@@ -352,6 +352,7 @@ $_ADMINLANG['services']['overrideautosusp'] = "Overide Auto-Suspend";
 $_ADMINLANG['services']['nosuspenduntil'] = "Do not suspend until";
 $_ADMINLANG['services']['endofcycle'] = "Auto-Terminate End of Cycle";
 $_ADMINLANG['services']['reason'] = "Reason";
+$_ADMINLANG['services']['price'] = "Price";
 
 # Module Command Buttons
 $_ADMINLANG['modulebuttons']['create'] = "Create";
@@ -513,7 +514,7 @@ $_ADMINLANG['domains']['domaincontactusecustom'] = "Use Following Details";
 
 # Orders
 $_ADMINLANG['orders']['title'] = "Orders";
-$_ADMINLANG['orders']['manage'] = "Manage Orders";
+$_ADMINLANG['orders']['manage'] = "All Order Statuses";
 $_ADMINLANG['orders']['listall'] = "List All Orders";
 $_ADMINLANG['orders']['listpending'] = "Pending Orders";
 $_ADMINLANG['orders']['listactive'] = "Active Orders";

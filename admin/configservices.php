@@ -58,7 +58,6 @@ $aInt = new RA_Admin("View Products/Services");
 $aInt->title = $aInt->lang("services", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
-$aInt->helplink = "Configuring Products/Services";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
 
 if ($action == "getdownloads") {
@@ -494,9 +493,7 @@ if ($action == "") {
     $num_rows2 = $data[0];
     $aInt->deleteJSConfirm("doDelete", "services", "deleteserviceconfirm", "?sub=delete&id=");
     $aInt->deleteJSConfirm("doGroupDelete", "services", "deletegroupconfirm", "?sub=deletegroup&id=");
-    echo "<p>";
-    echo $aInt->lang("services", "description");
-    echo "</p><p><b>";
+    echo "<p><b>";
     echo $aInt->lang("addons", "options");
     echo ":</b><a href=\"";
     echo $PHP_SELF;
@@ -539,7 +536,7 @@ if ($action == "") {
     echo "</th><th>";
     echo $aInt->lang("services", "paytype");
     echo "</th><th>";
-    echo $aInt->lang("services", "stock");
+    echo $aInt->lang("services", "price");
     echo "</th><th>";
     echo $aInt->lang("services", "autosetup");
     echo "</th><th width=\"20\"></th><th width=\"20\"></th></tr>";

@@ -16,7 +16,6 @@ $aInt = new RA_Admin("Configure Automation Settings");
 $aInt->title = $aInt->lang("automation", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "autosettings";
-$aInt->helplink = "Automation Settings";
 
 if ($sub == "save") {
 	check_token("RA.admin.default");
@@ -71,28 +70,7 @@ if ($success) {
 echo "
 <form method=\"post\" action=\"";
 echo $PHP_SELF;
-echo "?sub=save\">
-<p>";
-echo $aInt->lang("automation", "croninfo");
-echo "</p>
-
-<div class=\"contentbox\">
-";
-echo $aInt->lang("automation", "cronphp");
-echo ":<br><input type=\"text\" size=\"100\" value=\"php -q ";
-$adminfolder = $ra->get_admin_folder_name();
-echo ROOTDIR . "/" . $adminfolder;
-echo "/cron.php\"><br><b>OR</b><br>
-";
-echo $aInt->lang("automation", "cronget");
-echo ":<br><input type=\"text\" size=\"100\" value=\"GET ";
-echo $CONFIG['SystemURL'];
-echo "/";
-echo $adminfolder;
-echo "/cron.php\">
-</div><br>
-
-";
+echo "?sub=save\">";
 $result = select_query("tblconfiguration", "", "");
 
 while ($data = mysql_fetch_array($result)) {
@@ -211,10 +189,8 @@ echo $aInt->lang("automation", "blankcycledefault");
 echo ")
 <br /><br />
 <b>";
-echo $aInt->lang("automation", "domainsettings");
 echo "</b><br />
 ";
-echo $aInt->lang("automation", "domainsettingsinfo");
 echo ":<br />
 <input type=\"text\" name=\"createdomaininvoicedays\" value=\"";
 echo $CONFIG['CreateDomainInvoiceDaysBefore'];
@@ -373,57 +349,6 @@ echo $aInt->lang("automation", "productpricesinfo");
 echo "</label></td></tr>
 </table>
 <p><b>";
-echo $aInt->lang("automation", "domainsettings");
-echo "</b></p> ";
-$renewals = explode(",", $CONFIG['DomainRenewalNotices']);
-echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "firstrenewal");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"renewals[0]\" value=\"";
-echo $renewals[0];
-echo "\" size=3> ";
-echo $aInt->lang("automation", "firstrenewalinfo");
-echo " (";
-echo $aInt->lang("automation", "todisable");
-echo ")</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "secondrenewal");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"renewals[1]\" value=\"";
-echo $renewals[1];
-echo "\" size=3> ";
-echo $aInt->lang("automation", "secondrenewalinfo");
-echo " (";
-echo $aInt->lang("automation", "todisable");
-echo ")</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "thirdrenewal");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"renewals[2]\" value=\"";
-echo $renewals[2];
-echo "\" size=3> ";
-echo $aInt->lang("automation", "thirdrenewalinfo");
-echo " (";
-echo $aInt->lang("automation", "todisable");
-echo ")</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "fourthrenewal");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"renewals[3]\" value=\"";
-echo $renewals[3];
-echo "\" size=3> ";
-echo $aInt->lang("automation", "fourthrenewalinfo");
-echo " (";
-echo $aInt->lang("automation", "todisable");
-echo ")</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "fifthrenewal");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"renewals[4]\" value=\"";
-echo $renewals[4];
-echo "\" size=3> ";
-echo $aInt->lang("automation", "fifthrenewalinfo");
-echo " (";
-echo $aInt->lang("automation", "todisable");
-echo ")</td></tr>
-</table>
-<p><b>";
 echo $aInt->lang("automation", "ticketsettings");
 echo "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
@@ -453,14 +378,8 @@ echo "> ";
 echo $aInt->lang("automation", "cancellationinfo");
 echo "</label></td></tr>
 <tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "usage");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"updatestatusauto\"";
+echo "</td>";
 
-if ($CONFIG['UpdateStatsAuto'] == "on") {
-	echo " CHECKED";
-}
-
-echo "> ";
 echo $aInt->lang("automation", "usageinfo");
 echo "</label></td></tr>
 <tr><td class=\"fieldlabel\">";

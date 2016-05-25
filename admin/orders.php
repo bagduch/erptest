@@ -25,7 +25,7 @@ $aInt = new RA_Admin($reqperm);
 $aInt->title = $aInt->lang("orders", "manage");
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
-$aInt->helplink = "Order Management";
+//$aInt->helplink = "Order Management";
 $aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunctions", "domainfunctions", "invoicefunctions", "processinvoices", "clientfunctions", "ccfunctions", "registrarfunctions", "fraudfunctions"));
 
 if ($ra->get_req_var("rerunfraudcheck")) {
@@ -303,8 +303,21 @@ if (!$action) {
 	$pageObj = new RA_Pagination($name, $orderby, $sort);
 	$pageObj->digestCookieData();
 	$tbl = new RA_ListTable($pageObj);
-	$tbl->setColumns(array("checkall", array("id", $aInt->lang("fields", "id")), array("ordernum", $aInt->lang("fields", "ordernum")), array("date", $aInt->lang("fields", "date")), $aInt->lang("fields", "clientname"), array("paymentmethod", $aInt->lang("fields", "paymentmethod")), array("amount", $aInt->lang("fields", "total")), $aInt->lang("fields", "paymentstatus"), array("status", $aInt->lang("fields", "status")), ""));
-	$criteria = array("clientid" => $clientid, "amount" => $amount, "orderid" => $orderid, "ordernum" => $ordernum, "orderip" => $orderip, "orderdate" => $orderdate, "clientname" => $clientname, "paymentstatus" => $paymentstatus, "status" => $status);
+	$tbl->setColumns(
+		array("checkall", 
+			array("id", $aInt->lang("fields", "id")), 
+			array("ordernum", $aInt->lang("fields", "ordernum")), 
+			array("date", $aInt->lang("fields", "date")), 
+			$aInt->lang("fields", "clientname"), 
+			array("paymentmethod", $aInt->lang("fields", "paymentmethod")), 
+			array("amount", $aInt->lang("fields", "total")), 
+			array("status", "Order Status"),
+			$aInt->lang("fields", "paymentstatus"), 
+//			array("status", $aInt->lang("fields", "status")), 
+			""
+		)
+	);
+	$criteria = array("clientid" => $clientid, "amount" => $amount, "orderid" => $orderid, "ordernum" => $ordernum, "orderip" => $orderip, "orderdate" => $orderdate, "clientname" => $clientname, "status" => $status, "paymentstatus" => $paymentstatus);
 	$ordersModel = new RA_Orders($pageObj);
 	$ordersModel->execute($criteria);
 	$numresults = $pageObj->getNumResults();
@@ -316,10 +329,18 @@ if (!$action) {
 	else {
 		$orderlist = $pageObj->getData();
 		foreach ($orderlist as $order) {
-			$tbl->addRow(array("<input type=\"checkbox\" name=\"selectedorders[]\" value=\"" . $order['id'] . "\" class=\"checkall\">", "<a href=\"" . $PHP_SELF . "?action=view&id=" . $order['id'] . "\"><b>" . $order['id'] . "</b></a>", $order['ordernum'], $order['date'], $order['clientname'], $order['paymentmethod'], $order['amount'], $order['paymentstatusformatted'], $order['statusformatted'], "<a href=\"#\" onClick=\"doDelete('" . $order['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>"));
+			$tbl->addRow(array(
+		"<input type=\"checkbox\" name=\"selectedorders[]\" value=\"" . $order['id'] . "\" class=\"checkall\">", 
+		"<a href=\"" . $PHP_SELF . "?action=view&id=" . $order['id'] . "\"><b>" . $order['id'] . "</b></a>", $order['ordernum'], 
+		$order['date'], $order['clientname'], 
+		$order['paymentmethod'], 
+		$order['amount'], 
+		$order['statusformatted'], 
+		$order['paymentstatusformatted'], 
+		"<a href=\"#\" onClick=\"doDelete('" . $order['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>")
+		);
 		}
 
-		$tbl->setMassActionBtns("<input type=\"submit\" name=\"massaccept\" value=\"" . $aInt->lang("orders", "accept") . "\" class=\"btn-success\" onclick=\"return confirm('" . $aInt->lang("orders", "acceptconfirm", "1") . "')\" /> <input type=\"submit\" name=\"masscancel\" value=\"" . $aInt->lang("orders", "cancel") . "\" onclick=\"return confirm('" . $aInt->lang("orders", "cancelconfirm", "1") . "')\" /> <input type=\"submit\" name=\"massdelete\" value=\"" . $aInt->lang("orders", "delete") . "\" class=\"btn-danger\" onclick=\"return confirm('" . $aInt->lang("orders", "deleteconfirm", "1") . "')\" /> <input type=\"submit\" name=\"sendmessage\" value=\"" . $aInt->lang("global", "sendmessage") . "\" />");
 		echo $tbl->output();
 		unset($orderlist);
 		unset($ordersModel);
