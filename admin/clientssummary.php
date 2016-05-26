@@ -437,14 +437,6 @@ if ($action == "deleteclient") {
 }
 
 
-if ($action == "savenotes") {
-	check_token("RA.admin.default");
-	checkPermission("Edit Clients Details");
-	update_query("tblclients", array("notes" => $adminnotes), array("id" => $userid));
-	logActivity("Client Summary Notes Updated - User ID: " . $userid, $userid);
-	redir("userid=" . $userid);
-	exit();
-}
 
 
 if ($action == "addfunds") {

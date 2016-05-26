@@ -218,6 +218,7 @@ $_ADMINLANG['clients']['overrideautocloseinfo'] = "Disable Automatic Status Upda
 $_ADMINLANG['clients']['invalidemail'] = "The email address you entered was not valid";
 $_ADMINLANG['clients']['2faenabled'] = "Enabled - Uncheck to disable";
 $_ADMINLANG['clients']['ccstoredisabled'] = "Credit Card Storage is Disabled";
+$_ADMINLANG['clients']['clientscredits'] = "Credit Log";
 
 # Client Summary
 $_ADMINLANG['clientsummary']['title'] = "Client Profile";
@@ -232,6 +233,7 @@ $_ADMINLANG['clientsummary']['billableitems'] = "Billable Items";
 $_ADMINLANG['clientsummary']['invoices'] = "Invoices";
 $_ADMINLANG['clientsummary']['quotes'] = "Quotes";
 $_ADMINLANG['clientsummary']['transactions'] = "Transactions";
+$_ADMINLANG['clientsummary']['credits'] = "Credit Log";
 $_ADMINLANG['clientsummary']['emails'] = "Emails";
 $_ADMINLANG['clientsummary']['notes'] = "Notes";
 $_ADMINLANG['clientsummary']['log'] = "Log";
@@ -1067,7 +1069,7 @@ $_ADMINLANG['setup']['gateways'] = "Payment Gateways";
 $_ADMINLANG['setup']['tax'] = "Tax Rules";
 $_ADMINLANG['setup']['promos'] = "Promotions";
 $_ADMINLANG['setup']['bundles'] = "Product Bundles";
-$_ADMINLANG['setup']['products'] = "Products/Services";
+$_ADMINLANG['setup']['products'] = "Products";
 $_ADMINLANG['setup']['servicestitle'] = "Services";
 $_ADMINLANG['setup']['services'] = "View Services";
 $_ADMINLANG['setup']['cservicesg'] = "Create Service Group";
@@ -1120,6 +1122,7 @@ $_ADMINLANG['fields']['postcode'] = "Postcode";
 $_ADMINLANG['fields']['username'] = "Username";
 $_ADMINLANG['fields']['password'] = "Password";
 $_ADMINLANG['fields']['phonenumber'] = "Phone Number";
+$_ADMINLANG['fields']['mobilenumber'] = "Mobile Number";
 $_ADMINLANG['fields']['product'] = "Product/Service";
 $_ADMINLANG['fields']['services'] = "Services";
 $_ADMINLANG['fields']['created'] = "Created";
@@ -1690,7 +1693,7 @@ $_ADMINLANG['services']['updatesort'] = "Update Sorting";
 # Products
 $_ADMINLANG['products']['associateddl'] = "Associated Download";
 $_ADMINLANG['products']['welcomeemail'] = "Welcome Email";
-$_ADMINLANG['products']['title'] = "Products/Services";
+$_ADMINLANG['products']['title'] = "Products";
 $_ADMINLANG['products']['description'] = "This is where you configure all your products and services. Each product must be assigned to a group which can either be visible or hidden from the order page (products may also be hidden individually). A product which is in a hidden group can still be ordered using the Direct Order Link shown when editing the package.";
 $_ADMINLANG['products']['createnewgroup'] = "Create a New Group";
 $_ADMINLANG['products']['createnewproduct'] = "Create a New Product";
@@ -3048,4 +3051,5 @@ $_ADMINLANG['twofa']['backupcodeis'] = "Your Backup Code is";
 $_ADMINLANG['twofa']['backupcodeexpl'] = "Write this down on paper and keep it safe.<br />It will be needed if you ever lose your 2nd factor device or it is unavailable to you.";
 $_ADMINLANG['twofa']['disableclickhere'] = "Click here to Disable";
 $_ADMINLANG['twofa']['enableclickhere'] = "Click here to Enable";
+
 

@@ -305,7 +305,7 @@
 		$this->smarty->compile_dir = $templates_compiledir;
 
 		if ($this->inClientsProfile) {
-			$this->title = "Clients Profile";
+			$this->title = "Customer Account";
 			$this->sidebar = "clients";
 			$this->icon = "clientsprofile";
 		}
@@ -1017,9 +1017,8 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 		$tabarray['clientscontacts'] = $this->lang("clientsummary", "contacts");
 		$tabarray['clientsservices'] = $this->lang("clientsummary", "services");
 		$tabarray['clientproduct'] = $this->lang("clientsummary", "products");
-		$tabarray['clientsbillableitems'] = $this->lang("clientsummary", "billableitems");
 		$tabarray['clientsinvoices'] = $this->lang("clientsummary", "invoices");
-		$tabarray['clientsquotes'] = $this->lang("clientsummary", "quotes");
+		$tabarray['clientscredits'] = $this->lang("clientsummary", "credits");
 		$tabarray['clientstransactions'] = $this->lang("clientsummary", "transactions");
 		$tabarray['clientsemails'] = $this->lang("clientsummary", "emails");
 		$tabarray['clientsnotes'] = $this->lang("clientsummary", "notes") . " (" . get_query_val("tblnotes", "COUNT(id)", array("userid" => $uid)) . ")";
@@ -1045,13 +1044,13 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
 		echo "</p>\r\n</form>\r\n<div id=\"clienttabs\">\r\n<ul>";
 		foreach ($tabarray as $link => $name) {
-
 			if ($link == $this->filename) {
 				$class = "tabselected";
 			}
 			else {
 				$class = "tab";
 			}
+//			echo " Link: " . $link ." Class: ". $class;
 
 			echo "<li class=\"" . $class . "\"><a href=\"" . $link . ".php?userid=" . $_GET['userid'] . "\">" . $name . "</a></li>";
 		}

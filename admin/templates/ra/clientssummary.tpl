@@ -49,11 +49,13 @@
 <tr><td>{$_ADMINLANG.fields.postcode}</td><td>{$clientsdetails.postcode}</td></tr>
 <tr class="altrow"><td>{$_ADMINLANG.fields.country}</td><td>{$clientsdetails.country} - {$clientsdetails.countrylong}</td></tr>
 <tr><td>{$_ADMINLANG.fields.phonenumber}</td><td>{$clientsdetails.phonenumber}</td></tr>
+<tr><td>{$_ADMINLANG.fields.mobilenumber}</td><td>{$clientsdetails.mobilenumber}</td></tr>
 </table>
 <ul>
 <li><a href="clientssummary.php?userid={$clientsdetails.userid}&resetpw=true&token={$csrfToken}"><img src="images/icons/resetpw.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.resetsendpassword}</a>
-<li><a href="#" onClick="openCCDetails();return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
 <li><a href="../dologin.php?username={$clientsdetails.email|urlencode}&token={$csrfToken}"><img src="images/icons/clientlogin.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.loginasclient}</a>
+<li><a href="orders.php?clientid={$clientsdetails.userid}"><img src="images/icons/orders.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.vieworders}</a>
+<li><a href="ordersadd.php?userid={$clientsdetails.userid}"><img src="images/icons/ordersadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.orders.addnew}</a>
 </ul>
 </div>
 
@@ -89,8 +91,7 @@
  <li><a href="#" onClick="showDialog('addfunds');return false"><img src="images/icons/addfunds.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.createaddfunds}</a>
 <li><a href="#" onClick="showDialog('geninvoices');return false"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>
 <li><a href="clientsbillableitems.php?userid={$clientsdetails.userid}&action=manage"><img src="images/icons/billableitems.png" border="0" align="absmiddle" /> {$_ADMINLANG.billableitems.additem}</a>
-<li><a href="#" onClick="window.open('clientscredits.php?userid={$clientsdetails.userid}','','width=750,height=350,scrollbars=yes');return false"><img src="images/icons/income.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.managecredits}</a>
-<li><a href="quotes.php?action=manage&userid={$clientsdetails.userid}"><img src="images/icons/quotes.png" border="0" align="absmiddle" /> {$_ADMINLANG.quotes.createnew}</a>
+<li><a href="#" onClick="openCCDetails();return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
 </ul>
 </div>
 
@@ -120,8 +121,6 @@
 <tr class="altrow"><td>{$_ADMINLANG.stats.affiliatesignups}</td><td>{$stats.numaffiliatesignups}</td></tr>
 </table>
 <ul>
-<li><a href="orders.php?clientid={$clientsdetails.userid}"><img src="images/icons/orders.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.vieworders}</a>
-<li><a href="ordersadd.php?userid={$clientsdetails.userid}"><img src="images/icons/ordersadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.orders.addnew}</a>
 </ul>
 </div>
 
@@ -168,6 +167,7 @@
 {foreach from=$customactionlinks item=customactionlink}
 <li>{$customactionlink}</li>
 {/foreach}
+<li><a href="clientsnotes.php?userid={$clientsdetails.userid}"><img src="images/icons/ticketsopen.png" border="0" align="absmiddle" />Add Note</a>
 <li><a href="reports.php?report=client_statement&userid={$clientsdetails.userid}"><img src="images/icons/reports.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.accountstatement}</a>
 <li><a href="supporttickets.php?action=open&userid={$clientsdetails.userid}"><img src="images/icons/ticketsopen.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.newticket}</a>
 <li><a href="supporttickets.php?view=any&client={$clientsdetails.userid}"><img src="images/icons/ticketsother.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.viewtickets}</a>
@@ -186,15 +186,6 @@
 </form>
 </div>
 
-<div class="clientssummarybox">
-<div class="title">{$_ADMINLANG.fields.adminnotes}</div>
-<form method="post" action="{$smarty.server.PHP_SELF}?userid={$clientsdetails.userid}&action=savenotes">
-<div align="center">
-<textarea name="adminnotes" rows="6" style="width:90%;" />{$clientsdetails.notes}</textarea><br />
-<input type="submit" value="{$_ADMINLANG.global.submit}" class="button" />
-</div>
-</form>
-</div>
 
 </td></tr>
 <tr><td colspan="4">
@@ -235,10 +226,9 @@ $(document).ready(function(){
 <img src="images/spacer.gif" width="1" height="4" /><br />
 
 <table width="100%" class="form">
-<tr><td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.addons.title}</strong></td></tr>
+<tr><td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.products.title}</strong></td></tr>
 <tr><td align="center">
 
-<div class="tablebg">
 <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
 <tr><th width="20"><input type="checkbox" id="addonsall" /></th><th>ID</th><th>{$_ADMINLANG.addons.name}</th><th>{$_ADMINLANG.fields.amount}</th><th>{$_ADMINLANG.fields.billingcycle}</th><th>{$_ADMINLANG.fields.signupdate}</th><th>{$_ADMINLANG.fields.nextduedate}</th><th>{$_ADMINLANG.fields.status}</th><th width="20"></th></tr>
 {foreach key=num from=$addonsummary item=addon}
@@ -253,43 +243,13 @@ $(document).ready(function(){
 
 <img src="images/spacer.gif" width="1" height="4" /><br />
 
-<table width="100%" class="form">
-<tr><td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.domains.title}</strong></td></tr>
-<tr><td align="center">
 
-<div class="tablebg">
-<table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-<tr><th width="20"><input type="checkbox" id="domainsall" /></th><th>{$_ADMINLANG.fields.id}</th><th>{$_ADMINLANG.fields.domain}</th><th>{$_ADMINLANG.fields.registrar}</th><th>{$_ADMINLANG.fields.regdate}</th><th>{$_ADMINLANG.fields.nextduedate}</th><th>{$_ADMINLANG.fields.expirydate}</th><th>{$_ADMINLANG.fields.status}</th><th width="20"></th></tr>
-{foreach key=num from=$domainsummary item=domain}
-<tr><td><input type="checkbox" name="seldomains[]" value="{$domain.id}" class="checkdomains" /></td><td><a href="clientsdomains.php?userid={$clientsdetails.userid}&domainid={$domain.id}">{$domain.idshort}</a></td><td style="padding-left:5px;padding-right:5px"><a href="http://{$domain.domain}" target="_blank">{$domain.domain}</a></td><td>{$domain.registrar}</td><td>{$domain.registrationdate}</td><td>{$domain.nextduedate}</td><td>{$domain.expirydate}</td><td>{$domain.status}</td><td><a href="clientsdomains.php?userid={$clientsdetails.userid}&domainid={$domain.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td></tr>
-{foreachelse}
-<tr><td colspan="9">{$_ADMINLANG.global.norecordsfound}</td></tr>
-{/foreach}
-</table>
 </div>
 
 </td></tr></table>
 
-<img src="images/spacer.gif" width="1" height="4" /><br />
-
-<table width="100%" class="form">
-<tr><td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.clientsummary.currentquotes}</strong></td></tr>
-<tr><td align="center">
-
-<div class="tablebg">
-<table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-<tr><th>{$_ADMINLANG.fields.id}</th><th>{$_ADMINLANG.fields.subject}</th><th>{$_ADMINLANG.fields.date}</th><th>{$_ADMINLANG.fields.total}</th><th>{$_ADMINLANG.fields.validuntil}</th><th>{$_ADMINLANG.fields.status}</th><th width="20"></th></tr>
-{foreach key=num from=$quotes item=quote}
-<tr><td>{$quote.id}</td><td style="padding-left:5px;padding-right:5px">{$quote.subject}</td><td>{$quote.datecreated}</td><td>{$quote.total}</td><td>{$quote.validuntil}</td><td>{$quote.stage}</td><td><a href="quotes.php?action=manage&id={$quote.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td></tr>
-{foreachelse}
-<tr><td colspan="7">{$_ADMINLANG.global.norecordsfound}</td></tr>
-{/foreach}
-</table>
-</div>
-
-</td></tr></table>
-
-<p align="center"><input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" /> <input type="submit" name="inv" value="{$_ADMINLANG.clientsummary.invoiceselected}" class="button" /> <input type="submit" name="del" value="{$_ADMINLANG.clientsummary.deleteselected}" class="button" /></p>
+<p align="center">
+<input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" /> 
 
 <div id="massupdatebox" style="width:75%;background-color:#f7f7f7;border:1px dashed #cccccc;padding:10px;margin-left:auto;margin-right:auto;display:none;">
 <h2 style="text-align:center;margin:0 0 10px 0">{$_ADMINLANG.clientsummary.massupdateitems}</h2>

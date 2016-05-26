@@ -1,21 +1,17 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
-$aInt = new RA_Admin("View Credit Log");
+$aInt = new RA_Admin("View Credit Log", false);
 $aInt->title = $aInt->lang("credit", "creditmanagement");
 ob_start();
+
+$aInt->inClientsProfile = true;
+$aInt->valUserID($userid);
 $currency = getCurrency($userid);
+$clientsdetails = getClientsDetails($userid);
+
+
 $result = select_query("tblclients", "", array("id" => $userid));
 $data = mysql_fetch_array($result);
 $name = stripslashes($data['firstname'] . " " . $data['lastname']);
@@ -266,5 +262,5 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->displayPopUp();
+$aInt->display();
 ?>

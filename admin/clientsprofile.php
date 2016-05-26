@@ -34,7 +34,7 @@ if ($ra->get_req_var("save")) {
 		$_SESSION['profilevalidationerror'] = $errormessage;
 		$oldclientsdetails = getClientsDetails($userid);
 		$table = "tblclients";
-		$array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
+		$array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "mobilenumber" => $mobilenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
 
 		if (!$twofaenabled) {
 			$array['authmodule'] = "";
@@ -63,7 +63,7 @@ if ($ra->get_req_var("save")) {
 			$customfieldsarray[$k] = $_POST['customfield'][$k];
 		}
 
-		$updatefieldsarray = array("firstname" => "First Name", "lastname" => "Last Name", "companyname" => "Company Name", "email" => "Email Address", "address1" => "Address 1", "address2" => "Address 2", "city" => "City", "state" => "State", "postcode" => "Postcode", "country" => "Country", "phonenumber" => "Phone Number", "billingcid" => "Billing Contact");
+		$updatefieldsarray = array("firstname" => "First Name", "lastname" => "Last Name", "companyname" => "Company Name", "email" => "Email Address", "address1" => "Address 1", "address2" => "Address 2", "city" => "City", "state" => "State", "postcode" => "Postcode", "country" => "Country", "phonenumber" => "Phone Number", "mobilenumber" => "Mobile Number","billingcid" => "Billing Contact");
 		$updatedtickboxarray = array("latefeeoveride" => "Late Fees Override", "overideduenotices" => "Overdue Notices", "taxexempt" => "Tax Exempt", "separateinvoices" => "Separate Invoices", "disableautocc" => "Disable CC Processing", "emailoptout" => "Marketing Emails Opt-out", "overrideautoclose" => "Auto Close");
 		$changelist = array();
 		foreach ($updatefieldsarray as $field => $displayname) {
@@ -137,6 +137,7 @@ $state = $clientsdetails['state'];
 $postcode = $clientsdetails['postcode'];
 $country = $clientsdetails['country'];
 $phonenumber = $clientsdetails['phonenumber'];
+$mobilenumber= $clientsdetails['mobilenumber'];
 $currency = $clientsdetails['currency'];
 $notes = $clientsdetails['notes'];
 $status = $clientsdetails['status'];
@@ -268,6 +269,13 @@ echo $phonenumber;
 echo "\" tabindex=\"14\"></td></tr>
 <tr><td class=\"fieldlabel\"><br /></td><td class=\"fieldarea\"></td><td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td></tr>
 <tr><td class=\"fieldlabel\">";
+echo $aInt->lang("fields", "mobilenumber");
+echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"mobilenumber\" value=\"";
+echo $mobilenumber;
+echo "\" tabindex=\"14\"></td></tr>
+<tr><td class=\"fieldlabel\"><br /></td><td class=\"fieldarea\"></td><td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td></tr>
+<tr><td class=\"fieldlabel\">";
+
 echo $aInt->lang("clients", "latefees");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"latefeeoveride\"";
 

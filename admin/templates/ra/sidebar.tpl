@@ -22,12 +22,6 @@
 <span class="header"><img src="images/icons/products.png" alt="Products/Services" width="16" height="16" class="absmiddle" /> {$_ADMINLANG.services.title}</span>
 <ul class="menu">
     <li><a href="clientshostinglist.php">{$_ADMINLANG.services.listall}</a></li>
-    <li><a href="clientshostinglist.php?type=hostingaccount">- {$_ADMINLANG.services.listhosting}</a></li>
-    <li><a href="clientshostinglist.php?type=reselleraccount">- {$_ADMINLANG.services.listreseller}</a></li>
-    <li><a href="clientshostinglist.php?type=server">- {$_ADMINLANG.services.listservers}</a></li>
-    <li><a href="clientshostinglist.php?type=other">- {$_ADMINLANG.services.listother}</a></li>
-    <li><a href="clientsaddonslist.php">{$_ADMINLANG.services.listaddons}</a></li>
-    <li><a href="clientsdomainlist.php">{$_ADMINLANG.services.listdomains}</a></li>
     <li><a href="cancelrequests.php">{$_ADMINLANG.clients.cancelrequests}</a></li>
 </ul>
 
