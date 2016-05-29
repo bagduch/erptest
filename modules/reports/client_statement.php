@@ -3,8 +3,8 @@
 if (!defined("RA"))
 	die("This file cannot be accessed directly");
 
-$reportdata["title"] = "Client Account Register Balance";
-$reportdata["description"] = "This report provides a statement of account for individual client accounts.";
+$reportdata["title"] = "Customer / Transaction Statement";
+$reportdata["description"] = "";
 
 $reportdata["headertext"] = '<form method="post" action="reports.php?report=client_statement">Enter Client ID: <input type="text" name="userid" value="'.$userid.'" size="10" /> Date Range: <input type="text" name="datefrom" value="'.$datefrom.'" class="datepick" /> to <input type="text" name="dateto" value="'.$dateto.'" class="datepick" /> (Leave blank for all time) <input type="submit" value="Generate Report" /></form>';
 
@@ -38,6 +38,16 @@ while($data = mysql_fetch_array($result)) {
     $result2 = select_query("tblinvoiceitems","type",array("invoiceid"=>$invoiceid));
     $data = mysql_fetch_array($result2);
     $itemtype = $data[0];
+    $adminid = $data["adminid"];
+    if ($adminid>0) {
+	$result3= select_query("tbladmins","username",array("id"=>$adminid));
+	$data = mysql_fetch_array($result3);
+	$adminname = $data[0];
+	} else {
+     $adminname = "BLANK";
+	}
+	
+
     if ($itemtype=="AddFunds") {
         $description = "Credit Prefunding";
     } elseif ($itemtype=="Invoice") {
@@ -52,7 +62,8 @@ while($data = mysql_fetch_array($result)) {
         $description = $description;
         if ($invoiceid) $description .= " - <a href=\"invoices.php?action=edit&id=$invoiceid\" target=\"_blank\">#$invoiceid</a>";
     }
-	$statement[str_replace('-','',$date)."_".$count] = array("Transaction",$date,$description,$amountin,$amountout);
+	$statement[str_replace('-','',$date)."_".$count] = array("Transaction",$date,$description,$amountin,$amountout,$adminname);
+	print($adminname."adminnameadminname");
     $count++;
 }
 
@@ -61,7 +72,7 @@ while($data = mysql_fetch_array($result)) {
 $datefrom = ($datefrom) ? str_replace('-','',toMySQLDate($datefrom)) : '';
 $dateto = ($dateto) ? str_replace('-','',toMySQLDate($dateto)) : '';
 
-$reportdata["tableheadings"] = array("Type","Date","Description","Credits","Debits","Balance");
+$reportdata["tableheadings"] = array("Type","Date","Description","Credits","Debits","Balance","Admin");
 ksort($statement);
 foreach ($statement AS $date=>$entry) {
     $date = substr($date,0,8);
@@ -70,7 +81,7 @@ foreach ($statement AS $date=>$entry) {
         $totaldebits -= $entry[4];
         $balance += $entry[3]-$entry[4];
     }
-    if ((($date>=$datefrom)AND($date<=$dateto))OR(!$dateto)) $reportdata["tablevalues"][] = array($entry[0],fromMySQLDate($entry[1]),$entry[2],formatCurrency($entry[3]),formatCurrency($entry[4]),formatCurrency($balance));
+    if ((($date>=$datefrom)AND($date<=$dateto))OR(!$dateto)) $reportdata["tablevalues"][] = array($entry[0],fromMySQLDate($entry[1]),$entry[2],formatCurrency($entry[3]),formatCurrency($entry[4]),formatCurrency($balance),$entry[5]);
 }
 $reportdata["tablevalues"][] = array('#efefef','','','<b>Ending Balance</b>','<b>'.formatCurrency($totalcredits).'</b>','<b>'.formatCurrency($totaldebits).'</b>','<b>'.formatCurrency($balance).'</b>');
 

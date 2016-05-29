@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -34,7 +24,23 @@ if ($ra->get_req_var("save")) {
 		$_SESSION['profilevalidationerror'] = $errormessage;
 		$oldclientsdetails = getClientsDetails($userid);
 		$table = "tblclients";
-		$array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "mobilenumber" => $mobilenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
+		$array = array(
+			"firstname" => $firstname, 
+			"lastname" => $lastname, 
+			"companyname" => $companyname, 
+			"email" => $email, 
+			"address1" => $address1, 
+			"address2" => $address2, 
+			"city" => $city, 
+			"state" => $state, 
+			"postcode" => $postcode, 
+			"country" => $country, 
+			"phonenumber" => $phonenumber, 
+			"mobilenumber" => $mobilenumber, 
+			"currency" => $_POST['currency'], 
+			"notes" => $notes, 
+			"status" => $status, 
+			"taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
 
 		if (!$twofaenabled) {
 			$array['authmodule'] = "";
@@ -67,7 +73,6 @@ if ($ra->get_req_var("save")) {
 		$updatedtickboxarray = array("latefeeoveride" => "Late Fees Override", "overideduenotices" => "Overdue Notices", "taxexempt" => "Tax Exempt", "separateinvoices" => "Separate Invoices", "disableautocc" => "Disable CC Processing", "emailoptout" => "Marketing Emails Opt-out", "overrideautoclose" => "Auto Close");
 		$changelist = array();
 		foreach ($updatefieldsarray as $field => $displayname) {
-
 			if ($array[$field] != $oldclientsdetails[$field]) {
 				$changelist[] = "" . $displayname . ": '" . $oldclientsdetails[$field] . "' to '" . $array[$field] . "'";
 				continue;
@@ -77,7 +82,6 @@ if ($ra->get_req_var("save")) {
 		foreach ($updatedtickboxarray as $field => $displayname) {
 			$oldfield = ($oldclientsdetails[$field] ? "Enabled" : "Disabled");
 			$newfield = ($array[$field] ? "Enabled" : "Disabled");
-
 			if ($oldfield != $newfield) {
 				$changelist[] = "" . $displayname . ": '" . $oldfield . "' to '" . $newfield . "'";
 				continue;
@@ -186,14 +190,15 @@ echo $aInt->lang("fields", "lastname");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"lastname\" value=\"";
 echo $lastname;
 echo "\" tabindex=\"2\"></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "address2");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"address2\" value=\"";
-echo $address2;
-echo "\" tabindex=\"9\"> <font color=#cccccc>";
-echo "<s";
-echo "mall>(";
-echo $aInt->lang("global", "optional");
-echo ")</small></font></td></tr>
+// echo $aInt->lang("fields", "address2");
+echo "</td><td class=\"fieldarea\">"; // <input type=\"text\" size=\"30\" name=\"address2\" value=\"";
+//echo $address2;
+//echo "\" tabindex=\"9\"> <font color=#cccccc>";
+//echo "<s";
+//echo "mall>(";
+//echo $aInt->lang("global", "optional");
+//echo ")</small></font></td></tr>
+echo "</td></tr>
 <tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "companyname");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"companyname\" value=\"";
@@ -257,8 +262,9 @@ echo $aInt->lang("fields", "country");
 echo "</td><td class=\"fieldarea\">";
 include "../includes/countries.php";
 echo getCountriesDropDown($country, "", 13);
-echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
+echo "</td></tr>";
+
+echo "<tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "securityanswer");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"securityqans\" size=\"40\" value=\"";
 echo $securityqans;
@@ -266,15 +272,14 @@ echo "\" tabindex=\"7\"></td><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "phonenumber");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"phonenumber\" value=\"";
 echo $phonenumber;
-echo "\" tabindex=\"14\"></td></tr>
-<tr><td class=\"fieldlabel\"><br /></td><td class=\"fieldarea\"></td><td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "mobilenumber");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"mobilenumber\" value=\"";
-echo $mobilenumber;
-echo "\" tabindex=\"14\"></td></tr>
-<tr><td class=\"fieldlabel\"><br /></td><td class=\"fieldarea\"></td><td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td></tr>
-<tr><td class=\"fieldlabel\">";
+echo "\" tabindex=\"14\"></td></tr>";
+
+echo "<tr>";
+echo "<td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td>";
+echo "<td class=\"fieldlabel\">".$aInt->lang("fields", "mobilenumber")."</td>";
+echo "<td class=\"fieldarea\">";
+echo "<input type=\"text\" size=\"20\" name=\"mobilenumber\" value=\"".$mobilenumber."\"</input>";
+echo "</td><tr><td class=\"fieldlabel\">";
 
 echo $aInt->lang("clients", "latefees");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"latefeeoveride\"";
@@ -419,18 +424,7 @@ while ($data = mysql_fetch_array($result)) {
 	echo ">" . $data['code'] . "</option>";
 }
 
-echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("clients", "marketingemailsoptout");
-echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"emailoptout\"";
-
-if ($emailoptout == "1") {
-	echo " checked";
-}
-
-echo " value=\"1\" tabindex=\"20\"> ";
-echo $aInt->lang("clients", "disablemarketingemails");
-echo "</td><td class=\"fieldlabel\">";
+echo "</select></td></tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "clientgroup");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
@@ -453,18 +447,7 @@ while ($data = mysql_fetch_assoc($result)) {
 	echo ">" . $group_name . "</option>";
 }
 
-echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("clients", "overrideautoclose");
-echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"overrideautoclose\"";
-
-if ($overrideautoclose == "1") {
-	echo " checked";
-}
-
-echo " value=\"1\" tabindex=\"20\"> ";
-echo $aInt->lang("clients", "overrideautocloseinfo");
-echo "</td><td class=\"fieldlabel\">";
+echo "</select></td><td class=\"fieldlabel\">";
 echo $aInt->lang("twofa", "title");
 echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"twofaenabled\"";
 
@@ -497,14 +480,7 @@ foreach ($hookret as $hookdat) {
 	}
 }
 
-echo "<td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "adminnotes");
-echo "</td><td class=\"fieldarea\" colspan=\"3\"><textarea name=\"notes\" rows=4 style=\"width:100%;\" tabindex=\"";
-echo $taxindex++;
-echo "\">";
-echo $notes;
-echo "</textarea></td></tr>
-</table>
+echo "</table>
 
 <img src=\"images/spacer.gif\" height=\"10\" width=\"1\"><br>
 <div align=\"center\"><input type=\"submit\" value=\"";

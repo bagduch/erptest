@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -94,7 +84,7 @@ if ($action == "save") {
 		}
 
 		$table = "tblcontacts";
-		$array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "subaccount" => $subaccount, "permissions" => $permissions, "domainemails" => $domainemails, "generalemails" => $generalemails, "invoiceemails" => $invoiceemails, "productemails" => $productemails, "supportemails" => $supportemails, "affiliateemails" => $affiliateemails);
+		$array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "mobilenumber"=>$mobilenumber,"subaccount" => $subaccount, "permissions" => $permissions, "domainemails" => $domainemails, "generalemails" => $generalemails, "invoiceemails" => $invoiceemails, "productemails" => $productemails, "supportemails" => $supportemails, "affiliateemails" => $affiliateemails);
 
 		if ($password && $password != $aInt->lang("fields", "entertochange")) {
 			$array['password'] = generateClientPW($password);
@@ -207,6 +197,7 @@ if ($contactid && $contactid != "addnew") {
 	$postcode = $data['postcode'];
 	$country = $data['country'];
 	$phonenumber = $data['phonenumber'];
+	$mobilenumber = $data['mobilenumber'];
 	$subaccount = $data['subaccount'];
 	$password = $data['password'];
 	$permissions = explode(",", $data['permissions']);
@@ -242,27 +233,16 @@ echo "\"></td><td width=\"15%\" class=\"fieldlabel\">";
 echo $aInt->lang("fields", "address");
 echo " 1</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"address1\" tabindex=\"7\" value=\"";
 echo $address1;
-echo "\"></td></tr>
-<tr><td class=\"fieldlabel\">";
+echo "\"></td></tr><tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "lastname");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"lastname\" tabindex=\"2\" value=\"";
 echo $lastname;
-echo "\"></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "address");
-echo " 2</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"address2\" tabindex=\"8\" value=\"";
-echo $address2;
-echo "\"> <font color=#cccccc>";
-echo "<s";
-echo "mall>(";
-echo $aInt->lang("global", "optional");
-echo ")</small></font></td></tr>
-<tr><td class=\"fieldlabel\">";
+echo "\"></td>";
+echo "<td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td></tr><tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "companyname");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"companyname\" tabindex=\"3\" value=\"";
 echo $companyname;
-echo "\"> <font color=#cccccc>";
-echo "<s";
-echo "mall>(";
+echo "\"><small>(";
 echo $aInt->lang("global", "optional");
 echo ")</small></font></td><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "city");
@@ -334,7 +314,6 @@ if ($generalemails) {
 
 echo "> General</label>
 <label><input type=\"checkbox\" name=\"invoiceemails\" tabindex=\"15\" ";
-
 if ($invoiceemails) {
 	echo "checked";
 }
@@ -353,15 +332,8 @@ if ($productemails) {
 	echo "checked";
 }
 
-echo "> Product</label>
-<label><input type=\"checkbox\" name=\"domainemails\" tabindex=\"18\" ";
-
-if ($domainemails) {
-	echo "checked";
-}
-
-echo "> Domain</label>
-<label><input type=\"checkbox\" name=\"affiliateemails\" tabindex=\"19\" ";
+echo "> Product</label>";
+echo "<label><input type=\"checkbox\" name=\"affiliateemails\" tabindex=\"19\" ";
 
 if ($affiliateemails) {
 	echo "checked";
@@ -372,8 +344,11 @@ echo "> Affiliate</label>
 echo $aInt->lang("fields", "phonenumber");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"phonenumber\" tabindex=\"13\" value=\"";
 echo $phonenumber;
-echo "\"></td></tr>
-<tr><td class=\"fieldlabel\">";
+echo "\"></td></tr>";
+echo "<tr><td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td>";
+echo "<td class=\"fieldlabel\">".$aInt->lang("fields", "mobilenumber")."</td>";
+echo "<td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"mobilenumber\" tabindex=\"13\" value=\"".$mobilenumber."\"></td></tr>";
+echo "<tr><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "permissions");
 echo "</td><td class=\"fieldarea\" colspan=\"3\">
 <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td width=\"50%\" valign=\"top\">

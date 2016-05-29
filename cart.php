@@ -541,6 +541,11 @@ if ($a == "domainoptions") {
 
 
 if ($a == "confproduct") {
+    
+}
+
+
+if ($a == "confservice") {
     $templatefile = "configureservice";
     $i = (int) $_REQUEST['i'];
 
@@ -570,40 +575,13 @@ if ($a == "confproduct") {
         global $errormessage;
 
         $errormessage = "";
-        $result = select_query("tblproducts", "type", array("id" => $pid));
+        $result = select_query("tblservices", "type", array("id" => $pid));
         $data = mysql_fetch_array($result);
         $producttype = $data['type'];
 
-        if ($producttype == "server") {
-            if (!$hostname) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
-            } else {
-                $result = select_query("tblhosting", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "domainstatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
-                $data = mysql_fetch_array($result);
-                $existingcount = $data[0];
-
-                if ($existingcount) {
-                    $errormessage .= "<li>" . $_LANG['ordererrorserverhostnameinuse'];
-                }
-            }
-
-
-            if (!$ns1prefix || !$ns2prefix) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
-            }
-
-
-            if (!$rootpw) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
-            }
-
-            $serverarray = array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw);
-        }
-
-
         if ($configoption) {
             foreach ($configoption as $opid => $opid2) {
-                $result = select_query("tblproductconfigoptions", "", array("id" => $opid));
+                $result = select_query("tblserviceconfigoptions", "", array("id" => $opid));
                 $data = mysql_fetch_array($result);
                 $optionname = $data['optionname'];
                 $optiontype = $data['optiontype'];
@@ -697,7 +675,6 @@ if ($a == "confproduct") {
     $customfields = $_SESSION['cart']['products'][$i]['customfields'];
     $configoptions = $_SESSION['cart']['products'][$i]['configoptions'];
     $addons = $_SESSION['cart']['products'][$i]['addons'];
-    $domain = $_SESSION['cart']['products'][$i]['domain'];
     $noconfig = $_SESSION['cart']['products'][$i]['noconfig'];
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
@@ -757,9 +734,7 @@ if ($a == "confproduct") {
     $smartyvalues['configurableoptions'] = $configurableoptions;
     $smartyvalues['addons'] = $addonsarray;
     $smartyvalues['customfields'] = $customfields;
-    $smartyvalues['domain'] = $domain;
 }
-
 
 if ($a == "checkout") {
     $domainconfigerror = false;
@@ -823,7 +798,7 @@ if ($a == "addcontact") {
 if ($a == "view") {
 
     $viewdata = $cart->Viewcart();
-   // echo "<pre>", print_r($viewdata, 1), "<pre>";
+    // echo "<pre>", print_r($viewdata, 1), "<pre>";
     $templatefile = $viewdata['template'];
     $smartyvalues = $viewdata['smarty'];
     //  echo "<pre>", print_r($smartyvalues, 1), "<pre>";

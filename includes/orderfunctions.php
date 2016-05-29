@@ -700,7 +700,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     $recurringdiscount = $promocalc['recurringdiscount'];
                     $product_total_today_db -= $onetimediscount;
                     $product_recurring_db -= $recurringdiscount;
-                    $cart_discount += $onetimediscount * $qty;
+                    $cart_discount += $onetimediscount * 1;
                     $promoid = $promo_data['id'];
                 }
             }
@@ -711,11 +711,11 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $product_setup = 0;
             }
 
-            $cart_total += $product_total_today_db * $qty;
-            $product_total_qty_recurring = $product_recurring_db * $qty;
+            $cart_total += $product_total_today_db * 1;
+            $product_total_qty_recurring = $product_recurring_db * 1;
 
             if (($CONFIG['TaxEnabled'] && $tax) && !$clientsdetails['taxexempt']) {
-                $cart_tax += $product_total_today_db * $qty;
+                $cart_tax += $product_total_today_db * 1;
 
                 if ($CONFIG['TaxType'] == "Exclusive") {
                     if ($CONFIG['TaxL2Compound']) {
@@ -887,7 +887,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
                     $addon_total_today_db = $addon_setupfee + $addon_recurring;
                     $addon_recurring_db = $addon_recurring;
-                    $addon_total_today = $addon_total_today_db * $qty;
+                    $addon_total_today = $addon_total_today_db * 1;
 
                     if ($CONFIG['TaxInclusiveDeduct']) {
                         $addon_total_today_db = round($addon_total_today_db / $excltaxrate, 2);
@@ -903,7 +903,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                             $recurringdiscount = $promocalc['recurringdiscount'];
                             $addon_total_today_db -= $onetimediscount;
                             $addon_recurring_db -= $recurringdiscount;
-                            $cart_discount += $onetimediscount * $qty;
+                            $cart_discount += $onetimediscount * 1;
                         }
                     }
 

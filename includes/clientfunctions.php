@@ -54,6 +54,7 @@ function getClientsDetails($userid = "", $contactid = "") {
 	$details['countryname'] = $countries[$data['country']];
 	$details['phonecc'] = $countrycallingcodes[$data['country']];
 	$details['phonenumber'] = $data['phonenumber'];
+	$details['mobilenumber'] = $data['mobilenumber'];
 	$details['notes'] = $data['notes'];
 	$details['password'] = $data['password'];
 	$details['twofaenabled'] = ($data['authmodule'] ? true : false);

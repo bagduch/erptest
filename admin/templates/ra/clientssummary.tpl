@@ -212,9 +212,27 @@ $(document).ready(function(){
 
 <div class="tablebg">
 <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-<tr><th width="20"><input type="checkbox" id="prodsall" /></th><th>{$_ADMINLANG.fields.id}</th><th>{$_ADMINLANG.fields.product}</th><th>{$_ADMINLANG.fields.amount}</th><th>{$_ADMINLANG.fields.billingcycle}</th><th>{$_ADMINLANG.fields.signupdate}</th><th>{$_ADMINLANG.fields.nextduedate}</th><th>{$_ADMINLANG.fields.status}</th><th width="20"></th></tr>
-{foreach key=num from=$productsummary item=product}
-<tr><td><input type="checkbox" name="selproducts[]" value="{$product.id}" class="checkprods" /></td><td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}">{$product.idshort}</a></td><td style="padding-left:5px;padding-right:5px">{$product.dpackage} - <a href="http://{$product.domain}" target="_blank">{$product.domain}</a></td><td>{$product.amount}</td><td>{$product.dbillingcycle}</td><td>{$product.regdate}</td><td>{$product.nextduedate}</td><td>{$product.domainstatus}</td><td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td></tr>
+<tr>
+	<th width="20"><input type="checkbox" id="prodsall" /></th>
+	<th>{$_ADMINLANG.fields.id}</th>
+	<th>{$_ADMINLANG.fields.product}</th>
+	<th>{$_ADMINLANG.fields.amount}</th>
+	<th>{$_ADMINLANG.fields.billingcycle}</th>
+	<th>{$_ADMINLANG.fields.signupdate}</th>
+	<th>{$_ADMINLANG.fields.nextduedate}</th>
+	<th>{$_ADMINLANG.fields.status}</th>
+	<th width="20"></th>
+</tr>
+{foreach key=num from=$servicessummary item=product}
+<tr>
+	<td><input type="checkbox" name="selproducts[]" value="{$product.id}" class="checkprods" /></td>
+	<td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}">{$product.idshort}</a></td>
+	<td style="padding-left:5px;padding-right:5px">{$product.dpackage} - <a href="http://{$product.domain}" target="_blank">{$product.domain}</a></td><td>{$product.amount}</td>
+	<td>{$product.dbillingcycle}</td><td>{$product.regdate}</td>
+	<td>{$product.nextduedate}</td>
+	<td>{$product.domainstatus}</td>
+	<td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+</tr>
 {foreachelse}
 <tr><td colspan="9">{$_ADMINLANG.global.norecordsfound}</td></tr>
 {/foreach}
@@ -230,9 +248,29 @@ $(document).ready(function(){
 <tr><td align="center">
 
 <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-<tr><th width="20"><input type="checkbox" id="addonsall" /></th><th>ID</th><th>{$_ADMINLANG.addons.name}</th><th>{$_ADMINLANG.fields.amount}</th><th>{$_ADMINLANG.fields.billingcycle}</th><th>{$_ADMINLANG.fields.signupdate}</th><th>{$_ADMINLANG.fields.nextduedate}</th><th>{$_ADMINLANG.fields.status}</th><th width="20"></th></tr>
-{foreach key=num from=$addonsummary item=addon}
-<tr><td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td><td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td><td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br>{$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td><td>{$addon.amount}</td><td>{$addon.dbillingcycle}</td><td>{$addon.regdate}</td><td>{$addon.nextduedate}</td><td>{$addon.status}</td><td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td></tr>
+<tr>
+	<th width="20"><input type="checkbox" id="addonsall" /></th>
+	<th>ID</th>
+	<th>{$_ADMINLANG.addons.name}</th>
+	<th>{$_ADMINLANG.fields.amount}</th>
+	<th>{$_ADMINLANG.fields.billingcycle}</th>
+	<th>{$_ADMINLANG.fields.signupdate}</th>
+	<th>{$_ADMINLANG.fields.nextduedate}</th>
+	<th>{$_ADMINLANG.fields.status}</th>
+	<th width="20"></th>
+</tr>
+{foreach key=num from=$productssummary item=addon}
+<tr>
+	<td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
+	<td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td>
+	<td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br>{$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td>
+	<td>{$addon.amount}</td>
+	<td>{$addon.dbillingcycle}</td>
+	<td>{$addon.regdate}</td>
+	<td>{$addon.nextduedate}</td>
+	<td>{$addon.status}</td>
+	<td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+</tr>
 {foreachelse}
 <tr><td colspan="9">{$_ADMINLANG.global.norecordsfound}</td></tr>
 {/foreach}
@@ -242,7 +280,6 @@ $(document).ready(function(){
 </td></tr></table>
 
 <img src="images/spacer.gif" width="1" height="4" /><br />
-
 
 </div>
 

@@ -100,7 +100,7 @@ class RA_Carts {
                 }
             }
 
-            redir("a=confproduct&i=" . $newprodnum . $ajax);
+            redir("a=confservice&i=" . $newprodnum . $ajax);
 
 
             $this->data['template'] = $templatefile;
@@ -109,8 +109,201 @@ class RA_Carts {
         }
     }
 
-    public function ConfProduct() {
-        
+    public function ConfService() {
+
+        $templatefile = "configureservice";
+        $i = (int) $_REQUEST['i'];
+
+
+        if (!is_array($_SESSION['cart']['products'][$i])) {
+            if ($ajax) {
+                exit($_LANG['invoiceserror']);
+            }
+
+            redir();
+            exit();
+        }
+
+        $newproduct = $_SESSION['cart']['newproduct'];
+        unset($_SESSION['cart']['newproduct']);
+        $pid = $_SESSION['cart']['products'][$i]['pid'];
+        $productinfo = $orderfrm->setPid($pid);
+
+        if (!$productinfo) {
+            redir();
+        }
+
+        $_SESSION['cart']['cartsummarypid'] = $productinfo['pid'];
+        $pid = $productinfo['pid'];
+
+        if ($configure) {
+            global $errormessage;
+
+            $errormessage = "";
+            $result = select_query("tblservices", "type", array("id" => $pid));
+            $data = mysql_fetch_array($result);
+            $producttype = $data['type'];
+
+            if ($configoption) {
+                foreach ($configoption as $opid => $opid2) {
+                    $result = select_query("tblproductconfigoptions", "", array("id" => $opid));
+                    $data = mysql_fetch_array($result);
+                    $optionname = $data['optionname'];
+                    $optiontype = $data['optiontype'];
+                    $qtyminimum = $data['qtyminimum'];
+                    $qtymaximum = $data['qtymaximum'];
+
+                    if ($optiontype == 4) {
+                        $opid2 = (int) $opid2;
+
+                        if ($opid2 < 0) {
+                            $opid2 = 0;
+                        }
+
+
+                        if (($qtyminimum || $qtymaximum) && ($opid2 < $qtyminimum || $qtymaximum < $opid2)) {
+                            if (strpos($optionname, "|")) {
+                                $optionname = explode("|", $optionname);
+                                $optionname = trim($optionname[1]);
+                            }
+
+                            $errormessage .= "<li>" . sprintf($_LANG['configoptionqtyminmax'], $optionname, $qtyminimum, $qtymaximum);
+                            $opid2 = 0;
+                        }
+                    }
+
+                    $configoptionsarray[sanitize($opid)] = sanitize($opid2);
+                }
+            }
+
+            $addonsarray = (is_array($addons) ? array_keys($addons) : "");
+            $errormessage .= bundlesValidateProductConfig($i, $billingcycle, $configoptionsarray, $addonsarray);
+            $_SESSION['cart']['products'][$i]['billingcycle'] = $billingcycle;
+            $_SESSION['cart']['products'][$i]['server'] = $serverarray;
+            $_SESSION['cart']['products'][$i]['configoptions'] = $configoptionsarray;
+            $_SESSION['cart']['products'][$i]['customfields'] = $customfield;
+            $_SESSION['cart']['products'][$i]['addons'] = $addonsarray;
+
+            if ($calctotal) {
+                $i = $ra->get_req_var("i");
+                $productinfo = $orderfrm->setPid($_SESSION['cart']['products'][$i]['pid']);
+                $ordersummarytemp = "/templates/orderforms/" . $orderfrm->getTemplate() . "/ordersummary.tpl";
+
+
+                if (file_exists(ROOTDIR . $ordersummarytemp)) {
+                    $carttotals = calcCartTotals(false, true);
+
+//               echo "<pre>",print_r($carttotals,1),"</pre>";
+                    $templatevars = array("producttotals" => $carttotals['products'][$i], "carttotals" => $carttotals);
+                    echo processSingleTemplate($ordersummarytemp, $templatevars);
+                }
+
+                exit();
+            }
+
+
+            if ((!$ajax && !$nocyclerefresh) && $previousbillingcycle != $billingcycle) {
+                redir("a=confproduct&i=" . $i);
+                exit();
+            }
+
+            $validate = new RA_Validate();
+            $validate->validateCustomFields("product", $pid, true);
+            run_validate_hook($validate, "ShoppingCartValidateProductUpdate", $_REQUEST);
+
+            if ($validate->hasErrors()) {
+                $errormessage .= $validate->getHTMLErrorOutput();
+            }
+
+
+            if ($errormessage) {
+                if ($ajax) {
+                    exit($errormessage);
+                }
+
+                $smartyvalues['errormessage'] = $errormessage;
+            } else {
+                unset($_SESSION['cart']['products'][$i]['noconfig']);
+                $_SESSION['cart']['lastconfigured'] = array("type" => "product", "i" => $i);
+
+                if ($ajax) {
+                    exit();
+                }
+
+                redir("a=confdomains");
+                exit();
+            }
+        }
+
+        $billingcycle = $_SESSION['cart']['products'][$i]['billingcycle'];
+        $server = $_SESSION['cart']['products'][$i]['server'];
+        $customfields = $_SESSION['cart']['products'][$i]['customfields'];
+        $configoptions = $_SESSION['cart']['products'][$i]['configoptions'];
+        $addons = $_SESSION['cart']['products'][$i]['addons'];
+        $domain = $_SESSION['cart']['products'][$i]['domain'];
+        $noconfig = $_SESSION['cart']['products'][$i]['noconfig'];
+        $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
+        $pricing = getPricingInfo($pid);
+        $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
+        $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
+
+        $addonsarray = getAddons($pid, $addons);
+        $recurringcycles = 0;
+
+        if ($pricing['type'] == "recurring") {
+            if (0 <= $pricing['rawpricing']['monthly']) {
+                ++$recurringcycles;
+            }
+
+
+            if (0 <= $pricing['rawpricing']['quarterly']) {
+                ++$recurringcycles;
+            }
+
+
+            if (0 <= $pricing['rawpricing']['semiannually']) {
+                ++$recurringcycles;
+            }
+
+
+            if (0 <= $pricing['rawpricing']['annually']) {
+                ++$recurringcycles;
+            }
+
+
+            if (0 <= $pricing['rawpricing']['biennially']) {
+                ++$recurringcycles;
+            }
+        }
+
+
+        if ((((($newproduct && $productinfo['type'] != "server") && ($pricing['type'] != "recurring" || $recurringcycles <= 1)) && !count($configurableoptions)) && !count($customfields)) && !count($addonsarray)) {
+            unset($_SESSION['cart']['products'][$i]['noconfig']);
+            $_SESSION['cart']['lastconfigured'] = array("type" => "product", "i" => $i);
+
+            if ($ajax) {
+                exit();
+            }
+
+            redir("a=confdomains");
+            exit();
+        }
+
+        $serverarray = array("hostname" => $server['hostname'], "ns1prefix" => $server['ns1prefix'], "ns2prefix" => $server['ns2prefix'], "rootpw" => $server['rootpw']);
+        $smartyvalues['editconfig'] = true;
+        $smartyvalues['firstconfig'] = ($noconfig ? true : false);
+        $smartyvalues['i'] = $i;
+        $smartyvalues['productinfo'] = $productinfo;
+        $smartyvalues['pricing'] = $pricing;
+        $smartyvalues['billingcycle'] = $billingcycle;
+        $smartyvalues['server'] = $serverarray;
+        $smartyvalues['configurableoptions'] = $configurableoptions;
+        $smartyvalues['addons'] = $addonsarray;
+        $smartyvalues['customfields'] = $customfields;
+        $smartyvalues['domain'] = $domain;
+        $this->data['template'] = $templatefile;
+        $this->data['smarty'] = $smartyvalues;
+        return $this->data;
     }
 
     public function Viewcart() {

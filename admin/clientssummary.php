@@ -37,7 +37,7 @@ if ($action == "massaction") {
 		if ($selproducts) {
 			checkPermission("Delete Clients Products/Services");
 			foreach ($selproducts as $pid) {
-				delete_query("tblhosting", array("id" => $pid));
+				delete_query("tblclientsservices", array("id" => $pid));
 				delete_query("tblhostingaddons", array("hostingid" => $pid));
 				logActivity("Deleted Product ID: " . $pid . " - User ID: " . $userid, $userid);
 			}
@@ -75,7 +75,7 @@ if ($action == "massaction") {
 			checkPermission("Edit Clients Products/Services");
 			$targetnextduedate = toMySQLDate($nextduedate);
 			foreach ($selproducts as $serviceid) {
-				$data = get_query_vals("tblhosting", "packageid,domain,nextduedate,billingcycle,amount,paymentmethod", array("id" => $serviceid));
+				$data = get_query_vals("tblclientsservices", "packageid,domain,nextduedate,billingcycle,amount,paymentmethod", array("id" => $serviceid));
 				$existingpid = $data['packageid'];
 				$domain = $data['domain'];
 				$existingnextduedate = $data['nextduedate'];
@@ -115,7 +115,7 @@ if ($action == "massaction") {
 					$paymentmethod = $data['paymentmethod'];
 				}
 
-				$domain = get_query_val("tblhosting", "domain", array("id" => $serviceid));
+				$domain = get_query_val("tblclientsservices", "domain", array("id" => $serviceid));
 
 				if ($recurringamount) {
 					$price = $recurringamount;
@@ -189,7 +189,7 @@ if ($action == "massaction") {
 		if ($selproducts && count($updateqry)) {
 			checkPermission("Edit Clients Products/Services");
 			foreach ($selproducts as $pid) {
-				update_query("tblhosting", $updateqry, array("id" => $pid));
+				update_query("tblclientsservices", $updateqry, array("id" => $pid));
 			}
 
 			logActivity("Mass Updated Products IDs: " . implode(",", $selproducts) . (" - User ID: " . $userid), $userid);
@@ -700,7 +700,7 @@ while ($data = mysql_fetch_array($result)) {
 $templatevars->messages .= "</select>";
 $recordsfound = "";
 $productsummary = array();
-$result = select_query("tblhosting", "tblhosting.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
+$result = select_query("tblclientsservices", "tblhosting.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 while ($data = mysql_fetch_array($result)) {
 	$id = $data['id'];
