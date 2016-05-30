@@ -470,7 +470,7 @@ if ($action == "getallservices") {
 		$predefinedaddons[$addon_id] = $addon_name;
 	}
 
-	$result = select_query("tblhostingaddons", "tblhostingaddons.*,tblhostingaddons.id AS addonid,tblhostingaddons.addonid AS addonid2,tblhostingaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "", "tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
+	$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS addonid,tblserviceaddons.addonid AS addonid2,tblserviceaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
 
 	while ($data = mysql_fetch_array($result)) {
 		$service_id = $data['id'];
@@ -1874,7 +1874,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 	if ($pauserid && checkPermission("List Services", true)) {
 		$currency = getCurrency($pauserid);
 		$smartyvalues['relatedservices'] = array();
-		$totalitems = get_query_val("tblhosting", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblhostingaddons", "COUNT(tblhostingaddons.id)", array("tblhosting.userid" => $pauserid), "", "", "", "tblhosting ON tblhosting.id=tblhostingaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
+		$totalitems = get_query_val("tblhosting", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblserviceaddons", "COUNT(tblserviceaddons.id)", array("tblhosting.userid" => $pauserid), "", "", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
 		$lefttoselect = 10;
 		$result = select_query("tblhosting", "tblhosting.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblhosting.packageid");
 
@@ -1922,7 +1922,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 		$lefttoselect = 10 - count($smartyvalues['relatedservices']);
 
 		if (0 < $lefttoselect) {
-			$result = select_query("tblhostingaddons", "tblhostingaddons.*,tblhostingaddons.id AS addonid,tblhostingaddons.addonid AS addonid2,tblhostingaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "0," . $lefttoselect, "tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
+			$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS addonid,tblserviceaddons.addonid AS addonid2,tblserviceaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "0," . $lefttoselect, "tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$service_id = $data['id'];

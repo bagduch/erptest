@@ -37,7 +37,7 @@ function recalcsummary() {
 
 function prodconfrecalcsummary() {
     jQuery("#cartloader").show();
-    jQuery.post("cart.php", 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#orderfrm").serialize(),
+    jQuery.post("cart.php", 'ajax=1&a=confservice&calctotal=true&'+jQuery("#orderfrm").serialize(),
     function(data){
         jQuery.post("cart.php", 'a=view&cartsummary=1&ajax=1',
         function(data){
@@ -49,7 +49,7 @@ function prodconfrecalcsummary() {
 
 function prodconfcomplete() {
     jQuery("#prodconfloading").slideDown();
-    jQuery.post("cart.php", 'a=confproduct&ajax=1&'+jQuery("#orderfrm").serialize(),
+    jQuery.post("cart.php", 'a=confservice&ajax=1&'+jQuery("#orderfrm").serialize(),
     function(data){
         if (data) {
             jQuery("#configproducterror").html(data);

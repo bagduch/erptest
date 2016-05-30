@@ -37,8 +37,8 @@ if ($action == "massaction") {
 		if ($selproducts) {
 			checkPermission("Delete Clients Products/Services");
 			foreach ($selproducts as $pid) {
-				delete_query("tblclientsservices", array("id" => $pid));
-				delete_query("tblhostingaddons", array("hostingid" => $pid));
+				delete_query("tblhosting", array("id" => $pid));
+				delete_query("tblserviceaddons", array("hostingid" => $pid));
 				logActivity("Deleted Product ID: " . $pid . " - User ID: " . $userid, $userid);
 			}
 		}
@@ -47,7 +47,7 @@ if ($action == "massaction") {
 		if ($seladdons) {
 			checkPermission("Delete Clients Products/Services");
 			foreach ($seladdons as $aid) {
-				delete_query("tblhostingaddons", array("id" => $aid));
+				delete_query("tblserviceaddons", array("id" => $aid));
 				logActivity("Deleted Addon ID: " . $aid . " - User ID: " . $userid, $userid);
 			}
 		}
@@ -75,7 +75,7 @@ if ($action == "massaction") {
 			checkPermission("Edit Clients Products/Services");
 			$targetnextduedate = toMySQLDate($nextduedate);
 			foreach ($selproducts as $serviceid) {
-				$data = get_query_vals("tblclientsservices", "packageid,domain,nextduedate,billingcycle,amount,paymentmethod", array("id" => $serviceid));
+				$data = get_query_vals("tblhosting", "packageid,domain,nextduedate,billingcycle,amount,paymentmethod", array("id" => $serviceid));
 				$existingpid = $data['packageid'];
 				$domain = $data['domain'];
 				$existingnextduedate = $data['nextduedate'];
@@ -103,7 +103,7 @@ if ($action == "massaction") {
 			}
 
 			foreach ($seladdons as $aid) {
-				$data = get_query_vals("tblhostingaddons", "hostingid,addonid,name,nextduedate,billingcycle,recurring,paymentmethod", array("id" => $aid));
+				$data = get_query_vals("tblserviceaddons", "hostingid,addonid,name,nextduedate,billingcycle,recurring,paymentmethod", array("id" => $aid));
 				$serviceid = $data['hostingid'];
 				$addonid = $data['addonid'];
 				$name = $data['name'];
@@ -115,7 +115,7 @@ if ($action == "massaction") {
 					$paymentmethod = $data['paymentmethod'];
 				}
 
-				$domain = get_query_val("tblclientsservices", "domain", array("id" => $serviceid));
+				$domain = get_query_val("tblhosting", "domain", array("id" => $serviceid));
 
 				if ($recurringamount) {
 					$price = $recurringamount;
@@ -189,7 +189,7 @@ if ($action == "massaction") {
 		if ($selproducts && count($updateqry)) {
 			checkPermission("Edit Clients Products/Services");
 			foreach ($selproducts as $pid) {
-				update_query("tblclientsservices", $updateqry, array("id" => $pid));
+				update_query("tblhosting", $updateqry, array("id" => $pid));
 			}
 
 			logActivity("Mass Updated Products IDs: " . implode(",", $selproducts) . (" - User ID: " . $userid), $userid);
@@ -216,7 +216,7 @@ if ($action == "massaction") {
 			if (count($updateqry)) {
 				checkPermission("Edit Clients Products/Services");
 				foreach ($seladdons as $aid) {
-					update_query("tblhostingaddons", $updateqry, array("id" => $aid));
+					update_query("tblserviceaddons", $updateqry, array("id" => $aid));
 				}
 
 				logActivity("Mass Updated Addons IDs: " . implode(",", $seladdons) . (" - User ID: " . $userid), $userid);
@@ -700,7 +700,7 @@ while ($data = mysql_fetch_array($result)) {
 $templatevars->messages .= "</select>";
 $recordsfound = "";
 $productsummary = array();
-$result = select_query("tblclientsservices", "tblhosting.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
+$result = select_query("tblhosting", "tblhosting.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 while ($data = mysql_fetch_array($result)) {
 	$id = $data['id'];
@@ -740,7 +740,7 @@ while ($data = mysql_fetch_array($result)) {
 	$predefinedaddons[$addon_id] = $addon_name;
 }
 
-$result = select_query("tblhostingaddons", "tblhostingaddons.*,tblhostingaddons.id AS aid,tblhostingaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
+$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblhosting.id AS hostingid,tblhosting.domain,tblservices.name", array("tblhosting.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
 $addonsummary = array();
 
 while ($data = mysql_fetch_array($result)) {

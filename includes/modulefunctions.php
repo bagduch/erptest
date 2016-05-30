@@ -304,7 +304,7 @@ function ServerTerminateAccount($func_id) {
 		if ($result == "success") {
 			logActivity("Module Terminate Successful - Service ID: " . $func_id, $params['clientsdetails']['userid']);
 			update_query("tblhosting", array("domainstatus" => "Terminated"), array("id" => $func_id));
-			update_query("tblhostingaddons", array("status" => "Terminated"), array("hostingid" => $func_id));
+			update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $func_id));
 			run_hook("AfterModuleTerminate", array("params" => $params));
 			return $result;
 		}

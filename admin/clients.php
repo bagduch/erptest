@@ -172,7 +172,15 @@ else {
 	foreach ($clientlist as $client) {
 		$linkopen = "<a href=\"clientssummary.php?userid=" . $client['id'] . "\"" . ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "") . ">";
 		$linkclose = "</a>";
-		$tbl->addRow(array("<input type=\"checkbox\" name=\"selectedclients[]\" value=\"" . $client['id'] . "\" class=\"checkall\">", $linkopen . $client['id'] . $linkclose, $linkopen . $client['firstname'] . $linkclose, $linkopen . $client['lastname'] . $linkclose, $client['companyname'], "<a href=\"mailto:" . $client['email'] . "\">" . $client['email'] . "</a>", $client['services'] . " (" . $client['totalservices'] . ")", "prods: ".$client['products'],  $client['datecreated'], "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
+		$tbl->addRow(
+			array(
+				"<input type=\"checkbox\" name=\"selectedclients[]\" value=\"" . $client['id'] . "\" class=\"checkall\">", 
+				$linkopen . $client['id'] . $linkclose, 
+				$linkopen . $client['firstname'] . $linkclose, $linkopen . $client['lastname'] . $linkclose, $client['companyname'], 
+				"<a href=\"mailto:" . $client['email'] . "\">" . $client['email'] . "</a>", 
+				$client['services'] . " (" . $client['totalservices'] . ")", 
+				"prods: ".$client['products'],  $client['datecreated'], 
+				"<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
 	}
 
 	echo $tbl->output();

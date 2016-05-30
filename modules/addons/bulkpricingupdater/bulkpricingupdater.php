@@ -154,10 +154,10 @@ function bulkpricingupdater_output($vars) {
 		echo "<li>";
 
 		if ($prodfirstletter == "A") {
-			$query = "UPDATE tblhostingaddons,tblhosting SET tblhostingaddons.recurring='" . $newprice . "' WHERE tblhostingaddons.addonid='" . $prodrest . "' AND tblhostingaddons.status IN (" . $statusmatches . ") AND tblhostingaddons.billingcycle IN (" . $billingcyclematches . ") AND tblhosting.id=tblhostingaddons.hostingid AND tblhosting.userid IN (SELECT id FROM tblclients WHERE currency='" . $currid . "')";
+			$query = "UPDATE tblserviceaddons,tblhosting SET tblserviceaddons.recurring='" . $newprice . "' WHERE tblserviceaddons.addonid='" . $prodrest . "' AND tblserviceaddons.status IN (" . $statusmatches . ") AND tblserviceaddons.billingcycle IN (" . $billingcyclematches . ") AND tblhosting.id=tblserviceaddons.hostingid AND tblhosting.userid IN (SELECT id FROM tblclients WHERE currency='" . $currid . "')";
 
 			if ($currentprice) {
-				$query .= " AND tblhostingaddons.recurring='" . $currentprice . "'";
+				$query .= " AND tblserviceaddons.recurring='" . $currentprice . "'";
 			}
 
 			echo "Updated Addon ID " . $prodrest;

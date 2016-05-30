@@ -333,7 +333,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 
 		if ($serverresult == "success") {
 			update_query("tblhosting", array("domainstatus" => "Cancelled"), array("id" => $id));
-			update_query("tblhostingaddons", array("status" => "Cancelled"), array("hostingid" => $id));
+			update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $id));
 			run_hook("AddonCancelled", array("id" => "all", "userid" => $userid, "serviceid" => $id, "addonid" => ""));
 			$cron->emailLogSub("SUCCESS: " . $loginfo, true);
 			++$i;
@@ -397,7 +397,7 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
 		}
 	}
 
-	$query3 = "SELECT tblhostingaddons.*,tblhosting.userid,tblhosting.packageid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.groupid FROM tblhostingaddons INNER JOIN tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid WHERE tblhostingaddons.status='Active' AND tblhostingaddons.billingcycle!='Free' AND tblhostingaddons.billingcycle!='Free Account' AND tblhostingaddons.billingcycle!='One Time' AND tblhostingaddons.nextduedate<='" . $suspenddate . "' AND tblhosting.overideautosuspend!='on' AND tblhosting.overideautosuspend!='1' ORDER BY tblhostingaddons.name ASC";
+	$query3 = "SELECT tblserviceaddons.*,tblhosting.userid,tblhosting.packageid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.groupid FROM tblserviceaddons INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid WHERE tblserviceaddons.status='Active' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.billingcycle!='One Time' AND tblserviceaddons.nextduedate<='" . $suspenddate . "' AND tblhosting.overideautosuspend!='on' AND tblhosting.overideautosuspend!='1' ORDER BY tblserviceaddons.name ASC";
 	$result3 = full_query($query3);
 
 	while ($data = mysql_fetch_array($result3)) {
@@ -417,7 +417,7 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
 		$susptermexempt = $data2['susptermexempt'];
 
 		if (!$susptermexempt) {
-			update_query("tblhostingaddons", array("status" => "Suspended"), array("id" => $id));
+			update_query("tblserviceaddons", array("status" => "Suspended"), array("id" => $id));
 			$loginfo = $firstname . " " . $lastname . " - " . $name . " (Service ID: " . $serviceid . " - Addon ID: " . $id . ")";
 			$cron->logActivity("SUCCESS: " . $loginfo, true);
 			run_hook("AddonSuspended", array("id" => $id, "userid" => $userid, "serviceid" => $serviceid, "addonid" => $addonid));
@@ -513,7 +513,7 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
 		}
 	}
 
-	$query = "UPDATE tblhostingaddons SET status='Terminated' WHERE (status='Active' OR status='Suspended') AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND nextduedate!='0000-00-00' AND nextduedate<='" . $terminatedate . "'";
+	$query = "UPDATE tblserviceaddons SET status='Terminated' WHERE (status='Active' OR status='Suspended') AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND nextduedate!='0000-00-00' AND nextduedate<='" . $terminatedate . "'";
 	$result = full_query($query);
 	$cron->logActivity("Processed " . $i . " Terminations", true);
 	$cron->emailLog($i . " Services Terminated");
@@ -730,7 +730,7 @@ if ($cron->isScheduled("emailmarketing")) {
 
 					if (count($prodexcludeaid)) {
 						if (implode($prodexcludeaid)) {
-							$criteria[] = "(SELECT COUNT(*) FROM tblhostingaddons WHERE tblhostingaddons.hostingid=tblhosting.id AND tblhostingaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblhostingaddons.status='Active')=0";
+							$criteria[] = "(SELECT COUNT(*) FROM tblserviceaddons WHERE tblserviceaddons.hostingid=tblhosting.id AND tblserviceaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblserviceaddons.status='Active')=0";
 						}
 					}
 
@@ -745,7 +745,7 @@ if ($cron->isScheduled("emailmarketing")) {
 
 				if (count($filteraids)) {
 					$criteria = array();
-					$query1 = "SELECT hostingid FROM tblhostingaddons WHERE ";
+					$query1 = "SELECT hostingid FROM tblserviceaddons WHERE ";
 					$criteria[] = "addonid IN (" . db_build_in_array($filteraids) . ")";
 
 					if (0 < $prodnumdays) {
@@ -767,20 +767,20 @@ if ($cron->isScheduled("emailmarketing")) {
 
 					if (count($prodexcludepid)) {
 						if (implode($prodexcludepid)) {
-							$criteria[] = "(SELECT COUNT(*) FROM tblhosting h2 WHERE h2.userid=(SELECT userid FROM tblhosting WHERE tblhosting.id=tblhostingaddons.hostingid) AND h2.packageid IN (" . db_build_in_array($prodexcludepid) . ") AND h2.domainstatus='Active')=0";
+							$criteria[] = "(SELECT COUNT(*) FROM tblhosting h2 WHERE h2.userid=(SELECT userid FROM tblhosting WHERE tblhosting.id=tblserviceaddons.hostingid) AND h2.packageid IN (" . db_build_in_array($prodexcludepid) . ") AND h2.domainstatus='Active')=0";
 						}
 					}
 
 
 					if (count($prodexcludeaid)) {
 						if (implode($prodexcludeaid)) {
-							$criteria[] = "(SELECT COUNT(*) FROM tblhostingaddons h2 WHERE h2.hostingid=tblhostingaddons.hostingid AND tblhostingaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblhostingaddons.status='Active')=0";
+							$criteria[] = "(SELECT COUNT(*) FROM tblserviceaddons h2 WHERE h2.hostingid=tblserviceaddons.hostingid AND tblserviceaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblserviceaddons.status='Active')=0";
 						}
 					}
 
 
 					if ($marketing) {
-						$criteria[] = "(SELECT COUNT(*) FROM tblclients h3 WHERE h3.id=(SELECT userid FROM tblhosting WHERE tblhosting.id=tblhostingaddons.hostingid) AND h3.emailoptout = '0')=1";
+						$criteria[] = "(SELECT COUNT(*) FROM tblclients h3 WHERE h3.id=(SELECT userid FROM tblhosting WHERE tblhosting.id=tblserviceaddons.hostingid) AND h3.emailoptout = '0')=1";
 					}
 
 					$query1 .= implode(" AND ", $criteria);
@@ -999,7 +999,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 
 	while ($data = mysql_fetch_array($result)) {
 		$userid = $data['id'];
-		$result2 = full_query("SELECT (SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id AND domainstatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblhostingaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
+		$result2 = full_query("SELECT (SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id AND domainstatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
 		$data = mysql_fetch_array($result2);
 		$totalactivecount = $data[0];
 
@@ -1015,7 +1015,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 		update_query("tblclients", array("status" => "Active"), array("id" => $userid));
 	}
 
-	$result = full_query("SELECT tblhosting.userid FROM tblhostingaddons INNER JOIN tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblhostingaddons.status IN ('Active','Suspended')");
+	$result = full_query("SELECT tblhosting.userid FROM tblserviceaddons INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblserviceaddons.status IN ('Active','Suspended')");
 
 	while ($data = mysql_fetch_array($result)) {
 		$userid = $data['userid'];

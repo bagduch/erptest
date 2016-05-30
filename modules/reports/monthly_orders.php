@@ -45,7 +45,7 @@ while($data = mysql_fetch_array($result)) {
     $pid = $data["id"];
     $prodname = $data["name"];
 
-    $result2 = select_query("tblhostingaddons","COUNT(*),SUM(tblhostingaddons.setupfee+tblhostingaddons.recurring)","tblhostingaddons.addonid='$pid' AND tblhostingaddons.status='Active' AND tblhostingaddons.regdate LIKE '$datefilter' AND tblclients.currency='$currencyid'","","","","tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid");
+    $result2 = select_query("tblserviceaddons","COUNT(*),SUM(tblserviceaddons.setupfee+tblserviceaddons.recurring)","tblserviceaddons.addonid='$pid' AND tblserviceaddons.status='Active' AND tblserviceaddons.regdate LIKE '$datefilter' AND tblclients.currency='$currencyid'","","","","tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid");
     $data = mysql_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];

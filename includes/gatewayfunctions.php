@@ -362,7 +362,7 @@ function getRecurringBillingValues($invoiceid) {
 		$recurringamount += $prodamount;
 	}
 
-	$query = "SELECT tblhostingaddons.recurring,tblhostingaddons.tax FROM tblinvoiceitems INNER JOIN tblhostingaddons ON tblhostingaddons.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Addon' AND tblhostingaddons.billingcycle='" . db_escape_string($billingcycle) . "'";
+	$query = "SELECT tblserviceaddons.recurring,tblserviceaddons.tax FROM tblinvoiceitems INNER JOIN tblserviceaddons ON tblserviceaddons.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Addon' AND tblserviceaddons.billingcycle='" . db_escape_string($billingcycle) . "'";
 	$result = full_query($query);
 
 	while ($data = mysql_fetch_array($result)) {

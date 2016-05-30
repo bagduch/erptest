@@ -234,7 +234,7 @@ class RA_Orders extends RA_TableModel
 		delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
 		delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
 		delete_query("tblhosting", array("orderid" => $orderid));
-		delete_query("tblhostingaddons", array("orderid" => $orderid));
+		delete_query("tblserviceaddons", array("orderid" => $orderid));
 		delete_query("tbldomains", array("orderid" => $orderid));
 		delete_query("tblupgrades", array("orderid" => $orderid));
 		delete_query("tblorders", array("id" => $orderid));
@@ -332,7 +332,7 @@ class RA_Orders extends RA_TableModel
 			update_query("tblhosting", array("domainstatus" => $status), array("orderid" => $orderid));
 		}
 
-		update_query("tblhostingaddons", array("status" => $status), array("orderid" => $orderid));
+		update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
 
 		if ($status == "Pending") {
 			$result = select_query("tbldomains", "id,type", array("orderid" => $orderid));
@@ -429,7 +429,7 @@ class RA_Orders extends RA_TableModel
 			$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 		}
 
-		$result = select_query("tblhostingaddons", "", array("orderid" => $orderid));
+		$result = select_query("tblserviceaddons", "", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
 			$aid = $data['id'];

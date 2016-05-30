@@ -261,10 +261,6 @@ if ($action == "save") {
         "recurringcycles" => $recurringcycles,
         "autoterminatedays" => $autoterminatedays,
         "autoterminateemail" => $autoterminateemail,
-        "upgradepackages" => serialize($upgradepackages),
-        "configoptionsupgrade" => $configoptionsupgrade,
-        "upgradechargefullcycle" => $upgradechargefullcycle,
-        "upgradeemail" => $upgradeemail,
         "tax" => $tax,
         "affiliatepaytype" => $affiliatepaytype,
         "affiliatepayamount" => $affiliatepayamount,
@@ -730,11 +726,8 @@ if ($action == "") {
         $autoterminatedays = $data['autoterminatedays'];
         $autoterminateemail = $data['autoterminateemail'];
         $tax = $data['tax'];
-        $upgradepackages = $data['upgradepackages'];
         $configoptionsupgrade = $data['configoptionsupgrade'];
         $billingcycleupgrade = $data['billingcycleupgrade'];
-        $upgradechargefullcycle = $data['upgradechargefullcycle'];
-        $upgradeemail = $data['upgradeemail'];
         $overagesenabled = $data['overagesenabled'];
         $overagesdisklimit = $data['overagesdisklimit'];
         $overagesbwlimit = $data['overagesbwlimit'];
@@ -748,7 +741,6 @@ if ($action == "") {
         $freedomainpaymentterms = explode(",", $freedomainpaymentterms);
         $freedomaintlds = explode(",", $freedomaintlds);
         $overagesenabled = explode(",", $overagesenabled);
-        $upgradepackages = unserialize($upgradepackages);
         $downloads = unserialize($downloads);
         $order = $data['order'];
         echo "<script type=\"text/javascript\" src=\"../includes/jscript/jquerylq.js\"></script>
@@ -798,7 +790,7 @@ $(\"#showadddownloadcat\").click(
         }
 
         echo $infobox;
-        echo $aInt->Tabs(array($aInt->lang("services", "tabsdetails"), $aInt->lang("global", "pricing"), $aInt->lang("services", "tabsmodulesettings"), $aInt->lang("setup", "configoptions"), $aInt->lang("services", "tabsupgrades"), $aInt->lang("setup", "other")));
+        echo $aInt->Tabs(array($aInt->lang("services", "tabsdetails"), $aInt->lang("global", "pricing"), $aInt->lang("services", "tabsmodulesettings"), $aInt->lang("setup", "configoptions"), $aInt->lang("setup", "other")));
         echo "
 <div id=\"tab0box\" class=\"tabbox\">
   <div id=\"tab_content\">

@@ -517,7 +517,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
 		if (substr($type, 0, 12) == "ProrataAddon") {
 			$newduedate = substr($type, 12);
-			update_query("tblhostingaddons", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
+			update_query("tblserviceaddons", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
 		}
 	}
 
@@ -659,7 +659,7 @@ function makeHostingPayment($func_domainid) {
 	}
 
 	AffiliatePayment("", $func_domainid);
-	$result = select_query("tblhostingaddons", "id,addonid", "hostingid=" . (int)$func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
+	$result = select_query("tblserviceaddons", "id,addonid", "hostingid=" . (int)$func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
 
 	while ($data = mysql_fetch_array($result)) {
 		$aid = $data['id'];
@@ -670,7 +670,7 @@ function makeHostingPayment($func_domainid) {
 		$welcomeemail = $data['welcomeemail'];
 
 		if ($autoactivate) {
-			update_query("tblhostingaddons", array("status" => "Active"), array("id" => $aid));
+			update_query("tblserviceaddons", array("status" => "Active"), array("id" => $aid));
 
 			if ($welcomeemail) {
 				$result = select_query("tblemailtemplates", "name", array("id" => $welcomeemail));
@@ -835,7 +835,7 @@ function makeDomainPayment($func_domainid, $type = "") {
 function makeAddonPayment($func_addonid) {
 	global $CONFIG;
 
-	$result = select_query("tblhostingaddons", "", array("id" => $func_addonid));
+	$result = select_query("tblserviceaddons", "", array("id" => $func_addonid));
 	$data = mysql_fetch_array($result);
 	$id = $data['id'];
 	$hostingid = $data['hostingid'];
@@ -865,7 +865,7 @@ function makeAddonPayment($func_addonid) {
 	}
 
 	$nextduedate = getInvoicePayUntilDate($nextduedate, $billingcycle, true);
-	update_query("tblhostingaddons", array("nextduedate" => $nextduedate), array("id" => $func_addonid));
+	update_query("tblserviceaddons", array("nextduedate" => $nextduedate), array("id" => $func_addonid));
 
 	if ($status == "Pending") {
 		$result = select_query("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
@@ -874,7 +874,7 @@ function makeAddonPayment($func_addonid) {
 		$welcomeemail = $data['welcomeemail'];
 
 		if ($autoactivate) {
-			update_query("tblhostingaddons", array("status" => "Active"), array("id" => $func_addonid));
+			update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
 
 			if ($welcomeemail) {
 				$result = select_query("tblemailtemplates", "name", array("id" => $welcomeemail));
@@ -889,7 +889,7 @@ function makeAddonPayment($func_addonid) {
 
 
 	if ($status == "Suspended") {
-		update_query("tblhostingaddons", array("status" => "Active"), array("id" => $func_addonid));
+		update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
 
 		if ($addonid) {
 			$result2 = select_query("tbladdons", "suspendproduct", array("id" => $addonid));

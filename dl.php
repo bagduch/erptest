@@ -148,13 +148,13 @@ else {
 
 
 				if ($serviceid) {
-					$where = array("tblhostingaddons.hostingid" => $serviceid, "tblhosting.userid" => $_SESSION['uid'], "tblhostingaddons.status" => "Active");
+					$where = array("tblserviceaddons.hostingid" => $serviceid, "tblhosting.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 				else {
-					$where = array("tblhosting.userid" => $_SESSION['uid'], "tblhostingaddons.status" => "Active");
+					$where = array("tblhosting.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 
-				$result = select_query("tblhostingaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblhostingaddons.addonid INNER JOIN tblhosting ON tblhosting.id=tblhostingaddons.hostingid");
+				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
 
 				while ($data = mysql_fetch_array($result)) {
 					$addondownloads = $data['downloads'];
@@ -220,13 +220,13 @@ else {
 					$result = select_query("tbladdons", "name", array("id" => $addonid));
 					$data = mysql_fetch_array($result);
 					$addonname = $data['name'];
-					$where = "tblhosting.userid='" . (int)$_SESSION['uid'] . "' AND tblhostingaddons.status='Active' AND (tblhostingaddons.name='" . mysql_real_escape_string($addonname) . "' OR tblhostingaddons.addonid='" . (int)$addonid . "')";
+					$where = "tblhosting.userid='" . (int)$_SESSION['uid'] . "' AND tblserviceaddons.status='Active' AND (tblserviceaddons.name='" . mysql_real_escape_string($addonname) . "' OR tblserviceaddons.addonid='" . (int)$addonid . "')";
 
 					if ($pid) {
 						$where .= " AND tblhosting.id='" . (int)$pid . "'";
 					}
 
-					$result = select_query("tblhostingaddons", "COUNT(*)", $where, "", "", "", "tblhosting ON tblhosting.id=tblhostingaddons.hostingid");
+					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
 					$data = mysql_fetch_array($result);
 					$supportpackageactive = $data[0];
 

@@ -250,7 +250,7 @@ if ($action == "save") {
 		if ($continuousinvoicegeneration == "on" && !$CONFIG['ContinuousInvoiceGeneration']) {
 			full_query("UPDATE tblhosting SET nextinvoicedate = nextduedate");
 			full_query("UPDATE tbldomains SET nextinvoicedate = nextduedate");
-			full_query("UPDATE tblhostingaddons SET nextinvoicedate = nextduedate");
+			full_query("UPDATE tblserviceaddons SET nextinvoicedate = nextduedate");
 		}
 
 

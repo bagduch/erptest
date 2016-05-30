@@ -14,7 +14,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblhostingaddons", "id,addonid,hostingid,status", array("id" => $id));
+$result = select_query("tblserviceaddons", "id,addonid,hostingid,status", array("id" => $id));
 $data = mysql_fetch_array($result);
 
 if (!$data['id']) {
@@ -76,7 +76,7 @@ if ($status && $status != $currentstatus) {
 
 
 if (0 < count($updateqry)) {
-	update_query("tblhostingaddons", $updateqry, array("id" => $id));
+	update_query("tblserviceaddons", $updateqry, array("id" => $id));
 	logActivity("Modified Addon - Addon ID: " . $id . " - Service ID: " . $serviceid);
 
 	if ($currentstatus != "Active" && $status == "Active") {

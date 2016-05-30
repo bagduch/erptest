@@ -128,7 +128,7 @@ function licensing_CreateAccount($params) {
 			}
 		}
 
-		insert_query( "tblhostingaddons", array( "orderid" => $orderid, "hostingid" => $params['serviceid'], "addonid" => $addonid, "setupfee" => $addonsetupfee, "recurring" => $addonrecurring, "billingcycle" => $addonbillingcycle, "tax" => $addontax, "status" => "Active", "regdate" => "now()", "nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate, "paymentmethod" => $paymentmethod ) );
+		insert_query( "tblserviceaddons", array( "orderid" => $orderid, "hostingid" => $params['serviceid'], "addonid" => $addonid, "setupfee" => $addonsetupfee, "recurring" => $addonrecurring, "billingcycle" => $addonbillingcycle, "tax" => $addontax, "status" => "Active", "regdate" => "now()", "nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate, "paymentmethod" => $paymentmethod ) );
 	}
 
 	return "success";
@@ -377,7 +377,7 @@ function licensing_ChangePackage($params) {
 	$addonid = $addonid[0];
 
 	if ($addonid) {
-		$currentaddon = get_query_val( "tblhostingaddons", "id", array( "hostingid" => $params['serviceid'], "addonid" => $addonid, "status" => "Active" ) );
+		$currentaddon = get_query_val( "tblserviceaddons", "id", array( "hostingid" => $params['serviceid'], "addonid" => $addonid, "status" => "Active" ) );
 
 		if (!$currentaddon) {
 			$data = get_query_vals( "tblhosting", "billingcycle,paymentmethod", array( "id" => $params['serviceid'] ) );
@@ -419,7 +419,7 @@ function licensing_ChangePackage($params) {
 				}
 			}
 
-			insert_query( "tblhostingaddons", array( "orderid" => $orderid, "hostingid" => $params['serviceid'], "addonid" => $addonid, "setupfee" => $addonsetupfee, "recurring" => $addonrecurring, "billingcycle" => $addonbillingcycle, "tax" => $addontax, "status" => "Active", "regdate" => "now()", "nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate, "paymentmethod" => $paymentmethod ) );
+			insert_query( "tblserviceaddons", array( "orderid" => $orderid, "hostingid" => $params['serviceid'], "addonid" => $addonid, "setupfee" => $addonsetupfee, "recurring" => $addonrecurring, "billingcycle" => $addonbillingcycle, "tax" => $addontax, "status" => "Active", "regdate" => "now()", "nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate, "paymentmethod" => $paymentmethod ) );
 		}
 	}
 

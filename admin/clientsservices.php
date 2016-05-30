@@ -126,14 +126,14 @@ if ($frm->issubmitted()) {
 
 
         if (is_numeric($aid)) {
-            $oldstatus = get_query_val("tblhostingaddons", "status", array("id" => $aid));
+            $oldstatus = get_query_val("tblserviceaddons", "status", array("id" => $aid));
             $array = array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes);
 
             if ($oldnextduedate != $nextduedate) {
                 $array['nextinvoicedate'] = toMySQLDate($nextduedate);
             }
 
-            update_query("tblhostingaddons", $array, array("id" => $aid));
+            update_query("tblserviceaddons", $array, array("id" => $aid));
 
             if ($oldserviceid != $id) {
                 logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid);
@@ -184,7 +184,7 @@ if ($frm->issubmitted()) {
                 }
             }
 
-            $newaddonid = insert_query("tblhostingaddons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
+            $newaddonid = insert_query("tblserviceaddons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
             logActivity("Added New Addon - " . $name . $predefname . " - Addon ID: " . $newaddonid . " - Service ID: " . $id);
 
             if ($geninvoice) {
@@ -324,7 +324,7 @@ if ($action == "delete") {
     checkPermission("Delete Clients Products/Services");
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
     delete_query("tblhosting", array("id" => $id));
-    delete_query("tblhostingaddons", array("hostingid" => $id));
+    delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblhostingconfigoptions", array("relid" => $id));
     full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
     logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
@@ -336,7 +336,7 @@ if ($action == "deladdon") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
-    delete_query("tblhostingaddons", array("id" => $aid));
+    delete_query("tblserviceaddons", array("id" => $aid));
     logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
     redir("userid=" . $userid . "&id=" . $id);
 }
@@ -634,7 +634,7 @@ if ($aid) {
         $notes = "";
     } else {
         $managetitle = $aInt->lang("addons", "editaddon");
-        $result = select_query("tblhostingaddons", "", array("id" => $aid));
+        $result = select_query("tblserviceaddons", "", array("id" => $aid));
         $data = mysql_fetch_array($result);
         $addonid = $data['addonid'];
         $customname = $data['name'];

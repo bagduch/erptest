@@ -50,7 +50,7 @@ if ($addonid) {
 	$where[] = "addonid=" . (int)$addonid;
 }
 
-$result = select_query("tblhostingaddons", "", implode(" AND ", $where));
+$result = select_query("tblserviceaddons", "", implode(" AND ", $where));
 $apiresults = array("result" => "success", "serviceid" => $serviceid, "clientid" => $clientid, "totalresults" => mysql_num_rows($result));
 
 while ($data = mysql_fetch_array($result)) {

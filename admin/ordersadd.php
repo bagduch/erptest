@@ -463,7 +463,7 @@ if ($ra->get_req_var("submitorder")) {
 
 			if (is_array($_SESSION['orderdetails']['Products'])) {
 				foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-					update_query("tblhosting", array("domainstatus" => "Active"), array("id" => $productid));
+					update_query("tblcustomerservices", array("domainstatus" => "Active"), array("id" => $productid));
 				}
 			}
 

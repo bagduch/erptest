@@ -369,15 +369,15 @@ if ($showform) {
 			else {
 				if ($emailtype == "Addon") {
 					$type = "addon";
-					$query = "SELECT tblhosting.id,tblhosting.userid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblhostingaddons ON tblhostingaddons.hostingid = tblhosting.id WHERE tblhostingaddons.id!=''";
+					$query = "SELECT tblhosting.id,tblhosting.userid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblhosting.id WHERE tblserviceaddons.id!=''";
 
 					if ($addonids) {
-						$query .= " AND tblhostingaddons.addonid IN (" . $addonids . ")";
+						$query .= " AND tblserviceaddons.addonid IN (" . $addonids . ")";
 					}
 
 
 					if ($addonstatus) {
-						$query .= " AND tblhostingaddons.status IN (" . $addonstatus . ")";
+						$query .= " AND tblserviceaddons.status IN (" . $addonstatus . ")";
 					}
 
 

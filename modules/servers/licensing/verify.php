@@ -83,7 +83,7 @@ function licensing_getlicreturndata($licenseid) {
 
 	$customfields = substr( $customfields, 0, 0 - 1 );
 	$addons = "";
-	$result = full_query( "SELECT addonid, name, nextduedate, status FROM tblhostingaddons WHERE tblhostingaddons.hostingid=" . (int)$serviceid );
+	$result = full_query( "SELECT addonid, name, nextduedate, status FROM tblserviceaddons WHERE tblserviceaddons.hostingid=" . (int)$serviceid );
 
 	while ($data = mysql_fetch_assoc( $result )) {
 		if (!$data['name']) {

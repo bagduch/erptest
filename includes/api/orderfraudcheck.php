@@ -60,10 +60,10 @@ else {
 			update_query("tblhosting", array("domainstatus" => "Fraud"), array("id" => $data['id'], "domainstatus" => "Pending"));
 		}
 
-		$result = select_query("tblhostingaddons", "id", array("orderid" => $orderid));
+		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
-			update_query("tblhostingaddons", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
+			update_query("tblserviceaddons", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
 		}
 
 		$result = select_query("tbldomains", "id", array("orderid" => $orderid));
@@ -83,10 +83,10 @@ else {
 			update_query("tblhosting", array("domainstatus" => "Pending"), array("id" => $data['id'], "domainstatus" => "Fraud"));
 		}
 
-		$result = select_query("tblhostingaddons", "id", array("orderid" => $orderid));
+		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
-			update_query("tblhostingaddons", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
+			update_query("tblserviceaddons", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
 		}
 
 		$result = select_query("tbldomains", "id", array("orderid" => $orderid));

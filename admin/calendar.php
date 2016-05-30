@@ -37,7 +37,7 @@ function calendar_core_addons($vars) {
 		$addons[$addon_id] = $data['name'];
 	}
 	$events = array();
-	$result = select_query("tblhostingaddons", "id,addonid,name,hostingid,nextduedate", "status IN ('Active','Suspended') AND nextduedate BETWEEN '" . date("Y-m-d", $vars['start']) . "' AND '" . date("Y-m-d", $vars['end']) . "'");
+	$result = select_query("tblserviceaddons", "id,addonid,name,hostingid,nextduedate", "status IN ('Active','Suspended') AND nextduedate BETWEEN '" . date("Y-m-d", $vars['start']) . "' AND '" . date("Y-m-d", $vars['end']) . "'");
 	while ($data = mysql_fetch_assoc($result)) {
 		$name = (0 < strlen($data['name']) ? $data['name'] : $addons[$data['addonid']]);
 		$events[] = array("id" => $data['id'], "title" => $name, "start" => strtotime($data['nextduedate']), "allDay" => true, "editable" => false, "url" => "clientsservices.php?id=" . $data['hostingid'] . "&aid=" . $data['id']);

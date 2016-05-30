@@ -220,7 +220,7 @@ class RA_Service
 
 		$predefinedaddons = $this->getPredefinedAddonsOnce();
 		$addons = array();
-		$result = select_query("tblhostingaddons", "", array("hostingid" => $this->getID()), "id", "DESC");
+		$result = select_query("tblserviceaddons", "", array("hostingid" => $this->getID()), "id", "DESC");
 
 		while ($data = mysql_fetch_array($result)) {
 			$addon_id = $data['id'];

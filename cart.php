@@ -32,6 +32,9 @@ $sld = $ra->get_req_var("sld");
 $tld = $ra->get_req_var("tld");
 $domains = $ra->get_req_var("domains");
 $step = $ra->get_req_var("step");
+$submit = $ra->get_req_var("submit");
+$checkout = $ra->get_req_var("checkout");
+$validatepromo = $ra->get_req_var("validatepromo");
 $orderfrmtpl = $ra->get_config("OrderFormTemplate");
 
 if (!isValidforPath($orderfrmtpl)) {
@@ -540,11 +543,6 @@ if ($a == "domainoptions") {
 }
 
 
-if ($a == "confproduct") {
-    
-}
-
-
 if ($a == "confservice") {
     $templatefile = "configureservice";
     $i = (int) $_REQUEST['i'];
@@ -575,9 +573,36 @@ if ($a == "confservice") {
         global $errormessage;
 
         $errormessage = "";
-        $result = select_query("tblservices", "type", array("id" => $pid));
+        $result = select_query("tblproducts", "type", array("id" => $pid));
         $data = mysql_fetch_array($result);
         $producttype = $data['type'];
+
+        if ($producttype == "server") {
+            if (!$hostname) {
+                $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
+            } else {
+                $result = select_query("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "domainstatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
+                $data = mysql_fetch_array($result);
+                $existingcount = $data[0];
+
+                if ($existingcount) {
+                    $errormessage .= "<li>" . $_LANG['ordererrorserverhostnameinuse'];
+                }
+            }
+
+
+            if (!$ns1prefix || !$ns2prefix) {
+                $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
+            }
+
+
+            if (!$rootpw) {
+                $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
+            }
+
+            $serverarray = array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw);
+        }
+
 
         if ($configoption) {
             foreach ($configoption as $opid => $opid2) {
@@ -638,7 +663,7 @@ if ($a == "confservice") {
 
 
         if ((!$ajax && !$nocyclerefresh) && $previousbillingcycle != $billingcycle) {
-            redir("a=confproduct&i=" . $i);
+            redir("a=confservice&i=" . $i);
             exit();
         }
 
@@ -675,6 +700,7 @@ if ($a == "confservice") {
     $customfields = $_SESSION['cart']['products'][$i]['customfields'];
     $configoptions = $_SESSION['cart']['products'][$i]['configoptions'];
     $addons = $_SESSION['cart']['products'][$i]['addons'];
+    $domain = $_SESSION['cart']['products'][$i]['domain'];
     $noconfig = $_SESSION['cart']['products'][$i]['noconfig'];
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
@@ -734,60 +760,20 @@ if ($a == "confservice") {
     $smartyvalues['configurableoptions'] = $configurableoptions;
     $smartyvalues['addons'] = $addonsarray;
     $smartyvalues['customfields'] = $customfields;
+    $smartyvalues['domain'] = $domain;
 }
+
 
 if ($a == "checkout") {
     $domainconfigerror = false;
-    include "includes/additionaldomainfields.php";
-    $domains = $_SESSION['cart']['domains'];
-
-    if ($domains) {
-        foreach ($domains as $key => $domainname) {
-            $domainparts = explode(".", $domainname['domain'], 2);
-
-            if ($domainname['type'] == "register") {
-                $tempdomainfields = $additionaldomainfields["." . $domainparts[1]];
-                $domainfields = $domainname['fields'];
-
-                if ($tempdomainfields) {
-                    foreach ($tempdomainfields as $fieldnum => $values) {
-
-                        if ($values['Required'] && !$domainfields[$fieldnum]) {
-                            $domainconfigerror = true;
-                            continue;
-                        }
-                    }
-
-                    continue;
-                }
-
-                continue;
-            }
-
-            $result = select_query("tbldomainpricing", "", array("extension" => "." . $domainparts[1]));
-            $data = mysql_fetch_array($result);
-
-            if ($data['eppcode'] && !$domainname['eppcode']) {
-                $domainconfigerror = true;
-                continue;
-            }
-        }
-    }
-
-
-    if ($domainconfigerror) {
-        if ($ajax) {
-            $errormessage .= "<li>" . $_LANG['carterrordomainconfigskipped'];
-        } else {
-            redir("a=confdomains&validate=1");
-        }
-    }
-
+    // include "includes/additionaldomainfields.php";
     $allowcheckout = true;
     $a = "view";
 }
 
-
+if ($a == "confdomains") {
+    
+}
 if ($a == "addcontact") {
     $allowcheckout = true;
     $addcontact = true;
@@ -797,11 +783,16 @@ if ($a == "addcontact") {
 
 if ($a == "view") {
 
-    $viewdata = $cart->Viewcart();
+
+    if (($submit || $checkout) && !$validatepromo) {
+        $viewdata = $cart->Viewcart(true);
+    } else {
+        $viewdata = $cart->Viewcart(false);
+    }
     // echo "<pre>", print_r($viewdata, 1), "<pre>";
     $templatefile = $viewdata['template'];
     $smartyvalues = $viewdata['smarty'];
-    //  echo "<pre>", print_r($smartyvalues, 1), "<pre>";
+    // echo "<pre>", print_r($smartyvalues, 1), "<pre>";
 }
 
 
@@ -888,7 +879,7 @@ if ($a == "fraudcheck") {
 
         if ($_SESSION['orderdetails']['Addons']) {
             foreach ($_SESSION['orderdetails']['Addons'] as $addonid) {
-                update_query("tblhostingaddons", array("status" => "Pending"), array("id" => $addonid, "status" => "Fraud"));
+                update_query("tblserviceaddons", array("status" => "Pending"), array("id" => $addonid, "status" => "Fraud"));
             }
         }
 

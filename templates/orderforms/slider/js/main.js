@@ -48,9 +48,9 @@ function addtocart(gid) {
             jQuery("#configproducterror").html(data);
             jQuery("#configproducterror").slideDown();
             jQuery("#loading1").slideUp();
-        } else { 
+        } else {
             if (gid) window.location='cart.php?gid='+gid;
-            else window.location='cart.php?a=view';
+            else window.location='cart.php?a=confdomains';
         }
     });
 }

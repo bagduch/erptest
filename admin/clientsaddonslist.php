@@ -28,7 +28,7 @@ while ($data = mysql_fetch_array($result)) {
 }
 
 $aInt->sortableTableInit("id", "DESC");
-$query = "FROM tblhostingaddons INNER JOIN tblhosting ON tblhosting.id=tblhostingaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblhosting.packageid=tblservices.id WHERE tblhostingaddons.id!='' ";
+$query = "FROM tblserviceaddons INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblhosting.packageid=tblservices.id WHERE tblserviceaddons.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -36,7 +36,7 @@ if ($clientname) {
 
 
 if ($addon) {
-	$query .= (is_numeric($addon) ? "AND tblhostingaddons.addonid='" . $addon . "'" : "AND tblhostingaddons.name='" . db_escape_string($addon) . "' ");
+	$query .= (is_numeric($addon) ? "AND tblserviceaddons.addonid='" . $addon . "'" : "AND tblserviceaddons.name='" . db_escape_string($addon) . "' ");
 }
 
 
@@ -51,7 +51,7 @@ if ($package != "") {
 
 
 if ($billingcycle != "") {
-	$query .= "AND tblhostingaddons.billingcycle='" . db_escape_string($billingcycle) . "' ";
+	$query .= "AND tblserviceaddons.billingcycle='" . db_escape_string($billingcycle) . "' ";
 }
 
 
@@ -61,12 +61,12 @@ if ($server != "") {
 
 
 if ($paymentmethod != "") {
-	$query .= "AND tblhostingaddons.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
+	$query .= "AND tblserviceaddons.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
 }
 
 
 if ($status != "") {
-	$query .= "AND tblhostingaddons.status='" . db_escape_string($status) . "' ";
+	$query .= "AND tblserviceaddons.status='" . db_escape_string($status) . "' ";
 }
 
 
@@ -74,7 +74,7 @@ if ($domain != "") {
 	$query .= "AND tblhosting.domain LIKE '%" . db_escape_string($domain) . "%' ";
 }
 
-$result = full_query("SELECT COUNT(tblhostingaddons.id) " . $query);
+$result = full_query("SELECT COUNT(tblserviceaddons.id) " . $query);
 $data = mysql_fetch_array($result);
 $numrows = $data[0];
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
@@ -111,7 +111,7 @@ while ($data = mysql_fetch_array($result)) {
 	echo ">" . $addon_name . "</option>";
 }
 
-$query2 = "SELECT DISTINCT name FROM tblhostingaddons WHERE name!='' ORDER BY name ASC";
+$query2 = "SELECT DISTINCT name FROM tblserviceaddons WHERE name!='' ORDER BY name ASC";
 $result2 = full_query($query2);
 
 while ($data = mysql_fetch_array($result2)) {
@@ -217,7 +217,7 @@ echo "\" class=\"button\"></DIV>
 $query .= "ORDER BY ";
 
 if ($orderby == "addon") {
-	$query .= "tblhostingaddons.name";
+	$query .= "tblserviceaddons.name";
 }
 else {
 	if ($orderby == "product") {
@@ -239,7 +239,7 @@ else {
 }
 
 $query .= " " . $order;
-$query = "SELECT tblhostingaddons.*,tblhostingaddons.name AS addonname,tblhosting.domain,tblhosting.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT tblserviceaddons.*,tblserviceaddons.name AS addonname,tblhosting.domain,tblhosting.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query($query);
 
 while ($data = mysql_fetch_array($result)) {

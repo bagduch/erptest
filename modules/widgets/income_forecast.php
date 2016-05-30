@@ -36,7 +36,7 @@ while ($data = mysql_fetch_array($result)) {
     $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
     $incomestats[$data['currency']][$data['billingcycle']]["sum"] = $data[3];
 }
-$result = select_query("tblhostingaddons,tblhosting,tblclients", "currency,tblhostingaddons.billingcycle,COUNT(*),SUM(recurring)", "tblhostingaddons.hostingid=tblhosting.id AND tblclients.id=tblhosting.userid AND (tblhostingaddons.status='Active' OR tblhostingaddons.status='Suspended') GROUP BY currency, tblhostingaddons.billingcycle");
+$result = select_query("tblserviceaddons,tblhosting,tblclients", "currency,tblserviceaddons.billingcycle,COUNT(*),SUM(recurring)", "tblserviceaddons.hostingid=tblhosting.id AND tblclients.id=tblhosting.userid AND (tblserviceaddons.status='Active' OR tblserviceaddons.status='Suspended') GROUP BY currency, tblserviceaddons.billingcycle");
 while ($data = mysql_fetch_array($result)) {
     if (isset($incomestats[$data['currency']][$data['billingcycle']]["count"])) $incomestats[$data['currency']][$data['billingcycle']]["count"] += $data[2];
     else $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];

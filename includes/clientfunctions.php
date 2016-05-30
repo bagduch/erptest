@@ -492,7 +492,7 @@ function deleteClient($userid) {
 
 	while ($data = mysql_fetch_array($result)) {
 		$domainlistid = $data['id'];
-		delete_query("tblhostingaddons", array("hostingid" => $domainlistid));
+		delete_query("tblserviceaddons", array("hostingid" => $domainlistid));
 	}
 
 	$result = select_query("tblcustomfields", "id", array("type" => "client"));
@@ -977,9 +977,9 @@ function closeClient($userid) {
 
 	while ($data = mysql_fetch_array($result)) {
 		$domainlistid = $data['id'];
-		update_query("tblhostingaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Pending"));
-		update_query("tblhostingaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Active"));
-		update_query("tblhostingaddons", array("status" => "Terminated"), array("hostingid" => $domainlistid, "status" => "Suspended"));
+		update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Pending"));
+		update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Active"));
+		update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $domainlistid, "status" => "Suspended"));
 	}
 
 	update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending"));
@@ -1358,7 +1358,7 @@ function clientChangeDefaultGateway($userid, $paymentmethod) {
 
 		update_query("tblclients", array("defaultgateway" => $paymentmethod), array("id" => $userid));
 		update_query("tblhosting", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
-		update_query("tblhostingaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblhosting WHERE userid=" . (int)$userid . ")");
+		update_query("tblserviceaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblhosting WHERE userid=" . (int)$userid . ")");
 		update_query("tbldomains", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
 		update_query("tblinvoices", array("paymentmethod" => $paymentmethod), array("userid" => $userid, "status" => "Unpaid"));
 	}

@@ -16,7 +16,7 @@ function payza_config() {
 	update_query( "tblclients", array( "defaultgateway" => "payza" ), array( "defaultgateway" => "alertpay" ) );
 	update_query( "tbldomains", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
 	update_query( "tblhosting", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
-	update_query( "tblhostingaddons", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
+	update_query( "tblserviceaddons", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
 	update_query( "tblinvoiceitems", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
 	update_query( "tblinvoices", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );
 	update_query( "tblorders", array( "paymentmethod" => "payza" ), array( "paymentmethod" => "alertpay" ) );

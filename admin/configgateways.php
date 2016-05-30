@@ -130,7 +130,7 @@ if ($action == "deactivate" && in_array($gateway, $includedmodules)) {
 
 	if ($gateway != $newgateway) {
 		update_query("tblhosting", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
-		update_query("tblhostingaddons", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
+		update_query("tblserviceaddons", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tbldomains", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tblinvoices", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tblorders", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));

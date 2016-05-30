@@ -134,7 +134,7 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 		$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 	}
 
-	$result2 = select_query("tblhostingaddons", "", array("orderid" => $orderid));
+	$result2 = select_query("tblserviceaddons", "", array("orderid" => $orderid));
 
 	while ($data = mysql_fetch_array($result2)) {
 		$aid = $data['id'];

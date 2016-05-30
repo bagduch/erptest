@@ -26,7 +26,7 @@ while ($data = mysql_fetch_array($result)) {
 }
 
 # Loop Through Addons
-$result = full_query("SELECT tblhostingaddons.addonid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblhostingaddons ON tblhostingaddons.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND tblinvoiceitems.type='Addon' AND currency=".(int)$currencyid." GROUP BY  tblhostingaddons.addonid");
+$result = full_query("SELECT tblserviceaddons.addonid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblserviceaddons ON tblserviceaddons.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND tblinvoiceitems.type='Addon' AND currency=".(int)$currencyid." GROUP BY  tblserviceaddons.addonid");
 while ($data = mysql_fetch_array($result)) {
     $addons[$data[0]] = array("amount" => $data[2],"unitssold" => $data[1]);
 }

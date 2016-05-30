@@ -96,7 +96,7 @@ function google_analytics_hook_checkout_tracker($vars) {
    ";
 	}
 
-	$result = select_query( "tblhostingaddons", "tblhostingaddons.id,tblhostingaddons.addonid,tbladdons.name,tblhostingaddons.setupfee,tblhostingaddons.recurring", array( "orderid" => $orderid ), "", "", "", "tbladdons ON tbladdons.id=tblhostingaddons.addonid" );
+	$result = select_query( "tblserviceaddons", "tblserviceaddons.id,tblserviceaddons.addonid,tbladdons.name,tblserviceaddons.setupfee,tblserviceaddons.recurring", array( "orderid" => $orderid ), "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid" );
 
 	while ($data = mysql_fetch_array( $result )) {
 		$aid = $data['id'];
