@@ -22,7 +22,7 @@ require "includes/cartfunctions.php";
 initialiseClientArea($_LANG['carttitle'], "", "<a href=\"cart.php\">" . $_LANG['carttitle'] . "</a>");
 checkContactPermission("orders");
 $orderfrm = new RA_OrderForm();
-$cart = new RA_Carts($orderfrm);
+$cart = new RA_Carts($orderfrm, $ra);
 $a = $ra->get_req_var("a");
 $gid = $ra->get_req_var("gid");
 $pid = (int) $ra->get_req_var("pid");

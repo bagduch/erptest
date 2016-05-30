@@ -34,9 +34,10 @@ class RA_Carts {
     public $data;
     private $ra;
 
-    public function __construct($orderfrm) {
+    public function __construct($orderfrm, $ra) {
         $this->data = "";
         $this->orderfrm = $orderfrm;
+        $this->ra = $ra;
     }
 
     public function AddServices($pid) {
@@ -176,7 +177,7 @@ class RA_Carts {
 
             run_validate_hook($validate, "ShoppingCartValidateCheckout", $_REQUEST);
 
-            if (isset($_SESSION['uid']) && $ra->get_config("EnableTOSAccept")) {
+            if (isset($_SESSION['uid']) && $this->ra->get_config("EnableTOSAccept")) {
                 $validate->validate("required", "accepttos", "ordererroraccepttos");
             }
 

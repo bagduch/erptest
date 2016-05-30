@@ -406,6 +406,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     }
 
 
+    
     if ($checkout) {
         if (!$_SESSION['cart']) {
             return false;
@@ -506,7 +507,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             $servertype = $data['servertype'];
             $servergroup = $data['servergroup'];
 
-     
+
 
             $productinfo = getProductInfo($pid);
             $productdata['productinfo'] = $productinfo;
@@ -753,15 +754,15 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             if ($checkout) {
                 $multiqtyids = array();
                 $qtycount = 1;
-
+                $qty = 1;
                 while ($qtycount <= $qty) {
                     $serverid = ($servertype ? getServerID($servertype, $servergroup) : "0");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
-                    $serviceid = insert_query("tblcustomerservices", array("userid" => $userid, "type" => $type, "orderid" => $orderid, "packageid" => $pid, "server" => $serverid, "regdate" => "now()", "description" => $description, "paymentmethod" => $paymentmethod, "firstpaymentamount" => $product_total_today_db, "amount" => $product_recurring_db, "billingcycle" => $databasecycle, "nextduedate" => $hostingquerydates, "nextinvoicedate" => $hostingquerydates, "descriptionstatus" => "Pending", "ns1" => $serverns1prefix, "ns2" => $serverns2prefix, "password" => $serverrootpw, "promoid" => $promoid));
+                    $serviceid = insert_query("tblcustomerservices", array("userid" => $userid, "orderid" => $orderid, "packageid" => $pid, "server" => $serverid, "regdate" => "now()", "description" => $description, "paymentmethod" => $paymentmethod, "firstpaymentamount" => $product_total_today_db, "amount" => $product_recurring_db, "billingcycle" => $databasecycle, "nextduedate" => $hostingquerydates, "nextinvoicedate" => $hostingquerydates, "descriptionstatus" => "Pending", "password" => $serverrootpw, "promoid" => $promoid));
                     $multiqtyids[$qtycount] = $serviceid;
                     $orderproductids[] = $serviceid;
 
-               
+
 
 
                     if ($configoptionsdb) {
@@ -941,7 +942,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                             } else {
                                 $addon_recurring_db += $addon_recurring_db * $taxrate + $addon_recurring_db * $taxrate2;
                             }
-                        }   
+                        }
                     }
 
                     $addon_billingcycle = str_replace(array("-", " "), "", strtolower($addon_billingcycle));
@@ -961,7 +962,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                             $pricing_text .= $_LANG['invoiceqtyeach'] . "<br />" . $_LANG['invoicestotal'] . ": " . formatCurrency($addon_total_today);
                         }
                     }
-$qty = 1;
+                    $qty = 1;
                     $addonsarray[] = array("name" => $addon_name, "pricingtext" => $pricing_text, "setup" => formatCurrency($addon_setupfee), "recurring" => formatCurrency($addon_recurring), "totaltoday" => formatCurrency($addon_total_today));
                     $productdata['pricing']['setup'] += $addon_setupfee * $qty;
                     $productdata['pricing']['addons'] += $addon_recurring * $qty;

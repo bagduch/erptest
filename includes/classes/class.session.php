@@ -32,7 +32,7 @@ class RA_Session {
 		return "";
 	}
 
-	public function get($key) {
+	public static function get($key) {
 		return array_key_exists($key, $_SESSION) ? $_SESSION[$key] : "";
 	}
 
