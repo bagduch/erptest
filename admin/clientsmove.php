@@ -86,11 +86,11 @@ else {
 
 
 	if ($type == "hosting") {
-		$result = select_query("tblhosting", "userid", array("id" => $id));
+		$result = select_query("tblcustomerservices", "userid", array("id" => $id));
 		$data = mysql_fetch_array($result);
 		$userid = $data['userid'];
 		logActivity("Moved Service ID: " . $id . " from User ID: " . $userid . " to User ID: " . $newuserid, $newuserid);
-		update_query("tblhosting", array("userid" => $newuserid), array("id" => $id));
+		update_query("tblcustomerservices", array("userid" => $newuserid), array("id" => $id));
 		echo "<s";
 		echo "cript language=\"javascript\">
 window.opener.location.href = \"clientshosting.php?userid=";

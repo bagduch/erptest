@@ -513,7 +513,7 @@ function plesk9_UsageUpdate($params) {
 				$bwused = (is_null( $bwused ) ? 0 : $bwused / 1024 / 1024);
 				$disklimit = (is_null( $disklimit ) ? 0 : $disklimit / 1024 / 1024);
 				$bwlimit = (is_null( $diskused ) ? 0 : $bwlimit / 1024 / 1024);
-				update_query( "tblhosting", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "username" => $username, "server" => $params['serverid'] ) );
+				update_query( "tblcustomerservices", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "username" => $username, "server" => $params['serverid'] ) );
 				continue;
 			}
 		}

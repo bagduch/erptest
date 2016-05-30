@@ -79,7 +79,7 @@ $smartyvalues['resolvedcount'] = $data[0];
 $users_servers = array();
 
 if (isset($_SESSION['uid'])) {
-	$result = select_query("tblhosting", "DISTINCT server", array("userid" => $_SESSION['uid']));
+	$result = select_query("tblcustomerservices", "DISTINCT server", array("userid" => $_SESSION['uid']));
 
 	while ($data = mysql_fetch_array($result)) {
 		if ($data['server']) {

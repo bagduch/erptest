@@ -434,7 +434,7 @@ if ($action == "getallservices") {
 	$currency = getCurrency($pauserid);
 	$service = get_query_val("tbltickets", "service", array("id" => $id));
 	$output = array();
-	$result = select_query("tblhosting", "tblhosting.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
+	$result = select_query("tblcustomerservices", "tblhosting.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 	while ($data = mysql_fetch_array($result)) {
 		$service_id = $data['id'];
@@ -1824,7 +1824,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 	if ($service) {
 		switch (substr($service, 0, 1)) {
 		case "S":
-				$result = select_query("tblhosting", "tblhosting.id,tblhosting.userid,tblhosting.regdate,tblhosting.domain,tblhosting.domainstatus,tblhosting.nextduedate,tblhosting.billingcycle,tblservices.name,tblhosting.username,tblhosting.password,tblservices.servertype", array("tblhosting.id" => substr($service, 1)), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+				$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.userid,tblhosting.regdate,tblhosting.domain,tblhosting.domainstatus,tblhosting.nextduedate,tblhosting.billingcycle,tblservices.name,tblhosting.username,tblhosting.password,tblservices.servertype", array("tblhosting.id" => substr($service, 1)), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 				$data = mysql_fetch_array($result);
 				$service_id = $data['id'];
 				$service_userid = $data['userid'];
@@ -1874,9 +1874,9 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 	if ($pauserid && checkPermission("List Services", true)) {
 		$currency = getCurrency($pauserid);
 		$smartyvalues['relatedservices'] = array();
-		$totalitems = get_query_val("tblhosting", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblserviceaddons", "COUNT(tblserviceaddons.id)", array("tblhosting.userid" => $pauserid), "", "", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
+		$totalitems = get_query_val("tblcustomerservices", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblserviceaddons", "COUNT(tblserviceaddons.id)", array("tblhosting.userid" => $pauserid), "", "", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
 		$lefttoselect = 10;
-		$result = select_query("tblhosting", "tblhosting.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblhosting.packageid");
+		$result = select_query("tblcustomerservices", "tblhosting.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblhosting.packageid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$service_id = $data['id'];

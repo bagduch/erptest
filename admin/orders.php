@@ -71,7 +71,7 @@ if ($ra->get_req_var("rerunfraudcheck")) {
 
 if ($action == "affassign") {
 	if ($orderid && $affid) {
-		$result = select_query("tblhosting", "id", array("orderid" => $orderid));
+		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
 			$serviceid = $data['id'];
@@ -709,7 +709,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo "</td><td class=\"fieldlabel\">";
 		echo $aInt->lang("fields", "affiliate");
 		echo "</td><td class=\"fieldarea\" id=\"affiliatefield\">";
-		$result = select_query("tblhosting", "id", array("orderid" => $id));
+		$result = select_query("tblcustomerservices", "id", array("orderid" => $id));
 		$data = mysql_fetch_array($result);
 		$firstproductinorder = $data['id'];
 		$result = select_query("tblaffiliatesaccounts", "", array("relid" => $firstproductinorder));
@@ -765,7 +765,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo $aInt->lang("fields", "paymentstatus");
 		echo "</th></tr>
 ";
-		$result = select_query("tblhosting", "", array("orderid" => $id));
+		$result = select_query("tblcustomerservices", "", array("orderid" => $id));
 
 		while ($data = mysql_fetch_array($result)) {
 			$hostingid = $data['id'];
@@ -837,7 +837,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 						$serverid = $data2['id'];
 						$servername = $data2['name'];
 						$servermaxaccounts = $data2['maxaccounts'];
-						$result3 = select_query("tblhosting", "", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+						$result3 = select_query("tblcustomerservices", "", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
 						$servernumaccounts = mysql_num_rows($result3);
 						echo "<option value=\"" . $serverid . "\"";
 
@@ -1074,7 +1074,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblhosting", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 			$data = mysql_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];

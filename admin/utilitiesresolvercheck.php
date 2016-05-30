@@ -107,7 +107,7 @@ else {
 			$serverassignedips[] = $serverip;
 			echo "<tr><td colspan=\"6\" style=\"background-color:#efefef;font-weight:bold;\">" . $servername . " - " . $serverip . "</td></tr>";
 			$serviceid = "";
-			$result2 = select_query("tblhosting", "tblhosting.id AS serviceid,tblhosting.domain,tblhosting.domainstatus,tblhosting.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname", "server='" . $serverid . "' AND domain!='' AND (domainstatus='Active' OR domainstatus='Suspended')", "domain", "ASC", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblclients ON tblhosting.userid=tblclients.id");
+			$result2 = select_query("tblcustomerservices", "tblhosting.id AS serviceid,tblhosting.domain,tblhosting.domainstatus,tblhosting.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname", "server='" . $serverid . "' AND domain!='' AND (domainstatus='Active' OR domainstatus='Suspended')", "domain", "ASC", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblclients ON tblhosting.userid=tblclients.id");
 
 			while ($data = mysql_fetch_array($result2)) {
 				$serviceid = $data['serviceid'];
@@ -161,7 +161,7 @@ else {
 			echo "<h3>" . $aInt->lang("utilitiesresolvercheck", "terminatingaccts") . "</h3>
 <ul>";
 			foreach ($selectedclients as $serviceid) {
-				$result = select_query("tblhosting", "tblhosting.id AS serviceid,tblhosting.domain,tblhosting.domainstatus,tblhosting.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.servertype", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblclients ON tblhosting.userid=tblclients.id");
+				$result = select_query("tblcustomerservices", "tblhosting.id AS serviceid,tblhosting.domain,tblhosting.domainstatus,tblhosting.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.servertype", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblclients ON tblhosting.userid=tblclients.id");
 				$data = mysql_fetch_array($result);
 				$serviceid = $data['serviceid'];
 				$domain = $data['domain'];

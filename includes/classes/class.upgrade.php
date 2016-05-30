@@ -180,7 +180,7 @@ class RA_Upgrade {
 		if (is_array($this->promodata)) {
 		}
 		else {
-			$promodata = get_query_vals("tblpromotions", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblhosting", "promoid", array("id" => $serviceid))));
+			$promodata = get_query_vals("tblpromotions", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblcustomerservices", "promoid", array("id" => $serviceid))));
 
 			if (is_array($promodata)) {
 				$smartyvalues['promocode'] = $promocode = $promodata['code'];

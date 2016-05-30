@@ -48,7 +48,7 @@ function virtualmin_CreateAccount($params) {
 	if ($params['type'] == "reselleraccount") {
 		if (!$params['username']) {
 			$username = preg_replace( "/[^a-z0-9]/", "", strtolower( $params['clientsdetails']['firstname'] . $params['clientsdetails']['lastname'] . $params['serviceid'] ) );
-			update_query( "tblhosting", array( "username" => $username ), array( "id" => $params['serviceid'] ) );
+			update_query( "tblcustomerservices", array( "username" => $username ), array( "id" => $params['serviceid'] ) );
 			$params['username'] = $username;
 		}
 
@@ -209,7 +209,7 @@ function virtualmin_UsageUpdate($params) {
 		$bwused = $values["Bandwidth byte usage"] / 1048576;
 
 		if ($domain) {
-			update_query( "tblhosting", array( "diskusage" => $diskusage, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+			update_query( "tblcustomerservices", array( "diskusage" => $diskusage, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 			continue;
 		}
 	}

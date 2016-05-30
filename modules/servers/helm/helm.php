@@ -86,7 +86,7 @@ function helm_CreateAccount($params) {
 
 
 	if ($data['RESULTS']['RESULTCODE'] == "0") {
-		update_query( "tblhosting", array( "username" => $data['RESULTS']['RESULTDATA'] ), array( "id" => (int)$params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $data['RESULTS']['RESULTDATA'] ), array( "id" => (int)$params['serviceid'] ) );
 		$url = "" . $http . "://" . $params['serverip'] . "/billing_api.asp";
 		$query_string = "action=AddPackage&Username=" . $params['serverusername'] . "&Password=" . $params['serverpassword'];
 		$query_string .= "&UserAccountNumber=" . $data['RESULTS']['RESULTDATA'];

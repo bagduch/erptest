@@ -15,7 +15,7 @@ function widget_calendar($vars) {
         elseif ($day==date("d")+1) echo 'Tomorrow, '.date("jS F Y",mktime(0,0,0,date("m"),$day,date("Y")));
         else echo date("l, jS F Y",mktime(0,0,0,date("m"),$day,date("Y")));
         echo '</div>';
-        $numproducts = get_query_val("tblhosting","COUNT(id)","domainstatus IN ('Active','Suspended') AND nextduedate='".date("Y-m-").(int)$day."'");
+        $numproducts = get_query_val("tblcustomerservices","COUNT(id)","domainstatus IN ('Active','Suspended') AND nextduedate='".date("Y-m-").(int)$day."'");
         $numaddons = get_query_val("tblserviceaddons","COUNT(id)","status IN ('Active','Suspended') AND nextduedate='".date("Y-m-").(int)$day."'");
         $numdomains = get_query_val("tbldomains","COUNT(id)","status IN ('Active') AND nextduedate='".date("Y-m-").(int)$day."'");
         $numtodoitems = get_query_val("tbltodolist","COUNT(id)","duedate BETWEEN '".mktime(0,0,0,date("m"),$day,date("Y"))."' AND '".mktime(0,0,0,date("m"),$day+1,date("Y"))."'");

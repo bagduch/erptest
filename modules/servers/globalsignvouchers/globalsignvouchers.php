@@ -61,7 +61,7 @@ function globalsignvouchers_CreateAccount($params) {
 	}
 
 	updateService( array( "domain" => $domain, "username" => "", "password" => "" ) );
-	$result = select_query( "tblhosting", "billingcycle", array( "id" => $params['serviceid'] ) );
+	$result = select_query( "tblcustomerservices", "billingcycle", array( "id" => $params['serviceid'] ) );
 	$data = mysql_fetch_array( $result );
 	$billingcycle = $data[0];
 

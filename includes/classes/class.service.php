@@ -43,7 +43,7 @@ class RA_Service
 			$where["tblhosting.userid"] = $this->userid;
 		}
 
-		$result = select_query("tblhosting", "tblhosting.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$result = select_query("tblcustomerservices", "tblhosting.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 		$data = mysql_fetch_array($result);
 
 		if ($data['id']) {

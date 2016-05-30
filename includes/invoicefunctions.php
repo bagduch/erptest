@@ -511,7 +511,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
 		if (substr($type, 0, 14) == "ProrataProduct") {
 			$newduedate = substr($type, 14);
-			update_query("tblhosting", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
+			update_query("tblcustomerservices", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
 		}
 
 
@@ -577,7 +577,7 @@ function makeHostingPayment($func_domainid) {
 	global $CONFIG;
 	global $disable_to_do_list_entries;
 
-	$result = select_query("tblhosting", "", array("id" => $func_domainid));
+	$result = select_query("tblcustomerservices", "", array("id" => $func_domainid));
 	$data = mysql_fetch_array($result);
 	$userid = $data['userid'];
 	$billingcycle = $data['billingcycle'];
@@ -610,7 +610,7 @@ function makeHostingPayment($func_domainid) {
 		$nextduedate = getInvoicePayUntilDate($nextduedate, $billingcycle, true);
 	}
 
-	update_query("tblhosting", array("nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate), array("id" => $func_domainid));
+	update_query("tblcustomerservices", array("nextduedate" => $nextduedate, "nextinvoicedate" => $nextduedate), array("id" => $func_domainid));
 
 	if (!function_exists("getModuleType")) {
 		include dirname(__FILE__) . "/modulefunctions.php";
@@ -797,7 +797,7 @@ function makeDomainPayment($func_domainid, $type = "") {
 	else {
 		if (($status != "Pending" && $status != "Cancelled") && $status != "Fraud") {
 			if ($ra->get_config("AutoRenewDomainsonPayment") && $registrar) {
-				if (($ra->get_config("FreeDomainAutoRenewRequiresProduct") && $recurringamount <= 0) && !get_query_val("tblhosting", "COUNT(*)", array("userid" => $userid, "domain" => $domain, "domainstatus" => "Active"))) {
+				if (($ra->get_config("FreeDomainAutoRenewRequiresProduct") && $recurringamount <= 0) && !get_query_val("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "domain" => $domain, "domainstatus" => "Active"))) {
 					logActivity("Surpressed Automatic Domain Renewal on Payment Due to Domain Being Free and having No Active Associated Product", $userid);
 					sendAdminNotification("account", "Free Domain Renewal Manual Action Required", "The domain " . $domain . " (ID: " . $func_domainid . ") was just invoiced for renewal and automatically marked paid due to it being free, but because no active Product/Service matching the domain was found in order to qualify for the free domain offer, the renewal has not been automatically submitted to the registrar.  You must login to review & process this renewal manually should it be desired.");
 					return null;
@@ -855,7 +855,7 @@ function makeAddonPayment($func_addonid) {
 		$paymentmethod = $gateway;
 	}
 
-	$result = select_query("tblhosting", "userid,domain", array("id" => $hostingid));
+	$result = select_query("tblcustomerservices", "userid,domain", array("id" => $hostingid));
 	$data = mysql_fetch_array($result);
 	$userid = $data['userid'];
 	$domain = $data['domain'];
@@ -897,7 +897,7 @@ function makeAddonPayment($func_addonid) {
 			$suspendproduct = $data2[0];
 
 			if ($suspendproduct) {
-				$result2 = select_query("tblhosting", "servertype", array("tblhosting.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+				$result2 = select_query("tblcustomerservices", "servertype", array("tblhosting.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 				$data2 = mysql_fetch_array($result2);
 				$module = $data2[0];
 				logActivity("Unsuspending Parent Service for Addon Payment - Service ID: " . $hostingid, $userid);
@@ -1005,7 +1005,7 @@ function getNewClientAutoProvisionStatus($userid) {
 	global $CONFIG;
 
 	if ($CONFIG['AutoProvisionExistingOnly']) {
-		$result = select_query("tblhosting", "COUNT(*)", array("userid" => $userid, "domainstatus" => "Active"));
+		$result = select_query("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "domainstatus" => "Active"));
 		$data = mysql_fetch_array($result);
 		$result = select_query("tbldomains", "COUNT(*)", array("userid" => $userid, "status" => "Active"));
 		$data2 = mysql_fetch_array($result);

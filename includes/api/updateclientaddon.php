@@ -24,7 +24,7 @@ if (!$data['id']) {
 
 $serviceid = $data['hostingid'];
 $currentstatus = $data['status'];
-$userid = get_query_val("tblhosting", "userid", array("id" => $serviceid));
+$userid = get_query_val("tblcustomerservices", "userid", array("id" => $serviceid));
 $updateqry = array();
 
 if ($addonid) {

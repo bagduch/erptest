@@ -37,7 +37,7 @@ function helm4_CreateAccount($params) {
 
 	if ($helmaccountid) {
 		$helmaccountusername = $result['RESULTS']['RESULTDATA']['RECORD']['PRIMARYLOGINNAME'];
-		$result = select_query( "tblhosting", "username,password", array( "username" => $helmaccountusername ) );
+		$result = select_query( "tblcustomerservices", "username,password", array( "username" => $helmaccountusername ) );
 		$data = mysql_fetch_array( $result );
 		updateService( array( "username" => $data['username'], "password" => $data['password'] ) );
 	}

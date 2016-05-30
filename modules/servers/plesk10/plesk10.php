@@ -31,7 +31,7 @@ function plesk10_ClientArea($params) {
 	$domain = ($params['serverhostname'] ? $params['serverhostname'] : $params['serverip']);
 	$port = ($params['serveraccesshash'] ? $params['serveraccesshash'] : "8443");
 	$secure = ($params['serversecure'] ? "https" : "http");
-	$result = select_query( "tblhosting", "username,password", array( "server" => $params['serverid'], "userid" => $params['clientsdetails']['userid'], "domainstatus" => "Active" ), "id", "ASC" );
+	$result = select_query( "tblcustomerservices", "username,password", array( "server" => $params['serverid'], "userid" => $params['clientsdetails']['userid'], "domainstatus" => "Active" ), "id", "ASC" );
 	$data = mysql_fetch_array( $result );
 	$code = "<form action=\"" . $secure . "://" . $domain . ":" . $port . "/login_up.php3\" method=\"post\" target=\"_blank\"><input type=\"hidden\" name=\"login_name\" value=\"" . $data['username'] . "\"><input type=\"hidden\" name=\"passwd\" value=\"" . decrypt( $data['password'] ) . "\"><input type=\"submit\" value=\"" . $_LANG['plesklogin'] . "\" class=\"button\"></form>";
 	return $code;
@@ -92,7 +92,7 @@ function plesk10_CreateAccount($params) {
 		return "success";
 	}
 
-	$sqlresult = select_query( "tblhosting", "username", array( "userid" => $params['clientsdetails']['userid'] ) );
+	$sqlresult = select_query( "tblcustomerservices", "username", array( "userid" => $params['clientsdetails']['userid'] ) );
 
 	while ($data = mysql_fetch_array( $sqlresult )) {
 		$username = $data[0];

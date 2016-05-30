@@ -129,7 +129,7 @@ if ($action == "deactivate" && in_array($gateway, $includedmodules)) {
 	check_token("RA.admin.default");
 
 	if ($gateway != $newgateway) {
-		update_query("tblhosting", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
+		update_query("tblcustomerservices", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tblserviceaddons", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tbldomains", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
 		update_query("tblinvoices", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));

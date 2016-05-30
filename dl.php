@@ -128,7 +128,7 @@ else {
 					$where = array("userid" => $_SESSION['uid'], "tblhosting.domainstatus" => "Active");
 				}
 
-				$result = select_query("tblhosting", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+				$result = select_query("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 				while ($data = mysql_fetch_array($result)) {
 					$productdownloads = $data['downloads'];

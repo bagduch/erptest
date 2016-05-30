@@ -29,7 +29,7 @@ if (!function_exists("getCartConfigOptions")) {
 	require ROOTDIR . "/includes/configoptionsfunctions.php";
 }
 
-$result = select_query("tblhosting", "id,userid", array("id" => $serviceid));
+$result = select_query("tblcustomerservices", "id,userid", array("id" => $serviceid));
 $data = mysql_fetch_array($result);
 $serviceid = $data['id'];
 $clientid = $data['userid'];
@@ -69,7 +69,7 @@ if ($type == "product") {
 else {
 	if ($type == "configoptions") {
 		$subtotal = 0;
-		$result = select_query("tblhosting", "packageid,billingcycle", array("id" => $serviceid));
+		$result = select_query("tblcustomerservices", "packageid,billingcycle", array("id" => $serviceid));
 		$data = mysql_fetch_array($result);
 		$pid = $data[0];
 		$billingcycle = $data[1];

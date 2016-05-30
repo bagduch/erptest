@@ -43,21 +43,21 @@ function gamecp_CreateAccount($params) {
 	}
 
 	$username = preg_replace( "/[^a-z0123456789]/", "", $username );
-	update_query( "tblhosting", array( "username" => $username ), array( "id" => $params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "username" => $username ), array( "id" => $params['serviceid'] ) );
 	$args = array( "plugin_gamecp_GameCP_URL" => $params['configoption1'], "plugin_gamecp_Connector_Passphrase" => $params['configoption2'], "debugging" => "off" );
 	$unfio = array( "action" => "userinfo", "function" => "userinfo", "customerid" => $clientsdetails['userid'] );
 	$userinfo = curl2gcp( $args, $unfio );
 	preg_match_all( '/USER: (?P<name>\w+) ::/', $userinfo, $matches );
 
 	if ($matches['name'][0] && $matches['name'][0] != $username) {
-		update_query( "tblhosting", array( "username" => $matches['name'][0] ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $matches['name'][0] ), array( "id" => $params['serviceid'] ) );
 		$customfields['field_name'] = $matches['name'][0];
 	}
 
 	preg_match_all( '/PASS: (?P<pass>\w+) ::/', $userinfo, $pwmatch );
 
 	if ($pwmatch['pass'][0]) {
-		update_query( "tblhosting", array( "password" => encrypt( $pwmatch['pass'][0] ) ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "password" => encrypt( $pwmatch['pass'][0] ) ), array( "id" => $params['serviceid'] ) );
 		$params['password'] = $pwmatch['pass'][0];
 	}
 
@@ -67,7 +67,7 @@ function gamecp_CreateAccount($params) {
 	preg_match_all( '/USER: (?P<name>\w+) ::/', $r_result, $matches );
 
 	if ($matches['name'][0] && $matches['name'][0] != $username) {
-		update_query( "tblhosting", array( "username" => $matches['name'][0] ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $matches['name'][0] ), array( "id" => $params['serviceid'] ) );
 		$customfields['field_name'] = $matches['name'][0];
 	}
 

@@ -17,7 +17,7 @@ if (!$_SESSION['uid']) {
 	exit( "Access Denied" );
 }
 
-$result = select_query( "tblhosting", "count(*)", array( "id" => $serviceid, "userid" => $_SESSION['uid'] ) );
+$result = select_query( "tblcustomerservices", "count(*)", array( "id" => $serviceid, "userid" => $_SESSION['uid'] ) );
 $data = mysql_fetch_array( $result );
 
 if (!$data[0]) {

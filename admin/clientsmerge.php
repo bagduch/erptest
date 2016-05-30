@@ -112,7 +112,7 @@ else {
 		$deleteuser = trim($userid);
 	}
 
-	$tables_array = array("tblaccounts", "tblcontacts", "tbldomains", "tblemails", "tblhosting", "tblinvoiceitems", "tblinvoices", "tblnotes", "tblorders", "tblquotes", "tblticketreplies", "tbltickets", "tblactivitylog", "tblsslorders");
+	$tables_array = array("tblaccounts", "tblcontacts", "tbldomains", "tblemails", "tblcustomerservices", "tblinvoiceitems", "tblinvoices", "tblnotes", "tblorders", "tblquotes", "tblticketreplies", "tbltickets", "tblactivitylog", "tblsslorders");
 	foreach ($tables_array as $table) {
 		update_query($table, array("userid" => $resultinguserid), array("userid" => $userid));
 	}

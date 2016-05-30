@@ -108,7 +108,7 @@ function vpsnet_CreateAccount($params) {
 		$netid = $result['response']['virtual_machine']['id'];
 		$password = $result['response']['virtual_machine']['password'];
 		$ip = $result['response']['virtual_machine']['primary_ip_address']['ip_address']['ip_address'];
-		update_query("tblhosting", array("dedicatedip" => $ip, "password" => encrypt($password)), array("id" => $params['serviceid']));
+		update_query("tblcustomerservices", array("dedicatedip" => $ip, "password" => encrypt($password)), array("id" => $params['serviceid']));
 		insert_query("mod_vpsnet", array("relid" => $params['serviceid'], "setting" => "netid", "value" => $netid));
 		insert_query("mod_vpsnet", array("relid" => $params['serviceid'], "setting" => "slices", "value" => $initialNodes));
 		return "success";

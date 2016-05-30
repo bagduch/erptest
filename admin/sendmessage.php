@@ -208,7 +208,7 @@ if ($action == "send") {
 						}
 						else {
 							if ($type == "product") {
-								$skipemail = get_query_val("tblhosting", "emailoptout", array("tblhosting.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
+								$skipemail = get_query_val("tblcustomerservices", "emailoptout", array("tblhosting.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
 							}
 							else {
 								if ($type == "domain") {
@@ -491,7 +491,7 @@ if ($showform) {
 			else {
 				if ($type == "product") {
 					foreach ($selectedclients as $id) {
-						$result = select_query("tblhosting", "tblclients.firstname,tblclients.lastname,tblclients.email,tblhosting.domain", array("tblhosting.id" => $id), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
+						$result = select_query("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblhosting.domain", array("tblhosting.id" => $id), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
 						$data = mysql_fetch_array($result);
 						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 					}

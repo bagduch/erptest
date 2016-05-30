@@ -46,7 +46,7 @@ function resellerclubssl_CreateAccount($params) {
 		$certyears = $params['configoptions']['Years'];
 	}
 	else {
-		$billingcycle = get_query_val( "tblhosting", "billingcycle", array( "id" => $params['serviceid'] ) );
+		$billingcycle = get_query_val( "tblcustomerservices", "billingcycle", array( "id" => $params['serviceid'] ) );
 
 		if ($billingcycle == "Biennially") {
 			$certyears = 8;
@@ -219,7 +219,7 @@ function resellerclubssl_ClientArea($params) {
 
 	if ($id) {
 		if (!$provisiondate) {
-			$provisiondate = get_query_val( "tblhosting", "regdate", array( "id" => $params['serviceid'] ) );
+			$provisiondate = get_query_val( "tblcustomerservices", "regdate", array( "id" => $params['serviceid'] ) );
 		}
 
 		$provisiondate = ($provisiondate == "0000-00-00" ? "-" : fromMySQLDate( $provisiondate ));

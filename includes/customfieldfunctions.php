@@ -172,7 +172,7 @@ function saveCustomFields($relid, $customfields, $type = "") {
 
 function migrateCustomFieldsBetweenProducts($serviceid, $newpid, $save = false) {
     $customfieldsarray = array();
-    $result = select_query("tblhosting", "packageid", array("id" => $serviceid));
+    $result = select_query("tblcustomerservices", "packageid", array("id" => $serviceid));
     $data = mysql_fetch_array($result);
     $existingpid = $data[0];
 

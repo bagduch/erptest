@@ -172,7 +172,7 @@ else {
 			$smarty->assign("clientname", $clientname);
 			$smarty->assign("email", $email);
 			$relatedservices = array();
-			$result = select_query("tblhosting", "tblhosting.id,tblhosting.domain,tblhosting.domainstatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domain,tblhosting.domainstatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$productname = $data['name'];

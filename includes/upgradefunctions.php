@@ -20,7 +20,7 @@ function SumUpPackageUpgradeOrder($id, $newproductid, $newproductbillingcycle, $
 	global $applytax;
 
 	$_SESSION['upgradeids'] = "";
-	$result = select_query("tblhosting", "tblservices.name,tblservices.id,tblhosting.nextduedate,tblhosting.billingcycle,tblhosting.amount,tblhosting.firstpaymentamount,tblhosting.domain", array("userid" => $_SESSION['uid'], "tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+	$result = select_query("tblcustomerservices", "tblservices.name,tblservices.id,tblhosting.nextduedate,tblhosting.billingcycle,tblhosting.amount,tblhosting.firstpaymentamount,tblhosting.domain", array("userid" => $_SESSION['uid'], "tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 	$data = mysql_fetch_array($result);
 	$oldproductid = $data['id'];
 	$oldproductname = $data['name'];
@@ -254,7 +254,7 @@ function SumUpConfigOptionsOrder($id, $configoptions, $promocode, $paymentmethod
 	global $applytax;
 
 	$_SESSION['upgradeids'] = array();
-	$result = select_query("tblhosting", "packageid,domain,nextduedate,billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
+	$result = select_query("tblcustomerservices", "packageid,domain,nextduedate,billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
 	$data = mysql_fetch_array($result);
 	$packageid = $data['packageid'];
 	$domain = $data['domain'];
@@ -619,13 +619,13 @@ function doUpgrade($upgradeid) {
 			}
 		}
 
-		$result = select_query("tblhosting", "billingcycle", array("id" => $relid));
+		$result = select_query("tblcustomerservices", "billingcycle", array("id" => $relid));
 		$data = mysql_fetch_array($result);
 		$billingcycle = $data['billingcycle'];
 
 		if ($billingcycle == "Free Account") {
 			$newnextdue = getInvoicePayUntilDate(date("Y-m-d"), $newbillingcycle, true);
-			update_query("tblhosting", array("nextduedate" => $newnextdue, "nextinvoicedate" => $newnextdue), array("id" => $relid));
+			update_query("tblcustomerservices", array("nextduedate" => $newnextdue, "nextinvoicedate" => $newnextdue), array("id" => $relid));
 		}
 
 
@@ -634,7 +634,7 @@ function doUpgrade($upgradeid) {
 		}
 
 		migrateCustomFieldsBetweenProducts($relid, $newpackageid);
-		update_query("tblhosting", array("packageid" => $newpackageid, "billingcycle" => $newbillingcycle, "" . $changevalue => "+=" . $recurringchange), array("id" => $relid));
+		update_query("tblcustomerservices", array("packageid" => $newpackageid, "billingcycle" => $newbillingcycle, "" . $changevalue => "+=" . $recurringchange), array("id" => $relid));
 		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblhosting ON tblhosting.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblhosting.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
 		$data = mysql_fetch_array($result);
 		$invitemid = $data['id'];
@@ -688,7 +688,7 @@ function doUpgrade($upgradeid) {
 				}
 			}
 
-			update_query("tblhosting", array("amount" => "+=" . $recurringchange), array("id" => $relid));
+			update_query("tblcustomerservices", array("amount" => "+=" . $recurringchange), array("id" => $relid));
 			run_hook("AfterConfigOptionsUpgrade", array("upgradeid" => $upgradeid));
 		}
 	}
@@ -713,19 +713,19 @@ function doUpgrade($upgradeid) {
 				$recurringamount = ($recurringamount < $promovalue ? "0" : $recurringamount - $promovalue);
 			}
 
-			update_query("tblhosting", array("amount" => $recurringamount, "promoid" => $promoid), array("id" => $relid));
+			update_query("tblcustomerservices", array("amount" => $recurringamount, "promoid" => $promoid), array("id" => $relid));
 		}
 		else {
-			update_query("tblhosting", array("promoid" => "0"), array("id" => $relid));
+			update_query("tblcustomerservices", array("promoid" => "0"), array("id" => $relid));
 		}
 	}
 	else {
-		update_query("tblhosting", array("promoid" => "0"), array("id" => $relid));
+		update_query("tblcustomerservices", array("promoid" => "0"), array("id" => $relid));
 	}
 
 
 	if ($type == "package" || $type == "configoptions") {
-		$data = get_query_vals("tblhosting", "userid,packageid", array("id" => $relid));
+		$data = get_query_vals("tblcustomerservices", "userid,packageid", array("id" => $relid));
 		$userid = $data['userid'];
 		$pid = $data['packageid'];
 		$result = select_query("tblservices", "servertype,upgradeemail", array("id" => $pid));

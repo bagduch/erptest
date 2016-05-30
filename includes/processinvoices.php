@@ -78,7 +78,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 			$cancellationreqids[] = $data[0];
 		}
 
-		$result = select_query("tblhosting", "tblhosting.id,tblhosting.userid,tblhosting.nextduedate,tblhosting.nextinvoicedate,tblhosting.billingcycle,tblhosting.regdate,tblhosting.firstpaymentamount,tblhosting.amount,tblhosting.domain,tblhosting.paymentmethod,tblhosting.packageid,tblhosting.promoid,tblhosting.domainstatus", $hostingquery, "domain", "ASC");
+		$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.userid,tblhosting.nextduedate,tblhosting.nextinvoicedate,tblhosting.billingcycle,tblhosting.regdate,tblhosting.firstpaymentamount,tblhosting.amount,tblhosting.domain,tblhosting.paymentmethod,tblhosting.packageid,tblhosting.promoid,tblhosting.domainstatus", $hostingquery, "domain", "ASC");
 		$totalservicerows = mysql_num_rows($result);
 
 		while ($data = mysql_fetch_array($result)) {
@@ -115,7 +115,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 						$num_rows3 = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Hosting", "relid" => $id));
 
 						if ($recurringcycles <= $num_rows3) {
-							update_query("tblhosting", array("domainstatus" => "Completed"), array("id" => $id));
+							update_query("tblcustomerservices", array("domainstatus" => "Completed"), array("id" => $id));
 							run_hook("ServiceRecurringCompleted", array("serviceid" => $id, "recurringinvoices" => $num_rows3));
 							$recurringfinished = true;
 						}
@@ -138,7 +138,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 				}
 				else {
 					if ((!$contblock && $continvoicegen) && $billingcycle != "One Time") {
-						update_query("tblhosting", array("nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)), array("id" => $id));
+						update_query("tblcustomerservices", array("nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)), array("id" => $id));
 					}
 				}
 			}
@@ -657,7 +657,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
 			$proratabilling = false;
 
 			if ($type == "Hosting") {
-				$data = get_query_vals("tblhosting", "billingcycle,packageid,regdate,nextduedate", array("id" => $relid));
+				$data = get_query_vals("tblcustomerservices", "billingcycle,packageid,regdate,nextduedate", array("id" => $relid));
 				$billingcycle = $data['billingcycle'];
 				$packageid = $data['packageid'];
 				$regdate = $data['regdate'];
@@ -719,7 +719,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
 
 
 			if ($type == "Hosting") {
-				update_query("tblhosting", array("nextinvoicedate" => $nextinvoicedate), array("id" => $relid));
+				update_query("tblcustomerservices", array("nextinvoicedate" => $nextinvoicedate), array("id" => $relid));
 			}
 
 
@@ -805,7 +805,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
 	$proratadate = $data['proratadate'];
 	$proratachargenextmonth = $data['proratachargenextmonth'];
 	$recurringcycles = $data['recurringcycles'];
-	$userid = get_query_val("tblhosting", "userid", array("id" => $id));
+	$userid = get_query_val("tblcustomerservices", "userid", array("id" => $id));
 	$currency = getCurrency($userid);
 
 	if ($tax && $CONFIG['TaxEnabled']) {
@@ -1038,7 +1038,7 @@ function getInvoiceProductPromo($amount, $promoid, $userid = "", $serviceid = ""
 
 
 	if ($serviceid) {
-		$data = get_query_vals("tblhosting", "packageid,regdate,nextduedate,firstpaymentamount,billingcycle", array("id" => $serviceid));
+		$data = get_query_vals("tblcustomerservices", "packageid,regdate,nextduedate,firstpaymentamount,billingcycle", array("id" => $serviceid));
 		$pid = $data['packageid'];
 		$regdate = $data['regdate'];
 		$nextduedate = $data['nextduedate'];
@@ -1067,7 +1067,7 @@ function getInvoiceProductPromo($amount, $promoid, $userid = "", $serviceid = ""
 				$amount += $configoption['selectedrecurring'];
 			}
 
-			update_query("tblhosting", array("amount" => $amount, "promoid" => "0"), array("id" => $serviceid));
+			update_query("tblcustomerservices", array("amount" => $amount, "promoid" => "0"), array("id" => $serviceid));
 		}
 	}
 

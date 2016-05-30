@@ -73,7 +73,7 @@ function hypervm_CreateAccount($params) {
 			$vhostname .= "." . $params['domain'];
 		}
 
-		update_query( "tblhosting", array( "domain" => $vhostname ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "domain" => $vhostname ), array( "id" => $params['serviceid'] ) );
 		$vhostname = "&v-hostname=" . $vhostname;
 	}
 
@@ -90,7 +90,7 @@ function hypervm_CreateAccount($params) {
 
 	if (substr( $params['username'], 0 - 3 ) != ".vm") {
 		$params->username .= ".vm";
-		update_query( "tblhosting", array( "username" => $params['username'] ), array( "id" => (int)$params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $params['username'] ), array( "id" => (int)$params['serviceid'] ) );
 	}
 
 	$result = lxlabs_get_via_json( $params['serversecure'], $params['serverip'], $params['serverusername'], $params['serverpassword'], "8888", "action=simplelist&resource=resourceplan" );
@@ -115,7 +115,7 @@ function hypervm_CreateAccount($params) {
 
 	$result = lxlabs_get_via_json( $params['serversecure'], $params['serverip'], $params['serverusername'], $params['serverpassword'], "8888", "action=getproperty&class=vps&name=" . $params['username'] . "&v-coma_vmipaddress_a=" );
 	$ipaddresses = $result->result->cadbahhgeh;
-	update_query( "tblhosting", array( "dedicatedip" => $ipaddresses ), array( "id" => $params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "dedicatedip" => $ipaddresses ), array( "id" => $params['serviceid'] ) );
 	return "success";
 }
 

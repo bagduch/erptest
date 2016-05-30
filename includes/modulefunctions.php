@@ -19,7 +19,7 @@ function getModuleType($id) {
 
 function ModuleBuildParams($id) {
 
-	$result = select_query("tblhosting", "", array("id" => $id));
+	$result = select_query("tblcustomerservices", "", array("id" => $id));
 	$data = mysql_fetch_array($result);
 	$func_id = $id = $data['id'];
 	$userid = $data['userid'];
@@ -160,13 +160,13 @@ function ServerCreateAccount($func_id) {
 
 	if (!$params['username']) {
 		$params['username'] = createServerUsername($params['domain']);
-		update_query("tblhosting", array("username" => $params['username']), array("id" => $func_id));
+		update_query("tblcustomerservices", array("username" => $params['username']), array("id" => $func_id));
 	}
 
 
 	if (!$params['password']) {
 		$params['password'] = createServerPassword();
-		update_query("tblhosting", array("password" => encrypt($params['password'])), array("id" => $func_id));
+		update_query("tblcustomerservices", array("password" => encrypt($params['password'])), array("id" => $func_id));
 	}
 
 	$hookresults = run_hook("PreModuleCreate", array("params" => $params));
@@ -187,7 +187,7 @@ function ServerCreateAccount($func_id) {
 
 		if ($result == "success") {
 			logActivity("Module Create Successful - Service ID: " . $func_id, $params['clientsdetails']['userid']);
-			update_query("tblhosting", array("domainstatus" => "Active"), array("id" => $func_id));
+			update_query("tblcustomerservices", array("domainstatus" => "Active"), array("id" => $func_id));
 			run_hook("AfterModuleCreate", array("params" => $params));
 			return $result;
 		}
@@ -227,7 +227,7 @@ function ServerSuspendAccount($func_id, $suspendreason = "") {
 		if ($result == "success") {
 			$reason = ($suspendreason ? " - Reason: " . $suspendreason : "");
 			logActivity("Module Suspend Successful" . $reason . (" - Service ID: " . $func_id), $params['clientsdetails']['userid']);
-			update_query("tblhosting", array("domainstatus" => "Suspended", "suspendreason" => $suspendreason), array("id" => $func_id));
+			update_query("tblcustomerservices", array("domainstatus" => "Suspended", "suspendreason" => $suspendreason), array("id" => $func_id));
 			run_hook("AfterModuleSuspend", array("params" => $params));
 			return $result;
 		}
@@ -265,7 +265,7 @@ function ServerUnsuspendAccount($func_id) {
 
 		if ($result == "success") {
 			logActivity("Module Unsuspend Successful - Service ID: " . $func_id, $params['clientsdetails']['userid']);
-			update_query("tblhosting", array("domainstatus" => "Active", "suspendreason" => ""), array("id" => $func_id));
+			update_query("tblcustomerservices", array("domainstatus" => "Active", "suspendreason" => ""), array("id" => $func_id));
 			run_hook("AfterModuleUnsuspend", array("params" => $params));
 			return $result;
 		}
@@ -303,7 +303,7 @@ function ServerTerminateAccount($func_id) {
 
 		if ($result == "success") {
 			logActivity("Module Terminate Successful - Service ID: " . $func_id, $params['clientsdetails']['userid']);
-			update_query("tblhosting", array("domainstatus" => "Terminated"), array("id" => $func_id));
+			update_query("tblcustomerservices", array("domainstatus" => "Terminated"), array("id" => $func_id));
 			update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $func_id));
 			run_hook("AfterModuleTerminate", array("params" => $params));
 			return $result;
@@ -512,7 +512,7 @@ function createServerUsername($domain) {
 		$domain = strtolower($domain);
 		$username = preg_replace("/[^a-z]/", "", $domain);
 		$username = substr($username, 0, 8);
-		$result = select_query("tblhosting", "COUNT(*)", array("username" => $username));
+		$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
 		$data = mysql_fetch_array($result);
 		$username_exists = $data[0];
 		$suffix = 0;
@@ -521,7 +521,7 @@ function createServerUsername($domain) {
 			++$suffix;
 			$trimlength = 8 - strlen($suffix);
 			$username = substr($username, 0, $trimlength) . $suffix;
-			$result = select_query("tblhosting", "COUNT(*)", array("username" => $username));
+			$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
 			$data = mysql_fetch_array($result);
 			$username_exists = $data[0];
 		}
@@ -547,7 +547,7 @@ function createServerUsername($domain) {
 			++$i;
 		}
 
-		$result = select_query("tblhosting", "COUNT(*)", array("username" => $username));
+		$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
 		$data = mysql_fetch_array($result);
 		$username_exists = $data[0];
 
@@ -570,7 +570,7 @@ function createServerUsername($domain) {
 				++$i;
 			}
 
-			$result = select_query("tblhosting", "COUNT(*)", array("username" => $username));
+			$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
 			$data = mysql_fetch_array($result);
 			$username_exists = $data[0];
 		}

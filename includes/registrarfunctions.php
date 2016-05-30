@@ -340,7 +340,7 @@ function RegRegisterDomain($paramvars) {
 		$result = select_query("tblorders", "nameservers", array("id" => $orderid));
 		$data = mysql_fetch_array($result);
 		$nameservers = $data['nameservers'];
-		$result = select_query("tblhosting", "server", array("domain" => $domain));
+		$result = select_query("tblcustomerservices", "server", array("domain" => $domain));
 		$data = mysql_fetch_array($result);
 		$server = $data['server'];
 
@@ -506,7 +506,7 @@ function RegTransferDomain($paramvars) {
 		$result = select_query("tblorders", "nameservers", array("id" => $orderid));
 		$data = mysql_fetch_array($result);
 		$nameservers = $data['nameservers'];
-		$result = select_query("tblhosting", "server", array("domain" => $domain));
+		$result = select_query("tblcustomerservices", "server", array("domain" => $domain));
 		$data = mysql_fetch_array($result);
 		$server = $data['server'];
 
@@ -705,7 +705,7 @@ function RegClientAreaOutput($params) {
 function RegGetDefaultNameservers($params, $domain) {
 	global $CONFIG;
 
-	$serverid = get_query_val("tblhosting", "server", array("domain" => $domain));
+	$serverid = get_query_val("tblcustomerservices", "server", array("domain" => $domain));
 
 	if ($serverid) {
 		$result = select_query("tblservers", "", array("id" => $serverid));

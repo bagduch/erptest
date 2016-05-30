@@ -152,7 +152,7 @@ function doFraudCheck($params, $checkonly = false) {
 			$forcepids[$k] = trim($v);
 		}
 
-		$result = select_query("tblhosting", "COUNT(id)", "orderid=" . (int)$_SESSION['orderdetails']['OrderID'] . " AND packageid IN (" . db_build_in_array(db_escape_numarray($forcepids)) . ")");
+		$result = select_query("tblcustomerservices", "COUNT(id)", "orderid=" . (int)$_SESSION['orderdetails']['OrderID'] . " AND packageid IN (" . db_build_in_array(db_escape_numarray($forcepids)) . ")");
 		$data = mysql_fetch_array($result);
 
 		if ($data[0]) {

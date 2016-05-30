@@ -33,7 +33,7 @@ function scpanel_CreateAccount($params) {
 		$params['username'] = substr( $params['username'], 0, 8 );
 	}
 
-	update_query( "tblhosting", array( "domain" => $params['domain'], "username" => $params['username'] ), array( "id" => (int)$params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => $params['domain'], "username" => $params['username'] ), array( "id" => (int)$params['serviceid'] ) );
 	$cpanelpassword = createServerPassword();
 	$sHTTP = "GET /scripts/wwwacct?domain=" . urlencode( $params['domain'] ) . "&username=" . urlencode( $params['username'] ) . "&password=" . urlencode( $cpanelpassword ) . "&plan=" . urlencode( $params['configoption12'] ) . ( ( "&x=
  HTTP/1.0

@@ -87,7 +87,7 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 	$orderdata['fraudoutput'] = $fraudoutput;
 	$orderdata['frauddata'] = $frauddata;
 	$lineitems = array();
-	$result2 = select_query("tblhosting", "", array("orderid" => $orderid));
+	$result2 = select_query("tblcustomerservices", "", array("orderid" => $orderid));
 
 	while ($data = mysql_fetch_array($result2)) {
 		$serviceid = $data['id'];

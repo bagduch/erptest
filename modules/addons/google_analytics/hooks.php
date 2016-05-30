@@ -76,7 +76,7 @@ function google_analytics_hook_checkout_tracker($vars) {
     '" . $clientdetails['country'] . "'
   ]);
 ";
-	$result = select_query( "tblhosting", "tblhosting.id,tblservices.id AS pid,tblservices.name,tblservicegroups.name AS groupname,tblhosting.firstpaymentamount", array( "orderid" => $orderid ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid" );
+	$result = select_query( "tblcustomerservices", "tblhosting.id,tblservices.id AS pid,tblservices.name,tblservicegroups.name AS groupname,tblhosting.firstpaymentamount", array( "orderid" => $orderid ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid" );
 
 	while ($data = mysql_fetch_array( $result )) {
 		$serviceid = $data['id'];

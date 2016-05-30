@@ -488,7 +488,7 @@ function deleteClient($userid) {
 	delete_query("tblclients", array("id" => $userid));
 	delete_query("tblcontacts", array("userid" => $userid));
 	delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE userid=" . $userid . ")");
-	$result = select_query("tblhosting", "id", array("userid" => $userid));
+	$result = select_query("tblcustomerservices", "id", array("userid" => $userid));
 
 	while ($data = mysql_fetch_array($result)) {
 		$domainlistid = $data['id'];
@@ -507,7 +507,7 @@ function deleteClient($userid) {
 	while ($data = mysql_fetch_array($result)) {
 		$customfieldid = $data['id'];
 		$customfieldpid = $data['relid'];
-		$result2 = select_query("tblhosting", "id", array("userid" => $userid, "packageid" => $customfieldpid));
+		$result2 = select_query("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
 
 		while ($data = mysql_fetch_array($result2)) {
 			$hostingid = $data['id'];
@@ -516,7 +516,7 @@ function deleteClient($userid) {
 	}
 
 	delete_query("tblorders", array("userid" => $userid));
-	delete_query("tblhosting", array("userid" => $userid));
+	delete_query("tblcustomerservices", array("userid" => $userid));
 	delete_query("tbldomains", array("userid" => $userid));
 	delete_query("tblemails", array("userid" => $userid));
 	delete_query("tblinvoices", array("userid" => $userid));
@@ -790,7 +790,7 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 			logActivity("Automatic Cancellation Requested Immediately - Service ID: " . $serviceid, $userid);
 		}
 
-		$data = get_query_vals("tblhosting", "domain,freedomain", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+		$data = get_query_vals("tblcustomerservices", "domain,freedomain", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 		$domain = $data[0];
 		$freedomain = $data[1];
 
@@ -878,7 +878,7 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 
 function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billingcycle = "", $configoptionsrecurring = "empty", $promoid = 0, $includesetup = false) {
 	if ((!$userid || !$pid) || !$billingcycle) {
-		$result = select_query("tblhosting", "userid,packageid,billingcycle", array("id" => $serviceid));
+		$result = select_query("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
 		$data = mysql_fetch_array($result);
 
 		if (!$userid) {
@@ -970,10 +970,10 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 
 function closeClient($userid) {
 	update_query("tblclients", array("status" => "Closed"), array("id" => $userid));
-	update_query("tblhosting", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Pending"));
-	update_query("tblhosting", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Active"));
-	update_query("tblhosting", array("domainstatus" => "Terminated"), array("userid" => $userid, "domainstatus" => "Suspended"));
-	$result = select_query("tblhosting", "id", array("userid" => $userid));
+	update_query("tblcustomerservices", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Pending"));
+	update_query("tblcustomerservices", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Active"));
+	update_query("tblcustomerservices", array("domainstatus" => "Terminated"), array("userid" => $userid, "domainstatus" => "Suspended"));
+	$result = select_query("tblcustomerservices", "id", array("userid" => $userid));
 
 	while ($data = mysql_fetch_array($result)) {
 		$domainlistid = $data['id'];
@@ -1357,7 +1357,7 @@ function clientChangeDefaultGateway($userid, $paymentmethod) {
 		}
 
 		update_query("tblclients", array("defaultgateway" => $paymentmethod), array("id" => $userid));
-		update_query("tblhosting", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
+		update_query("tblcustomerservices", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
 		update_query("tblserviceaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblhosting WHERE userid=" . (int)$userid . ")");
 		update_query("tbldomains", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
 		update_query("tblinvoices", array("paymentmethod" => $paymentmethod), array("userid" => $userid, "status" => "Unpaid"));

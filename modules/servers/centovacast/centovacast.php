@@ -113,7 +113,7 @@ function centovacast_QueryAllRows() {
 
 
 /**
- * Determines whether a particular username already exists in the RA"tblhosting"
+ * Determines whether a particular username already exists in the RA"tblcustomerservices"
  * table.
  *
  * @internal
@@ -842,7 +842,7 @@ function centovacast_UsageUpdate($params) {
 
 	$serverid = $params['serverid'];
 	foreach ($accounts as $k => $values) {
-		update_query( "tblhosting", array( "diskused" => $values['diskusage'], "disklimit" => max( 0, $values['diskquota'] ), "bwused" => $values['transferusage'], "bwlimit" => max( 0, $values['transferlimit'] ), "lastupdate" => "now()" ), array( "server" => $serverid, "username" => $values['username'] ) );
+		update_query( "tblcustomerservices", array( "diskused" => $values['diskusage'], "disklimit" => max( 0, $values['diskquota'] ), "bwused" => $values['transferusage'], "bwlimit" => max( 0, $values['transferlimit'] ), "lastupdate" => "now()" ), array( "server" => $serverid, "username" => $values['username'] ) );
 	}
 
 	return "success";

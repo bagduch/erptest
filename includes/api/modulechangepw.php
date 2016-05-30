@@ -20,7 +20,7 @@ if (!function_exists("ServerChangePassword")) {
 }
 
 $serviceid = (isset($_POST['serviceid']) ? $_POST['serviceid'] : $_POST['accountid']);
-$result = select_query("tblhosting", "packageid", array("id" => $serviceid));
+$result = select_query("tblcustomerservices", "packageid", array("id" => $serviceid));
 $data = mysql_fetch_array($result);
 $packageid = $data['packageid'];
 
@@ -31,7 +31,7 @@ if (!$packageid) {
 
 
 if ($servicepassword) {
-	update_query("tblhosting", array("password" => encrypt($servicepassword)), array("id" => $serviceid));
+	update_query("tblcustomerservices", array("password" => encrypt($servicepassword)), array("id" => $serviceid));
 }
 
 $result = ServerChangePassword($serviceid);

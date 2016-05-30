@@ -40,7 +40,7 @@ if ($step == "4") {
 	}
 }
 
-$result = select_query("tblhosting", "tblhosting.id,tblhosting.domain,tblhosting.nextduedate,tblhosting.billingcycle,tblhosting.packageid,tblservices.name AS productname,tblservicegroups.name AS groupname", array("userid" => $_SESSION['uid'], "tblhosting.id" => $id, "tblhosting.domainstatus" => "Active"), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domain,tblhosting.nextduedate,tblhosting.billingcycle,tblhosting.packageid,tblservices.name AS productname,tblservicegroups.name AS groupname", array("userid" => $_SESSION['uid'], "tblhosting.id" => $id, "tblhosting.domainstatus" => "Active"), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 $data = mysql_fetch_array($result);
 $id = $data['id'];
 
@@ -122,7 +122,7 @@ if (!$step) {
 	}
 	else {
 		if ($type == "configoptions") {
-			$result = select_query("tblhosting", "billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
+			$result = select_query("tblcustomerservices", "billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
 			$data = mysql_fetch_array($result);
 			$billingcycle = $data['billingcycle'];
 			$newproductbillingcycle = strtolower($billingcycle);
@@ -183,7 +183,7 @@ else {
 			}
 		}
 		else {
-			$promodata = get_query_vals("tblpromotions", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblhosting", "promoid", array("id" => $serviceid))));
+			$promodata = get_query_vals("tblpromotions", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblcustomerservices", "promoid", array("id" => $serviceid))));
 
 			if (is_array($promodata)) {
 				$smartyvalues['promocode'] = $promocode = $promodata['code'];

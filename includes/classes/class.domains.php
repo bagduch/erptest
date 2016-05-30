@@ -151,7 +151,7 @@ class RA_Domains {
 		global $ra;
 
 		$vars = array();
-		$serverid = get_query_val("tblhosting", "server", array("domain" => $this->getData("domain")));
+		$serverid = get_query_val("tblcustomerservices", "server", array("domain" => $this->getData("domain")));
 
 		if ($serverid) {
 			$result = select_query("tblservers", "nameserver1,nameserver2,nameserver3,nameserver4,nameserver5", array("id" => $serverid));

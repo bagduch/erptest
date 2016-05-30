@@ -195,7 +195,7 @@ if (!$a) {
             }
 
             $productids = array();
-            $result = select_query("tblhosting", "tblhosting.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
+            $result = select_query("tblcustomerservices", "tblhosting.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
 
             while ($data = mysql_fetch_array($result)) {
                 $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "domain" => $data['domain']);
@@ -512,7 +512,7 @@ if ($a == "domainoptions") {
 
 
                 if ($CONFIG['AllowDomainsTwice']) {
-                    $result = select_query("tblhosting", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (domainstatus!='Terminated' AND domainstatus!='Cancelled' AND domainstatus!='Fraud')");
+                    $result = select_query("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (domainstatus!='Terminated' AND domainstatus!='Cancelled' AND domainstatus!='Fraud')");
                     $data = mysql_fetch_array($result);
                     $domaincheck = $data[0];
 
@@ -872,7 +872,7 @@ if ($a == "fraudcheck") {
 
         if ($_SESSION['orderdetails']['Products']) {
             foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-                update_query("tblhosting", array("domainstatus" => "Pending"), array("id" => $productid, "domainstatus" => "Fraud"));
+                update_query("tblcustomerservices", array("domainstatus" => "Pending"), array("id" => $productid, "domainstatus" => "Fraud"));
             }
         }
 
@@ -929,7 +929,7 @@ if ($a == "complete") {
         exit("Unexpected payment method value. Exiting.");
     }
 
-    $result = select_query("tblhosting", "tblhosting.id,tblproducts.servertype", array("tblhosting.orderid" => $orderid, "tblhosting.domainstatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
+    $result = select_query("tblcustomerservices", "tblhosting.id,tblproducts.servertype", array("tblhosting.orderid" => $orderid, "tblhosting.domainstatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
 
     while ($data = mysql_fetch_array($result)) {
         $id = $data['id'];

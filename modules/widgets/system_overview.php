@@ -14,8 +14,8 @@ function widget_system_overview($vars) {
         $totalclients = get_query_val("tblclients","COUNT(id)","");
         $clientsactive = ($activeclients==0 || $totalclients==0) ? '0' : round((($activeclients/$totalclients)*100),0);
 
-        $activeservices = get_query_val("tblhosting","COUNT(id)","domainstatus='Active'");
-        $totalservices = get_query_val("tblhosting","COUNT(id)","");
+        $activeservices = get_query_val("tblcustomerservices","COUNT(id)","domainstatus='Active'");
+        $totalservices = get_query_val("tblcustomerservices","COUNT(id)","");
         $servicesactive = ($activeservices==0 || $totalservices==0) ? '0' : round((($activeservices/$totalservices)*100),0);
 
         $unpaidinvoices = get_query_val("tblinvoices","COUNT(id)","status='Unpaid'");

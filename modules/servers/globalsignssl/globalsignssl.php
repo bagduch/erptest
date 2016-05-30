@@ -309,7 +309,7 @@ function globalsignssl_SSLStepTwo($params) {
 	$values['displaydata']['Locality'] = $csrdata->Locality;
 	$values['displaydata']['State'] = $csrdata->State;
 	$values['displaydata']['Country'] = $csrdata->Country;
-	update_query( "tblhosting", array( "domain" => $values['displaydata']['Domain'] ), array( "id" => $params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => $values['displaydata']['Domain'] ), array( "id" => $params['serviceid'] ) );
 	return $values;
 }
 

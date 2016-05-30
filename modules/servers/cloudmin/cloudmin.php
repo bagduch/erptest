@@ -222,7 +222,7 @@ function cloudmin_req($params, $postfields) {
 			$hostname = substr( $data, $pos1 + strlen( $matchstring ), $pos2 - $pos1 - strlen( $matchstring ) );
 
 			if ($hostname) {
-				update_query( "tblhosting", array( "domain" => $hostname ), array( "id" => $params['serviceid'] ) );
+				update_query( "tblcustomerservices", array( "domain" => $hostname ), array( "id" => $params['serviceid'] ) );
 			}
 		}
 		else {

@@ -343,7 +343,7 @@ if (!function_exists("emailtpl_template")) {
 							$gatewaysarray[$data['gateway']] = $data['value'];
 						}
 
-						$result = select_query("tblhosting", "tblhosting.*,tblservices.name,tblservices.description", array("tblhosting.id" => $func_id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+						$result = select_query("tblcustomerservices", "tblhosting.*,tblservices.name,tblservices.description", array("tblhosting.id" => $func_id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 						$data = mysql_fetch_array($result);
 						$id = $data['id'];
 						$userid = $data['userid'];
@@ -2543,7 +2543,7 @@ if (!function_exists("emailtpl_template")) {
 			$fields['password'] = encrypt($fields['password']);
 		}
 
-		update_query("tblhosting", $fields, array("id" => $serviceid));
+		update_query("tblcustomerservices", $fields, array("id" => $serviceid));
 		return true;
 	}
 

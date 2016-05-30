@@ -20,7 +20,7 @@ $aInt->helplink = "Servers";
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$numaccounts = get_query_val("tblhosting", "COUNT(*)", array("server" => $id));
+	$numaccounts = get_query_val("tblcustomerservices", "COUNT(*)", array("server" => $id));
 
 	if (0 < $numaccounts) {
 		redir("deleteerror=true");
@@ -218,7 +218,7 @@ if ($action == "") {
 			$type = $data['type'];
 			$disabled = $data['disabled'];
 			$active = ($active ? "*" : "");
-			$result2 = select_query("tblhosting", "COUNT(*)", "server='" . $id . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+			$result2 = select_query("tblcustomerservices", "COUNT(*)", "server='" . $id . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
 			$data = mysql_fetch_array($result2);
 			$numaccounts = $data[0];
 			$percentuse = @round($numaccounts / $maxaccounts * 100, 0);

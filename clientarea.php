@@ -672,7 +672,7 @@ $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $conta
           if ($action == "hosting" || $action == "products") {
             checkContactPermission("products");
             $ca->setTemplate("clientareaproducts");
-            $table = "tblhosting";
+            $table = "tblcustomerservices";
             $fields = "COUNT(*)";
             $where = "userid='".db_escape_string($client->getID())."'";
 
@@ -945,7 +945,7 @@ else {
             $modulechangepwresult = "error";
             $modulechangepasswordmessage = $validate->getHTMLErrorOutput();
           } else {
-            update_query("tblhosting", array("password" => encrypt($newpassword1)), array("id" => $id));
+            update_query("tblcustomerservices", array("password" => encrypt($newpassword1)), array("id" => $id));
             $success = $service->moduleCall("ChangePassword", array("password" => html_entity_decode($newpassword1)));
 
             if ($success) {
@@ -956,7 +956,7 @@ else {
             } else {
               $modulechangepwresult = "error";
               $modulechangepasswordmessage = $_LANG['serverchangepasswordfailed'];
-              update_query("tblhosting", array("password" => encrypt($servicepw)), array("id" => $id));
+              update_query("tblcustomerservices", array("password" => encrypt($servicepw)), array("id" => $id));
             }
           }
 

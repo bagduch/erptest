@@ -362,7 +362,7 @@ function websitepanel_UsageUpdate($params) {
 				$startDate = websitepanel_calculateDate( $row['regdate'] );
 				$bandwidth = websitepanel_getBandwidth( $params, $packageID, $startDate );
 				$diskspace = websitepanel_getDiskspace( $params, $packageID );
-				update_query( "tblhosting", array( "diskusage" => $diskspace, "disklimit" => $dslimit, "bwusage" => $bandwidth, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "server" => $params['serverid'], "username" => $username ) );
+				update_query( "tblcustomerservices", array( "diskusage" => $diskspace, "disklimit" => $dslimit, "bwusage" => $bandwidth, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "server" => $params['serverid'], "username" => $username ) );
 			}
 		}
     	catch ( Exception $e )

@@ -19,7 +19,7 @@ function mcp_firstrun() {
 
 
 	while ($serverData = mysql_fetch_assoc( $checkServerID )) {
-		$selectCastcontrol = select_query( "tblhosting", "userid,password", array( "server" => (int)$serverData['id'] ), "id", "ASC" );
+		$selectCastcontrol = select_query( "tblcustomerservices", "userid,password", array( "server" => (int)$serverData['id'] ), "id", "ASC" );
 
 		if (mysql_num_rows( $selectCastcontrol ) == 0) {
 			return true;
@@ -151,7 +151,7 @@ function mediacp_CreateAccount($params) {
 	}
 
 	$___url = parse_url( $params['configoption2'] );
-	update_query( "tblhosting", array( "username" => $api['args']['username'], "password" => encrypt( mcp_getClientPassword( $params['clientsdetails']['userid'] ) ) ), array( "id" => (int)$params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "username" => $api['args']['username'], "password" => encrypt( mcp_getClientPassword( $params['clientsdetails']['userid'] ) ) ), array( "id" => (int)$params['serviceid'] ) );
 
 	if ($params['configoption16'] == "No") {
 		return "success";
@@ -410,7 +410,7 @@ function mediacp_CreateAccount($params) {
 		}
 	}
 
-	update_query( "tblhosting", array( "domain" => $___url['host'] . ":" . $return['portbase'] ), array( "id" => (int)$params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => $___url['host'] . ":" . $return['portbase'] ), array( "id" => (int)$params['serviceid'] ) );
 	return "success";
 }
 
@@ -431,7 +431,7 @@ function mediacp_TerminateAccount($params) {
 	}
 
 	delete_query( "tblcustomfieldsvalues", array( "relid" => (int)$params['serviceid'] ) );
-	update_query( "tblhosting", array( "domain" => $params['domain'] . ":terminated" ), array( "id" => (int)$params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => $params['domain'] . ":terminated" ), array( "id" => (int)$params['serviceid'] ) );
 	return "success";
 }
 

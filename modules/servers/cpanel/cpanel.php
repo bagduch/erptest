@@ -284,7 +284,7 @@ function cpanel_CreateAccount($params) {
 
 	if ($dedicatedip == "y") {
 		$newaccountip = $output['CREATEACCT']['RESULT']['OPTIONS']['IP'];
-		update_query( "tblhosting", array( "dedicatedip" => $newaccountip ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "dedicatedip" => $newaccountip ), array( "id" => $params['serviceid'] ) );
 	}
 
 
@@ -863,7 +863,7 @@ function cpanel_ChangePackage($params) {
 					$output = cpanel_req( $params['serversecure'], $params['serverip'], $params['serverusername'], $params['serverpassword'], $params['serveraccesshash'], $cpanelrequest );
 
 					if ($output['SETSITEIP']['RESULT']['STATUS']) {
-						update_query( "tblhosting", array( "dedicatedip" => $ipaddr ), array( "id" => $params['serviceid'] ) );
+						update_query( "tblcustomerservices", array( "dedicatedip" => $ipaddr ), array( "id" => $params['serviceid'] ) );
 					}
 				}
 			}
@@ -908,7 +908,7 @@ function cpanel_UsageUpdate($params) {
 			$disklimit = $data['DISKLIMIT'];
 			$diskused = str_replace( "M", "", $diskused );
 			$disklimit = str_replace( "M", "", $disklimit );
-			update_query( "tblhosting", array( "diskusage" => $diskused, "disklimit" => $disklimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+			update_query( "tblcustomerservices", array( "diskusage" => $diskused, "disklimit" => $disklimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 		}
 	}
 
@@ -923,12 +923,12 @@ function cpanel_UsageUpdate($params) {
 			$bwlimit = $data['LIMIT'];
 			$bwused = $bwused / ( 1024 * 1024 );
 			$bwlimit = $bwlimit / ( 1024 * 1024 );
-			update_query( "tblhosting", array( "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+			update_query( "tblcustomerservices", array( "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 		}
 	}
 
 	unset( $output );
-	$result = select_query( "tblhosting", "domain,username", array( "server" => $params['serverid'], "type" => "reselleraccount" ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
+	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'], "type" => "reselleraccount" ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
 
 	while ($data = mysql_fetch_array( $result )) {
 		$domain = $data['domain'];
@@ -953,7 +953,7 @@ function cpanel_UsageUpdate($params) {
 					$bwlimit = $output['RESELLERSTATS']['RESULT']['TOTALBWALLOC'];
 				}
 
-				update_query( "tblhosting", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+				update_query( "tblcustomerservices", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 			}
 		}
 

@@ -79,7 +79,7 @@ if (isset($_SESSION['uid'])) {
 	$provisiondate = $data['provisiondate'];
 	$completiondate = $data['completiondate'];
 	$status = $data['status'];
-	$result = select_query("tblhosting", "packageid,regdate,domain,firstpaymentamount", array("id" => $serviceid));
+	$result = select_query("tblcustomerservices", "packageid,regdate,domain,firstpaymentamount", array("id" => $serviceid));
 	$data = mysql_fetch_array($result);
 	$productid = $data['packageid'];
 	$regdate = $data['regdate'];
@@ -226,7 +226,7 @@ if (isset($_SESSION['uid'])) {
 
 
 				if ($result['domain']) {
-					update_query("tblhosting", array("domain" => $result['domain']), array("id" => $serviceid));
+					update_query("tblcustomerservices", array("domain" => $result['domain']), array("id" => $serviceid));
 				}
 
 
@@ -275,7 +275,7 @@ if (isset($_SESSION['uid'])) {
 
 
 			if ($result['domain']) {
-				update_query("tblhosting", array("domain" => $result['domain']), array("id" => $serviceid));
+				update_query("tblcustomerservices", array("domain" => $result['domain']), array("id" => $serviceid));
 			}
 
 

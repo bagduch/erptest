@@ -20,7 +20,7 @@ if (!function_exists("ServerChangePackage")) {
 }
 
 $serviceid = (isset($_POST['serviceid']) ? $_POST['serviceid'] : $_POST['accountid']);
-$result = select_query("tblhosting", "packageid", array("id" => $serviceid));
+$result = select_query("tblcustomerservices", "packageid", array("id" => $serviceid));
 $data = mysql_fetch_array($result);
 $packageid = $data['packageid'];
 

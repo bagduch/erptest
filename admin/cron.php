@@ -332,7 +332,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 		$loginfo = $firstname . " " . $lastname . " - " . $prodname . $domain . " (Due Date: " . $nextduedate . ")";
 
 		if ($serverresult == "success") {
-			update_query("tblhosting", array("domainstatus" => "Cancelled"), array("id" => $id));
+			update_query("tblcustomerservices", array("domainstatus" => "Cancelled"), array("id" => $id));
 			update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $id));
 			run_hook("AddonCancelled", array("id" => "all", "userid" => $userid, "serviceid" => $id, "addonid" => ""));
 			$cron->emailLogSub("SUCCESS: " . $loginfo, true);
@@ -348,7 +348,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 
 
 if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
-	update_query("tblhosting", array("overideautosuspend" => ""), "(overideautosuspend='on' OR overideautosuspend='1') AND overidesuspenduntil<'" . date("Y-m-d") . "' AND overidesuspenduntil!='0000-00-00'");
+	update_query("tblcustomerservices", array("overideautosuspend" => ""), "(overideautosuspend='on' OR overideautosuspend='1') AND overidesuspenduntil<'" . date("Y-m-d") . "' AND overidesuspenduntil!='0000-00-00'");
 	$i = 0;
 	$suspenddate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AutoSuspensionDays'], date("Y")));
 	$query3 = "SELECT * FROM tblhosting WHERE domainstatus='Active' AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND overideautosuspend!='on' AND overideautosuspend!='1' AND nextduedate<='" . $suspenddate . "' ORDER BY domain ASC";
@@ -538,7 +538,7 @@ if ($cron->isScheduled("fixedtermterminations")) {
 		}
 
 		$terminatebefore = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $autoterminatedays, date("Y")));
-		$result2 = select_query("tblhosting", "tblhosting.id,userid,domain,firstname,lastname", "packageid=" . $pid . " AND regdate<='" . $terminatebefore . "' AND (domainstatus='Active' OR domainstatus='Suspended')", "id", "ASC", "", "tblclients ON tblclients.id=tblhosting.userid");
+		$result2 = select_query("tblcustomerservices", "tblhosting.id,userid,domain,firstname,lastname", "packageid=" . $pid . " AND regdate<='" . $terminatebefore . "' AND (domainstatus='Active' OR domainstatus='Suspended')", "id", "ASC", "", "tblclients ON tblclients.id=tblhosting.userid");
 
 		while ($data = mysql_fetch_array($result2)) {
 			$serviceid = $data[0];
@@ -881,7 +881,7 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
 		$overagesbasediskprice = $data['overagesdiskprice'];
 		$overagesbasebwprice = $data['overagesbwprice'];
 		$overagesenabled = explode(",", $overagesenabled);
-		$result2 = select_query("tblhosting", "tblhosting.*,tblclients.currency", "packageid=" . $pid . " AND (domainstatus='Active' OR domainstatus='Suspended')", "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
+		$result2 = select_query("tblcustomerservices", "tblhosting.*,tblclients.currency", "packageid=" . $pid . " AND (domainstatus='Active' OR domainstatus='Suspended')", "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
 
 		while ($data = mysql_fetch_array($result2)) {
 			$serviceid = $data['id'];

@@ -29,7 +29,7 @@ if (!function_exists("getCartConfigOptions")) {
 	require ROOTDIR . "/includes/configoptionsfunctions.php";
 }
 
-$result = select_query("tblhosting", "id,billingcycle,promoid", array("id" => $serviceid));
+$result = select_query("tblcustomerservices", "id,billingcycle,promoid", array("id" => $serviceid));
 $data = mysql_fetch_array($result);
 $serviceid = $data['id'];
 
@@ -180,7 +180,7 @@ if ($suspendreason) {
 	$updateqry['suspendreason'] = $suspendreason;
 }
 
-update_query("tblhosting", $updateqry, array("id" => $serviceid));
+update_query("tblcustomerservices", $updateqry, array("id" => $serviceid));
 
 if ($customfields) {
 	if (!is_array($customfields)) {
@@ -222,7 +222,7 @@ if ($configoptions) {
 
 if ($autorecalc) {
 	$recurringamount = recalcRecurringProductPrice($serviceid, "", $pid, $billingcycle, "empty", $promoid);
-	update_query("tblhosting", array("amount" => $recurringamount), array("id" => $serviceid));
+	update_query("tblcustomerservices", array("amount" => $recurringamount), array("id" => $serviceid));
 }
 
 $apiresults = array("result" => "success", "serviceid" => $serviceid);

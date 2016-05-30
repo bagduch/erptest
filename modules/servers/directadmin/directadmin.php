@@ -51,7 +51,7 @@ function directadmin_CreateAccount($params) {
 			}
 		}
 
-		update_query( "tblhosting", array( "dedicatedip" => $ip ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "dedicatedip" => $ip ), array( "id" => $params['serviceid'] ) );
 	}
 
 	$params['getip'] = "";
@@ -418,7 +418,7 @@ function directadmin_ChangePackage($params) {
 
 
 function directadmin_UsageUpdate($params) {
-	$result = select_query( "tblhosting", "domain,username", array( "server" => $params['serverid'] ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
+	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'] ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
 
 	while ($data = mysql_fetch_assoc( $result )) {
 		$username = $data['username'];
@@ -434,7 +434,7 @@ function directadmin_UsageUpdate($params) {
 		$bandwidth = urldecode( $results['bandwidth'] );
 		$disklimit = ($quota == "unlimited" ? "0" : round( $quota ));
 		$bwlimit = ($bandwidth == "unlimited" ? "0" : round( $bandwidth ));
-		update_query( "tblhosting", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+		update_query( "tblcustomerservices", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 	}
 
 }

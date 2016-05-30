@@ -409,7 +409,7 @@ Accessed within the Past 30 Days<br />
 			$lastaccess = fromMySQLDate($lastaccess, "time");
 		}
 
-		$data = get_query_vals("tblhosting", "tblservicegroups.name,tblservices.name", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$data = get_query_vals("tblcustomerservices", "tblservicegroups.name,tblservices.name", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 		$productname = $data[0] . " - " . $data[1];
 		echo "
 <h2>Manage License Key</h2>

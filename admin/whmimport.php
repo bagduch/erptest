@@ -61,7 +61,7 @@ if ($step == "") {
 			$servername .= " (" . $aInt->lang("emailtpls", "disabled") . ")";
 		}
 
-		$result2 = select_query("tblhosting", "COUNT(*)", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+		$result2 = select_query("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
 		$data = mysql_fetch_array($result2);
 		$servernumaccounts = $data[0];
 		echo "<option value=\"" . $serverid . "\"";
@@ -207,7 +207,7 @@ Data: " . $data . "</textarea>";
 						$created = @date("d M Y", $created);
 					}
 
-					$result = select_query("tblhosting", "id,domainstatus,packageid,server", array("domain" => $domain, "domainstatus" => "Active"));
+					$result = select_query("tblcustomerservices", "id,domainstatus,packageid,server", array("domain" => $domain, "domainstatus" => "Active"));
 					$data = mysql_fetch_array($result);
 					$domaincount = $data[0];
 					$domainstatus = $data['domainstatus'];
@@ -216,7 +216,7 @@ Data: " . $data . "</textarea>";
 					$bgcolor = ($domaincount ? "#ffff95" : "#ffffff");
 
 					if (!$domaincount) {
-						$result = select_query("tblhosting", "id,domainstatus,packageid,server", array("domain" => $domain));
+						$result = select_query("tblcustomerservices", "id,domainstatus,packageid,server", array("domain" => $domain));
 						$data = mysql_fetch_array($result);
 						$domaincount = $data[0];
 						$domainstatus = $data['domainstatus'];
@@ -391,7 +391,7 @@ Data: " . $data . "</textarea>";
 
 						$str = encrypt($str);
 						$userid = insert_query("tblclients", array("firstname" => $user, "lastname" => "Owner", "email" => $email, "password" => $str, "status" => "Active", "datecreated" => $created));
-						insert_query("tblhosting", array("userid" => $userid, "regdate" => $created, "domain" => $domain, "server" => $server, "paymentmethod" => $defaultgateway, "billingcycle" => "Free Account", "domainstatus" => "Active", "username" => $user, "packageid" => $pid, "notes" => "Imported using WHM Import Script - Payment Method, Pricing, Billing Cycle & Next Due Date may be incorrect"));
+						insert_query("tblcustomerservices", array("userid" => $userid, "regdate" => $created, "domain" => $domain, "server" => $server, "paymentmethod" => $defaultgateway, "billingcycle" => "Free Account", "domainstatus" => "Active", "username" => $user, "packageid" => $pid, "notes" => "Imported using WHM Import Script - Payment Method, Pricing, Billing Cycle & Next Due Date may be incorrect"));
 
 						if ($createdomains) {
 							$domainparts = explode(".", $arr[1], 2);

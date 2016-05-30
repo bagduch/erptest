@@ -334,7 +334,7 @@ function enkompass_UsageUpdate($params) {
 		$diskused = $acct['DISKUSED'];
 		$bwlimit = $acct['BANDWIDTHLIMIT'];
 		$bwused = $acct['BANDWIDTHUSED'];
-		update_query( "tblhosting", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+		update_query( "tblcustomerservices", array( "diskusage" => $diskused, "disklimit" => $disklimit, "bwusage" => $bwused, "bwlimit" => $bwlimit, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 	}
 
 }

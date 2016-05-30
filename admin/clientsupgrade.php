@@ -103,7 +103,7 @@ $aInt = new RA_Admin("Create Upgrade/Downgrade Orders", false);
 $aInt->title = $aInt->lang("services", "upgradedowngrade");
 $aInt->requiredFiles(array("orderfunctions", "upgradefunctions", "invoicefunctions", "configoptionsfunctions"));
 ob_start();
-$result = select_query("tblhosting", "tblhosting.userid,tblhosting.domain,tblhosting.billingcycle,tblhosting.nextduedate,tblhosting.paymentmethod,tblservices.id AS pid,tblservices.name,tblservicegroups.name as groupname", array("tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query("tblcustomerservices", "tblhosting.userid,tblhosting.domain,tblhosting.billingcycle,tblhosting.nextduedate,tblhosting.paymentmethod,tblservices.id AS pid,tblservices.name,tblservicegroups.name as groupname", array("tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 $data = mysql_fetch_array($result);
 $userid = $data['userid'];
 $service_groupname = $data['groupname'];

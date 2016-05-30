@@ -80,7 +80,7 @@ function interworx_CreateAccount($params) {
 		$api_controller = "/nodeworx/reseller";
 		$action = "add";
 		$input = array( "nickname" => strtolower( $params['clientsdetails']['firstname'] . $params['clientsdetails']['lastname'] ), "email" => $params['clientsdetails']['email'], "password" => $params['password'], "confirm_password" => $params['password'], "language" => "en-us", "theme" => $params['configoption2'], "billing_day" => "1", "status" => "active", "packagetemplate" => $params['configoption1'], "RSL_OPT_OVERSELL_STORAGE" => $overselling, "RSL_OPT_OVERSELL_BANDWIDTH" => $overselling, "ips" => $ipaddress, "database_servers" => "localhost" );
-		update_query( "tblhosting", array( "username" => $params['clientsdetails']['email'] ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $params['clientsdetails']['email'] ), array( "id" => $params['serviceid'] ) );
 	}
 	else {
 		$action = "add";
@@ -148,7 +148,7 @@ function interworx_UsageUpdate($params) {
 		$bandwidth = $data['bandwidth'];
 		$storage_used = $data['storage_used'];
 		$storage = $data['storage'];
-		update_query( "tblhosting", array( "diskusage" => $storage_used, "disklimit" => $storage, "bwusage" => $bandwidth_used, "bwlimit" => $bandwidth, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
+		update_query( "tblcustomerservices", array( "diskusage" => $storage_used, "disklimit" => $storage, "bwusage" => $bandwidth_used, "bwlimit" => $bandwidth, "lastupdate" => "now()" ), array( "domain" => $domain, "server" => $params['serverid'] ) );
 	}
 
 }

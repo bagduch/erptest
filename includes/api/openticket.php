@@ -84,7 +84,7 @@ if (!$priority || !in_array($priority, array("Low", "Medium", "High"))) {
 
 if ($serviceid) {
 	if (is_numeric($serviceid) || substr($serviceid, 0, 1) == "S") {
-		$result = select_query("tblhosting", "id", array("id" => $serviceid, "userid" => $clientid));
+		$result = select_query("tblcustomerservices", "id", array("id" => $serviceid, "userid" => $clientid));
 		$data = mysql_fetch_array($result);
 
 		if (!$data['id']) {

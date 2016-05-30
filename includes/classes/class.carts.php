@@ -10,27 +10,20 @@
  * 
  *
  * */
-include '../gatewayfunctions.php';
-include "../orderfunctions.php";
-include "../gatewayfunctions.php";
-include "../cartfunctions.php";
-include "../clientfunctions.php";
 include "../functions.php";
-
-require "../orderfunctions.php";
-require "../domainfunctions.php";
-require "../whoisfunctions.php";
-require "../configoptionsfunctions.php";
-require "../customfieldfunctions.php";
-require "../clientfunctions.php";
-require "../invoicefunctions.php";
-require "../processinvoices.php";
-require "../gatewayfunctions.php";
-require "../fraudfunctions.php";
-require "../modulefunctions.php";
-require "../ccfunctions.php";
-require "../cartfunctions.php";
-
+include "../orderfunctions.php";
+include "../domainfunctions.php";
+include "../whoisfunctions.php";
+include "../configoptionsfunctions.php";
+include "../customfieldfunctions.php";
+include "../clientfunctions.php";
+include "../invoicefunctions.php";
+include "../processinvoices.php";
+include "../gatewayfunctions.php";
+include "../fraudfunctions.php";
+include "../modulefunctions.php";
+include "../ccfunctions.php";
+include "../cartfunctions.php";
 
 use RA_Gateways;
 use RA_Validate;
@@ -39,6 +32,7 @@ class RA_Carts {
 
     private $orderfrm;
     public $data;
+    private $ra;
 
     public function __construct($orderfrm) {
         $this->data = "";
@@ -190,7 +184,7 @@ class RA_Carts {
             if ($validate->hasErrors()) {
                 $errormessage .= $validate->getHTMLErrorOutput();
             }
- 
+
             $currency = getCurrency($_SESSION['uid'], $_SESSION['currency']);
 
 

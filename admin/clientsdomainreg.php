@@ -41,7 +41,7 @@ $params['registrar'] = $registrar;
 $nsvals = array();
 
 if (!$ns1 && !$ns2) {
-	$result = select_query("tblhosting", "", array("domain" => $domain));
+	$result = select_query("tblcustomerservices", "", array("domain" => $domain));
 	$data = mysql_fetch_array($result);
 	$server = $data['server'];
 

@@ -168,7 +168,7 @@ function enomssl_ClientArea($params) {
 
 	if ($id) {
 		if (!$provisiondate) {
-			$result = select_query( "tblhosting", "regdate", array( "id" => $params['serviceid'] ) );
+			$result = select_query( "tblcustomerservices", "regdate", array( "id" => $params['serviceid'] ) );
 			$data = mysql_fetch_array( $result );
 			$provisiondate = $data['regdate'];
 		}
@@ -370,7 +370,7 @@ function enomssl_SSLStepTwo($params) {
 	$values['displaydata']['Domain'] = $result['INTERFACE-RESPONSE']['CERTGETCERTDETAIL']['DOMAINNAME'];
 	$values['displaydata']["Validity Period"] = $result['INTERFACE-RESPONSE']['CERTGETCERTDETAIL']['VALIDITYPERIOD'] . " Months";
 	$values['displaydata']["Expiration Date"] = $result['INTERFACE-RESPONSE']['CERTGETCERTDETAIL']['EXPIRATIONDATE'];
-	update_query( "tblhosting", array( "domain" => $values['displaydata']['Domain'] ), array( "id" => $params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => $values['displaydata']['Domain'] ), array( "id" => $params['serviceid'] ) );
 	$postfields = array();
 	$postfields['uid'] = $params['configoption1'];
 	$postfields['pw'] = $params['configoption2'];

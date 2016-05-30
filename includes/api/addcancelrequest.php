@@ -24,7 +24,7 @@ if (!function_exists("createCancellationRequest")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query("tblhosting", "id,userid", array("id" => $serviceid));
+$result = select_query("tblcustomerservices", "id,userid", array("id" => $serviceid));
 $data = mysql_fetch_array($result);
 $serviceid = $data[0];
 $userid = $data[1];

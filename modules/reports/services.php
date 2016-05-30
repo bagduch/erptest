@@ -67,7 +67,7 @@ if (count($incfields)) {
         }
     }
 
-    $result = select_query("tblhosting",implode(',',$fieldlist),$filters);
+    $result = select_query("tblcustomerservices",implode(',',$fieldlist),$filters);
     while ($data = mysql_fetch_assoc($result)) {
         if (isset($data['paymentmethod'])) $data['paymentmethod'] = $gateways->getDisplayName($data['paymentmethod']);
         if (isset($data['password'])) $data['password']=decrypt($data['password']);

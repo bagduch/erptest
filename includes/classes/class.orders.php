@@ -233,7 +233,7 @@ class RA_Orders extends RA_TableModel
 		$invoiceid = $data['invoiceid'];
 		delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
 		delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
-		delete_query("tblhosting", array("orderid" => $orderid));
+		delete_query("tblcustomerservices", array("orderid" => $orderid));
 		delete_query("tblserviceaddons", array("orderid" => $orderid));
 		delete_query("tbldomains", array("orderid" => $orderid));
 		delete_query("tblupgrades", array("orderid" => $orderid));
@@ -292,7 +292,7 @@ class RA_Orders extends RA_TableModel
 		update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
 		if ($status == "Cancelled" || $status == "Fraud") {
-			$result = select_query("tblhosting", "tblhosting.id,tblhosting.domainstatus,tblservices.servertype,tblhosting.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domainstatus,tblservices.servertype,tblhosting.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$productid = $data['id'];
@@ -313,7 +313,7 @@ class RA_Orders extends RA_TableModel
 					$moduleresult = ServerTerminateAccount($productid);
 
 					if ($moduleresult == "success") {
-						update_query("tblhosting", array("domainstatus" => $status), array("id" => $productid));
+						update_query("tblcustomerservices", array("domainstatus" => $status), array("id" => $productid));
 
 						if ($stockcontrol == "on") {
 							update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
@@ -321,7 +321,7 @@ class RA_Orders extends RA_TableModel
 					}
 				}
 
-				update_query("tblhosting", array("domainstatus" => $status), array("id" => $productid));
+				update_query("tblcustomerservices", array("domainstatus" => $status), array("id" => $productid));
 
 				if ($stockcontrol == "on") {
 					update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
@@ -329,7 +329,7 @@ class RA_Orders extends RA_TableModel
 			}
 		}
 		else {
-			update_query("tblhosting", array("domainstatus" => $status), array("orderid" => $orderid));
+			update_query("tblcustomerservices", array("domainstatus" => $status), array("orderid" => $orderid));
 		}
 
 		update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
@@ -373,7 +373,7 @@ class RA_Orders extends RA_TableModel
 
 		$orderid = $this->orderid;
 		$items = array();
-		$result = select_query("tblhosting", "", array("orderid" => $orderid));
+		$result = select_query("tblcustomerservices", "", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
 			$hostingid = $data['id'];
@@ -496,7 +496,7 @@ class RA_Orders extends RA_TableModel
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblhosting", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 			$data = mysql_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];

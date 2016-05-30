@@ -29,7 +29,7 @@ function enomtruste_CreateAccount($params) {
 	updateService( array( "username" => "", "password" => "" ) );
 	$withseal = $params['configoption3'];
 	$numyears = $params['configoption4'];
-	$result = select_query( "tblhosting", "billingcycle", array( "id" => $params['serviceid'] ) );
+	$result = select_query( "tblcustomerservices", "billingcycle", array( "id" => $params['serviceid'] ) );
 	$data = mysql_fetch_array( $result );
 	$billingcycle = $data[0];
 

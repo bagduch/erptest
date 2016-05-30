@@ -45,7 +45,7 @@ if ($userid && !$id) {
 		$aInt->gracefulExit("Invalid User ID");
 	}
 
-	$id = get_query_val("tblhosting", "id", array("userid" => $userid), "domain", "ASC", "0,1");
+	$id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "domain", "ASC", "0,1");
 }
 
 
@@ -284,7 +284,7 @@ if ($frm->issubmitted()) {
 		$updatearr['nextinvoicedate'] = $updatearr['nextduedate'];
 	}
 
-	update_query("tblhosting", $updatearr, array("id" => $id));
+	update_query("tblcustomerservices", $updatearr, array("id" => $id));
 	logActivity("Modified Product/Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid);
 	$cancelid = get_query_val("tblcancelrequests", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
 
@@ -334,7 +334,7 @@ if ($action == "delete") {
 	check_token("RA.admin.default");
 	checkPermission("Delete Clients Products/Services");
 	run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
-	delete_query("tblhosting", array("id" => $id));
+	delete_query("tblcustomerservices", array("id" => $id));
 	delete_query("tblserviceaddons", array("hostingid" => $id));
 	delete_query("tblhostingconfigoptions", array("relid" => $id));
 	full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
@@ -485,7 +485,7 @@ if (!$server) {
 	$server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
 
 	if ($server) {
-		update_query("tblhosting", array("server" => $server), array("id" => $id));
+		update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
 	}
 }
 
@@ -557,7 +557,7 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query("tblhosting", "tblhosting.id,tblhosting.domain,tblservices.name,tblhosting.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblhosting.packageid=tblservices.id");
+$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domain,tblservices.name,tblhosting.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblhosting.packageid=tblservices.id");
 
 while ($data = mysql_fetch_array($result)) {
 	$servicelist_id = $data['id'];
@@ -713,7 +713,7 @@ else {
 			$servername .= " (" . $aInt->lang("emailtpls", "disabled") . ")";
 		}
 
-		$result2 = select_query("tblhosting", "COUNT(*)", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+		$result2 = select_query("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
 		$data = mysql_fetch_array($result2);
 		$servernumaccounts = $data[0];
 		$label = $servername . " (" . $servernumaccounts . "/" . $servermaxaccounts . " " . $aInt->lang("fields", "accounts") . ")";

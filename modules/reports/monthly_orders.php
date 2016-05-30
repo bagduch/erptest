@@ -22,7 +22,7 @@ while($data = mysql_fetch_array($result)) {
 
     if ($group!=$prevgroup) $reportdata["tablevalues"][] = array("**<b>$group</b>");
 
-    $result2 = select_query("tblhosting","COUNT(*),SUM(tblhosting.firstpaymentamount)","tblhosting.packageid='$pid' AND tblhosting.domainstatus='Active' AND tblhosting.regdate LIKE '".$datefilter."' AND tblclients.currency='$currencyid'","","","","tblclients ON tblclients.id=tblhosting.userid");
+    $result2 = select_query("tblcustomerservices","COUNT(*),SUM(tblhosting.firstpaymentamount)","tblhosting.packageid='$pid' AND tblhosting.domainstatus='Active' AND tblhosting.regdate LIKE '".$datefilter."' AND tblclients.currency='$currencyid'","","","","tblclients ON tblclients.id=tblhosting.userid");
     $data = mysql_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];

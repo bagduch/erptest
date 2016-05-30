@@ -43,7 +43,7 @@ function heartinternet_CreateAccount($params) {
 	else {
 		$username = $xmldata['epp']['response']['resData']["package:creData"]["package:id"]['value'];
 		$password = $xmldata['epp']['response']['resData']["package:creData"]["package:passwordSet"]["package:password"][0]['value'];
-		update_query( "tblhosting", array( "username" => $username, "password" => encrypt( $password ) ), array( "id" => $params['serviceid'] ) );
+		update_query( "tblcustomerservices", array( "username" => $username, "password" => encrypt( $password ) ), array( "id" => $params['serviceid'] ) );
 		$result = "success";
 	}
 
@@ -177,7 +177,7 @@ function heartinternet_ChangePassword($params) {
 		$newpassword = $xmldata['epp']['response']['resData']["package:password"]['value'];
 
 		if ($newpassword != $oldpassword) {
-			update_query( "tblhosting", array( "password" => encrypt( $newpassword ) ), array( "id" => $params['serviceid'] ) );
+			update_query( "tblcustomerservices", array( "password" => encrypt( $newpassword ) ), array( "id" => $params['serviceid'] ) );
 		}
 
 		$result = "success";

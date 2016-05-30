@@ -1,6 +1,6 @@
 {php}
 	$serviceid = $this->_tpl_vars['id'];
-    $servicedata = get_query_vals("tblhosting","",array("id"=>$serviceid));
+    $servicedata = get_query_vals("tblcustomerservices","",array("id"=>$serviceid));
     $packagedata = get_query_vals("tblservices","",array("id"=>$servicedata['packageid']));
     $serverdata = get_query_vals("tblservers","",array("id"=>$servicedata['server']));
 	$params = array();

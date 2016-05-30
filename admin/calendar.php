@@ -21,7 +21,7 @@ function calendar_core_calendar($vars) {
 
 function calendar_core_products($vars) {
 	$events = array();
-	$result = select_query("tblhosting", "tblhosting.id,tblhosting.domain,tblhosting.nextduedate,tblservices.name", "domainstatus IN ('Active','Suspended') AND nextduedate BETWEEN '" . date("Y-m-d", $vars['start']) . "' AND '" . date("Y-m-d", $vars['end']) . "'", "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+	$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domain,tblhosting.nextduedate,tblservices.name", "domainstatus IN ('Active','Suspended') AND nextduedate BETWEEN '" . date("Y-m-d", $vars['start']) . "' AND '" . date("Y-m-d", $vars['end']) . "'", "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
 
 	while ($data = mysql_fetch_assoc($result)) {
 		$events[] = array("id" => $data['id'], "title" => $data['name'] . ($data['domain'] ? " - " . $data['domain'] : ""), "start" => strtotime($data['nextduedate']) + 86400, "allDay" => true, "editable" => false, "url" => "clientshosting.php?id=" . $data['id']);

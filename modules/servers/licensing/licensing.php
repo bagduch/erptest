@@ -87,7 +87,7 @@ function licensing_CreateAccount($params) {
 	$addonid = $addonid[0];
 
 	if ($addonid) {
-		$result = select_query( "tblhosting", "orderid,paymentmethod", array( "id" => $params['serviceid'] ) );
+		$result = select_query( "tblcustomerservices", "orderid,paymentmethod", array( "id" => $params['serviceid'] ) );
 		$data = mysql_fetch_array( $result );
 		$orderid = $data['orderid'];
 		$paymentmethod = $data['paymentmethod'];
@@ -262,7 +262,7 @@ function licensing_revoke($params) {
 	}
 
 	delete_query( "mod_licensing", array( "serviceid" => $params['serviceid'] ) );
-	update_query( "tblhosting", array( "domain" => "" ), array( "id" => $params['serviceid'] ) );
+	update_query( "tblcustomerservices", array( "domain" => "" ), array( "id" => $params['serviceid'] ) );
 	return "success";
 }
 
@@ -380,7 +380,7 @@ function licensing_ChangePackage($params) {
 		$currentaddon = get_query_val( "tblserviceaddons", "id", array( "hostingid" => $params['serviceid'], "addonid" => $addonid, "status" => "Active" ) );
 
 		if (!$currentaddon) {
-			$data = get_query_vals( "tblhosting", "billingcycle,paymentmethod", array( "id" => $params['serviceid'] ) );
+			$data = get_query_vals( "tblcustomerservices", "billingcycle,paymentmethod", array( "id" => $params['serviceid'] ) );
 			$paymentmethod = $data['paymentmethod'];
 			$billingcycle = ($data['billingcycle'] == "One Time" ? "onetime" : strtolower( $data['billingcycle'] ));
 			$orderid = get_query_val( "tblupgrades", "orderid", array( "type" => "package", "relid" => $params['serviceid'], "newvalue" => "" . $params['packageid'] . "," . $billingcycle ) );

@@ -36,7 +36,7 @@ function licensing_getlicreturndata($licenseid) {
 	$validdomain = implode( ",", licensing_explode( $validdomain ) );
 	$validip = implode( ",", licensing_explode( $validip ) );
 	$validdirectory = implode( ",", licensing_explode( $validdirectory ) );
-	$result = select_query( "tblhosting", "", array( "id" => $serviceid ) );
+	$result = select_query( "tblcustomerservices", "", array( "id" => $serviceid ) );
 	$data = mysql_fetch_array( $result );
 	$productid = ltrim( $data['packageid'], "0" );
 	$nextduedate = $data['nextduedate'];
@@ -138,7 +138,7 @@ $validip = $data['validip'];
 $validdirectory = $data['validdirectory'];
 $reissues = $data['reissues'];
 $status = $data['status'];
-$result = select_query( "tblhosting", "tblservices.id,tblservices.configoption4,tblservices.configoption5,tblservices.configoption6,tblservices.configoption8,tblservices.configoption9", array( "tblhosting.id" => $serviceid ), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id" );
+$result = select_query( "tblcustomerservices", "tblservices.id,tblservices.configoption4,tblservices.configoption5,tblservices.configoption6,tblservices.configoption8,tblservices.configoption9", array( "tblhosting.id" => $serviceid ), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id" );
 $data = mysql_fetch_array( $result );
 $pid = $data['id'];
 $allowdomainconflict = $data['configoption4'];
@@ -213,7 +213,7 @@ if ($status == "Reissued" || $status == "Active") {
 			echo "<status>Suspended</status>";
 			licensing_getlicreturndata( $licenseid );
 			update_query( "mod_licensing", array( "status" => "Suspended" ), array( "id" => $licenseid ) );
-			update_query( "tblhosting", array( "status" => "Suspended", "suspendreason" => "Duplicate Free Trial Use" ), array( "id" => $serviceid ) );
+			update_query( "tblcustomerservices", array( "status" => "Suspended", "suspendreason" => "Duplicate Free Trial Use" ), array( "id" => $serviceid ) );
 			insert_query( "mod_licensinglog", array( "licenseid" => $licenseid, "domain" => $_POST['domain'], "ip" => $_POST['ip'], "path" => $_POST['dir'], "message" => "License Suspended for Duplicate Trials Use (" . implode( ",", $trialmatches ) . ")", "datetime" => "now()" ) );
 			exit();
 		}
@@ -228,7 +228,7 @@ if ($status == "Reissued" || $status == "Active") {
 		echo "<status>Suspended</status>";
 		licensing_getlicreturndata( $licenseid );
 		update_query( "mod_licensing", array( "status" => "Suspended" ), array( "id" => $licenseid ) );
-		update_query( "tblhosting", array( "status" => "Suspended", "suspendreason" => "Banned Domain/IP" ), array( "id" => $serviceid ) );
+		update_query( "tblcustomerservices", array( "status" => "Suspended", "suspendreason" => "Banned Domain/IP" ), array( "id" => $serviceid ) );
 		insert_query( "mod_licensinglog", array( "licenseid" => $licenseid, "domain" => $_POST['domain'], "ip" => $_POST['ip'], "path" => $_POST['dir'], "message" => "Banned Domain/IP (" . $bannotes . ")", "datetime" => "now()" ) );
 		exit();
 	}
