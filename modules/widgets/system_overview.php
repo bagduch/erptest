@@ -108,7 +108,7 @@ while ($data = mysql_fetch_array($result)) $statusfilter[] = $data[0];
 $result = full_query("SELECT COUNT(*) FROM tbltickets WHERE status IN (".db_build_in_array($statusfilter).")");
 $data = mysql_fetch_array($result);
 $ticketsawaitingreply = $data[0];
-$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblhosting ON tblhosting.id=tblcancelrequests.relid WHERE (tblhosting.domainstatus!='Cancelled' AND tblhosting.domainstatus!='Terminated')");
+$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.domainstatus!='Cancelled' AND tblcustomerservices.domainstatus!='Terminated')");
 $data = mysql_fetch_array($result);
 $cancellationrequests = $data[0];
 $result = full_query("SELECT COUNT(*) FROM tbltodolist WHERE status!='Completed' AND status!='Postponed' AND duedate<='".date("Y-m-d")."'");

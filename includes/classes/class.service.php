@@ -37,13 +37,13 @@ class RA_Service
 	}
 
 	public function getServicesData() {
-		$where = array("tblhosting.id" => $this->id);
+		$where = array("tblcustomerservices.id" => $this->id);
 
 		if ($this->userid) {
-			$where["tblhosting.userid"] = $this->userid;
+			$where["tblcustomerservices.userid"] = $this->userid;
 		}
 
-		$result = select_query("tblcustomerservices", "tblhosting.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 		$data = mysql_fetch_array($result);
 
 		if ($data['id']) {

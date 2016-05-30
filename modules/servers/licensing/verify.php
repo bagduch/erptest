@@ -53,7 +53,7 @@ function licensing_getlicreturndata($licenseid) {
 	$companyname = $data['companyname'];
 	$email = $data['email'];
 	$configoptions = "";
-	$result = full_query( "SELECT tblserviceconfigoptions.optionname, tblserviceconfigoptions.optiontype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblhosting ON tblhosting.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid=" . (int)$serviceid . " AND tblserviceconfiglinks.pid=tblhosting.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC" );
+	$result = full_query( "SELECT tblserviceconfigoptions.optionname, tblserviceconfigoptions.optiontype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblhosting ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid=" . (int)$serviceid . " AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC" );
 
 	while ($data = mysql_fetch_array( $result )) {
 		if ($data[1] == "3") {
@@ -138,7 +138,7 @@ $validip = $data['validip'];
 $validdirectory = $data['validdirectory'];
 $reissues = $data['reissues'];
 $status = $data['status'];
-$result = select_query( "tblcustomerservices", "tblservices.id,tblservices.configoption4,tblservices.configoption5,tblservices.configoption6,tblservices.configoption8,tblservices.configoption9", array( "tblhosting.id" => $serviceid ), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id" );
+$result = select_query( "tblcustomerservices", "tblservices.id,tblservices.configoption4,tblservices.configoption5,tblservices.configoption6,tblservices.configoption8,tblservices.configoption9", array( "tblcustomerservices.id" => $serviceid ), "", "", "", "tblservices ON tblcustomerservices.packageid=tblservices.id" );
 $data = mysql_fetch_array( $result );
 $pid = $data['id'];
 $allowdomainconflict = $data['configoption4'];
@@ -197,7 +197,7 @@ if ($status == "Reissued") {
 if ($status == "Reissued" || $status == "Active") {
 	if ($licensing_freetrial) {
 		$trialmatches = array();
-		$result = select_query( "mod_licensing", "mod_licensing.*", "mod_licensing.id!=" . (int)$licenseid . " AND tblhosting.packageid=" . (int)$pid . " AND mod_licensing.validdomain LIKE '%" . db_escape_string( $domain ) . "%' AND mod_licensing.validdomain!=''", "", "", "", "tblhosting ON tblhosting.id=mod_licensing.serviceid" );
+		$result = select_query( "mod_licensing", "mod_licensing.*", "mod_licensing.id!=" . (int)$licenseid . " AND tblcustomerservices.packageid=" . (int)$pid . " AND mod_licensing.validdomain LIKE '%" . db_escape_string( $domain ) . "%' AND mod_licensing.validdomain!=''", "", "", "", "tblhosting ON tblcustomerservices.id=mod_licensing.serviceid" );
 
 		while ($data = mysql_fetch_array( $result )) {
 			$triallicenseid = $data['id'];

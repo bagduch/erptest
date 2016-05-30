@@ -44,7 +44,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 	if ($func_userid != "") {
 		$hostingquery .= " AND userid=" . (int)$func_userid;
 		$domainquery .= " AND userid=" . (int)$func_userid;
-		$hostingaddonsquery .= " AND tblhosting.userid=" . (int)$func_userid;
+		$hostingaddonsquery .= " AND tblcustomerservices.userid=" . (int)$func_userid;
 		$billableitemqry = " AND userid=" . (int)$func_userid;
 	}
 
@@ -78,7 +78,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 			$cancellationreqids[] = $data[0];
 		}
 
-		$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.userid,tblhosting.nextduedate,tblhosting.nextinvoicedate,tblhosting.billingcycle,tblhosting.regdate,tblhosting.firstpaymentamount,tblhosting.amount,tblhosting.domain,tblhosting.paymentmethod,tblhosting.packageid,tblhosting.promoid,tblhosting.domainstatus", $hostingquery, "domain", "ASC");
+		$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.nextduedate,tblcustomerservices.nextinvoicedate,tblcustomerservices.billingcycle,tblcustomerservices.regdate,tblcustomerservices.firstpaymentamount,tblcustomerservices.amount,tblcustomerservices.domain,tblcustomerservices.paymentmethod,tblcustomerservices.packageid,tblcustomerservices.promoid,tblcustomerservices.domainstatus", $hostingquery, "domain", "ASC");
 		$totalservicerows = mysql_num_rows($result);
 
 		while ($data = mysql_fetch_array($result)) {
@@ -145,7 +145,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
 
 			if ($hostingaddonsquery) {
-				$result3 = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblhosting.userid,tblhosting.domain", $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), "tblserviceaddons`.`name", "ASC", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
+				$result3 = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblcustomerservices.userid,tblcustomerservices.domain", $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), "tblserviceaddons`.`name", "ASC", "", "tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
 
 				while ($data = mysql_fetch_array($result3)) {
 					$id = $data['id'];
@@ -233,7 +233,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 			$hostingaddonsquery .= " AND tblserviceaddons.id NOT IN (" . db_build_in_array(db_escape_numarray($AddonSpecificIDs)) . ")";
 		}
 
-		$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblhosting.userid,tblhosting.domain", $hostingaddonsquery, "tblserviceaddons`.`name", "ASC", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
+		$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblcustomerservices.userid,tblcustomerservices.domain", $hostingaddonsquery, "tblserviceaddons`.`name", "ASC", "", "tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
 		$totaladdonrows = mysql_num_rows($result);
 
 		while ($data = mysql_fetch_array($result)) {
@@ -849,7 +849,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
 	}
 
 	$configbillingcycle = strtolower(str_replace("-", "", $configbillingcycle));
-	$query = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty,tblhostingconfigoptions.optionid FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblhosting ON tblhosting.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid=" . (int)$id . " AND tblserviceconfigoptions.hidden='0' AND tblserviceconfigoptionssub.hidden='0' AND tblserviceconfiglinks.pid=tblhosting.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
+	$query = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty,tblhostingconfigoptions.optionid FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblhosting ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid=" . (int)$id . " AND tblserviceconfigoptions.hidden='0' AND tblserviceconfigoptionssub.hidden='0' AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
 	$result = full_query($query);
 
 	while ($data = mysql_fetch_array($result)) {
@@ -983,7 +983,7 @@ function SendOverdueInvoiceReminders() {
 				$userid = $data['userid'];
 				$firstname = $data['firstname'];
 				$lastname = $data['lastname'];
-				$result2 = full_query("SELECT COUNT(tblinvoiceitems.id) FROM tblinvoiceitems INNER JOIN tblhosting ON tblhosting.id=tblinvoiceitems.relid WHERE tblinvoiceitems.type = 'Hosting' AND tblhosting.overideautosuspend = '1' AND tblhosting.overidesuspenduntil>'" . date("Y-m-d") . "' AND tblhosting.overidesuspenduntil!='0000-00-00' AND tblinvoiceitems.invoiceid = " . (int)$invoiceid);
+				$result2 = full_query("SELECT COUNT(tblinvoiceitems.id) FROM tblinvoiceitems INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoiceitems.type = 'Hosting' AND tblcustomerservices.overideautosuspend = '1' AND tblcustomerservices.overidesuspenduntil>'" . date("Y-m-d") . "' AND tblcustomerservices.overidesuspenduntil!='0000-00-00' AND tblinvoiceitems.invoiceid = " . (int)$invoiceid);
 				$data2 = mysql_fetch_array($result2);
 				$numoverideautosuspend = $data2[0];
 

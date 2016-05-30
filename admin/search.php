@@ -119,13 +119,13 @@ if ($intellisearch) {
 
 	if (checkPermission("List Services", true) || checkPermission("View Clients Products/Services", true)) {
 		$tempmatches = "";
-		$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblhosting.id,tblhosting.userid,tblhosting.domain,tblservices.name,tblhosting.domainstatus FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid WHERE ";
+		$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE ";
 
 		if (is_numeric($value)) {
-			$query .= "tblhosting.id='" . $value . "' OR";
+			$query .= "tblcustomerservices.id='" . $value . "' OR";
 		}
 
-		$query .= " domain LIKE '%" . $value . "%' OR username LIKE '%" . $value . "%' OR dedicatedip LIKE '%" . $value . "%' OR tblhosting.notes LIKE '%" . $value . "%'";
+		$query .= " domain LIKE '%" . $value . "%' OR username LIKE '%" . $value . "%' OR dedicatedip LIKE '%" . $value . "%' OR tblcustomerservices.notes LIKE '%" . $value . "%'";
 		$query .= " LIMIT 0,10";
 		$result = full_query($query);
 

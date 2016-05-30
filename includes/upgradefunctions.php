@@ -20,7 +20,7 @@ function SumUpPackageUpgradeOrder($id, $newproductid, $newproductbillingcycle, $
 	global $applytax;
 
 	$_SESSION['upgradeids'] = "";
-	$result = select_query("tblcustomerservices", "tblservices.name,tblservices.id,tblhosting.nextduedate,tblhosting.billingcycle,tblhosting.amount,tblhosting.firstpaymentamount,tblhosting.domain", array("userid" => $_SESSION['uid'], "tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+	$result = select_query("tblcustomerservices", "tblservices.name,tblservices.id,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.domain", array("userid" => $_SESSION['uid'], "tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 	$data = mysql_fetch_array($result);
 	$oldproductid = $data['id'];
 	$oldproductname = $data['name'];
@@ -635,7 +635,7 @@ function doUpgrade($upgradeid) {
 
 		migrateCustomFieldsBetweenProducts($relid, $newpackageid);
 		update_query("tblcustomerservices", array("packageid" => $newpackageid, "billingcycle" => $newbillingcycle, "" . $changevalue => "+=" . $recurringchange), array("id" => $relid));
-		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblhosting ON tblhosting.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblhosting.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
+		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
 		$data = mysql_fetch_array($result);
 		$invitemid = $data['id'];
 		$inviteminvoiceid = $data['invoiceid'];

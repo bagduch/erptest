@@ -62,7 +62,7 @@ if (count($incfields)) {
     foreach ($incfields AS $fieldname) {
         if (array_key_exists($fieldname,$filterfields)) {
             $reportdata["tableheadings"][] = $filterfields[$fieldname];
-            if ($fieldname=="clientname") $fieldname = "(SELECT CONCAT(firstname,' ',lastname) FROM tblclients WHERE id=tblhosting.userid)";
+            if ($fieldname=="clientname") $fieldname = "(SELECT CONCAT(firstname,' ',lastname) FROM tblclients WHERE id=tblcustomerservices.userid)";
             $fieldlist[] = $fieldname;
         }
     }

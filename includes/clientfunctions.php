@@ -174,7 +174,7 @@ function getClientsStats($userid) {
 	$stats['numcollectionsinvoices'] = (isset($invoicestats['Collections'][1]) ? $invoicestats['Collections'][1] : 0);
 	$stats['collectionsinvoicesamount'] = (isset($invoicestats['Collections'][2]) ? formatCurrency($invoicestats['Collections'][2]) : 0);
 	$productstats = array();
-	$result = full_query("SELECT tblservices.type,domainstatus,COUNT(*) FROM tblhosting INNER JOIN tblservices ON tblhosting.packageid=tblservices.id WHERE tblhosting.userid=" . (int)$userid . " GROUP BY domainstatus,tblservices.type");
+	$result = full_query("SELECT tblservices.type,domainstatus,COUNT(*) FROM tblhosting INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int)$userid . " GROUP BY domainstatus,tblservices.type");
 
 	while ($data = mysql_fetch_array($result)) {
 		$productstats[$data[0]][$data[1]] = $data[2];
@@ -790,7 +790,7 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 			logActivity("Automatic Cancellation Requested Immediately - Service ID: " . $serviceid, $userid);
 		}
 
-		$data = get_query_vals("tblcustomerservices", "domain,freedomain", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+		$data = get_query_vals("tblcustomerservices", "domain,freedomain", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 		$domain = $data[0];
 		$freedomain = $data[1];
 

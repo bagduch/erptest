@@ -1074,7 +1074,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 			$data = mysql_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];

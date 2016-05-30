@@ -623,7 +623,7 @@ function createServerPassword() {
 
 function getServerID($servertype, $servergroup) {
 	if (!$servergroup) {
-		$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblhosting WHERE tblhosting.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
+		$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblhosting WHERE tblcustomerservices.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
 		$data = mysql_fetch_array($result);
 		$serverid = $data['id'];
 		$maxaccounts = $data['maxaccounts'];
@@ -631,7 +631,7 @@ function getServerID($servertype, $servergroup) {
 
 		if ($serverid) {
 			if ($maxaccounts <= $usagecount) {
-				$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblhosting.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
+				$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblcustomerservices.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
 				$data = mysql_fetch_array($result);
 
 				if ($data['id']) {
@@ -656,13 +656,13 @@ function getServerID($servertype, $servergroup) {
 		$serverslist = substr($serverslist, 0, 0 - 1);
 
 		if ($filltype == 1) {
-			$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblhosting.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
+			$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblcustomerservices.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
 			$data = mysql_fetch_array($result);
 			$serverid = $data['id'];
 		}
 		else {
 			if ($filltype == 2) {
-				$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblhosting WHERE tblhosting.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
+				$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblhosting WHERE tblcustomerservices.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
 				$data = mysql_fetch_array($result);
 				$serverid = $data['id'];
 				$maxaccounts = $data['maxaccounts'];
@@ -670,7 +670,7 @@ function getServerID($servertype, $servergroup) {
 
 				if ($serverid) {
 					if ($maxaccounts <= $usagecount) {
-						$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblhosting.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
+						$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblhosting WHERE tblcustomerservices.server=tblservers.id AND (domainstatus='Active' OR domainstatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
 						$data = mysql_fetch_array($result);
 
 						if ($data['id']) {

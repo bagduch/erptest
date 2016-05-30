@@ -682,7 +682,7 @@ $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $conta
               $smartyvalues['q'] = $q;
             }
 
-            $innerjoin = "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid";
+            $innerjoin = "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid";
             $result = select_query($table, $fields, $where, "", "", "", $innerjoin);
             $data = mysql_fetch_array($result);
             $numitems = $data[0];
@@ -709,7 +709,7 @@ $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $conta
             }
 
             $accounts = array();
-            $fields = "tblhosting.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.tax,tblservices.upgradepackages,tblservices.downloads,tblservices.servertype";
+            $fields = "tblcustomerservices.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.tax,tblservices.upgradepackages,tblservices.downloads,tblservices.servertype";
             $result = select_query($table, $fields, $where, $orderby, $sort, $limit, $innerjoin);
 
             while ($data = mysql_fetch_array($result)) {

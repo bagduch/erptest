@@ -47,7 +47,7 @@ if (listtype) {
 }
 
 $aInt->sortableTableInit("domain", "ASC");
-$query = "FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblhosting.packageid=tblservices.id WHERE tblhosting.id!='' ";
+$query = "FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -65,42 +65,42 @@ if ($package) {
 
 
 if ($billingcycle) {
-	$query .= "AND tblhosting.billingcycle='" . db_escape_string($billingcycle) . "' ";
+	$query .= "AND tblcustomerservices.billingcycle='" . db_escape_string($billingcycle) . "' ";
 }
 
 
 if ($server) {
-	$query .= "AND tblhosting.server='" . db_escape_string($server) . "' ";
+	$query .= "AND tblcustomerservices.server='" . db_escape_string($server) . "' ";
 }
 
 
 if ($paymentmethod) {
-	$query .= "AND tblhosting.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
+	$query .= "AND tblcustomerservices.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
 }
 
 
 if ($status) {
-	$query .= "AND tblhosting.domainstatus='" . db_escape_string($status) . "' ";
+	$query .= "AND tblcustomerservices.domainstatus='" . db_escape_string($status) . "' ";
 }
 
 
 if ($domain) {
-	$query .= "AND tblhosting.domain LIKE '%" . db_escape_string($domain) . "%' ";
+	$query .= "AND tblcustomerservices.domain LIKE '%" . db_escape_string($domain) . "%' ";
 }
 
 
 if ($username) {
-	$query .= "AND tblhosting.username='" . db_escape_string($username) . "' ";
+	$query .= "AND tblcustomerservices.username='" . db_escape_string($username) . "' ";
 }
 
 
 if ($dedicatedip) {
-	$query .= "AND tblhosting.dedicatedip='" . db_escape_string($dedicatedip) . "' ";
+	$query .= "AND tblcustomerservices.dedicatedip='" . db_escape_string($dedicatedip) . "' ";
 }
 
 
 if ($assignedips) {
-	$query .= "AND tblhosting.assignedips LIKE '%" . db_escape_string($assignedips) . "%' ";
+	$query .= "AND tblcustomerservices.assignedips LIKE '%" . db_escape_string($assignedips) . "%' ";
 }
 
 
@@ -110,30 +110,30 @@ if ($packagesearch) {
 
 
 if ($id) {
-	$query .= "AND tblhosting.id='" . db_escape_string($id) . "' ";
+	$query .= "AND tblcustomerservices.id='" . db_escape_string($id) . "' ";
 }
 
 
 if ($subscriptionid) {
-	$query .= "AND tblhosting.subscriptionid='" . db_escape_string($subscriptionid) . "' ";
+	$query .= "AND tblcustomerservices.subscriptionid='" . db_escape_string($subscriptionid) . "' ";
 }
 
 
 if ($notes) {
-	$query .= "AND tblhosting.notes LIKE '%" . db_escape_string($notes) . "%' ";
+	$query .= "AND tblcustomerservices.notes LIKE '%" . db_escape_string($notes) . "%' ";
 }
 
 
 if ($customfieldvalue) {
 	if ($customfield) {
-		$query .= "AND tblhosting.id IN (SELECT relid FROM tblcustomfieldsvalues WHERE fieldid=" . (int)$customfield . " AND value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
+		$query .= "AND tblcustomerservices.id IN (SELECT relid FROM tblcustomfieldsvalues WHERE fieldid=" . (int)$customfield . " AND value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 	else {
-		$query .= "AND tblhosting.id IN (SELECT tblcustomfieldsvalues.relid FROM tblcustomfieldsvalues INNER JOIN tblcustomfields ON tblcustomfieldsvalues.fieldid=tblcustomfields.id WHERE tblcustomfields.type='product' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
+		$query .= "AND tblcustomerservices.id IN (SELECT tblcustomfieldsvalues.relid FROM tblcustomfieldsvalues INNER JOIN tblcustomfields ON tblcustomfieldsvalues.fieldid=tblcustomfields.id WHERE tblcustomfields.type='product' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 }
 
-$result = full_query("SELECT COUNT(tblhosting.id) " . $query);
+$result = full_query("SELECT COUNT(tblcustomerservices.id) " . $query);
 $data = mysql_fetch_array($result);
 $numrows = $data[0];
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
@@ -314,7 +314,7 @@ else {
 }
 
 $query .= " " . $order;
-$query = "SELECT tblhosting.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT tblcustomerservices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query($query);
 
 while ($data = mysql_fetch_array($result)) {

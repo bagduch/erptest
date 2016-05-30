@@ -17,7 +17,7 @@ while ($data = mysql_fetch_array($result)) {
 	$name = $data["name"];
 	$monthlycost = $data["monthlycost"];
 	$monthly = $quarterly = $semiannually = $annually = $biennially = $triennially = 0;
-	$query2 = "SELECT tblhosting.*,tblhosting.amount/tblcurrencies.rate AS reportamt FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblcurrencies ON tblcurrencies.id=tblclients.currency WHERE server='".(int)$id."' AND (domainstatus='Active' OR domainstatus='Suspended') AND billingcycle!='Free Account' AND billingcycle!='One Time'";
+	$query2 = "SELECT tblcustomerservices.*,tblcustomerservices.amount/tblcurrencies.rate AS reportamt FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblcurrencies ON tblcurrencies.id=tblclients.currency WHERE server='".(int)$id."' AND (domainstatus='Active' OR domainstatus='Suspended') AND billingcycle!='Free Account' AND billingcycle!='One Time'";
 	$result2=full_query($query2);
 	while($data = mysql_fetch_array($result2)){
 		$amount = $data["reportamt"];

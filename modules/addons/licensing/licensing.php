@@ -336,7 +336,7 @@ Accessed within the Past 30 Days<br />
 			$orderby = "id";
 		}
 
-		$result = select_query("mod_licensing", "mod_licensing.*", $where, $orderby, $order, "", "tblhosting ON tblhosting.id=mod_licensing.serviceid");
+		$result = select_query("mod_licensing", "mod_licensing.*", $where, $orderby, $order, "", "tblhosting ON tblcustomerservices.id=mod_licensing.serviceid");
 		$numrows = mysql_num_rows($result);
 
 		if (count($where) && $numrows == 1) {
@@ -345,7 +345,7 @@ Accessed within the Past 30 Days<br />
 			redir("module=licensing&action=manage&id=" . $id);
 		}
 
-		$result = select_query("mod_licensing", "mod_licensing.*", $where, $orderby, $order, $page * $limit . ("," . $limit), "tblhosting ON tblhosting.id=mod_licensing.serviceid");
+		$result = select_query("mod_licensing", "mod_licensing.*", $where, $orderby, $order, $page * $limit . ("," . $limit), "tblhosting ON tblcustomerservices.id=mod_licensing.serviceid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$id = $data['id'];
@@ -409,7 +409,7 @@ Accessed within the Past 30 Days<br />
 			$lastaccess = fromMySQLDate($lastaccess, "time");
 		}
 
-		$data = get_query_vals("tblcustomerservices", "tblservicegroups.name,tblservices.name", array("tblhosting.id" => $serviceid), "", "", "", "tblservices ON tblhosting.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$data = get_query_vals("tblcustomerservices", "tblservicegroups.name,tblservices.name", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 		$productname = $data[0] . " - " . $data[1];
 		echo "
 <h2>Manage License Key</h2>
@@ -640,7 +640,7 @@ function licensing_clientarea($vars) {
 
 	if ($domain) {
 		$check = true;
-		$result = select_query("mod_licensing", "mod_licensing.*,tblservices.name", "validdomain LIKE '%" . db_escape_string($domain) . "%' OR validip LIKE '%" . db_escape_string($domain) . "%'", "", "", "", "tblhosting ON tblhosting.id=mod_licensing.serviceid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
+		$result = select_query("mod_licensing", "mod_licensing.*,tblservices.name", "validdomain LIKE '%" . db_escape_string($domain) . "%' OR validip LIKE '%" . db_escape_string($domain) . "%'", "", "", "", "tblhosting ON tblcustomerservices.id=mod_licensing.serviceid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$licenseid = $data['id'];

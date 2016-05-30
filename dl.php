@@ -122,13 +122,13 @@ else {
 				$downloads = array();
 
 				if ($serviceid) {
-					$where = array("tblhosting.id" => $serviceid, "userid" => $_SESSION['uid'], "tblhosting.domainstatus" => "Active");
+					$where = array("tblcustomerservices.id" => $serviceid, "userid" => $_SESSION['uid'], "tblcustomerservices.domainstatus" => "Active");
 				}
 				else {
-					$where = array("userid" => $_SESSION['uid'], "tblhosting.domainstatus" => "Active");
+					$where = array("userid" => $_SESSION['uid'], "tblcustomerservices.domainstatus" => "Active");
 				}
 
-				$result = select_query("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+				$result = select_query("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 				while ($data = mysql_fetch_array($result)) {
 					$productdownloads = $data['downloads'];
@@ -148,13 +148,13 @@ else {
 
 
 				if ($serviceid) {
-					$where = array("tblserviceaddons.hostingid" => $serviceid, "tblhosting.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
+					$where = array("tblserviceaddons.hostingid" => $serviceid, "tblcustomerservices.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 				else {
-					$where = array("tblhosting.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
+					$where = array("tblcustomerservices.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 
-				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
+				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
 
 				while ($data = mysql_fetch_array($result)) {
 					$addondownloads = $data['downloads'];
@@ -210,7 +210,7 @@ else {
 					exit();
 				}
 
-				$result = select_query("tblservices", "tblservices.configoption7", array("tblhosting.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblhosting ON tblhosting.packageid=tblservices.id");
+				$result = select_query("tblservices", "tblservices.configoption7", array("tblcustomerservices.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblhosting ON tblcustomerservices.packageid=tblservices.id");
 				$data = mysql_fetch_array($result);
 				$supportpackage = $data['configoption7'];
 				$addonid = explode("|", $supportpackage);
@@ -220,13 +220,13 @@ else {
 					$result = select_query("tbladdons", "name", array("id" => $addonid));
 					$data = mysql_fetch_array($result);
 					$addonname = $data['name'];
-					$where = "tblhosting.userid='" . (int)$_SESSION['uid'] . "' AND tblserviceaddons.status='Active' AND (tblserviceaddons.name='" . mysql_real_escape_string($addonname) . "' OR tblserviceaddons.addonid='" . (int)$addonid . "')";
+					$where = "tblcustomerservices.userid='" . (int)$_SESSION['uid'] . "' AND tblserviceaddons.status='Active' AND (tblserviceaddons.name='" . mysql_real_escape_string($addonname) . "' OR tblserviceaddons.addonid='" . (int)$addonid . "')";
 
 					if ($pid) {
-						$where .= " AND tblhosting.id='" . (int)$pid . "'";
+						$where .= " AND tblcustomerservices.id='" . (int)$pid . "'";
 					}
 
-					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblhosting ON tblhosting.id=tblserviceaddons.hostingid");
+					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
 					$data = mysql_fetch_array($result);
 					$supportpackageactive = $data[0];
 

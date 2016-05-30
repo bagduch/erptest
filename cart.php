@@ -191,11 +191,11 @@ if (!$a) {
             $where['domainstatus'] = "Active";
 
             if ($pid) {
-                $where["tblhosting.id"] = $pid;
+                $where["tblcustomerservices.id"] = $pid;
             }
 
             $productids = array();
-            $result = select_query("tblcustomerservices", "tblhosting.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
+            $result = select_query("tblcustomerservices", "tblcustomerservices.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
             while ($data = mysql_fetch_array($result)) {
                 $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "domain" => $data['domain']);
@@ -929,7 +929,7 @@ if ($a == "complete") {
         exit("Unexpected payment method value. Exiting.");
     }
 
-    $result = select_query("tblcustomerservices", "tblhosting.id,tblproducts.servertype", array("tblhosting.orderid" => $orderid, "tblhosting.domainstatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblhosting.packageid");
+    $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblproducts.servertype", array("tblcustomerservices.orderid" => $orderid, "tblcustomerservices.domainstatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
     while ($data = mysql_fetch_array($result)) {
         $id = $data['id'];

@@ -28,7 +28,7 @@ while ($data = mysql_fetch_array($result)) {
 }
 
 $aInt->sortableTableInit("id", "DESC");
-$query = "FROM tblserviceaddons INNER JOIN tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblhosting.packageid=tblservices.id WHERE tblserviceaddons.id!='' ";
+$query = "FROM tblserviceaddons INNER JOIN tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblserviceaddons.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -56,7 +56,7 @@ if ($billingcycle != "") {
 
 
 if ($server != "") {
-	$query .= "AND tblhosting.server='" . db_escape_string($server) . "' ";
+	$query .= "AND tblcustomerservices.server='" . db_escape_string($server) . "' ";
 }
 
 
@@ -71,7 +71,7 @@ if ($status != "") {
 
 
 if ($domain != "") {
-	$query .= "AND tblhosting.domain LIKE '%" . db_escape_string($domain) . "%' ";
+	$query .= "AND tblcustomerservices.domain LIKE '%" . db_escape_string($domain) . "%' ";
 }
 
 $result = full_query("SELECT COUNT(tblserviceaddons.id) " . $query);
@@ -239,7 +239,7 @@ else {
 }
 
 $query .= " " . $order;
-$query = "SELECT tblserviceaddons.*,tblserviceaddons.name AS addonname,tblhosting.domain,tblhosting.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT tblserviceaddons.*,tblserviceaddons.name AS addonname,tblcustomerservices.domain,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query($query);
 
 while ($data = mysql_fetch_array($result)) {

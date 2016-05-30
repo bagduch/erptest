@@ -14,7 +14,7 @@ $reportdata["tableheadings"] = array("Month","Monthly","Quarterly","Semi-Annual"
 
 $totals = array();
 
-$result = select_query("tblcustomerservices","",array("domainstatus"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tblhosting.userid");
+$result = select_query("tblcustomerservices","",array("domainstatus"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tblcustomerservices.userid");
 while ($data = mysql_fetch_array($result)) {
     $recurringamount = $data["amount"];
     $nextduedate = $data["nextduedate"];

@@ -22,7 +22,7 @@ while($data = mysql_fetch_array($result)) {
 
     if ($group!=$prevgroup) $reportdata["tablevalues"][] = array("**<b>$group</b>");
 
-    $result2 = select_query("tblcustomerservices","COUNT(*),SUM(tblhosting.firstpaymentamount)","tblhosting.packageid='$pid' AND tblhosting.domainstatus='Active' AND tblhosting.regdate LIKE '".$datefilter."' AND tblclients.currency='$currencyid'","","","","tblclients ON tblclients.id=tblhosting.userid");
+    $result2 = select_query("tblcustomerservices","COUNT(*),SUM(tblcustomerservices.firstpaymentamount)","tblcustomerservices.packageid='$pid' AND tblcustomerservices.domainstatus='Active' AND tblcustomerservices.regdate LIKE '".$datefilter."' AND tblclients.currency='$currencyid'","","","","tblclients ON tblclients.id=tblcustomerservices.userid");
     $data = mysql_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];
@@ -45,7 +45,7 @@ while($data = mysql_fetch_array($result)) {
     $pid = $data["id"];
     $prodname = $data["name"];
 
-    $result2 = select_query("tblserviceaddons","COUNT(*),SUM(tblserviceaddons.setupfee+tblserviceaddons.recurring)","tblserviceaddons.addonid='$pid' AND tblserviceaddons.status='Active' AND tblserviceaddons.regdate LIKE '$datefilter' AND tblclients.currency='$currencyid'","","","","tblhosting ON tblhosting.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblhosting.userid");
+    $result2 = select_query("tblserviceaddons","COUNT(*),SUM(tblserviceaddons.setupfee+tblserviceaddons.recurring)","tblserviceaddons.addonid='$pid' AND tblserviceaddons.status='Active' AND tblserviceaddons.regdate LIKE '$datefilter' AND tblclients.currency='$currencyid'","","","","tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
     $data = mysql_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];

@@ -292,7 +292,7 @@ class RA_Orders extends RA_TableModel
 		update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
 		if ($status == "Cancelled" || $status == "Fraud") {
-			$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domainstatus,tblservices.servertype,tblhosting.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domainstatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$productid = $data['id'];
@@ -496,7 +496,7 @@ class RA_Orders extends RA_TableModel
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblhosting.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 			$data = mysql_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];

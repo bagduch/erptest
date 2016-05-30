@@ -53,11 +53,11 @@ if (!$id) {
     $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
 
-$query = "select tblhosting.*,tblservices.servertype,tblservices.type from tblhosting INNER JOIN tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=1) WHERE tblhosting.id=" . $id;
+$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblhosting INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=1) WHERE tblcustomerservices.id=" . $id;
 
 
 $result = full_query($query);
-//$result = select_query("tblcustomerservices", "tblhosting.*,tblservices.servertype,tblservices.type", array("tblhosting.id" => $id), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+//$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.servertype,tblservices.type", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 $service_data = mysql_fetch_array($result);
 $id = $service_data['id'];
 
@@ -545,7 +545,7 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query("tblcustomerservices", "tblhosting.id,tblhosting.domain,tblservices.name,tblhosting.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblhosting.packageid=tblservices.id");
+$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
 while ($data = mysql_fetch_array($result)) {
     $servicelist_id = $data['id'];

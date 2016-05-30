@@ -27,30 +27,30 @@ if (!function_exists("getCartConfigOptions")) {
 $where = array();
 
 if ($clientid) {
-	$where["tblhosting.userid"] = $clientid;
+	$where["tblcustomerservices.userid"] = $clientid;
 }
 
 
 if ($serviceid) {
-	$where["tblhosting.id"] = $serviceid;
+	$where["tblcustomerservices.id"] = $serviceid;
 }
 
 
 if ($pid) {
-	$where["tblhosting.packageid"] = $pid;
+	$where["tblcustomerservices.packageid"] = $pid;
 }
 
 
 if ($domain) {
-	$where["tblhosting.domain"] = $domain;
+	$where["tblcustomerservices.domain"] = $domain;
 }
 
 
 if ($username2) {
-	$where["tblhosting.username"] = $username2;
+	$where["tblcustomerservices.username"] = $username2;
 }
 
-$result = select_query("tblcustomerservices", "COUNT(*)", $where, "", "", "", "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query("tblcustomerservices", "COUNT(*)", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 $data = mysql_fetch_array($result);
 $totalresults = $data[0];
 $limitstart = (int)$limitstart;
@@ -60,7 +60,7 @@ if (!$limitnum) {
 	$limitnum = 999999;
 }
 
-$result = select_query("tblcustomerservices", "tblhosting.*,tblservices.name AS productname,tblservicegroups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM tblservers WHERE tblservers.id=tblhosting.server) AS serverdetails,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tblhosting.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name AS productname,tblservicegroups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM tblservers WHERE tblservers.id=tblcustomerservices.server) AS serverdetails,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tblcustomerservices.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 $apiresults = array("result" => "success", "clientid" => $clientid, "serviceid" => $serviceid, "pid" => $pid, "domain" => $domain, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result));
 
 if (!$totalresults) {

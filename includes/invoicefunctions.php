@@ -897,7 +897,7 @@ function makeAddonPayment($func_addonid) {
 			$suspendproduct = $data2[0];
 
 			if ($suspendproduct) {
-				$result2 = select_query("tblcustomerservices", "servertype", array("tblhosting.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid");
+				$result2 = select_query("tblcustomerservices", "servertype", array("tblcustomerservices.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 				$data2 = mysql_fetch_array($result2);
 				$module = $data2[0];
 				logActivity("Unsuspending Parent Service for Addon Payment - Service ID: " . $hostingid, $userid);

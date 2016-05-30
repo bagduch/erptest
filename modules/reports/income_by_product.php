@@ -14,13 +14,13 @@ $reportdata["tableheadings"] = array("Product Name","Units Sold","Value");
 $products = $addons = array();
 
 # Loop Through Products
-$result = full_query("SELECT tblhosting.packageid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblhosting ON tblhosting.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND (tblinvoiceitems.type='Hosting' OR tblinvoiceitems.type LIKE 'ProrataProduct%') AND currency=".(int)$currencyid." GROUP BY tblhosting.packageid");
+$result = full_query("SELECT tblcustomerservices.packageid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND (tblinvoiceitems.type='Hosting' OR tblinvoiceitems.type LIKE 'ProrataProduct%') AND currency=".(int)$currencyid." GROUP BY tblcustomerservices.packageid");
 while ($data = mysql_fetch_array($result)) {
     $products[$data[0]] = array("amount" => $data[2],"unitssold" => $data[1]);
 }
 
 # Loop Through Product Discounts
-$result = full_query("SELECT tblhosting.packageid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblhosting ON tblhosting.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND tblinvoiceitems.type='PromoHosting' AND currency=".(int)$currencyid." GROUP BY  tblhosting.packageid");
+$result = full_query("SELECT tblcustomerservices.packageid,COUNT(*),SUM(tblinvoiceitems.amount) FROM tblinvoiceitems INNER JOIN tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.datepaid LIKE '".(int)$year."-".$pmonth."-%' AND tblinvoiceitems.type='PromoHosting' AND currency=".(int)$currencyid." GROUP BY  tblcustomerservices.packageid");
 while ($data = mysql_fetch_array($result)) {
     $products[$data[0]]["amount"] += $data[2];
 }

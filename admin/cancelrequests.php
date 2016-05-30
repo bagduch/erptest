@@ -102,7 +102,7 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("date", "ASC");
-$query = "FROM tblcancelrequests INNER JOIN tblhosting ON tblhosting.id=tblcancelrequests.relid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid INNER JOIN tblclients ON tblhosting.userid=tblclients.id WHERE ";
+$query = "FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id WHERE ";
 $filter = false;
 $criteria = array();
 
@@ -113,13 +113,13 @@ if ($reason) {
 
 
 if ($domain) {
-	$criteria[] = "tblhosting.domain LIKE '%" . db_escape_string($domain) . "%'";
+	$criteria[] = "tblcustomerservices.domain LIKE '%" . db_escape_string($domain) . "%'";
 	$filter = true;
 }
 
 
 if ($userid) {
-	$criteria[] = "tblhosting.userid=" . (int)$userid;
+	$criteria[] = "tblcustomerservices.userid=" . (int)$userid;
 	$filter = true;
 }
 
@@ -138,10 +138,10 @@ if ($type) {
 
 if (!$filter) {
 	if ($completed) {
-		$criteria[] = "(tblhosting.domainstatus='Cancelled' OR tblhosting.domainstatus='Terminated') ";
+		$criteria[] = "(tblcustomerservices.domainstatus='Cancelled' OR tblcustomerservices.domainstatus='Terminated') ";
 	}
 	else {
-		$criteria[] = "(tblhosting.domainstatus!='Cancelled' AND tblhosting.domainstatus!='Terminated') ";
+		$criteria[] = "(tblcustomerservices.domainstatus!='Cancelled' AND tblcustomerservices.domainstatus!='Terminated') ";
 	}
 }
 
@@ -150,7 +150,7 @@ $result = full_query("SELECT COUNT(tblcancelrequests.id) " . $query);
 $data = mysql_fetch_array($result);
 $numrows = $data[0];
 $query .= " ORDER BY tblcancelrequests.date ASC";
-$query = "SELECT tblcancelrequests.*,tblhosting.domain,tblhosting.nextduedate,tblservices.name AS productname,tblservicegroups.name AS groupname,tblhosting.id AS productid,tblhosting.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT tblcancelrequests.*,tblcustomerservices.domain,tblcustomerservices.nextduedate,tblservices.name AS productname,tblservicegroups.name AS groupname,tblcustomerservices.id AS productid,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query($query);
 
 while ($data = mysql_fetch_array($result)) {

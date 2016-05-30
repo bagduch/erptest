@@ -928,7 +928,7 @@ function cpanel_UsageUpdate($params) {
 	}
 
 	unset( $output );
-	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'], "type" => "reselleraccount" ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
+	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'], "type" => "reselleraccount" ), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid" );
 
 	while ($data = mysql_fetch_array( $result )) {
 		$domain = $data['domain'];

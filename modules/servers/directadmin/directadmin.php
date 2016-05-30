@@ -418,7 +418,7 @@ function directadmin_ChangePackage($params) {
 
 
 function directadmin_UsageUpdate($params) {
-	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'] ), "", "", "", "tblservices ON tblservices.id=tblhosting.packageid" );
+	$result = select_query( "tblcustomerservices", "domain,username", array( "server" => $params['serverid'] ), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid" );
 
 	while ($data = mysql_fetch_assoc( $result )) {
 		$username = $data['username'];

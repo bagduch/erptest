@@ -23,7 +23,7 @@ while ($data = mysql_fetch_array($result)) {
     $name = $firstname.' '.$lastname;
     if ($companyname) $name .= ' ('.$companyname.')';
 
-    $result2 = select_query("tblaffiliatespending","COUNT(*),SUM(tblaffiliatespending.amount)",array("affiliateid"=>$affid),"clearingdate","DESC","","tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblhosting ON tblhosting.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid INNER JOIN tblclients ON tblclients.id=tblhosting.userid");
+    $result2 = select_query("tblaffiliatespending","COUNT(*),SUM(tblaffiliatespending.amount)",array("affiliateid"=>$affid),"clearingdate","DESC","","tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
     $data = mysql_fetch_array($result2);
     $pendingcommissions = $data[0];
     $pendingcommissionsamount = $data[1];

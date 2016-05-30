@@ -1,7 +1,7 @@
 {php}
 
 $serviceid = $this->_tpl_vars['serviceid'];
-$result = full_query("SELECT mod_licensing.licensekey,mod_licensing.validdomain,mod_licensing.validip,mod_licensing.validdirectory,mod_licensing.status,tblservices.configoption3 FROM tblhosting,tblservices,mod_licensing WHERE tblhosting.packageid=tblservices.id AND tblhosting.id=mod_licensing.serviceid AND tblservices.servertype='licensing' AND tblhosting.id=".(int)$serviceid);
+$result = full_query("SELECT mod_licensing.licensekey,mod_licensing.validdomain,mod_licensing.validip,mod_licensing.validdirectory,mod_licensing.status,tblservices.configoption3 FROM tblhosting,tblservices,mod_licensing WHERE tblcustomerservices.packageid=tblservices.id AND tblcustomerservices.id=mod_licensing.serviceid AND tblservices.servertype='licensing' AND tblcustomerservices.id=".(int)$serviceid);
 $data = mysql_fetch_array($result);
 $licensekey = $data['licensekey'];
 $validdomain = $data['validdomain'];

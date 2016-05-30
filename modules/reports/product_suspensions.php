@@ -8,7 +8,7 @@ $reportdata["description"] = "This report allows you to review all suspended pro
 
 $reportdata["tableheadings"] = array("Service ID","Client Name","Product Name","Domain","Next Due Date","Suspend Reason");
 
-$result = select_query("tblcustomerservices","tblhosting.*,tblclients.firstname,tblclients.lastname,tblservices.name",array("domainstatus"=>"Suspended"),"id","ASC","","tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid");
+$result = select_query("tblcustomerservices","tblcustomerservices.*,tblclients.firstname,tblclients.lastname,tblservices.name",array("domainstatus"=>"Suspended"),"id","ASC","","tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
 while ($data = mysql_fetch_array($result)) {
 	$serviceid = $data["id"];
     $userid = $data["userid"];

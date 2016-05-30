@@ -208,7 +208,7 @@ if ($action == "send") {
 						}
 						else {
 							if ($type == "product") {
-								$skipemail = get_query_val("tblcustomerservices", "emailoptout", array("tblhosting.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
+								$skipemail = get_query_val("tblcustomerservices", "emailoptout", array("tblcustomerservices.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
 							}
 							else {
 								if ($type == "domain") {
@@ -324,7 +324,7 @@ if ($showform) {
 		else {
 			if ($emailtype == "Product/Service") {
 				$type = "product";
-				$query = "SELECT tblhosting.id,tblhosting.userid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblservices ON tblservices.id=tblhosting.packageid WHERE tblhosting.id!=''";
+				$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE tblcustomerservices.id!=''";
 
 				if ($productids) {
 					$query .= " AND tblservices.id IN (" . $productids . ")";
@@ -332,12 +332,12 @@ if ($showform) {
 
 
 				if ($productstatus) {
-					$query .= " AND tblhosting.domainstatus IN (" . $productstatus . ")";
+					$query .= " AND tblcustomerservices.domainstatus IN (" . $productstatus . ")";
 				}
 
 
 				if ($server) {
-					$query .= " AND tblhosting.server IN (" . $server . ")";
+					$query .= " AND tblcustomerservices.server IN (" . $server . ")";
 				}
 
 
@@ -369,7 +369,7 @@ if ($showform) {
 			else {
 				if ($emailtype == "Addon") {
 					$type = "addon";
-					$query = "SELECT tblhosting.id,tblhosting.userid,tblhosting.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblhosting.id WHERE tblserviceaddons.id!=''";
+					$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblcustomerservices.id WHERE tblserviceaddons.id!=''";
 
 					if ($addonids) {
 						$query .= " AND tblserviceaddons.addonid IN (" . $addonids . ")";
@@ -491,7 +491,7 @@ if ($showform) {
 			else {
 				if ($type == "product") {
 					foreach ($selectedclients as $id) {
-						$result = select_query("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblhosting.domain", array("tblhosting.id" => $id), "", "", "", "tblclients ON tblclients.id=tblhosting.userid");
+						$result = select_query("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
 						$data = mysql_fetch_array($result);
 						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 					}
@@ -543,7 +543,7 @@ if ($showform) {
 			}
 			else {
 				if ($type == "product") {
-					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblhosting.domain FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblhosting.userid WHERE tblhosting.id='" . mysql_real_escape_string($id) . "'";
+					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysql_real_escape_string($id) . "'";
 					$result = full_query($query);
 					$data = mysql_fetch_array($result);
 

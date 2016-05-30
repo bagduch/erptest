@@ -31,12 +31,12 @@ function ah_formatstat($billingcycle,$stat) {
     return $value;
 }
 $incomestats = array();
-$result = select_query("tblhosting,tblclients", "currency,billingcycle,COUNT(*),SUM(amount)", "tblclients.id = tblhosting.userid AND (domainstatus = 'Active' OR domainstatus = 'Suspended') GROUP BY currency, billingcycle");
+$result = select_query("tblhosting,tblclients", "currency,billingcycle,COUNT(*),SUM(amount)", "tblclients.id = tblcustomerservices.userid AND (domainstatus = 'Active' OR domainstatus = 'Suspended') GROUP BY currency, billingcycle");
 while ($data = mysql_fetch_array($result)) {
     $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
     $incomestats[$data['currency']][$data['billingcycle']]["sum"] = $data[3];
 }
-$result = select_query("tblserviceaddons,tblhosting,tblclients", "currency,tblserviceaddons.billingcycle,COUNT(*),SUM(recurring)", "tblserviceaddons.hostingid=tblhosting.id AND tblclients.id=tblhosting.userid AND (tblserviceaddons.status='Active' OR tblserviceaddons.status='Suspended') GROUP BY currency, tblserviceaddons.billingcycle");
+$result = select_query("tblserviceaddons,tblhosting,tblclients", "currency,tblserviceaddons.billingcycle,COUNT(*),SUM(recurring)", "tblserviceaddons.hostingid=tblcustomerservices.id AND tblclients.id=tblcustomerservices.userid AND (tblserviceaddons.status='Active' OR tblserviceaddons.status='Suspended') GROUP BY currency, tblserviceaddons.billingcycle");
 while ($data = mysql_fetch_array($result)) {
     if (isset($incomestats[$data['currency']][$data['billingcycle']]["count"])) $incomestats[$data['currency']][$data['billingcycle']]["count"] += $data[2];
     else $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
