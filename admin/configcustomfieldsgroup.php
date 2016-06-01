@@ -12,8 +12,6 @@ $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
 $action = $ra->get_req_var("action");
 
-
-
 if ($manageoptions) {
     $result = select_query("tblcurrencies", "", "", "code", "ASC");
     while ($data = mysql_fetch_array($result)) {
@@ -39,8 +37,7 @@ if ($manageoptions) {
     $name = $data['name'];
     ob_start();
     echo "";
-    echo "<s";
-    echo "cript langauge=\"JavaScript\">
+    echo "<script langauge=\"JavaScript\">
 function deletegroupoption(id) {
 	if (confirm(\"Are you sure you want to delete this product configuration option?\")) {
 		window.location='";

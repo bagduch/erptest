@@ -546,8 +546,6 @@ if ($a == "domainoptions") {
 if ($a == "confservice") {
     $templatefile = "configureservice";
     $i = (int) $_REQUEST['i'];
-
-
     if (!is_array($_SESSION['cart']['products'][$i])) {
         if ($ajax) {
             exit($_LANG['invoiceserror']);
