@@ -48,7 +48,7 @@ CREATE TABLE `tblaccounts` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
   `currency` int(10) NOT NULL,
-  `gateway` varchar(128) NOT NULL,
+  `gateway` varchar(128) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `description` text NOT NULL,
   `amountin` decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -56,7 +56,7 @@ CREATE TABLE `tblaccounts` (
   `amountout` decimal(10,2) NOT NULL DEFAULT '0.00',
   `rate` decimal(10,5) NOT NULL DEFAULT '1.00000',
   `transid` varchar(64) NOT NULL,
-  `invoiceid` int(10) NOT NULL DEFAULT '0',
+  `invoiceid` int(10) DEFAULT NULL,
   `refundid` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `invoiceid` (`invoiceid`),
@@ -64,8 +64,11 @@ CREATE TABLE `tblaccounts` (
   KEY `date` (`date`),
   KEY `transid` (`transid`(32)),
   KEY `currency` (`currency`),
+  KEY `gateway` (`gateway`),
+  CONSTRAINT `tblaccounts_ibfk_4` FOREIGN KEY (`gateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`),
+  CONSTRAINT `tblaccounts_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`),
   CONSTRAINT `tblaccounts_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`),
-  CONSTRAINT `tblaccounts_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`)
+  CONSTRAINT `tblaccounts_ibfk_3` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -97,9 +100,10 @@ DROP TABLE IF EXISTS `tbladdonmodules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbladdonmodules` (
-  `module` varchar(64) NOT NULL,
+  `module` varchar(64) DEFAULT NULL,
   `setting` varchar(64) NOT NULL,
-  `value` varchar(128) NOT NULL
+  `value` varchar(128) NOT NULL,
+  KEY `module` (`module`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -121,10 +125,12 @@ CREATE TABLE `tbladdons` (
   `downloads` text NOT NULL,
   `autoactivate` text NOT NULL,
   `suspendproduct` text NOT NULL,
-  `welcomeemail` int(10) NOT NULL,
+  `welcomeemail` int(10) DEFAULT NULL,
   `weight` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`(32))
+  KEY `name` (`name`(32)),
+  KEY `welcomeemail` (`welcomeemail`),
+  CONSTRAINT `tbladdons_ibfk_1` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -148,7 +154,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=256 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=260 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,20 +224,6 @@ CREATE TABLE `tbladmins` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbladminsecurityquestions`
---
-
-DROP TABLE IF EXISTS `tbladminsecurityquestions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbladminsecurityquestions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `question` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tblaffiliates`
 --
 
@@ -249,7 +241,8 @@ CREATE TABLE `tblaffiliates` (
   `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
   `withdrawn` decimal(10,2) NOT NULL DEFAULT '0.00',
   KEY `affiliateid` (`id`),
-  KEY `clientid` (`clientid`)
+  KEY `clientid` (`clientid`),
+  CONSTRAINT `tblaffiliates_ibfk_1` FOREIGN KEY (`clientid`) REFERENCES `tblclients` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -366,31 +359,6 @@ CREATE TABLE `tblbannedips` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tblbillableitems`
---
-
-DROP TABLE IF EXISTS `tblbillableitems`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblbillableitems` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `userid` int(10) NOT NULL,
-  `description` text NOT NULL,
-  `hours` decimal(5,1) NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `recur` int(5) NOT NULL DEFAULT '0',
-  `recurcycle` text NOT NULL,
-  `recurfor` int(5) NOT NULL DEFAULT '0',
-  `invoiceaction` int(1) NOT NULL,
-  `duedate` date NOT NULL,
-  `invoicecount` int(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `userid` (`userid`),
-  CONSTRAINT `tblbillableitems_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tblcalendar`
 --
 
@@ -474,7 +442,7 @@ CREATE TABLE `tblclients` (
   `authmodule` text NOT NULL,
   `authdata` text NOT NULL,
   `currency` int(10) NOT NULL,
-  `defaultgateway` text NOT NULL,
+  `defaultgateway` varchar(64) DEFAULT NULL,
   `credit` decimal(10,2) NOT NULL,
   `taxexempt` text NOT NULL,
   `latefeeoveride` text NOT NULL,
@@ -501,8 +469,10 @@ CREATE TABLE `tblclients` (
   KEY `email` (`email`(64)),
   KEY `groupid` (`groupid`),
   KEY `currency` (`currency`),
-  CONSTRAINT `tblclients_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`),
-  CONSTRAINT `tblclients_ibfk_1` FOREIGN KEY (`groupid`) REFERENCES `tblclientgroups` (`id`)
+  KEY `defaultgateway` (`defaultgateway`),
+  CONSTRAINT `tblclients_ibfk_3` FOREIGN KEY (`defaultgateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`),
+  CONSTRAINT `tblclients_ibfk_1` FOREIGN KEY (`groupid`) REFERENCES `tblclientgroups` (`id`),
+  CONSTRAINT `tblclients_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -563,6 +533,7 @@ CREATE TABLE `tblcontacts` (
   `postcode` text NOT NULL,
   `country` text NOT NULL,
   `phonenumber` text NOT NULL,
+  `mobilenumber` text,
   `subaccount` int(1) NOT NULL DEFAULT '0',
   `password` text NOT NULL,
   `permissions` text NOT NULL,
@@ -574,7 +545,6 @@ CREATE TABLE `tblcontacts` (
   `affiliateemails` int(1) NOT NULL,
   `pwresetkey` text NOT NULL,
   `pwresetexpiry` int(10) NOT NULL,
-  `mobilenumber` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userid_firstname_lastname` (`userid`,`firstname`(32),`lastname`(32)),
   KEY `email` (`email`(64)),
@@ -667,7 +637,7 @@ CREATE TABLE `tblcustomerservices` (
   `server` int(10) NOT NULL,
   `regdate` date NOT NULL,
   `description` varchar(128) NOT NULL,
-  `paymentmethod` text NOT NULL,
+  `paymentmethod` varchar(64) DEFAULT NULL,
   `firstpaymentamount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `amount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `billingcycle` text NOT NULL,
@@ -690,6 +660,8 @@ CREATE TABLE `tblcustomerservices` (
   KEY `serverid` (`server`),
   KEY `domain` (`description`(64)),
   KEY `domainstatus` (`servicestatus`),
+  KEY `paymentmethod` (`paymentmethod`),
+  CONSTRAINT `tblcustomerservices_ibfk_5` FOREIGN KEY (`paymentmethod`) REFERENCES `tblpaymentgatewaynames` (`gateway`),
   CONSTRAINT `tblcustomerservices_fk_userid_tblclients` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`),
   CONSTRAINT `tblcustomerservices_ibfk_2` FOREIGN KEY (`packageid`) REFERENCES `tblservices` (`id`),
   CONSTRAINT `tblcustomerservices_ibfk_3` FOREIGN KEY (`orderid`) REFERENCES `tblorders` (`id`),
@@ -706,8 +678,7 @@ DROP TABLE IF EXISTS `tblcustomfields`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcustomfields` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `type` text NOT NULL,
-  `relid` int(10) NOT NULL DEFAULT '0',
+  `relid` int(10) DEFAULT NULL,
   `gid` int(11) NOT NULL,
   `fieldname` text NOT NULL,
   `fieldtype` text NOT NULL,
@@ -722,6 +693,7 @@ CREATE TABLE `tblcustomfields` (
   PRIMARY KEY (`id`),
   KEY `serviceid` (`relid`),
   KEY `gid` (`gid`),
+  CONSTRAINT `tblcustomfields_ibfk_2` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`),
   CONSTRAINT `tblcustomfields_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblcustomfieldsgroup` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -831,7 +803,7 @@ DROP TABLE IF EXISTS `tblemails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblemails` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `userid` int(10) NOT NULL,
+  `userid` int(10) DEFAULT NULL,
   `subject` text NOT NULL,
   `message` text NOT NULL,
   `date` datetime DEFAULT NULL,
@@ -884,7 +856,9 @@ CREATE TABLE `tblgatewaylog` (
   `gateway` varchar(64) DEFAULT NULL,
   `data` text NOT NULL,
   `result` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `gateway` (`gateway`),
+  CONSTRAINT `tblgatewaylog_ibfk_1` FOREIGN KEY (`gateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -899,7 +873,6 @@ CREATE TABLE `tblinvoiceitems` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `invoiceid` int(10) DEFAULT NULL,
   `userid` int(10) NOT NULL,
-  `type` text NOT NULL,
   `relid` int(10) DEFAULT NULL,
   `description` text NOT NULL,
   `amount` decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -910,8 +883,8 @@ CREATE TABLE `tblinvoiceitems` (
   PRIMARY KEY (`id`),
   KEY `invoiceid` (`invoiceid`),
   KEY `relid` (`relid`),
-  CONSTRAINT `tblinvoiceitems_ibfk_2` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`),
-  CONSTRAINT `tblinvoiceitems_ibfk_1` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`)
+  CONSTRAINT `tblinvoiceitems_ibfk_1` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`),
+  CONSTRAINT `tblinvoiceitems_ibfk_2` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1008,24 +981,6 @@ CREATE TABLE `tblknowledgebaselinks` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbllinks`
---
-
-DROP TABLE IF EXISTS `tbllinks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbllinks` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `link` text NOT NULL,
-  `clicks` int(10) NOT NULL,
-  `conversions` int(10) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `name` (`name`(64))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tblmodulelog`
 --
 
@@ -1035,12 +990,14 @@ DROP TABLE IF EXISTS `tblmodulelog`;
 CREATE TABLE `tblmodulelog` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
-  `module` text NOT NULL,
+  `module` varchar(64) DEFAULT NULL,
   `action` text NOT NULL,
   `request` text NOT NULL,
   `response` text NOT NULL,
   `arrdata` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `module` (`module`),
+  CONSTRAINT `tblmodulelog_ibfk_1` FOREIGN KEY (`module`) REFERENCES `tbladdonmodules` (`module`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1151,6 +1108,22 @@ CREATE TABLE `tblorderstatuses` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tblpaymentgatewaynames`
+--
+
+DROP TABLE IF EXISTS `tblpaymentgatewaynames`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblpaymentgatewaynames` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gateway` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gateway_setting` (`gateway`(32)),
+  KEY `gateway` (`gateway`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tblpaymentgateways`
 --
 
@@ -1165,7 +1138,9 @@ CREATE TABLE `tblpaymentgateways` (
   `order` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `gateway_setting` (`gateway`(32),`setting`(32)),
-  KEY `setting_value` (`setting`(32),`value`(32))
+  KEY `setting_value` (`setting`(32),`value`(32)),
+  KEY `gateway` (`gateway`),
+  CONSTRAINT `tblpaymentgateways_ibfk_1` FOREIGN KEY (`gateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1399,7 +1374,8 @@ CREATE TABLE `tblserviceconfigoptionssub` (
   `sortorder` int(10) NOT NULL DEFAULT '0',
   `hidden` int(1) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `configid` (`configid`)
+  KEY `configid` (`configid`),
+  CONSTRAINT `tblserviceconfigoptionssub_ibfk_1` FOREIGN KEY (`configid`) REFERENCES `tblserviceconfigoptions` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1434,7 +1410,6 @@ CREATE TABLE `tblservices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` text NOT NULL,
   `gid` int(10) NOT NULL,
-  `cpid` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `hidden` text NOT NULL,
@@ -1449,15 +1424,12 @@ CREATE TABLE `tblservices` (
   `recurringcycles` int(2) NOT NULL,
   `autoterminatedays` int(4) NOT NULL,
   `autoterminateemail` text NOT NULL,
-  `upgradepackages` text NOT NULL,
   `configoptionsupgrade` text NOT NULL,
   `upgradechargefullcycle` int(1) NOT NULL,
-  `upgradeemail` text NOT NULL,
   `tax` int(1) NOT NULL,
   `affiliateonetime` text NOT NULL,
   `affiliatepaytype` text NOT NULL,
   `affiliatepayamount` decimal(10,2) NOT NULL,
-  `downloads` text NOT NULL,
   `order` int(1) NOT NULL,
   `retired` int(1) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1772,7 +1744,7 @@ DROP TABLE IF EXISTS `tbltickettags`;
 CREATE TABLE `tbltickettags` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `ticketid` int(10) NOT NULL,
-  `tag` text NOT NULL,
+  `tag` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ticketid` (`ticketid`),
   CONSTRAINT `tbltickettags_ibfk_1` FOREIGN KEY (`ticketid`) REFERENCES `tbltickets` (`id`)
@@ -1798,31 +1770,6 @@ CREATE TABLE `tbltodolist` (
   KEY `duedate` (`duedate`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbltodolist_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tblupgrades`
---
-
-DROP TABLE IF EXISTS `tblupgrades`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblupgrades` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `orderid` int(10) NOT NULL,
-  `type` text NOT NULL,
-  `date` date NOT NULL,
-  `relid` int(10) NOT NULL,
-  `originalvalue` text NOT NULL,
-  `newvalue` text NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `recurringchange` decimal(10,2) NOT NULL,
-  `status` enum('Pending','Completed') NOT NULL DEFAULT 'Pending',
-  `paid` enum('Y','N') NOT NULL DEFAULT 'N',
-  PRIMARY KEY (`id`),
-  KEY `orderid` (`orderid`),
-  KEY `serviceid` (`relid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
