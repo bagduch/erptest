@@ -438,16 +438,16 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         }
 
         $orderid = insert_query("tblorders", 
-		array(
-			"ordernum" => $order_number, 
-			"userid" => $userid, 
-//			"contactid" => $_SESSION['cart']['contact'], 
-			"date" => "now()", 
-			"status" => "Pending", 
-			"paymentmethod" => $paymentmethod, 
-			"ipaddress" => $remote_ip, 
-			"notes" => $ordernotes)
-		);
+        array(
+            "ordernum" => $order_number, 
+            "userid" => $userid, 
+//          "contactid" => $_SESSION['cart']['contact'], 
+            "date" => "now()", 
+            "status" => "Pending", 
+            "paymentmethod" => $paymentmethod, 
+            "ipaddress" => $remote_ip, 
+            "notes" => $ordernotes)
+        );
         logActivity("New Order Placed - Order ID: " . $orderid . " - User ID: " . $userid);
         $descriptioneppcodes = array();
     }
@@ -769,22 +769,22 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     $serverid = ($servertype ? getServerID($servertype, $servergroup) : "0");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
                     $serviceid = insert_query("tblcustomerservices", 
-			array(	
-				"userid" => $userid, 
-				"orderid" => $orderid, 
-				"packageid" => $pid, 
-				"server" => $serverid, 
-				"regdate" => "now()", 
-				"description" => $description, 
-				"paymentmethod" => $paymentmethod, 
-				"firstpaymentamount" => $product_total_today_db, 
-				"amount" => $product_recurring_db, 
-				"billingcycle" => $databasecycle, 
-				"nextduedate" => $hostingquerydates, 
-				"nextinvoicedate" => $hostingquerydates, 
-				"servicestatus" => "Pending", 
-				"password" => $serverrootpw, 
-				"promoid" => $promoid));
+            array(  
+                "userid" => $userid, 
+                "orderid" => $orderid, 
+                "packageid" => $pid, 
+                "server" => $serverid, 
+                "regdate" => "now()", 
+                "description" => $description, 
+                "paymentmethod" => $paymentmethod, 
+                "firstpaymentamount" => $product_total_today_db, 
+                "amount" => $product_recurring_db, 
+                "billingcycle" => $databasecycle, 
+                "nextduedate" => $hostingquerydates, 
+                "nextinvoicedate" => $hostingquerydates, 
+                "servicestatus" => "Pending", 
+                "password" => $serverrootpw, 
+                "promoid" => $promoid));
                     $multiqtyids[$qtycount] = $serviceid;
                     $orderproductids[] = $serviceid;
 
