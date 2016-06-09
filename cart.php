@@ -74,23 +74,19 @@ if (isset($_SESSION['cart']['lastconfigured'])) {
     unset($_SESSION['cart']['lastconfigured']);
 }
 
-
 if ($step == "fraudcheck") {
     $a = "fraudcheck";
 }
 
-
 if ($promocode = $ra->get_req_var("promocode")) {
     SetPromoCode($promocode);
 }
-
 
 if ($a == "empty") {
     unset($_SESSION['cart']);
     redir("a=view");
     exit();
 }
-
 
 if ($a == "startover") {
     unset($_SESSION['cart']);
@@ -276,7 +272,6 @@ if (!$a) {
                     redir("", "clientarea.php");
                 }
 
-
                 if (!$_SESSION['uid']) {
                     $orderform = false;
                     require "login.php";
@@ -391,8 +386,6 @@ if (!$a) {
                     redir();
                 }
 
-
-
                 $smartyvalues['gid'] = $groupinfo['id'];
                 $smartyvalues['carts'] = $_SESSION['cart'];
                 $smartyvalues['groupname'] = $groupinfo['name'];
@@ -460,7 +453,6 @@ if ($a == "domainoptions") {
                     $smartyvalues['regoptions'] = $regoptions;
                 }
 
-
                 if ($transferenabled) {
                     $transferoptions = getTLDPriceList($tld, true, "transfer");
                     $smartyvalues['transferoptionscount'] = count($transferoptions);
@@ -509,13 +501,10 @@ if ($a == "domainoptions") {
                 if (substr($tld, 0, 1) != ".") {
                     $tld = "." . $tld;
                 }
-
-
                 if ($CONFIG['AllowDomainsTwice']) {
                     $result = select_query("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (domainstatus!='Terminated' AND domainstatus!='Cancelled' AND domainstatus!='Fraud')");
                     $data = mysql_fetch_array($result);
                     $domaincheck = $data[0];
-
                     if ($domaincheck) {
                         $smartyvalues['alreadyindb'] = true;
                     }
@@ -542,7 +531,6 @@ if ($a == "domainoptions") {
     $templatefile = "domainoptions";
 }
 
-
 if ($a == "confservice") {
     $templatefile = "configureservice";
     $i = (int) $_REQUEST['i'];
@@ -550,7 +538,6 @@ if ($a == "confservice") {
         if ($ajax) {
             exit($_LANG['invoiceserror']);
         }
-
         redir();
         exit();
     }
@@ -588,11 +575,9 @@ if ($a == "confservice") {
                 }
             }
 
-
             if (!$ns1prefix || !$ns2prefix) {
                 $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
             }
-
 
             if (!$rootpw) {
                 $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
@@ -617,7 +602,6 @@ if ($a == "confservice") {
                     if ($opid2 < 0) {
                         $opid2 = 0;
                     }
-
 
                     if (($qtyminimum || $qtymaximum) && ($opid2 < $qtyminimum || $qtymaximum < $opid2)) {
                         if (strpos($optionname, "|")) {
@@ -646,8 +630,6 @@ if ($a == "confservice") {
             $i = $ra->get_req_var("i");
             $productinfo = $orderfrm->setPid($_SESSION['cart']['products'][$i]['pid']);
             $ordersummarytemp = "/templates/orderforms/" . $orderfrm->getTemplate() . "/ordersummary.tpl";
-
-
             if (file_exists(ROOTDIR . $ordersummarytemp)) {
                 $carttotals = calcCartTotals(false, true);
 
@@ -658,7 +640,6 @@ if ($a == "confservice") {
 
             exit();
         }
-
 
         if ((!$ajax && !$nocyclerefresh) && $previousbillingcycle != $billingcycle) {
             redir("a=confservice&i=" . $i);
@@ -678,7 +659,6 @@ if ($a == "confservice") {
             if ($ajax) {
                 exit($errormessage);
             }
-
             $smartyvalues['errormessage'] = $errormessage;
         } else {
             unset($_SESSION['cart']['products'][$i]['noconfig']);
@@ -687,7 +667,6 @@ if ($a == "confservice") {
             if ($ajax) {
                 exit();
             }
-
             redir("a=confdomains");
             exit();
         }
@@ -704,7 +683,6 @@ if ($a == "confservice") {
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
     $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
-
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
@@ -713,16 +691,13 @@ if ($a == "confservice") {
             ++$recurringcycles;
         }
 
-
         if (0 <= $pricing['rawpricing']['quarterly']) {
             ++$recurringcycles;
         }
 
-
         if (0 <= $pricing['rawpricing']['semiannually']) {
             ++$recurringcycles;
         }
-
 
         if (0 <= $pricing['rawpricing']['annually']) {
             ++$recurringcycles;
@@ -746,7 +721,6 @@ if ($a == "confservice") {
         redir("a=confdomains");
         exit();
     }
-
     $serverarray = array("hostname" => $server['hostname'], "ns1prefix" => $server['ns1prefix'], "ns2prefix" => $server['ns2prefix'], "rootpw" => $server['rootpw']);
     $smartyvalues['editconfig'] = true;
     $smartyvalues['firstconfig'] = ($noconfig ? true : false);
@@ -778,10 +752,7 @@ if ($a == "addcontact") {
     $a = "view";
 }
 
-
 if ($a == "view") {
-
-
     if (($submit || $checkout) && !$validatepromo) {
         $viewdata = $cart->Viewcart(true);
     } else {
@@ -792,9 +763,6 @@ if ($a == "view") {
     $smartyvalues = $viewdata['smarty'];
     // echo "<pre>", print_r($smartyvalues, 1), "<pre>";
 }
-
-
-
 
 if ($a == "login") {
     if ($_SESSION['uid']) {
@@ -809,7 +777,6 @@ if ($a == "login") {
         $smartyvalues['incorrect'] = true;
     }
 }
-
 
 if ($a == "fraudcheck") {
     $orderid = $_SESSION['orderdetails']['OrderID'];
@@ -991,11 +958,9 @@ if ($a == "complete") {
             }
         }
 
-
         if ($CONFIG['AutoRedirectoInvoice'] == "on") {
             redir("id=" . $invoiceid, "viewinvoice.php");
         }
-
 
         if ($CONFIG['AutoRedirectoInvoice'] == "gateway") {
             if (in_array($paymentmethod, array("mailin", "banktransfer"))) {
