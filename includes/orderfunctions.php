@@ -546,26 +546,16 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 if (!$billingcycle) {
                     if (0 <= $pricing['rawpricing']['monthly']) {
                         $billingcycle = "monthly";
-                    } else {
-                        if (0 <= $pricing['rawpricing']['quarterly']) {
-                            $billingcycle = "quarterly";
-                        } else {
-                            if (0 <= $pricing['rawpricing']['semiannually']) {
-                                $billingcycle = "semiannually";
-                            } else {
-                                if (0 <= $pricing['rawpricing']['annually']) {
-                                    $billingcycle = "annually";
-                                } else {
-                                    if (0 <= $pricing['rawpricing']['biennially']) {
-                                        $billingcycle = "biennially";
-                                    } else {
-                                        if (0 <= $pricing['rawpricing']['triennially']) {
-                                            $billingcycle = "triennially";
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    } elseif (0 <= $pricing['rawpricing']['quarterly']) {
+                        $billingcycle = "quarterly";
+                    } elseif (0 <= $pricing['rawpricing']['semiannually']) {
+                        $billingcycle = "semiannually";
+                    } elseif (0 <= $pricing['rawpricing']['annually']) {
+                        $billingcycle = "annually";
+                     } elseif (0 <= $pricing['rawpricing']['biennially']) {
+                        $billingcycle = "biennially";
+                    } elseif (0 <= $pricing['rawpricing']['triennially']) {
+                            $billingcycle = "triennially";
                     }
                 }
             } else {
