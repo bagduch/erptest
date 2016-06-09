@@ -437,7 +437,17 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             return false;
         }
 
-        $orderid = insert_query("tblorders", array("ordernum" => $order_number, "userid" => $userid, "contactid" => $_SESSION['cart']['contact'], "date" => "now()", "status" => "Pending", "paymentmethod" => $paymentmethod, "ipaddress" => $remote_ip, "notes" => $ordernotes));
+        $orderid = insert_query("tblorders", 
+		array(
+			"ordernum" => $order_number, 
+			"userid" => $userid, 
+//			"contactid" => $_SESSION['cart']['contact'], 
+			"date" => "now()", 
+			"status" => "Pending", 
+			"paymentmethod" => $paymentmethod, 
+			"ipaddress" => $remote_ip, 
+			"notes" => $ordernotes)
+		);
         logActivity("New Order Placed - Order ID: " . $orderid . " - User ID: " . $userid);
         $descriptioneppcodes = array();
     }
@@ -758,7 +768,23 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 while ($qtycount <= $qty) {
                     $serverid = ($servertype ? getServerID($servertype, $servergroup) : "0");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
-                    $serviceid = insert_query("tblcustomerservices", array("userid" => $userid, "orderid" => $orderid, "packageid" => $pid, "server" => $serverid, "regdate" => "now()", "description" => $description, "paymentmethod" => $paymentmethod, "firstpaymentamount" => $product_total_today_db, "amount" => $product_recurring_db, "billingcycle" => $databasecycle, "nextduedate" => $hostingquerydates, "nextinvoicedate" => $hostingquerydates, "descriptionstatus" => "Pending", "password" => $serverrootpw, "promoid" => $promoid));
+                    $serviceid = insert_query("tblcustomerservices", 
+			array(	
+				"userid" => $userid, 
+				"orderid" => $orderid, 
+				"packageid" => $pid, 
+				"server" => $serverid, 
+				"regdate" => "now()", 
+				"description" => $description, 
+				"paymentmethod" => $paymentmethod, 
+				"firstpaymentamount" => $product_total_today_db, 
+				"amount" => $product_recurring_db, 
+				"billingcycle" => $databasecycle, 
+				"nextduedate" => $hostingquerydates, 
+				"nextinvoicedate" => $hostingquerydates, 
+				"servicestatus" => "Pending", 
+				"password" => $serverrootpw, 
+				"promoid" => $promoid));
                     $multiqtyids[$qtycount] = $serviceid;
                     $orderproductids[] = $serviceid;
 
@@ -1941,7 +1967,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if (count($requiredproducts)) {
-                    $result = select_query("tblcustomerservices", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND packageid IN (" . db_build_in_array($requiredproducts) . ") AND descriptionstatus='Active'");
+                    $result = select_query("tblcustomerservices", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND packageid IN (" . db_build_in_array($requiredproducts) . ") AND servicestatus='Active'");
                     $data = mysql_fetch_array($result);
 
                     if ($data[0]) {
@@ -2055,7 +2081,7 @@ function acceptOrder($orderid, $vars = array()) {
 
     $errors = array();
     run_hook("AcceptOrder", array("orderid" => $orderid));
-    $result = select_query("tblcustomerservices", "", array("orderid" => $orderid, "descriptionstatus" => "Pending"));
+    $result = select_query("tblcustomerservices", "", array("orderid" => $orderid, "servicestatus" => "Pending"));
 
     while ($data = mysql_fetch_array($result)) {
         $productid = $data['id'];
@@ -2138,7 +2164,7 @@ function acceptOrder($orderid, $vars = array()) {
             }
         }
 
-        update_query("tblcustomerservices", array("descriptionstatus" => "Active"), array("id" => $productid));
+        update_query("tblcustomerservices", array("servicestatus" => "Active"), array("id" => $productid));
 
         if ($sendwelcome) {
             sendMessage("defaultnewacc", $productid);
@@ -2360,11 +2386,11 @@ function changeOrderStatus($orderid, $status) {
     update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
     if ($status == "Cancelled" || $status == "Fraud") {
-        $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.descriptionstatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
         while ($data = mysql_fetch_array($result)) {
             $productid = $data['id'];
-            $prodstatus = $data['descriptionstatus'];
+            $prodstatus = $data['servicestatus'];
             $module = $data['servertype'];
             $packageid = $data['packageid'];
             $stockcontrol = $data['stockcontrol'];
@@ -2381,7 +2407,7 @@ function changeOrderStatus($orderid, $status) {
                 $moduleresult = ServerTerminateAccount($productid);
 
                 if ($moduleresult == "success") {
-                    update_query("tblcustomerservices", array("descriptionstatus" => $status), array("id" => $productid));
+                    update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
                     if ($stockcontrol == "on") {
                         update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
@@ -2389,14 +2415,14 @@ function changeOrderStatus($orderid, $status) {
                 }
             }
 
-            update_query("tblcustomerservices", array("descriptionstatus" => $status), array("id" => $productid));
+            update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
             if ($stockcontrol == "on") {
                 update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
             }
         }
     } else {
-        update_query("tblcustomerservices", array("descriptionstatus" => $status), array("orderid" => $orderid));
+        update_query("tblcustomerservices", array("servicestatus" => $status), array("orderid" => $orderid));
     }
 
     update_query("tblcustomerservicesaddons", array("status" => $status), array("orderid" => $orderid));

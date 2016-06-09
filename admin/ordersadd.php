@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -23,462 +13,469 @@ $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
 
 if ($action == "createpromo") {
-	check_token("RA.admin.default");
+    check_token("RA.admin.default");
 
-	if (!$code) {
-		exit("Promotion Code is Required");
-	}
+    if (!$code) {
+        exit("Promotion Code is Required");
+    }
 
 
-	if ($pvalue <= 0) {
-		exit("Promotion Value must be greater than zero");
-	}
+    if ($pvalue <= 0) {
+        exit("Promotion Value must be greater than zero");
+    }
 
-	$result = select_query("tblpromotions", "COUNT(*)", array("code" => $code));
-	$data = mysql_fetch_array($result);
-	$duplicates = $data[0];
+    $result = select_query("tblpromotions", "COUNT(*)", array("code" => $code));
+    $data = mysql_fetch_array($result);
+    $duplicates = $data[0];
 
-	if ($duplicates) {
-		exit("Promotion Code already exists. Please try another.");
-	}
+    if ($duplicates) {
+        exit("Promotion Code already exists. Please try another.");
+    }
 
-	$promoid = insert_query("tblpromotions", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "maxuses" => "1", "recurfor" => $recurfor, "expirationdate" => "0000-00-00", "notes" => "Order Process One Off Custom Promo"));
-	$promo_type = $type;
-	$promo_value = $pvalue;
-	$promo_recurring = $recurring;
-	$promo_code = $code;
+    $promoid = insert_query("tblpromotions", 
+        array("code" => $code, 
+            "type" => $type, 
+            "recurring" => 
+            $recurring, "value" => $pvalue, "maxuses" => "1", "recurfor" => $recurfor, "expirationdate" => "0000-00-00", "notes" => "Order Process One Off Custom Promo"));
+    $promo_type = $type;
+    $promo_value = $pvalue;
+    $promo_recurring = $recurring;
+    $promo_code = $code;
 
-	if ($promo_type == "Percentage") {
-		$promo_value .= "%";
-	}
-	else {
-		$promo_value = formatCurrency($promo_value);
-	}
+    if ($promo_type == "Percentage") {
+        $promo_value .= "%";
+    }
+    else {
+        $promo_value = formatCurrency($promo_value);
+    }
 
-	$promo_recurring = ($promo_recurring ? "Recurring" : "One Time");
-	echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
-	exit();
+    $promo_recurring = ($promo_recurring ? "Recurring" : "One Time");
+    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    exit();
 }
 
 
 if ($action == "getconfigoptions") {
-	check_token("RA.admin.default");
-	releaseSession();
+    check_token("RA.admin.default");
+    releaseSession();
 
-	if (!trim($pid)) {
-		exit();
-	}
+    if (!trim($pid)) {
+        exit();
+    }
 
-	$options = "";
-	$configoptions = getCartConfigOptions($pid, "", $cycle);
+    $options = "";
+    $configoptions = getCartConfigOptions($pid, "", $cycle);
 
-	if (count($configoptions)) {
-		$options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
+    if (count($configoptions)) {
+        $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-		foreach ($configoptions as $configoption) {
-			$options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $configoption['optionname'] . "</td><td class=\"fieldarea\">";
+        foreach ($configoptions as $configoption) {
+            $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $configoption['optionname'] . "</td><td class=\"fieldarea\">";
 
-			if ($configoption['optiontype'] == "1") {
-				$options .= "<select onchange=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\">";
-				foreach ($configoption['options'] as $optiondata) {
-					$options .= "<option value=\"" . $optiondata['id'] . "\"";
+            if ($configoption['optiontype'] == "1") {
+                $options .= "<select onchange=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\">";
+                foreach ($configoption['options'] as $optiondata) {
+                    $options .= "<option value=\"" . $optiondata['id'] . "\"";
 
-					if ($optiondata['id'] == $configoption['selectedvalue']) {
-						$options .= " selected";
-					}
+                    if ($optiondata['id'] == $configoption['selectedvalue']) {
+                        $options .= " selected";
+                    }
 
-					$options .= ">" . $optiondata['name'] . "</option>";
-				}
+                    $options .= ">" . $optiondata['name'] . "</option>";
+                }
 
-				$options .= "</select>";
-			}
-			else {
-				if ($configoption['optiontype'] == "2") {
-					foreach ($configoption['options'] as $optiondata) {
-						$options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
+                $options .= "</select>";
+            }
+            else {
+                if ($configoption['optiontype'] == "2") {
+                    foreach ($configoption['options'] as $optiondata) {
+                        $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
 
-						if ($optiondata['id'] == $configoption['selectedvalue']) {
-							$options .= " checked=\"checked\"";
-						}
+                        if ($optiondata['id'] == $configoption['selectedvalue']) {
+                            $options .= " checked=\"checked\"";
+                        }
 
-						$options .= "> " . $optiondata['name'] . "<br />";
-					}
-				}
-				else {
-					if ($configoption['optiontype'] == "3") {
-						$options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
+                        $options .= "> " . $optiondata['name'] . "<br />";
+                    }
+                }
+                else {
+                    if ($configoption['optiontype'] == "3") {
+                        $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
 
-						if ($configoption['selectedqty']) {
-							$options .= " checked=\"checked\"";
-						}
+                        if ($configoption['selectedqty']) {
+                            $options .= " checked=\"checked\"";
+                        }
 
-						$options .= "> " . $configoption['options'][0]['name'];
-					}
-					else {
-						if ($configoption['optiontype'] == "4") {
-							$options .= "<input type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
-						}
-					}
-				}
-			}
+                        $options .= "> " . $configoption['options'][0]['name'];
+                    }
+                    else {
+                        if ($configoption['optiontype'] == "4") {
+                            $options .= "<input type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
+                        }
+                    }
+                }
+            }
 
-			$options .= "</td></tr>";
-		}
+            $options .= "</td></tr>";
+        }
 
-		$options .= "</table>";
-	}
+        $options .= "</table>";
+    }
 
-	$customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
+    $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
 
-	if (count($customfields)) {
-		$options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
+    if (count($customfields)) {
+        $options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-		foreach ($customfields as $customfield) {
-			$inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
-			$options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";
-		}
+        foreach ($customfields as $customfield) {
+            $inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
+            $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";
+        }
 
-		$options .= "</table>";
-	}
+        $options .= "</table>";
+    }
 
-	$addonshtml = "";
-	$addonsarray = getAddons($pid);
+    $addonshtml = "";
+    $addonsarray = getAddons($pid);
 
-	if (count($addonsarray)) {
-		foreach ($addonsarray as $addon) {
-			$addonshtml .= "<label>" . str_replace("<input type=\"checkbox\" name=\"addons", "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"addons[" . $orderid . "]", $addon['checkbox']) . " " . $addon['name'] . " (" . $addon['pricing'] . ")";
+    if (count($addonsarray)) {
+        foreach ($addonsarray as $addon) {
+            $addonshtml .= "<label>" . str_replace("<input type=\"checkbox\" name=\"addons", "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"addons[" . $orderid . "]", $addon['checkbox']) . " " . $addon['name'] . " (" . $addon['pricing'] . ")";
 
-			if ($addon['description']) {
-				$addonshtml .= " - " . $addon['description'];
-			}
+            if ($addon['description']) {
+                $addonshtml .= " - " . $addon['description'];
+            }
 
-			$addonshtml .= "</label><br />";
-		}
-	}
+            $addonshtml .= "</label><br />";
+        }
+    }
 
-	echo json_encode(array("options" => $options, "addons" => $addonshtml));
-	exit();
+    echo json_encode(array("options" => $options, "addons" => $addonshtml));
+    exit();
 }
 
 
 if ($action == "getdomainaddlfields") {
-	check_token("RA.admin.default");
-	$domainparts = explode(".", $domain, 2);
-	$tempdomainfields = $additionaldomainfields["." . $domainparts[1]];
-	$addlfieldscode = "";
+    check_token("RA.admin.default");
+    $domainparts = explode(".", $domain, 2);
+    $tempdomainfields = $additionaldomainfields["." . $domainparts[1]];
+    $addlfieldscode = "";
 
-	if ($tempdomainfields) {
-		foreach ($tempdomainfields as $key => $values) {
+    if ($tempdomainfields) {
+        foreach ($tempdomainfields as $key => $values) {
 
-			if ($values['Name']) {
-				$addlfieldscode .= "<tr class=\"domainaddlfields" . $order . "\"><td width=\"130\" class=\"fieldlabel\">" . $values['Name'] . "</td><td class=\"fieldarea\">";
+            if ($values['Name']) {
+                $addlfieldscode .= "<tr class=\"domainaddlfields" . $order . "\"><td width=\"130\" class=\"fieldlabel\">" . $values['Name'] . "</td><td class=\"fieldarea\">";
 
-				if ($values['Type'] == "dropdown") {
-					$addlfieldscode .= "<select name=\"domflds[" . $order . "][" . $key . "]\">";
-					foreach (explode(",", $values['Options']) as $option) {
-						$addlfieldscode .= "<option value=\"" . $option . "\">" . $option . "</option>";
-					}
+                if ($values['Type'] == "dropdown") {
+                    $addlfieldscode .= "<select name=\"domflds[" . $order . "][" . $key . "]\">";
+                    foreach (explode(",", $values['Options']) as $option) {
+                        $addlfieldscode .= "<option value=\"" . $option . "\">" . $option . "</option>";
+                    }
 
-					$addlfieldscode .= "</select>";
-				}
-
-
-				if ($values['Type'] == "text") {
-					$addlfieldscode .= "<input type=\"text\" name=\"domflds[" . $order . "][" . $key . "]\" />";
-				}
+                    $addlfieldscode .= "</select>";
+                }
 
 
-				if ($values['Type'] == "tickbox") {
-					$addlfieldscode .= "<input type=\"checkbox\" name=\"domflds[" . $order . "][" . $key . "]\" /> " . $values['Description'];
-				}
+                if ($values['Type'] == "text") {
+                    $addlfieldscode .= "<input type=\"text\" name=\"domflds[" . $order . "][" . $key . "]\" />";
+                }
 
 
-				if ($values['Type'] == "radio") {
-					foreach (explode(",", $values['Options']) as $option) {
-						$addlfieldscode .= "<input type=\"radio\" name=\"domflds[" . $order . "][" . $key . "]\" value=\"" . $option . "\" /> " . $option . "<br />";
-					}
-				}
+                if ($values['Type'] == "tickbox") {
+                    $addlfieldscode .= "<input type=\"checkbox\" name=\"domflds[" . $order . "][" . $key . "]\" /> " . $values['Description'];
+                }
 
-				$addlfieldscode .= "</td></tr>";
-				continue;
-			}
-		}
-	}
 
-	echo $addlfieldscode;
-	exit();
+                if ($values['Type'] == "radio") {
+                    foreach (explode(",", $values['Options']) as $option) {
+                        $addlfieldscode .= "<input type=\"radio\" name=\"domflds[" . $order . "][" . $key . "]\" value=\"" . $option . "\" /> " . $option . "<br />";
+                    }
+                }
+
+                $addlfieldscode .= "</td></tr>";
+                continue;
+            }
+        }
+    }
+
+    echo $addlfieldscode;
+    exit();
 }
 
 
 if ($ra->get_req_var("submitorder")) {
-	check_token("RA.admin.default");
-	$userid = get_query_val("tblclients", "id", array("id" => $userid));
+    check_token("RA.admin.default");
+    $userid = get_query_val("tblclients", "id", array("id" => $userid));
 
-	if (!$userid && !$calconly) {
-		infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");
-	}
-	else {
-		$_SESSION['uid'] = $userid;
-		getUsersLang($userid);
-		$_SESSION['cart'] = array();
-		$_SESSION['cart']['paymentmethod'] = $paymentmethod;
-		foreach ($pid as $k => $prodid) {
+    if (!$userid && !$calconly) {
+        infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");
+    }
+    else {
+        $_SESSION['uid'] = $userid;
+        getUsersLang($userid);
+        $_SESSION['cart'] = array();
+        $_SESSION['cart']['paymentmethod'] = $paymentmethod;
+        foreach ($pid as $k => $prodid) {
 
-			if ($prodid) {
-				$addons[$k] = array_keys($addons[$k]);
+            if ($prodid) {
+                $addons[$k] = array_keys($addons[$k]);
 
-				if (!$qty[$k]) {
-					$qty[$k] = 1;
-				}
+                if (!$qty[$k]) {
+                    $qty[$k] = 1;
+                }
 
-				$productarray = array("pid" => $prodid, "domain" => $domain[$k], "billingcycle" => str_replace(array("-", " "), "", strtolower($billingcycle[$k])), "server" => "", "configoptions" => $configoption[$k], "customfields" => $customfield[$k], "addons" => $addons[$k]);
+                $productarray = array("pid" => $prodid, "domain" => $domain[$k], "billingcycle" => str_replace(array("-", " "), "", strtolower($billingcycle[$k])), "server" => "", "configoptions" => $configoption[$k], "customfields" => $customfield[$k], "addons" => $addons[$k]);
 
-				if (strlen($_POST['priceoverride'][$k])) {
-					$productarray['priceoverride'] = $_POST['priceoverride'][$k];
-				}
+                if (strlen($_POST['priceoverride'][$k])) {
+                    $productarray['priceoverride'] = $_POST['priceoverride'][$k];
+                }
 
-				$count = 1;
+                $count = 1;
 
-				while ($count <= $qty[$k]) {
-					$_SESSION['cart']['products'][] = $productarray;
-					++$count;
-				}
+                while ($count <= $qty[$k]) {
+                    $_SESSION['cart']['products'][] = $productarray;
+                    ++$count;
+                }
 
-				continue;
-			}
-		}
+                continue;
+            }
+        }
 
-		$validtlds = array();
-		$result = select_query("tbldomainpricing", "extension", "");
+        $validtlds = array();
+        $result = select_query("tbldomainpricing", "extension", "");
 
-		while ($data = mysql_fetch_array($result)) {
-			$validtlds[] = $data[0];
-		}
+        while ($data = mysql_fetch_array($result)) {
+            $validtlds[] = $data[0];
+        }
 
-		foreach ($regaction as $k => $regact) {
-			$domainparts = explode(".", $regdomain[$k], 2);
+        foreach ($regaction as $k => $regact) {
+            $domainparts = explode(".", $regdomain[$k], 2);
 
-			if ($regact && in_array("." . $domainparts[1], $validtlds)) {
-				$_SESSION['cart']['domains'][] = array("type" => $regact, "domain" => $regdomain[$k], "regperiod" => $regperiod[$k], "dnsmanagement" => $dnsmanagement[$k], "emailforwarding" => $emailforwarding[$k], "idprotection" => $idprotection[$k], "eppcode" => $eppcode[$k], "fields" => $domflds[$k]);
-				continue;
-			}
-		}
-
-
-		if ($promocode) {
-			$_SESSION['cart']['promo'] = $promocode;
-		}
-
-		$_SESSION['cart']['orderconfdisabled'] = ($adminorderconf ? false : true);
-		$_SESSION['cart']['geninvoicedisabled'] = ($admingenerateinvoice ? false : true);
-
-		if (!$adminsendinvoice) {
-			$CONFIG['NoInvoiceEmailOnOrder'] = true;
-		}
+            if ($regact && in_array("." . $domainparts[1], $validtlds)) {
+                $_SESSION['cart']['domains'][] = array("type" => $regact, "domain" => $regdomain[$k], "regperiod" => $regperiod[$k], "dnsmanagement" => $dnsmanagement[$k], "emailforwarding" => $emailforwarding[$k], "idprotection" => $idprotection[$k], "eppcode" => $eppcode[$k], "fields" => $domflds[$k]);
+                continue;
+            }
+        }
 
 
-		if ($calconly) {
-			$ordervals = calcCartTotals();
-			echo "<div class=\"ordersummarytitle\">Order Summary</div>
+        if ($promocode) {
+            $_SESSION['cart']['promo'] = $promocode;
+        }
+
+        $_SESSION['cart']['orderconfdisabled'] = ($adminorderconf ? false : true);
+        $_SESSION['cart']['geninvoicedisabled'] = ($admingenerateinvoice ? false : true);
+
+        if (!$adminsendinvoice) {
+            $CONFIG['NoInvoiceEmailOnOrder'] = true;
+        }
+
+
+        if ($calconly) {
+            $ordervals = calcCartTotals();
+            echo "<div class=\"ordersummarytitle\">Order Summary</div>
 <div id=\"ordersummary\">
 <table>
 ";
 
-			if (is_array($ordervals['products'])) {
-				foreach ($ordervals['products'] as $cartprod) {
-					echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $cartprod['productinfo']['groupname'] . " - " . $cartprod['productinfo']['name'] . "</div>";
-					echo $aInt->lang("billingcycles", $cartprod['billingcycle']);
+            if (is_array($ordervals['products'])) {
+                foreach ($ordervals['products'] as $cartprod) {
+                    echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $cartprod['productinfo']['groupname'] . " - " . $cartprod['productinfo']['name'] . "</div>";
+                    echo $aInt->lang("billingcycles", $cartprod['billingcycle']);
 
-					if ($cartprod['domain']) {
-						echo " - " . $cartprod['domain'];
-					}
+                    if ($cartprod['domain']) {
+                        echo " - " . $cartprod['domain'];
+                    }
 
-					echo "<div class=\"itempricing\">";
+                    echo "<div class=\"itempricing\">";
 
-					if ($cartprod['priceoverride']) {
-						echo formatCurrency($cartprod['priceoverride']) . "*";
-					}
-					else {
-						echo $cartprod['pricingtext'];
-					}
+                    if ($cartprod['priceoverride']) {
+                        echo formatCurrency($cartprod['priceoverride']) . "*";
+                    }
+                    else {
+                        echo $cartprod['pricingtext'];
+                    }
 
-					echo "</div>";
+                    echo "</div>";
 
-					if ($cartprod['configoptions']) {
-						foreach ($cartprod['configoptions'] as $cartcoption) {
+                    if ($cartprod['configoptions']) {
+                        foreach ($cartprod['configoptions'] as $cartcoption) {
 
-							if ($cartcoption['type'] == "1" || $cartcoption['type'] == "2") {
-								echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['value'];
-								continue;
-							}
-
-
-							if ($cartcoption['type'] == "3") {
-								echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": ";
-
-								if ($cartcoption['qty']) {
-									echo $aInt->lang("global", "yes");
-									continue;
-								}
-
-								echo $aInt->lang("global", "no");
-								continue;
-							}
+                            if ($cartcoption['type'] == "1" || $cartcoption['type'] == "2") {
+                                echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['value'];
+                                continue;
+                            }
 
 
-							if ($cartcoption['type'] == "4") {
-								echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['qty'] . " x " . $cartcoption['option'];
-								continue;
-							}
-						}
-					}
+                            if ($cartcoption['type'] == "3") {
+                                echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": ";
 
-					echo "</td></tr>";
+                                if ($cartcoption['qty']) {
+                                    echo $aInt->lang("global", "yes");
+                                    continue;
+                                }
 
-					if ($cartprod['addons']) {
-						foreach ($cartprod['addons'] as $addondata) {
-							echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $addondata['name'] . "</div><div class=\"itempricing\">" . $addondata['pricingtext'] . "</div></td></tr>";
-						}
-
-						continue;
-					}
-				}
-			}
+                                echo $aInt->lang("global", "no");
+                                continue;
+                            }
 
 
-			if (is_array($ordervals['domains'])) {
-				foreach ($ordervals['domains'] as $cartdom) {
-					echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $aInt->lang("fields", "domain") . " " . $aInt->lang("domains", $cartdom['type']) . "</div>" . $cartdom['domain'] . " (" . $cartdom['regperiod'] . " " . $aInt->lang("domains", "years") . ")";
+                            if ($cartcoption['type'] == "4") {
+                                echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['qty'] . " x " . $cartcoption['option'];
+                                continue;
+                            }
+                        }
+                    }
 
-					if ($cartdom['dnsmanagement']) {
-						echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "dnsmanagement");
-					}
+                    echo "</td></tr>";
 
+                    if ($cartprod['addons']) {
+                        foreach ($cartprod['addons'] as $addondata) {
+                            echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $addondata['name'] . "</div><div class=\"itempricing\">" . $addondata['pricingtext'] . "</div></td></tr>";
+                        }
 
-					if ($cartdom['emailforwarding']) {
-						echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "emailforwarding");
-					}
-
-
-					if ($cartdom['idprotection']) {
-						echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "idprotection");
-					}
-
-					echo "<div class=\"itempricing\">";
-
-					if ($cartdom['priceoverride']) {
-						echo formatCurrency($cartdom['priceoverride']) . "*";
-					}
-					else {
-						echo $cartdom['price'];
-					}
-
-					echo "</div>";
-				}
-			}
-
-			$cartitems = 0;
-			foreach (array("products", "addons", "domains", "renewals") as $k) {
-
-				if (array_key_exists($k, $ordervals)) {
-					$cartitems += count($ordervals[$k]);
-					continue;
-				}
-			}
+                        continue;
+                    }
+                }
+            }
 
 
-			if (!$cartitems) {
-				echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\" align=\"center\">No Items Selected</div></td></tr>";
-			}
+            if (is_array($ordervals['domains'])) {
+                foreach ($ordervals['domains'] as $cartdom) {
+                    echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $aInt->lang("fields", "domain") . " " . $aInt->lang("domains", $cartdom['type']) . "</div>" . $cartdom['domain'] . " (" . $cartdom['regperiod'] . " " . $aInt->lang("domains", "years") . ")";
 
-			echo "<tr class=\"subtotal\"><td>Subtotal</td><td class=\"alnright\">" . $ordervals['subtotal'] . "</td></tr>";
-
-			if ($ordervals['promotype']) {
-				echo "<tr class=\"promo\"><td>Promo Discount</td><td class=\"alnright\">" . $ordervals['discount'] . "</td></tr>";
-			}
+                    if ($cartdom['dnsmanagement']) {
+                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "dnsmanagement");
+                    }
 
 
-			if ($ordervals['taxrate']) {
-				echo "<tr class=\"tax\"><td>" . $ordervals['taxname'] . " @ " . $ordervals['taxrate'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal'] . "</td></tr>";
-			}
+                    if ($cartdom['emailforwarding']) {
+                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "emailforwarding");
+                    }
 
 
-			if ($ordervals['taxrate2']) {
-				echo "<tr class=\"tax\"><td>" . $ordervals['taxname2'] . " @ " . $ordervals['taxrate2'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal2'] . "</td></tr>";
-			}
+                    if ($cartdom['idprotection']) {
+                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "idprotection");
+                    }
 
-			echo "<tr class=\"total\"><td width=\"140\">Total</td><td class=\"alnright\">" . $ordervals['total'] . "</td></tr>";
+                    echo "<div class=\"itempricing\">";
 
-			if ((((($ordervals['totalrecurringmonthly'] || $ordervals['totalrecurringquarterly']) || $ordervals['totalrecurringsemiannually']) || $ordervals['totalrecurringannually']) || $ordervals['totalrecurringbiennially']) || $ordervals['totalrecurringtriennially']) {
-				echo "<tr class=\"recurring\"><td>Recurring</td><td class=\"alnright\">";
+                    if ($cartdom['priceoverride']) {
+                        echo formatCurrency($cartdom['priceoverride']) . "*";
+                    }
+                    else {
+                        echo $cartdom['price'];
+                    }
 
-				if ($ordervals['totalrecurringmonthly']) {
-					echo "" . $ordervals['totalrecurringmonthly'] . " Monthly<br />";
-				}
+                    echo "</div>";
+                }
+            }
 
+            $cartitems = 0;
+            foreach (array("products", "addons", "domains", "renewals") as $k) {
 
-				if ($ordervals['totalrecurringquarterly']) {
-					echo "" . $ordervals['totalrecurringquarterly'] . " Quarterly<br />";
-				}
-
-
-				if ($ordervals['totalrecurringsemiannually']) {
-					echo "" . $ordervals['totalrecurringsemiannually'] . " Semi-Annually<br />";
-				}
-
-
-				if ($ordervals['totalrecurringannually']) {
-					echo "" . $ordervals['totalrecurringannually'] . " Annually<br />";
-				}
+                if (array_key_exists($k, $ordervals)) {
+                    $cartitems += count($ordervals[$k]);
+                    continue;
+                }
+            }
 
 
-				if ($ordervals['totalrecurringbiennially']) {
-					echo "" . $ordervals['totalrecurringbiennially'] . " Biennially<br />";
-				}
+            if (!$cartitems) {
+                echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\" align=\"center\">No Items Selected</div></td></tr>";
+            }
+
+            echo "<tr class=\"subtotal\"><td>Subtotal</td><td class=\"alnright\">" . $ordervals['subtotal'] . "</td></tr>";
+
+            if ($ordervals['promotype']) {
+                echo "<tr class=\"promo\"><td>Promo Discount</td><td class=\"alnright\">" . $ordervals['discount'] . "</td></tr>";
+            }
 
 
-				if ($ordervals['totalrecurringtriennially']) {
-					echo "" . $ordervals['totalrecurringtriennially'] . " Triennially<br />";
-				}
+            if ($ordervals['taxrate']) {
+                echo "<tr class=\"tax\"><td>" . $ordervals['taxname'] . " @ " . $ordervals['taxrate'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal'] . "</td></tr>";
+            }
 
-				echo "</td></tr>";
-			}
 
-			echo "</table>
+            if ($ordervals['taxrate2']) {
+                echo "<tr class=\"tax\"><td>" . $ordervals['taxname2'] . " @ " . $ordervals['taxrate2'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal2'] . "</td></tr>";
+            }
+
+            echo "<tr class=\"total\"><td width=\"140\">Total</td><td class=\"alnright\">" . $ordervals['total'] . "</td></tr>";
+
+            if ((((($ordervals['totalrecurringmonthly'] || $ordervals['totalrecurringquarterly']) || $ordervals['totalrecurringsemiannually']) || $ordervals['totalrecurringannually']) || $ordervals['totalrecurringbiennially']) || $ordervals['totalrecurringtriennially']) {
+                echo "<tr class=\"recurring\"><td>Recurring</td><td class=\"alnright\">";
+
+                if ($ordervals['totalrecurringmonthly']) {
+                    echo "" . $ordervals['totalrecurringmonthly'] . " Monthly<br />";
+                }
+
+
+                if ($ordervals['totalrecurringquarterly']) {
+                    echo "" . $ordervals['totalrecurringquarterly'] . " Quarterly<br />";
+                }
+
+
+                if ($ordervals['totalrecurringsemiannually']) {
+                    echo "" . $ordervals['totalrecurringsemiannually'] . " Semi-Annually<br />";
+                }
+
+
+                if ($ordervals['totalrecurringannually']) {
+                    echo "" . $ordervals['totalrecurringannually'] . " Annually<br />";
+                }
+
+
+                if ($ordervals['totalrecurringbiennially']) {
+                    echo "" . $ordervals['totalrecurringbiennially'] . " Biennially<br />";
+                }
+
+
+                if ($ordervals['totalrecurringtriennially']) {
+                    echo "" . $ordervals['totalrecurringtriennially'] . " Triennially<br />";
+                }
+
+                echo "</td></tr>";
+            }
+
+            echo "</table>
 </div>";
-			exit();
-		}
+            exit();
+        }
 
-		$cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['domains']) + count($_SESSION['cart']['renewals']);
+        $cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['domains']) + count($_SESSION['cart']['renewals']);
 
-		if (!$cartitems) {
-			redir("noselections=1");
-		}
+        if (!$cartitems) {
+            redir("noselections=1");
+        }
 
-		calcCartTotals(true);
-		unset($_SESSION['uid']);
+        calcCartTotals(true);
+        unset($_SESSION['uid']);
 
-		if ($orderstatus == "Active") {
-			update_query("tblorders", array("status" => "Active"), array("id" => $_SESSION['orderdetails']['OrderID']));
+        if ($orderstatus == "Active") {
+            update_query("tblorders", 
+                array("status" => "Active"), 
+                array("id" => $_SESSION['orderdetails']['OrderID'])
+                );
 
-			if (is_array($_SESSION['orderdetails']['Products'])) {
-				foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-					update_query("tblcustomerservices", array("domainstatus" => "Active"), array("id" => $productid));
-				}
-			}
+            if (is_array($_SESSION['orderdetails']['Products'])) {
+                foreach ($_SESSION['orderdetails']['Products'] as $productid) {
+                    update_query("tblcustomerservices", array("domainstatus" => "Active"), array("id" => $productid));
+                }
+            }
 
 
-			if (is_array($_SESSION['orderdetails']['Domains'])) {
-				foreach ($_SESSION['orderdetails']['Domains'] as $domainid) {
-					update_query("tbldomains", array("status" => "Active"), array("id" => $domainid));
-				}
-			}
-		}
+            if (is_array($_SESSION['orderdetails']['Domains'])) {
+                foreach ($_SESSION['orderdetails']['Domains'] as $domainid) {
+                    update_query("tbldomains", array("status" => "Active"), array("id" => $domainid));
+                }
+            }
+        }
 
-		getUsersLang(0);
-		redir("action=view&id=" . $_SESSION['orderdetails']['OrderID'], "orders.php");
-		exit();
-	}
+        getUsersLang(0);
+        redir("action=view&id=" . $_SESSION['orderdetails']['OrderID'], "orders.php");
+        exit();
+    }
 }
 
 releaseSession();
@@ -486,9 +483,9 @@ $regperiods = $regperiodss = "";
 $regperiod = 1;
 
 while ($regperiod <= 10) {
-	$regperiods .= "<option value=\"" . $regperiod . "\">" . $regperiod . " " . $aInt->lang("domains", "year" . $regperiodss) . "</option>";
-	$regperiodss = "s";
-	++$regperiod;
+    $regperiods .= "<option value=\"" . $regperiod . "\">" . $regperiod . " " . $aInt->lang("domains", "year" . $regperiodss) . "</option>";
+    $regperiodss = "s";
+    ++$regperiod;
 }
 
 $jquerycode = "
@@ -522,16 +519,16 @@ $(function(){
       $(\"#regdomain0\").val($(\"#domain0\").val());
     });
 
-	$(\".regdomain\").live(\"keyup\", function(){
-    	var domainname = $(this).val();
-		if(domainname.length >= 5){
-			var ord = $(this).attr(\"id\").replace(\"regdomain\",\"\");
-			$.post(\"ordersadd.php\", { action: \"getdomainaddlfields\", domain: domainname, order:ord, token: \"" . generate_token("plain") . "\" },
-			function(data){
-				$(\".domainaddlfields\"+ord).remove();
-				$(\"#domainaddlfieldserase\"+ord).after(data);
-			});
-		}
+    $(\".regdomain\").live(\"keyup\", function(){
+        var domainname = $(this).val();
+        if(domainname.length >= 5){
+            var ord = $(this).attr(\"id\").replace(\"regdomain\",\"\");
+            $.post(\"ordersadd.php\", { action: \"getdomainaddlfields\", domain: domainname, order:ord, token: \"" . generate_token("plain") . "\" },
+            function(data){
+                $(\".domainaddlfields\"+ord).remove();
+                $(\"#domainaddlfieldserase\"+ord).after(data);
+            });
+        }
     });
 
 });
@@ -589,17 +586,17 @@ function updatesummary() {
 ob_start();
 
 if (!checkActiveGateway()) {
-	$aInt->gracefulExit($aInt->lang("gateways", "nonesetup"));
+    $aInt->gracefulExit($aInt->lang("gateways", "nonesetup"));
 }
 
 
 if ($userid && !$paymentmethod) {
-	$paymentmethod = getClientsPaymentMethod($userid);
+    $paymentmethod = getClientsPaymentMethod($userid);
 }
 
 
 if ($ra->get_req_var("noselections")) {
-	infoBox($aInt->lang("global", "validationerror"), $aInt->lang("orders", "noselections"));
+    infoBox($aInt->lang("global", "validationerror"), $aInt->lang("orders", "noselections"));
 }
 
 echo $infobox;
@@ -632,72 +629,72 @@ echo "</option><optgroup label=\"Active Promotions\">";
 $result = select_query("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
 
 while ($data = mysql_fetch_array($result)) {
-	$promo_id = $data['id'];
-	$promo_code = $data['code'];
-	$promo_type = $data['type'];
-	$promo_recurring = $data['recurring'];
-	$promo_value = $data['value'];
+    $promo_id = $data['id'];
+    $promo_code = $data['code'];
+    $promo_type = $data['type'];
+    $promo_recurring = $data['recurring'];
+    $promo_value = $data['value'];
 
-	if ($promo_type == "Percentage") {
-		$promo_value .= "%";
-	}
-	else {
-		$promo_value = formatCurrency($promo_value);
-	}
-
-
-	if ($promo_type == "Free Setup") {
-		$promo_value = $aInt->lang("promos", "freesetup");
-	}
-
-	$promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
-
-	if ($promo_type == "Price Override") {
-		$promo_recurring = $aInt->lang("promos", "priceoverride");
-	}
+    if ($promo_type == "Percentage") {
+        $promo_value .= "%";
+    }
+    else {
+        $promo_value = formatCurrency($promo_value);
+    }
 
 
-	if ($promo_type == "Free Setup") {
-		$promo_recurring = "";
-	}
+    if ($promo_type == "Free Setup") {
+        $promo_value = $aInt->lang("promos", "freesetup");
+    }
 
-	echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
+
+    if ($promo_type == "Price Override") {
+        $promo_recurring = $aInt->lang("promos", "priceoverride");
+    }
+
+
+    if ($promo_type == "Free Setup") {
+        $promo_recurring = "";
+    }
+
+    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 
 echo "</optgroup><optgroup label=\"Expired Promotions\">";
 $result = select_query("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
 
 while ($data = mysql_fetch_array($result)) {
-	$promo_id = $data['id'];
-	$promo_code = $data['code'];
-	$promo_type = $data['type'];
-	$promo_recurring = $data['recurring'];
-	$promo_value = $data['value'];
+    $promo_id = $data['id'];
+    $promo_code = $data['code'];
+    $promo_type = $data['type'];
+    $promo_recurring = $data['recurring'];
+    $promo_value = $data['value'];
 
-	if ($promo_type == "Percentage") {
-		$promo_value .= "%";
-	}
-	else {
-		$promo_value = formatCurrency($promo_value);
-	}
-
-
-	if ($promo_type == "Free Setup") {
-		$promo_value = $aInt->lang("promos", "freesetup");
-	}
-
-	$promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
-
-	if ($promo_type == "Price Override") {
-		$promo_recurring = $aInt->lang("promos", "priceoverride");
-	}
+    if ($promo_type == "Percentage") {
+        $promo_value .= "%";
+    }
+    else {
+        $promo_value = formatCurrency($promo_value);
+    }
 
 
-	if ($promo_type == "Free Setup") {
-		$promo_recurring = "";
-	}
+    if ($promo_type == "Free Setup") {
+        $promo_value = $aInt->lang("promos", "freesetup");
+    }
 
-	echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
+
+    if ($promo_type == "Price Override") {
+        $promo_recurring = $aInt->lang("promos", "priceoverride");
+    }
+
+
+    if ($promo_type == "Free Setup") {
+        $promo_recurring = "";
+    }
+
+    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 
 echo "</optgroup></select> <a href=\"#\" onclick=\"showDialog('createpromo');return false\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
@@ -749,7 +746,7 @@ echo $aInt->lang("fields", "billingcycle");
 echo "</td><td class=\"fieldarea\">";
 
 if (!$billingcycle) {
-	$billingcycle = "Monthly";
+    $billingcycle = "Monthly";
 }
 
 echo $aInt->cyclesDropDown($billingcycle, "", "", "billingcycle[]", "updatesummary()");

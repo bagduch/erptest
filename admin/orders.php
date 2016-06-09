@@ -499,7 +499,6 @@ else {
 		$fraudmodule = $data['fraudmodule'];
 		$fraudoutput = $data['fraudoutput'];
 		$notes = $data['notes'];
-		$contactid = $data['contactid'];
 		$invoicestatus = $data['invoicestatus'];
 		$date = fromMySQLDate($date, "time");
 		$jscode = "function cancelOrder() {
@@ -919,12 +918,6 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			$idprotection = $data['idprotection'];
 			$type = $aInt->lang("domains", strtolower($type));
 			echo "<tr><td align=\"center\"><a href=\"clientsdomains.php?userid=" . $userid . "&domainid=" . $domainid . "\"><b>" . $aInt->lang("fields", "domain") . ("</b></a></td><td>" . $type . " - " . $domain . "<br>");
-
-			if ($contactid) {
-				$result2 = select_query("tblcontacts", "firstname,lastname", array("id" => $contactid));
-				$data = mysql_fetch_array($result2);
-				echo $aInt->lang("domains", "registrant") . ": <a href=\"clientscontacts.php?userid=" . $userid . "&contactid=" . $contactid . "\">" . $data['firstname'] . " " . $data['lastname'] . " (" . $contactid . ")</a><br>";
-			}
 
 
 			if ($dnsmanagement) {
