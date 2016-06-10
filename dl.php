@@ -154,7 +154,7 @@ else {
 					$where = array("tblcustomerservices.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 
-				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
+				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
 
 				while ($data = mysql_fetch_array($result)) {
 					$addondownloads = $data['downloads'];
@@ -210,7 +210,7 @@ else {
 					exit();
 				}
 
-				$result = select_query("tblservices", "tblservices.configoption7", array("tblcustomerservices.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblhosting ON tblcustomerservices.packageid=tblservices.id");
+				$result = select_query("tblservices", "tblservices.configoption7", array("tblcustomerservices.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
 				$data = mysql_fetch_array($result);
 				$supportpackage = $data['configoption7'];
 				$addonid = explode("|", $supportpackage);
@@ -226,7 +226,7 @@ else {
 						$where .= " AND tblcustomerservices.id='" . (int)$pid . "'";
 					}
 
-					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid");
+					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
 					$data = mysql_fetch_array($result);
 					$supportpackageactive = $data[0];
 

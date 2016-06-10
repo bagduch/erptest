@@ -43,7 +43,7 @@ if (!function_exists("emailtpl_template")) {
 		$email_merge_fields = array();
 
 		if ($func_messagename == "defaultnewacc") {
-			$result = select_query("tblservices", "tblservices.welcomeemail", array("tblcustomerservices.id" => $func_id), "", "", "", "tblhosting ON tblcustomerservices.packageid=tblservices.id");
+			$result = select_query("tblservices", "tblservices.welcomeemail", array("tblcustomerservices.id" => $func_id), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
 			$data = mysql_fetch_array($result);
 
 			if (!$data['welcomeemail']) {
@@ -423,7 +423,7 @@ if (!function_exists("emailtpl_template")) {
 
 						$configoptions = array();
 						$configoptionshtml = "";
-						$query4 = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblhosting ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid='" . (int)$id . "' AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
+						$query4 = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid='" . (int)$id . "' AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
 						$result4 = full_query($query4);
 
 						while ($data4 = mysql_fetch_array($result4)) {
@@ -531,7 +531,7 @@ if (!function_exists("emailtpl_template")) {
 							getUsersLang($userid);
 							$referralstable .= "<table cellspacing=\"1\" bgcolor=\"#cccccc\" width=\"100%\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $_LANG['affiliatessignupdate'] . "</td><td>" . $_LANG['orderproduct'] . "</td><td>" . $_LANG['affiliatesamount'] . "</td><td>" . $_LANG['orderbillingcycle'] . "</td><td>" . $_LANG['affiliatescommission'] . "</td><td>" . $_LANG['affiliatesstatus'] . "</td></tr>";
 							$service = "";
-							$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+							$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
 							while ($data = mysql_fetch_array($result)) {
 								$affaccid = $data['id'];
@@ -1581,7 +1581,7 @@ if (!function_exists("emailtpl_template")) {
 		$lastpaid = $data['lastpaid'];
 		$relid = $data['relid'];
 		$commission = calculateAffiliateCommission($affid, $relid, $lastpaid);
-		$result = select_query("tblservices", "tblservices.affiliateonetime", array("tblcustomerservices.id" => $relid), "", "", "", "tblhosting ON tblcustomerservices.packageid=tblservices.id");
+		$result = select_query("tblservices", "tblservices.affiliateonetime", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
 		$data = mysql_fetch_array($result);
 		$affiliateonetime = $data['affiliateonetime'];
 
@@ -1628,7 +1628,7 @@ if (!function_exists("emailtpl_template")) {
 		static $AffCommAffiliatesData = array();
 
 		$percentage = $fixedamount = "";
-		$result = select_query("tblservices", "tblservices.affiliateonetime,tblservices.affiliatepaytype,tblservices.affiliatepayamount,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.billingcycle,tblcustomerservices.userid,tblclients.currency", array("tblcustomerservices.id" => $relid), "", "", "", "tblhosting ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query("tblservices", "tblservices.affiliateonetime,tblservices.affiliatepaytype,tblservices.affiliatepayamount,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.billingcycle,tblcustomerservices.userid,tblclients.currency", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 		$data = mysql_fetch_array($result);
 		$userid = $data['userid'];
 		$billingcycle = $data['billingcycle'];

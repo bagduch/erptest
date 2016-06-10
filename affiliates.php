@@ -48,7 +48,7 @@ if (isset($_SESSION['uid'])) {
 		$result = select_query("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
 		$data = mysql_fetch_array($result);
 		$signups = $data[0];
-		$result = select_query("tblaffiliatespending", "SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query("tblaffiliatespending", "SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 		$data = mysql_fetch_array($result);
 		$pendingcommissions = $data[0];
 		$conversionrate = round($signups / $visitors * 100, 2);
@@ -99,7 +99,7 @@ Balance: " . $balance);
 <table align=\"center\" id=\"affiliates\" cellspacing=\"1\">
 <tr><td id=\"affiliatesheading\">" . $_LANG['affiliatessignupdate'] . "</td><td id=\"affiliatesheading\">" . $_LANG['affiliateshostingpackage'] . "</td><td id=\"affiliatesheading\">" . $_LANG['affiliatesamount'] . "</td><td id=\"affiliatesheading\">" . $_LANG['affiliatescommision'] . "</td><td id=\"affiliatesheading\">" . $_LANG['affiliatesstatus'] . "</td></tr>
 ";
-		$numitems = get_query_val("tblaffiliatesaccounts", "COUNT(*)", array("affiliateid" => $affiliateid), "", "", "", "tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$numitems = get_query_val("tblaffiliatesaccounts", "COUNT(*)", array("affiliateid" => $affiliateid), "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 		list($orderby, $sort, $limit) = clientAreaTableInit("affiliates", "regdate", "DESC", $numitems);
 		$smartyvalues['orderby'] = $orderby;
 		$smartyvalues['sort'] = strtolower($sort);
@@ -127,7 +127,7 @@ Balance: " . $balance);
 		}
 
 		$referrals = array();
-		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$affaccid = $data['id'];

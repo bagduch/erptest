@@ -740,7 +740,7 @@ while ($data = mysql_fetch_array($result)) {
 	$predefinedaddons[$addon_id] = $addon_name;
 }
 
-$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblhosting ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
+$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
 $addonsummary = array();
 
 while ($data = mysql_fetch_array($result)) {

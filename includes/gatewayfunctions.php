@@ -310,7 +310,7 @@ function getRecurringBillingValues($invoiceid) {
 
 	$firstcycleperiod = $firstcycleunits = "";
 	$invoiceid = (int)$invoiceid;
-	$result = select_query("tblinvoiceitems", "tblinvoiceitems.relid,tblinvoiceitems.taxed,tblcustomerservices.userid,tblcustomerservices.amount,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblcustomerservices.regdate,tblcustomerservices.nextduedate", array("invoiceid" => $invoiceid, "type" => "Hosting"), "tblinvoiceitems`.`id", "ASC", "", "tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid");
+	$result = select_query("tblinvoiceitems", "tblinvoiceitems.relid,tblinvoiceitems.taxed,tblcustomerservices.userid,tblcustomerservices.amount,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblcustomerservices.regdate,tblcustomerservices.nextduedate", array("invoiceid" => $invoiceid, "type" => "Hosting"), "tblinvoiceitems`.`id", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid");
 	$data = mysql_fetch_array($result);
 	$relid = $data['relid'];
 	$taxed = $data['taxed'];
@@ -342,7 +342,7 @@ function getRecurringBillingValues($invoiceid) {
 	}
 
 	$recurringamount = 0;
-	$query = "SELECT tblcustomerservices.amount,tblinvoiceitems.taxed FROM tblinvoiceitems INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.billingcycle='" . db_escape_string($billingcycle) . "'";
+	$query = "SELECT tblcustomerservices.amount,tblinvoiceitems.taxed FROM tblinvoiceitems INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.billingcycle='" . db_escape_string($billingcycle) . "'";
 	$result = full_query($query);
 
 	while ($data = mysql_fetch_array($result)) {

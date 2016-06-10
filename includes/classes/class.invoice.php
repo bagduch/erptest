@@ -141,7 +141,7 @@ class RA_Invoice {
 		$this->output['pagetitle'] = $ra->get_lang("invoicenumber") . $this->getData("invoicenum");
 		$this->output['payto'] = nl2br($ra->get_config("InvoicePayTo"));
 		$this->output['notes'] = nl2br($this->output['notes']);
-		$this->output['subscrid'] = get_query_val("tblinvoiceitems", "tblcustomerservices.subscriptionid", "tblinvoiceitems.type='Hosting' AND tblinvoiceitems.invoiceid=" . $this->getData("id") . " AND tblcustomerservices.subscriptionid!=''", "tblhosting`.`id", "ASC", "", "tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid");
+		$this->output['subscrid'] = get_query_val("tblinvoiceitems", "tblcustomerservices.subscriptionid", "tblinvoiceitems.type='Hosting' AND tblinvoiceitems.invoiceid=" . $this->getData("id") . " AND tblcustomerservices.subscriptionid!=''", "tblhosting`.`id", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid");
 		$clienttotals = get_query_vals("tblinvoices", "SUM(credit),SUM(total)", array("userid" => $this->getData("userid"), "status" => "Unpaid"));
 		$alldueinvoicespayments = get_query_val("tblaccounts", "SUM(amountin-amountout)", "invoiceid IN (SELECT id FROM tblinvoices WHERE userid=" . (int)$this->getData("userid") . " AND status='Unpaid')");
 		$this->output['clienttotaldue'] = formatCurrency($clienttotals[0] + $clienttotals[1]);

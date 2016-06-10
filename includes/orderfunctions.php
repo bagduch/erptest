@@ -759,24 +759,26 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     $serverid = ($servertype ? getServerID($servertype, $servergroup) : "0");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
                     $serviceid = insert_query("tblcustomerservices", 
-            array(  
-                "userid" => $userid, 
-                "orderid" => $orderid, 
-                "packageid" => $pid, 
-                "server" => $serverid, 
-                "regdate" => "now()", 
-                "description" => $description, 
-                "paymentmethod" => $paymentmethod, 
-                "firstpaymentamount" => $product_total_today_db, 
-                "amount" => $product_recurring_db, 
-                "billingcycle" => $databasecycle, 
-                "nextduedate" => $hostingquerydates, 
-                "nextinvoicedate" => $hostingquerydates, 
-                "servicestatus" => "Pending", 
-                "password" => $serverrootpw, 
-                "promoid" => $promoid));
-                    $multiqtyids[$qtycount] = $serviceid;
-                    $orderproductids[] = $serviceid;
+                            array(  
+                                "userid" => $userid, 
+                                "orderid" => $orderid, 
+                                "packageid" => $pid, 
+//                                "server" => $serverid, 
+                                "regdate" => "now()", 
+                                "description" => $description, 
+                                "paymentmethod" => $paymentmethod, 
+                                "firstpaymentamount" => $product_total_today_db, 
+                                "amount" => $product_recurring_db, 
+                                "billingcycle" => $databasecycle, 
+                                "nextduedate" => $hostingquerydates, 
+                                "nextinvoicedate" => $hostingquerydates, 
+                                "servicestatus" => "Pending", 
+                                "password" => $serverrootpw //, 
+//                                "promoid" => $promoid
+                            )
+                    );
+                                    $multiqtyids[$qtycount] = $serviceid;
+                                    $orderproductids[] = $serviceid;
 
 
 
@@ -931,7 +933,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         while ($qtycount <= $qty) {
                             $serviceid = $multiqtyids[$qtycount];
                             $addonsetupfee = $addon_total_today_db - $addon_recurring_db;
-                            $aid = insert_query("tblcustomerservicesaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
+                            $aid = insert_query("tblserviceaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
                             $orderaddonids[] = $aid;
                             $adminemailitems .= $_LANG['clientareaaddon'] . (": " . $addon_name . "<br>\r\n") . $_LANG['ordersetupfee'] . ": " . formatCurrency($addonsetupfee) . "<br>\r\n";
 
@@ -1121,7 +1123,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
             if ($checkout) {
                 $addonsetupfee = $addon_total_today_db - $addon_recurring_db;
-                $aid = insert_query("tblcustomerservicesaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
+                $aid = insert_query("tblserviceaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
                 $orderaddonids[] = $aid;
                 $adminemailitems .= $_LANG['clientareaaddon'] . (": " . $addon_name . "<br>\r\n") . $_LANG['ordersetupfee'] . ": " . formatCurrency($addonsetupfee) . "<br>\r\n";
 
@@ -1967,7 +1969,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if (count($requiredaddons)) {
-                    $result = select_query("tblcustomerservicesaddons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblcustomerservicesaddons.hostingid");
+                    $result = select_query("tblserviceaddons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
                     $data = mysql_fetch_array($result);
 
                     if ($data[0]) {
@@ -2161,7 +2163,7 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    $result = select_query("tblcustomerservicesaddons", "", array("orderid" => $orderid, "status" => "Pending"));
+    $result = select_query("tblserviceaddons", "", array("orderid" => $orderid, "status" => "Pending"));
 
     while ($data = mysql_fetch_array($result)) {
         $aid = $data['id'];
@@ -2202,7 +2204,7 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    update_query("tblcustomerservicesaddons", array("status" => "Active"), array("orderid" => $orderid, "status" => "Pending"));
+    update_query("tblserviceaddons", array("status" => "Active"), array("orderid" => $orderid, "status" => "Pending"));
     $result = select_query("tbldescriptions", "", array("orderid" => $orderid, "status" => "Pending"));
 
     while ($data = mysql_fetch_array($result)) {
@@ -2415,7 +2417,7 @@ function changeOrderStatus($orderid, $status) {
         update_query("tblcustomerservices", array("servicestatus" => $status), array("orderid" => $orderid));
     }
 
-    update_query("tblcustomerservicesaddons", array("status" => $status), array("orderid" => $orderid));
+    update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
 
     if ($status == "Pending") {
         $result = select_query("tbldescriptions", "id,type", array("orderid" => $orderid));
@@ -2499,7 +2501,7 @@ function deleteOrder($orderid) {
     delete_query("tblcustomerservicesconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
     delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
     delete_query("tblcustomerservices", array("orderid" => $orderid));
-    delete_query("tblcustomerservicesaddons", array("orderid" => $orderid));
+    delete_query("tblserviceaddons", array("orderid" => $orderid));
     delete_query("tbldescriptions", array("orderid" => $orderid));
     delete_query("tblupgrades", array("orderid" => $orderid));
     delete_query("tblorders", array("id" => $orderid));
