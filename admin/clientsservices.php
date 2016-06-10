@@ -545,7 +545,7 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
 while ($data = mysql_fetch_array($result)) {
     $servicelist_id = $data['id'];
@@ -754,7 +754,7 @@ if ($aid) {
     //$tbl->add($aInt->lang("fields", "firstpaymentamount"), $frm->text("firstpaymentamount", $firstpaymentamount, "10"));
 //    $tbl->add($aInt->lang("fields", "server"), $frm->dropdown("server", $serversarr, $server, "submit()", "", true));
     $tbl->add($aInt->lang("fields", "recurringamount"), $frm->text("amount", $amount, "10") . " " . $frm->checkbox("autorecalcrecurringprice", $aInt->lang("services", "autorecalc"), ($autorecalcdefault ? true : false)));
-    $tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "descrption")), $frm->text("Descrption", $domain));
+    $tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "description")), $frm->text("Description", $domain));
     $tbl->add($aInt->lang("fields", "nextduedate"), (in_array($billingcycle, array("One Time", "Free Account")) ? "N/A" : $frm->hidden("oldnextduedate", $nextduedate) . $frm->date("nextduedate", $nextduedate)));
     $tbl->add($aInt->lang("fields", "dedicatedip"), $frm->text("dedicatedip", $dedicatedip, "25"));
     $tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle));

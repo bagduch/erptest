@@ -45,14 +45,14 @@ if ($userid && !$id) {
 		$aInt->gracefulExit("Invalid User ID");
 	}
 
-	$id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "domain", "ASC", "0,1");
+	$id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
 }
 
 
 if (!$id) {
 	$aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
-$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblhosting LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=2) WHERE tblcustomerservices.id=" . $id;
+$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=2) WHERE tblcustomerservices.id=" . $id;
 
 $result = full_query($query);
 $service_data = mysql_fetch_array($result);
@@ -213,14 +213,14 @@ if ($frm->issubmitted()) {
 	$configoptionsrecurring = 0;
 	foreach ($configoptions as $configoption) {
 		$configoptionsrecurring += $configoption['selectedrecurring'];
-		$result = select_query("tblhostingconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
+		$result = select_query("tblcustomerservicesconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
 		$data = mysql_fetch_array($result);
 
 		if (!$data[0]) {
-			insert_query("tblhostingconfigoptions", array("relid" => $id, "configid" => $configoption['id']));
+			insert_query("tblcustomerservicesconfigoptions", array("relid" => $id, "configid" => $configoption['id']));
 		}
 
-		update_query("tblhostingconfigoptions", array("optionid" => $configoption['selectedvalue'], "qty" => $configoption['selectedqty']), array("relid" => $id, "configid" => $configoption['id']));
+		update_query("tblcustomerservicesconfigoptions", array("optionid" => $configoption['selectedvalue'], "qty" => $configoption['selectedqty']), array("relid" => $id, "configid" => $configoption['id']));
 	}
 
 	$newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
@@ -253,7 +253,7 @@ if ($frm->issubmitted()) {
 	}
 
 	$updatearr = array();
-	$updatefields = array("server", "packageid", "domain", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "promoid", "overideautosuspend", "overidesuspenduntil", "ns1", "ns2", "domainstatus", "dedicatedip", "assignedips");
+	$updatefields = array("server", "packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "promoid", "overideautosuspend", "overidesuspenduntil", "ns1", "ns2", "domainstatus", "dedicatedip", "assignedips");
 	foreach ($updatefields as $fieldname) {
 		$newval = $ra->get_req_var($fieldname);
 
@@ -336,7 +336,7 @@ if ($action == "delete") {
 	run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
 	delete_query("tblcustomerservices", array("id" => $id));
 	delete_query("tblserviceaddons", array("hostingid" => $id));
-	delete_query("tblhostingconfigoptions", array("relid" => $id));
+	delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
 	full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
 	logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
 	redir("userid=" . $userid);
@@ -557,7 +557,7 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "domain", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
 while ($data = mysql_fetch_array($result)) {
 	$servicelist_id = $data['id'];
@@ -772,7 +772,7 @@ else {
 	$tbl->add($aInt->lang("fields", "firstpaymentamount"), $frm->text("firstpaymentamount", $firstpaymentamount, "10"));
 	$tbl->add($aInt->lang("fields", "server"), $frm->dropdown("server", $serversarr, $server, "submit()", "", true));
 	$tbl->add($aInt->lang("fields", "recurringamount"), $frm->text("amount", $amount, "10") . " " . $frm->checkbox("autorecalcrecurringprice", $aInt->lang("services", "autorecalc"), ($autorecalcdefault ? true : false)));
-	$tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "descrption")), $frm->text("Descrption", $domain, "40"));
+	$tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "description")), $frm->text("Description", $domain, "40"));
 	$tbl->add($aInt->lang("fields", "nextduedate"), (in_array($billingcycle, array("One Time", "Free Account")) ? "N/A" : $frm->hidden("oldnextduedate", $nextduedate) . $frm->date("nextduedate", $nextduedate)));
 	$tbl->add($aInt->lang("fields", "dedicatedip"), $frm->text("dedicatedip", $dedicatedip, "25"));
 	$tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle));
