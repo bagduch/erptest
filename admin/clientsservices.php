@@ -45,7 +45,7 @@ if ($userid && !$id) {
         $aInt->gracefulExit("Invalid User ID");
     }
 
-    $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "domain", "ASC", "0,1");
+    $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
 }
 
 
@@ -53,7 +53,7 @@ if (!$id) {
     $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
 
-$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblhosting INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=1) WHERE tblcustomerservices.id=" . $id;
+$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=1) WHERE tblcustomerservices.id=" . $id;
 
 
 $result = full_query($query);
@@ -209,14 +209,14 @@ if ($frm->issubmitted()) {
     $configoptionsrecurring = 0;
     foreach ($configoptions as $configoption) {
         $configoptionsrecurring += $configoption['selectedrecurring'];
-        $result = select_query("tblhostingconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
+        $result = select_query("tblcustomerservicesconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
         $data = mysql_fetch_array($result);
 
         if (!$data[0]) {
-            insert_query("tblhostingconfigoptions", array("relid" => $id, "configid" => $configoption['id']));
+            insert_query("tblcustomerservicesconfigoptions", array("relid" => $id, "configid" => $configoption['id']));
         }
 
-        update_query("tblhostingconfigoptions", array("optionid" => $configoption['selectedvalue'], "qty" => $configoption['selectedqty']), array("relid" => $id, "configid" => $configoption['id']));
+        update_query("tblcustomerservicesconfigoptions", array("optionid" => $configoption['selectedvalue'], "qty" => $configoption['selectedqty']), array("relid" => $id, "configid" => $configoption['id']));
     }
 
     $newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
@@ -325,7 +325,7 @@ if ($action == "delete") {
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
     delete_query("tblcustomerservices", array("id" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
-    delete_query("tblhostingconfigoptions", array("relid" => $id));
+    delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
     logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
