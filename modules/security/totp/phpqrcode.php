@@ -137,57 +137,57 @@
 
  
 
-	// Encoding modes
+    // Encoding modes
 
-	 
+     
 
-	define('QR_MODE_NUL', -1);
+    define('QR_MODE_NUL', -1);
 
-	define('QR_MODE_NUM', 0);
+    define('QR_MODE_NUM', 0);
 
-	define('QR_MODE_AN', 1);
+    define('QR_MODE_AN', 1);
 
-	define('QR_MODE_8', 2);
+    define('QR_MODE_8', 2);
 
-	define('QR_MODE_KANJI', 3);
+    define('QR_MODE_KANJI', 3);
 
-	define('QR_MODE_STRUCTURE', 4);
-
-
-
-	// Levels of error correction.
+    define('QR_MODE_STRUCTURE', 4);
 
 
 
-	define('QR_ECLEVEL_L', 0);
+    // Levels of error correction.
 
-	define('QR_ECLEVEL_M', 1);
 
-	define('QR_ECLEVEL_Q', 2);
 
-	define('QR_ECLEVEL_H', 3);
+    define('QR_ECLEVEL_L', 0);
 
-	
+    define('QR_ECLEVEL_M', 1);
 
-	// Supported output formats
+    define('QR_ECLEVEL_Q', 2);
 
-	
+    define('QR_ECLEVEL_H', 3);
 
-	define('QR_FORMAT_TEXT', 0);
+    
 
-	define('QR_FORMAT_PNG',  1);
+    // Supported output formats
 
-	
+    
 
-	class qrstr {
+    define('QR_FORMAT_TEXT', 0);
 
-		public static function set(&$srctab, $x, $y, $repl, $replLen = false) {
+    define('QR_FORMAT_PNG',  1);
 
-			$srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl,0,$replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
+    
 
-		}
+    class qrstr {
 
-	}	
+        public static function set(&$srctab, $x, $y, $repl, $replLen = false) {
+
+            $srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl,0,$replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
+
+        }
+
+    }   
 
 
 
@@ -395,11 +395,11 @@
 
         {
 
-			QRtools::markTime('before_build_cache');
+            QRtools::markTime('before_build_cache');
 
-			
+            
 
-			$mask = new QRmask();
+            $mask = new QRmask();
 
             for ($a=1; $a <= QRSPEC_VERSION_MAX; $a++) {
 
@@ -413,21 +413,21 @@
 
                 }
 
-				
+                
 
-				$width = count($frame);
+                $width = count($frame);
 
-				$bitMask = array_fill(0, $width, array_fill(0, $width, 0));
+                $bitMask = array_fill(0, $width, array_fill(0, $width, 0));
 
-				for ($maskNo=0; $maskNo<8; $maskNo++)
+                for ($maskNo=0; $maskNo<8; $maskNo++)
 
-					$mask->makeMaskNo($maskNo, $width, $frame, $bitMask, true);
+                    $mask->makeMaskNo($maskNo, $width, $frame, $bitMask, true);
 
             }
 
-			
+            
 
-			QRtools::markTime('after_build_cache');
+            QRtools::markTime('after_build_cache');
 
         }
 
@@ -1259,15 +1259,15 @@
 
 
 
-		// Version information pattern (BCH coded).
+        // Version information pattern (BCH coded).
 
         // See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
 
         
 
-		// size: [QRSPEC_VERSION_MAX - 6]
+        // size: [QRSPEC_VERSION_MAX - 6]
 
-		
+        
 
         public static $versionPattern = array(
 
@@ -4909,27 +4909,27 @@
 
  
 
-	define('N1', 3);
+    define('N1', 3);
 
-	define('N2', 3);
+    define('N2', 3);
 
-	define('N3', 40);
+    define('N3', 40);
 
-	define('N4', 10);
+    define('N4', 10);
 
 
 
-	class QRmask {
+    class QRmask {
 
-	
+    
 
-		public $runLength = array();
+        public $runLength = array();
 
-		
+        
 
-		//----------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
-		public function __construct() 
+        public function __construct() 
 
         {
 
