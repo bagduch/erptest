@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
@@ -27,16 +17,13 @@ if ($modop) {
     checkPermission("Perform Server Operations");
 }
 
-
 if (!$id && $hostingid) {
     $id = $hostingid;
 }
 
-
 if (!$userid && !$id) {
     $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
 }
-
 
 if ($userid && !$id) {
     $aInt->valUserID($userid);
@@ -53,7 +40,18 @@ if (!$id) {
     $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
 
-$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=1) WHERE tblcustomerservices.id=" . $id;
+$query = "
+select
+    tblcustomerservices.*,
+    tblservices.servertype,
+    tblservices.type 
+from tblcustomerservices 
+INNER JOIN tblservices 
+    ON tblservices.id=tblcustomerservices.packageid 
+INNER JOIN tblservicegroups 
+    ON (tblservices.gid=tblservicegroups.id ) 
+WHERE tblcustomerservices.id=" . $id
+. ' AND tblservicegroups.type="service"';
 
 
 $result = full_query($query);
@@ -222,7 +220,7 @@ if ($frm->issubmitted()) {
     $newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
     migrateCustomFieldsBetweenProducts($id, $packageid, true);
     $changelog = array();
-    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Product/Service", "server" => "Server", "domain" => "Domain", "dedicatedip" => "Dedicated IP", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "domainstatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
+    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "domain" => "Domain", "dedicatedip" => "Dedicated IP", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "domainstatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
     foreach ($logchangefields as $fieldname => $displayname) {
         $newval = $ra->get_req_var($fieldname);
         $oldval = $service_data[$fieldname];
@@ -276,7 +274,7 @@ if ($frm->issubmitted()) {
     }
 
     update_query("tblcustomerservices", $updatearr, array("id" => $id));
-    logActivity("Modified Product/Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid);
+    logActivity("Modified Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid);
     $cancelid = get_query_val("tblcancelrequests", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
 
     if ($autoterminateendcycle) {
@@ -327,7 +325,7 @@ if ($action == "delete") {
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
-    logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
+    logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
 }
 

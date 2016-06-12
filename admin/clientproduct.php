@@ -52,7 +52,7 @@ if ($userid && !$id) {
 if (!$id) {
     $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
-$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type=2) WHERE tblcustomerservices.id=" . $id;
+$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product') WHERE tblcustomerservices.id=" . $id;
 
 $result = full_query($query);
 $service_data = mysql_fetch_array($result);
