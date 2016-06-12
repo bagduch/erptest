@@ -29,51 +29,17 @@ if (!class_exists("RA_Init")) {
 $ra = new RA_Init();
 $ra = $ra->init();
 
-/*
-if ($CONFIG['Version'] == "5.2.14") {
-	update_query("tblconfiguration", array("value" => "5.2.15"), array("setting" => "Version"));
-	$CONFIG['Version'] = "5.2.15";
-}
-
-
-if ($CONFIG['Version'] != "5.2.15") {
-	if (file_exists("../install/install.php")) {
-		header("Location: ../install/install.php");
-		exit();
-	}
-
-	echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>维护中 (Err 2)</strong><br>网站升级中... 请稍后访问...</div>";
-	exit();
-}
-
-
-if (file_exists(ROOTDIR . "/install/install.php")) {
-	echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>安全提醒</strong><br>你必须删除 install 目录才能继续使用 ra</div>";
-	exit();
-}
-
-
-if (!$ra->check_template_cache_writeable()) {
-	exit("<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>权限错误</strong><br>The 模版缓存目录 '" . $ra->get_template_compiledir_name() . "' 必须设置为可写 (CHMOD 777) 才能继续。<br>如果此路径错误, 请在 configuration.php file 中修正。</div>");
-}
-
-
 if ((defined("CLIENTAREA") && $CONFIG['MaintenanceMode']) && !$_SESSION['adminid']) {
 	if ($CONFIG['MaintenanceModeURL']) {
 		header("Location: " . $CONFIG['MaintenanceModeURL']);
 		exit();
 	}
 
-	echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>维护中 (Err 3)</strong><br>" . $CONFIG['MaintenanceModeMessage'] . "</div>";
+	echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><br>" . $CONFIG['MaintenanceModeMessage'] . "</div>";
 	exit();
 }
-*/
 $licensing = RA_License::init();
 
-
-if ($licensing->getVersionHash() != "9eb7da5f081b3fc7ae1e460afdcb89ea8239eca1") {
-	exit("License Checking Error");
-}
 
 
 if ((defined("CLIENTAREA") && isset($_SESSION['uid'])) && !isset($_SESSION['adminid'])) {
