@@ -142,24 +142,16 @@ if ($frm->issubmitted()) {
 
             if ($oldstatus != "Active" && $status == "Active") {
                 run_hook("AddonActivated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-            } else {
-                if ($oldstatus != "Suspended" && $status == "Suspended") {
+            } elseif ($oldstatus != "Suspended" && $status == "Suspended") {
                     run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                } else {
-                    if ($oldstatus != "Terminated" && $status == "Terminated") {
-                        run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                    } else {
-                        if ($oldstatus != "Cancelled" && $status == "Cancelled") {
-                            run_hook("AddonCancelled", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                        } else {
-                            if ($oldstatus != "Fraud" && $status == "Fraud") {
-                                run_hook("AddonFraud", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                            } else {
-                                run_hook("AddonEdit", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                            }
-                        }
-                    }
-                }
+            } elseif ($oldstatus != "Terminated" && $status == "Terminated") {
+                run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Cancelled" && $status == "Cancelled") {
+                run_hook("AddonCancelled", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Fraud" && $status == "Fraud") {
+                run_hook("AddonFraud", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } else {
+                run_hook("AddonEdit", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             }
         } else {
             checkPermission("Add New Order");
@@ -251,18 +243,12 @@ if ($frm->issubmitted()) {
 
         if ($fieldname == "nextduedate" && $ra->get_req_var("billingcycle") == "Free Account") {
             $newval = "0000-00-00";
-        } else {
-            if (($fieldname == "regdate" || $fieldname == "nextduedate") || $fieldname == "overidesuspenduntil") {
-                $newval = toMySQLDate($newval);
-            } else {
-                if ($fieldname == "password") {
-                    $newval = encrypt($newval);
-                } else {
-                    if ($fieldname == "amount" && 0 <= $newamount) {
-                        $newval = $newamount;
-                    }
-                }
-            }
+        } elseif (($fieldname == "regdate" || $fieldname == "nextduedate") || $fieldname == "overidesuspenduntil") {
+            $newval = toMySQLDate($newval);
+        } elseif ($fieldname == "password") {
+            $newval = encrypt($newval);
+        } elseif ($fieldname == "amount" && 0 <= $newamount) {
+            $newval = $newamount;
         }
 
         $updatearr[$fieldname] = $newval;
