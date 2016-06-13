@@ -17,8 +17,8 @@ $aInt->inClientsProfile = true;
 
 if ($displaymessage == "true") {
     $aInt->title = $aInt->lang("emails", "viewemail");
-    $result = select_query("tblemails", "", array("id" => $id));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblemails", "", array("id" => $id));
+    $data = mysqli_fetch_array($result);
     $date = $data['date'];
     $to = (is_null($data['to']) ? $aInt->lang("emails", "registeredemail") : $data['to']);
     $cc = $data['cc'];
@@ -67,12 +67,12 @@ if ($action == "send") {
 
 $aInt->deleteJSConfirm("doDelete", "emails", "suredelete", "clientsemails.php?userid=" . $userid . "&action=delete&id=");
 $aInt->sortableTableInit("date", "DESC");
-$result = select_query("tblemails", "COUNT(*)", array("userid" => $userid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblemails", "COUNT(*)", array("userid" => $userid));
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query("tblemails", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
+$result = select_query_i("tblemails", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
     $date = $data['date'];
     $date = fromMySQLDate($date, "time");

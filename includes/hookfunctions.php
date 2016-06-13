@@ -105,7 +105,8 @@ $dh = opendir($hooksdir);
 
 while (false !== $hookfile = readdir($dh)) {
 	if (is_file($hooksdir . $hookfile)) {
-		$extension = end(explode(".", $hookfile));
+        $explode = explode(".", $hookfile);
+		$extension = end($explode);
 
 		if ($extension == "php") {
 			include $hooksdir . $hookfile;

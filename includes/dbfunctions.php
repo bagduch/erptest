@@ -446,7 +446,7 @@ function insert_query($table, $array) {
 	global $CONFIG;
 	global $query_count;
 	global $mysql_errors;
-	global $ramysql;
+	global $ramysqli;
 
 	$fieldnamelist = $fieldvaluelist = "";
 	$query = "INSERT INTO " . db_make_safe_field($table) . " ";
@@ -470,14 +470,22 @@ function insert_query($table, $array) {
 	$fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
 	$fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
 	$query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-	$result = mysql_query($query, $ramysql);
+	$result = mysqli_query($ramysqli, $query);
 
-	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-		logActivity("SQL Error: " . mysql_error($ramysql) . " - Full Query: " . $query);
+    if ($_SESSION['adminid'] > 0) {
+            echo "<pre>GUYGUYGUY";
+            var_dump($query);
+            var_dump($result);
+            error_log($query);
+            echo "</pre>";
+    }
+
+	if (!$result && ($CONFIG['SQLErrorReporting'])) {
+		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
-	$id = mysql_insert_id($ramysql);
+	$id = mysqli_insert_id($ramysqli);
 	return $id;
 }
 
@@ -485,7 +493,7 @@ function delete_query($table, $where) {
 	global $CONFIG;
 	global $query_count;
 	global $mysql_errors;
-	global $ramysql;
+	global $ramysqli;
 
 	$query = "DELETE FROM " . db_make_safe_field($table) . " WHERE ";
 
@@ -500,10 +508,10 @@ function delete_query($table, $where) {
 		$query .= $where;
 	}
 
-	$result = mysql_query($query, $ramysql);
+	$result = mysqli_query($ramysqli, $query);
 
-	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-		logActivity("SQL Error: " . mysql_error($ramysql) . " - Full Query: " . $query);
+	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
