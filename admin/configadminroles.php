@@ -30,16 +30,16 @@ if ($action == "addrole") {
 
 if ($action == "duplicaterole") {
 	check_token("RA.admin.default");
-	$result = select_query("tbladminroles", "", array("id" => $existinggroup));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladminroles", "", array("id" => $existinggroup));
+	$data = mysqli_fetch_array($result);
 	$widgets = $data['widgets'];
 	$systememails = $data['systememails'];
 	$accountemails = $data['accountemails'];
 	$supportemails = $data['supportemails'];
 	$roleid = insert_query("tbladminroles", array("name" => $newname, "widgets" => $widgets, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails));
-	$result = select_query("tbladminperms", "", array("roleid" => $existinggroup));
+	$result = select_query_i("tbladminperms", "", array("roleid" => $existinggroup));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		insert_query("tbladminperms", array("roleid" => $roleid, "permid" => $data['permid']));
 	}
 
@@ -104,14 +104,14 @@ if (!$action) {
 
 ";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tbladminroles", "", "", "name", "ASC");
+	$result = select_query_i("tbladminroles", "", "", "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$deletejs = (3 < $data['id'] ? "doDelete('" . $data['id'] . "')" : "alert('" . $aInt->lang("adminroles", "nodeldefault", 1) . "')");
 		$assigned = array();
-		$result2 = select_query("tbladmins", "id,username,disabled", array("roleid" => $data['id']), "username", "ASC");
+		$result2 = select_query_i("tbladmins", "id,username,disabled", array("roleid" => $data['id']), "username", "ASC");
 
-		while ($data2 = mysql_fetch_array($result2)) {
+		while ($data2 = mysqli_fetch_array($result2)) {
 			$assigned[] = "<a href=\"configadmins.php?action=manage&id=" . $data2['id'] . "\"" . ($data2['disabled'] ? " style=\"color:#ccc;\"" : "") . ">" . $data2['username'] . "</a>";
 		}
 
@@ -170,9 +170,9 @@ else {
 			echo "</td><td class=\"fieldarea\">";
 			echo "<s";
 			echo "elect name=\"existinggroup\">";
-			$result = select_query("tbladminroles", "", "", "name", "ASC");
+			$result = select_query_i("tbladminroles", "", "", "name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				echo "<option value=\"" . $data['id'] . "\">" . $data['name'] . "</otpion>";
 			}
 
@@ -192,8 +192,8 @@ else {
 		}
 		else {
 			if ($action == "edit") {
-				$result = select_query("tbladminroles", "", array("id" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tbladminroles", "", array("id" => $id));
+				$data = mysqli_fetch_array($result);
 				$name = $data['name'];
 				$widgets = $data['widgets'];
 				$systememails = $data['systememails'];
@@ -240,8 +240,8 @@ function zUncheckAll(oForm) {
 				$colcount = 0;
 				foreach ($adminpermsarray as $k => $v) {
 					echo ("<input type=\"checkbox\" name=\"adminperms[" . $k . "]") . "\" id=\"adminperms" . $k . "\"";
-					$result = select_query("tbladminperms", "COUNT(*)", array("roleid" => $id, "permid" => $k));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $id, "permid" => $k));
+					$data = mysqli_fetch_array($result);
 
 					if ($data[0]) {
 						echo " checked";

@@ -62,8 +62,8 @@ if (isset($_SESSION['currency']) && is_array($_SESSION['currency'])) {
 
 
 if (!isset($_SESSION['uid']) && isset($_REQUEST['currency'])) {
-	$result = select_query("tblcurrencies", "id", array("id" => (int)$_REQUEST['currency']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcurrencies", "id", array("id" => (int)$_REQUEST['currency']));
+	$data = mysqli_fetch_array($result);
 
 	if ($data['id']) {
 		$_SESSION['currency'] = $data['id'];

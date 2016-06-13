@@ -91,8 +91,8 @@ $remote_ip = $ra->get_user_ip();
 $performLicenseKeyUpdate = $ra->get_req_var("updatekey");
 
 if ($performLicenseKeyUpdate === "true") {
-	$result = select_query("tbladmins", "", array("username" => $username, "password" => md5($password), "disabled" => "0"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "", array("username" => $username, "password" => md5($password), "disabled" => "0"));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$roleid = $data['roleid'];
 	$whitelisted = false;
@@ -123,8 +123,8 @@ if ($performLicenseKeyUpdate === "true") {
 
 		update_query("tblconfiguration", array("value" => serialize($loginfailures)), array("setting" => "LoginFailures"));
 		$result = update_query("tbladmins", array("loginattempts" => "+1"), array("username" => $username));
-		$result = select_query("tbladmins", "loginattempts", array("username" => $username));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbladmins", "loginattempts", array("username" => $username));
+		$data = mysqli_fetch_array($result);
 		$loginattempts = $data['loginattempts'];
 
 		if (3 <= $loginattempts) {
@@ -138,8 +138,8 @@ if ($performLicenseKeyUpdate === "true") {
 
 
 	if ($roleid) {
-		$result = select_query("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => "64"));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => "64"));
+		$data = mysqli_fetch_array($result);
 		$match = $data[0];
 	}
 

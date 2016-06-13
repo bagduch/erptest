@@ -21,8 +21,8 @@ class RA_Auth {
 
 	private function getInfo($where) {
 		$where['disabled'] = "0";
-		$result = select_query("tbladmins", "id,username,password,template,language,authmodule,loginattempts", $where);
-		$data = mysql_fetch_assoc($result);
+		$result = select_query_i("tbladmins", "id,username,password,template,language,authmodule,loginattempts", $where);
+		$data = mysqli_fetch_assoc($result);
 		$this->admindata = $data;
 		return $data['id'] ? true : false;
 	}
@@ -277,8 +277,8 @@ class RA_Auth {
 			return false;
 		}
 
-		$result = select_query("tbladminlog", "id", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND sessionid='" . db_escape_string(session_id()) . "' AND logouttime='00000000000000'");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbladminlog", "id", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND sessionid='" . db_escape_string(session_id()) . "' AND logouttime='00000000000000'");
+		$data = mysqli_fetch_array($result);
 		$adminlogid = $data['id'];
 
 		if ($adminlogid) {

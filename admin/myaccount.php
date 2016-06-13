@@ -168,8 +168,8 @@ if ($action == "save") {
 }
 
 releaseSession();
-$result = select_query("tbladmins", "tbladmins.*,tbladminroles.name", array("tbladmins.id" => $_SESSION['adminid']), "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("tbladmins.id" => $_SESSION['adminid']), "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
+$data = mysqli_fetch_array($result);
 
 if (!$errormessage) {
 	$firstname = $data['firstname'];

@@ -399,8 +399,8 @@ if ($action == "uploadfile") {
 if ($action == "deletefile") {
 	check_token("RA.admin.default");
 	checkPermission("Manage Clients Files");
-	$result = select_query("tblclientsfiles", "", array("id" => $id, "userid" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclientsfiles", "", array("id" => $id, "userid" => $userid));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 
 	if (!$id) {
@@ -611,16 +611,16 @@ $clientsdetails['splitinvoices'] = ($clientsdetails['separateinvoices'] ? $aInt-
 $templatevars['clientsdetails'] = $clientsdetails;
 include "../includes/countries.php";
 $templatevars['clientsdetails']['countrylong'] = $countries[$clientsdetails['country']];
-$result = select_query("tblcontacts", "", array("userid" => $userid));
+$result = select_query_i("tblcontacts", "", array("userid" => $userid));
 $contacts = array();
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$contacts[] = array("id" => $data['id'], "firstname" => $data['firstname'], "lastname" => $data['lastname'], "email" => $data['email']);
 }
 
 $templatevars['contacts'] = $contacts;
-$result = select_query("tblclientgroups", "", array("id" => $clientsdetails['groupid']));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclientgroups", "", array("id" => $clientsdetails['groupid']));
+$data = mysqli_fetch_array($result);
 $groupname = $data['groupname'];
 $groupcolour = $data['groupcolour'];
 
@@ -629,8 +629,8 @@ if (!$groupname) {
 }
 
 $templatevars['clientgroup'] = array("name" => $groupname, "colour" => $groupcolour);
-$result = select_query("tblclients", "", array("id" => $userid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "", array("id" => $userid));
+$data = mysqli_fetch_array($result);
 $datecreated = $data['datecreated'];
 $templatevars['signupdate'] = fromMySQLDate($datecreated);
 
@@ -661,16 +661,16 @@ else {
 }
 
 $templatevars['stats'] = $clientstats;
-$result = select_query("tblemails", "", array("userid" => $userid), "id", "DESC", "0,5");
+$result = select_query_i("tblemails", "", array("userid" => $userid), "id", "DESC", "0,5");
 $lastfivemail = array();
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$lastfivemail[] = array("id" => $data['id'], "date" => fromMySQLDate($data['date'], "time"), "subject" => ($data['subject'] ? $data['subject'] : "No Subject"));
 }
 
 $templatevars['lastfivemail'] = $lastfivemail;
-$result = select_query("tblaffiliates", "", array("clientid" => $userid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblaffiliates", "", array("clientid" => $userid));
+$data = mysqli_fetch_array($result);
 $affid = $data['id'];
 $templatevars['affiliateid'] = $affid;
 
@@ -700,9 +700,9 @@ while ($data = mysql_fetch_array($result)) {
 $templatevars->messages .= "</select>";
 $recordsfound = "";
 $productsummary = array();
-$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$regdate = $data['regdate'];
 	$domain = $data['domain'];
@@ -732,18 +732,18 @@ while ($data = mysql_fetch_array($result)) {
 
 $templatevars['productsummary'] = $productsummary;
 $predefinedaddons = array();
-$result = select_query("tbladdons", "", "");
+$result = select_query_i("tbladdons", "", "");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$addon_id = $data['id'];
 	$addon_name = $data['name'];
 	$predefinedaddons[$addon_id] = $addon_name;
 }
 
-$result = select_query("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
+$result = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
 $addonsummary = array();
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['aid'];
 	$hostingid = $data['hostingid'];
 	$addonid = $data['addonid'];
@@ -780,9 +780,9 @@ while ($data = mysql_fetch_array($result)) {
 
 $templatevars['addonsummary'] = $addonsummary;
 $domainsummary = array();
-$result = select_query("tbldomains", "", array("userid" => $userid), "id", "DESC");
+$result = select_query_i("tbldomains", "", array("userid" => $userid), "id", "DESC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$domain = $data['domain'];
 	$registrar = ucfirst($data['registrar']);
@@ -800,10 +800,10 @@ while ($data = mysql_fetch_array($result)) {
 $templatevars['domainsummary'] = $domainsummary;
 $where['validuntil'] = array("sqltype" => ">", "value" => date("Ymd"));
 $where['userid'] = $userid;
-$result = select_query("tblquotes", "", $where);
+$result = select_query_i("tblquotes", "", $where);
 $quotes = array();
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$id = $data['id'];
 	$subject = $data['subject'];
 	$datecreated = $data['datecreated'];
@@ -816,9 +816,9 @@ while ($data = mysql_fetch_assoc($result)) {
 }
 
 $templatevars['quotes'] = $quotes;
-$result = select_query("tblclientsfiles", "", array("userid" => $userid), "title", "ASC");
+$result = select_query_i("tblclientsfiles", "", array("userid" => $userid), "title", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$title = $data['title'];
 	$adminonly = $data['adminonly'];
@@ -831,9 +831,9 @@ $templatevars['files'] = $files;
 $paymentmethoddropdown = paymentMethodsSelection("- " . $aInt->lang("global", "nochange") . " -");
 $templatevars['paymentmethoddropdown'] = $paymentmethoddropdown;
 $templatevars['notes'] = array();
-$result = select_query("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$data['created'] = fromMySQLDate($data['created'], 1);
 	$data['modified'] = fromMySQLDate($data['modified'], 1);
 	$data['note'] = autoHyperLink(nl2br($data['note']));

@@ -1,14 +1,134 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+
+
+// conversion of select_query to select_query_i by guy@hd.net.nz 2016-08-13
+function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
+	global $CONFIG;
+	global $query_count;
+	global $mysql_errors;
+	global $ramysqli;
+
+	if (!$fields) {
+		$fields = "*";
+	}
+
+	$query = "SELECT " . $fields . " FROM " . db_make_safe_field($table);
+
+	if ($innerjoin) {
+		$query .= " INNER JOIN " . db_escape_string($innerjoin) . "";
+	}
+
+
+	if ($where) {
+		if (is_array($where)) {
+			$criteria = array();
+			foreach ($where as $origkey => $value) {
+				$key = db_make_safe_field($origkey);
+
+				if (is_array($value)) {
+					if ($key == "default") {
+						$key = "`default`";
+					}
+
+					if ($value['sqltype'] == "LIKE") {
+						$criteria[] = "" . $key . " LIKE '%" . db_escape_string($value['value']) . "%'";
+						continue;
+					}
+
+					if ($value['sqltype'] == "NEQ") {
+						$criteria[] = "" . $key . "!='" . db_escape_string($value['value']) . "'";
+						continue;
+					}
+
+					if ($value['sqltype'] == ">" && db_is_valid_amount($value['value'])) {
+						$criteria[] = "" . $key . ">" . $value['value'];
+						continue;
+					}
+
+					if ($value['sqltype'] == "<" && db_is_valid_amount($value['value'])) {
+						$criteria[] = "" . $key . "<" . $value['value'];
+						continue;
+					}
+
+					if ($value['sqltype'] == "<=" && db_is_valid_amount($value['value'])) {
+						$criteria[] = "" . $origkey . "<=" . $value['value'];
+						continue;
+					}
+
+					if ($value['sqltype'] == ">=" && db_is_valid_amount($value['value'])) {
+						$criteria[] = "" . $origkey . ">=" . $value['value'];
+						continue;
+					}
+
+					if ($value['sqltype'] == "TABLEJOIN") {
+						$criteria[] = "" . $key . "=" . db_escape_string($value['value']) . "";
+						continue;
+					}
+
+					if ($value['sqltype'] == "IN") {
+						$criteria[] = "" . $key . " IN (" . db_build_in_array($value['values']) . ")";
+						continue;
+					}
+
+					exit("Invalid input condition");
+					continue;
+				}
+
+				if (substr($key, 0, 3) == "MD5") {
+					$key = explode("(", $origkey, 2);
+					$key = explode(")", $key[1], 2);
+					$key = db_make_safe_field($key[0]);
+					$key = "MD5(" . $key . ")";
+				}
+				else {
+					$key = db_build_quoted_field($key);
+				}
+
+				$criteria[] = "" . $key . "='" . db_escape_string($value) . "'";
+			}
+
+			$query .= " WHERE " . implode(" AND ", $criteria);
+		}
+		else {
+			$query .= " WHERE " . $where;
+		}
+	}
+
+
+	if ($orderby) {
+		$orderbysql = tokenizeOrderby($orderby, $orderbyorder);
+		$query .= " ORDER BY " . implode(",", $orderbysql);
+	}
+
+
+	if ($limit) {
+		if (strpos($limit, ",")) {
+			$limit = explode(",", $limit);
+			$limit = (int)$limit[0] . "," . (int)$limit[1];
+		}
+		else {
+			$limit = (int)$limit;
+		}
+
+		$query .= " LIMIT " . $limit;
+	}
+
+	$result = mysqli_query($ramysqli, $query);
+    if ($_SESSION['adminid'] > 0) {
+            echo "<pre>GUYGUYGUY";
+            var_dump($query);
+            var_dump($result);
+            echo "</pre>";
+    }
+
+	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
+	}
+
+	++$query_count;
+	return $result;
+}
+
 
 function select_query($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
 	global $CONFIG;
@@ -131,6 +251,13 @@ function select_query($table, $fields, $where, $orderby = "", $orderbyorder = ""
 	}
 
 	$result = mysql_query($query, $ramysql);
+
+    if ($_SESSION['adminid'] > 0) {
+            echo "<pre>GUYGUYGUY";
+            var_dump($query);
+            var_dump($result);
+            echo "</pre>";
+    }
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
 		logActivity("SQL Error: " . mysql_error($ramysql) . " - Full Query: " . $query);
@@ -261,10 +388,7 @@ function update_query($table, $array, $where) {
 		}
 
 
-		if ($value === "NULL") {
-			$query .= "NULL,";
-			continue;
-		}
+		if ($value === "NULL") { $query .= "NULL,";	continue; }
 
 
 		if (substr($value, 0, 2) === "+=" && db_is_valid_amount(substr($value, 2))) {

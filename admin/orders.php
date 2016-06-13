@@ -30,8 +30,8 @@ $aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunction
 
 if ($ra->get_req_var("rerunfraudcheck")) {
 	check_token("RA.admin.default");
-	$result = select_query("tblorders", "id,userid,ipaddress", array("id" => $orderid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblorders", "id,userid,ipaddress", array("id" => $orderid));
+	$data = mysqli_fetch_array($result);
 	$orderid = $data['id'];
 	$userid = $data['userid'];
 	$ipaddress = $data['ipaddress'];
@@ -71,9 +71,9 @@ if ($ra->get_req_var("rerunfraudcheck")) {
 
 if ($action == "affassign") {
 	if ($orderid && $affid) {
-		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
+		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$serviceid = $data['id'];
 			insert_query("tblaffiliatesaccounts", array("affiliateid" => $affid, "relid" => $serviceid));
 		}
@@ -82,9 +82,9 @@ if ($action == "affassign") {
 	}
 
 	echo $aInt->lang("orders", "chooseaffiliate") . "<br /><select name=\"affid\" id=\"affid\" style=\"width:270px;\">";
-	$result = select_query("tblaffiliates", "tblaffiliates.id,tblclients.firstname,tblclients.lastname", "", "firstname", "ASC", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+	$result = select_query_i("tblaffiliates", "tblaffiliates.id,tblclients.firstname,tblclients.lastname", "", "firstname", "ASC", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$aff_id = $data['id'];
 		$firstname = $data['firstname'];
 		$lastname = $data['lastname'];
@@ -99,9 +99,9 @@ if ($action == "affassign") {
 if ($action == "ajaxchangeorderstatus") {
 	check_token("RA.admin.default");
 	$id = get_query_val("tblorders", "id", array("id" => $id));
-	$result = select_query("tblorderstatuses", "title", "", "sortorder", "ASC");
+	$result = select_query_i("tblorderstatuses", "title", "", "sortorder", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$statusesarr[] = $data['title'];
 	}
 
@@ -172,9 +172,9 @@ if ($ra->get_req_var("massdelete")) {
 if ($ra->get_req_var("sendmessage")) {
 	check_token("RA.admin.default");
 	$clientslist = "";
-	$result = select_query("tblorders", "DISTINCT userid", "id IN (" . db_build_in_array($selectedorders) . ")");
+	$result = select_query_i("tblorders", "DISTINCT userid", "id IN (" . db_build_in_array($selectedorders) . ")");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$clientslist .= "selectedclients[]=" . $data['userid'] . "&";
 	}
 
@@ -258,9 +258,9 @@ if (!$action) {
 	echo "</option>
 ";
 	$status = $filters->get("status");
-	$result = select_query("tblorderstatuses", "", "", "sortorder", "ASC");
+	$result = select_query_i("tblorderstatuses", "", "", "sortorder", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		echo "<option value=\"" . $data['title'] . "\" style=\"color:" . $data['color'] . "\"";
 
 		if ($status == $data['title']) {
@@ -459,8 +459,8 @@ else {
 		echo $infobox;
 		$gatewaysarray = getGatewaysArray();
 		require ROOTDIR . "/includes/countries.php";
-		$result = select_query("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $id), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $id), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 
 		if (!$id) {
@@ -533,9 +533,9 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
    });
 });";
 		$statusoptions = "<select id=\"ajaxchangeorderstatus\" style=\"font-size:14px;\">";
-		$result = select_query("tblorderstatuses", "", "", "sortorder", "ASC");
+		$result = select_query_i("tblorderstatuses", "", "", "sortorder", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$statusoptions .= "<option style=\"color:" . $data['color'] . "\"";
 
 			if ($orderstatus == $data['title']) {
@@ -572,9 +572,9 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 
 		run_hook("ViewOrderDetailsPage", array("orderid" => $id, "ordernum" => $ordernum, "userid" => $userid, "amount" => $amount, "paymentmethod" => $paymentmethod, "invoiceid" => $invoiceid, "status" => $orderstatus));
 		$clientnotes = array();
-		$result = select_query("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+		$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 
-		while ($data = mysql_fetch_assoc($result)) {
+		while ($data = mysqli_fetch_assoc($result)) {
 			$data['created'] = fromMySQLDate($data['created'], 1);
 			$data['modified'] = fromMySQLDate($data['modified'], 1);
 			$data['note'] = autoHyperLink(nl2br($data['note']));
@@ -708,16 +708,16 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo "</td><td class=\"fieldlabel\">";
 		echo $aInt->lang("fields", "affiliate");
 		echo "</td><td class=\"fieldarea\" id=\"affiliatefield\">";
-		$result = select_query("tblcustomerservices", "id", array("orderid" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $id));
+		$data = mysqli_fetch_array($result);
 		$firstproductinorder = $data['id'];
-		$result = select_query("tblaffiliatesaccounts", "", array("relid" => $firstproductinorder));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliatesaccounts", "", array("relid" => $firstproductinorder));
+		$data = mysqli_fetch_array($result);
 		$affid = $data['affiliateid'];
 
 		if ($affid) {
-			$result = select_query("tblaffiliates", "tblaffiliates.id,firstname,lastname", array("tblaffiliates.id" => $affid), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblaffiliates", "tblaffiliates.id,firstname,lastname", array("tblaffiliates.id" => $affid), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+			$data = mysqli_fetch_array($result);
 			$affid = $data['id'];
 			$afffirstname = $data['firstname'];
 			$afflastname = $data['lastname'];
@@ -764,9 +764,9 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo $aInt->lang("fields", "paymentstatus");
 		echo "</th></tr>
 ";
-		$result = select_query("tblcustomerservices", "", array("orderid" => $id));
+		$result = select_query_i("tblcustomerservices", "", array("orderid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$hostingid = $data['id'];
 			$domain = $data['domain'];
 			$billingcycle = $data['billingcycle'];
@@ -789,8 +789,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 				$serverpassword = createServerPassword();
 			}
 
-			$result2 = select_query("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$data = mysqli_fetch_array($result2);
 			$groupname = $data['groupname'];
 			$productname = $data['name'];
 			$producttype = $data['type'];
@@ -830,14 +830,14 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 
 				if ($servertype) {
 					echo "" . $aInt->lang("fields", "username") . ((": <input type=\"text\" name=\"vars[products][" . $hostingid . "]") . "[username]\" size=\"12\" value=\"" . $serverusername . "\"> ") . $aInt->lang("fields", "password") . ((": <input type=\"text\" name=\"vars[products][" . $hostingid . "]") . "[password]\" size=\"12\" value=\"" . $serverpassword . "\"> ") . $aInt->lang("fields", "server") . ((": <select name=\"vars[products][" . $hostingid . "]") . "[server]\" style=\"width:150px;\"><option value=\"\">None</option>");
-					$result2 = select_query("tblservers", "", array("type" => $servertype), "name", "ASC");
+					$result2 = select_query_i("tblservers", "", array("type" => $servertype), "name", "ASC");
 
-					while ($data2 = mysql_fetch_array($result2)) {
+					while ($data2 = mysqli_fetch_array($result2)) {
 						$serverid = $data2['id'];
 						$servername = $data2['name'];
 						$servermaxaccounts = $data2['maxaccounts'];
-						$result3 = select_query("tblcustomerservices", "", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
-						$servernumaccounts = mysql_num_rows($result3);
+						$result3 = select_query_i("tblcustomerservices", "", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+						$servernumaccounts = $result3["num_rows"];
 						echo "<option value=\"" . $serverid . "\"";
 
 						if ($serverid == $server) {

@@ -129,7 +129,7 @@ if ($ra->get_req_var("saveorder")) {
 
 if ($ra->get_req_var("dismissgs")) {
     $roleid = get_query_val("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
-    $result = select_query("tbladminroles", "widgets", array("id" => $roleid));
+    $result = select_query_i("tbladminroles", "widgets", array("id" => $roleid));
     $data = mysql_fetch_array($result);
     $widgets = $data['widgets'];
     $widgets = explode(",", $widgets);

@@ -126,16 +126,16 @@ if ($action == "") {
 ";
 	echo "<h2>" . $aInt->lang("administrators", "active") . " </h2>";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "0"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
+	$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "0"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$departments = $deptnames = array();
 		$supportdepts = db_build_in_array(explode(",", $data['supportdepts']));
 
 		if ($supportdepts) {
-			$resultdeptids = select_query("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
+			$resultdeptids = select_query_i("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
 
-			while ($data_resultdeptids = mysql_fetch_array($resultdeptids)) {
+			while ($data_resultdeptids = mysqli_fetch_array($resultdeptids)) {
 				$deptnames[] = $data_resultdeptids[0];
 			}
 		}
@@ -151,16 +151,16 @@ if ($action == "") {
 	echo $aInt->sortableTable(array($aInt->lang("fields", "name"), $aInt->lang("fields", "email"), $aInt->lang("fields", "username"), $aInt->lang("administrators", "adminrole"), $aInt->lang("administrators", "assigneddepts"), "", ""), $tabledata);
 	echo "<h2>" . $aInt->lang("administrators", "inactive") . " </h2>";
 	$tabledata = array();
-	$result = select_query("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
+	$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$departments = $deptnames = array();
 		$supportdepts = db_build_in_array(explode(",", $data['supportdepts']));
 
 		if ($supportdepts) {
-			$resultdeptids = select_query("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
+			$resultdeptids = select_query_i("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
 
-			while ($data_resultdeptids = mysql_fetch_array($resultdeptids)) {
+			while ($data_resultdeptids = mysqli_fetch_array($resultdeptids)) {
 				$deptnames[] = $data_resultdeptids[0];
 			}
 		}
@@ -178,8 +178,8 @@ if ($action == "") {
 else {
 	if ($action == "manage") {
 		if ($id) {
-			$result = select_query("tbladmins", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$supportdepts = $data['supportdepts'];
 			$ticketnotifications = $data['ticketnotifications'];
 			$supportdepts = explode(",", $supportdepts);
@@ -234,9 +234,9 @@ else {
 		}
 
 		echo ">";
-		$result = select_query("tbladminroles", "", "", "name", "ASC");
+		$result = select_query_i("tbladminroles", "", "", "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$select_roleid = $data['id'];
 			$select_rolename = $data['name'];
 			echo "<option value=\"" . $select_roleid . "\"";
@@ -285,9 +285,9 @@ else {
 		echo $aInt->lang("administrators", "assigneddepts");
 		echo "</td><td class=\"fieldarea\">";
 		$nodepartments = true;
-		$result = select_query("tblticketdepartments", "", "", "order", "ASC");
+		$result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$deptid = $data['id'];
 			$deptname = $data['name'];
 			echo "<label><input type=\"checkbox\" name=\"deptids[]\" value=\"" . $deptid . "\"";

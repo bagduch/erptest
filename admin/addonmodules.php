@@ -104,11 +104,11 @@ else {
 	}
 
 	$modulelink = "addonmodules.php?module=" . $module;
-	$result = select_query("tbladdonmodules", "value", array("module" => $module, "setting" => "access"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladdonmodules", "value", array("module" => $module, "setting" => "access"));
+	$data = mysqli_fetch_array($result);
 	$allowedroles = explode(",", $data[0]);
-	$result = select_query("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+	$data = mysqli_fetch_array($result);
 	$adminroleid = $data[0];
 
 	if (!isValidforPath($module)) {
@@ -126,9 +126,9 @@ else {
 
 			if (in_array($adminroleid, $allowedroles)) {
 				$modulevars = array("modulelink" => $modulelink);
-				$result = select_query("tbladdonmodules", "", array("module" => $module));
+				$result = select_query_i("tbladdonmodules", "", array("module" => $module));
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$modulevars[$data['setting']] = $data['value'];
 				}
 
