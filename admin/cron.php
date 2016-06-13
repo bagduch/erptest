@@ -892,8 +892,8 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
 			$disklimit = $data['disklimit'];
 			$bwusage = $data['bwusage'];
 			$bwlimit = $data['bwlimit'];
-			$result3 = select_query("tblcurrencies", "rate", array("id" => $currency));
-			$data = mysql_fetch_array($result3);
+			$result3 = select_query_i("tblcurrencies", "rate", array("id" => $currency));
+			$data = mysqli_fetch_array($result3);
 			$convertrate = $data['rate'];
 
 			if (!$convertrate) {

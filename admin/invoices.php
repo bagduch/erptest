@@ -53,9 +53,9 @@ if ($action == "invtooltip") {
 	check_token("RA.admin.default");
 	echo "<table bgcolor=\"#cccccc\" cellspacing=\"1\" cellpadding=\"3\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $aInt->lang("fields", "description") . "</td><td>" . $aInt->lang("fields", "amount") . "</td></tr>";
 	$currency = getCurrency($userid);
-	$result = select_query("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
+	$result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$lineid = $data['id'];
 		echo "<tr bgcolor=\"#ffffff\"><td width=\"275\">" . nl2br($data['description']) . "</td><td width=\"100\" style=\"text-align:right;\">" . formatCurrency($data['amount']) . "</td></tr>";
 	}
@@ -129,8 +129,8 @@ if ($ra->get_req_var("markpaid")) {
 	check_token("RA.admin.default");
 	checkPermission("Manage Invoice");
 	foreach ($selectedinvoices as $invid) {
-		$result2 = select_query("tblinvoices", "paymentmethod, ppi", array("id" => $invid));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblinvoices", "paymentmethod, ppi", array("id" => $invid));
+		$data = mysqli_fetch_array($result2);
 		$paymentmethod = $data['paymentmethod'];
 		addInvoicePayment($invid, "", "", "", $paymentmethod);
 
@@ -173,8 +173,8 @@ if ($ra->get_req_var("markcancelled")) {
 if ($ra->get_req_var("duplicateinvoice")) {
 	check_token("RA.admin.default");
 	foreach ($selectedinvoices as $invid) {
-		$result_duplicate = select_query("tblinvoices", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
-		$data_duplicate = mysql_fetch_assoc($result_duplicate);
+		$result_duplicate = select_query_i("tblinvoices", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
+		$data_duplicate = mysqli_fetch_assoc($result_duplicate);
 		$datefrom = fromMySQLDate($data_duplicate['date']);
 		$date = toMySQLDate($datefrom);
 		$duedatefrom = fromMySQLDate($data_duplicate['duedate']);
@@ -408,8 +408,8 @@ if ($action == "") {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tblinvoices", "userid,paymentmethod", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoices", "userid,paymentmethod", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$userid = $data[0];
 		$oldpaymentmethod = $data[1];
 
@@ -497,16 +497,16 @@ else {
 
 
 			if ($selaction == "split" && is_array($itemids)) {
-				$result = select_query("tblinvoices", "userid,date,duedate,taxrate,taxrate2,paymentmethod", array("id" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblinvoices", "userid,date,duedate,taxrate,taxrate2,paymentmethod", array("id" => $id));
+				$data = mysqli_fetch_array($result);
 				$userid = $data[0];
 				$date = $data[1];
 				$duedate = $data[2];
 				$taxrate = $data[3];
 				$taxrate2 = $data[4];
 				$paymentmethod = $data[5];
-				$result = select_query("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $id));
+				$data = mysqli_fetch_array($result);
 				$totalitemscount = $data[0];
 
 				if (count($itemids) < $totalitemscount) {
@@ -536,8 +536,8 @@ else {
 			}
 
 			updateInvoiceTotal($id);
-			$result = select_query("tblinvoices", "userid", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblinvoices", "userid", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$userid = $data[0];
 			logActivity("Modified Invoice - Invoice ID: " . $id, $userid);
 			redir("action=edit&id=" . $id);
@@ -547,14 +547,14 @@ else {
 
 		if ($addcredit != "0.00" && $addcredit) {
 			check_token("RA.admin.default");
-			$result2 = select_query("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
+			$data = mysqli_fetch_array($result2);
 			$userid = $data['userid'];
 			$subtotal = $data['subtotal'];
 			$credit = $data['credit'];
 			$total = $data['total'];
-			$result2 = select_query("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
+			$data = mysqli_fetch_array($result2);
 			$amountpaid = $data[0];
 			$balance = $total - $amountpaid;
 
@@ -564,8 +564,8 @@ else {
 
 			$addcredit = round($addcredit, 2);
 			$balance = round($balance, 2);
-			$result2 = select_query("tblclients", "credit", array("id" => $userid));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblclients", "credit", array("id" => $userid));
+			$data = mysqli_fetch_array($result2);
 			$totalcredit = $data['credit'];
 
 			if ($totalcredit < $addcredit) {
@@ -586,8 +586,8 @@ else {
 
 		if ($removecredit != "0.00" && $removecredit != "") {
 			check_token("RA.admin.default");
-			$result2 = select_query("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
+			$data = mysqli_fetch_array($result2);
 			$userid = $data['userid'];
 			$subtotal = $data['subtotal'];
 			$credit = $data['credit'];
@@ -616,8 +616,8 @@ else {
 			exit();
 		}
 
-		$result = select_query("tblinvoices", "tblpaymentgateways.value", array("tblpaymentgateways.setting" => "type", "tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid INNER JOIN tblpaymentgateways ON tblpaymentgateways.gateway=tblinvoices.paymentmethod");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoices", "tblpaymentgateways.value", array("tblpaymentgateways.setting" => "type", "tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid INNER JOIN tblpaymentgateways ON tblpaymentgateways.gateway=tblinvoices.paymentmethod");
+		$data = mysqli_fetch_array($result);
 		$type = $data['value'];
 
 		if ($tplname) {
@@ -722,8 +722,8 @@ else {
 		$aInt->jscode = $jscode;
 		echo $infobox;
 		$gatewaysarray = getGatewaysArray();
-		$result = select_query("tblinvoices", "tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.state,tblclients.country", array("tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoices", "tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.state,tblclients.country", array("tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid");
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 		$invoicenum = $data['invoicenum'];
 		$date = $data['date'];
@@ -755,8 +755,8 @@ else {
 		}
 
 		$currency = getCurrency($userid);
-		$result = select_query("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
+		$data = mysqli_fetch_array($result);
 		$transcount = $data[0];
 		$amountpaid = $data[1];
 		$balance = $total - $amountpaid;
@@ -910,9 +910,9 @@ else {
 		echo "<s";
 		echo "elect name=\"tplname\">";
 		$emailtplsarray = array();
-		$result = select_query("tblemailtemplates", "id,name", array("type" => "invoice", "language" => ""), "name", "ASC");
+		$result = select_query_i("tblemailtemplates", "id,name", array("type" => "invoice", "language" => ""), "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$emailtplsarray[$data['name']] = $data['id'];
 		}
 
@@ -1253,9 +1253,9 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"transid\">";
-		$result = select_query("tblaccounts", "", array("invoiceid" => $id, "amountin" => array("sqltype" => ">", "value" => "0")), "date` ASC,`id", "ASC");
+		$result = select_query_i("tblaccounts", "", array("invoiceid" => $id, "amountin" => array("sqltype" => ">", "value" => "0")), "date` ASC,`id", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$trans_id = $data['id'];
 			$trans_date = $data['date'];
 			$trans_amountin = $data['amountin'];
@@ -1392,9 +1392,9 @@ window.location='";
 		echo $aInt->lang("fields", "taxed");
 		echo "</th><th width=\"20\"></th></tr>
 ";
-		$result = select_query("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
+		$result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$lineid = $data['id'];
 			$description = $data['description'];
 			$linecount = explode("\r\n", $description);
@@ -1479,9 +1479,9 @@ window.location='";
 
 ";
 		$aInt->sortableTableInit("nopagination");
-		$result = select_query("tblaccounts", "", array("invoiceid" => $id), "date` ASC,`id", "ASC");
+		$result = select_query_i("tblaccounts", "", array("invoiceid" => $id), "date` ASC,`id", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$ide = $data['id'];
 			$date = $data['date'];
 			$date = fromMySQLDate($date);
@@ -1496,8 +1496,8 @@ window.location='";
 			$fees = formatCurrency($fees);
 
 			if ($gateway) {
-				$result2 = select_query("tblpaymentgateways", "", array("gateway" => $gateway, "setting" => "name"));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblpaymentgateways", "", array("gateway" => $gateway, "setting" => "name"));
+				$data = mysqli_fetch_array($result2);
 				$gateway = $data['value'];
 			}
 			else {

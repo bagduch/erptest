@@ -116,11 +116,11 @@
 
 		if ($this->requiredPermission) {
 			$permid = array_search($this->requiredPermission, getAdminPermsArray());
-			$result = select_query("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+			$data = mysqli_fetch_array($result);
 			$roleid = $data['roleid'];
-			$result = select_query("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
+			$data = mysqli_fetch_array($result);
 			$match = $data[0];
 
 			if (!$match) {
@@ -196,9 +196,9 @@
 			$orderby = "companyname";
 		}
 
-		$result = select_query("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int)$selectedval, $orderby, "ASC");
+		$result = select_query_i("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int)$selectedval, $orderby, "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$selectid = $data['id'];
 			$selectfirstname = $data['firstname'];
 			$selectlastname = $data['lastname'];
@@ -350,8 +350,8 @@
 		$this->assign("datepickerformat", str_replace(array("DD", "MM", "YYYY"), array("dd", "mm", "yy"), $CONFIG['DateFormat']));
 
 		if (isset($_SESSION['adminid'])) {
-			$result = select_query("tbladmins", "firstname,lastname,notes,supportdepts,roleid", array("id" => $_SESSION['adminid']));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "firstname,lastname,notes,supportdepts,roleid", array("id" => $_SESSION['adminid']));
+			$data = mysqli_fetch_array($result);
 			$admin_username = $data['firstname'] . " " . $data['lastname'];
 			$admin_notes = $data['notes'];
 			$admin_supportdepts = $data['supportdepts'];
@@ -360,9 +360,9 @@
 			$this->assign("admin_notes", $admin_notes);
 			$admin_perms = array();
 			$adminpermsarray = getAdminPermsArray();
-			$result = select_query("tbladminperms", "permid", array("roleid" => $admin_roleid));
+			$result = select_query_i("tbladminperms", "permid", array("roleid" => $admin_roleid));
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$admin_perms[] = $adminpermsarray[$data[0]];
 			}
 
@@ -425,8 +425,8 @@
 
 
 			if (!$disable_admin_ticket_page_counts) {
-				$result = select_query("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
+				$data = mysqli_fetch_array($result);
 				$flaggedtickets = $data[0];
 				$flaggedticketschecked = true;
 			}
@@ -437,9 +437,9 @@
 			$this->assign("ticketcounts", $ticketcounts);
 			$this->assign("ticketstatuses", $ticketcounts);
 			$departments = array();
-			$result = select_query("tblticketdepartments", "id,name", "id IN (" . db_build_in_array($admin_supportdepts_qry) . ")", "order", "ASC");
+			$result = select_query_i("tblticketdepartments", "id,name", "id IN (" . db_build_in_array($admin_supportdepts_qry) . ")", "order", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$departments[] = array("id" => $data['id'], "name" => $data['name']);
 			}
 
@@ -450,9 +450,9 @@
 		if (checkPermission("Sidebar Statistics", true)) {
 			$templatevars = array();
 			$pendingorderstatuses = array();
-			$result = select_query("tblorderstatuses", "title", "showpending=1");
+			$result = select_query_i("tblorderstatuses", "title", "showpending=1");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$pendingorderstatuses[] = $data['title'];
 			}
 
@@ -1026,8 +1026,8 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 		echo "<form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"get\">\r\n<p>" . $this->lang("clientsummary", "activeclient") . ": ";
 
 		if ($CONFIG['DisableClientDropdown']) {
-			$result = select_query("tblclients", "", array("id" => $uid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblclients", "", array("id" => $uid));
+			$data = mysqli_fetch_array($result);
 			$selectfirstname = $data['firstname'];
 			$selectlastname = $data['lastname'];
 			$selectcompanyname = $data['companyname'];
@@ -1220,8 +1220,8 @@ $(\"#\"+name).dialog('open');
 				$data = $ClientOutputData[$userid];
 			}
 			else {
-				$result = select_query("tblclients", "firstname,lastname,companyname,groupid", array("id" => $userid));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblclients", "firstname,lastname,companyname,groupid", array("id" => $userid));
+				$data = mysqli_fetch_array($result);
 				$ClientOutputData[$userid] = $data;
 			}
 
@@ -1382,9 +1382,9 @@ function insertMergeField(mfield) {
 		}
 
 		$groupname = "";
-		$result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservices.retired,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+		$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservices.retired,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$packid = $data['id'];
 			$gid = $data['gid'];
 			$name = $data['name'];

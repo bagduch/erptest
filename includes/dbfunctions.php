@@ -542,15 +542,33 @@ function full_query($query, $userHandle = null) {
 	return $result;
 }
 
+function full_query_i($query, $userHandle = null) {
+    global $CONFIG;
+    global $query_count;
+    global $mysql_errors;
+    global $ramysqli;
+
+    $handle = (is_resource($userHandle) ? $userHandle : $ramysql);
+    $result = mysqli_query($query);
+
+    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
+        logActivity("SQL Error: " . mysql_error($handle) . " - Full Query: " . $query);
+    }
+
+    ++$query_count;
+    return $result;
+}
+
+
 function get_query_val($table, $field, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
-	$result = select_query($table, $field, $where, $orderby, $orderbyorder, $limit, $innerjoin);
-	$data = mysql_fetch_array($result);
+	$result = select_query_i($table, $field, $where, $orderby, $orderbyorder, $limit, $innerjoin);
+	$data = mysqli_fetch_array($result);
 	return $data[0];
 }
 
 function get_query_vals($table, $field, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
-	$result = select_query($table, $field, $where, $orderby, $orderbyorder, $limit, $innerjoin);
-	$data = mysql_fetch_array($result);
+	$result = select_query_i($table, $field, $where, $orderby, $orderbyorder, $limit, $innerjoin);
+	$data = mysqli_fetch_array($result);
 	return $data;
 }
 
