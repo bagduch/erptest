@@ -423,7 +423,7 @@ class RA_Init {
         global $ramysqli;
 
         $ramysql = @mysql_connect($this->db_host, $this->db_username, $this->db_password);
-        $ramysqli = @mysqli_connect($this->db_host, $this->db_username, $this->db_password,$this->db_name);
+        $ramysqli = @mysqli_connect("p:".$this->db_host, $this->db_username, $this->db_password,$this->db_name);
 
         $selected_db = @mysql_select_db($this->db_name);
 
