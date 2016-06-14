@@ -114,13 +114,13 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 	}
 
 	$result = mysqli_query($ramysqli, $query);
-    if ($_SESSION['adminid'] > 0) {
+    if (false && ($_SESSION['adminid'] > 0)) {
             echo "<pre>GUYGUYGUY";
             var_dump($query);
             var_dump($result);
             echo "</pre>";
             var_dump(mysqli_error($ramysqli));
-    } 
+    }  
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
