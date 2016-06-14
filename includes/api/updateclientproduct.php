@@ -82,7 +82,7 @@ if ($billingcycle) {
 
 
 if ($status) {
-	$updateqry['domainstatus'] = $status;
+	$updateqry['servicestatus'] = $status;
 }
 
 

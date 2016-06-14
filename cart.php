@@ -184,7 +184,7 @@ if (!$a) {
             $smarty->assign("productgroups", $productgroups);
             $where = array();
             $where['userid'] = $_SESSION['uid'];
-            $where['domainstatus'] = "Active";
+            $where['servicestatus'] = "Active";
 
             if ($pid) {
                 $where["tblcustomerservices.id"] = $pid;
@@ -439,13 +439,13 @@ if ($a == "domainoptions") {
                 $transferenabled = $CONFIG['AllowTransfer'];
                 $owndomainenabled = $CONFIG['AllowOwnDomain'];
                 $whoislookup = lookupDomain($sld, $tld);
-                $domainstatus = $whoislookup['result'];
+                $servicestatus = $whoislookup['result'];
 
                 if (!$checktype) {
-                    $checktype = ($domainstatus == "available" ? "register" : "transfer");
+                    $checktype = ($servicestatus == "available" ? "register" : "transfer");
                 }
 
-                $smartyvalues['status'] = $domainstatus;
+                $smartyvalues['status'] = $servicestatus;
 
                 if ($regenabled) {
                     $regoptions = getTLDPriceList($tld, true);
@@ -502,7 +502,7 @@ if ($a == "domainoptions") {
                     $tld = "." . $tld;
                 }
                 if ($CONFIG['AllowDomainsTwice']) {
-                    $result = select_query("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (domainstatus!='Terminated' AND domainstatus!='Cancelled' AND domainstatus!='Fraud')");
+                    $result = select_query("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (servicestatus!='Terminated' AND servicestatus!='Cancelled' AND servicestatus!='Fraud')");
                     $data = mysql_fetch_array($result);
                     $domaincheck = $data[0];
                     if ($domaincheck) {
@@ -566,7 +566,7 @@ if ($a == "confservice") {
             if (!$hostname) {
                 $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
             } else {
-                $result = select_query("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "domainstatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "domainstatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
+                $result = select_query("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
                 $data = mysql_fetch_array($result);
                 $existingcount = $data[0];
 
@@ -837,7 +837,7 @@ if ($a == "fraudcheck") {
 
         if ($_SESSION['orderdetails']['Products']) {
             foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-                update_query("tblcustomerservices", array("domainstatus" => "Pending"), array("id" => $productid, "domainstatus" => "Fraud"));
+                update_query("tblcustomerservices", array("servicestatus" => "Pending"), array("id" => $productid, "servicestatus" => "Fraud"));
             }
         }
 
@@ -894,7 +894,7 @@ if ($a == "complete") {
         exit("Unexpected payment method value. Exiting.");
     }
 
-    $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblproducts.servertype", array("tblcustomerservices.orderid" => $orderid, "tblcustomerservices.domainstatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
+    $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblproducts.servertype", array("tblcustomerservices.orderid" => $orderid, "tblcustomerservices.servicestatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
     while ($data = mysql_fetch_array($result)) {
         $id = $data['id'];

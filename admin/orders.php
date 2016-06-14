@@ -770,7 +770,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			$hostingid = $data['id'];
 			$domain = $data['domain'];
 			$billingcycle = $data['billingcycle'];
-			$hostingstatus = $data['domainstatus'];
+			$hostingstatus = $data['servicestatus'];
 			$firstpaymentamount = formatCurrency($data['firstpaymentamount']);
 			$recurringamount = $data['amount'];
 			$packageid = $data['packageid'];
@@ -836,7 +836,7 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 						$serverid = $data2['id'];
 						$servername = $data2['name'];
 						$servermaxaccounts = $data2['maxaccounts'];
-						$result3 = select_query_i("tblcustomerservices", "", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+						$result3 = select_query_i("tblcustomerservices", "", "server='" . $serverid . "' AND (servicestatus='Active' OR servicestatus='Suspended')");
 						$servernumaccounts = $result3["num_rows"];
 						echo "<option value=\"" . $serverid . "\"";
 

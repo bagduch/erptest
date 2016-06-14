@@ -84,7 +84,7 @@ while ($data = mysql_fetch_array($result)) {
 	$recurringamount = $data['amount'];
 	$billingcycle = $data['billingcycle'];
 	$nextduedate = $data['nextduedate'];
-	$domainstatus = $data['domainstatus'];
+	$servicestatus = $data['servicestatus'];
 	$username = $data['username'];
 	$password = decrypt($data['password']);
 	$notes = $data['notes'];
@@ -143,7 +143,7 @@ while ($data = mysql_fetch_array($result)) {
 		$configoptionsdata[] = array("id" => $configoption['id'], "option" => $configoption['optionname'], "type" => $type, "value" => $configoption['selectedoption']);
 	}
 
-	$apiresults['products']['product'][] = array("id" => $id, "clientid" => $userid, "orderid" => $orderid, "pid" => $pid, "regdate" => $regdate, "name" => $name, "groupname" => $groupname, "domain" => $domain, "dedicatedip" => $dedicatedip, "serverid" => $server, "servername" => $serverdetails[0], "serverip" => $serverdetails[1], "serverhostname" => $serverdetails[2], "firstpaymentamount" => $firstpaymentamount, "recurringamount" => $recurringamount, "paymentmethod" => $paymentmethod, "paymentmethodname" => $paymentmethodname, "billingcycle" => $billingcycle, "nextduedate" => $nextduedate, "status" => $domainstatus, "username" => $username, "password" => $password, "subscriptionid" => $subscriptionid, "promoid" => $promoid, "overideautosuspend" => $overideautosuspend, "overidesuspenduntil" => $overidesuspenduntil, "ns1" => $ns1, "ns2" => $ns2, "dedicatedip" => $dedicatedip, "assignedips" => $assignedips, "notes" => $notes, "diskusage" => $diskusage, "disklimit" => $disklimit, "bwusage" => $bwusage, "bwlimit" => $bwlimit, "lastupdate" => $lastupdate, "customfields" => array("customfield" => $customfieldsdata), "configoptions" => array("configoption" => $configoptionsdata));
+	$apiresults['products']['product'][] = array("id" => $id, "clientid" => $userid, "orderid" => $orderid, "pid" => $pid, "regdate" => $regdate, "name" => $name, "groupname" => $groupname, "domain" => $domain, "dedicatedip" => $dedicatedip, "serverid" => $server, "servername" => $serverdetails[0], "serverip" => $serverdetails[1], "serverhostname" => $serverdetails[2], "firstpaymentamount" => $firstpaymentamount, "recurringamount" => $recurringamount, "paymentmethod" => $paymentmethod, "paymentmethodname" => $paymentmethodname, "billingcycle" => $billingcycle, "nextduedate" => $nextduedate, "status" => $servicestatus, "username" => $username, "password" => $password, "subscriptionid" => $subscriptionid, "promoid" => $promoid, "overideautosuspend" => $overideautosuspend, "overidesuspenduntil" => $overidesuspenduntil, "ns1" => $ns1, "ns2" => $ns2, "dedicatedip" => $dedicatedip, "assignedips" => $assignedips, "notes" => $notes, "diskusage" => $diskusage, "disklimit" => $disklimit, "bwusage" => $bwusage, "bwlimit" => $bwlimit, "lastupdate" => $lastupdate, "customfields" => array("customfield" => $customfieldsdata), "configoptions" => array("configoption" => $configoptionsdata));
 }
 
 $responsetype = "xml";

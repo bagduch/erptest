@@ -139,7 +139,7 @@ function getAdminHomeStats($type = "") {
 	$data = mysql_fetch_array($result);
 	$overdueinvoices = $data[0];
 	$stats['invoices']['overduebalance'] = $data[1];
-	$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.domainstatus!='Cancelled' AND tblcustomerservices.domainstatus!='Terminated')");
+	$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
 	$data = mysql_fetch_array($result);
 	$stats['cancellations']['pending'] = $data[0];
 	$stats['orders']['today']['active'] = $stats['orders']['today']['fraud'] = $stats['orders']['today']['pending'] = $stats['orders']['today']['cancelled'] = 0;

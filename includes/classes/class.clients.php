@@ -25,8 +25,8 @@ class RA_Clients extends RA_TableModel {
 		$filters = $this->buildCriteria($criteria);
 		$where = (count($filters) ? " WHERE " . implode(" AND ", $filters) : "");
 		$customfieldjoin = ($this->customfieldsfilter ? " INNER JOIN tblcustomfieldsvalues ON tblcustomfieldsvalues.relid=tblclients.id" : "");
-		$result = full_query("SELECT COUNT(*) FROM tblclients" . $customfieldjoin . $where);
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT COUNT(*) FROM tblclients" . $customfieldjoin . $where);
+		$data = mysqli_fetch_array($result);
 		$this->getPageObj()->setNumResults($data[0]);
 		$clients = array();
 		$query = "SELECT id,firstname,lastname,companyname,email,datecreated,groupid,status FROM tblclients" . $customfieldjoin . $where . " ORDER BY " . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
@@ -46,8 +46,8 @@ class RA_Clients extends RA_TableModel {
 			$services = $totalservices = "-";
 
 			if (!$disable_clients_list_services_summary) {
-				$result2 = full_query("SELECT (SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id AND domainstatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS services,(SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id)+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id) AS totalservices FROM tblclients WHERE tblclients.id=" . (int)$id . " LIMIT 1");
-				$data = mysql_fetch_array($result2);
+				$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS services,(SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id)+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id) AS totalservices FROM tblclients WHERE tblclients.id=" . (int)$id . " LIMIT 1");
+				$data = mysqli_fetch_array($result2);
 				$services = $data['services'];
 				$totalservices = $data['totalservices'];
 			}

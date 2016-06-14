@@ -119,7 +119,8 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
             var_dump($query);
             var_dump($result);
             echo "</pre>";
-    }
+            var_dump(mysqli_error($ramysqli));
+    } 
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
@@ -254,6 +255,8 @@ function select_query($table, $fields, $where, $orderby = "", $orderbyorder = ""
 
     if ($_SESSION['adminid'] > 0) {
             echo "<pre>GUYGUYGUY";
+            echo __LINE__;
+            echo __FILE__;
             var_dump($query);
             var_dump($result);
             echo "</pre>";

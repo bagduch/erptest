@@ -229,7 +229,7 @@ $subscriptionid = $domain_data['subscriptionid'];
 $promoid = $domain_data['promoid'];
 $registrationdate = $domain_data['registrationdate'];
 $registrationperiod = $domain_data['registrationperiod'];
-$domainstatus = $domain_data['status'];
+$servicestatus = $domain_data['status'];
 $additionalnotes = $domain_data['additionalnotes'];
 $dnsmanagement = $domain_data['dnsmanagement'];
 $emailforwarding = $domain_data['emailforwarding'];
@@ -645,7 +645,7 @@ echo "<s";
 echo "elect name=\"status\">
 <option value=\"Pending\"";
 
-if ($domainstatus == "Pending") {
+if ($servicestatus == "Pending") {
 	echo " selected";
 }
 
@@ -654,7 +654,7 @@ echo $aInt->lang("status", "pending");
 echo "</option>
 <option value=\"Pending Transfer\"";
 
-if ($domainstatus == "Pending Transfer") {
+if ($servicestatus == "Pending Transfer") {
 	echo " selected";
 }
 
@@ -663,7 +663,7 @@ echo $aInt->lang("status", "pendingtransfer");
 echo "</option>
 <option value=\"Active\"";
 
-if ($domainstatus == "Active") {
+if ($servicestatus == "Active") {
 	echo " selected";
 }
 
@@ -672,7 +672,7 @@ echo $aInt->lang("status", "active");
 echo "</option>
 <option value=\"Expired\"";
 
-if ($domainstatus == "Expired") {
+if ($servicestatus == "Expired") {
 	echo " selected";
 }
 
@@ -681,7 +681,7 @@ echo $aInt->lang("status", "expired");
 echo "</option>
 <option value=\"Cancelled\"";
 
-if ($domainstatus == "Cancelled") {
+if ($servicestatus == "Cancelled") {
 	echo " selected";
 }
 
@@ -690,7 +690,7 @@ echo $aInt->lang("status", "cancelled");
 echo "</option>
 <option value=\"Fraud\"";
 
-if ($domainstatus == "Fraud") {
+if ($servicestatus == "Fraud") {
 	echo " selected";
 }
 

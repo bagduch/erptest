@@ -46,7 +46,7 @@ if ($step == "") {
 		$servername = $data['name'];
 		$activeserver = $data['active'];
 		$servermaxaccounts = $data['maxaccounts'];
-		$query2 = "SELECT * FROM tblhosting WHERE server=" . (int)$serverid . " AND domainstatus!='Pending' AND domainstatus!='Terminated'";
+		$query2 = "SELECT * FROM tblcustomerservices WHERE server=" . (int)$serverid . " AND servicestatus!='Pending' AND servicestatus!='Terminated'";
 		$result2 = full_query($query2);
 		$servernumaccounts = mysql_num_rows($result2);
 		echo "<option value=\"" . $serverid . "\"";
@@ -107,13 +107,13 @@ else {
 			$serverassignedips[] = $serverip;
 			echo "<tr><td colspan=\"6\" style=\"background-color:#efefef;font-weight:bold;\">" . $servername . " - " . $serverip . "</td></tr>";
 			$serviceid = "";
-			$result2 = select_query("tblcustomerservices", "tblcustomerservices.id AS serviceid,tblcustomerservices.domain,tblcustomerservices.domainstatus,tblcustomerservices.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname", "server='" . $serverid . "' AND domain!='' AND (domainstatus='Active' OR domainstatus='Suspended')", "domain", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id");
+			$result2 = select_query("tblcustomerservices", "tblcustomerservices.id AS serviceid,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblcustomerservices.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname", "server='" . $serverid . "' AND domain!='' AND (servicestatus='Active' OR servicestatus='Suspended')", "domain", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id");
 
 			while ($data = mysql_fetch_array($result2)) {
 				$serviceid = $data['serviceid'];
 				$domain = $data['domain'];
 				$package = $data['name'];
-				$status = $data['domainstatus'];
+				$status = $data['servicestatus'];
 				$userid = $data['userid'];
 				$firstname = $data['firstname'];
 				$lastname = $data['lastname'];
@@ -161,12 +161,12 @@ else {
 			echo "<h3>" . $aInt->lang("utilitiesresolvercheck", "terminatingaccts") . "</h3>
 <ul>";
 			foreach ($selectedclients as $serviceid) {
-				$result = select_query("tblcustomerservices", "tblcustomerservices.id AS serviceid,tblcustomerservices.domain,tblcustomerservices.domainstatus,tblcustomerservices.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.servertype", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id");
+				$result = select_query("tblcustomerservices", "tblcustomerservices.id AS serviceid,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblcustomerservices.userid,tblservices.name,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.servertype", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id");
 				$data = mysql_fetch_array($result);
 				$serviceid = $data['serviceid'];
 				$domain = $data['domain'];
 				$package = $data['name'];
-				$status = $data['domainstatus'];
+				$status = $data['servicestatus'];
 				$userid = $data['userid'];
 				$firstname = $data['firstname'];
 				$lastname = $data['lastname'];

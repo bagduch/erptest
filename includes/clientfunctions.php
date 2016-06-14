@@ -174,7 +174,7 @@ function getClientsStats($userid) {
 	$stats['numcollectionsinvoices'] = (isset($invoicestats['Collections'][1]) ? $invoicestats['Collections'][1] : 0);
 	$stats['collectionsinvoicesamount'] = (isset($invoicestats['Collections'][2]) ? formatCurrency($invoicestats['Collections'][2]) : 0);
 	$productstats = array();
-	$result = full_query("SELECT tblservices.type,domainstatus,COUNT(*) FROM tblhosting INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int)$userid . " GROUP BY domainstatus,tblservices.type");
+	$result = full_query("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int)$userid . " GROUP BY servicestatus,tblservices.type");
 
 	while ($data = mysql_fetch_array($result)) {
 		$productstats[$data[0]][$data[1]] = $data[2];
@@ -487,7 +487,7 @@ function deleteClient($userid) {
 	run_hook("PreDeleteClient", array("userid" => $userid));
 	delete_query("tblclients", array("id" => $userid));
 	delete_query("tblcontacts", array("userid" => $userid));
-	delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE userid=" . $userid . ")");
+	delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
 	$result = select_query("tblcustomerservices", "id", array("userid" => $userid));
 
 	while ($data = mysql_fetch_array($result)) {
@@ -970,9 +970,9 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 
 function closeClient($userid) {
 	update_query("tblclients", array("status" => "Closed"), array("id" => $userid));
-	update_query("tblcustomerservices", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Pending"));
-	update_query("tblcustomerservices", array("domainstatus" => "Cancelled"), array("userid" => $userid, "domainstatus" => "Active"));
-	update_query("tblcustomerservices", array("domainstatus" => "Terminated"), array("userid" => $userid, "domainstatus" => "Suspended"));
+	update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Pending"));
+	update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Active"));
+	update_query("tblcustomerservices", array("servicestatus" => "Terminated"), array("userid" => $userid, "servicestatus" => "Suspended"));
 	$result = select_query("tblcustomerservices", "id", array("userid" => $userid));
 
 	while ($data = mysql_fetch_array($result)) {
@@ -1358,7 +1358,7 @@ function clientChangeDefaultGateway($userid, $paymentmethod) {
 
 		update_query("tblclients", array("defaultgateway" => $paymentmethod), array("id" => $userid));
 		update_query("tblcustomerservices", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
-		update_query("tblserviceaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblhosting WHERE userid=" . (int)$userid . ")");
+		update_query("tblserviceaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=" . (int)$userid . ")");
 		update_query("tbldomains", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
 		update_query("tblinvoices", array("paymentmethod" => $paymentmethod), array("userid" => $userid, "status" => "Unpaid"));
 	}

@@ -77,7 +77,7 @@ $firstpaymentamount = $service_data['firstpaymentamount'];
 $amount = $service_data['amount'];
 $billingcycle = $service_data['billingcycle'];
 $nextduedate = $service_data['nextduedate'];
-$domainstatus = $service_data['domainstatus'];
+$servicestatus = $service_data['servicestatus'];
 $username = $service_data['username'];
 $password = decrypt($service_data['password']);
 $notes = $service_data['notes'];
@@ -212,7 +212,7 @@ if ($frm->issubmitted()) {
     $newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
     migrateCustomFieldsBetweenProducts($id, $packageid, true);
     $changelog = array();
-    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "domain" => "Domain", "dedicatedip" => "Dedicated IP", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "domainstatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
+    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "domain" => "Domain", "dedicatedip" => "Dedicated IP", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "servicestatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
     foreach ($logchangefields as $fieldname => $displayname) {
         $newval = $ra->get_req_var($fieldname);
         $oldval = $service_data[$fieldname];
@@ -237,7 +237,7 @@ if ($frm->issubmitted()) {
     }
 
     $updatearr = array();
-    $updatefields = array("server", "packageid", "domain", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "promoid", "overideautosuspend", "overidesuspenduntil", "ns1", "ns2", "domainstatus", "dedicatedip", "assignedips");
+    $updatefields = array("server", "packageid", "domain", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "promoid", "overideautosuspend", "overidesuspenduntil", "ns1", "ns2", "servicestatus", "dedicatedip", "assignedips");
     foreach ($updatefields as $fieldname) {
         $newval = $ra->get_req_var($fieldname);
 
@@ -532,13 +532,13 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
 while ($data = mysqli_fetch_array($result)) {
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
     $servicelist_domain = $data['domain'];
-    $servicelist_status = $data['domainstatus'];
+    $servicelist_status = $data['servicestatus'];
 
     if ($servicelist_domain) {
         $servicelist_product .= " - " . $servicelist_domain;
@@ -683,7 +683,7 @@ if ($aid) {
             $servername .= " (" . $aInt->lang("emailtpls", "disabled") . ")";
         }
 
-        $result2 = select_query_i("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (domainstatus='Active' OR domainstatus='Suspended')");
+        $result2 = select_query_i("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (servicestatus='Active' OR servicestatus='Suspended')");
         $data = mysqli_fetch_array($result2);
         $servernumaccounts = $data[0];
         $label = $servername . " (" . $servernumaccounts . "/" . $servermaxaccounts . " " . $aInt->lang("fields", "accounts") . ")";
@@ -749,7 +749,7 @@ if ($aid) {
     $tbl->add($aInt->lang("fields", "paymentmethod"), paymentMethodsSelection() . " <a href=\"clientsinvoices.php?userid=" . $userid . "&serviceid=" . $id . "\">" . $aInt->lang("invoices", "viewinvoices") . "</a>");
     $tbl->add($aInt->lang("fields", "password"), $frm->text("password", $password, "20"));
     $tbl->add($aInt->lang("fields", "promocode"), $frm->dropdown("promoid", $promoarr, $promoid, "", "", true) . " (" . $aInt->lang("services", "noaffect") . ")");
-    $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($domainstatus, false, "domainstatus", "prodstatus") . ($domainstatus == "Suspended" ? " (" . $aInt->lang("services", "suspendreason") . ": " . (!$suspendreason ? $_LANG['suspendreasonoverdue'] : $suspendreason) . ")" : ""));
+    $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($servicestatus, false, "servicestatus", "prodstatus") . ($servicestatus == "Suspended" ? " (" . $aInt->lang("services", "suspendreason") . ": " . (!$suspendreason ? $_LANG['suspendreasonoverdue'] : $suspendreason) . ")" : ""));
     $tbl->add($aInt->lang("fields", "subscriptionid"), $frm->text("subscriptionid", $subscriptionid, "25"));
 
     if ($producttype == "server") {

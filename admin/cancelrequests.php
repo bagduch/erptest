@@ -102,7 +102,7 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("date", "ASC");
-$query = "FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id WHERE ";
+$query = "FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id WHERE ";
 $filter = false;
 $criteria = array();
 
@@ -138,10 +138,10 @@ if ($type) {
 
 if (!$filter) {
 	if ($completed) {
-		$criteria[] = "(tblcustomerservices.domainstatus='Cancelled' OR tblcustomerservices.domainstatus='Terminated') ";
+		$criteria[] = "(tblcustomerservices.servicestatus='Cancelled' OR tblcustomerservices.servicestatus='Terminated') ";
 	}
 	else {
-		$criteria[] = "(tblcustomerservices.domainstatus!='Cancelled' AND tblcustomerservices.domainstatus!='Terminated') ";
+		$criteria[] = "(tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated') ";
 	}
 }
 

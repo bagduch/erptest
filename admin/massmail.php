@@ -250,10 +250,10 @@ echo "</h2>
 
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td width=\"20%\" class=\"fieldlabel\">";
-echo $aInt->lang("massmail", "domainstatus");
+echo $aInt->lang("massmail", "servicestatus");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
-echo "elect name=\"domainstatus[]\" size=\"5\" multiple=\"true\">
+echo "elect name=\"servicestatus[]\" size=\"5\" multiple=\"true\">
 <option value=\"Pending\">";
 echo $aInt->lang("status", "pending");
 echo "</option>

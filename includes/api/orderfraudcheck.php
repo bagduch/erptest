@@ -57,7 +57,7 @@ else {
 		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
-			update_query("tblcustomerservices", array("domainstatus" => "Fraud"), array("id" => $data['id'], "domainstatus" => "Pending"));
+			update_query("tblcustomerservices", array("servicestatus" => "Fraud"), array("id" => $data['id'], "servicestatus" => "Pending"));
 		}
 
 		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));
@@ -80,7 +80,7 @@ else {
 		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
 
 		while ($data = mysql_fetch_array($result)) {
-			update_query("tblcustomerservices", array("domainstatus" => "Pending"), array("id" => $data['id'], "domainstatus" => "Fraud"));
+			update_query("tblcustomerservices", array("servicestatus" => "Pending"), array("id" => $data['id'], "servicestatus" => "Fraud"));
 		}
 
 		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));

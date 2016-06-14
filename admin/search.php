@@ -119,7 +119,7 @@ if ($intellisearch) {
 
 	if (checkPermission("List Services", true) || checkPermission("View Clients Products/Services", true)) {
 		$tempmatches = "";
-		$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblservices.name,tblcustomerservices.domainstatus FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE ";
+		$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblservices.name,tblcustomerservices.servicestatus FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE ";
 
 		if (is_numeric($value)) {
 			$query .= "tblcustomerservices.id='" . $value . "' OR";
@@ -147,7 +147,7 @@ if ($intellisearch) {
 				$domain = "No Domain";
 			}
 
-			$status = $data['domainstatus'];
+			$status = $data['servicestatus'];
 			$tempmatches .= "<div class=\"searchresult\"><a href=\"clientshosting.php?userid=" . $userid . "&id=" . $productid . "\"><strong>" . $productname . " - " . $domain . "</strong> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br /><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a></div>");
 		}
 

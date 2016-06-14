@@ -31,20 +31,20 @@ function ah_formatstat($billingcycle,$stat) {
     return $value;
 }
 $incomestats = array();
-$result = select_query("tblhosting,tblclients", "currency,billingcycle,COUNT(*),SUM(amount)", "tblclients.id = tblcustomerservices.userid AND (domainstatus = 'Active' OR domainstatus = 'Suspended') GROUP BY currency, billingcycle");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tblcustomerservices,tblclients", "currency,billingcycle,COUNT(*),SUM(amount)", "tblclients.id = tblcustomerservices.userid AND (servicestatus = 'Active' OR servicestatus = 'Suspended') GROUP BY currency, billingcycle");
+while ($data = mysqli_fetch_array($result)) {
     $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
     $incomestats[$data['currency']][$data['billingcycle']]["sum"] = $data[3];
 }
-$result = select_query("tblserviceaddons,tblhosting,tblclients", "currency,tblserviceaddons.billingcycle,COUNT(*),SUM(recurring)", "tblserviceaddons.hostingid=tblcustomerservices.id AND tblclients.id=tblcustomerservices.userid AND (tblserviceaddons.status='Active' OR tblserviceaddons.status='Suspended') GROUP BY currency, tblserviceaddons.billingcycle");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tblserviceaddons,tblcustomerservices,tblclients", "currency,tblserviceaddons.billingcycle,COUNT(*),SUM(recurring)", "tblserviceaddons.hostingid=tblcustomerservices.id AND tblclients.id=tblcustomerservices.userid AND (tblserviceaddons.status='Active' OR tblserviceaddons.status='Suspended') GROUP BY currency, tblserviceaddons.billingcycle");
+while ($data = mysqli_fetch_array($result)) {
     if (isset($incomestats[$data['currency']][$data['billingcycle']]["count"])) $incomestats[$data['currency']][$data['billingcycle']]["count"] += $data[2];
     else $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
     if (isset($incomestats[$data['currency']][$data['billingcycle']]["sum"])) $incomestats[$data['currency']][$data['billingcycle']]["sum"] += $data[3];
     else $incomestats[$data['currency']][$data['billingcycle']]["sum"] = $data[3];
 }
-$result = select_query("tbldomains,tblclients", "currency,COUNT(*),SUM(recurringamount/registrationperiod)", "tblclients.id=tbldomains.userid AND tbldomains.status='Active' GROUP BY currency");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tbldomains,tblclients", "currency,COUNT(*),SUM(recurringamount/registrationperiod)", "tblclients.id=tbldomains.userid AND tbldomains.status='Active' GROUP BY currency");
+while ($data = mysqli_fetch_array($result)) {
     if (isset($incomestats[$data['currency']]["Annually"]["count"])) $incomestats[$data['currency']]["Annually"]["count"] += $data[1];
     else $incomestats[$data['currency']]["Annually"]["count"] = $data[1];
     if (isset($incomestats[$data['currency']]["Annually"]["sum"])) $incomestats[$data['currency']]["Annually"]["sum"] += $data[2];

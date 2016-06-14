@@ -172,7 +172,7 @@ else {
 			$smarty->assign("clientname", $clientname);
 			$smarty->assign("email", $email);
 			$relatedservices = array();
-			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.domainstatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$productname = $data['name'];
@@ -181,7 +181,7 @@ else {
 					$productname .= " - " . $data['domain'];
 				}
 
-				$relatedservices[] = array("id" => "S" . $data['id'], "name" => $productname, "status" => $_LANG["clientarea" . strtolower($data['domainstatus'])]);
+				$relatedservices[] = array("id" => "S" . $data['id'], "name" => $productname, "status" => $_LANG["clientarea" . strtolower($data['servicestatus'])]);
 			}
 
 			$result = select_query("tbldomains", "", array("userid" => $_SESSION['uid']), "domain", "ASC");

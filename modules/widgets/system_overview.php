@@ -14,7 +14,7 @@ function widget_system_overview($vars) {
         $totalclients = get_query_val("tblclients","COUNT(id)","");
         $clientsactive = ($activeclients==0 || $totalclients==0) ? '0' : round((($activeclients/$totalclients)*100),0);
 
-        $activeservices = get_query_val("tblcustomerservices","COUNT(id)","domainstatus='Active'");
+        $activeservices = get_query_val("tblcustomerservices","COUNT(id)","servicestatus='Active'");
         $totalservices = get_query_val("tblcustomerservices","COUNT(id)","");
         $servicesactive = ($activeservices==0 || $totalservices==0) ? '0' : round((($activeservices/$totalservices)*100),0);
 
@@ -108,7 +108,7 @@ while ($data = mysql_fetch_array($result)) $statusfilter[] = $data[0];
 $result = full_query("SELECT COUNT(*) FROM tbltickets WHERE status IN (".db_build_in_array($statusfilter).")");
 $data = mysql_fetch_array($result);
 $ticketsawaitingreply = $data[0];
-$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.domainstatus!='Cancelled' AND tblcustomerservices.domainstatus!='Terminated')");
+$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblhosting ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
 $data = mysql_fetch_array($result);
 $cancellationrequests = $data[0];
 $result = full_query("SELECT COUNT(*) FROM tbltodolist WHERE status!='Completed' AND status!='Postponed' AND duedate<='".date("Y-m-d")."'");

@@ -469,7 +469,7 @@
 			}
 
 			$templatevars['services']['pending'] = $templatevars['services']['active'] = $templatevars['services']['suspended'] = $templatevars['services']['terminated'] = $templatevars['services']['cancelled'] = $templatevars['services']['fraud'] = 0;
-			$query = "SELECT domainstatus,COUNT(*) FROM tblhosting GROUP BY domainstatus";
+			$query = "SELECT servicestatus,COUNT(*) FROM tblcustomerservices GROUP BY servicestatus";
 			$result = full_query($query);
 
 			while ($data = mysql_fetch_array($result)) {

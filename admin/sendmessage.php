@@ -280,7 +280,7 @@ if ($showform) {
 		$server = db_build_in_array($server);
 		$addonids = db_build_in_array($addonids);
 		$addonstatus = db_build_in_array($addonstatus);
-		$domainstatus = db_build_in_array($domainstatus);
+		$servicestatus = db_build_in_array($servicestatus);
 
 		if ($emailtype == "General") {
 			$type = "general";
@@ -324,7 +324,7 @@ if ($showform) {
 		else {
 			if ($emailtype == "Product/Service") {
 				$type = "product";
-				$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE tblcustomerservices.id!=''";
+				$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE tblcustomerservices.id!=''";
 
 				if ($productids) {
 					$query .= " AND tblservices.id IN (" . $productids . ")";
@@ -332,7 +332,7 @@ if ($showform) {
 
 
 				if ($productstatus) {
-					$query .= " AND tblcustomerservices.domainstatus IN (" . $productstatus . ")";
+					$query .= " AND tblcustomerservices.servicestatus IN (" . $productstatus . ")";
 				}
 
 
@@ -369,7 +369,7 @@ if ($showform) {
 			else {
 				if ($emailtype == "Addon") {
 					$type = "addon";
-					$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblcustomerservices.id WHERE tblserviceaddons.id!=''";
+					$query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblcustomerservices.id WHERE tblserviceaddons.id!=''";
 
 					if ($addonids) {
 						$query .= " AND tblserviceaddons.addonid IN (" . $addonids . ")";
@@ -411,8 +411,8 @@ if ($showform) {
 						$type = "domain";
 						$query = "SELECT tbldomains.id,tbldomains.userid,tbldomains.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id!=''";
 
-						if ($domainstatus) {
-							$query .= " AND tbldomains.status IN (" . $domainstatus . ")";
+						if ($servicestatus) {
+							$query .= " AND tbldomains.status IN (" . $servicestatus . ")";
 						}
 
 
@@ -543,7 +543,7 @@ if ($showform) {
 			}
 			else {
 				if ($type == "product") {
-					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysql_real_escape_string($id) . "'";
+					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysql_real_escape_string($id) . "'";
 					$result = full_query($query);
 					$data = mysql_fetch_array($result);
 

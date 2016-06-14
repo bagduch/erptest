@@ -250,7 +250,7 @@ class RA_Carts {
 
                 if ($_SESSION['orderdetails']['Products']) {
                     foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-                        update_query("tblcustomerservices", array("domainstatus" => "Fraud"), array("id" => $productid, "domainstatus" => "Pending"));
+                        update_query("tblcustomerservices", array("servicestatus" => "Fraud"), array("id" => $productid, "servicestatus" => "Pending"));
                     }
                 }
 

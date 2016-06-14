@@ -47,7 +47,7 @@ if (listtype) {
 }
 
 $aInt->sortableTableInit("domain", "ASC");
-$query = "FROM tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.id!='' ";
+$query = "FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -80,7 +80,7 @@ if ($paymentmethod) {
 
 
 if ($status) {
-	$query .= "AND tblcustomerservices.domainstatus='" . db_escape_string($status) . "' ";
+	$query .= "AND tblcustomerservices.servicestatus='" . db_escape_string($status) . "' ";
 }
 
 
@@ -330,7 +330,7 @@ while ($data = mysql_fetch_array($result)) {
 	$amount = $data['amount'];
 	$billingcycle = $data['billingcycle'];
 	$nextduedate = $data['nextduedate'];
-	$status = $data['domainstatus'];
+	$status = $data['servicestatus'];
 	$notes = $data['notes'];
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];

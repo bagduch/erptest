@@ -5,7 +5,7 @@ if (!defined("RA"))
 
 $reportdata["title"] = "Services";
 
-$filterfields = array("id"=>"ID","userid"=>"User ID","clientname"=>"Client Name","orderid"=>"Order ID","packageid"=>"Product ID","server"=>"Server ID","domain"=>"Domain Name","dedicatedip"=>"Dedicated IP","assignedips"=>"Assigned IPs","firstpaymentamount"=>"First Payment Amount","amount"=>"Recurring Amount","billingcycle"=>"Billing Cycle","nextduedate"=>"Next Due Date","paymentmethod"=>"Payment Method","domainstatus"=>"Status","username"=>"Username","password"=>"Password","notes"=>"Notes","subscriptionid"=>"Subscription ID","suspendreason"=>"Suspend Reason");
+$filterfields = array("id"=>"ID","userid"=>"User ID","clientname"=>"Client Name","orderid"=>"Order ID","packageid"=>"Product ID","server"=>"Server ID","domain"=>"Domain Name","dedicatedip"=>"Dedicated IP","assignedips"=>"Assigned IPs","firstpaymentamount"=>"First Payment Amount","amount"=>"Recurring Amount","billingcycle"=>"Billing Cycle","nextduedate"=>"Next Due Date","paymentmethod"=>"Payment Method","servicestatus"=>"Status","username"=>"Username","password"=>"Password","notes"=>"Notes","subscriptionid"=>"Subscription ID","suspendreason"=>"Suspend Reason");
 
 $reportdata["description"] = $reportdata["headertext"] = '';
 

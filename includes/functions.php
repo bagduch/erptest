@@ -370,7 +370,7 @@ if (!function_exists("emailtpl_template")) {
 						$firstpaymentamount = $data['firstpaymentamount'];
 						$recurringamount = $data['amount'];
 						$billingcycle = $data['billingcycle'];
-						$domainstatus = $data['domainstatus'];
+						$servicestatus = $data['servicestatus'];
 						$username = $data['username'];
 						$password = decrypt($data['password']);
 						$dedicatedip = $data['dedicatedip'];
@@ -389,11 +389,11 @@ if (!function_exists("emailtpl_template")) {
 						getUsersLang($userid);
 						$currency = getCurrency($userid);
 
-						if ($domainstatus == "Suspended" && !$suspendreason) {
+						if ($servicestatus == "Suspended" && !$suspendreason) {
 							$suspendreason = $_LANG['suspendreasonoverdue'];
 						}
 
-						$domainstatus = $_LANG["clientarea" . strtolower(str_replace(" ", "", $domainstatus))];
+						$servicestatus = $_LANG["clientarea" . strtolower(str_replace(" ", "", $servicestatus))];
 						$canceltype = $_LANG["clientareacancellation" . strtolower(str_replace(" ", "", $canceltype))];
 
 						if ($server) {
@@ -497,7 +497,7 @@ if (!function_exists("emailtpl_template")) {
 						$email_merge_fields['service_recurring_amount'] = formatCurrency($recurringamount);
 						$email_merge_fields['service_billing_cycle'] = $_LANG["orderpaymentterm" . $langbillingcycle];
 						$email_merge_fields['service_next_due_date'] = $nextduedate;
-						$email_merge_fields['service_status'] = $domainstatus;
+						$email_merge_fields['service_status'] = $servicestatus;
 						$email_merge_fields['service_username'] = $username;
 						$email_merge_fields['service_password'] = $password;
 						$email_merge_fields['service_subscription_id'] = $subscriptionid;
@@ -531,7 +531,7 @@ if (!function_exists("emailtpl_template")) {
 							getUsersLang($userid);
 							$referralstable .= "<table cellspacing=\"1\" bgcolor=\"#cccccc\" width=\"100%\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $_LANG['affiliatessignupdate'] . "</td><td>" . $_LANG['orderproduct'] . "</td><td>" . $_LANG['affiliatesamount'] . "</td><td>" . $_LANG['orderbillingcycle'] . "</td><td>" . $_LANG['affiliatescommission'] . "</td><td>" . $_LANG['affiliatesstatus'] . "</td></tr>";
 							$service = "";
-							$result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+							$result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
 							while ($data = mysqli_fetch_array($result)) {
 								$affaccid = $data['id'];
@@ -542,7 +542,7 @@ if (!function_exists("emailtpl_template")) {
 								$date = $data['regdate'];
 								$service = $data['name'];
 								$billingcycle = $data['billingcycle'];
-								$status = $data['domainstatus'];
+								$status = $data['servicestatus'];
 
 								if ($billingcycle == "One Time") {
 									$amount = $data['firstpaymentamount'];

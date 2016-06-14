@@ -635,7 +635,7 @@ function doUpgrade($upgradeid) {
 
 		migrateCustomFieldsBetweenProducts($relid, $newpackageid);
 		update_query("tblcustomerservices", array("packageid" => $newpackageid, "billingcycle" => $newbillingcycle, "" . $changevalue => "+=" . $recurringchange), array("id" => $relid));
-		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblhosting ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
+		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
 		$data = mysql_fetch_array($result);
 		$invitemid = $data['id'];
 		$inviteminvoiceid = $data['invoiceid'];
@@ -643,7 +643,7 @@ function doUpgrade($upgradeid) {
 		if ($invitemid) {
 			update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $inviteminvoiceid));
 			update_query("tblinvoiceitems", array("duedate" => "0000-00-00"), array("id" => $invitemid));
-			full_query("UPDATE tblhosting SET nextinvoicedate=nextduedate WHERE id=" . (int)$relid);
+			full_query("UPDATE tblcustomerservices SET nextinvoicedate=nextduedate WHERE id=" . (int)$relid);
 		}
 
 

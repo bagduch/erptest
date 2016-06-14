@@ -292,11 +292,11 @@ class RA_Orders extends RA_TableModel
 		update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
 		if ($status == "Cancelled" || $status == "Fraud") {
-			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domainstatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 			while ($data = mysql_fetch_array($result)) {
 				$productid = $data['id'];
-				$prodstatus = $data['domainstatus'];
+				$prodstatus = $data['servicestatus'];
 				$module = $data['servertype'];
 				$packageid = $data['packageid'];
 				$stockcontrol = $data['stockcontrol'];
@@ -313,7 +313,7 @@ class RA_Orders extends RA_TableModel
 					$moduleresult = ServerTerminateAccount($productid);
 
 					if ($moduleresult == "success") {
-						update_query("tblcustomerservices", array("domainstatus" => $status), array("id" => $productid));
+						update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
 						if ($stockcontrol == "on") {
 							update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
@@ -321,7 +321,7 @@ class RA_Orders extends RA_TableModel
 					}
 				}
 
-				update_query("tblcustomerservices", array("domainstatus" => $status), array("id" => $productid));
+				update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
 				if ($stockcontrol == "on") {
 					update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
@@ -329,7 +329,7 @@ class RA_Orders extends RA_TableModel
 			}
 		}
 		else {
-			update_query("tblcustomerservices", array("domainstatus" => $status), array("orderid" => $orderid));
+			update_query("tblcustomerservices", array("servicestatus" => $status), array("orderid" => $orderid));
 		}
 
 		update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
@@ -379,7 +379,7 @@ class RA_Orders extends RA_TableModel
 			$hostingid = $data['id'];
 			$domain = $data['domain'];
 			$billingcycle = $data['billingcycle'];
-			$hostingstatus = $data['domainstatus'];
+			$hostingstatus = $data['servicestatus'];
 			$firstpaymentamount = formatCurrency($data['firstpaymentamount']);
 			$recurringamount = $data['amount'];
 			$packageid = $data['packageid'];

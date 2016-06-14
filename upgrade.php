@@ -40,7 +40,7 @@ if ($step == "4") {
 	}
 }
 
-$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblservices.name AS productname,tblservicegroups.name AS groupname", array("userid" => $_SESSION['uid'], "tblcustomerservices.id" => $id, "tblcustomerservices.domainstatus" => "Active"), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblservices.name AS productname,tblservicegroups.name AS groupname", array("userid" => $_SESSION['uid'], "tblcustomerservices.id" => $id, "tblcustomerservices.servicestatus" => "Active"), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 $data = mysql_fetch_array($result);
 $id = $data['id'];
 

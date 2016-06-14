@@ -122,10 +122,10 @@ else {
 				$downloads = array();
 
 				if ($serviceid) {
-					$where = array("tblcustomerservices.id" => $serviceid, "userid" => $_SESSION['uid'], "tblcustomerservices.domainstatus" => "Active");
+					$where = array("tblcustomerservices.id" => $serviceid, "userid" => $_SESSION['uid'], "tblcustomerservices.servicestatus" => "Active");
 				}
 				else {
-					$where = array("userid" => $_SESSION['uid'], "tblcustomerservices.domainstatus" => "Active");
+					$where = array("userid" => $_SESSION['uid'], "tblcustomerservices.servicestatus" => "Active");
 				}
 
 				$result = select_query("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");

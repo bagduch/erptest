@@ -117,7 +117,7 @@ Balance: " . $balance);
 				}
 				else {
 					if ($orderby == "status") {
-						$orderby = "tblhosting`.`domainstatus";
+						$orderby = "tblhosting`.`servicestatus";
 					}
 					else {
 						$orderby = "tblhosting`.`regdate";
@@ -127,7 +127,7 @@ Balance: " . $balance);
 		}
 
 		$referrals = array();
-		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.domainstatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$affaccid = $data['id'];
@@ -139,7 +139,7 @@ Balance: " . $balance);
 			$date = $data['regdate'];
 			$service = $data['name'];
 			$billingcycle = $data['billingcycle'];
-			$status = $data['domainstatus'];
+			$status = $data['servicestatus'];
 			$date = fromMySQLDate($date);
 			$currency = getCurrency($userid);
 			$commission = calculateAffiliateCommission($affiliateid, $relid, $lastpaid);

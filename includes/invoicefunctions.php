@@ -585,7 +585,7 @@ function makeHostingPayment($func_domainid) {
 	$packageid = $data['packageid'];
 	$regdate = $data['regdate'];
 	$nextduedate = $data['nextduedate'];
-	$status = $data['domainstatus'];
+	$status = $data['servicestatus'];
 	$server = $data['server'];
 	$paymentmethod = $data['paymentmethod'];
 	$suspendreason = $data['suspendreason'];
@@ -797,7 +797,7 @@ function makeDomainPayment($func_domainid, $type = "") {
 	else {
 		if (($status != "Pending" && $status != "Cancelled") && $status != "Fraud") {
 			if ($ra->get_config("AutoRenewDomainsonPayment") && $registrar) {
-				if (($ra->get_config("FreeDomainAutoRenewRequiresProduct") && $recurringamount <= 0) && !get_query_val("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "domain" => $domain, "domainstatus" => "Active"))) {
+				if (($ra->get_config("FreeDomainAutoRenewRequiresProduct") && $recurringamount <= 0) && !get_query_val("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "domain" => $domain, "servicestatus" => "Active"))) {
 					logActivity("Surpressed Automatic Domain Renewal on Payment Due to Domain Being Free and having No Active Associated Product", $userid);
 					sendAdminNotification("account", "Free Domain Renewal Manual Action Required", "The domain " . $domain . " (ID: " . $func_domainid . ") was just invoiced for renewal and automatically marked paid due to it being free, but because no active Product/Service matching the domain was found in order to qualify for the free domain offer, the renewal has not been automatically submitted to the registrar.  You must login to review & process this renewal manually should it be desired.");
 					return null;
@@ -1005,7 +1005,7 @@ function getNewClientAutoProvisionStatus($userid) {
 	global $CONFIG;
 
 	if ($CONFIG['AutoProvisionExistingOnly']) {
-		$result = select_query("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "domainstatus" => "Active"));
+		$result = select_query("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "servicestatus" => "Active"));
 		$data = mysql_fetch_array($result);
 		$result = select_query("tbldomains", "COUNT(*)", array("userid" => $userid, "status" => "Active"));
 		$data2 = mysql_fetch_array($result);

@@ -67,37 +67,37 @@ if ($CONFIG['NetworkIssuesRequireLogin'] && !$_SESSION['uid']) {
 	require "login.php";
 }
 
-$result = select_query("tblnetworkissues", "COUNT(*)", "status!='Resolved' AND status!='Scheduled'");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblnetworkissues", "COUNT(*)", "status!='Resolved' AND status!='Scheduled'");
+$data = mysqli_fetch_array($result);
 $smartyvalues['opencount'] = $data[0];
-$result = select_query("tblnetworkissues", "COUNT(*)", "status='Scheduled'");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblnetworkissues", "COUNT(*)", "status='Scheduled'");
+$data = mysqli_fetch_array($result);
 $smartyvalues['scheduledcount'] = $data[0];
-$result = select_query("tblnetworkissues", "COUNT(*)", "status='Resolved'");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblnetworkissues", "COUNT(*)", "status='Resolved'");
+$data = mysqli_fetch_array($result);
 $smartyvalues['resolvedcount'] = $data[0];
 $users_servers = array();
 
 if (isset($_SESSION['uid'])) {
-	$result = select_query("tblcustomerservices", "DISTINCT server", array("userid" => $_SESSION['uid']));
+	$result = select_query_i("tblcustomerservices", "DISTINCT server", array("userid" => $_SESSION['uid']));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		if ($data['server']) {
 			$users_servers[] = $data['server'];
 		}
 	}
 }
 
-$result = select_query("tblnetworkissues", "COUNT(*)", $query_where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblnetworkissues", "COUNT(*)", $query_where);
+$data = mysqli_fetch_array($result);
 $numitems = $data[0];
 list($orderby, $sort, $limit) = clientAreaTableInit("networkissues", "lastupdate", "DESC", $numitems);
 $smartyvalues['orderby'] = $orderby;
 $smartyvalues['sort'] = strtolower($sort);
 $issues = array();
-$result = select_query("tblnetworkissues", "", $query_where, $orderby, $sort, $limit);
+$result = select_query_i("tblnetworkissues", "", $query_where, $orderby, $sort, $limit);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$startdate = fromMySQLDate($data['startdate'], true);
 	$lastupdate = fromMySQLDate($data['lastupdate'], true);
 
@@ -118,8 +118,8 @@ while ($data = mysql_fetch_array($result)) {
 			$affected = true;
 		}
 
-		$result2 = select_query("tblservers", "name", array("id" => $data['server']));
-		$data2 = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblservers", "name", array("id" => $data['server']));
+		$data2 = mysqli_fetch_array($result2);
 		$servername = $data2['name'];
 	}
 	else {

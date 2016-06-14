@@ -93,7 +93,7 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 		$serviceid = $data['id'];
 		$domain = $data['domain'];
 		$billingcycle = $data['billingcycle'];
-		$hostingstatus = $data['domainstatus'];
+		$hostingstatus = $data['servicestatus'];
 		$firstpaymentamount = formatCurrency($data['firstpaymentamount']);
 		$packageid = $data['packageid'];
 		$result3 = select_query("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");

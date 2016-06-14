@@ -176,7 +176,7 @@ if ($action == "massaction") {
 
 
 		if ($status) {
-			$updateqry['domainstatus'] = $status;
+			$updateqry['servicestatus'] = $status;
 		}
 
 
@@ -196,7 +196,7 @@ if ($action == "massaction") {
 		}
 
 		unset($updateqry['amount']);
-		unset($updateqry['domainstatus']);
+		unset($updateqry['servicestatus']);
 		unset($updateqry['overideautosuspend']);
 		unset($updateqry['overidesuspenduntil']);
 
@@ -700,7 +700,7 @@ while ($data = mysql_fetch_array($result)) {
 $templatevars->messages .= "</select>";
 $recordsfound = "";
 $productsummary = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $userid), "tblhosting`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $userid), "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
@@ -711,7 +711,7 @@ while ($data = mysqli_fetch_array($result)) {
 	$amount = formatCurrency($data['amount']);
 	$billingcycle = $data['billingcycle'];
 	$nextduedate = $data['nextduedate'];
-	$status = $data['domainstatus'];
+	$status = $data['servicestatus'];
 	$regdate = fromMySQLDate($regdate);
 	$nextduedate = fromMySQLDate($nextduedate);
 
@@ -727,7 +727,7 @@ while ($data = mysqli_fetch_array($result)) {
 
 	$billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($billingcycle)));
 	$status = $aInt->lang("status", strtolower($status));
-	$productsummary[] = array("id" => $id, "idshort" => ltrim($id, "0"), "regdate" => $regdate, "domain" => $domain, "dpackage" => $dpackage, "dpaymentmethod" => $dpaymentmethod, "amount" => $amount, "dbillingcycle" => $billingcycle, "nextduedate" => $nextduedate, "domainstatus" => $status);
+	$productsummary[] = array("id" => $id, "idshort" => ltrim($id, "0"), "regdate" => $regdate, "domain" => $domain, "dpackage" => $dpackage, "dpaymentmethod" => $dpaymentmethod, "amount" => $amount, "dbillingcycle" => $billingcycle, "nextduedate" => $nextduedate, "servicestatus" => $status);
 }
 
 $templatevars['productsummary'] = $productsummary;
@@ -740,7 +740,7 @@ while ($data = mysqli_fetch_array($result)) {
 	$predefinedaddons[$addon_id] = $addon_name;
 }
 
-$result = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblhosting`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
+$result = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblcustomerservices`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
 $addonsummary = array();
 
 while ($data = mysqli_fetch_array($result)) {

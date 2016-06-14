@@ -48,7 +48,7 @@ class RA_Service
 
 		if ($data['id']) {
 			$data['pid'] = $data['packageid'];
-			$data['status'] = $data['domainstatus'];
+			$data['status'] = $data['servicestatus'];
 			$data['password'] = decrypt($data['password']);
 
 			if ($data['downloads']) {

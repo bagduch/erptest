@@ -434,7 +434,7 @@ if ($action == "getallservices") {
 	$currency = getCurrency($pauserid);
 	$service = get_query_val("tbltickets", "service", array("id" => $id));
 	$output = array();
-	$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+	$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 	while ($data = mysql_fetch_array($result)) {
 		$service_id = $data['id'];
@@ -458,7 +458,7 @@ if ($action == "getallservices") {
 		$service_amount = formatCurrency($service_amount);
 		$selected = (substr($service, 0, 1) == "S" && substr($service, 1) == $service_id) ? true : false;
 		$service_name = "<a href=\"clientshosting.php?userid=" . $pauserid . "&id=" . $service_id . "\" target=\"_blank\">" . $service_name . "</a> - <a href=\"http://" . $service_domain . "/\" target=\"_blank\">" . $service_domain . "</a>";
-		$output[] = "<tr" . ($selected ? " class=\"rowhighlight\"" : "") . "><td>" . $service_name . "</td><td>" . $service_amount . "</td><td>" . $service_billingcycle . "</td><td>" . $service_regdate . "</td><td>" . $service_nextduedate . "</td><td>" . $data['domainstatus'] . "</td></tr>";
+		$output[] = "<tr" . ($selected ? " class=\"rowhighlight\"" : "") . "><td>" . $service_name . "</td><td>" . $service_amount . "</td><td>" . $service_billingcycle . "</td><td>" . $service_regdate . "</td><td>" . $service_nextduedate . "</td><td>" . $data['servicestatus'] . "</td></tr>";
 	}
 
 	$predefinedaddons = array();
@@ -1824,13 +1824,13 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 	if ($service) {
 		switch (substr($service, 0, 1)) {
 		case "S":
-				$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.regdate,tblcustomerservices.domain,tblcustomerservices.domainstatus,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblservices.name,tblcustomerservices.username,tblcustomerservices.password,tblservices.servertype", array("tblcustomerservices.id" => substr($service, 1)), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+				$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.regdate,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblservices.name,tblcustomerservices.username,tblcustomerservices.password,tblservices.servertype", array("tblcustomerservices.id" => substr($service, 1)), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 				$data = mysql_fetch_array($result);
 				$service_id = $data['id'];
 				$service_userid = $data['userid'];
 				$service_name = $data['name'];
 				$service_domain = $data['domain'];
-				$service_status = $data['domainstatus'];
+				$service_status = $data['servicestatus'];
 				$service_regdate = $data['regdate'];
 				$service_nextduedate = $data['nextduedate'];
 				$service_username = $data['username'];
@@ -1876,7 +1876,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 		$smartyvalues['relatedservices'] = array();
 		$totalitems = get_query_val("tblcustomerservices", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblserviceaddons", "COUNT(tblserviceaddons.id)", array("tblcustomerservices.userid" => $pauserid), "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
 		$lefttoselect = 10;
-		$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "domainstatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblcustomerservices.packageid");
+		$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
 		while ($data = mysql_fetch_array($result)) {
 			$service_id = $data['id'];
@@ -1887,7 +1887,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 			$service_billingcycle = $data['billingcycle'];
 			$service_signupdate = $data['regdate'];
 			$service_nextduedate = $data['nextduedate'];
-			$service_status = $data['domainstatus'];
+			$service_status = $data['servicestatus'];
 			$service_signupdate = fromMySQLDate($service_signupdate);
 
 			if ($service_nextduedate == "0000-00-00") {

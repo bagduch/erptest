@@ -248,7 +248,7 @@ if ($action == "save") {
 		update_query("tblconfiguration", array("value" => $prorataclientsanniversarydate), array("setting" => "ProrataClientsAnniversaryDate"));
 
 		if ($continuousinvoicegeneration == "on" && !$CONFIG['ContinuousInvoiceGeneration']) {
-			full_query("UPDATE tblhosting SET nextinvoicedate = nextduedate");
+			full_query("UPDATE tblcustomerservices SET nextinvoicedate = nextduedate");
 			full_query("UPDATE tbldomains SET nextinvoicedate = nextduedate");
 			full_query("UPDATE tblserviceaddons SET nextinvoicedate = nextduedate");
 		}

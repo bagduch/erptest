@@ -700,7 +700,7 @@ $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $conta
                   $orderby = "nextduedate";
                 } else {
                   if ($orderby == "status") {
-                    $orderby = "domainstatus";
+                    $orderby = "servicestatus";
                   } else {
                     $orderby = "domain` ".$sort.",`tblservices`.`name";
                   }
@@ -720,7 +720,7 @@ $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $conta
               $recurringamount = $data['amount'];
               $nextduedate = $data['nextduedate'];
               $billingcycle = $data['billingcycle'];
-              $status = $data['domainstatus'];
+              $status = $data['servicestatus'];
               $upgradepackages = count(unserialize($data['upgradepackages']));
               $downloads = unserialize($data['downloads']);
               $productgroup = $data['productgroup'];
@@ -1095,7 +1095,7 @@ else {
         $nextduedate = $domains->getData("nextduedate");
         $expirydate = $domains->getData("expirydate");
         $paymentmethod = $domains->getData("paymentmethod");
-        $domainstatus = $domains->getData("status");
+        $servicestatus = $domains->getData("status");
         $registrationperiod = $domains->getData("registrationperiod");
         $registrationdate = $domains->getData("registrationdate");
         $donotrenew = $domains->getData("donotrenew");
@@ -1109,10 +1109,10 @@ else {
         $registrationdate = fromMySQLDate($registrationdate, 0, 1, "-");
         $nextduedate = fromMySQLDate($nextduedate, 0, 1, "-");
         $expirydate = fromMySQLDate($expirydate, 0, 1, "-");
-        $rawstatus = $ca->getRawStatus($domainstatus);
+        $rawstatus = $ca->getRawStatus($servicestatus);
         $allowrenew = false;
 
-        if ($domainstatus == "Active" || $domainstatus == "Expired") {
+        if ($servicestatus == "Active" || $servicestatus == "Expired") {
           $allowrenew = true;
         }
 
@@ -1162,7 +1162,7 @@ else {
         $domainidprotectionprice = $data['ssetupfee'];
         $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($domaindnsmanagementprice), "emailforwarding" => formatCurrency($domainemailforwardingprice), "idprotection" => formatCurrency($domainidprotectionprice)));
 
-        if ($domainstatus == "Active" && $domains->getModule()) {
+        if ($servicestatus == "Active" && $domains->getModule()) {
           $registrarclientarea = "";
           $ca->assign("registrar", $registrar);
 
