@@ -1,20 +1,8 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 function kbGetCatIds($catid) {
 	global $idnumbers;
-
-	$result = select_query("tblknowledgebasecats", "id", array("parentid" => $catid, "hidden" => ""));
-
+	$result = select_query_i("tblknowledgebasecats", "id", array("parentid" => $catid, "hidden" => ""));
 	while ($data = mysql_fetch_array($result)) {
 		$cid = $data[0];
 		$idnumbers[] = $cid;
@@ -66,6 +54,10 @@ $aInt->icon = "knowledgebase";
 $catid = (int)$catid;
 $categorieslist = "";
 
+if ($catid == 0) {
+    $catid = null;
+}
+
 if ($addarticle) {
 	check_token("RA.admin.default");
 	$newarticleid = insert_query("tblknowledgebase", array("title" => $articlename));
@@ -78,7 +70,14 @@ if ($addarticle) {
 
 if ($addcategory) {
 	check_token("RA.admin.default");
-	$newcatid = insert_query("tblknowledgebasecats", array("parentid" => $catid, "name" => $catname, "description" => $description, "hidden" => $hidden));
+    $stmt = $ramysqli->prepare("INSERT INTO tblknowledgebasecats (name,description) VALUES (?,?)");
+    $stmt->bind_param($catname,$description);
+    error_log($ramysqli->error);
+    error_log(print_r($stmt,1));
+    $stmt->execute();
+    error_log(print_r($stmt,1));
+    error_log($ramysqli->error);
+//	$newcatid = insert_query("tblknowledgebasecats", array("parentid" => $catid, "name" => $catname, "description" => $description, "hidden" => $hidden));
 	logActivity("Added New Knowledgebase Category - " . $catname);
 	redir("catid=" . $newcatid);
 	exit();
@@ -120,7 +119,14 @@ if ($action == "save") {
 
 if ($action == "savecat") {
 	check_token("RA.admin.default");
-	update_query("tblknowledgebasecats", array("name" => $name, "description" => $description, "hidden" => $hidden, "parentid" => $parentcategory), array("id" => $id));
+	update_query("tblknowledgebasecats", 
+        array(
+            "name" => $name, 
+            "description" => $description, 
+            "hidden" => $hidden, 
+            "parentid" => $parentcategory), 
+            array("id" => $id)
+        );
 	foreach ($multilang_name as $language => $name) {
 		delete_query("tblknowledgebasecats", array("catid" => $id, "language" => $language));
 
@@ -255,10 +261,23 @@ if ($action == "") {
 
 ";
 	echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "kbhome") . "</a> " . $breadcrumbnav . "</p>";
-	$result = select_query("tblknowledgebasecats", "", array("parentid" => $catid), "name", "ASC");
-	$numcats = mysql_num_rows($result);
-	echo "
-";
+    $result = full_query_i("SELECT * FROM tblknowledgebasecats WHERE parentid IS null ORDER BY name ASC");
+/*	$result = select_query_i(
+        "tblknowledgebasecats", 
+        "", 
+        array(
+            "parentid" => array(
+                "sqltype" => "NEQ", 
+                "value" => null
+            )
+        ), 
+        "name", 
+        "ASC"
+        
+    );
+*/
+
+	$numcats = mysqli_num_rows($result);
 
 	if ($numcats != "0") {
 		echo "
@@ -273,10 +292,15 @@ if ($action == "") {
 			$catid = "0";
 		}
 
-		$result = select_query("tblknowledgebasecats", "", array("parentid" => $catid, "catid" => 0), "name", "ASC");
+//		$result = select_query("tblknowledgebasecats", "", array("parentid" => $catid, "catid" => 0), "name", "ASC");
+        $stmt = full_query_i("SELECT * FROM tblknowledgebasecats WHERE parentid IS NULL");
+//        $stmt->bind_param($catid,$catname,$description,$hidden);a
+//        $stmt->bind_param();
+ //       $result = $stmt->execute();
+
 		$i = 0;
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
 			$description = $data['description'];
@@ -290,7 +314,7 @@ if ($action == "") {
 			}
 
 			$queryreport = substr($queryreport, 4);
-			$result2 = select_query("tblknowledgebase", "COUNT(*)", "parentid=0 AND (" . $queryreport . ")", "", "", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+			$result2 = select_query("tblknowledgebase", "COUNT(*)", "parentid=NULL AND (" . $queryreport . ")", "", "", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
 			$data2 = mysql_fetch_array($result2);
 			$numarticles = $data2[0];
 			echo "<td width=33%><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"" . $PHP_SELF . "?catid=" . $id . "\"><b>" . $name . "</b></a> (" . $numarticles . ") <a href=\"" . $PHP_SELF . "?action=editcat&id=" . $id . "\"><img src=\"images/edit.gif\" align=\"absmiddle\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\" /></a> <a href=\"#\" onClick=\"doDeleteCat(" . $id . ")\"><img src=\"images/delete.gif\" align=\"absmiddle\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\" /></a>";

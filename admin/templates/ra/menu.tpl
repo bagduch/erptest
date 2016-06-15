@@ -111,9 +111,6 @@
 </li>{/if}
 <li><a title="Utilities" href="">{$_ADMINLANG.utilities.title}</a>
   <ul>
-    {if in_array("Email Marketer",$admin_perms)}<li><a href="utilitiesemailmarketer.php">{$_ADMINLANG.utilities.emailmarketer}</a></li>{/if}
-    {if in_array("Link Tracking",$admin_perms)}<li><a href="utilitieslinktracking.php">{$_ADMINLANG.utilities.linktracking}</a></li>{/if}
-    {if in_array("Calendar",$admin_perms)}<li><a href="calendar.php">{$_ADMINLANG.utilities.calendar}</a></li>{/if}
     {if in_array("To-Do List",$admin_perms)}<li><a href="todolist.php">{$_ADMINLANG.utilities.todolist}</a></li>{/if}
         {if in_array("View Activity Log",$admin_perms)}<li><a href="systemactivitylog.php">{$_ADMINLANG.utilities.activitylog}</a></li>{/if}
         {if in_array("View Admin Log",$admin_perms)}<li><a href="systemadminlog.php">{$_ADMINLANG.utilities.adminlog}</a></li>{/if}

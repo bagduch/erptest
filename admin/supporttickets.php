@@ -1207,18 +1207,6 @@ else {
 }
 
 
-if ($autorefresh) {
-	check_token("RA.admin.default");
-
-	if ($autorefresh == "Never") {
-		wDelCookie("AutoRefresh");
-	}
-	else {
-		wSetCookie("AutoRefresh", $autorefresh, time() + 90 * 24 * 60 * 60);
-	}
-
-	redir();
-}
 
 
 if ($action == "viewticket") {
@@ -1252,7 +1240,6 @@ if (!$action) {
 		}
 	}
 
-	echo $aInt->Tabs(array($aInt->lang("global", "searchfilter"), $aInt->lang("support", "autorefresh")), true);
 	$filterops = array("view", "deptid", "client", "subject", "email", "tag");
 	$filt->setAllowedVars($filterops);
 	$view = $filt->get("view");
@@ -1387,57 +1374,6 @@ if (!$action) {
 <div id=\"tab1box\" class=\"tabbox\">
   <div id=\"tab_content\">
 
-<form action=\"";
-	echo $PHP_SELF;
-	echo "\" method=\"post\">
-<div align=\"center\">";
-	echo $aInt->lang("support", "autorefreshevery");
-	echo " ";
-	echo "<s";
-	echo "elect name=\"autorefresh\"><option>Never</option><option value=\"1\"";
-
-	if ($_COOKIE['RAAutoRefresh'] == 1) {
-		echo "selected";
-	}
-
-	echo ">1 ";
-	echo $aInt->lang("support", "minute");
-	echo "</option><option value=\"2\"";
-
-	if ($_COOKIE['RAAutoRefresh'] == 2) {
-		echo "selected";
-	}
-
-	echo ">2 ";
-	echo $aInt->lang("support", "minutes");
-	echo "</option><option value=\"5\"";
-
-	if ($_COOKIE['RAAutoRefresh'] == 5) {
-		echo "selected";
-	}
-
-	echo ">5 ";
-	echo $aInt->lang("support", "minutes");
-	echo "</option><option value=\"10\"";
-
-	if ($_COOKIE['RAAutoRefresh'] == 10) {
-		echo "selected";
-	}
-
-	echo ">10 ";
-	echo $aInt->lang("support", "minutes");
-	echo "</option><option value=\"15\"";
-
-	if ($_COOKIE['RAAutoRefresh'] == 15) {
-		echo "selected";
-	}
-
-	echo ">15 ";
-	echo $aInt->lang("support", "minutes");
-	echo "</option></select> <input type=\"submit\" value=\"";
-	echo $aInt->lang("support", "setautorefresh");
-	echo "\" class=\"button\" /></div>
-</form>
 
   </div>
 </div>

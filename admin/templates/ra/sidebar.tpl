@@ -1,6 +1,5 @@
 {if $sidebar eq "home"}
 
-<span class="header"><img src="images/icons/linktracking.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.global.shortcuts}</span>
 <ul class="menu">
     <li><a href="clientsadd.php"><img src="images/icons/clientsadd.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.clients.addnew}</a></li>
     <li><a href="ordersadd.php"><img src="images/icons/ordersadd.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.orders.addnew}</a></li>
@@ -227,17 +226,7 @@ No Replies Yet
 
 <span class="header"><img src="images/icons/utilities.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.utilities.title}</span>
 <ul class="menu">
-    <li><a href="utilitieslinktracking.php">{$_ADMINLANG.utilities.linktracking}</a></li>
-    <li><a href="browser.php">{$_ADMINLANG.utilities.browser}</a></li>
-    <li><a href="calendar.php">{$_ADMINLANG.utilities.calendar}</a></li>
     <li><a href="todolist.php">{$_ADMINLANG.utilities.todolist}</a></li>
-    <li><a href="whois.php">{$_ADMINLANG.utilities.whois}</a></li>
-    <li><a href="utilitiesresolvercheck.php">{$_ADMINLANG.utilities.domainresolver}</a></li>
-    <li><a href="systemintegrationcode.php">{$_ADMINLANG.utilities.integrationcode}</a></li>
-    <li><a href="whmimport.php">{$_ADMINLANG.utilities.cpanelimport}</a></li>
-    <li><a href="systemdatabase.php">{$_ADMINLANG.utilities.dbstatus}</a></li>
-    <li><a href="systemcleanup.php">{$_ADMINLANG.utilities.syscleanup}</a></li>
-    <li><a href="systemphpinfo.php">{$_ADMINLANG.utilities.phpinfo}</a></li>
 </ul>
 
 <span class="header"><img src="images/icons/logs.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.utilities.logs}</span>
@@ -247,7 +236,6 @@ No Replies Yet
     <li><a href="systemmodulelog.php">{$_ADMINLANG.utilities.modulelog}</a></li>
     <li><a href="systememaillog.php">{$_ADMINLANG.utilities.emaillog}</a></li>
     <li><a href="systemmailimportlog.php">{$_ADMINLANG.utilities.ticketmaillog}</a></li>
-    <li><a href="systemwhoislog.php">{$_ADMINLANG.utilities.whoislog}</a></li>
 </ul>
 
 {elseif $sidebar eq "addonmodules"}
