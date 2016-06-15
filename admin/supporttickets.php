@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -410,7 +400,16 @@ if ($action == "gettickets") {
 		$tabledata[] = array("<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), $flagstyle . $date, $flagstyle . $department, "<div style=\"text-align:left;\">" . $flagstyle . $ticketlink . $title . "</a></div>", $flagstyle . $tstatus, $flagstyle . $lastreply);
 	}
 
-	echo $aInt->sortableTable(array("", $aInt->lang("support", "datesubmitted"), $aInt->lang("support", "department"), $aInt->lang("fields", "subject"), $aInt->lang("fields", "status"), $aInt->lang("support", "lastreply")), $tabledata);
+	echo $aInt->sortableTable(
+        array(
+            "", 
+            $aInt->lang("support", "datesubmitted"), 
+            $aInt->lang("support", "department"), 
+            $aInt->lang("fields", "subject"), 
+            $aInt->lang("fields", "status"), 
+            $aInt->lang("support", "lastreply")), 
+            $tabledata
+    );
 	echo "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
 
 	if (0 < $offset) {
@@ -1239,7 +1238,7 @@ if (!$action) {
 			echo "<meta http-equiv=\"refresh\" content=\"" . $refreshtime . "\">";
 		}
 	}
-
+    echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 	$filterops = array("view", "deptid", "client", "subject", "email", "tag");
 	$filt->setAllowedVars($filterops);
 	$view = $filt->get("view");
@@ -1250,38 +1249,23 @@ if (!$action) {
 	$tag = $filt->get("tag");
 	$filt->store();
 	$smartyvalues['ticketfilterdata'] = array("view" => $view, "deptid" => $deptid, "subject" => $subject, "email" => $email);
-	echo "
-<div id=\"tab0box\" class=\"tabbox\">
-  <div id=\"tab_content\">
+	echo "<div id=\"tab0box\" class=\"tabbox\">";
+    echo "<div id=\"tab_content\">";
 
-<form action=\"";
-	echo $PHP_SELF;
-	echo "\" method=\"post\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-	echo $aInt->lang("fields", "status");
-	echo "</td><td class=\"fieldarea\">";
-	echo "<s";
-	echo "elect name=\"view\">
-<option value=\"any\"";
+    printf("<form action=\"%s\" method=\"post\">",$PHP_SELF);
+    echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+    echo "<tr>";
+    printf("<td width=\"15%\" class=\"fieldlabel\">%s</td>",$aInt->lang("fields", "status"));
+	echo "<td class=\"fieldarea\"><select name=\"view\">";
+    echo "<option value=\"any\"";
 
-	if ($view == "any") {
-		echo " selected";
-	}
+	echo ($view == "any") ? "<option value=\"any\" selected>" : "<option value=\"any\">";
+	echo $aInt->lang("global", "any")."</option>";
 
-	echo ">";
-	echo $aInt->lang("global", "any");
-	echo "</option>
-<option value=\"\"";
+	echo ($view == "") ? "<option value=\"\" selected>" : "<option value=\"\">";
+	echo $aInt->lang("support", "awaitingreply")."</option>";
 
-	if ($view == "") {
-		echo " selected";
-	}
-
-	echo ">";
-	echo $aInt->lang("support", "awaitingreply");
-	echo "</option>
-<option value=\"flagged\"";
+    echo "<option value=\"flagged\"";
 
 	if ($view == "flagged") {
 		echo " selected";
@@ -1300,9 +1284,9 @@ if (!$action) {
 	echo $aInt->lang("support", "allactive");
 	echo "</option>
 ";
-	$result = select_query("tblticketstatuses", "", "", "sortorder", "ASC");
+	$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		echo "<option";
 
 		if ($view == $data['title']) {
@@ -1317,23 +1301,22 @@ if (!$action) {
 	echo "</td><td class=\"fieldarea\">";
 
 	if ($CONFIG['DisableClientDropdown']) {
-		echo "<input type=\"text\" name=\"client\" value=\"" . $client . "\" size=\"10\" />";
+        printf("<input type=\"text\" name=\"client\" value=\"%s\" size=\"10\" />",$client);
 	}
 	else {
 		echo $aInt->clientsDropDown($client, "", "client", true);
 	}
 
-	echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-	echo $aInt->lang("support", "department");
+	echo "</td></tr>";
+    printf("<tr><td class=\"fieldlabel\">%s</td>",$aInt->lang("support", "department"));
+    printf("<td class=\"fieldarea\"><select name=\"deptid\"><option value=\"\">%s",$aInt->lang("support", "department"));
 	echo "</td><td class=\"fieldarea\">";
-	echo "<s";
-	echo "elect name=\"deptid\"><option value=\"\">";
+	echo "<select name=\"deptid\"><option value=\"\">";
 	echo $aInt->lang("global", "any");
 	echo "</option>";
-	$result = select_query("tblticketdepartments", "", "", "order", "ASC");
+	$result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$name = $data['name'];
 
@@ -1486,7 +1469,7 @@ if (!$action) {
 	$numrows = $data[0];
 	$aInt->sortableTableInit("nopagination");
 	$query = "SELECT tbltickets.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-	$result = full_query($query);
+	$result = full_query_i($query);
 	buildAdminTicketListArray($result);
 	$tableformurl = "?view=" . $view . "&sub=multipleaction";
 	$tableformbuttons = "<input onclick=\"return confirm('" . $aInt->lang("support", "massmergeconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("clientsummary", "merge") . "\" name=\"merge\" class=\"btn-small\" /> <input onclick=\"return confirm('" . $aInt->lang("support", "masscloseconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("global", "close") . "\" name=\"close\" class=\"btn-small\" /> <input onclick=\"return confirm('" . $aInt->lang("support", "massdeleteconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" name=\"delete\" class=\"btn-small\" /> <input onclick=\"return confirm('" . $aInt->lang("support", "massblockdeleteconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("support", "blockanddelete") . "\" name=\"blockdelete\" class=\"btn-small\" />";
@@ -1512,7 +1495,22 @@ if (!$action) {
 	$query = "SELECT tbltickets.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 	$result = full_query($query);
 	buildAdminTicketListArray($result);
-	echo $aInt->sortableTable(array("checkall", "", $aInt->lang("support", "department"), array("title", $aInt->lang("fields", "subject")), $aInt->lang("support", "submitter"), array("status", $aInt->lang("fields", "status")), array("lastreply", $aInt->lang("support", "lastreply"))), $tabledata, $tableformurl, $tableformbuttons, true);
+	echo $aInt->sortableTable(
+        array(
+            "checkall", 
+            "",
+            $aInt->lang("support", "department"), 
+            array("title", $aInt->lang("fields", "subject")), 
+            $aInt->lang("support", "submitter"), 
+            array("assignedto", "Assigned To"),
+            array("status", $aInt->lang("fields", "status")), 
+            array("lastreply", $aInt->lang("support", "lastreply"))
+        ), 
+        $tabledata, 
+        $tableformurl, 
+        $tableformbuttons, 
+        true
+        );
 	$smartyvalues['tagcloud'] = $tickets->buildTagCloud();
 }
 

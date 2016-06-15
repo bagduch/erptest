@@ -2,7 +2,9 @@
 
 
 ini_set("log_errors", 1);
-ini_set("error_log", "/tmp/php-error.log");
+ini_set("display_startup_errors", 1);
+ini_set("error_log", "/tmp/php_errors.log");
+error_reporting(E_ALL);
 error_log( "Hello, errors!" );
 
 function getValidLanguages($admin = "") {
@@ -18,7 +20,7 @@ function htmlspecialchars_array($arr) {
 	return $ra->sanitize_input_vars($arr);
 }
 
-error_reporting(0);
+//error_reporting(0);
 include dirname(__FILE__) . "/includes/classes/class.init.php";
 
 if (!class_exists("RA_Init")) {

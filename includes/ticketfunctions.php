@@ -1041,7 +1041,7 @@ function buildAdminTicketListArray($result) {
 	global $tickets;
 
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$ticketnumber = $data['tid'];
 		$did = $data['did'];
