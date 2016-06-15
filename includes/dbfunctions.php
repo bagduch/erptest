@@ -114,7 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 	}
 
 	$result = mysqli_query($ramysqli, $query);
-    if (false && ($_SESSION['adminid'] > 0)) {
+    if (false && ($_SESSION['adminid']  == 3)) {
             echo "<pre>GUYGUYGUY";
             var_dump($query);
             var_dump($result);
@@ -253,7 +253,7 @@ function select_query($table, $fields, $where, $orderby = "", $orderbyorder = ""
 
 	$result = mysql_query($query, $ramysql);
 
-    if ($_SESSION['adminid'] > 0) {
+    if ($_SESSION['adminid'] == 3) {
             echo "<pre>GUYGUYGUY";
             echo __LINE__;
             echo __FILE__;

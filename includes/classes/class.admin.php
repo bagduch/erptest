@@ -774,12 +774,8 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $numrows;
         global $page;
 
-        $pages = ceil($numrows / $this->rowLimit);
-
-        if ($pages == 0) {
-            $pages = 1;
-        }
-
+        $pages = max(ceil($numrows / $this->rowLimit),1);
+        
         $content = "";
 
         if ($this->tablePagination) {
@@ -795,21 +791,37 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                         }
                         continue;
                     }
-                    $varsrecall .= "<input type=\"hidden\" name=\"" . $key . "\" value=\"" . $value . "\" />" . "\r\n";
                     $varsrecall .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\" />\r\n",$key,$value);
                     continue;
                 }
             }
 
+/* 
+<form method="post" action="/billing_hd_ems_007/supporttickets.php?filter=1">
+<input type="hidden" name="token" value="4b3c8bc5c547bf6f9f13b441e4871e916212f5fe" />
+<table width="100%" border="0" cellpadding="3" cellspacing="0"><tr>
+<td width="50%" align="left">14 Records Found, Page 1 of 1</td>
+<td width="50%" align="right">Jump to Page: <select name="page" onchange="submit()"><option value="1" selected>1</option></select> <input type="submit" value="Go" class="btn btn-xs btn-default" /></td>
+</tr></table>
+</form>
+*/
 
-/*            if ($varsrecall) {
-                $varsrecall = "\r\n" . $varsrecall;
-            }*/
 
-            $content .= "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">" . $varsrecall . "
-<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\"><tr>
-<td width=\"50%\" align=\"left\">" . $numrows . " " . $this->lang("global", "recordsfound") . ", " . $this->lang("global", "page") . " " . ($page + 1) . " " . $this->lang("global", "of") . " " . $pages . "</td>
-<td width=\"50%\" align=\"right\">" . $this->lang("global", "jumppage") . ": <select name=\"page\" onchange=\"submit()\">";
+            $content .= sprintf("<form method=\"post\" action=\"%s\">",$_SERVER['PHP_SELF']);
+            $content .= $varsrecall ; // token
+            $content .= "<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
+            $content .= "<tr>";
+            //$printing .= sprintf("<td width=\"50%\" align=\"left\">" 
+            $printing .= sprintf("<td width=\"50\% >test %d %s",
+                            $numrows, 
+                            $this->lang("global", "recordsfound")
+                        );
+            error_log('printing is '.$printing);
+            $content .= $printing;
+            $content .= ", " . $this->lang("global", "page") . " " ;
+            $content .= ($page + 1) . " " . $this->lang("global", "of") . " " . $pages . "</td>";
+            $content .= "<td width=\"50%\" align=\"right\">" . $this->lang("global", "jumppage") ;
+            $content .= ": <select name=\"page\" onchange=\"submit()\">";
             $i = 1;
 
             while ($i <= $pages) {
