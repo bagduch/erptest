@@ -2,7 +2,7 @@
 
 html {height: 100%;}
 body{font-family:'Open Sans', sans-serif;background: #6ed7fe url(img/whmcs-city-bg.jpg) no-repeat top center;}
-.border,.border tr,.border td
+.border,.border tr
 {  
     border: 1px solid #ccc;
 }
