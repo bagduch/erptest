@@ -154,47 +154,47 @@ $('li.nav-toggle > button').click(function(e){
       else { $('.toggle-left').removeClass('fa-angle-double-right').addClass('fa-angle-double-left'); }
       if($('.site-holder').hasClass('mini-sidebar'))
       {    
-        $('.sidebar-holder').tooltip({
-          selector: "a",
-          container: "body",
-          placement: "right"
-        });
-        $('li.submenu ul').tooltip('destroy');
+//        $('.sidebar-holder').tooltip({
+//          selector: "a",
+//          container: "body",
+//          placement: "right"
+//        });
+//        $('li.submenu ul').tooltip('destroy');
       }
       else
       {
-        $('.sidebar-holder').tooltip('destroy');
+//        $('.sidebar-holder').tooltip('destroy');
       }
     }
     function changeSidebarStateNoAnimate(){
       $('.toggle-left').removeClass('fa-angle-double-left').addClass('fa-angle-double-right');
       if($('.site-holder').hasClass('mini-sidebar'))
       {    
-        $('.sidebar-holder').tooltip({
-          selector: "a",
-          container: "body",
-          placement: "right"
-        });
-        $('li.submenu ul').tooltip('destroy');
+//        $('.sidebar-holder').tooltip({
+//          selector: "a",
+//          container: "body",
+//          placement: "right"
+//        });
+//        $('li.submenu ul').tooltip('destroy');
       }
       else
       {
-        $('.sidebar-holder').tooltip('destroy');
+//        $('.sidebar-holder').tooltip('destroy');
       }      
     }
       //
       if($('.site-holder').hasClass('mini-sidebar'))
       {    
-        $('.sidebar-holder').tooltip({
-          selector: "a",
-          container: "body",
-          placement: "right"
-        });
-        $('li.submenu').tooltip('destroy');
+//        $('.sidebar-holder').tooltip({
+//          selector: "a",
+//          container: "body",
+//          placement: "right"
+//        });
+//        $('li.submenu').tooltip('destroy');
       }
       else
       {
-        $('.sidebar-holder').tooltip('destroy');
+//        $('.sidebar-holder').tooltip('destroy');
       }
       $('.show-info').click(function(){
         $('.page-information').toggleClass('hidden');

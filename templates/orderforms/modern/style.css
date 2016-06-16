@@ -160,14 +160,14 @@ Product Listing
 }
 
 #order-modern .product {
-    margin: 10px;
+/*    margin: 10px;
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -o-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 5px;*/
 }
 
 #order-modern .product:hover {
