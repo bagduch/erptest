@@ -1,6 +1,7 @@
 <?php
 
-if (!defined("RA")) die("This file cannot be accessed directly");
+if (!defined("RA"))
+    die("This file cannot be accessed directly");
 
 $_LANG['isocode'] = 'en';
 
@@ -200,7 +201,7 @@ $_LANG['clientareapendingtransfer'] = "Pending Transfer";
 $_LANG['clientareaphonenumber'] = "Phone Number";
 $_LANG['clientareapostcode'] = "Zip Code";
 $_LANG['clientareaproductdetails'] = "Product Details";
-$_LANG['clientareaproducts'] = "My Products &amp; Services";
+$_LANG['clientareaproducts'] = "My Products";
 $_LANG['clientareaproductsnone'] = "No Products/Services Ordered";
 $_LANG['clientarearegistrationperiod'] = "Registration Period";
 $_LANG['clientareasavechanges'] = "Save Changes";
@@ -593,12 +594,12 @@ $_LANG['orderpaymentterm6month'] = "6 Month Price";
 $_LANG['orderpaymenttermannually'] = "Annually";
 $_LANG['orderpaymenttermbiennially'] = "Biennially";
 $_LANG['orderpaymenttermfreeaccount'] = "Free Account";
-$_LANG['orderpaymenttermmonthly'] = "Monthly";
+$_LANG['orderpaymenttermmonthly'] = "/M";
 $_LANG['orderpaymenttermonetime'] = "One Time";
 $_LANG['orderpaymenttermquarterly'] = "Quarterly";
 $_LANG['orderpaymenttermsemiannually'] = "Semi-Annually";
 $_LANG['orderprice'] = "Price";
-$_LANG['orderproduct'] = "Product/Service";
+$_LANG['orderproduct'] = "Product";
 $_LANG['orderprogress'] = "Progress";
 $_LANG['orderpromoexpired'] = "The promotion code entered has expired";
 $_LANG['orderpromoinvalid'] = "The promotion code entered does not apply to any items in your order";
@@ -1159,6 +1160,7 @@ $_LANG['bundlewarningdomainaddon'] = "The selected bundle requires you select th
 # New Client Area Template  Lines
 
 $_LANG['navservices'] = "Services";
+$_LANG['navproduct'] = "Products";
 $_LANG['navservicesorder'] = "Order New Services";
 $_LANG['navdomains'] = "Domains";
 $_LANG['navrenewdomains'] = "Renew Domains";
@@ -1412,20 +1414,20 @@ $_LANG['returnclient'] = "Return to Client Area";
 
 $_LANG['clientareanavsecurity'] = "Security Settings";
 $_LANG['twofactorauth'] = "Two-Factor Authentication";
-$_LANG['twofaenable'] = "Enable ".$_LANG['twofactorauth'];
-$_LANG['twofadisable'] = "Disable ".$_LANG['twofactorauth'];
+$_LANG['twofaenable'] = "Enable " . $_LANG['twofactorauth'];
+$_LANG['twofadisable'] = "Disable " . $_LANG['twofactorauth'];
 $_LANG['twofaenableclickhere'] = "Click here to Enable";
 $_LANG['twofadisableclickhere'] = "Click here to Disable";
-$_LANG['twofaenforced'] = "For your security, we require that you must enable ".$_LANG['twofactorauth']." before you can continue. This page will guide you through the process of setting it up.";
+$_LANG['twofaenforced'] = "For your security, we require that you must enable " . $_LANG['twofactorauth'] . " before you can continue. This page will guide you through the process of setting it up.";
 $_LANG['twofasetup'] = "Two-Factor Authentication Setup Process";
 $_LANG['twofasetupgetstarted'] = "Get Started";
-$_LANG['twofaactivationintro'] = $_LANG['twofactorauth']." adds an extra layer of protection to logins. Once enabled &amp; configured, each time you sign in you will be asked to enter both your username & password as well as a second factor such as a security code.";
-$_LANG['twofaactivationmultichoice'] = "To continue, please choose your desired ".$_LANG['twofactorauth']." method from below.";
-$_LANG['twofadisableintro'] = "To disable ".$_LANG['twofactorauth']." please confirm your password in the field below.";
-$_LANG['twofaactivationerror'] = "An error occurred while attempting to activate ".$_LANG['twofactorauth']." for your account. Please try again.";
+$_LANG['twofaactivationintro'] = $_LANG['twofactorauth'] . " adds an extra layer of protection to logins. Once enabled &amp; configured, each time you sign in you will be asked to enter both your username & password as well as a second factor such as a security code.";
+$_LANG['twofaactivationmultichoice'] = "To continue, please choose your desired " . $_LANG['twofactorauth'] . " method from below.";
+$_LANG['twofadisableintro'] = "To disable " . $_LANG['twofactorauth'] . " please confirm your password in the field below.";
+$_LANG['twofaactivationerror'] = "An error occurred while attempting to activate " . $_LANG['twofactorauth'] . " for your account. Please try again.";
 $_LANG['twofamoduleerror'] = "An error occurred loading the module. Please try again.";
-$_LANG['twofaactivationcomplete'] = $_LANG['twofactorauth']." Setup is Complete!";
-$_LANG['twofadisableconfirmation'] = $_LANG['twofactorauth']." has now been disabled for your account.";
+$_LANG['twofaactivationcomplete'] = $_LANG['twofactorauth'] . " Setup is Complete!";
+$_LANG['twofadisableconfirmation'] = $_LANG['twofactorauth'] . " has now been disabled for your account.";
 $_LANG['twofabackupcodeis'] = "Your Backup Code is";
 $_LANG['twofanewbackupcodeis'] = "Your New Backup Code is";
 $_LANG['twofabackupcodelogin'] = "Enter Your Backup Code Above to Login";

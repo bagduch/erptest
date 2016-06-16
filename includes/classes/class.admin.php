@@ -427,6 +427,7 @@
             if (!$disable_admin_ticket_page_counts) {
                 $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
                 $data = mysqli_fetch_array($result);
+                echo "<pre class=test>".print_r($data,1)."</pre>";
                 $flaggedtickets = $data[0];
                 $flaggedticketschecked = true;
             }
@@ -812,18 +813,17 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             $content .= "<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
             $content .= "<tr>";
             //$printing .= sprintf("<td width=\"50%\" align=\"left\">" 
-            $printing .= sprintf("<td width=\"50\% >test %d %s",
+            $content .= sprintf("<td width=\"50%%\" >%d %s",
                             $numrows, 
                             $this->lang("global", "recordsfound")
                         );
-            error_log('printing is '.$printing);
-            $content .= $printing;
             $content .= ", " . $this->lang("global", "page") . " " ;
-            $content .= ($page + 1) . " " . $this->lang("global", "of") . " " . $pages . "</td>";
+            $content .= sprintf("%d %s %d</td>",($page + 1),$this->lang("global", "of"),$pages);
             $content .= "<td width=\"50%\" align=\"right\">" . $this->lang("global", "jumppage") ;
             $content .= ": <select name=\"page\" onchange=\"submit()\">";
-            $i = 1;
 
+
+            $i = 1;
             while ($i <= $pages) {
                 $newpage = $i - 1;
                 $content .= "<option value=\"" . $newpage . "\"";

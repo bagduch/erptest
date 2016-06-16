@@ -809,7 +809,7 @@ if (!$action) {
                         "email" => $email, 
                         "date" => $date, 
                         "message" => $message, 
-                        "assignedadminid" => $admin, 
+                        "adminname" => $admin, 
                         "attachment" => $attachment
                         )
                     );
@@ -871,7 +871,17 @@ else {
         $message = $data['message'];
         $admin = $data['admin'];
         $attachment = $data['attachment'];
-        insert_query("tblticketreplies", array("tid" => $mastertid, "userid" => $userid, "name" => $name, "email" => $email, "date" => $date, "message" => $message, "admin" => $admin, "attachment" => $attachment));
+        insert_query(
+            "tblticketreplies", 
+            array(
+                "tid" => $mastertid, 
+                "userid" => $userid, 
+                "name" => $name, 
+                "email" => $email, 
+                "date" => $date, 
+                "message" => $message, 
+                "adminname" => $admin, 
+                "attachment" => $attachment));
         delete_query("tbltickets", array("id" => $mergeid));
         redir("action=viewticket&id=" . $mastertid);
         exit();
@@ -911,7 +921,19 @@ else {
             if (!$errormessage) {
                 $attachments = uploadTicketAttachments(true);
                 $client = (int)str_replace("UserID:", "", $client);
-                $ticketdata = openNewTicket($client, $contactid, $deptid, $subject, $message, $priority, $attachments, array("name" => $name, "email" => $email), $relatedservice, $ccemail, ($sendemail ? false : true), true);
+                $ticketdata = openNewTicket(
+                    $client, 
+                    $contactid, 
+                    $deptid, 
+                    $subject, 
+                    $message, 
+                    $priority, 
+                    $attachments, 
+                    array("name" => $name, "email" => $email), 
+                    $relatedservice, 
+                    $ccemail, 
+                    ($sendemail ? false : true), 
+                    true);
                 $id = $ticketdata['ID'];
                 redir("action=viewticket&id=" . $id);
                 exit();
@@ -1222,8 +1244,8 @@ else {
 
 
 if ($action == "viewticket") {
-    $result = select_query("tbltickets", "", array("id" => $id));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tbltickets", "", array("id" => $id));
+    $data = mysqli_fetch_array($result);
     $replyingadmin = $data['replyingadmin'];
 
     if (!$replyingadmin) {
@@ -1562,7 +1584,7 @@ if ($action == "viewticket") {
     $title = $data['title'];
     $message = $data['message'];
     $tstatus = $data['status'];
-    $admin = $data['admin'];
+    $admin = $data['adminname'];
     $attachment = $data['attachment'];
     $urgency = $data['urgency'];
     $lastreply = $data['lastreply'];
@@ -1654,7 +1676,7 @@ if ($action == "viewticket") {
     }
 
     $staffinvolved = array();
-    $result = select_query("tblticketreplies", "DISTINCT admin", array("tid" => $id));
+    $result = select_query("tblticketreplies", "DISTINCT adminname", array("tid" => $id));
 
     while ($data = mysql_fetch_array($result)) {
         if (trim($data[0])) {
@@ -1674,9 +1696,9 @@ if ($action == "viewticket") {
     $outstatus = getStatusColour($tstatus);
     $aInt->Tabs();
     $tags = array();
-    $result = select_query("tbltickettags", "tag", array("ticketid" => $id), "tag", "ASC");
+    $result = select_query_i("tbltickettags", "tag", array("ticketid" => $id), "tag", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $tags[] = $data['tag'];
     }
 
@@ -1720,6 +1742,9 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $smartyvalues['signature'] = $signature;
     $smartyvalues['predefinedreplies'] = genPredefinedRepliesList(0);
     $smartyvalues['clientnotes'] = array();
+
+    error_log(print_r($smartyvalues,1));
+
     $result = select_query("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $pauserid, "sticky" => "1"), "modified", "DESC");
 
     while ($data = mysql_fetch_assoc($result)) {
@@ -1730,10 +1755,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     }
 
     $notes = array();
-    $result = select_query("tblticketnotes", "", array("ticketid" => $id), "date", "ASC");
+    $result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "date", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
-        $notes[] = array("id" => $data['id'], "admin" => $data['admin'], "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
+    while ($data = mysqli_fetch_array($result)) {
+        $notes[] = array("id" => $data['id'], "admin" => $data['adminname'], "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
     }
 
     $smartyvalues['notes'] = $notes;

@@ -24,19 +24,6 @@
      </div>
    </a>
  </div>
- <div class="col-md-4">
-  <a title="{$LANG.cartproductdomain}" href="clientarea.php?action=domains">
-   <div class="info-box  bg-info  text-white">
-    <div class="info-icon bg-info-dark">
-     <span aria-hidden="true" class="icon icon-globe"></span>
-   </div>
-   <div class="info-details">
-     <h4>{$LANG.cartproductdomain}<span class="pull-right">{$clientsstats.numdomains}</span></h4>
-     <p>{$LANG.clientareaactive}<span class="badge pull-right bg-white text-success"> {$clientsstats.numactivedomains} </span> </p>
-   </div>
- </div>
-</a>
-</div>
 <div class="col-md-4">
   <div class="info-box  bg-info  text-white">
    <div class="info-icon bg-info-dark">

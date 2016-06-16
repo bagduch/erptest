@@ -99,10 +99,9 @@ function AddNote($tid, $message) {
 }
 
 function AdminRead($tid) {
-	$result = select_query("tbltickets", "adminunread", array("id" => $tid));
-	$data = mysql_fetch_assoc($result);
-	$adminread = $data['adminunread'];
-	$adminreadarray = ($adminread ? explode(",", $adminread) : array());
+	$result = select_query_i("tbltickets", "adminunread", array("id" => $tid));
+	$data = mysqli_fetch_assoc($result);
+	$adminreadarray = ($data['adminunread'] ? explode(",", $adminread) : array());
 
 	if (!in_array($_SESSION['adminid'], $adminreadarray)) {
 		$adminreadarray[] = $_SESSION['adminid'];
@@ -149,6 +148,11 @@ function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $ur
 	if (!$deptid) {
 		exit("Department Not Found. Exiting.");
 	}
+
+    if ($contactid == '') {
+        error_log('changing contactid');
+        $contactid = "NULL";
+    }
 
 	$ccemail = trim($ccemail);
 
@@ -200,13 +204,28 @@ function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $ur
 	}
 
 	$table = "tbltickets";
-	$array = array("tid" => $tid, "userid" => $userid, "contactid" => $contactid, "did" => $deptid, "date" => "now()", "title" => $tickettitle, "message" => $message, "urgency" => $urgency, "status" => "Open", "attachment" => $attachedfile, "lastreply" => "now()", "name" => $from['name'], "email" => $from['email'], "c" => $c, "clientunread" => "1", "adminunread" => "", "service" => $relatedservice, "cc" => $ccemail);
+	$array = array(
+        "tid" => $tid,
+        "userid" => $userid, 
+        "contactid" => $contactid, 
+        "did" => $deptid, 
+        "date" => "now()", 
+        "title" => $tickettitle, 
+        "message" => $message, 
+        "urgency" => $urgency, 
+        "status" => "Open", 
+        "attachment" => $attachedfile, "lastreply" => "now()", "name" => $from['name'], "email" => $from['email'], "c" => $c, "clientunread" => "1", "adminunread" => "", "service" => $relatedservice, "cc" => $ccemail);
+
+    error_log(print_r(is_null($array['contactid'],1)));
+    error_log(print_r(null,1));
+    error_log(print_r('',1));
 
 	if ($admin) {
-		$array['admin'] = getAdminName();
+		$array['adminname'] = getAdminName();
 	}
 
 	$id = insert_query($table, $array);
+    error_log("insertquery id is ".$id."<br />");
 	$tid = genTicketMask($id);
 	update_query("tbltickets", array("tid" => $tid), array("id" => $id));
 
