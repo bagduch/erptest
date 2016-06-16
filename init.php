@@ -1,5 +1,5 @@
 <?php
-
+echo "<pre>".dirname(__FILE__)."</pre>";
 
 ini_set("log_errors", 1);
 ini_set("display_startup_errors", 1);
