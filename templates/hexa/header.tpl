@@ -6,8 +6,6 @@
     <meta charset="UTF-8">
     <title>{$companyname} - {$pagetitle}{if $kbarticle.title} - {$kbarticle.title}{/if}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {if $systemurl}<base href="{$systemurl}" />
-    {/if}
     <link rel='stylesheet' id='bootstrap-css'  href='templates/{$template}/css/bootstrap.min.css' type='text/css' media='all' />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/{$template}/css/simple-line-icons.css">
