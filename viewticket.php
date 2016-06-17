@@ -202,7 +202,7 @@ else {
 		if (!$errormessage) {
 			$attachments = uploadTicketAttachments();
 			$from = array("name" => $replyname, "email" => $replyemail);
-			AddReply($id, $_SESSION['uid'], $_SESSION['cid'], $replymessage, "", $attachments, $from);
+			AddReply($id, $_SESSION['uid'], $_SESSION['cid'], $replymessage, "NULL", $attachments, $from);
 			redir("tid=" . $tid . "&c=" . $c);
 		}
 	}
@@ -236,26 +236,23 @@ else {
 
 	if ($admin) {
 		$user = "<strong>" . $admin . "</strong><br />" . $_LANG['supportticketsstaff'];
-	}
-	else {
-		if (0 < $userid) {
-			$clientsdata = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
-			$clientname = $clientsdata['firstname'] . " " . $clientsdata['lastname'];
-			$clientemail = $clientsdata['email'];
-			$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketsclient'];
+	} elseif (0 < $userid) {
+		$clientsdata = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
+		$clientname = $clientsdata['firstname'] . " " . $clientsdata['lastname'];
+		$clientemail = $clientsdata['email'];
+		$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketsclient'];
 
-			if (0 < $contactid) {
-				$contactdata = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
-				$clientname = $contactdata['firstname'] . " " . $contactdata['lastname'];
-				$clientemail = $contactdata['email'];
-				$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketscontact'];
-			}
-		}
-		else {
-			$clientname = $name;
-			$clientemail = $email;
-			$user = "<strong>" . $clientname . "</strong><br />" . $clientemail;
-		}
+        if (0 < $contactid) {
+			$contactdata = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
+			$clientname = $contactdata['firstname'] . " " . $contactdata['lastname'];
+			$clientemail = $contactdata['email'];
+			$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketscontact'];
+        }
+	} else {
+		$clientname = $name;
+		$clientemail = $email;
+		$user = "<strong>" . $clientname . "</strong><br />" . $clientemail;
+		
 	}
 
 	$department = getDepartmentName($deptid);

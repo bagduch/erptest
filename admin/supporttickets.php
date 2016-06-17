@@ -1001,7 +1001,7 @@ else {
                             }
                         }
 
-                        AddReply($id, "", "", $message, true, $attachments, "", $newstatus);
+                        AddReply($id, "NULL", "NULL", $message, true, $attachments, null, $newstatus);
                         run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => $newstatus, "ticketid" => $id));
 
                         if ($billingdescription && $billingdescription != $aInt->lang("support", "toinvoicedes")) {
@@ -1469,7 +1469,7 @@ if (!$action) {
 
     if ($client) {
         $filters[] = "tbltickets.userid='" . db_escape_string($client) . "'";
-    }
+    } 
 
 
     if ($deptid) {
@@ -1743,8 +1743,6 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $smartyvalues['predefinedreplies'] = genPredefinedRepliesList(0);
     $smartyvalues['clientnotes'] = array();
 
-    error_log(print_r($smartyvalues,1));
-
     $result = select_query("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $pauserid, "sticky" => "1"), "modified", "DESC");
 
     while ($data = mysql_fetch_assoc($result)) {
@@ -1758,7 +1756,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "date", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
-        $notes[] = array("id" => $data['id'], "admin" => $data['adminname'], "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
+        $notes[] = array("id" => $data['id'], "admin" => getAdminName($data['adminid']), "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
     }
 
     $smartyvalues['notes'] = $notes;
@@ -2006,7 +2004,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     })();";
     $aInt->jquerycode = $jquerycode;
     $replies = array();
-    $result = select_query("tbltickets", "userid,contactid,name,email,date,title,message,admin,attachment", array("id" => $id));
+    $result = select_query("tbltickets", "userid,contactid,name,email,date,title,message,adminname,attachment", array("id" => $id));
     $data = mysql_fetch_array($result);
     $userid = $data['userid'];
     $contactid = $data['contactid'];
@@ -2015,7 +2013,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $date = $data['date'];
     $title = $data['title'];
     $message = $data['message'];
-    $admin = $data['admin'];
+    $admin = $data['adminname'];
     $attachment = $data['attachment'];
     $friendlydate = (substr($date, 0, 10) == date("Y-m-d") ? "" : (substr($date, 0, 4) == date("Y") ? date("l jS F", strtotime($date)) : date("l jS F Y", strtotime($date))));
     $friendlytime = date("H:i", strtotime($date));
@@ -2028,9 +2026,9 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 
     $attachments = getTicketAttachmentsInfo($id, "", $attachment);
     $replies[] = array("id" => 0, "admin" => $admin, "userid" => $userid, "contactid" => $contactid, "clientname" => $name, "clientemail" => $email, "date" => $date, "friendlydate" => $friendlydate, "friendlytime" => $friendlytime, "message" => $message, "attachments" => $attachments, "numattachments" => count($attachments));
-    $result = select_query("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+    $result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $replyid = $data['id'];
         $userid = $data['userid'];
         $contactid = $data['contactid'];
@@ -2039,7 +2037,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $date = $data['date'];
         $message = $data['message'];
         $attachment = $data['attachment'];
-        $admin = $data['admin'];
+        $admin = $data['adminname'];
         $rating = $data['rating'];
         $friendlydate = (substr($date, 0, 10) == date("Y-m-d") ? "" : (substr($date, 0, 4) == date("Y") ? date("l jS F", strtotime($date)) : date("l jS F Y", strtotime($date))));
         $friendlytime = date("H:i", strtotime($date));

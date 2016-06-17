@@ -79,9 +79,10 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 					$key = explode(")", $key[1], 2);
 					$key = db_make_safe_field($key[0]);
 					$key = "MD5(" . $key . ")";
-				}
-				else {
+				} else {
 					$key = db_build_quoted_field($key);
+
+                    
 				}
 
 				$criteria[] = "" . $key . "='" . db_escape_string($value) . "'";
@@ -461,8 +462,8 @@ function insert_query($table, $array) {
 			continue;
 		}
 
-
-		if ($value === "NULL") {
+        error_log("$key \$value is ".print_r($value,1)."and isnull is ".is_null($value));
+		if (($value === "NULL") || ($value === "") || is_null($value)) {
 			$fieldvaluelist .= "NULL,";
 			continue;
 		}

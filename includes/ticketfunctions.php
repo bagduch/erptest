@@ -93,7 +93,7 @@ function AddNote($tid, $message) {
 	}
 
 	$adminname = getAdminName();
-	insert_query("tblticketnotes", array("ticketid" => $tid, "date" => "now()", "admin" => $adminname, "message" => nl2br($message)));
+	insert_query("tblticketnotes", array("ticketid" => $tid, "date" => "now()", "adminid" => $_SESSION['adminid'], "message" => nl2br($message)));
 	addTicketLog($tid, "Ticket Note Added");
 	run_hook("TicketAddNote", array("ticketid" => $tid, "message" => $message, "adminid" => $_SESSION['adminid']));
 }
@@ -137,12 +137,27 @@ function getDepartmentName($deptid) {
 	return $department;
 }
 
-function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $urgency, $attachedfile = "", $from = "", $relatedservice = "", $ccemail = "", $noemail = "", $admin = "") {
+function openNewTicket(
+    $userid, 
+    $contactid, 
+    $deptid, 
+    $tickettitle, 
+    $message, 
+    $urgency, 
+    $attachedfile = "", 
+    $from = "", 
+    $relatedservice = "", 
+    $ccemail = "", 
+    $noemail = "", 
+    $admin = "") {
+    
+    error_log('userid is '.print_r($userid,1));
+    
 	global $CONFIG;
 
-	$result = select_query("tblticketdepartments", "", array("id" => $deptid));
-	$data = mysql_fetch_array($result);
-	$deptid = $data['id'];
+	$result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
+	$data = mysqli_fetch_array($result);
+	$deptid = (int)$data['id'];
 	$noautoresponder = $data['noautoresponder'];
 
 	if (!$deptid) {
@@ -150,20 +165,25 @@ function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $ur
 	}
 
     if ($contactid == '') {
-        error_log('changing contactid');
         $contactid = "NULL";
     }
 
 	$ccemail = trim($ccemail);
 
-	if ($userid) {
+    
+    if ( ($userid == '') || ($userid == 0) || (userid == '0') ) {
+        $userid = "NULL";
+    } elseif ($userid) {
 		$name = $email = "";
 
 		if (0 < $contactid) {
-			$data = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
+			$data = get_query_vals(
+                "tblcontacts", 
+                "firstname,lastname,email", 
+                array("id" => $contactid, "userid" => $userid)
+                );
 			$ccemail .= ($ccemail ? "," . $data['email'] : $data['email']);
-		}
-		else {
+		} else {
 			$data = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
 		}
 
@@ -214,18 +234,21 @@ function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $ur
         "message" => $message, 
         "urgency" => $urgency, 
         "status" => "Open", 
-        "attachment" => $attachedfile, "lastreply" => "now()", "name" => $from['name'], "email" => $from['email'], "c" => $c, "clientunread" => "1", "adminunread" => "", "service" => $relatedservice, "cc" => $ccemail);
-
-    error_log(print_r(is_null($array['contactid'],1)));
-    error_log(print_r(null,1));
-    error_log(print_r('',1));
+        "attachment" => $attachedfile, 
+        "lastreply" => "now()", 
+        "name" => $from['name'], 
+        "email" => $from['email'], 
+        "c" => $c, 
+        "clientunread" => "1", 
+        "adminunread" => null, 
+        "service" => $relatedservice, 
+        "cc" => $ccemail);
 
 	if ($admin) {
 		$array['adminname'] = getAdminName();
 	}
 
 	$id = insert_query($table, $array);
-    error_log("insertquery id is ".$id."<br />");
 	$tid = genTicketMask($id);
 	update_query("tbltickets", array("tid" => $tid), array("id" => $id));
 
@@ -255,15 +278,14 @@ function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $ur
 	}
 
 	run_hook("TicketOpen" . ($admin ? "Admin" : ""), array("ticketid" => $id, "userid" => $userid, "deptid" => $deptid, "deptname" => $deptname, "subject" => $tickettitle, "message" => $message, "priority" => $urgency));
-	return array("ID" => $id, "TID" => $tid, "C" => $c, "Subject" => $tickettitle);
+    return array("ID" => $id, "TID" => $tid, "C" => $c, "Subject" => $tickettitle);
 }
 
 function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile = "", $from = "", $status = "", $noemail = "", $api = false) {
 	global $CONFIG;
-
 	if ($admin) {
 		$data = get_query_vals("tbltickets", "userid,contactid,name,email", array("id" => $ticketid));
-
+        //error_log("during addreply, data userid is ".type($data['userid']));
 		if (0 < $data['userid']) {
 			if (0 < $data['contactid']) {
 				$data = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $data['contactid'], "userid" => $data['userid']));
@@ -291,7 +313,18 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
 	}
 
 	$table = "tblticketreplies";
-	$array = array("tid" => $ticketid, "userid" => $userid, "contactid" => $contactid, "name" => $from['name'], "email" => $from['email'], "date" => "now()", "message" => $message, "admin" => $adminname, "attachment" => $attachfile);
+	$array = array(
+        "tid" => $ticketid, 
+        "userid" => $userid, 
+        "contactid" => $contactid, 
+        "name" => $from['name'], 
+        "email" => $from['email'], 
+        "date" => "now()", 
+        "message" => $message, 
+        "adminname" => $adminname, 
+        "attachment" => $attachfile
+        );
+    error_log("replying with ".print_r($array,1));
 	$ticketreplyid = insert_query($table, $array);
 	$result = select_query("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));
 	$data = mysql_fetch_array($result);
@@ -310,6 +343,11 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
 		$clientname = $from['name'];
 	}
 
+    if (($contactid == 0) || ($contactid == "")) {
+        $contactid = NULL;
+    
+    
+    }
 	$deptname = getDepartmentName($deptid);
 
 	if ($admin) {
