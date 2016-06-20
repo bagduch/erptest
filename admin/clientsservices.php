@@ -3,10 +3,9 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
+$aInt->requiredFiles(array("clientfunctions", "servicefunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
-$id = (int) $ra->get_req_var("id");
-$hostingid = (int) $ra->get_req_var("hostingid");
+$id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
@@ -15,11 +14,6 @@ $action = $ra->get_req_var("action");
 $modop = $ra->get_req_var("modop");
 if ($modop) {     
     checkPermission("Perform Server Operations"); 
-}
-
-// I assume that hostingid has been deprecated by id?
-if (!$id && $hostingid) {
-    $id = $hostingid;
 }
 
 // if neither userid nor id are defined after that, I guess we just take the very first service?
@@ -40,26 +34,18 @@ if ($userid && !$id) {
 
 // if we can't determine a suitable product ID to show, reject
 if (!$id) {
-    $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
+    //$aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
+    $aInt->gracefulExit("%s <a href=\"ordersadd.php?userid=%d\">%s</a>%s", 
+        $aInt->lang("services", "noproductsinfo"),
+        $userid,
+        $aInt->lang("global", "clickhere"),
+        $aInt->lang("orders", "toplacenew"));
 }
 
-$query = "
-SELECT
-    tblcustomerservices.*,
-    tblservices.servertype,
-    tblservices.type 
-FROM tblcustomerservices 
-INNER JOIN tblservices 
-    ON tblservices.id=tblcustomerservices.packageid 
-INNER JOIN tblservicegroups 
-    ON (tblservices.gid=tblservicegroups.id ) 
-WHERE tblcustomerservices.id=" . (int)$id
-. ' AND tblservicegroups.type="service"';
+
+$service_data = getServiceData($id);
 
 
-$result = full_query_i($query);
-
-$service_data = mysqli_fetch_array($result);
 $id = $service_data['id'];
 
 if (!$id) {
@@ -168,7 +154,7 @@ if ($frm->issubmitted()) {
                 }
             }
 
-            $newaddonid = insert_query("tblserviceaddons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
+            $newaddonid = insert_query("tblserviceaddons", array("id" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
             logActivity("Added New Addon - " . $name . $predefname . " - Addon ID: " . $newaddonid . " - Service ID: " . $id);
 
             if ($geninvoice) {
@@ -301,7 +287,7 @@ if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
-    delete_query("tblcustomerservices", array("id" => $id));
+    delete_query("tblcustomerservices", array("hostingid" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
