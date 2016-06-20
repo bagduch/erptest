@@ -11,7 +11,6 @@
  *
  * */
 function getClientsDetails($userid = "", $contactid = "") {
-<<<<<<< HEAD
     global $encryption_key;
 
     require ROOTDIR . "/includes/countries.php";
@@ -21,8 +20,8 @@ function getClientsDetails($userid = "", $contactid = "") {
         $userid = $_SESSION['uid'];
     }
 
-    $result = select_query("tblclients", "", array("id" => $userid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "", array("id" => $userid));
+    $data = mysqli_fetch_array($result);
 
     if ($contactid == "billing") {
         $contactid = $data['billingcid'];
@@ -30,10 +29,10 @@ function getClientsDetails($userid = "", $contactid = "") {
 
 
     if ($contactid) {
-        $result = select_query("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
+        $result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
 
-        if (mysql_num_rows($result)) {
-            $data = array_merge($data, mysql_fetch_array($result));
+        if (mysqli_num_rows($result)) {
+            $data = array_merge($data, mysqli_fetch_array($result));
             $data['id'] = $userid;
         } else {
             update_query("tblclients", array("billingcid" => ""), array("id" => $userid));
@@ -141,21 +140,21 @@ function getClientsStats($userid) {
 
     $currency = getCurrency($userid);
     $stats = array();
-    $result = select_query("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0),(SELECT SUM(amountin-fees-amountout) FROM tblaccounts WHERE userid=" . (int) $userid . "),(SELECT credit FROM tblclients WHERE id=" . (int) $userid . ")", array("userid" => $userid, "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0),(SELECT SUM(amountin-fees-amountout) FROM tblaccounts WHERE userid=" . (int) $userid . "),(SELECT credit FROM tblclients WHERE id=" . (int) $userid . ")", array("userid" => $userid, "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
+    $data = mysqli_fetch_array($result);
     $stats['numdueinvoices'] = $data[0];
     $stats['dueinvoicesbalance'] = formatCurrency($data[1]);
     $stats['income'] = formatCurrency($data[2]);
     $stats['incredit'] = (0 < $data[3] ? true : false);
     $stats['creditbalance'] = formatCurrency($data[3]);
-    $result = select_query("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0)", array("userid" => $userid, "status" => "Unpaid", "duedate" => array("sqltype" => "<", "value" => date("Ymd")), "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0)", array("userid" => $userid, "status" => "Unpaid", "duedate" => array("sqltype" => "<", "value" => date("Ymd")), "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
+    $data = mysqli_fetch_array($result);
     $stats['numoverdueinvoices'] = $data[0];
     $stats['overdueinvoicesbalance'] = formatCurrency($data[1]);
     $invoicestats = array();
-    $result = select_query("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
+    $result = select_query_i("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $invoicestats[$data[0]] = $data;
     }
 
@@ -170,9 +169,9 @@ function getClientsStats($userid) {
     $stats['numcollectionsinvoices'] = (isset($invoicestats['Collections'][1]) ? $invoicestats['Collections'][1] : 0);
     $stats['collectionsinvoicesamount'] = (isset($invoicestats['Collections'][2]) ? formatCurrency($invoicestats['Collections'][2]) : 0);
     $productstats = array();
-    $result = full_query("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int) $userid . " GROUP BY servicestatus,tblservices.type");
+    $result = full_query_i("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int) $userid . " GROUP BY servicestatus,tblservices.type");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $productstats[$data[0]][$data[1]] = $data[2];
     }
 
@@ -225,9 +224,9 @@ function getClientsStats($userid) {
     $stats['productsnumcancelled'] = $stats['productsnumcancelledhosting'] + $stats['productsnumcancelledreseller'] + $stats['productsnumcancelledservers'] + $stats['productsnumcancelledother'];
     $stats['productsnumtotal'] = $stats['productsnumhosting'] + $stats['productsnumreseller'] + $stats['productsnumservers'] + $stats['productsnumother'];
     $domainstats = array();
-    select_query("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
+    select_query_i("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainstats[$data[0]] = $data[1];
     }
 
@@ -238,9 +237,9 @@ function getClientsStats($userid) {
     }
 
     $quotestats = array();
-    $result = select_query("tblquotes", "stage,COUNT(*)", "userid=" . (int) $userid . " GROUP BY stage");
+    $result = select_query_i("tblquotes", "stage,COUNT(*)", "userid=" . (int) $userid . " GROUP BY stage");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $quotestats[$data[0]] = $data[1];
     }
 
@@ -251,16 +250,16 @@ function getClientsStats($userid) {
     }
 
     $statusfilter = array();
-    $result = select_query("tblticketstatuses", "title", array("showactive" => "1"));
+    $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $statusfilter[] = $data[0];
     }
 
     $ticketstats = array();
-    $result = select_query("tbltickets", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
+    $result = select_query_i("tbltickets", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $ticketstats[$data[0]] = $data[1];
     }
 
@@ -274,273 +273,10 @@ function getClientsStats($userid) {
         $stats['numtickets'] += $count;
     }
 
-    $result = select_query("tblaffiliatesaccounts", "COUNT(*)", array("clientid" => $userid), "", "", "", "tblaffiliates ON tblaffiliatesaccounts.affiliateid=tblaffiliates.id");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblaffiliatesaccounts", "COUNT(*)", array("clientid" => $userid), "", "", "", "tblaffiliates ON tblaffiliatesaccounts.affiliateid=tblaffiliates.id");
+    $data = mysqli_fetch_array($result);
     $stats['numaffiliatesignups'] = $data[0];
     return $stats;
-=======
-	global $encryption_key;
-
-	require ROOTDIR . "/includes/countries.php";
-	require ROOTDIR . "/includes/countriescallingcodes.php";
-
-	if (!$userid) {
-		$userid = $_SESSION['uid'];
-	}
-
-	$result = select_query_i("tblclients", "", array("id" => $userid));
-	$data = mysqli_fetch_array($result);
-
-	if ($contactid == "billing") {
-		$contactid = $data['billingcid'];
-	}
-
-
-	if ($contactid) {
-		$result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
-
-		if (mysqli_num_rows($result)) {
-			$data = array_merge($data, mysqli_fetch_array($result));
-			$data['id'] = $userid;
-		}
-		else {
-			update_query("tblclients", array("billingcid" => ""), array("id" => $userid));
-		}
-	}
-
-	$details['id'] = $details['userid'] = $data['id'];
-	$details['firstname'] = $data['firstname'];
-	$details['lastname'] = $data['lastname'];
-	$details['companyname'] = $data['companyname'];
-	$details['email'] = $data['email'];
-	$details['address1'] = $data['address1'];
-	$details['address2'] = $data['address2'];
-	$details['city'] = $data['city'];
-	$details['state'] = $data['state'];
-	$details['postcode'] = $data['postcode'];
-	$details['country'] = $details['countrycode'] = $data['country'];
-	$details['countryname'] = $countries[$data['country']];
-	$details['phonecc'] = $countrycallingcodes[$data['country']];
-	$details['phonenumber'] = $data['phonenumber'];
-	$details['mobilenumber'] = $data['mobilenumber'];
-	$details['notes'] = $data['notes'];
-	$details['password'] = $data['password'];
-	$details['twofaenabled'] = ($data['authmodule'] ? true : false);
-	$details['currency'] = $data['currency'];
-	$details['defaultgateway'] = $data['defaultgateway'];
-	$details['cctype'] = $data['cardtype'];
-	$details['cclastfour'] = $data['cardlastfour'];
-	$details['securityqid'] = $data['securityqid'];
-	$details['securityqans'] = decrypt($data['securityqans']);
-	$details['groupid'] = $data['groupid'];
-	$details['status'] = $data['status'];
-	$details['credit'] = $data['credit'];
-	$details['taxexempt'] = $data['taxexempt'];
-	$details['latefeeoveride'] = $data['latefeeoveride'];
-	$details['overideduenotices'] = $data['overideduenotices'];
-	$details['separateinvoices'] = $data['separateinvoices'];
-	$details['disableautocc'] = $data['disableautocc'];
-	$details['emailoptout'] = $data['emailoptout'];
-	$details['overrideautoclose'] = $data['overrideautoclose'];
-	$details['language'] = $data['language'];
-	$lastlogin = $data['lastlogin'];
-	$ipaddr = $data['ip'];
-	$host = $data['host'];
-
-	if ($details['country'] == "GB") {
-		$postcode = $origpostcode = $data['postcode'];
-		$postcode = strtoupper($postcode);
-		$postcode = preg_replace("/[^A-Z0-9]/", "", $postcode);
-
-		if (strlen($postcode) == 5) {
-			$postcode = substr($postcode, 0, 2) . " " . substr($postcode, 2);
-		}
-		else {
-			if (strlen($postcode) == 6) {
-				$postcode = substr($postcode, 0, 3) . " " . substr($postcode, 3);
-			}
-			else {
-				if (strlen($postcode) == 7) {
-					$postcode = substr($postcode, 0, 4) . " " . substr($postcode, 4);
-				}
-				else {
-					$postcode = $origpostcode;
-				}
-			}
-		}
-
-		$postcode = trim($postcode);
-		$details['postcode'] = $postcode;
-	}
-
-
-	if ($lastlogin == "0000-00-00 00:00:00") {
-		$details['lastlogin'] = "No Login Logged";
-	}
-	else {
-		$details['lastlogin'] = "Date: " . fromMySQLDate($lastlogin, "time") . ("<br>IP Address: " . $ipaddr . "<br>Host: " . $host);
-	}
-
-
-	if (!function_exists("getCustomFields")) {
-		require dirname(__FILE__) . "/customfieldfunctions.php";
-	}
-
-	$customfields = getCustomFields("client", "", $userid, "on");
-	$i = 1;
-	foreach ($customfields as $value) {
-		$details["customfields" . $i] = $value['value'];
-		$details['customfields'][] = array("id" => $value['id'], "value" => $value['value']);
-		++$i;
-	}
-
-	$details['billingcid'] = $data['billingcid'];
-
-	if ($contactid) {
-		$details['domainemails'] = $data['domainemails'];
-		$details['generalemails'] = $data['generalemails'];
-		$details['invoiceemails'] = $data['invoiceemails'];
-		$details['productemails'] = $data['productemails'];
-		$details['supportemails'] = $data['supportemails'];
-	}
-
-	return $details;
-}
-
-function getClientsStats($userid) {
-	global $CONFIG;
-	global $currency;
-
-	$currency = getCurrency($userid);
-	$stats = array();
-	$result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0),(SELECT SUM(amountin-fees-amountout) FROM tblaccounts WHERE userid=" . (int)$userid . "),(SELECT credit FROM tblclients WHERE id=" . (int)$userid . ")", array("userid" => $userid, "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-	$data = mysqli_fetch_array($result);
-	$stats['numdueinvoices'] = $data[0];
-	$stats['dueinvoicesbalance'] = formatCurrency($data[1]);
-	$stats['income'] = formatCurrency($data[2]);
-	$stats['incredit'] = (0 < $data[3] ? true : false);
-	$stats['creditbalance'] = formatCurrency($data[3]);
-	$result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0)", array("userid" => $userid, "status" => "Unpaid", "duedate" => array("sqltype" => "<", "value" => date("Ymd")), "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-	$data = mysqli_fetch_array($result);
-	$stats['numoverdueinvoices'] = $data[0];
-	$stats['overdueinvoicesbalance'] = formatCurrency($data[1]);
-	$invoicestats = array();
-	$result = select_query_i("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int)$userid . " GROUP BY status");
-
-	while ($data = mysqli_fetch_array($result)) {
-		$invoicestats[$data[0]] = $data;
-	}
-
-	$stats['numpaidinvoices'] = (isset($invoicestats['Paid'][1]) ? $invoicestats['Paid'][1] : 0);
-	$stats['paidinvoicesamount'] = (isset($invoicestats['Paid'][2]) ? formatCurrency($invoicestats['Paid'][2]) : 0);
-	$stats['numunpaidinvoices'] = (isset($invoicestats['Unpaid'][1]) ? $invoicestats['Unpaid'][1] : 0);
-	$stats['unpaidinvoicesamount'] = (isset($invoicestats['Unpaid'][2]) ? formatCurrency($invoicestats['Unpaid'][2]) : 0);
-	$stats['numcancelledinvoices'] = (isset($invoicestats['Cancelled'][1]) ? $invoicestats['Cancelled'][1] : 0);
-	$stats['cancelledinvoicesamount'] = (isset($invoicestats['Cancelled'][2]) ? formatCurrency($invoicestats['Cancelled'][2]) : 0);
-	$stats['numrefundedinvoices'] = (isset($invoicestats['Refunded'][1]) ? $invoicestats['Refunded'][1] : 0);
-	$stats['refundedinvoicesamount'] = (isset($invoicestats['Refunded'][2]) ? formatCurrency($invoicestats['Refunded'][2]) : 0);
-	$stats['numcollectionsinvoices'] = (isset($invoicestats['Collections'][1]) ? $invoicestats['Collections'][1] : 0);
-	$stats['collectionsinvoicesamount'] = (isset($invoicestats['Collections'][2]) ? formatCurrency($invoicestats['Collections'][2]) : 0);
-	$productstats = array();
-	$result = full_query_i("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int)$userid . " GROUP BY servicestatus,tblservices.type");
-
-	while ($data = mysqli_fetch_array($result)) {
-		$productstats[$data[0]][$data[1]] = $data[2];
-	}
-
-	$stats['productsnumactivehosting'] = (isset($productstats['hostingaccount']['Active']) ? $productstats['hostingaccount']['Active'] : 0);
-	$stats['productsnumhosting'] = 0;
-
-	if (array_key_exists("hostingaccount", $productstats) && is_array($productstats['hostingaccount'])) {
-		foreach ($productstats['hostingaccount'] as $status => $count) {
-			$stats['productsnumhosting'] += $count;
-		}
-	}
-
-	$stats['productsnumactivereseller'] = (isset($productstats['reselleraccount']['Active']) ? $productstats['reselleraccount']['Active'] : 0);
-	$stats['productsnumreseller'] = 0;
-
-	if (array_key_exists("reselleraccount", $productstats) && is_array($productstats['reselleraccount'])) {
-		foreach ($productstats['reselleraccount'] as $status => $count) {
-			$stats['productsnumreseller'] += $count;
-		}
-	}
-
-	$stats['productsnumactiveservers'] = (isset($productstats['server']['Active']) ? $productstats['server']['Active'] : 0);
-	$stats['productsnumservers'] = 0;
-
-	if (array_key_exists("server", $productstats) && is_array($productstats['server'])) {
-		foreach ($productstats['server'] as $status => $count) {
-			$stats['productsnumservers'] += $count;
-		}
-	}
-
-	$stats['productsnumactiveother'] = (isset($productstats['other']['Active']) ? $productstats['other']['Active'] : 0);
-	$stats['productsnumother'] = 0;
-
-	if (array_key_exists("other", $productstats) && is_array($productstats['other'])) {
-		foreach ($productstats['other'] as $status => $count) {
-			$stats['productsnumother'] += $count;
-		}
-	}
-
-	$stats['productsnumactive'] = $stats['productsnumactivehosting'] + $stats['productsnumactivereseller'] + $stats['productsnumactiveservers'] + $stats['productsnumactiveother'];
-	$stats['productsnumtotal'] = $stats['productsnumhosting'] + $stats['productsnumreseller'] + $stats['productsnumservers'] + $stats['productsnumother'];
-	$domainstats = array();
-	select_query_i("tbldomains", "status,COUNT(*)", "userid=" . (int)$userid . " GROUP BY status");
-
-	while ($data = mysqli_fetch_array($result)) {
-		$domainstats[$data[0]] = $data[1];
-	}
-
-	$stats['numactivedomains'] = (isset($domainstats['Active']) ? $domainstats['Active'] : 0);
-	$stats['numdomains'] = 0;
-	foreach ($domainstats as $count) {
-		$stats['numdomains'] += $count;
-	}
-
-	$quotestats = array();
-	$result = select_query_i("tblquotes", "stage,COUNT(*)", "userid=" . (int)$userid . " GROUP BY stage");
-
-	while ($data = mysqli_fetch_array($result)) {
-		$quotestats[$data[0]] = $data[1];
-	}
-
-	$stats['numacceptedquotes'] = (isset($quotestats['Accepted']) ? $quotestats['Accepted'] : 0);
-	$stats['numquotes'] = 0;
-	foreach ($quotestats as $count) {
-		$stats['numquotes'] += $count;
-	}
-
-	$statusfilter = array();
-	$result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
-
-	while ($data = mysqli_fetch_array($result)) {
-		$statusfilter[] = $data[0];
-	}
-
-	$ticketstats = array();
-	$result = select_query_i("tbltickets", "status,COUNT(*)", "userid=" . (int)$userid . " GROUP BY status");
-
-	while ($data = mysqli_fetch_array($result)) {
-		$ticketstats[$data[0]] = $data[1];
-	}
-
-	$stats['numactivetickets'] = $stats['numtickets'] = 0;
-	foreach ($ticketstats as $status => $count) {
-
-		if (in_array($status, $statusfilter)) {
-			$stats['numactivetickets'] += $count;
-		}
-
-		$stats['numtickets'] += $count;
-	}
-
-	$result = select_query_i("tblaffiliatesaccounts", "COUNT(*)", array("clientid" => $userid), "", "", "", "tblaffiliates ON tblaffiliatesaccounts.affiliateid=tblaffiliates.id");
-	$data = mysqli_fetch_array($result);
-	$stats['numaffiliatesignups'] = $data[0];
-	return $stats;
->>>>>>> guy
 }
 
 function getCountriesDropDown($selected = "", $fieldname = "", $tabindex = "") {
@@ -747,7 +483,6 @@ function addContact($userid, $firstname, $lastname, $companyname, $email, $addre
 }
 
 function deleteClient($userid) {
-<<<<<<< HEAD
     $userid = (int) get_query_val("tblclients", "id", array("id" => (int) $userid));
 
     if (!$userid) {
@@ -758,28 +493,28 @@ function deleteClient($userid) {
     delete_query("tblclients", array("id" => $userid));
     delete_query("tblcontacts", array("userid" => $userid));
     delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
-    $result = select_query("tblcustomerservices", "id", array("userid" => $userid));
+    $result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainlistid = $data['id'];
         delete_query("tblserviceaddons", array("hostingid" => $domainlistid));
     }
 
-    $result = select_query("tblcustomfields", "id", array("type" => "client"));
+    $result = select_query_i("tblcustomfields", "id", array("type" => "client"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $customfieldid = $data['id'];
         delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $userid));
     }
 
-    $result = select_query("tblcustomfields", "id,relid", array("type" => "product"));
+    $result = select_query_i("tblcustomfields", "id,relid", array("type" => "product"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $customfieldid = $data['id'];
         $customfieldpid = $data['relid'];
-        $result2 = select_query("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
+        $result2 = select_query_i("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
 
-        while ($data = mysql_fetch_array($result2)) {
+        while ($data = mysqli_fetch_array($result2)) {
             $hostingid = $data['id'];
             delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $hostingid));
         }
@@ -803,84 +538,16 @@ function deleteClient($userid) {
 
 function getSecurityQuestions($questionid = "") {
     if ($questionid) {
-        $query = select_query("tbladminsecurityquestions", "", array("question" => $questionid));
+        $query = select_query_i("tbladminsecurityquestions", "", array("question" => $questionid));
     } else {
-        $query = select_query("tbladminsecurityquestions", "", "");
+        $query = select_query_i("tbladminsecurityquestions", "", "");
     }
-=======
-	$userid = (int)get_query_val("tblclients", "id", array("id" => (int)$userid));
-
-	if (!$userid) {
-		return false;
-	}
-
-	run_hook("PreDeleteClient", array("userid" => $userid));
-	delete_query("tblclients", array("id" => $userid));
-	delete_query("tblcontacts", array("userid" => $userid));
-	delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
-	$result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
-
-	while ($data = mysqli_fetch_array($result)) {
-		$domainlistid = $data['id'];
-		delete_query("tblserviceaddons", array("hostingid" => $domainlistid));
-	}
-
-	$result = select_query_i("tblcustomfields", "id", array("type" => "client"));
-
-	while ($data = mysqli_fetch_array($result)) {
-		$customfieldid = $data['id'];
-		delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $userid));
-	}
-
-	$result = select_query_i("tblcustomfields", "id,relid", array("type" => "product"));
-
-	while ($data = mysqli_fetch_array($result)) {
-		$customfieldid = $data['id'];
-		$customfieldpid = $data['relid'];
-		$result2 = select_query_i("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
-
-		while ($data = mysqli_fetch_array($result2)) {
-			$hostingid = $data['id'];
-			delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $hostingid));
-		}
-	}
-
-	delete_query("tblorders", array("userid" => $userid));
-	delete_query("tblcustomerservices", array("userid" => $userid));
-	delete_query("tbldomains", array("userid" => $userid));
-	delete_query("tblemails", array("userid" => $userid));
-	delete_query("tblinvoices", array("userid" => $userid));
-	delete_query("tblinvoiceitems", array("userid" => $userid));
-	delete_query("tbltickets", array("userid" => $userid));
-	delete_query("tblaffiliates", array("clientid" => $userid));
-	delete_query("tblnotes", array("userid" => $userid));
-	delete_query("tblcredit", array("clientid" => $userid));
-	delete_query("tblactivitylog", array("userid" => $userid));
-	delete_query("tblsslorders", array("userid" => $userid));
-	logActivity("Client Deleted - ID: " . $userid);
-	return true;
-}
-
-function getSecurityQuestions($questionid = "") {
-	if ($questionid) {
-		$query = select_query_i("tbladminsecurityquestions", "", array("question" => $questionid));
-	}
-	else {
-		$query = select_query_i("tbladminsecurityquestions", "", "");
-	}
->>>>>>> guy
 
     $results = array();
 
-<<<<<<< HEAD
-    while ($data = mysql_fetch_assoc($query)) {
+    while ($data = mysqli_fetch_assoc($query)) {
         $results[] = array("id" => $data['id'], "question" => decrypt($data['question']));
     }
-=======
-	while ($data = mysqli_fetch_assoc($query)) {
-		$results[] = array("id" => $data['id'], "question" => decrypt($data['question']));
-	}
->>>>>>> guy
 
     return $results;
 }
@@ -909,13 +576,12 @@ function generateClientPW($plain, $salt = "", $ignoreconfig = false) {
 }
 
 function checkContactPermission($reqperm, $noredirect = "") {
-<<<<<<< HEAD
     if (!isset($_SESSION['cid'])) {
         return true;
     }
 
-    $result = select_query("tblcontacts", "permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblcontacts", "permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+    $data = mysqli_fetch_array($result);
     $permissions = $data['permissions'];
     $permissions = explode(",", $permissions);
 
@@ -949,47 +615,6 @@ function checkContactPermission($reqperm, $noredirect = "") {
     }
 
     return true;
-=======
-	if (!isset($_SESSION['cid'])) {
-		return true;
-	}
-
-	$result = select_query_i("tblcontacts", "permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
-	$data = mysqli_fetch_array($result);
-	$permissions = $data['permissions'];
-	$permissions = explode(",", $permissions);
-
-	if (!in_array($reqperm, $permissions)) {
-		global $ca;
-		global $_LANG;
-		global $smartyvalues;
-
-		if ($noredirect) {
-			return false;
-		}
-
-		foreach ($permissions as $key => $permission) {
-			$permissions[$key] = $_LANG["subaccountperms" . $permission];
-		}
-
-
-		if (is_object($ca)) {
-			$ca->assign("allowedpermissions", $permissions);
-			$ca->assign("requiredpermission", $reqperm);
-			$ca->setTemplate("contactaccessdenied");
-			$ca->output();
-			exit();
-		}
-
-		$smartyvalues['allowedpermissions'] = $permissions;
-		$smartyvalues['requiredpermission'] = $reqperm;
-		$templatefile = "contactaccessdenied";
-		outputClientArea($templatefile);
-		exit();
-	}
-
-	return true;
->>>>>>> guy
 }
 
 function validateClientLogin($username, $password, $twofadone = false) {
@@ -1025,54 +650,21 @@ function validateClientLogin($username, $password, $twofadone = false) {
         $where['status'] = array("sqltype" => "NEQ", "value" => "Closed");
     }
 
-<<<<<<< HEAD
-    $result = select_query("tblclients", "", $where);
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "", $where);
+    $data = mysqli_fetch_array($result);
     $login_uid = $data['id'];
     $login_pwd = $data['password'];
     $language = $data['language'];
     $authmodule = $data['authmodule'];
-=======
-	if (isset($_SESSION['upw'])) {
-		unset($_SESSION['upw']);
-	}
-
-	$login_uid = $login_cid = $login_pwd = $loginsharematch = "";
-	$where = array();
-	$where['email'] = $username;
-
-	if (!$_SESSION['adminid']) {
-		$where['status'] = array("sqltype" => "NEQ", "value" => "Closed");
-	}
-
-	$result = select_query_i("tblclients", "", $where);
-	$data = mysqli_fetch_array($result);
-	$login_uid = $data['id'];
-	$login_pwd = $data['password'];
-	$language = $data['language'];
-	$authmodule = $data['authmodule'];
-
-	if (!$login_uid) {
-		$result = select_query_i("tblcontacts", "", array("email" => $username, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
-		$data = mysqli_fetch_array($result);
-		$login_cid = $data['id'];
-		$login_uid = $data['userid'];
-		$login_pwd = $data['password'];
-		$result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-		$data = mysqli_fetch_array($result);
-		$login_uid = $data['id'];
-		$language = $data['language'];
-	}
->>>>>>> guy
 
     if (!$login_uid) {
-        $result = select_query("tblcontacts", "", array("email" => $username, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "", array("email" => $username, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
+        $data = mysqli_fetch_array($result);
         $login_cid = $data['id'];
         $login_uid = $data['userid'];
         $login_pwd = $data['password'];
-        $result = select_query("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+        $data = mysqli_fetch_array($result);
         $login_uid = $data['id'];
         $language = $data['language'];
     }
@@ -1082,29 +674,17 @@ function validateClientLogin($username, $password, $twofadone = false) {
         $hookresults = run_hook("ClientLoginShare", array("username" => $username, "password" => $password));
         foreach ($hookresults as $hookres) {
 
-<<<<<<< HEAD
             if ($hookres) {
                 $hookid = $hookres['id'];
                 $hookemail = $hookres['email'];
 
                 if ($hookid) {
-                    $result = select_query("tblclients", "", array("id" => $hookid));
+                    $result = select_query_i("tblclients", "", array("id" => $hookid));
                 } else {
-                    $result = select_query("tblclients", "", array("email" => $hookemail));
+                    $result = select_query_i("tblclients", "", array("email" => $hookemail));
                 }
-=======
-				if ($hookid) {
-					$result = select_query_i("tblclients", "", array("id" => $hookid));
-				}
-				else {
-					$result = select_query_i("tblclients", "", array("email" => $hookemail));
-				}
 
-				$data = mysqli_fetch_array($result);
-				$login_uid = $data['id'];
->>>>>>> guy
-
-                $data = mysql_fetch_array($result);
+                $data = mysqli_fetch_array($result);
                 $login_uid = $data['id'];
 
                 if ($login_uid) {
@@ -1192,7 +772,6 @@ function validateClientLogin($username, $password, $twofadone = false) {
 }
 
 function createCancellationRequest($userid, $serviceid, $reason, $type) {
-<<<<<<< HEAD
     global $CONFIG;
     global $currency;
 
@@ -1226,8 +805,8 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 
             if ($recurringamount <= 0) {
                 $currency = getCurrency($userid);
-                $result = select_query("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                $data = mysqli_fetch_array($result);
                 $domaindnsmanagementprice = $data['msetupfee'] * $regperiod;
                 $domainemailforwardingprice = $data['qsetupfee'] * $regperiod;
                 $domainidprotectionprice = $data['ssetupfee'] * $regperiod;
@@ -1261,13 +840,13 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
         run_hook("CancellationRequest", array("userid" => $userid, "relid" => $serviceid, "reason" => $reason, "type" => $type));
 
         if ($CONFIG['CancelInvoiceOnCancellation']) {
-            $result = select_query("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Hosting", "relid" => $serviceid, "status" => "Unpaid", "tblinvoices.userid" => $userid), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+            $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Hosting", "relid" => $serviceid, "status" => "Unpaid", "tblinvoices.userid" => $userid), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $itemid = $data['id'];
                 $invoiceid = $data['invoiceid'];
-                $result2 = select_query("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
-                $data = mysql_fetch_array($result2);
+                $result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
+                $data = mysqli_fetch_array($result2);
                 $itemcount = $data[0];
 
                 if (1 < $itemcount && $itemcount <= 4) {
@@ -1299,8 +878,8 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 
 function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billingcycle = "", $configoptionsrecurring = "empty", $promoid = 0, $includesetup = false) {
     if ((!$userid || !$pid) || !$billingcycle) {
-        $result = select_query("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
+        $data = mysqli_fetch_array($result);
 
         if (!$userid) {
             $userid = $data['userid'];
@@ -1320,8 +899,8 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
     global $currency;
 
     $currency = getCurrency($userid);
-    $result = select_query("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $data = mysqli_fetch_array($result);
 
     if ($billingcycle == "Monthly") {
         $amount = $data['monthly'];
@@ -1387,9 +966,9 @@ function closeClient($userid) {
     update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Pending"));
     update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Active"));
     update_query("tblcustomerservices", array("servicestatus" => "Terminated"), array("userid" => $userid, "servicestatus" => "Suspended"));
-    $result = select_query("tblcustomerservices", "id", array("userid" => $userid));
+    $result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainlistid = $data['id'];
         update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Pending"));
         update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Active"));
@@ -1403,226 +982,6 @@ function closeClient($userid) {
     update_query("tblbillableitems", array("invoiceaction" => "0"), array("userid" => $userid));
     logActivity("Client Status changed to Closed - User ID: " . $userid, $userid);
     run_hook("ClientClose", array("userid" => $userid));
-=======
-	global $CONFIG;
-	global $currency;
-
-	$existing = get_query_val("tblcancelrequests", "COUNT(id)", array("relid" => $serviceid));
-
-	if ($existing == 0) {
-		if (!in_array($type, array("Immediate", "End of Billing Period"))) {
-			$type = "End of Billing Period";
-		}
-
-		insert_query("tblcancelrequests", array("date" => "now()", "relid" => $serviceid, "reason" => $reason, "type" => $type));
-
-		if ($type == "End of Billing Period") {
-			logActivity("Automatic Cancellation Requested for End of Current Cycle - Service ID: " . $serviceid, $userid);
-		}
-		else {
-			logActivity("Automatic Cancellation Requested Immediately - Service ID: " . $serviceid, $userid);
-		}
-
-		$data = get_query_vals("tblcustomerservices", "domain,freedomain", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-		$domain = $data[0];
-		$freedomain = $data[1];
-
-		if ($freedomain && $domain) {
-			$data = get_query_vals("tbldomains", "id,recurringamount,registrationperiod,dnsmanagement,emailforwarding,idprotection", array("userid" => $userid, "domain" => $domain), "status", "ASC");
-			$domainid = $data['id'];
-			$recurringamount = $data['recurringamount'];
-			$regperiod = $data['registrationperiod'];
-			$dnsmanagement = $data['dnsmanagement'];
-			$emailforwarding = $data['emailforwarding'];
-			$idprotection = $data['idprotection'];
-
-			if ($recurringamount <= 0) {
-				$currency = getCurrency($userid);
-				$result = select_query_i("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-				$data = mysqli_fetch_array($result);
-				$domaindnsmanagementprice = $data['msetupfee'] * $regperiod;
-				$domainemailforwardingprice = $data['qsetupfee'] * $regperiod;
-				$domainidprotectionprice = $data['ssetupfee'] * $regperiod;
-				$domainparts = explode(".", $domain, 2);
-
-				if (!function_exists("getTLDPriceList")) {
-					require ROOTDIR . "/includes/domainfunctions.php";
-				}
-
-				$temppricelist = getTLDPriceList("." . $domainparts[1], "", true, $userid);
-				$recurringamount = $temppricelist[$regperiod]['renew'];
-
-				if ($dnsmanagement) {
-					$recurringamount += $domaindnsmanagementprice;
-				}
-
-
-				if ($emailforwarding) {
-					$recurringamount += $domainemailforwardingprice;
-				}
-
-
-				if ($idprotection) {
-					$recurringamount += $domainidprotectionprice;
-				}
-
-				update_query("tbldomains", array("recurringamount" => $recurringamount), array("id" => $domainid));
-			}
-		}
-
-		run_hook("CancellationRequest", array("userid" => $userid, "relid" => $serviceid, "reason" => $reason, "type" => $type));
-
-		if ($CONFIG['CancelInvoiceOnCancellation']) {
-			$result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Hosting", "relid" => $serviceid, "status" => "Unpaid", "tblinvoices.userid" => $userid), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
-
-			while ($data = mysqli_fetch_array($result)) {
-				$itemid = $data['id'];
-				$invoiceid = $data['invoiceid'];
-				$result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
-				$data = mysqli_fetch_array($result2);
-				$itemcount = $data[0];
-
-				if (1 < $itemcount && $itemcount <= 4) {
-					$itemcount -= get_query_val("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid, "type" => "PromoHosting", "relid" => $serviceid));
-					$itemcount -= get_query_val("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid, "type" => "GroupDiscount"));
-					$itemcount -= get_query_val("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid, "type" => "LateFee"));
-				}
-
-
-				if ($itemcount == 1) {
-					update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invoiceid));
-					logActivity("Cancelled Outstanding Product Renewal Invoice - Invoice ID: " . $invoiceid . " - Service ID: " . $serviceid, $userid);
-					run_hook("InvoiceCancelled", array("invoiceid" => $invoiceid));
-				}
-
-				delete_query("tblinvoiceitems", array("id" => $itemid));
-				delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "type" => "PromoHosting", "relid" => $serviceid));
-				delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "type" => "GroupDiscount"));
-				updateInvoiceTotal($invoiceid);
-				logActivity("Removed Outstanding Product Renewal Invoice Line Item - Invoice ID: " . $invoiceid . " - Service ID: " . $serviceid, $userid);
-			}
-		}
-
-		return "success";
-	}
-
-	return "Existing Cancellation Request Exists";
-}
-
-function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billingcycle = "", $configoptionsrecurring = "empty", $promoid = 0, $includesetup = false) {
-	if ((!$userid || !$pid) || !$billingcycle) {
-		$result = select_query_i("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
-		$data = mysqli_fetch_array($result);
-
-		if (!$userid) {
-			$userid = $data['userid'];
-		}
-
-
-		if (!$pid) {
-			$pid = $data['packageid'];
-		}
-
-
-		if (!$billingcycle) {
-			$billingcycle = $data['billingcycle'];
-		}
-	}
-
-	global $currency;
-
-	$currency = getCurrency($userid);
-	$result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
-	$data = mysqli_fetch_array($result);
-
-	if ($billingcycle == "Monthly") {
-		$amount = $data['monthly'];
-	}
-	else {
-		if ($billingcycle == "Quarterly") {
-			$amount = $data['quarterly'];
-		}
-		else {
-			if ($billingcycle == "Semi-Annually") {
-				$amount = $data['semiannually'];
-			}
-			else {
-				if ($billingcycle == "Annually") {
-					$amount = $data['annually'];
-				}
-				else {
-					if ($billingcycle == "Biennially") {
-						$amount = $data['biennially'];
-					}
-					else {
-						if ($billingcycle == "Triennially") {
-							$amount = $data['triennially'];
-						}
-						else {
-							$amount = 0;
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	if ($includesetup === true) {
-		$setupvar = substr(strtolower($billingcycle), 0, 1);
-		$amount += $data[$setupvar . "setupfee"];
-	}
-
-
-	if ($configoptionsrecurring == "empty") {
-		if (!function_exists("getCartConfigOptions")) {
-			require ROOTDIR . "/includes/configoptionsfunctions.php";
-		}
-
-		$configoptions = getCartConfigOptions($pid, "", $billingcycle, $serviceid);
-		foreach ($configoptions as $configoption) {
-			$amount += $configoption['selectedrecurring'];
-
-			if ($includesetup === true) {
-				$amount += $configoption['selectedsetup'];
-				continue;
-			}
-		}
-	}
-	else {
-		$amount += $configoptionsrecurring;
-	}
-
-
-	if ($promoid) {
-		$amount -= recalcPromoAmount($pid, $userid, $serviceid, $billingcycle, $amount, $promoid);
-	}
-
-	return $amount;
-}
-
-function closeClient($userid) {
-	update_query("tblclients", array("status" => "Closed"), array("id" => $userid));
-	update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Pending"));
-	update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Active"));
-	update_query("tblcustomerservices", array("servicestatus" => "Terminated"), array("userid" => $userid, "servicestatus" => "Suspended"));
-	$result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
-
-	while ($data = mysqli_fetch_array($result)) {
-		$domainlistid = $data['id'];
-		update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Pending"));
-		update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Active"));
-		update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $domainlistid, "status" => "Suspended"));
-	}
-
-	update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending"));
-	update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Active"));
-	update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending-Transfer"));
-	update_query("tblinvoices", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Unpaid"));
-	update_query("tblbillableitems", array("invoiceaction" => "0"), array("userid" => $userid));
-	logActivity("Client Status changed to Closed - User ID: " . $userid, $userid);
-	run_hook("ClientClose", array("userid" => $userid));
->>>>>>> guy
 }
 
 function convertStateToCode($ostate, $country) {
@@ -1937,13 +1296,12 @@ function clientChangeDefaultGateway($userid, $paymentmethod) {
 }
 
 function recalcPromoAmount($pid, $userid, $serviceid, $billingcycle, $recurringamount, $promoid) {
-<<<<<<< HEAD
     global $currency;
 
     $currency = getCurrency($userid);
     $recurringdiscount = $used = "";
-    $result = select_query("tblpromotions", "", array("id" => $promoid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpromotions", "", array("id" => $promoid));
+    $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $type = $data['type'];
     $recurring = $data['recurring'];
@@ -1988,16 +1346,16 @@ function doResetPWEmail($email, $answer = "") {
         return $_LANG['pwresetemailrequired'];
     }
 
-    $result = select_query("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $password = $data['password'];
     $securityqid = $data['securityqid'];
     $securityqans = $data['securityqans'];
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $password = $data['password'];
@@ -2010,8 +1368,8 @@ function doResetPWEmail($email, $answer = "") {
 
 
     if ($securityqid) {
-        $result = select_query("tbladminsecurityquestions", "", array("id" => $securityqid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tbladminsecurityquestions", "", array("id" => $securityqid));
+        $data = mysqli_fetch_array($result);
         $securityquestion = decrypt($data['question']);
 
         if (!$answer) {
@@ -2041,135 +1399,14 @@ function doResetPWEmail($email, $answer = "") {
 function doResetPWKeyCheck($key) {
     global $_LANG;
 
-    $result = select_query("tblclients", "id,pwresetexpiry", array("pwresetkey" => $key));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,pwresetexpiry", array("pwresetkey" => $key));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $pwresetexpiry = $data['pwresetexpiry'];
-=======
-	global $currency;
-
-	$currency = getCurrency($userid);
-	$recurringdiscount = $used = "";
-	$result = select_query_i("tblpromotions", "", array("id" => $promoid));
-	$data = mysqli_fetch_array($result);
-	$id = $data['id'];
-	$type = $data['type'];
-	$recurring = $data['recurring'];
-	$value = $data['value'];
-
-	if ($recurring) {
-		if ($type == "Percentage") {
-			$recurringdiscount = $recurringamount * ($value / 100);
-		}
-		else {
-			if ($type == "Fixed Amount") {
-				if ($currency['id'] != 1) {
-					$value = convertCurrency($value, 1, $currency['id']);
-				}
-
-
-				if ($recurringamount < $value) {
-					$recurringdiscount = $recurringamount;
-				}
-				else {
-					$recurringdiscount = $value;
-				}
-			}
-			else {
-				if ($type == "Price Override") {
-					if ($currency['id'] != 1) {
-						$value = convertCurrency($value, 1, $currency['id']);
-					}
-
-					$recurringdiscount = $recurringamount - $value;
-				}
-			}
-		}
-	}
-
-	return $recurringdiscount;
-}
-
-function doResetPWEmail($email, $answer = "") {
-	global $CONFIG;
-	global $_LANG;
-	global $securityquestion;
-
-	if (!$email) {
-		return $_LANG['pwresetemailrequired'];
-	}
-
-	$result = select_query_i("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-	$data = mysqli_fetch_array($result);
-	$userid = $data['id'];
-	$password = $data['password'];
-	$securityqid = $data['securityqid'];
-	$securityqans = $data['securityqans'];
-
-	if (!$userid) {
-		$result = select_query_i("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
-		$data = mysqli_fetch_array($result);
-		$contactid = $data['id'];
-		$userid = $data['userid'];
-		$password = $data['password'];
-	}
-
-
-	if (!$userid) {
-		return $_LANG['pwresetemailnotfound'];
-	}
-
-
-	if ($securityqid) {
-		$result = select_query_i("tbladminsecurityquestions", "", array("id" => $securityqid));
-		$data = mysqli_fetch_array($result);
-		$securityquestion = decrypt($data['question']);
-
-		if (!$answer) {
-			return "";
-		}
-
-
-		if ($answer != decrypt($securityqans)) {
-			return $_LANG['pwresetsecurityquestionincorrect'];
-		}
-	}
-
-	$resetkey = md5($userid . rand(100000, 999999) . $password);
-
-	if ($contactid) {
-		update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
-	}
-	else {
-		update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
-	}
-
-	$reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
-	$reseturl .= "/pwreset.php?key=" . $resetkey;
-	sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
-	logActivity("Password Reset Requested", $userid);
-}
-
-function doResetPWKeyCheck($key) {
-	global $_LANG;
-
-	$result = select_query_i("tblclients", "id,pwresetexpiry", array("pwresetkey" => $key));
-	$data = mysqli_fetch_array($result);
-	$userid = $data['id'];
-	$pwresetexpiry = $data['pwresetexpiry'];
-
-	if (!$userid) {
-		$result = select_query_i("tblcontacts", "id,userid,pwresetexpiry", array("pwresetkey" => $key));
-		$data = mysqli_fetch_array($result);
-		$contactid = $data['id'];
-		$userid = $data['userid'];
-		$pwresetexpiry = $data['pwresetexpiry'];
-	}
->>>>>>> guy
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "id,userid,pwresetexpiry", array("pwresetkey" => $key));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "id,userid,pwresetexpiry", array("pwresetkey" => $key));
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $pwresetexpiry = $data['pwresetexpiry'];
@@ -2187,7 +1424,6 @@ function doResetPWKeyCheck($key) {
 }
 
 function doResetPW($key, $newpw, $confirmpw) {
-<<<<<<< HEAD
     global $_LANG;
 
     $newpw = html_entity_decode($newpw);
@@ -2197,15 +1433,15 @@ function doResetPW($key, $newpw, $confirmpw) {
         return $_LANG['pwresetemailrequired'];
     }
 
-    $result = select_query("tblclients", "id,email,pwresetexpiry", array("pwresetkey" => $key));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,email,pwresetexpiry", array("pwresetkey" => $key));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $email = $data['email'];
     $pwresetexpiry = $data['pwresetexpiry'];
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "id,email,userid,pwresetexpiry", array("pwresetkey" => $key));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "id,email,userid,pwresetexpiry", array("pwresetkey" => $key));
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $pwresetexpiry = $data['pwresetexpiry'];
@@ -2248,69 +1484,6 @@ function doResetPW($key, $newpw, $confirmpw) {
     }
 
     return $validate->getHTMLErrorOutput();
-=======
-	global $_LANG;
-
-	$newpw = html_entity_decode($newpw);
-	$confirmpw = html_entity_decode($confirmpw);
-
-	if (!$key) {
-		return $_LANG['pwresetemailrequired'];
-	}
-
-	$result = select_query_i("tblclients", "id,email,pwresetexpiry", array("pwresetkey" => $key));
-	$data = mysqli_fetch_array($result);
-	$userid = $data['id'];
-	$email = $data['email'];
-	$pwresetexpiry = $data['pwresetexpiry'];
-
-	if (!$userid) {
-		$result = select_query_i("tblcontacts", "id,email,userid,pwresetexpiry", array("pwresetkey" => $key));
-		$data = mysqli_fetch_array($result);
-		$contactid = $data['id'];
-		$userid = $data['userid'];
-		$pwresetexpiry = $data['pwresetexpiry'];
-		$email = $data['email'];
-	}
-
-
-	if (!$userid) {
-		return $_LANG['pwresetemailnotfound'];
-	}
-
-
-	if ($pwresetexpiry < time()) {
-		return $_LANG['pwresetkeyexpired'];
-	}
-
-	$validate = new RA_Validate();
-
-	if ($validate->validate("required", "newpw", "ordererrorpassword")) {
-		if ($validate->validate("pwstrength", "newpw", "pwstrengthfail")) {
-			if ($validate->validate("required", "confirmpw", "clientareaerrorpasswordconfirm")) {
-				$validate->validate("match_value", "newpw", "clientareaerrorpasswordnotmatch", "confirmpw");
-			}
-		}
-	}
-
-
-	if (!$validate->hasErrors()) {
-		if ($contactid) {
-			update_query("tblcontacts", array("password" => generateClientPW($newpw), "pwresetkey" => "", "pwresetexpiry" => ""), array("id" => $contactid));
-		}
-		else {
-			update_query("tblclients", array("password" => generateClientPW($newpw), "pwresetkey" => "", "pwresetexpiry" => ""), array("id" => $userid));
-		}
-
-		run_hook("ClientChangePassword", array("userid" => $userid, "password" => $newpw));
-		logActivity("Password Reset Completed", $userid);
-		sendMessage("Password Reset Confirmation", $userid, array("contactid" => $contactid));
-		validateClientLogin($email, $newpw);
-		redir("success=true", "pwreset.php");
-	}
-
-	return $validate->getHTMLErrorOutput();
->>>>>>> guy
 }
 
 ?>
