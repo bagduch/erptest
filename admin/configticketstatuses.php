@@ -36,8 +36,8 @@ if ($action == "save") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query("tblticketstatuses", "title", array("id" => $id));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("tblticketstatuses", "title", array("id" => $id));
+	$data = mysqli_fetch_assoc($result);
 	$title = $data['title'];
 	update_query("tbltickets", array("status" => "Closed"), array("status" => $title));
 	delete_query("tblticketstatuses", array("id" => $id));
@@ -80,9 +80,9 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query("tblticketstatuses", "", "", "sortorder", "ASC");
+$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$statusid = $data['id'];
 	$title = $data['title'];
 	$color = $data['color'];
@@ -115,8 +115,8 @@ echo "
 <h2>";
 
 if ($action == "edit") {
-	$result = select_query("tblticketstatuses", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketstatuses", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$title = $data['title'];
 	$color = $data['color'];
 	$sortorder = $data['sortorder'];

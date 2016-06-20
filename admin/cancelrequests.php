@@ -146,14 +146,14 @@ if (!$filter) {
 }
 
 $query .= implode(" AND ", $criteria);
-$result = full_query("SELECT COUNT(tblcancelrequests.id) " . $query);
-$data = mysql_fetch_array($result);
+$result = full_query_i("SELECT COUNT(tblcancelrequests.id) " . $query);
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 $query .= " ORDER BY tblcancelrequests.date ASC";
 $query = "SELECT tblcancelrequests.*,tblcustomerservices.domain,tblcustomerservices.nextduedate,tblservices.name AS productname,tblservicegroups.name AS groupname,tblcustomerservices.id AS productid,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	++$clicount;
 	$id2 = $data['id'];
 	$date = $data['date'];

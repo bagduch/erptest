@@ -90,8 +90,8 @@ else {
 
 
 if ($allowed) {
-	$result = select_query("tbladmins", "id,disabled", array("username" => $_POST['username'], "password" => $_POST['password']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "id,disabled", array("username" => $_POST['username'], "password" => $_POST['password']));
+	$data = mysqli_fetch_array($result);
 	$adminid = $data['id'];
 	$admindisabled = $data['disabled'];
 
@@ -101,8 +101,8 @@ if ($allowed) {
 	}
 	else {
 		if (!$adminid) {
-			$result = select_query("tbladmins", "loginattempts", array("username" => $login_unm));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "loginattempts", array("username" => $login_unm));
+			$data = mysqli_fetch_array($result);
 			$loginattempts = $data['loginattempts'] + 1;
 
 			if ("3" <= $loginattempts) {

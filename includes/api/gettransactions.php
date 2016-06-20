@@ -30,10 +30,10 @@ if ($transid) {
 	$where['transid'] = $transid;
 }
 
-$result = select_query("tblaccounts", "", $where);
-$apiresults = array("result" => "success", "totalresults" => mysql_num_rows($result), "startnumber" => 0, "numreturned" => mysql_num_rows($result));
+$result = select_query_i("tblaccounts", "", $where);
+$apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result), "startnumber" => 0, "numreturned" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$apiresults['transactions']['transaction'][] = $data;
 }
 

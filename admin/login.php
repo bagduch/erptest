@@ -22,8 +22,8 @@ if (!function_exists("curl_init")) {
 
 
 
-$result = select_query("tblconfiguration", "COUNT(*)", array("setting" => "License"));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblconfiguration", "COUNT(*)", array("setting" => "License"));
+$data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
 	insert_query("tblconfiguration", array("setting" => "License"));
@@ -168,8 +168,8 @@ echo "=\"login_container\">
 $msgtitle = $msg = $reset = "";
 
 if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp) && $verify) {
-	$result = select_query("tbladmins", "", array("email" => $email, "disabled" => "0"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "", array("email" => $email, "disabled" => "0"));
+	$data = mysqli_fetch_array($result);
 	$adminid = $data['id'];
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];
@@ -388,8 +388,8 @@ else {
 		echo "<div id=\"login_msg\"><span style=\"font-size:14px;\"><strong>";
 
 		if ($sub == "send") {
-			$result = select_query("tbladmins", "", array("email" => $email));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "", array("email" => $email));
+			$data = mysqli_fetch_array($result);
 			$adminid = $data['id'];
 			$firstname = $data['firstname'];
 			$lastname = $data['lastname'];

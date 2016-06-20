@@ -50,8 +50,8 @@ if ($username2) {
 	$where["tblcustomerservices.username"] = $username2;
 }
 
-$result = select_query("tblcustomerservices", "COUNT(*)", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcustomerservices", "COUNT(*)", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
 $limitstart = (int)$limitstart;
 $limitnum = (int)$limitnum;
@@ -60,15 +60,15 @@ if (!$limitnum) {
 	$limitnum = 999999;
 }
 
-$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.name AS productname,tblservicegroups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM tblservers WHERE tblservers.id=tblcustomerservices.server) AS serverdetails,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tblcustomerservices.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
-$apiresults = array("result" => "success", "clientid" => $clientid, "serviceid" => $serviceid, "pid" => $pid, "domain" => $domain, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result));
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name AS productname,tblservicegroups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM tblservers WHERE tblservers.id=tblcustomerservices.server) AS serverdetails,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tblcustomerservices.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$apiresults = array("result" => "success", "clientid" => $clientid, "serviceid" => $serviceid, "pid" => $pid, "domain" => $domain, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result));
 
 if (!$totalresults) {
 	$apiresults['products'] = "";
 }
 
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$orderid = $data['orderid'];

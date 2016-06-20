@@ -11,16 +11,16 @@
  **/
 
 function getModuleType($id) {
-	$result = select_query("tblservers", "type", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservers", "type", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$type = $data['type'];
 	return $type;
 }
 
 function ModuleBuildParams($id) {
 
-	$result = select_query("tblcustomerservices", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$func_id = $id = $data['id'];
 	$userid = $data['userid'];
 	$domain = $data['domain'];
@@ -36,8 +36,8 @@ function ModuleBuildParams($id) {
 	$params['packageid'] = $pid;
 	$params['pid'] = $pid;
 	$params['serverid'] = $server;
-	$result = select_query("tblservices", "", array("id" => $pid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "", array("id" => $pid));
+	$data = mysqli_fetch_array($result);
 	$params['type'] = $data['type'];
 	$params['producttype'] = $data['type'];
 	$params['moduletype'] = $data['servertype'];
@@ -61,9 +61,9 @@ function ModuleBuildParams($id) {
 	$customfields = array();
         
       
-	$result = full_query("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid=" . (int)$id . " AND tblcustomfields.relid=" . (int)$pid);
+	$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid=" . (int)$id . " AND tblcustomfields.relid=" . (int)$pid);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$customfieldname = $data[0];
 		$customfieldvalue = $data[1];
 
@@ -83,9 +83,9 @@ function ModuleBuildParams($id) {
 
 	$params['customfields'] = $customfields;
 	$configoptions = array();
-	$result = full_query("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid=" . (int)$id . " AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid=" . (int)$pid);
+	$result = full_query_i("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid=" . (int)$id . " AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid=" . (int)$pid);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$configoptionname = $data[0];
 		$configoptiontype = $data[1];
 		$configoptionvalue = $data[2];
@@ -123,8 +123,8 @@ function ModuleBuildParams($id) {
 	$params['clientsdetails'] = $clientsdetails;
 
 	if ($server) {
-		$result = select_query("tblservers", "", array("id" => $server));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservers", "", array("id" => $server));
+		$data = mysqli_fetch_array($result);
 		$params['server'] = true;
 		$params['serverip'] = $data['ipaddress'];
 		$params['serverhostname'] = $data['hostname'];
@@ -471,9 +471,9 @@ function ServerClientArea($func_id) {
 }
 
 function ServerUsageUpdate() {
-	$result2 = select_query("tblservers", "", array("disabled" => "0"), "name", "ASC");
+	$result2 = select_query_i("tblservers", "", array("disabled" => "0"), "name", "ASC");
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$servertype = $data['type'];
 		$params['serverid'] = $data['id'];
 		$params['serverip'] = $data['ipaddress'];
@@ -512,8 +512,8 @@ function createServerUsername($domain) {
 		$domain = strtolower($domain);
 		$username = preg_replace("/[^a-z]/", "", $domain);
 		$username = substr($username, 0, 8);
-		$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "COUNT(*)", array("username" => $username));
+		$data = mysqli_fetch_array($result);
 		$username_exists = $data[0];
 		$suffix = 0;
 
@@ -521,8 +521,8 @@ function createServerUsername($domain) {
 			++$suffix;
 			$trimlength = 8 - strlen($suffix);
 			$username = substr($username, 0, $trimlength) . $suffix;
-			$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblcustomerservices", "COUNT(*)", array("username" => $username));
+			$data = mysqli_fetch_array($result);
 			$username_exists = $data[0];
 		}
 	}
@@ -547,8 +547,8 @@ function createServerUsername($domain) {
 			++$i;
 		}
 
-		$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "COUNT(*)", array("username" => $username));
+		$data = mysqli_fetch_array($result);
 		$username_exists = $data[0];
 
 		while (0 < $username_exists) {
@@ -570,8 +570,8 @@ function createServerUsername($domain) {
 				++$i;
 			}
 
-			$result = select_query("tblcustomerservices", "COUNT(*)", array("username" => $username));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblcustomerservices", "COUNT(*)", array("username" => $username));
+			$data = mysqli_fetch_array($result);
 			$username_exists = $data[0];
 		}
 	}
@@ -623,16 +623,16 @@ function createServerPassword() {
 
 function getServerID($servertype, $servergroup) {
 	if (!$servergroup) {
-		$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
+		$data = mysqli_fetch_array($result);
 		$serverid = $data['id'];
 		$maxaccounts = $data['maxaccounts'];
 		$usagecount = $data['usagecount'];
 
 		if ($serverid) {
 			if ($maxaccounts <= $usagecount) {
-				$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
-				$data = mysql_fetch_array($result);
+				$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
+				$data = mysqli_fetch_array($result);
 
 				if ($data['id']) {
 					$serverid = $data['id'];
@@ -643,35 +643,35 @@ function getServerID($servertype, $servergroup) {
 		}
 	}
 	else {
-		$result = select_query("tblservergroups", "filltype", array("id" => $servergroup));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservergroups", "filltype", array("id" => $servergroup));
+		$data = mysqli_fetch_array($result);
 		$filltype = $data['filltype'];
 		$serverslist = "";
-		$result = select_query("tblservergroupsrel", "serverid", array("groupid" => $servergroup));
+		$result = select_query_i("tblservergroupsrel", "serverid", array("groupid" => $servergroup));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$serverslist .= (int)$data['serverid'] . ",";
 		}
 
 		$serverslist = substr($serverslist, 0, 0 - 1);
 
 		if ($filltype == 1) {
-			$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
-			$data = mysql_fetch_array($result);
+			$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
+			$data = mysqli_fetch_array($result);
 			$serverid = $data['id'];
 		}
 		else {
 			if ($filltype == 2) {
-				$result = select_query("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
+				$data = mysqli_fetch_array($result);
 				$serverid = $data['id'];
 				$maxaccounts = $data['maxaccounts'];
 				$usagecount = $data['usagecount'];
 
 				if ($serverid) {
 					if ($maxaccounts <= $usagecount) {
-						$result = full_query("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
-						$data = mysql_fetch_array($result);
+						$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
+						$data = mysqli_fetch_array($result);
 
 						if ($data['id']) {
 							$serverid = $data['id'];

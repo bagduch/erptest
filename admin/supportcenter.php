@@ -59,9 +59,9 @@ $replytimes = array("1" => "0", "2" => 0, "4" => "0", "8" => "0", "16" => "0", "
 $avefirstresponse = "0";
 $avefirstresponsecount = "0";
 $opennoreply = "0";
-$result = full_query("SELECT id,date,(SELECT date FROM tblticketreplies WHERE tblticketreplies.tid=tbltickets.id AND admin!='' LIMIT 1) FROM tbltickets WHERE " . $date . " ORDER BY id ASC");
+$result = full_query_i("SELECT id,date,(SELECT date FROM tblticketreplies WHERE tblticketreplies.tid=tbltickets.id AND admin!='' LIMIT 1) FROM tbltickets WHERE " . $date . " ORDER BY id ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$ticketid = $data[0];
 	$dateopened = $data[1];
 	$datefirstreply = $data[2];

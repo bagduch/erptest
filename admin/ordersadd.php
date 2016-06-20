@@ -24,8 +24,8 @@ if ($action == "createpromo") {
         exit("Promotion Value must be greater than zero");
     }
 
-    $result = select_query("tblpromotions", "COUNT(*)", array("code" => $code));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+    $data = mysqli_fetch_array($result);
     $duplicates = $data[0];
 
     if ($duplicates) {
@@ -243,9 +243,9 @@ if ($ra->get_req_var("submitorder")) {
         }
 
         $validtlds = array();
-        $result = select_query("tbldomainpricing", "extension", "");
+        $result = select_query_i("tbldomainpricing", "extension", "");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $validtlds[] = $data[0];
         }
 
@@ -626,9 +626,9 @@ echo "<s";
 echo "elect name=\"promocode\" id=\"promodd\" onchange=\"updatesummary()\"><option value=\"\">";
 echo $aInt->lang("global", "none");
 echo "</option><optgroup label=\"Active Promotions\">";
-$result = select_query("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
+$result = select_query_i("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];
     $promo_type = $data['type'];
@@ -662,9 +662,9 @@ while ($data = mysql_fetch_array($result)) {
 }
 
 echo "</optgroup><optgroup label=\"Expired Promotions\">";
-$result = select_query("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
+$result = select_query_i("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];
     $promo_type = $data['type'];

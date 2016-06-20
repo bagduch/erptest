@@ -29,8 +29,8 @@ if (!function_exists("deleteOrder")) {
 	require ROOTDIR . "/includes/orderfunctions.php";
 }
 
-$result = select_query("tblorders", "", array("id" => $orderid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblorders", "", array("id" => $orderid));
+$data = mysqli_fetch_array($result);
 $orderid = $data['id'];
 
 if (!$orderid) {

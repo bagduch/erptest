@@ -19,8 +19,8 @@ if (!function_exists("generateClientPW")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query("tblcontacts", "id,subaccount", array("id" => $contactid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcontacts", "id,subaccount", array("id" => $contactid));
+$data = mysqli_fetch_array($result);
 $subaccount = $data['subaccount'];
 
 if (!$data[0]) {
@@ -30,10 +30,10 @@ if (!$data[0]) {
 
 
 if (($subaccount || $_REQUEST['subaccount']) && $_REQUEST['email']) {
-	$result = select_query("tblclients", "id", array("email" => $_REQUEST['email']));
-	$data = mysql_fetch_array($result);
-	$result = select_query("tblcontacts", "id", array("email" => $_REQUEST['email'], "subaccount" => "1", "id" => array("sqltype" => "NEQ", "value" => $contactid)));
-	$data2 = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("email" => $_REQUEST['email']));
+	$data = mysqli_fetch_array($result);
+	$result = select_query_i("tblcontacts", "id", array("email" => $_REQUEST['email'], "subaccount" => "1", "id" => array("sqltype" => "NEQ", "value" => $contactid)));
+	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {
 		$apiresults = array("result" => "error", "message" => "Duplicate Email Address");

@@ -93,14 +93,14 @@ foreach ($nums as $num) {
 		}
 	}
 
-	$result = select_query("tblticketspamfilters", "COUNT(*)", array("type" => $filtertype));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketspamfilters", "COUNT(*)", array("type" => $filtertype));
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$aInt->sortableTableInit("id", "ASC");
 	$tabledata = "";
-	$result = select_query("tblticketspamfilters", "", array("type" => $filtertype), "content", "ASC", $page * $limit . ("," . $limit));
+	$result = select_query_i("tblticketspamfilters", "", array("type" => $filtertype), "content", "ASC", $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$content = $data['content'];
 		$tabledata[] = array($content, "<a href=\"#\" onClick=\"doDelete('" . $id . "','" . $num . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");

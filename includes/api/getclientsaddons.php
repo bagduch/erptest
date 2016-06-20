@@ -35,10 +35,10 @@ if ($serviceid) {
 
 
 if ($clientid) {
-	$result = select_query("tblcustomerservices", "", array("userid" => $clientid));
+	$result = select_query_i("tblcustomerservices", "", array("userid" => $clientid));
 	$hostingids = array();
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$hostingids[] = (int)$data['id'];
 	}
 
@@ -50,10 +50,10 @@ if ($addonid) {
 	$where[] = "addonid=" . (int)$addonid;
 }
 
-$result = select_query("tblserviceaddons", "", implode(" AND ", $where));
-$apiresults = array("result" => "success", "serviceid" => $serviceid, "clientid" => $clientid, "totalresults" => mysql_num_rows($result));
+$result = select_query_i("tblserviceaddons", "", implode(" AND ", $where));
+$apiresults = array("result" => "success", "serviceid" => $serviceid, "clientid" => $clientid, "totalresults" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$aid = $data['id'];
 	$addonarray = array("id" => $data['id'], "userid" => get_query_val("tblcustomerservices", "userid", array("id" => $data['hostingid'])), "orderid" => $data['orderid'], "serviceid" => $data['hostingid'], "addonid" => $data['addonid'], "name" => $data['name'], "setupfee" => $data['setupfee'], "recurring" => $data['recurring'], "billingcycle" => $data['billingcycle'], "tax" => $data['tax'], "status" => $data['status'], "regdate" => $data['regdate'], "nextduedate" => $data['nextduedate'], "nextinvoicedate" => $data['nextinvoicedate'], "paymentmethod" => $data['paymentmethod'], "notes" => $data['notes']);
 	$apiresults['addons']['addon'][] = $addonarray;

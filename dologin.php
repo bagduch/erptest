@@ -138,20 +138,20 @@ if (!$loginsuccess) {
 					$hashverify = sha1($email . $timestamp . $autoauthkey);
 
 					if ($hashverify == $hash) {
-						$result = select_query("tblclients", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-						$data = mysql_fetch_array($result);
+						$result = select_query_i("tblclients", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+						$data = mysqli_fetch_array($result);
 						$login_uid = $data['id'];
 						$login_pwd = $data['password'];
 						$language = $data['language'];
 
 						if (!$login_uid) {
-							$result = select_query("tblcontacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
-							$data = mysql_fetch_array($result);
+							$result = select_query_i("tblcontacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
+							$data = mysqli_fetch_array($result);
 							$login_cid = $data['id'];
 							$login_uid = $data['userid'];
 							$login_pwd = $data['password'];
-							$result = select_query("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-							$data = mysql_fetch_array($result);
+							$result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+							$data = mysqli_fetch_array($result);
 							$login_uid = $data['id'];
 							$language = $data['language'];
 						}

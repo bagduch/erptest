@@ -17,8 +17,8 @@ initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav);
 
 if (isset($_SESSION['uid'])) {
 	checkContactPermission("affiliates");
-	$result = select_query("tblaffiliates", "", array("clientid" => $_SESSION['uid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaffiliates", "", array("clientid" => $_SESSION['uid']));
+	$data = mysqli_fetch_array($result);
 	$id = $affiliateid = $data['id'];
 
 	if (!$affiliateid) {
@@ -28,8 +28,8 @@ if (isset($_SESSION['uid'])) {
 			redir();
 		}
 
-		$result = select_query("tblclients", "currency", array("id" => $_SESSION['uid']));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "currency", array("id" => $_SESSION['uid']));
+		$data = mysqli_fetch_array($result);
 		$clientcurrency = $data['currency'];
 		$bonusdeposit = convertCurrency($CONFIG['AffiliateBonusDeposit'], 1, $clientcurrency);
 		$templatefile = "affiliatessignup";
@@ -45,11 +45,11 @@ if (isset($_SESSION['uid'])) {
 		$visitors = $data['visitors'];
 		$balance = $data['balance'];
 		$withdrawn = $data['withdrawn'];
-		$result = select_query("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
+		$data = mysqli_fetch_array($result);
 		$signups = $data[0];
-		$result = select_query("tblaffiliatespending", "SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliatespending", "SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$data = mysqli_fetch_array($result);
 		$pendingcommissions = $data[0];
 		$conversionrate = round($signups / $visitors * 100, 2);
 		$smarty->assign("affiliateid", $id);
@@ -127,9 +127,9 @@ Balance: " . $balance);
 		}
 
 		$referrals = array();
-		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), $orderby, $sort, $limit, "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$affaccid = $data['id'];
 			$lastpaid = $data['lastpaid'];
 			$relid = $data['relid'];
@@ -175,9 +175,9 @@ Balance: " . $balance);
 		$smarty->assign("referrals", $referrals);
 		$smartyvalues = array_merge($smartyvalues, clientAreaTablePageNav($numitems));
 		$commissionhistory = array();
-		$result = select_query("tblaffiliateshistory", "", array("affiliateid" => $affiliateid), "id", "DESC", "0,10");
+		$result = select_query_i("tblaffiliateshistory", "", array("affiliateid" => $affiliateid), "id", "DESC", "0,10");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$historyid = $data['id'];
 			$date = $data['date'];
 			$affaccid = $data['affaccid'];
@@ -188,9 +188,9 @@ Balance: " . $balance);
 
 		$smarty->assign("commissionhistory", $commissionhistory);
 		$withdrawalshistory = array();
-		$result = select_query("tblaffiliateswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
+		$result = select_query_i("tblaffiliateswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$historyid = $data['id'];
 			$date = $data['date'];
 			$amount = $data['amount'];

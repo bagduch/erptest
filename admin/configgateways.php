@@ -34,9 +34,9 @@ $aInt->helplink = "Payment Gateways";
 $aInt->requiredFiles(array("gatewayfunctions", "modulefunctions"));
 
 $GatewayValues = $GatewayConfig = $ActiveGateways = $DisabledGateways = array();
-$result = select_query("tblpaymentgateways", "", "", "setting", "ASC");
+$result = select_query_i("tblpaymentgateways", "", "", "setting", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$gwv_gateway = $data['gateway'];
 	$gwv_setting = $data['setting'];
 	$gwv_value = $data['value'];
@@ -98,9 +98,9 @@ while (false !== $file = readdir($dh)) {
 
 
 closedir($dh);
-$result = select_query("tblpaymentgateways", "", "", "order", "DESC");
+$result = select_query_i("tblpaymentgateways", "", "", "order", "DESC");
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $lastorder = $data['order'];
 
 if ($action == "activate" && in_array($gateway, $includedmodules)) {
@@ -154,8 +154,8 @@ if ($action == "save" && in_array($module, $includedmodules)) {
 	foreach ($GatewayConfig[$module] as $confname => $values) {
 
 		if ($values['Type'] != "System") {
-			$result = select_query("tblpaymentgateways", "COUNT(*)", array("gateway" => $module, "setting" => $confname));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblpaymentgateways", "COUNT(*)", array("gateway" => $module, "setting" => $confname));
+			$data = mysqli_fetch_array($result);
 			$count = $data[0];
 
 			if ($count) {
@@ -174,8 +174,8 @@ if ($action == "save" && in_array($module, $includedmodules)) {
 
 if ($action == "moveup") {
 	check_token("RA.admin.default");
-	$result = select_query("tblpaymentgateways", "", array("`order`" => $order));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpaymentgateways", "", array("`order`" => $order));
+	$data = mysqli_fetch_array($result);
 	$gateway = $data['gateway'];
 	$order1 = $order - 1;
 	update_query("tblpaymentgateways", array("order" => $order), array("`order`" => $order1));
@@ -186,8 +186,8 @@ if ($action == "moveup") {
 
 if ($action == "movedown") {
 	check_token("RA.admin.default");
-	$result = select_query("tblpaymentgateways", "", array("`order`" => $order));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpaymentgateways", "", array("`order`" => $order));
+	$data = mysqli_fetch_array($result);
 	$gateway = $data['gateway'];
 	$order1 = $order + 1;
 	update_query("tblpaymentgateways", array("order" => $order), array("`order`" => $order1));
@@ -195,10 +195,10 @@ if ($action == "movedown") {
 	redir();
 }
 
-$result = select_query("tblcurrencies", "id,code", "", "code", "ASC");
+$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
 $i = 0;
 
-while ($currenciesarray[$i] = mysql_fetch_assoc($result)) {
+while ($currenciesarray[$i] = mysqli_fetch_assoc($result)) {
 	++$i;
 }
 
@@ -250,9 +250,9 @@ $count = 1;
 $newgateways = "";
 $data = get_query_vals("tblpaymentgateways", "COUNT(gateway)", array("setting" => "name"));
 $numgateways = $data[0];
-$result3 = select_query("tblpaymentgateways", "", array("setting" => "name"), "order", "ASC");
+$result3 = select_query_i("tblpaymentgateways", "", array("setting" => "name"), "order", "ASC");
 
-while ($data = mysql_fetch_array($result3)) {
+while ($data = mysqli_fetch_array($result3)) {
 	$module = $data['gateway'];
 	$order = $data['order'];
 	echo "

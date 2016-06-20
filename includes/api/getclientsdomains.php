@@ -40,8 +40,8 @@ if ($domain) {
 	$where["tbldomains.domain"] = $domain;
 }
 
-$result = select_query("tbldomains", "COUNT(*)", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "COUNT(*)", $where);
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
 $limitstart = (int)$limitstart;
 $limitnum = (int)$limitnum;
@@ -50,15 +50,15 @@ if (!$limitnum) {
 	$limitnum = 25;
 }
 
-$result = select_query("tbldomains", "tbldomains.*,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tbldomains.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tbldomains`.`id", "ASC", "" . $limitstart . "," . $limitnum);
-$apiresults = array("result" => "success", "clientid" => $clientid, "domainid" => $domainid, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result));
+$result = select_query_i("tbldomains", "tbldomains.*,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tbldomains.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tbldomains`.`id", "ASC", "" . $limitstart . "," . $limitnum);
+$apiresults = array("result" => "success", "clientid" => $clientid, "domainid" => $domainid, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result));
 
 if (!$totalresults) {
 	$apiresults['domains'] = "";
 }
 
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$orderid = $data['orderid'];

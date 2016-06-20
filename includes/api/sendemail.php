@@ -29,8 +29,8 @@ else {
 	$messagename = $_POST['messagename'];
 }
 
-$result = select_query("tblemailtemplates", "COUNT(*)", array("name" => $messagename));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblemailtemplates", "COUNT(*)", array("name" => $messagename));
+$data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
 	$apiresults = array("result" => "error", "message" => "Email Template not found");

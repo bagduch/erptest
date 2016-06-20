@@ -54,8 +54,8 @@ if (!$id) {
 }
 $query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product') WHERE tblcustomerservices.id=" . $id;
 
-$result = full_query($query);
-$service_data = mysql_fetch_array($result);
+$result = full_query_i($query);
+$service_data = mysqli_fetch_array($result);
 $id = $service_data['id'];
 
 if (!$id) {
@@ -171,8 +171,8 @@ if ($frm->issubmitted()) {
             $predefname = "";
 
             if ($addonid) {
-                $result = select_query("tbladdons", "", array("id" => $addonid));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tbladdons", "", array("id" => $addonid));
+                $data = mysqli_fetch_array($result);
                 $addonid = $data['id'];
                 $predefname = $data['name'];
                 $tax = $data['tax'];
@@ -180,8 +180,8 @@ if ($frm->issubmitted()) {
                 if ($ra->get_req_var("defaultpricing")) {
                     $billingcycle = $data['billingcycle'];
                     $currency = getCurrency($userid);
-                    $result2 = select_query("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
-                    $data = mysql_fetch_array($result2);
+                    $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $data = mysqli_fetch_array($result2);
                     $setupfee = $data['msetupfee'];
                     $recurring = $data['monthly'];
                 }
@@ -212,8 +212,8 @@ if ($frm->issubmitted()) {
     $configoptionsrecurring = 0;
     foreach ($configoptions as $configoption) {
         $configoptionsrecurring += $configoption['selectedrecurring'];
-        $result = select_query("tblcustomerservicesconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcustomerservicesconfigoptions", "COUNT(*)", array("relid" => $id, "configid" => $configoption['id']));
+        $data = mysqli_fetch_array($result);
 
         if (!$data[0]) {
             insert_query("tblcustomerservicesconfigoptions", array("relid" => $id, "configid" => $configoption['id']));
@@ -336,7 +336,7 @@ if ($action == "delete") {
     delete_query("tblcustomerservices", array("id" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
-    full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
+    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
     logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
 }
@@ -524,9 +524,9 @@ function runModuleCommand(cmd,custom) {
 ";
 $aInt->jscode = $jscode;
 $clientnotes = array();
-$result = select_query("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
     $data['note'] = autoHyperLink(nl2br($data['note']));
@@ -556,9 +556,9 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
     $servicelist_domain = $data['domain'];
@@ -649,8 +649,8 @@ if ($aid) {
     }
     else {
         $managetitle = $aInt->lang("addons", "editaddon");
-        $result = select_query("tblserviceaddons", "", array("id" => $aid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblserviceaddons", "", array("id" => $aid));
+        $data = mysqli_fetch_array($result);
         $addonid = $data['addonid'];
         $customname = $data['name'];
         $recurring = $data['recurring'];
@@ -668,9 +668,9 @@ if ($aid) {
 
     echo "<h2>" . $managetitle . "</h2>";
     $predefaddons = array();
-    $result = select_query("tbladdons", "", "", "weight` ASC,`name", "ASC");
+    $result = select_query_i("tbladdons", "", "", "weight` ASC,`name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $preid = $data['id'];
         $name = $data['name'];
         $predefaddons[$preid] = $name;
@@ -699,9 +699,9 @@ if ($aid) {
 }
 else {
     $serversarr = $serversarr2 = array();
-    $result = select_query("tblservers", "", array("type" => $module), "name", "ASC");
+    $result = select_query_i("tblservers", "", array("type" => $module), "name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $serverid = $data['id'];
         $servername = $data['name'];
         $activeserver = $data['active'];
@@ -712,8 +712,8 @@ else {
             $servername .= " (" . $aInt->lang("emailtpls", "disabled") . ")";
         }
 
-        $result2 = select_query("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (servicestatus='Active' OR servicestatus='Suspended')");
-        $data = mysql_fetch_array($result2);
+        $result2 = select_query_i("tblcustomerservices", "COUNT(*)", "server='" . $serverid . "' AND (servicestatus='Active' OR servicestatus='Suspended')");
+        $data = mysqli_fetch_array($result2);
         $servernumaccounts = $data[0];
         $label = $servername . " (" . $servernumaccounts . "/" . $servermaxaccounts . " " . $aInt->lang("fields", "accounts") . ")";
 
@@ -729,9 +729,9 @@ else {
     }
 
     $promoarr = array();
-    $result = select_query("tblpromotions", "", "", "code", "ASC");
+    $result = select_query_i("tblpromotions", "", "", "code", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $promo_id = $data['id'];
         $promo_code = $data['code'];
         $promo_type = $data['type'];
@@ -957,9 +957,9 @@ echo $frmsub->hidden("type", "product");
 echo $frmsub->hidden("id", $id);
 $emailarr = array();
 $emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
-$result = select_query("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
+$result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
     $messagename = $data['name'];
     $custom = $data['custom'];
     $emailarr[$messagename] = ($custom ? array("#efefef", $messagename) : $messagename);

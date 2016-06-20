@@ -30,8 +30,8 @@ $aInt->valUserID($userid);
 if ($markpaid) {
 	check_token("RA.admin.default");
 	foreach ($selectedinvoices as $invid) {
-		$result2 = select_query("tblinvoices", "paymentmethod", array("id" => $invid));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblinvoices", "paymentmethod", array("id" => $invid));
+		$data = mysqli_fetch_array($result2);
 		$paymentmethod = $data['paymentmethod'];
 		addInvoicePayment($invid, "", "", "", $paymentmethod);
 		run_hook("InvoicePaid", array("invoiceid" => $invoiceid));
@@ -83,8 +83,8 @@ if ($markcancelled) {
 if ($duplicateinvoice) {
 	check_token("RA.admin.default");
 	foreach ($selectedinvoices as $invid) {
-		$result_duplicate = select_query("tblinvoices", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
-		$data_duplicate = mysql_fetch_assoc($result_duplicate);
+		$result_duplicate = select_query_i("tblinvoices", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
+		$data_duplicate = mysqli_fetch_assoc($result_duplicate);
 		$datefrom = fromMySQLDate($data_duplicate['date']);
 		$date = toMySQLDate($datefrom);
 		$duedatefrom = fromMySQLDate($data_duplicate['duedate']);
@@ -154,8 +154,8 @@ if ($merge) {
 	update_query("tblinvoiceitems", array("invoiceid" => $endinvoiceid), "invoiceid IN (" . db_build_in_array($selectedinvoices) . ")");
 	update_query("tblaccounts", array("invoiceid" => $endinvoiceid), "invoiceid IN (" . db_build_in_array($selectedinvoices) . ")");
 	update_query("tblorders", array("invoiceid" => $endinvoiceid), "invoiceid IN (" . db_build_in_array($selectedinvoices) . ")");
-	$result = select_query("tblinvoices", "SUM(credit)", "id IN (" . db_build_in_array($selectedinvoices) . ")");
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "SUM(credit)", "id IN (" . db_build_in_array($selectedinvoices) . ")");
+	$data = mysqli_fetch_array($result);
 	$totalcredit = $data[0];
 	update_query("tblinvoices", array("credit" => $totalcredit), array("id" => $endinvoiceid));
 	unset($selectedinvoices[count($selectedinvoices) - 1]);
@@ -187,15 +187,15 @@ if ($masspay) {
 	$paymentmethod = getClientsPaymentMethod($userid);
 	$invoiceitems = array();
 	foreach ($selectedinvoices as $invoiceid) {
-		$result = select_query("tblinvoices", "", array("id" => $invoiceid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoices", "", array("id" => $invoiceid));
+		$data = mysqli_fetch_array($result);
 		$subtotal += $data['subtotal'];
 		$credit += $data['credit'];
 		$tax += $data['tax'];
 		$tax2 += $data['tax2'];
 		$thistotal = $data['total'];
-		$result = select_query("tblaccounts", "SUM(amountin)", array("invoiceid" => $invoiceid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaccounts", "SUM(amountin)", array("invoiceid" => $invoiceid));
+		$data = mysqli_fetch_array($result);
 		$thispayments = $data[0];
 		$thistotal = $thistotal - $thispayments;
 		insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Invoice", "relid" => $invoiceid, "description" => $_LANG['invoicenumber'] . $invoiceid, "amount" => $thistotal, "duedate" => "now()", "paymentmethod" => $paymentmethod));
@@ -440,8 +440,8 @@ echo "'\" class=\"btn-success\" /></div>
 $currency = getCurrency($userid);
 $gatewaysarray = getGatewaysArray();
 $aInt->sortableTableInit("duedate", "DESC");
-$result = select_query("tblinvoices", "COUNT(*)", implode(" AND ", $filters));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblinvoices", "COUNT(*)", implode(" AND ", $filters));
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 $qryorderby = $orderby;
 
@@ -449,9 +449,9 @@ if ($qryorderby == "id") {
 	$qryorderby = "tblinvoices`.`invoicenum` " . $order . ",`tblinvoices`.`id";
 }
 
-$result = select_query("tblinvoices", "", implode(" AND ", $filters), $qryorderby, $order, $page * $limit . ("," . $limit));
+$result = select_query_i("tblinvoices", "", implode(" AND ", $filters), $qryorderby, $order, $page * $limit . ("," . $limit));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$invoicenum = $data['invoicenum'];
 	$date = $data['date'];

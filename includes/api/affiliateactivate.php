@@ -24,8 +24,8 @@ if (!function_exists("affiliateActivate")) {
 	require ROOTDIR . "/includes/affiliatefunctions.php";
 }
 
-$result = select_query("tblclients", "id", array("id" => $userid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "id", array("id" => $userid));
+$data = mysqli_fetch_array($result);
 $userid = $data['id'];
 
 if (!$userid) {

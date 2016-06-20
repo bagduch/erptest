@@ -27,8 +27,8 @@ if (!function_exists("openNewTicket")) {
 $from = "";
 
 if ($clientid) {
-	$result = select_query("tblclients", "id", array("id" => $clientid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("id" => $clientid));
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -37,8 +37,8 @@ if ($clientid) {
 
 
 	if ($contactid) {
-		$result = select_query("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
 			$apiresults = array("result" => "error", "message" => "Contact ID Not Found");
@@ -55,8 +55,8 @@ else {
 	$from = array("name" => $name, "email" => $email);
 }
 
-$result = select_query("tblticketdepartments", "", array("id" => $deptid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
+$data = mysqli_fetch_array($result);
 $deptid = $data['id'];
 
 if (!$deptid) {
@@ -84,8 +84,8 @@ if (!$priority || !in_array($priority, array("Low", "Medium", "High"))) {
 
 if ($serviceid) {
 	if (is_numeric($serviceid) || substr($serviceid, 0, 1) == "S") {
-		$result = select_query("tblcustomerservices", "id", array("id" => $serviceid, "userid" => $clientid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "id", array("id" => $serviceid, "userid" => $clientid));
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
 			$apiresults = array("result" => "error", "message" => "Service ID Not Found");
@@ -96,8 +96,8 @@ if ($serviceid) {
 	}
 	else {
 		$serviceid = substr($serviceid, 1);
-		$result = select_query("tbldomains", "id", array("id" => $serviceid, "userid" => $clientid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldomains", "id", array("id" => $serviceid, "userid" => $clientid));
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
 			$apiresults = array("result" => "error", "message" => "Service ID Not Found");
@@ -110,8 +110,8 @@ if ($serviceid) {
 
 
 if ($domainid) {
-	$result = select_query("tbldomains", "id", array("id" => $domainid, "userid" => $clientid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "id", array("id" => $domainid, "userid" => $clientid));
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		$apiresults = array("result" => "error", "message" => "Domain ID Not Found");

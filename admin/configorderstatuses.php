@@ -85,9 +85,9 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query("tblorderstatuses", "", "", "sortorder", "ASC");
+$result = select_query_i("tblorderstatuses", "", "", "sortorder", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$statusid = $data['id'];
 	$title = $data['title'];
 	$color = $data['color'];

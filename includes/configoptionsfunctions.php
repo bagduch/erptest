@@ -29,12 +29,12 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 	$cyclemonths = getBillingCycleMonths($cycle);
 	if ($accountid) {
 		$values = array();
-		$result = select_query("tblserviceconfigoptions", "", array("relid" => $accountid));
+		$result = select_query_i("tblserviceconfigoptions", "", array("relid" => $accountid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$configid = $data['configid'];
-			$result2 = select_query("tblserviceconfigoptions", "", array("id" => $configid));
-			$data2 = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+			$data2 = mysqli_fetch_array($result2);
 			$optiontype = $data2['optiontype'];
 
 			if ($optiontype == 3 || $optiontype == 4) {
@@ -54,9 +54,9 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		$where['hidden'] = 0;
 	}
 
-	$result2 = select_query("tblserviceconfigoptions", "", $where, "order` ASC,`id", "ASC", "", "tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid");
+	$result2 = select_query_i("tblserviceconfigoptions", "", $where, "order` ASC,`id", "ASC", "", "tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid");
 
-	while ($data2 = mysql_fetch_array($result2)) {
+	while ($data2 = mysqli_fetch_array($result2)) {
 		$optionid = $data2['id'];
 		$optionname = $data2['optionname'];
 		$optiontype = $data2['optiontype'];
@@ -74,8 +74,8 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		$selvalue = $values[$optionid];
 
 		if ($optiontype == "3") {
-			$result3 = select_query("tblserviceconfigoptionssub", "", array("configid" => $optionid));
-			$data3 = mysql_fetch_array($result3);
+			$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid));
+			$data3 = mysqli_fetch_array($result3);
 			$opid = $data3['id'];
 			$ophidden = $data3['hidden'];
 			$opname = $data3['optionname'];
@@ -86,8 +86,8 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 			}
 
 			$opnameonly = $opname;
-			$result4 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
-			$data = mysql_fetch_array($result4);
+			$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+			$data = mysqli_fetch_array($result4);
 			$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 			$price = $fullprice = $data[$cycle];
 
@@ -121,8 +121,8 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		}
 		else {
 			if ($optiontype == "4") {
-				$result3 = select_query("tblserviceconfigoptionssub", "", array("configid" => $optionid));
-				$data3 = mysql_fetch_array($result3);
+				$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid));
+				$data3 = mysqli_fetch_array($result3);
 				$opid = $data3['id'];
 				$ophidden = $data3['hidden'];
 				$opname = $data3['optionname'];
@@ -133,8 +133,8 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 				}
 
 				$opnameonly = $opname;
-				$result4 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
-				$data = mysql_fetch_array($result4);
+				$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+				$data = mysqli_fetch_array($result4);
 				$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 				$price = $fullprice = $data[$cycle];
 
@@ -162,9 +162,9 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 				$selrecurring = $fullprice * $selectedqty;
 			}
 			else {
-				$result3 = select_query("tblserviceconfigoptionssub", "", array("configid" => $optionid), "sortorder` ASC,`id", "ASC");
+				$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid), "sortorder` ASC,`id", "ASC");
 
-				while ($data3 = mysql_fetch_array($result3)) {
+				while ($data3 = mysqli_fetch_array($result3)) {
 					$opid = $data3['id'];
 					$opname = $data3['optionname'];
 					$ophidden = $data3['hidden'];
@@ -175,8 +175,8 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 					}
 
 					$opnameonly = $opname;
-					$result4 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
-					$data = mysql_fetch_array($result4);
+					$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+					$data = mysqli_fetch_array($result4);
 					$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 					$price = $fullprice = $data[$cycle];
 

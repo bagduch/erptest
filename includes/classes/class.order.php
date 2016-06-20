@@ -23,8 +23,8 @@ class RA_Order {
 	}
 
 	public function loadData() {
-		$result = select_query("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $this->orderid), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $this->orderid), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
 			return false;

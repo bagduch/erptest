@@ -68,9 +68,9 @@ if ($action == "delete") {
 	exit();
 }
 
-$result = select_query("tblconfiguration", "", "");
+$result = select_query_i("tblconfiguration", "", "");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$setting = $data['setting'];
 	$value = $data['value'];
 	$CONFIG["" . $setting] = "" . $value;
@@ -207,9 +207,9 @@ echo "
 ";
 $aInt->sortableTableInit("nopagination");
 $tabledata = "";
-$result = select_query("tbltax", "", array("level" => "1"), "state", "ASC");
+$result = select_query_i("tbltax", "", array("level" => "1"), "state", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$name = $data['name'];
 	$state = $data['state'];
@@ -238,9 +238,9 @@ echo "
 ";
 $aInt->sortableTableInit("nopagination");
 $tabledata = "";
-$result = select_query("tbltax", "", array("level" => "2"), "state", "ASC");
+$result = select_query_i("tbltax", "", array("level" => "2"), "state", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$name = $data['name'];
 	$state = $data['state'];

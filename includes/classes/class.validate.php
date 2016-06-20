@@ -84,9 +84,9 @@ class RA_Validate {
 			$where['showorder'] = "on";
 		}
 
-		$result = select_query("tblcustomfields", "id,fieldname,fieldtype,fieldoptions,required,regexpr", $where, "sortorder` ASC,`id", "ASC");
+		$result = select_query_i("tblcustomfields", "id,fieldname,fieldtype,fieldoptions,required,regexpr", $where, "sortorder` ASC,`id", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$fieldid = $data['id'];
 			$fieldname = $data['fieldname'];
 			$fieldtype = $data['fieldtype'];

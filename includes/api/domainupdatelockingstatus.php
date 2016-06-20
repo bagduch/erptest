@@ -19,8 +19,8 @@ if (!function_exists("RegSaveRegistrarLock")) {
 	require ROOTDIR . "/includes/registrarfunctions.php";
 }
 
-$result = select_query("tbldomains", "id,domain,registrar,registrationperiod", array("id" => $domainid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "id,domain,registrar,registrationperiod", array("id" => $domainid));
+$data = mysqli_fetch_array($result);
 $domainid = $data[0];
 
 if (!$domainid) {

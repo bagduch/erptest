@@ -191,9 +191,9 @@ if (!$a) {
             }
 
             $productids = array();
-            $result = select_query("tblcustomerservices", "tblcustomerservices.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
+            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "domain" => $data['domain']);
 
                 if (!in_array($data['packageid'], $productids)) {
@@ -202,9 +202,9 @@ if (!$a) {
             }
 
             $addonids = array();
-            $result = select_query("tbladdons", "id,packages", "");
+            $result = select_query_i("tbladdons", "id,packages", "");
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $id = $data['id'];
                 $packages = $data['packages'];
                 $packages = explode(",", $packages);
@@ -220,9 +220,9 @@ if (!$a) {
             $addons = array();
 
             if (count($addonids)) {
-                $result = select_query("tbladdons", "", "id IN (" . db_build_in_array($addonids) . ")", "weight` ASC,`name", "ASC");
+                $result = select_query_i("tbladdons", "", "id IN (" . db_build_in_array($addonids) . ")", "weight` ASC,`name", "ASC");
 
-                while ($data = mysql_fetch_array($result)) {
+                while ($data = mysqli_fetch_array($result)) {
                     $addonid = $data['id'];
                     $packages = $data['packages'];
                     $packages = explode(",", $packages);
@@ -234,8 +234,8 @@ if (!$a) {
                     if ($billingcycle == "Free Account") {
                         $free = true;
                     } else {
-                        $result2 = select_query("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
-                        $data = mysql_fetch_array($result2);
+                        $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                        $data = mysqli_fetch_array($result2);
                         $setupfee = $data['msetupfee'];
                         $recurring = $data['monthly'];
                         $setupfee = ($setupfee == "0.00" ? "" : formatCurrency($setupfee));
@@ -287,9 +287,9 @@ if (!$a) {
                 $DomainRenewalMinimums = array_merge(array(".co.uk" => "180", ".org.uk" => "180", ".me.uk" => "180", ".com.au" => "90", ".net.au" => "90", ".org.au" => "90"), $DomainRenewalMinimums);
                 $DomainRenewalPriceOptions = array();
                 $renewals = array();
-                $result = select_query("tbldomains", "", "userid='" . (int) $_SESSION['uid'] . "' AND (status='Active' OR status='Expired')", "expirydate", "ASC");
+                $result = select_query_i("tbldomains", "", "userid='" . (int) $_SESSION['uid'] . "' AND (status='Active' OR status='Expired')", "expirydate", "ASC");
 
-                while ($data = mysql_fetch_array($result)) {
+                while ($data = mysqli_fetch_array($result)) {
                     $id = $data['id'];
                     $domain = $data['domain'];
                     $expirydate = $data['expirydate'];
@@ -367,8 +367,8 @@ if (!$a) {
                 $smartyvalues['productservices'] = $productservice;
 
                 if ($pid) {
-                    $result = select_query("tblservices", "id,gid", array("id" => $pid));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblservices", "id,gid", array("id" => $pid));
+                    $data = mysqli_fetch_array($result);
                     $pid = $data['id'];
                     $gid = $data['gid'];
                     $smartyvalues['pid'] = $pid;
@@ -377,8 +377,8 @@ if (!$a) {
                         $gid = $productservice[0]['gid'];
                     }
                 }
-                $type = select_query('tblservicegroups', "type", array("id" => $gid));
-                $typedata = mysql_fetch_array($result);
+                $type = select_query_i('tblservicegroups', "type", array("id" => $gid));
+                $typedata = mysqli_fetch_array($result);
                 $smartyvalues['type'] = $typedata['type'];
                 $groupinfo = $orderfrm->getProductGroupInfo($gid);
 
@@ -426,8 +426,8 @@ if ($a == "domainoptions") {
 
 
             if ($CONFIG['AllowDomainsTwice']) {
-                $result = select_query("tbldomains", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (status!='Expired' AND status!='Cancelled')");
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tbldomains", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (status!='Expired' AND status!='Cancelled')");
+                $data = mysqli_fetch_array($result);
                 $domaincheck = $data[0];
             }
 
@@ -502,8 +502,8 @@ if ($a == "domainoptions") {
                     $tld = "." . $tld;
                 }
                 if ($CONFIG['AllowDomainsTwice']) {
-                    $result = select_query("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (servicestatus!='Terminated' AND servicestatus!='Cancelled' AND servicestatus!='Fraud')");
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (servicestatus!='Terminated' AND servicestatus!='Cancelled' AND servicestatus!='Fraud')");
+                    $data = mysqli_fetch_array($result);
                     $domaincheck = $data[0];
                     if ($domaincheck) {
                         $smartyvalues['alreadyindb'] = true;
@@ -558,16 +558,16 @@ if ($a == "confservice") {
         global $errormessage;
 
         $errormessage = "";
-        $result = select_query("tblproducts", "type", array("id" => $pid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblproducts", "type", array("id" => $pid));
+        $data = mysqli_fetch_array($result);
         $producttype = $data['type'];
 
         if ($producttype == "server") {
             if (!$hostname) {
                 $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
             } else {
-                $result = select_query("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
+                $data = mysqli_fetch_array($result);
                 $existingcount = $data[0];
 
                 if ($existingcount) {
@@ -589,8 +589,8 @@ if ($a == "confservice") {
 
         if ($configoption) {
             foreach ($configoption as $opid => $opid2) {
-                $result = select_query("tblserviceconfigoptions", "", array("id" => $opid));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblserviceconfigoptions", "", array("id" => $opid));
+                $data = mysqli_fetch_array($result);
                 $optionname = $data['optionname'];
                 $optiontype = $data['optiontype'];
                 $qtyminimum = $data['qtyminimum'];
@@ -787,16 +787,16 @@ if ($a == "fraudcheck") {
         $fraudmodule = getActiveFraudModule();
 
         if ($CONFIG['SkipFraudForExisting']) {
-            $result = select_query("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $data = mysqli_fetch_array($result);
 
             if ($data[0]) {
                 $fraudmodule = "";
             }
         }
 
-        $result = full_query("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
-        $data = mysql_fetch_array($result);
+        $result = full_query_i("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
+        $data = mysqli_fetch_array($result);
 
         if ($data[0]) {
             $fraudmodule = "";
@@ -874,8 +874,8 @@ if ($a == "complete") {
     $total = 0;
 
     if ($invoiceid) {
-        $result = select_query("tblinvoices", "id,total,paymentmethod,status", array("userid" => $_SESSION['uid'], "id" => $invoiceid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblinvoices", "id,total,paymentmethod,status", array("userid" => $_SESSION['uid'], "id" => $invoiceid));
+        $data = mysqli_fetch_array($result);
         $invoiceid = $data['id'];
         $total = $data['total'];
         $paymentmethod = $data['paymentmethod'];
@@ -894,9 +894,9 @@ if ($a == "complete") {
         exit("Unexpected payment method value. Exiting.");
     }
 
-    $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblproducts.servertype", array("tblcustomerservices.orderid" => $orderid, "tblcustomerservices.servicestatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
+    $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblproducts.servertype", array("tblcustomerservices.orderid" => $orderid, "tblcustomerservices.servicestatus" => "Pending", "tblproducts.autosetup" => "order"), "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $servertype = $data['servertype'];
 

@@ -84,13 +84,13 @@ if ($action == "") {
 
 ";
 	$query = "SELECT * FROM tblannouncements WHERE language='' ORDER BY date DESC";
-	$result = full_query($query);
-	$numrows = mysql_num_rows($result);
+	$result = full_query_i($query);
+	$numrows = mysqli_num_rows($result);
 	$aInt->sortableTableInit("date", "DESC");
 	$query .= " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$date = $data['date'];
 		$title = $data['title'];
@@ -116,17 +116,17 @@ else {
 
 		if ($id) {
 			$action = "Edit";
-			$result = select_query("tblannouncements", "", array("id" => $id, "language" => ""));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblannouncements", "", array("id" => $id, "language" => ""));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$date = $data['date'];
 			$title = $data['title'];
 			$announcement = $data['announcement'];
 			$published = $data['published'];
 			$date = fromMySQLDate($date, true);
-			$result = select_query("tblannouncements", "", array("parentid" => $id));
+			$result = select_query_i("tblannouncements", "", array("parentid" => $id));
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$language = $data['language'];
 				$multilang_title[$language] = $data['title'];
 				$multilang_announcement[$language] = $data['announcement'];

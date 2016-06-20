@@ -22,8 +22,8 @@ $reportdata["headertext"] = '
 <tr><td class="fieldlabel">Filter By</td><td class="fieldarea"><select name="filterby"><option>Date Created</option><option>Due Date</option><option>Date Paid</option></select></td></tr>
 <tr><td class="fieldlabel">Date Range</td><td class="fieldarea"><input type="text" name="datefrom" value="'.fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m")-1,date("d"),date("Y")))).'" class="datepick" /> to &nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="dateto" value="'.fromMySQLDate(date("Y-m-d")).'" class="datepick" /></td></tr>
 <tr><td class="fieldlabel">Payment Methods</td><td class="fieldarea"><select name="paymentmethods[]" size="8" multiple="true">';
-	$result = select_query("tblpaymentgateways","gateway,value",array("setting"=>"name"),"order","ASC");
-	while($data = mysql_fetch_array($result)) {
+	$result = select_query_i("tblpaymentgateways","gateway,value",array("setting"=>"name"),"order","ASC");
+	while($data = mysqli_fetch_array($result)) {
 		$dbcongateway = $data["gateway"];
 		$dbconvalue = $data["value"];
 		$reportdata["headertext"] .= '<option value="'.$dbcongateway.'" selected>'.$dbconvalue.'</option>';

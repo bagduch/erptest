@@ -532,7 +532,7 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 						}
 
 						$filterdate = date("YmdHis", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y")));
-						$query = "SELECT count(*) FROM tbltickets WHERE date>'" . $filterdate . "' AND (email='" . mysql_real_escape_string($email) . "'";
+						$query = "SELECT count(*) FROM tbltickets WHERE date>'" . $filterdate . "' AND (email='" . mysqli_real_escape_string($email) . "'";
 
 						if ($userid) {
 							$query .= " OR userid=" . (int)$userid;

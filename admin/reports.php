@@ -97,9 +97,9 @@ else {
 
 if ($report) {
 	$currencies = array();
-	$result = select_query("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$code = $data['code'];
 		$currencies[$id] = $code;

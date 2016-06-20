@@ -35,8 +35,8 @@ $folder_path = $file_name = $display_name = "";
 $allowedtodownload = "";
 
 if ($type == "i") {
-	$result = select_query("tblinvoices", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		exit("Invalid Access Attempt");
@@ -78,8 +78,8 @@ if ($type == "i") {
 
 
 if ($type == "a") {
-	$result = select_query("tbltickets", "userid,attachment", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbltickets", "userid,attachment", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$attachments = $data['attachment'];
 	$folder_path = $attachments_dir;
@@ -93,8 +93,8 @@ if ($type == "a") {
 }
 else {
 	if ($type == "ar") {
-		$result = select_query("tblticketreplies", "userid,attachment", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblticketreplies", "userid,attachment", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$userid = $data['userid'];
 		$attachments = $data['attachment'];
 		$folder_path = $attachments_dir;
@@ -108,8 +108,8 @@ else {
 	}
 	else {
 		if ($type == "d") {
-			$result = select_query("tbldownloads", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldownloads", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$filename = $data['location'];
 			$clientsonly = $data['clientsonly'];
 			$productdownload = $data['productdownload'];
@@ -128,9 +128,9 @@ else {
 					$where = array("userid" => $_SESSION['uid'], "tblcustomerservices.servicestatus" => "Active");
 				}
 
-				$result = select_query("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+				$result = select_query_i("tblcustomerservices", "DISTINCT tblservices.id,tblservices.downloads, tblservices.servertype, tblservices.configoption7", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$productdownloads = $data['downloads'];
 					$productdownloads = unserialize($productdownloads);
 
@@ -154,9 +154,9 @@ else {
 					$where = array("tblcustomerservices.userid" => $_SESSION['uid'], "tblserviceaddons.status" => "Active");
 				}
 
-				$result = select_query("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+				$result = select_query_i("tblserviceaddons", "DISTINCT tbladdons.id,tbladdons.downloads", $where, "", "", "", "tbladdons ON tbladdons.id=tblserviceaddons.addonid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$addondownloads = $data['downloads'];
 					$addondownloads = explode(",", $addondownloads);
 					$downloads = array_merge($downloads, $addondownloads);
@@ -175,9 +175,9 @@ else {
 						$pagetitle = $_LANG['downloadstitle'];
 						$breadcrumbnav = "<a href=\"" . $CONFIG['SystemURL'] . "/index.php\">" . $_LANG['globalsystemname'] . "</a> > <a href=\"" . $CONFIG['SystemURL'] . "/downloads.php\">" . $_LANG['downloadstitle'] . "</a>";
 						initialiseClientArea($pagetitle, "", $breadcrumbnav);
-						$result = select_query("tblservices", "id,name,downloads", array("downloads" => array("sqltype" => "NEQ", "value" => "")));
+						$result = select_query_i("tblservices", "id,name,downloads", array("downloads" => array("sqltype" => "NEQ", "value" => "")));
 
-						while ($data = mysql_fetch_array($result)) {
+						while ($data = mysqli_fetch_array($result)) {
 							$downloads = $data['downloads'];
 							$downloads = unserialize($downloads);
 
@@ -188,9 +188,9 @@ else {
 							}
 						}
 
-						$result = select_query("tbladdons", "id,name,downloads", array("downloads" => array("sqltype" => "NEQ", "value" => "")));
+						$result = select_query_i("tbladdons", "id,name,downloads", array("downloads" => array("sqltype" => "NEQ", "value" => "")));
 
-						while ($data = mysql_fetch_array($result)) {
+						while ($data = mysqli_fetch_array($result)) {
 							$downloads = $data['downloads'];
 							$downloads = explode(",", $downloads);
 
@@ -210,24 +210,24 @@ else {
 					exit();
 				}
 
-				$result = select_query("tblservices", "tblservices.configoption7", array("tblcustomerservices.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblservices", "tblservices.configoption7", array("tblcustomerservices.id" => $serviceid, "tblservices.servertype" => "licensing"), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
+				$data = mysqli_fetch_array($result);
 				$supportpackage = $data['configoption7'];
 				$addonid = explode("|", $supportpackage);
 				$addonid = $addonid[0];
 
 				if ($addonid) {
-					$result = select_query("tbladdons", "name", array("id" => $addonid));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tbladdons", "name", array("id" => $addonid));
+					$data = mysqli_fetch_array($result);
 					$addonname = $data['name'];
-					$where = "tblcustomerservices.userid='" . (int)$_SESSION['uid'] . "' AND tblserviceaddons.status='Active' AND (tblserviceaddons.name='" . mysql_real_escape_string($addonname) . "' OR tblserviceaddons.addonid='" . (int)$addonid . "')";
+					$where = "tblcustomerservices.userid='" . (int)$_SESSION['uid'] . "' AND tblserviceaddons.status='Active' AND (tblserviceaddons.name='" . mysqli_real_escape_string($addonname) . "' OR tblserviceaddons.addonid='" . (int)$addonid . "')";
 
 					if ($pid) {
 						$where .= " AND tblcustomerservices.id='" . (int)$pid . "'";
 					}
 
-					$result = select_query("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblserviceaddons", "COUNT(*)", $where, "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+					$data = mysqli_fetch_array($result);
 					$supportpackageactive = $data[0];
 
 					if (!$supportpackageactive) {
@@ -267,8 +267,8 @@ You will need to renew your support & updates before you can download the latest
 		}
 		else {
 			if ($type == "f") {
-				$result = select_query("tblclientsfiles", "userid,filename,adminonly", array("id" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblclientsfiles", "userid,filename,adminonly", array("id" => $id));
+				$data = mysqli_fetch_array($result);
 				$userid = $data['userid'];
 				$file_name = $data['filename'];
 				$adminonly = $data['adminonly'];
@@ -290,8 +290,8 @@ You will need to renew your support & updates before you can download the latest
 						downloadLogin();
 					}
 
-					$result = select_query("tblquotes", "id,userid", array("id" => $id));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblquotes", "id,userid", array("id" => $id));
+					$data = mysqli_fetch_array($result);
 					$id = $data['id'];
 					$userid = $data['userid'];
 

@@ -14,10 +14,10 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblcurrencies", "", "", "id", "ASC");
-$apiresults = array("result" => "success", "totalresults" => mysql_num_rows($result));
+$result = select_query_i("tblcurrencies", "", "", "id", "ASC");
+$apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$code = $data['code'];
 	$prefix = $data['prefix'];

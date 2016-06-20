@@ -98,9 +98,9 @@ if (!$action) {
 
 ";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tbladdons", "", "", "weight` ASC,`name", "ASC");
+	$result = select_query_i("tbladdons", "", "", "weight` ASC,`name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$addonid = $data['id'];
 		$packages = $data['packages'];
 		$name = $data['name'];
@@ -120,8 +120,8 @@ else {
 	if ($action == "manage") {
 		if ($id) {
 			$managetitle = $aInt->lang("addons", "editaddon");
-			$result = select_query("tbladdons", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladdons", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$packages = $data['packages'];
 			$name = $data['name'];
 			$description = $data['description'];
@@ -174,21 +174,21 @@ else {
 <table cellspacing=\"1\" bgcolor=\"#cccccc\" align=\"center\">
 ";
 		$headerrow = $setupfeerow = $recurringrow = "";
-		$result = select_query("tblcurrencies", "id,code", "", "code", "ASC");
+		$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$currency_id = $data['id'];
 			$currency_code = $data['code'];
 
 			if ($id) {
-				$result2 = select_query("tblpricing", "", array("type" => "addon", "currency" => $currency_id, "relid" => $id));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency_id, "relid" => $id));
+				$data = mysqli_fetch_array($result2);
 				$pricing_id = $data['id'];
 
 				if (!$pricing_id) {
 					insert_query("tblpricing", array("type" => "addon", "currency" => $currency_id, "relid" => $id));
-					$result2 = select_query("tblpricing", "", array("type" => "addon", "currency" => $currency_id, "relid" => $id));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency_id, "relid" => $id));
+					$data = mysqli_fetch_array($result2);
 				}
 			}
 
@@ -250,9 +250,9 @@ else {
 		echo "<s";
 		echo "elect name=\"downloads[]\" size=\"5\" multiple>";
 		$query = "SELECT tbldownloads.*,tbldownloadcats.name FROM tbldownloads INNER JOIN tbldownloadcats ON tbldownloads.category=tbldownloadcats.id WHERE tbldownloads.productdownload='on' ORDER BY tbldownloadcats.name ASC,tbldownloads.title ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$downloadid = $data['id'];
 			$downloadcat = $data['name'];
 			$downloadname = $data['title'];
@@ -277,9 +277,9 @@ else {
 		echo "</option>
 ";
 		$query = "SELECT * FROM tblemailtemplates WHERE type='product' AND language='' ORDER BY name ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$mid = $data['id'];
 			$name = $data['name'];
 			echo "<option value=\"" . $mid . "\"";
@@ -316,9 +316,9 @@ else {
 <table width=\"100%\"><tr>
 ";
 		$prodcount = 0;
-		$result = select_query("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+		$result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$type = $data['type'];
 			$name = $data['name'];

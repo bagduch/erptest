@@ -131,7 +131,7 @@
             {elseif $reply.contactid}
             {$reply.name} <span class="badge">{$LANG.supportticketscontact}</span>
             {elseif $reply.userid}
-            <img src="https://secure.gravatar.com/avatar/{php}$userid = $this->_tpl_vars['clientsdetails']['userid'];$result = mysql_query("SELECT email FROM tblclients WHERE id=$userid");$data = mysql_fetch_array($result);$email = $data["email"];echo md5( strtolower( trim( $email ) ) );{/php}?s=30&d=mm" class="menu-avatar" alt="">{$reply.name}
+            <img src="https://secure.gravatar.com/avatar/{php}$userid = $this->_tpl_vars['clientsdetails']['userid'];$result = mysqli_query("SELECT email FROM tblclients WHERE id=$userid");$data = mysqli_fetch_array($result);$email = $data["email"];echo md5( strtolower( trim( $email ) ) );{/php}?s=30&d=mm" class="menu-avatar" alt="">{$reply.name}
             {else}
             {$reply.name} <span class="badge">{$reply.email}</span>
             {/if}</h4>

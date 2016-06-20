@@ -34,9 +34,9 @@ if ($CONFIG['NetworkIssuesRequireLogin'] && !isset($_SESSION['uid'])) {
 
 releaseSession();
 $servers = array();
-$result = select_query("tblservers", "", "disabled=0 AND statusaddress!=''", "name", "ASC");
+$result = select_query_i("tblservers", "", "disabled=0 AND statusaddress!=''", "name", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$name = $data['name'];
 	$ipaddress = $data['ipaddress'];
 	$statusaddress = $data['statusaddress'];

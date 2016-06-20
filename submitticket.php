@@ -96,8 +96,8 @@ if ($CONFIG['SupportModule']) {
 
 if ($step == "") {
 	$templatefile = "supportticketsubmit-stepone";
-	$result = select_query("tblticketdepartments", "COUNT(*)", array("hidden" => ""));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketdepartments", "COUNT(*)", array("hidden" => ""));
+	$data = mysqli_fetch_array($result);
 	$totaldepartments = $data[0];
 	$where = "";
 	$where['hidden'] = "";
@@ -107,9 +107,9 @@ if ($step == "") {
 	}
 
 	$departments = array();
-	$result = select_query("tblticketdepartments", "", $where, "order", "ASC");
+	$result = select_query_i("tblticketdepartments", "", $where, "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$dept_id = $data['id'];
 		$dept_name = $data['name'];
 		$dept_desc = $data['description'];
@@ -127,8 +127,8 @@ if ($step == "") {
 else {
 	if ($step == "2") {
 		$templatefile = "supportticketsubmit-steptwo";
-		$result = select_query("tblticketdepartments", "id,name,clientsonly", array("id" => $deptid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblticketdepartments", "id,name,clientsonly", array("id" => $deptid));
+		$data = mysqli_fetch_array($result);
 		$deptid = $data['id'];
 
 		if (!$deptid) {
@@ -154,9 +154,9 @@ else {
 
 		$where .= ") OR id=" . (int)$deptid;
 		$departments = array();
-		$result = select_query("tblticketdepartments", "", $where, "order", "ASC");
+		$result = select_query_i("tblticketdepartments", "", $where, "order", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$dept_id = $data['id'];
 			$dept_name = $data['name'];
 			$dept_desc = $data['description'];
@@ -172,9 +172,9 @@ else {
 			$smarty->assign("clientname", $clientname);
 			$smarty->assign("email", $email);
 			$relatedservices = array();
-			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblhosting`.`domain", "ASC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$productname = $data['name'];
 
 				if ($data['domain']) {
@@ -184,9 +184,9 @@ else {
 				$relatedservices[] = array("id" => "S" . $data['id'], "name" => $productname, "status" => $_LANG["clientarea" . strtolower($data['servicestatus'])]);
 			}
 
-			$result = select_query("tbldomains", "", array("userid" => $_SESSION['uid']), "domain", "ASC");
+			$result = select_query_i("tbldomains", "", array("userid" => $_SESSION['uid']), "domain", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$relatedservices[] = array("id" => "D" . $data['id'], "name" => $_LANG['clientareahostingdomain'] . " - " . $data['domain'], "status" => $_LANG["clientarea" . strtolower(str_replace("-", "", $data['status']))]);
 			}
 
@@ -213,8 +213,8 @@ else {
 	}
 	else {
 		if ($step == "3") {
-			$result = select_query("tblticketdepartments", "id,clientsonly", array("id" => $deptid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketdepartments", "id,clientsonly", array("id" => $deptid));
+			$data = mysqli_fetch_array($result);
 			$deptid = $data['id'];
 			$check_clientsonly = $data['clientsonly'];
 
@@ -231,8 +231,8 @@ IP Address: " . $remote_ip;
 			$cc = "";
 
 			if ($_SESSION['cid']) {
-				$result = select_query("tblcontacts", "email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblcontacts", "email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+				$data = mysqli_fetch_array($result);
 				$cc = $data['email'];
 			}
 

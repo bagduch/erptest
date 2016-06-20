@@ -14,8 +14,8 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tbltickets", "", array("id" => $ticketid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+$data = mysqli_fetch_array($result);
 $ticketid = $data['id'];
 
 if (!$ticketid) {

@@ -24,8 +24,8 @@ if (!function_exists("updateInvoiceTotal")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$result = select_query("tblclients", "id", array("id" => $_POST['userid']));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "id", array("id" => $_POST['userid']));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -74,11 +74,11 @@ if ($_POST['sendinvoice']) {
 
 
 if ($autoapplycredit) {
-	$result = select_query("tblclients", "credit", array("id" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "credit", array("id" => $userid));
+	$data = mysqli_fetch_array($result);
 	$credit = $data['credit'];
-	$result = select_query("tblinvoices", "total", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$total = $data['total'];
 
 	if (0 < $credit) {

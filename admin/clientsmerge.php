@@ -58,8 +58,8 @@ function searchselectclient(userid,name,email) {
 <tr><td class=\"fieldlabel\">";
 	echo $aInt->lang("clients", "firstclient");
 	echo "</td><td class=\"fieldarea\">";
-	$result = select_query("tblclients", "", array("id" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "", array("id" => $userid));
+	$data = mysqli_fetch_array($result);
 	$useridselect = $data['id'];
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];
@@ -94,8 +94,8 @@ function searchselectclient(userid,name,email) {
 else {
 	check_token("RA.admin.default");
 	$newuserid = trim($newuserid);
-	$result = select_query("tblclients", "id", array("id" => $newuserid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("id" => $newuserid));
+	$data = mysqli_fetch_array($result);
 	$newuserid = $data['id'];
 
 	if (!$newuserid) {
@@ -124,20 +124,20 @@ else {
 	}
 
 	update_query("tblcredit", array("clientid" => $resultinguserid), array("clientid" => $userid));
-	$result = select_query("tblclients", "credit", array("id" => $deleteuser));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "credit", array("id" => $deleteuser));
+	$data = mysqli_fetch_array($result);
 	$credit = $data[0];
 	update_query("tblclients", array("credit" => "+=" . $credit), array("id" => (int)$resultinguserid));
-	$result = select_query("tblaffiliates", "", array("clientid" => $deleteuser));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaffiliates", "", array("clientid" => $deleteuser));
+	$data = mysqli_fetch_array($result);
 	$affid = $data['id'];
 
 	if ($affid) {
 		$visitors = $data['visitors'];
 		$balance = $data['balance'];
 		$withdrawn = $data['withdrawn'];
-		$result = select_query("tblaffiliates", "", array("clientid" => $resultinguserid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliates", "", array("clientid" => $resultinguserid));
+		$data = mysqli_fetch_array($result);
 		$newaffid = $data['id'];
 
 		if (!$newaffid) {

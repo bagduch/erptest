@@ -34,13 +34,13 @@ if ($action == "preview") {
 
 	if ($massmail && $safeStoredQuery = $queryMgr->getQuery($queryMgr->getTokenValue())) {
 		$massmailquery = $safeStoredQuery;
-		$result = full_query($massmailquery);
-		$totalemails = mysql_num_rows($result);
+		$result = full_query_i($massmailquery);
+		$totalemails = mysqli_num_rows($result);
 		$totalsteps = ceil($totalemails / $massmailamount);
 		$esttotaltime = ($totalsteps - ($step + 1)) * $massmailinterval;
-		$result = full_query($massmailquery . " LIMIT 0,1");
+		$result = full_query_i($massmailquery . " LIMIT 0,1");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			sendMessage("Mass Mail Template", $data['id'], "", true, $_SESSION['massmail']['attachments']);
 		}
 	}
@@ -165,16 +165,16 @@ if ($action == "send") {
 				$massmailinterval = 30;
 			}
 
-			$result = full_query($massmailquery);
-			$totalemails = mysql_num_rows($result);
+			$result = full_query_i($massmailquery);
+			$totalemails = mysqli_num_rows($result);
 			$totalsteps = ceil($totalemails / $massmailamount);
 			$esttotaltime = ($totalsteps - ($step + 1)) * $massmailinterval;
 			infoBox($aInt->lang("sendmessage", "massmailqueue"), $totalemails . $aInt->lang("sendmessage", "massmailspart1") . ($step + 1) . $aInt->lang("sendmessage", "massmailspart2") . $totalsteps . $aInt->lang("sendmessage", "massmailspart3") . $esttotaltime . $aInt->lang("sendmessage", "massmailspart4"));
 			echo $infobox;
-			$result = full_query($massmailquery . " LIMIT " . (int)$step * $massmailamount . "," . (int)$massmailamount);
+			$result = full_query_i($massmailquery . " LIMIT " . (int)$step * $massmailamount . "," . (int)$massmailamount);
 			ob_start();
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				if ($sendforeach || (!$sendforeach && !in_array($data['userid'], $sentids))) {
 					sendMessage("Mass Mail Template", $data['id'], "", true, $mail_attachments);
 					$sentids[] = $data['userid'];
@@ -463,9 +463,9 @@ if ($showform) {
 		}
 
 		$useridsdone = array();
-		$result = full_query($massmailquery);
+		$result = full_query_i($massmailquery);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			if ($sendforeach || (!$sendforeach && !in_array($data['userid'], $useridsdone))) {
 				$temptodata = "" . $data['firstname'] . " " . $data['lastname'];
 
@@ -483,32 +483,32 @@ if ($showform) {
 		if ($multiple) {
 			if ($type == "general") {
 				foreach ($selectedclients as $id) {
-					$result = select_query("tblclients", "", array("id" => $id));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblclients", "", array("id" => $id));
+					$data = mysqli_fetch_array($result);
 					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
 				}
 			}
 			else {
 				if ($type == "product") {
 					foreach ($selectedclients as $id) {
-						$result = select_query("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
-						$data = mysql_fetch_array($result);
+						$result = select_query_i("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+						$data = mysqli_fetch_array($result);
 						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 					}
 				}
 				else {
 					if ($type == "domain") {
 						foreach ($selectedclients as $id) {
-							$result = select_query("tbldomains", "tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
-							$data = mysql_fetch_array($result);
+							$result = select_query_i("tbldomains", "tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
+							$data = mysqli_fetch_array($result);
 							$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 						}
 					}
 					else {
 						if ($type == "affiliate") {
 							foreach ($selectedclients as $id) {
-								$result = select_query("tblaffiliates", "tblclients.firstname,tblclients.lastname,tblclients.email", array("tblaffiliates.id" => $id), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
-								$data = mysql_fetch_array($result);
+								$result = select_query_i("tblaffiliates", "tblclients.firstname,tblclients.lastname,tblclients.email", array("tblaffiliates.id" => $id), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+								$data = mysqli_fetch_array($result);
 								$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 							}
 						}
@@ -518,8 +518,8 @@ if ($showform) {
 		}
 		else {
 			if ($resend) {
-				$result = select_query("tblemails", "", array("id" => $emailid));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblemails", "", array("id" => $emailid));
+				$data = mysqli_fetch_array($result);
 				$id = $data['userid'];
 				$subject = $data['subject'];
 				$message = $data['message'];
@@ -534,8 +534,8 @@ if ($showform) {
 
 
 			if ($type == "general") {
-				$result = select_query("tblclients", "", array("id" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblclients", "", array("id" => $id));
+				$data = mysqli_fetch_array($result);
 
 				if ($data['email']) {
 					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
@@ -543,9 +543,9 @@ if ($showform) {
 			}
 			else {
 				if ($type == "product") {
-					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysql_real_escape_string($id) . "'";
-					$result = full_query($query);
-					$data = mysql_fetch_array($result);
+					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysqli_real_escape_string($id) . "'";
+					$result = full_query_i($query);
+					$data = mysqli_fetch_array($result);
 
 					if ($data['email']) {
 						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
@@ -553,9 +553,9 @@ if ($showform) {
 				}
 				else {
 					if ($type == "domain") {
-						$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id='" . mysql_real_escape_string($id) . "'";
-						$result = full_query($query);
-						$data = mysql_fetch_array($result);
+						$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id='" . mysqli_real_escape_string($id) . "'";
+						$result = full_query_i($query);
+						$data = mysqli_fetch_array($result);
 
 						if ($data['email']) {
 							$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
@@ -575,12 +575,12 @@ if ($showform) {
 
 	if ($sub == "loadmessage") {
 		$language = (((!$massmailquery && !$multiple) && (int)$data['id']) ? get_query_val("tblclients", "language", array("id" => $data['id'])) : "");
-		$result = select_query("tblemailtemplates", "", array("name" => $messagename, "language" => $language));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblemailtemplates", "", array("name" => $messagename, "language" => $language));
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
-			$result = select_query("tblemailtemplates", "", array("name" => $messagename));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblemailtemplates", "", array("name" => $messagename));
+			$data = mysqli_fetch_array($result);
 		}
 
 		$subject = $data['subject'];
@@ -853,9 +853,9 @@ frmmessage.subject.select();
 	echo $aInt->lang("sendmessage", "choose");
 	echo "...";
 	$query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' ORDER BY custom,name ASC";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$messid = $data['id'];
 		$messagename = $data['name'];
 		echo "<option style=\"background-color:#ffffff\">" . $messagename . "</option>";
@@ -863,9 +863,9 @@ frmmessage.subject.select();
 
 
 	if ($type != "general") {
-		$result = select_query("tblemailtemplates", "", array("type" => $type, "language" => ""), "custom` ASC,`name", "ASC");
+		$result = select_query_i("tblemailtemplates", "", array("type" => $type, "language" => ""), "custom` ASC,`name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$messid = $data['id'];
 			$messagename = $data['name'];
 			echo "<option";

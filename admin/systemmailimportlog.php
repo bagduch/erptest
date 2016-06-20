@@ -20,8 +20,8 @@ $aInt->requiredFiles(array("ticketfunctions"));
 
 if ($display) {
 	$aInt->title = $aInt->lang("system", "viewimportmessage");
-	$result = select_query("tblticketmaillog", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketmaillog", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$date = $data['date'];
 	$to = $data['to'];
@@ -80,8 +80,8 @@ if ($display) {
 		check_token("RA.admin.default");
 		$tid = $userid = $adminid = 0;
 		$from = $admin = "";
-		$result = select_query("tblclients", "id", array("email" => $email));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "id", array("email" => $email));
+		$data = mysqli_fetch_array($result);
 		$userid = $data['id'];
 
 		if (!$userid) {
@@ -91,13 +91,13 @@ if ($display) {
 		$pos = strpos($subject, "[Ticket ID: ");
 
 		if ($pos === false) {
-			$result = select_query("tblticketdepartments", "id", array("email" => $email));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketdepartments", "id", array("email" => $email));
+			$data = mysqli_fetch_array($result);
 			$deptid = $data['id'];
 
 			if (!$deptid) {
-				$result = select_query("tblticketdepartments", "id", "", "order", "ASC");
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblticketdepartments", "id", "", "order", "ASC");
+				$data = mysqli_fetch_array($result);
 				$deptid = $data['id'];
 			}
 
@@ -106,11 +106,11 @@ if ($display) {
 		}
 		else {
 			$tid = substr($subject, $pos + 12, 6);
-			$result = select_query("tbltickets", "", array("tid" => $tid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbltickets", "", array("tid" => $tid));
+			$data = mysqli_fetch_array($result);
 			$tid = $data['id'];
-			$result = select_query("tbladmins", "id", array("email" => $email));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbladmins", "id", array("email" => $email));
+			$data = mysqli_fetch_array($result);
 			$adminid = $data['id'];
 
 			if ($adminid) {
@@ -147,13 +147,13 @@ if ($display) {
 ob_start();
 $aInt->sortableTableInit("date");
 $query = "SELECT COUNT(id) as cnt FROM tblticketmaillog ORDER BY id DESC";
-$numresults = full_query($query);
-$data = mysql_fetch_assoc($numresults);
+$numresults = full_query_i($query);
+$data = mysqli_fetch_assoc($numresults);
 $numrows = $data['cnt'];
 $query = "SELECT * FROM tblticketmaillog ORDER BY id DESC LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$date = $data['date'];
 	$to = $data['to'];

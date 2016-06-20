@@ -69,8 +69,8 @@ if ($action == "save") {
 		redir("updated=true");
 	}
 	else {
-		$result = select_query("tblpromotions", "COUNT(*)", array("code" => $code));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+		$data = mysqli_fetch_array($result);
 		$duplicates = $data[0];
 		$newid = insert_query("tblpromotions", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "cycles" => $cycles, "appliesto" => $appliesto, "requires" => $requires, "requiresexisting" => $requiresexisting, "startdate" => $startdate, "expirationdate" => $expirationdate, "maxuses" => $maxuses, "lifetimepromo" => $lifetimepromo, "applyonce" => $applyonce, "newsignups" => $newsignups, "existingclient" => $existingclient, "onceperclient" => $onceperclient, "recurfor" => $recurfor, "upgrades" => $upgrades, "upgradeconfig" => $upgradeconfig, "notes" => $notes));
 
@@ -180,12 +180,12 @@ if (!$action) {
 		}
 	}
 
-	$result = select_query("tblpromotions", "COUNT(*)", $where);
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpromotions", "COUNT(*)", $where);
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
-	$result = select_query("tblpromotions", "", $where, "code", "ASC", $page * $limit . ("," . $limit));
+	$result = select_query_i("tblpromotions", "", $where, "code", "ASC", $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$pid = $data['id'];
 		$code = $data['code'];
 		$type = $data['type'];
@@ -253,9 +253,9 @@ else {
 		echo "<s";
 		echo "elect name=\"duplicate\">";
 		$query = "SELECT * FROM tblpromotions ORDER BY code ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$promoid = $data['id'];
 			$promoname = $data['code'];
 			echo "<option value=\"" . $promoid . "\">" . $promoname;
@@ -273,8 +273,8 @@ else {
 	else {
 		if ($action == "manage") {
 			if ($id) {
-				$result = select_query("tblpromotions", "", array("id" => $id));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblpromotions", "", array("id" => $id));
+				$data = mysqli_fetch_array($result);
 				$code = $data['code'];
 				$type = $data['type'];
 				$recurring = $data['recurring'];
@@ -303,15 +303,15 @@ else {
 				$requires = explode(",", $requires);
 				$upgradeconfig = unserialize($upgradeconfig);
 				$managetitle = $aInt->lang("promos", "editpromo");
-				$result = select_query("tblpromotions", "COUNT(*)", array("code" => $code));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+				$data = mysqli_fetch_array($result);
 				$duplicates = $data[0];
 			}
 			else {
 				if ($duplicate) {
 					checkPermission("Create/Edit Promotions");
-					$result = select_query("tblpromotions", "", array("id" => $duplicate));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblpromotions", "", array("id" => $duplicate));
+					$data = mysqli_fetch_array($result);
 					$code = "";
 					$type = $data['type'];
 					$recurring = $data['recurring'];
@@ -443,14 +443,14 @@ else {
 			echo "<s";
 			echo "elect name=\"appliesto[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-			$result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 			$jscode = "function autoGenPromo() {
     $.post(\"configpromotions.php\", \"action=genpromo\", function(data) {
         $(\"#promocode\").val(data);
     });
 }";
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$groupname = $data['groupname'];
 				$name = $data['name'];
@@ -463,9 +463,9 @@ else {
 				echo ">" . $groupname . " - " . $name . "</option>";
 			}
 
-			$result = select_query("tbladdons", "", "", "name", "ASC");
+			$result = select_query_i("tbladdons", "", "", "name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$name = $data['name'];
 				$description = $data['description'];
@@ -478,9 +478,9 @@ else {
 				echo ">" . $aInt->lang("orders", "addon") . (" - " . $name . "</option>");
 			}
 
-			$result = select_query("tbldomainpricing", "DISTINCT extension", "", "extension", "ASC");
+			$result = select_query_i("tbldomainpricing", "DISTINCT extension", "", "extension", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$tld = $data['extension'];
 				echo "<option value=\"D" . $tld . "\"";
 
@@ -498,9 +498,9 @@ else {
 			echo "<s";
 			echo "elect name=\"requires[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-			$result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$groupname = $data['groupname'];
 				$name = $data['name'];
@@ -513,9 +513,9 @@ else {
 				echo ">" . $groupname . " - " . $name . "</option>";
 			}
 
-			$result = select_query("tbladdons", "", "", "name", "ASC");
+			$result = select_query_i("tbladdons", "", "", "name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$name = $data['name'];
 				$description = $data['description'];
@@ -528,9 +528,9 @@ else {
 				echo ">" . $aInt->lang("orders", "addon") . (" - " . $name . "</option>");
 			}
 
-			$result = select_query("tbldomainpricing", "DISTINCT extension", "", "extension", "ASC");
+			$result = select_query_i("tbldomainpricing", "DISTINCT extension", "", "extension", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$tld = $data['extension'];
 				echo "<option value=\"D" . $tld . "\"";
 
@@ -792,9 +792,9 @@ else {
 			echo "<s";
 			echo "elect name=\"configoptionupgrades[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-			$result = select_query("tblserviceconfigoptions", "tblserviceconfigoptions.id,name,optionname", "", "optionname", "ASC", "", "tblserviceconfiggroups ON tblserviceconfiggroups.id=tblserviceconfigoptions.gid");
+			$result = select_query_i("tblserviceconfigoptions", "tblserviceconfigoptions.id,name,optionname", "", "optionname", "ASC", "", "tblserviceconfiggroups ON tblserviceconfiggroups.id=tblserviceconfigoptions.gid");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$configid = $data['id'];
 				$groupname = $data['name'];
 				$optionname = $data['optionname'];

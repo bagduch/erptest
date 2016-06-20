@@ -76,8 +76,8 @@ function searchselectclient(userid,name,email) {
 else {
 	check_token("RA.admin.default");
 	$newuserid = trim($newuserid);
-	$result = select_query("tblclients", "id", array("id" => $newuserid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("id" => $newuserid));
+	$data = mysqli_fetch_array($result);
 	$newuserid = $data['id'];
 
 	if (!$newuserid) {
@@ -86,8 +86,8 @@ else {
 
 
 	if ($type == "hosting") {
-		$result = select_query("tblcustomerservices", "userid", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "userid", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$userid = $data['userid'];
 		logActivity("Moved Service ID: " . $id . " from User ID: " . $userid . " to User ID: " . $newuserid, $newuserid);
 		update_query("tblcustomerservices", array("userid" => $newuserid), array("id" => $id));
@@ -104,8 +104,8 @@ window.close();
 	}
 	else {
 		if ($type == "domain") {
-			$result = select_query("tbldomains", "userid", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldomains", "userid", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$userid = $data['userid'];
 			logActivity("Moved Domain ID: " . $id . " from User ID: " . $userid . " to User ID: " . $newuserid, $newuserid);
 			update_query("tbldomains", array("userid" => $newuserid), array("id" => $id));

@@ -25,8 +25,8 @@ $aInt->inClientsProfile = true;
 $aInt->requiredFiles(array("invoicefunctions", "processinvoices", "gatewayfunctions", "clientfunctions"));
 
 if ($action == "getproddesc") {
-	$result = select_query("tblservices", "name,description", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "name,description", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	echo $data[0];
 
 	if ($data[1]) {
@@ -43,8 +43,8 @@ if ($action == "getprodprice") {
 		$currency = $currency['id'];
 	}
 
-	$result = select_query("tblpricing", "", array("type" => "product", "currency" => $currency, "relid" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency, "relid" => $id));
+	$data = mysqli_fetch_array($result);
 
 	if (0 < $data['monthly']) {
 		echo $data['monthly'];
@@ -173,19 +173,19 @@ if (!$action) {
 	}
 
 	$aInt->deleteJSConfirm("doDelete", "billableitems", "itemsdeletequestion", "clientsbillableitems.php?userid=" . $userid . "&action=delete&id=");
-	$result = select_query("tblbillableitems", "COUNT(id),SUM(amount)", array("userid" => $userid, "invoicecount" => "0"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblbillableitems", "COUNT(id),SUM(amount)", array("userid" => $userid, "invoicecount" => "0"));
+	$data = mysqli_fetch_array($result);
 	$unbilledcount = $data[0];
 	$unbilledamount = formatCurrency($data[1]);
 	echo "<div align=\"right\"><input type=\"button\" value=\"" . $aInt->lang("billableitems", "additem") . "\" class=\"button\" onClick=\"window.location='clientsbillableitems.php?userid=" . $userid . "&action=manage'\"> <input type=\"button\" value=\"" . $aInt->lang("billableitems", "addtimebilling") . "\" class=\"button\" onClick=\"window.location='clientsbillableitems.php?userid=" . $userid . "&action=timebilling'\"></div><h2>" . $aInt->lang("billableitems", "uninvoiced") . " - <span class=\"textred\">" . $unbilledamount . "</span> (" . $unbilledcount . ")</h2>";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tblbillableitems", "COUNT(*)", array("userid" => $userid, "invoicecount" => "0"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblbillableitems", "COUNT(*)", array("userid" => $userid, "invoicecount" => "0"));
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$tabledata = "";
-	$result = select_query("tblbillableitems", "", array("userid" => $userid, "invoicecount" => "0"), $orderby, $order, $page * $limit . ("," . $limit));
+	$result = select_query_i("tblbillableitems", "", array("userid" => $userid, "invoicecount" => "0"), $orderby, $order, $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$label = $data['label'];
 		$description = $data['description'];
@@ -228,13 +228,13 @@ if (!$action) {
 	echo $aInt->sortableTable(array("checkall", array("id", $aInt->lang("fields", "id")), array("description", $aInt->lang("fields", "description")), array("hours", $aInt->lang("fields", "hours")), array("amount", $aInt->lang("fields", "amount")), array("invoiceaction", $aInt->lang("billableitems", "invoiceaction")), "", ""), $tabledata, $tableformurl, $tableformbuttons);
 	echo "<h2>" . $aInt->lang("billableitems", "invoiced") . "</h2>";
 	$aInt->sortableTableInit("id", "DESC");
-	$result = select_query("tblbillableitems", "COUNT(*)", array("userid" => $userid, "invoicecount" => array("sqltype" => ">", "value" => "0")));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblbillableitems", "COUNT(*)", array("userid" => $userid, "invoicecount" => array("sqltype" => ">", "value" => "0")));
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$tabledata = "";
-	$result = select_query("tblbillableitems", "", array("userid" => $userid, "invoicecount" => array("sqltype" => ">", "value" => "0")), $orderby, $order, $page * $limit . ("," . $limit));
+	$result = select_query_i("tblbillableitems", "", array("userid" => $userid, "invoicecount" => array("sqltype" => ">", "value" => "0")), $orderby, $order, $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$label = $data['label'];
 		$description = $data['description'];
@@ -270,9 +270,9 @@ if (!$action) {
 
 		$managelink = "<a href=\"clientsbillableitems.php?userid=" . $userid . "&action=manage&id=" . $id . "\">";
 		$invoicesnumbers = "";
-		$result2 = select_query("tblinvoiceitems", "*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC");
+		$result2 = select_query_i("tblinvoiceitems", "*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC");
 
-		while ($data = mysql_fetch_array($result2)) {
+		while ($data = mysqli_fetch_array($result2)) {
 			$invoicesnumbers .= "<a href=\"invoices.php?action=edit&id=" . $data['invoiceid'] . "\">" . $data['invoiceid'] . "</a>, ";
 		}
 
@@ -288,8 +288,8 @@ else {
 
 		if ($id) {
 			$pagetitle = $aInt->lang("billableitems", "edititem");
-			$result = select_query("tblbillableitems", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblbillableitems", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$description = $data['description'];
 			$hours = $data['hours'];
@@ -481,9 +481,9 @@ else {
 			$currency = getCurrency($userid);
 			$gatewaysarray = getGatewaysArray();
 			$aInt->sortableTableInit("nopagination");
-			$result = select_query("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+			$result = select_query_i("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$invoiceid = $data['id'];
 				$date = $data['date'];
 				$duedate = $data['duedate'];
@@ -525,9 +525,9 @@ else {
     });
 });";
 			$options = "";
-			$result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$pid = $data['id'];
 				$pname = $data['name'];
 				$ptype = $data['groupname'];

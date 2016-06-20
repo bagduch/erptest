@@ -23,8 +23,8 @@ if ($action == "do") {
 }
 
 ob_start();
-$result = select_query("tbldomains", "", array("id" => $domainid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "", array("id" => $domainid));
+$data = mysqli_fetch_array($result);
 $domainid = $data['id'];
 $userid = $data['userid'];
 $domain = $data['domain'];
@@ -41,13 +41,13 @@ $params['registrar'] = $registrar;
 $nsvals = array();
 
 if (!$ns1 && !$ns2) {
-	$result = select_query("tblcustomerservices", "", array("domain" => $domain));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "", array("domain" => $domain));
+	$data = mysqli_fetch_array($result);
 	$server = $data['server'];
 
 	if ($server) {
-		$result = select_query("tblservers", "", array("id" => $server));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservers", "", array("id" => $server));
+		$data = mysqli_fetch_array($result);
 		$i = 1;
 
 		while ($i <= 5) {
@@ -69,8 +69,8 @@ if (!$ns1 && !$ns2) {
 	}
 }
 
-$result = select_query("tblorders", "", array("id" => $orderid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblorders", "", array("id" => $orderid));
+$data = mysqli_fetch_array($result);
 $nameservers = $data['nameservers'];
 
 if ($nameservers && $nameservers != ",") {

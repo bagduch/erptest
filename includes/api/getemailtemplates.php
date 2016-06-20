@@ -25,10 +25,10 @@ if ($language) {
 	$where['language'] = $language;
 }
 
-$result = select_query("tblemailtemplates", "", $where, "name", "ASC");
-$apiresults = array("result" => "success", "totalresults" => mysql_num_rows($result));
+$result = select_query_i("tblemailtemplates", "", $where, "name", "ASC");
+$apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$apiresults['emailtemplates']['emailtemplate'][] = array("id" => $data['id'], "name" => $data['name'], "subject" => $data['subject'], "custom" => $data['custom']);
 }
 

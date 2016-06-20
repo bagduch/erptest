@@ -76,16 +76,16 @@ if ($action == "withdraw") {
 	update_query("tblaffiliates", array("balance" => "-=" . $amount, "withdrawn" => "+=" . $amount), array("id" => (int)$id));
 
 	if ($payouttype == "1") {
-		$result = select_query("tblaffiliates", "", array("id" => (int)$id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliates", "", array("id" => (int)$id));
+		$data = mysqli_fetch_array($result);
 		$id = (int)$data['id'];
 		$clientid = (int)$data['clientid'];
 		addTransaction($clientid, "", "Affiliate Commissions Withdrawal Payout", "0", "0", $amount, $paymentmethod, $transid);
 	}
 	else {
 		if ($payouttype == "2") {
-			$result = select_query("tblaffiliates", "", array("id" => (int)$id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblaffiliates", "", array("id" => (int)$id));
+			$data = mysqli_fetch_array($result);
 			$id = (int)$data['id'];
 			$clientid = (int)$data['clientid'];
 			insert_query("tblcredit", array("clientid" => $clientid, "date" => "now()", "description" => "Affiliate Commissions Withdrawal", "amount" => $amount));
@@ -134,8 +134,8 @@ if ($action == "") {
 		$query .= " AND withdrawn " . $withdrawntype . " '" . db_escape_string($withdrawn) . "'";
 	}
 
-	$result = full_query("SELECT COUNT(tblaffiliates.id) " . $query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i("SELECT COUNT(tblaffiliates.id) " . $query);
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$aInt->deleteJSConfirm("doDelete", "affiliates", "deletesure", "affiliates.php?sub=delete&ide=");
 	echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
@@ -210,9 +210,9 @@ if ($action == "") {
 	$query .= ($orderby == "clientname" ? "tblclients.firstname " . $order . ",tblclients.lastname" : $orderby);
 	$query .= " " . $order;
 	$query = "SELECT tblaffiliates.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,(SELECT COUNT(*) FROM tblaffiliatesaccounts WHERE tblaffiliatesaccounts.affiliateid=tblaffiliates.id) AS signups " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$date = $data['date'];
 		$userid = $data['clientid'];
@@ -250,8 +250,8 @@ else {
 		}
 
 		echo $infobox;
-		$result = select_query("tblaffiliates", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliates", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 
 		if (!$id) {
@@ -266,15 +266,15 @@ else {
 		$paymenttype = $data['paytype'];
 		$payamount = $data['payamount'];
 		$onetime = $data['onetime'];
-		$result = select_query("tblclients", "", array("id" => $clientid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "", array("id" => $clientid));
+		$data = mysqli_fetch_array($result);
 		$firstname = $data['firstname'];
 		$lastname = $data['lastname'];
-		$result = select_query("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
+		$data = mysqli_fetch_array($result);
 		$signups = $data[0];
-		$result = select_query("tblaffiliatespending", "COUNT(*),SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaffiliatespending", "COUNT(*),SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$data = mysqli_fetch_array($result);
 		$pendingcommissions = $data[0];
 		$pendingcommissionsamount = $data[1];
 		$currency = getCurrency($clientid);
@@ -385,7 +385,7 @@ else {
 ";
 		$aInt->sortableTableInit("regdate", "DESC");
 		$tabledata = "";
-		$mysql_errors = true;
+		$mysqli_errors = true;
 		$numrows = get_query_val("tblaffiliatesaccounts", "COUNT(*)", array("tblaffiliatesaccounts.affiliateid" => $id), "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
 		if ((((($orderby == "id" || $orderby == "regdate") || $orderby == "clientname") || $orderby == "name") || $orderby == "lastpaid") || $orderby == "servicestatus") {
@@ -394,9 +394,9 @@ else {
 			$orderby = "regdate";
 		}
 
-		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.id,tblaffiliatesaccounts.lastpaid,tblaffiliatesaccounts.relid, concat(tblclients.firstname,' ',tblclients.lastname,'|||',tblclients.currency) as clientname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.domain,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("tblaffiliatesaccounts.affiliateid" => $id), "" . $orderby, "" . $order, $page * $limit . ("," . $limit), "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.id,tblaffiliatesaccounts.lastpaid,tblaffiliatesaccounts.relid, concat(tblclients.firstname,' ',tblclients.lastname,'|||',tblclients.currency) as clientname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.domain,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("tblaffiliatesaccounts.affiliateid" => $id), "" . $orderby, "" . $order, $page * $limit . ("," . $limit), "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$affaccid = $data['id'];
 			$lastpaid = $data['lastpaid'];
 			$relid = $data['relid'];
@@ -457,9 +457,9 @@ else {
 		$currency = getCurrency($clientid);
 		$aInt->sortableTableInit("nopagination");
 		$tabledata = "";
-		$result = select_query("tblaffiliatespending", "tblaffiliatespending.id,tblaffiliatespending.affaccid,tblaffiliatespending.amount,tblaffiliatespending.clearingdate,tblaffiliatesaccounts.relid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.billingcycle", array("affiliateid" => $id), "clearingdate", "ASC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+		$result = select_query_i("tblaffiliatespending", "tblaffiliatespending.id,tblaffiliatespending.affaccid,tblaffiliatespending.amount,tblaffiliatespending.clearingdate,tblaffiliatesaccounts.relid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.billingcycle", array("affiliateid" => $id), "clearingdate", "ASC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$pendingid = $data['id'];
 			$affaccid = $data['affaccid'];
 			$amount = $data['amount'];
@@ -487,9 +487,9 @@ else {
 ";
 		$aInt->sortableTableInit("nopagination");
 		$tabledata = "";
-		$result = select_query("tblaffiliateshistory", "tblaffiliateshistory.*,(SELECT CONCAT(tblclients.id,'|||',tblclients.firstname,'|||',tblclients.lastname,'|||',tblclients.companyname,'|||',tblservices.name,'|||',tblcustomerservices.id,'|||',tblcustomerservices.billingcycle,'|||',tblcustomerservices.servicestatus) FROM tblaffiliatesaccounts INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblaffiliatesaccounts.id=tblaffiliateshistory.affaccid) AS referraldata", array("affiliateid" => $id), "date", "DESC");
+		$result = select_query_i("tblaffiliateshistory", "tblaffiliateshistory.*,(SELECT CONCAT(tblclients.id,'|||',tblclients.firstname,'|||',tblclients.lastname,'|||',tblclients.companyname,'|||',tblservices.name,'|||',tblcustomerservices.id,'|||',tblcustomerservices.billingcycle,'|||',tblcustomerservices.servicestatus) FROM tblaffiliatesaccounts INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblaffiliatesaccounts.id=tblaffiliateshistory.affaccid) AS referraldata", array("affiliateid" => $id), "date", "DESC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$historyid = $data['id'];
 			$date = $data['date'];
 			$affaccid = $data['affaccid'];
@@ -539,9 +539,9 @@ else {
 <tr><td class=\"fieldlabel\">Related Referral:</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"refid\"><option value=\"\">None</option>";
-		$result = select_query("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,(SELECT CONCAT(tblclients.firstname,'|||',tblclients.lastname,'|||',tblcustomerservices.userid,'|||',tblservices.name,'|||',tblcustomerservices.servicestatus,'|||',tblcustomerservices.domain,'|||',tblcustomerservices.amount,'|||',tblcustomerservices.regdate,'|||',tblcustomerservices.billingcycle) FROM tblcustomerservices INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id=tblaffiliatesaccounts.relid) AS referraldata", array("affiliateid" => $id));
+		$result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,(SELECT CONCAT(tblclients.firstname,'|||',tblclients.lastname,'|||',tblcustomerservices.userid,'|||',tblservices.name,'|||',tblcustomerservices.servicestatus,'|||',tblcustomerservices.domain,'|||',tblcustomerservices.amount,'|||',tblcustomerservices.regdate,'|||',tblcustomerservices.billingcycle) FROM tblcustomerservices INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id=tblaffiliatesaccounts.relid) AS referraldata", array("affiliateid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$affaccid = $data['id'];
 			$lastpaid = $data['lastpaid'];
 			$relid = $data['relid'];
@@ -593,9 +593,9 @@ else {
 ";
 		$aInt->sortableTableInit("nopagination");
 		$tabledata = "";
-		$result = select_query("tblaffiliateswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
+		$result = select_query_i("tblaffiliateswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$historyid = $data['id'];
 			$date = $data['date'];
 			$amount = $data['amount'];

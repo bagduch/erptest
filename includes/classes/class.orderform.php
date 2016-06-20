@@ -33,9 +33,9 @@ class RA_OrderForm {
 
     public function getProductGroups() {
         $groupsarray = array();
-        $result = select_query("tblproductgroups", "", "hidden='' AND type=2", "order", "ASC");
+        $result = select_query_i("tblproductgroups", "", "hidden='' AND type=2", "order", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $groupid = $data['id'];
             $groupname = $data['name'];
             $groupsarray[] = array("gid" => $groupid, "name" => $groupname);
@@ -46,9 +46,9 @@ class RA_OrderForm {
 
     public function getServiceGroups() {
         $groupsarray = array();
-        $result = select_query("tblservicegroups", "","", "order", "ASC");
+        $result = select_query_i("tblservicegroups", "","", "order", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $groupid = $data['id'];
             $groupname = $data['name'];
             $groupsarray[] = array("gid" => $groupid, "name" => $groupname);
@@ -61,15 +61,15 @@ class RA_OrderForm {
         global $currency;
 
         if (!$gid) {
-            $result = select_query("tblservicegroups", "id","hidden=''", "order", "ASC");
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblservicegroups", "id","hidden=''", "order", "ASC");
+            $data = mysqli_fetch_array($result);
             $gid = $data[0];
         }
 
         $tmparray = array();
-        $result = select_query("tblservices", "", array("gid" => $gid, "hidden" => ""), "order` ASC,`name", "ASC");
+        $result = select_query_i("tblservices", "", array("gid" => $gid, "hidden" => ""), "order` ASC,`name", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
             $type = $data['type'];
             $name = $data['name'];
@@ -103,9 +103,9 @@ class RA_OrderForm {
 
 
         if ($inclbundles) {
-            $result = select_query("tblbundles", "", array("showgroup" => "1", "gid" => $gid));
+            $result = select_query_i("tblbundles", "", array("showgroup" => "1", "gid" => $gid));
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $description = $data['description'];
                 $desc = $this->formatProductDescription($description);
                 $displayprice = $data['displayprice'];
@@ -149,8 +149,8 @@ class RA_OrderForm {
     }
 
     public function getProductGroupInfo($gid) {
-        $result = select_query("tblservicegroups", "", array("id" => $gid));
-        $data = mysql_fetch_assoc($result);
+        $result = select_query_i("tblservicegroups", "", array("id" => $gid));
+        $data = mysqli_fetch_assoc($result);
 
         if (!$data['id']) {
             return false;
@@ -166,8 +166,8 @@ class RA_OrderForm {
 
     public function setPid($pid) {
         $this->pid = $pid;
-        $result = select_query("tblservices", "tblservices.id AS pid,tblservices.gid,tblservices.type,tblservices.name AS name,tblservicegroups.name AS groupname,tblservices.description,tblservices.paytype,tblservicegroups.orderfrmtpl", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
-        $data = mysql_fetch_assoc($result);
+        $result = select_query_i("tblservices", "tblservices.id AS pid,tblservices.gid,tblservices.type,tblservices.name AS name,tblservicegroups.name AS groupname,tblservices.description,tblservices.paytype,tblservicegroups.orderfrmtpl", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+        $data = mysqli_fetch_assoc($result);
       
         if (!$data['pid']) {
             return false;
@@ -194,8 +194,8 @@ class RA_OrderForm {
         }
 
         $paytype = $this->productinfo['paytype'];
-        $result = select_query("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $this->productinfo['pid']));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $this->productinfo['pid']));
+        $data = mysqli_fetch_array($result);
         $monthly = $data['monthly'];
         $quarterly = $data['quarterly'];
         $semiannually = $data['semiannually'];

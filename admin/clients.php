@@ -119,9 +119,9 @@ echo "elect name=\"currency\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
 $currency = $filters->get("currency");
-$result = select_query("tblcurrencies", "id,code", "", "code", "ASC");
+$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	echo "<option value=\"" . $data['id'] . "\"";
 
 	if ($currency == $data['id']) {
@@ -138,9 +138,9 @@ echo $cardlastfour = $filters->get("cardlastfour");
 echo "\" /></td></tr>
 ";
 $customfields = $filters->get("customfields");
-$result = select_query("tblcustomfields", "id,fieldname", array("type" => "client"));
+$result = select_query_i("tblcustomfields", "id,fieldname", array("type" => "client"));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$fieldid = $data['id'];
 	$fieldname = $data['fieldname'];
 	echo "<tr><td class=\"fieldlabel\">" . $fieldname . "</td><td class=\"fieldarea\" colspan=\"3\"><input type=\"text\" name=\"customfields[" . $fieldid . "]\" size=\"30\" value=\"" . $customfields[$fieldid] . "\" /></td></tr>";

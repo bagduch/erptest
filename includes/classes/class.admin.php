@@ -372,9 +372,9 @@
 
         $admins = "";
         $query = "SELECT DISTINCT adminusername FROM tbladminlog WHERE lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND logouttime='0000-00-00' ORDER BY lastvisit ASC";
-        $result = full_query($query);
+        $result = full_query_i($query);
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $admins .= $data['adminusername'] . ", ";
         }
 
@@ -408,9 +408,9 @@
                 $query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
             }
 
-            $result = full_query($query);
+            $result = full_query_i($query);
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $ticketcounts[] = array("title" => $data[0], "count" => $data[1]);
 
                 if ($data['showactive']) {
@@ -458,50 +458,50 @@
             }
 
             $query = "SELECT COUNT(*) FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.status IN (" . db_build_in_array($pendingorderstatuses) . ")";
-            $result = full_query($query);
-            $data = mysql_fetch_array($result);
+            $result = full_query_i($query);
+            $data = mysqli_fetch_array($result);
             $templatevars['orders']['pending'] = $data[0];
             $templatevars['clients']['active'] = $templatevars['clients']['inactive'] = $templatevars['clients']['closed'] = 0;
             $query = "SELECT status,COUNT(*) FROM tblclients GROUP BY status";
-            $result = full_query($query);
+            $result = full_query_i($query);
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $templatevars['clients'][strtolower($data[0])] = $data[1];
             }
 
             $templatevars['services']['pending'] = $templatevars['services']['active'] = $templatevars['services']['suspended'] = $templatevars['services']['terminated'] = $templatevars['services']['cancelled'] = $templatevars['services']['fraud'] = 0;
             $query = "SELECT servicestatus,COUNT(*) FROM tblcustomerservices GROUP BY servicestatus";
-            $result = full_query($query);
+            $result = full_query_i($query);
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $templatevars['services'][strtolower($data[0])] = $data[1];
             }
 
             $templatevars['domains']['pending'] = $templatevars['domains']['active'] = $templatevars['domains']['pendingtransfer'] = $templatevars['domains']['expired'] = $templatevars['domains']['cancelled'] = $templatevars['domains']['fraud'] = 0;
             $query = "SELECT status,COUNT(*) FROM tbldomains GROUP BY status";
-            $result = full_query($query);
+            $result = full_query_i($query);
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $templatevars['domains'][str_replace(" ", "", strtolower($data[0]))] = $data[1];
             }
 
             $query = "SELECT COUNT(id) FROM tblinvoices WHERE status='Unpaid'";
-            $result = full_query($query);
-            $data = mysql_fetch_array($result);
+            $result = full_query_i($query);
+            $data = mysqli_fetch_array($result);
             $templatevars['invoices']['unpaid'] = $data[0];
             $query = "SELECT COUNT(id) FROM tblinvoices WHERE status='Unpaid' AND duedate<'" . date("Ymd") . "'";
-            $result = full_query($query);
-            $data = mysql_fetch_array($result);
+            $result = full_query_i($query);
+            $data = mysqli_fetch_array($result);
             $templatevars['invoices']['overdue'] = $data[0];
 
             if (!$disable_admin_ticket_page_counts) {
                 $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed'";
-                $result = full_query($query);
-                $data = mysql_fetch_array($result);
+                $result = full_query_i($query);
+                $data = mysqli_fetch_array($result);
                 $templatevars['tickets']['active'] = $data[0];
                 $query = "SELECT COUNT(*) FROM tbltickets WHERE status IN (SELECT title FROM `tblticketstatuses` WHERE showawaiting = '1')";
-                $result = full_query($query);
-                $data = mysql_fetch_array($result);
+                $result = full_query_i($query);
+                $data = mysqli_fetch_array($result);
                 $templatevars['tickets']['awaitingreply'] = $data[0];
 
                 if ($flaggedticketschecked) {
@@ -509,16 +509,16 @@
                 }
                 else {
                     $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'";
-                    $result = full_query($query);
-                    $data = mysql_fetch_array($result);
+                    $result = full_query_i($query);
+                    $data = mysqli_fetch_array($result);
                     $templatevars['tickets']['flagged'] = $data[0];
                 }
 
                 $ticketstats = array();
                 $query = "SELECT status,COUNT(*) FROM tbltickets GROUP BY status";
-                $result = full_query($query);
+                $result = full_query_i($query);
 
-                while ($data = mysql_fetch_array($result)) {
+                while ($data = mysqli_fetch_array($result)) {
                     $ticketstats[$data[0]] = $data[1];
                 }
 

@@ -103,8 +103,8 @@ $aInt = new RA_Admin("Create Upgrade/Downgrade Orders", false);
 $aInt->title = $aInt->lang("services", "upgradedowngrade");
 $aInt->requiredFiles(array("orderfunctions", "upgradefunctions", "invoicefunctions", "configoptionsfunctions"));
 ob_start();
-$result = select_query("tblcustomerservices", "tblcustomerservices.userid,tblcustomerservices.domain,tblcustomerservices.billingcycle,tblcustomerservices.nextduedate,tblcustomerservices.paymentmethod,tblservices.id AS pid,tblservices.name,tblservicegroups.name as groupname", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.userid,tblcustomerservices.domain,tblcustomerservices.billingcycle,tblcustomerservices.nextduedate,tblcustomerservices.paymentmethod,tblservices.id AS pid,tblservices.name,tblservicegroups.name as groupname", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$data = mysqli_fetch_array($result);
 $userid = $data['userid'];
 $service_groupname = $data['groupname'];
 $service_pid = $data['pid'];
@@ -396,9 +396,9 @@ function calctotals() {
 				echo "elect name=\"promocode\" id=\"promocode\" onchange=\"calctotals()\"><option value=\"\">";
 				echo $aInt->lang("global", "none");
 				echo "</option>";
-				$result = select_query("tblpromotions", "", array("upgrades" => "1"), "code", "ASC");
+				$result = select_query_i("tblpromotions", "", array("upgrades" => "1"), "code", "ASC");
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$promo_id = $data['id'];
 					$promo_code = $data['code'];
 					$promo_type = $data['type'];

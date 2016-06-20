@@ -18,14 +18,14 @@ $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
 $aInt->sortableTableInit("date");
 $query = "DELETE FROM tbladminlog WHERE lastvisit='00000000000000'";
-$result = full_query($query);
+$result = full_query_i($query);
 $date = date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y")));
 $query = "UPDATE tbladminlog SET logouttime=lastvisit WHERE lastvisit<'" . $date . "' and logouttime='00000000000000'";
-$result = full_query($query);
+$result = full_query_i($query);
 $numrows = get_query_val("tbladminlog", "COUNT(*)", "");
-$result = select_query("tbladminlog", "", "", "id", "DESC", $page * $limit . "," . $limit);
+$result = select_query_i("tbladminlog", "", "", "id", "DESC", $page * $limit . "," . $limit);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$logintime = $data['logintime'];
 	$lastvisit = $data['lastvisit'];

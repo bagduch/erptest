@@ -14,8 +14,8 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblannouncements", "id", array("id" => $announcementid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblannouncements", "id", array("id" => $announcementid));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Announcement ID Not Found");

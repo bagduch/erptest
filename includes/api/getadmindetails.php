@@ -19,8 +19,8 @@ if (!function_exists("getAdminPermsArray")) {
 	require ROOTDIR . "/includes/adminfunctions.php";
 }
 
-$result = select_query("tbladmins", "id,firstname,lastname,notes,signature,roleid,supportdepts", array("id" => $_SESSION['adminid']));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbladmins", "id,firstname,lastname,notes,signature,roleid,supportdepts", array("id" => $_SESSION['adminid']));
+$data = mysqli_fetch_array($result);
 $adminid = $data['id'];
 $firstname = $data['firstname'];
 $lastname = $data['lastname'];
@@ -30,9 +30,9 @@ $adminroleid = $data['roleid'];
 $supportdepts = $data['supportdepts'];
 $apiresults = array("result" => "success", "adminid" => $adminid, "name" => "" . $firstname . " " . $lastname, "notes" => $notes, "signature" => $signature);
 $adminpermsarray = getAdminPermsArray();
-$result = select_query("tbladminperms", "", array("roleid" => $adminroleid));
+$result = select_query_i("tbladminperms", "", array("roleid" => $adminroleid));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$permid = $data['permid'];
 	$apiresults->allowedpermissions .= $adminpermsarray[$permid] . ",";
 }
@@ -74,21 +74,21 @@ if ($android) {
 	define("ANDROIDLICENSE", $licensing->isActiveAddon("Android App"));
 	$apiresults['android'] = ANDROIDLICENSE;
 	$statuses = array();
-	$result = select_query("tblticketstatuses", "", "", "sortorder", "ASC");
+	$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$statuses[$data['title']] = 0;
 	}
 
 	$where = "";
 
 	if ($deptid) {
-		$where = "WHERE did='" . mysql_real_escape_string($deptid) . "'";
+		$where = "WHERE did='" . mysqli_real_escape_string($deptid) . "'";
 	}
 
-	$result = full_query("SELECT status, COUNT(*) AS count FROM tbltickets " . $where . " GROUP BY status");
+	$result = full_query_i("SELECT status, COUNT(*) AS count FROM tbltickets " . $where . " GROUP BY status");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$statuses[$data['status']] = $data['count'];
 	}
 
@@ -97,9 +97,9 @@ if ($android) {
 	}
 
 	$deptartments = array();
-	$result = full_query("SELECT id, name FROM tblticketdepartments");
+	$result = full_query_i("SELECT id, name FROM tblticketdepartments");
 
-	while ($data = mysql_fetch_assoc($result)) {
+	while ($data = mysqli_fetch_assoc($result)) {
 		$deptartments[$data['id']] = $data['name'];
 	}
 
@@ -108,9 +108,9 @@ if ($android) {
 	}
 
 	$gateways = array();
-	$result = select_query("tblpaymentgateways", "gateway,value", array("setting" => "name"));
+	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"));
 
-	while ($data = mysql_fetch_assoc($result)) {
+	while ($data = mysqli_fetch_assoc($result)) {
 		$gateways[$data['gateway']] = $data['value'];
 	}
 

@@ -32,8 +32,8 @@ if (!isset($_REQUEST['projectid'])) {
 
 
 if (isset($_REQUEST['projectid'])) {
-	$result = select_query("mod_project", "", array("id" => (int)$projectid));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("mod_project", "", array("id" => (int)$projectid));
+	$data = mysqli_fetch_assoc($result);
 	$projectid = $data['id'];
 
 	if (!$projectid) {
@@ -44,8 +44,8 @@ if (isset($_REQUEST['projectid'])) {
 
 
 if (isset($_REQUEST['userid'])) {
-	$result_userid = select_query("tblclients", "id", array("id" => $_REQUEST['userid']));
-	$data_userid = mysql_fetch_array($result_userid);
+	$result_userid = select_query_i("tblclients", "id", array("id" => $_REQUEST['userid']));
+	$data_userid = mysqli_fetch_array($result_userid);
 
 	if (!$data_userid['id']) {
 		$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -55,8 +55,8 @@ if (isset($_REQUEST['userid'])) {
 
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query("tbladmins", "id", array("id" => $_REQUEST['adminid']));
-	$data_adminid = mysql_fetch_array($result_adminid);
+	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {
 		$apiresults = array("result" => "error", "message" => "Admin ID Not Found");

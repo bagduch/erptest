@@ -62,8 +62,8 @@ if ($withdrawn) {
 
 
 if ($userid) {
-	$result_user = select_query("tblaffiliates", "clientid", array("clientid" => $userid));
-	$data_user = mysql_fetch_array($result_user);
+	$result_user = select_query_i("tblaffiliates", "clientid", array("clientid" => $userid));
+	$data_user = mysqli_fetch_array($result_user);
 	$userid = $data_user['clientid'];
 
 	if (!$userid) {
@@ -72,13 +72,13 @@ if ($userid) {
 	}
 }
 
-$result = select_query("tblaffiliates", "COUNT(*)", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblaffiliates", "COUNT(*)", $where);
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result2 = select_query("tblaffiliates", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
-$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result2), "affiliates" => array());
+$result2 = select_query_i("tblaffiliates", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
+$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result2), "affiliates" => array());
 
-while ($data3 = mysql_fetch_assoc($result2)) {
+while ($data3 = mysqli_fetch_assoc($result2)) {
 	$apiresults['affiliates']['affiliate'][] = $data3;
 }
 

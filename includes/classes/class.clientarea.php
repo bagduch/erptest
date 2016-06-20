@@ -209,9 +209,9 @@ class RA_ClientArea
 
 	public function getCurrencyOptions() {
 		$currenciesarray = array();
-		$result = select_query("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+		$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$currenciesarray[] = array("id" => $data['id'], "code" => $data['code'], "default" => $data['default']);
 		}
 
@@ -272,8 +272,8 @@ class RA_ClientArea
 			$this->assign("clientsstats", getClientsStats($_SESSION['uid']));
 
 			if (isset($_SESSION['cid'])) {
-				$result = select_query("tblcontacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblcontacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+				$data = mysqli_fetch_array($result);
 				$loggedinuser = array("contactid" => $data['id'], "firstname" => $data['firstname'], "lastname" => $data['lastname'], "email" => $data['email']);
 				$contactpermissions = explode(",", $data[4]);
 			}

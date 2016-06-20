@@ -77,9 +77,9 @@ echo "\" class=\"button\"></div>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query("tblbannedemails", "", "", "domain", "ASC");
+$result = select_query_i("tblbannedemails", "", "", "domain", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$domain = $data['domain'];
 	$count = $data['count'];

@@ -248,22 +248,22 @@ if ($action == "save") {
 		update_query("tblconfiguration", array("value" => $prorataclientsanniversarydate), array("setting" => "ProrataClientsAnniversaryDate"));
 
 		if ($continuousinvoicegeneration == "on" && !$CONFIG['ContinuousInvoiceGeneration']) {
-			full_query("UPDATE tblcustomerservices SET nextinvoicedate = nextduedate");
-			full_query("UPDATE tbldomains SET nextinvoicedate = nextduedate");
-			full_query("UPDATE tblserviceaddons SET nextinvoicedate = nextduedate");
+			full_query_i("UPDATE tblcustomerservices SET nextinvoicedate = nextduedate");
+			full_query_i("UPDATE tbldomains SET nextinvoicedate = nextduedate");
+			full_query_i("UPDATE tblserviceaddons SET nextinvoicedate = nextduedate");
 		}
 
 
 		if (is_numeric($invoicestartnumber)) {
-			full_query("ALTER TABLE tblinvoices AUTO_INCREMENT = " . (int)$invoicestartnumber);
+			full_query_i("ALTER TABLE tblinvoices AUTO_INCREMENT = " . (int)$invoicestartnumber);
 		}
 
 		update_query("tblconfiguration", array("value" => $nomd5), array("setting" => "NOMD5"));
 
 		if ($CONFIG['NOMD5'] != $nomd5) {
-			$result = select_query("tblclients", "id, password", "");
+			$result = select_query_i("tblclients", "id, password", "");
 
-			while ($data = mysql_fetch_assoc($result)) {
+			while ($data = mysqli_fetch_assoc($result)) {
 				$id = $data['id'];
 
 				if ($nomd5 == "on") {
@@ -288,9 +288,9 @@ if ($action == "save") {
 				update_query("tblclients", array("password" => $password), array("id" => $id));
 			}
 
-			$result = select_query("tblcontacts", "id, password", array("subaccount" => "1"));
+			$result = select_query_i("tblcontacts", "id, password", array("subaccount" => "1"));
 
-			while ($data = mysql_fetch_assoc($result)) {
+			while ($data = mysqli_fetch_assoc($result)) {
 				$id = $data['id'];
 
 				if ($nomd5 == "on") {
@@ -360,9 +360,9 @@ if ($success) {
 	echo $infobox;
 }
 
-$result = select_query("tblconfiguration", "", "");
+$result = select_query_i("tblconfiguration", "", "");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$setting = $data['setting'];
 	$value = $data['value'];
 	$CONFIG["" . $setting] = "" . $value;
@@ -1229,9 +1229,9 @@ echo "<s";
 echo "elect name=\"contactformdept\"><option value=\"\">";
 echo $aInt->lang("general", "presalesdept");
 echo "</option>";
-$dept_query = select_query("tblticketdepartments", "id, name", "");
+$dept_query = select_query_i("tblticketdepartments", "id, name", "");
 
-while ($dept_result = mysql_fetch_assoc($dept_query)) {
+while ($dept_result = mysqli_fetch_assoc($dept_query)) {
 	$selected = "";
 
 	if ($CONFIG['ContactFormDept'] == $dept_result['id']) {
@@ -1756,8 +1756,8 @@ echo $aInt->lang("general", "invoicestartno");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"invoicestartnumber\" value=\"\" size=\"10\"> ";
 echo $aInt->lang("general", "invoicestartnoinfo");
 $query = "SELECT * FROM tblinvoices ORDER BY id DESC LIMIT 0,1";
-$result = full_query($query);
-$data = mysql_fetch_array($result);
+$result = full_query_i($query);
+$data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
 	echo "0";
@@ -1884,9 +1884,9 @@ echo $aInt->lang("general", "affdepartment");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"affiliatedepartment\">";
-$dept_query = select_query("tblticketdepartments", "id,name", "", "order", "ASC");
+$dept_query = select_query_i("tblticketdepartments", "id,name", "", "order", "ASC");
 
-while ($dept_result = mysql_fetch_assoc($dept_query)) {
+while ($dept_result = mysqli_fetch_assoc($dept_query)) {
 	echo "<option value=\"" . $dept_result['id'] . "\"";
 
 	if ($CONFIG['AffiliateDepartment'] == $dept_result['id']) {

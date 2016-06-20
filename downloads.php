@@ -13,9 +13,9 @@
 function dlGetCatIds($catid) {
 	global $idnumbers;
 
-	$result = select_query("tbldownloadcats", "id", array("parentid" => $catid, "hidden" => ""));
+	$result = select_query_i("tbldownloadcats", "id", array("parentid" => $catid, "hidden" => ""));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$cid = $data[0];
 		$idnumbers[] = $cid;
 		dlGetCatIds($cid);
@@ -53,7 +53,7 @@ function createDownloadsArray($result) {
 
 	$downloads = array();
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$category = $data['category'];
 		$type = $data['type'];
@@ -132,8 +132,8 @@ if ($CONFIG['SupportModule']) {
 
 
 if ($action == "displaycat" || $action == "displayarticle") {
-	$result = select_query("tbldownloadcats", "", array("id" => $catid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldownloadcats", "", array("id" => $catid));
+	$data = mysqli_fetch_array($result);
 	$catid = $data['id'];
 
 	if (!$catid) {
@@ -152,8 +152,8 @@ if ($action == "displaycat" || $action == "displayarticle") {
 
 
 	while ($catparentid != "0") {
-		$result = select_query("tbldownloadcats", "", array("id" => $catparentid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldownloadcats", "", array("id" => $catparentid));
+		$data = mysqli_fetch_array($result);
 		$cattempid = $data['id'];
 		$catparentid = $data['parentid'];
 		$catname = $data['name'];
@@ -179,9 +179,9 @@ $smarty->assign("breadcrumbnav", $breadcrumbnav);
 if ($action == "displaycat") {
 	$templatefile = "downloadscat";
 	$i = 0;
-	$result = select_query("tbldownloadcats", "", array("parentid" => $catid, "hidden" => ""), "name", "ASC");
+	$result = select_query_i("tbldownloadcats", "", array("parentid" => $catid, "hidden" => ""), "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$idkb = $data['id'];
 		$dlcats[$i] = array("id" => $idkb, "name" => $data['name'], "urlfriendlyname" => getModRewriteFriendlyString($data['name']), "description" => $data['description']);
 		$idnumbers = array();
@@ -198,7 +198,7 @@ if ($action == "displaycat") {
 	}
 
 	$smarty->assign("dlcats", $dlcats);
-	$result = select_query("tbldownloads", "", "category=" . $catid . " AND hidden=''" . $proddlrestrict, "title", "ASC");
+	$result = select_query_i("tbldownloads", "", "category=" . $catid . " AND hidden=''" . $proddlrestrict, "title", "ASC");
 	$downloads = createDownloadsArray($result);
 	$smarty->assign("downloads", $downloads);
 }
@@ -211,7 +211,7 @@ else {
 		}
 
 		$templatefile = "downloadscat";
-		$result = select_query("tbldownloads", "tbldownloads.*", "(title like '%" . db_escape_string($search) . "%' OR tbldownloads.description like '%" . db_escape_string($search) . "%') AND tbldownloads.hidden='' AND tbldownloadcats.hidden=''" . $proddlrestrict, "title", "ASC", "", "tbldownloadcats ON tbldownloadcats.id=tbldownloads.category");
+		$result = select_query_i("tbldownloads", "tbldownloads.*", "(title like '%" . db_escape_string($search) . "%' OR tbldownloads.description like '%" . db_escape_string($search) . "%') AND tbldownloads.hidden='' AND tbldownloadcats.hidden=''" . $proddlrestrict, "title", "ASC", "", "tbldownloadcats ON tbldownloadcats.id=tbldownloads.category");
 		$downloads = createDownloadsArray($result);
 		$smarty->assign("search", $search);
 		$smarty->assign("downloads", $downloads);
@@ -219,9 +219,9 @@ else {
 	else {
 		$templatefile = "downloads";
 		$i = 0;
-		$result = select_query("tbldownloadcats", "", array("parentid" => "0", "hidden" => ""), "name", "ASC");
+		$result = select_query_i("tbldownloadcats", "", array("parentid" => "0", "hidden" => ""), "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$idkb = $data['id'];
 			$dlcats[$i] = array("id" => $idkb, "name" => $data['name'], "urlfriendlyname" => getModRewriteFriendlyString($data['name']), "description" => $data['description']);
 			$idnumbers = array();
@@ -238,7 +238,7 @@ else {
 		}
 
 		$smarty->assign("dlcats", $dlcats);
-		$result = select_query("tbldownloads", "tbldownloads.*", "tbldownloadcats.hidden='' AND tbldownloads.hidden=''" . $proddlrestrict, "downloads", "DESC", "0,5", "tbldownloadcats ON tbldownloadcats.id=tbldownloads.category");
+		$result = select_query_i("tbldownloads", "tbldownloads.*", "tbldownloadcats.hidden='' AND tbldownloads.hidden=''" . $proddlrestrict, "downloads", "DESC", "0,5", "tbldownloadcats ON tbldownloadcats.id=tbldownloads.category");
 		$downloads = createDownloadsArray($result);
 		$smarty->assign("mostdownloads", $downloads);
 	}

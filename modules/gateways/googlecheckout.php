@@ -25,9 +25,9 @@ function googlecheckout_link($params) {
 		$url = "https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/";
 	}
 
-	$result = select_query( "tblinvoiceitems", "description", array( "invoiceid" => $params['invoiceid'] ) );
+	$result = select_query_i( "tblinvoiceitems", "description", array( "invoiceid" => $params['invoiceid'] ) );
 
-	while ($data = mysql_fetch_array( $result )) {
+	while ($data = mysqli_fetch_array( $result )) {
 		$params->description .= " - " . $data[0];
 	}
 

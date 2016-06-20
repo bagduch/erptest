@@ -21,8 +21,8 @@ if (!function_exists("addTransaction")) {
 
 
 if ($userid) {
-	$result = select_query("tblclients", "id", array("id" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("id" => $userid));
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -33,8 +33,8 @@ if ($userid) {
 
 if ($invoiceid = (int)$_POST['invoiceid']) {
 	$query = "SELECT * FROM tblinvoices WHERE id='" . $invoiceid . "'";
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		$apiresults = array("result" => "error", "message" => "Invoice ID Not Found");

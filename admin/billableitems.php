@@ -223,12 +223,12 @@ if (!$action) {
 		$where['userid'] = $userid;
 	}
 
-	$result = select_query("tblbillableitems", "COUNT(*)", $where);
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblbillableitems", "COUNT(*)", $where);
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
-	$result = select_query("tblbillableitems", "tblbillableitems.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency", $where, $orderby, $order, $page * $limit . ("," . $limit), "tblclients ON tblclients.id=tblbillableitems.userid");
+	$result = select_query_i("tblbillableitems", "tblbillableitems.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency", $where, $orderby, $order, $page * $limit . ("," . $limit), "tblclients ON tblclients.id=tblbillableitems.userid");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$userid = $data['userid'];
 		$firstname = $data['firstname'];
@@ -290,8 +290,8 @@ else {
 
 		if ($id) {
 			$pagetitle = $aInt->lang("billableitems", "edititem");
-			$result = select_query("tblbillableitems", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblbillableitems", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$userid = $data['userid'];
 			$description = $data['description'];
@@ -324,9 +324,9 @@ else {
 			$amount = "0.00";
 			$invoicecount = 0;
 			$options = "";
-			$result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$pid = $data['id'];
 				$pname = $data['name'];
 				$ptype = $data['groupname'];
@@ -512,9 +512,9 @@ else {
 			$currency = getCurrency($userid);
 			$gatewaysarray = getGatewaysArray();
 			$aInt->sortableTableInit("nopagination");
-			$result = select_query("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+			$result = select_query_i("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$invoiceid = $data['id'];
 				$date = $data['date'];
 				$duedate = $data['duedate'];

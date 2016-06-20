@@ -59,9 +59,9 @@ echo "</p>
 echo $_SERVER['PHP_SELF'];
 echo "?action=save\">
 ";
-$result = select_query("tblcustomfields", "", array("type" => "client"), "sortorder` ASC,`id", "ASC");
+$result = select_query_i("tblcustomfields", "", array("type" => "client"), "sortorder` ASC,`id", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$fid = $data['id'];
 	$fieldname = $data['fieldname'];
 	$fieldtype = $data['fieldtype'];

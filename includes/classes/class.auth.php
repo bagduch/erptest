@@ -285,7 +285,7 @@ class RA_Auth {
 			update_query("tbladminlog", array("lastvisit" => "now()"), array("id" => $adminlogid));
 		}
 		else {
-			full_query("UPDATE tbladminlog SET logouttime=lastvisit WHERE adminusername='" . mysql_real_escape_string($this->getAdminUsername()) . "' AND logouttime='00000000000000'");
+			full_query_i("UPDATE tbladminlog SET logouttime=lastvisit WHERE adminusername='" . mysqli_real_escape_string($this->getAdminUsername()) . "' AND logouttime='00000000000000'");
 			insert_query("tbladminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
 		}
 

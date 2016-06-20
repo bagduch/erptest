@@ -13,8 +13,8 @@ $aInt->helplink = "Configurable Options";
 $action = $ra->get_req_var("action");
 
 if ($manageoptions) {
-    $result = select_query("tblcurrencies", "", "", "code", "ASC");
-    while ($data = mysql_fetch_array($result)) {
+    $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
+    while ($data = mysqli_fetch_array($result)) {
         $curr_id = $data['id'];
         $curr_code = $data['code'];
         $currenciesarray[$curr_id] = $curr_code;
@@ -31,8 +31,8 @@ if ($manageoptions) {
         exit();
     }
     $aInt->title = "Configurable Options";
-    $result = select_query("tblcustomfieldsgroup", "", array("id" => $cid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $cid));
+    $data = mysqli_fetch_array($result);
     $cid = $data['id'];
     $name = $data['name'];
     ob_start();
@@ -111,9 +111,9 @@ function closewindow() {
 ";
     $x = 0;
     $query = "SELECT * FROM tblserviceconfigoptionssub WHERE configid=" . (int) $cid . " ORDER BY sortorder ASC,id ASC";
-    $result = full_query($query);
+    $result = full_query_i($query);
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         ++$x;
         $optionid = $data['id'];
         $optionname = $data['optionname'];
@@ -128,14 +128,14 @@ function closewindow() {
         echo "</td>";
         $firstcurrencydone = false;
         foreach ($currenciesarray as $curr_id => $curr_code) {
-            $result2 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-            $data = mysql_fetch_array($result2);
+            $result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+            $data = mysqli_fetch_array($result2);
             $pricing_id = $data['id'];
 
             if (!$pricing_id) {
                 insert_query("tblpricing", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-                $result2 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-                $data = mysql_fetch_array($result2);
+                $result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+                $data = mysqli_fetch_array($result2);
             }
 
             $val[1] = $data['msetupfee'];
@@ -242,8 +242,8 @@ if ($action == "savegroup") {
 if ($action == "duplicate") {
     check_token("RA.admin.default");
     checkPermission("Create New Products/Services");
-    $result = select_query("tblcustomfieldsgroup", "", array("id" => $existinggroupid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $existinggroupid));
+    $data = mysqli_fetch_array($result);
     $addstr = "";
     foreach ($data as $key => $value) {
 
@@ -263,11 +263,11 @@ if ($action == "duplicate") {
     }
 
     $addstr = substr($addstr, 0, 0 - 1);
-    full_query("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
-    $newgroupid = mysql_insert_id();
-    $result = select_query("tblcustomfields", "", array("gid" => $existinggroupid));
+    full_query_i("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
+    $newgroupid = mysqli_insert_id();
+    $result = select_query_i("tblcustomfields", "", array("gid" => $existinggroupid));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $configid = $data['id'];
         $addstr = "";
         foreach ($data as $key => $value) {
@@ -288,11 +288,11 @@ if ($action == "duplicate") {
         }
 
         $addstr = substr($addstr, 0, 0 - 1);
-        full_query("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
-        $newconfigid = mysql_insert_id();
-        $result2 = select_query("tblcustomfields", "", array("gid" => $configid));
+        full_query_i("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
+        $newconfigid = mysqli_insert_id();
+        $result2 = select_query_i("tblcustomfields", "", array("gid" => $configid));
 
-        while ($data = mysql_fetch_array($result2)) {
+        while ($data = mysqli_fetch_array($result2)) {
             $optionid = $data['id'];
             $addstr = "";
             foreach ($data as $key => $value) {
@@ -313,7 +313,7 @@ if ($action == "duplicate") {
             }
 
             $addstr = substr($addstr, 0, 0 - 1);
-            full_query("INSERT INTO tblcustomfields VALUES (" . $addstr . ")");
+            full_query_i("INSERT INTO tblcustomfields VALUES (" . $addstr . ")");
         }
     }
 
@@ -401,9 +401,9 @@ if ($action == "") {
 
 ";
     $aInt->sortableTableInit("nopagination");
-    $result = select_query("tblcustomfieldsgroup", "", "", "name", "ASC");
+    $result = select_query_i("tblcustomfieldsgroup", "", "", "name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $name = $data['name'];
         $tabledata[] = array($name, "<a href=\"" . $_SERVER['PHP_SELF'] . ("?action=managegroup&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>"), "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
@@ -415,14 +415,14 @@ if ($action == "") {
         if ($id) {
             $action = "save";
             $steptitle = "Manage Group";
-            $result = select_query("tblcustomfieldsgroup", "", array("id" => $id));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $id));
+            $data = mysqli_fetch_array($result);
             $id = $data['id'];
             $name = $data['name'];
             $productlinks = array();
-            $result = select_query("tblservices", "", array("cpid" => $id));
+            $result = select_query_i("tblservices", "", array("cpid" => $id));
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $productlinks[] = $data['id'];
             }
         } else {
@@ -463,9 +463,9 @@ function doDelete(id,opid) {
         echo "<s";
         echo "elect name=\"productlinks[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-        $result = select_query("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+        $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $pid = $data['id'];
             $groupname = $data['groupname'];
             $name = $data['name'];
@@ -482,8 +482,8 @@ function doDelete(id,opid) {
 </table>
 ";
         if ($id) {
-            $result = select_query("tblcustomfields", "", array("type" => "product", "gid" => $id), "sortorder` ASC,`id", "ASC");
-            while ($data = mysql_fetch_array($result)) {
+            $result = select_query_i("tblcustomfields", "", array("type" => "product", "gid" => $id), "sortorder` ASC,`id", "ASC");
+            while ($data = mysqli_fetch_array($result)) {
                 $fid = $data['id'];
                 $fieldname = $data['fieldname'];
                 $fieldtype = $data['fieldtype'];
@@ -727,9 +727,9 @@ function doDelete(id,opid) {
 <tr><td width=150 class=\"fieldlabel\">Existing Group</td><td class=\"fieldarea\">";
             echo "<s";
             echo "elect name=\"existinggroupid\">";
-            $result = select_query("tblcustomfieldsgroup", "", "", "id", "ASC");
+            $result = select_query_i("tblcustomfieldsgroup", "", "", "id", "ASC");
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $id = $data['id'];
                 $name = $data['name'];
 

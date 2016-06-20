@@ -38,8 +38,8 @@ if ($fraud && in_array($fraud, $fraudmodules)) {
 	include "../modules/fraud/" . $fraud . "/" . $fraud . ".php";
 	$configarray = getConfigArray();
 	foreach ($configarray as $regconfoption => $values) {
-		$result = select_query("tblfraud", "", array("fraud" => $fraud, "setting" => $regconfoption));
-		$num_rows = mysql_num_rows($result);
+		$result = select_query_i("tblfraud", "", array("fraud" => $fraud, "setting" => $regconfoption));
+		$num_rows = mysqli_num_rows($result);
 
 		if ($num_rows == "0") {
 			insert_query("tblfraud", array("fraud" => $fraud, "setting" => $regconfoption, "value" => $values['Value']));

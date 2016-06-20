@@ -20,8 +20,8 @@ if (!function_exists("AddReply")) {
 }
 
 $from = "";
-$result = select_query("tbltickets", "", array("id" => $ticketid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+$data = mysqli_fetch_array($result);
 $ticketid = $data['id'];
 
 if (!$ticketid) {
@@ -31,8 +31,8 @@ if (!$ticketid) {
 
 
 if ($clientid) {
-	$result = select_query("tblclients", "id", array("id" => $clientid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("id" => $clientid));
+	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
 		$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -41,8 +41,8 @@ if ($clientid) {
 
 
 	if ($contactid) {
-		$result = select_query("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
+		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
 			$apiresults = array("result" => "error", "message" => "Contact ID Not Found");

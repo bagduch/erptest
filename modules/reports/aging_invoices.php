@@ -22,8 +22,8 @@ for ( $day = 0; $day < 120; $day += 30) {
     $rowdata[] = "$day - ".($day+30);
     $currencytotals = array();
     $query = "SELECT tblclients.currency,SUM(tblinvoices.total),(SELECT SUM(amountin-amountout) FROM tblaccounts INNER JOIN tblinvoices ON tblinvoices.id=tblaccounts.invoiceid INNER JOIN tblclients t2 ON t2.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.duedate>='".db_make_safe_date($enddate)."' AND tblinvoices.status='Unpaid' AND t2.currency=tblclients.currency) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.duedate>='".db_make_safe_date($enddate)."' AND tblinvoices.status='Unpaid' GROUP BY tblclients.currency";
-    $result = full_query($query);
-    while ($data = mysql_fetch_array($result)) {
+    $result = full_query_i($query);
+    while ($data = mysqli_fetch_array($result)) {
         $currencytotals[$data[0]] = $data[1]-$data[2];
     }
     foreach ($currencies AS $currencyid=>$currencyname) {
@@ -42,8 +42,8 @@ $rowdata = array();
 $rowdata[] = "120 +";
 $currencytotals = array();
 $query = "SELECT tblclients.currency,SUM(tblinvoices.total) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.status='Unpaid' GROUP BY tblclients.currency";
-$result = full_query($query);
-while ($data = mysql_fetch_array($result)) {
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
         $currencytotals[$data[0]] = $data[1];
 }
 foreach ($currencies AS $currencyid=>$currencyname) {

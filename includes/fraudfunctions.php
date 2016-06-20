@@ -12,9 +12,9 @@
 
 function getFraudConfigOptions($fraud) {
 	$configoptions = array();
-	$result = select_query("tblfraud", "", array("fraud" => $fraud));
+	$result = select_query_i("tblfraud", "", array("fraud" => $fraud));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$setting = $data['setting'];
 		$value = $data['value'];
 		$configoptions[$setting] = $value;
@@ -26,14 +26,14 @@ function getFraudConfigOptions($fraud) {
 function getActiveFraudModule() {
 	global $CONFIG;
 
-	$result = select_query("tblfraud", "fraud", array("setting" => "Enable", "value" => "on"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblfraud", "fraud", array("setting" => "Enable", "value" => "on"));
+	$data = mysqli_fetch_array($result);
 	$fraud = $data['fraud'];
 	$orderid = $_SESSION['orderdetails']['OrderID'];
 
 	if ($CONFIG['SkipFraudForExisting']) {
-		$result = select_query("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+		$data = mysqli_fetch_array($result);
 
 		if ($data[0]) {
 			$fraudmodule = "";

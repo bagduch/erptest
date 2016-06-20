@@ -58,8 +58,8 @@ initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav);
 
 if (isset($_SESSION['uid'])) {
 	$step = (in_array($_GET['step'], array(2, 3)) ? $_GET['step'] : "");
-	$result = select_query("tblsslorders", "", array("userid" => $_SESSION['uid'], "MD5(id)" => $cert));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblsslorders", "", array("userid" => $_SESSION['uid'], "MD5(id)" => $cert));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 
 	if (!$id) {
@@ -79,15 +79,15 @@ if (isset($_SESSION['uid'])) {
 	$provisiondate = $data['provisiondate'];
 	$completiondate = $data['completiondate'];
 	$status = $data['status'];
-	$result = select_query("tblcustomerservices", "packageid,regdate,domain,firstpaymentamount", array("id" => $serviceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "packageid,regdate,domain,firstpaymentamount", array("id" => $serviceid));
+	$data = mysqli_fetch_array($result);
 	$productid = $data['packageid'];
 	$regdate = $data['regdate'];
 	$domain = $data['domain'];
 	$firstpaymentamount = $data['firstpaymentamount'];
 	$regdate = fromMySQLDate($regdate);
-	$result = select_query("tblservices", "name", array("id" => $productid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "name", array("id" => $productid));
+	$data = mysqli_fetch_array($result);
 	$certificatename = $data['name'];
 	$smartyvalues['cert'] = $cert;
 	$smartyvalues['serviceid'] = $serviceid;
@@ -115,8 +115,8 @@ if (isset($_SESSION['uid'])) {
 	$params['configdata'] = $configdata;
 
 	if (!$_POST) {
-		$result = select_query("tblclients", "", array("id" => $_SESSION['uid']));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "", array("id" => $_SESSION['uid']));
+		$data = mysqli_fetch_array($result);
 		$firstname = $data['firstname'];
 		$lastname = $data['lastname'];
 		$orgname = $data['companyname'];
@@ -371,8 +371,8 @@ if (isset($_SESSION['uid'])) {
 -----END CERTIFICATE REQUEST-----";
 		}
 
-		$result = select_query("tblsslorders", "", array("userid" => $_SESSION['uid'], "MD5(id)" => $cert));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblsslorders", "", array("userid" => $_SESSION['uid'], "MD5(id)" => $cert));
+		$data = mysqli_fetch_array($result);
 		$status = $data['status'];
 		$smartyvalues['status'] = $status;
 		$smartyvalues['displaydata'] = $result['displaydata'];

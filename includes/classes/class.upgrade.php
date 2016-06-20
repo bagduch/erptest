@@ -43,8 +43,8 @@ class RA_Upgrade {
 	}
 
 	public function hasUnpaidInvoice() {
-		$result = select_query("tblinvoiceitems", "invoiceid", array("type" => "Hosting", "relid" => $this->getProductInfo("id"), "status" => "Unpaid", "tblinvoices.userid" => $this->getProductInfo("userid")), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoiceitems", "invoiceid", array("type" => "Hosting", "relid" => $this->getProductInfo("id"), "status" => "Unpaid", "tblinvoices.userid" => $this->getProductInfo("userid")), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+		$data = mysqli_fetch_array($result);
 
 		if ($data[0]) {
 			return true;
@@ -65,9 +65,9 @@ class RA_Upgrade {
 		}
 
 		$array = array();
-		$result = select_query("tblservices", "id", "id IN (" . db_build_in_array($upgradepackages) . ")", "order` ASC,`name", "ASC");
+		$result = select_query_i("tblservices", "id", "id IN (" . db_build_in_array($upgradepackages) . ")", "order` ASC,`name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$pid = $data['id'];
 			$array[$pid] = getProductInfo($pid);
 			$array[$pid]['pricing'] = getPricingInfo($pid, "", true);
@@ -266,8 +266,8 @@ class RA_Upgrade {
 		$newpid = $this->newpid;
 		$newbillingcycleraw = $this->newbillingcycleraw;
 		$newbillingcycle = $this->newbillingcyclenice;
-		$result = select_query("tblservices", "id,name,tax,paytype,upgradechargefullcycle", array("id" => $newpid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservices", "id,name,tax,paytype,upgradechargefullcycle", array("id" => $newpid));
+		$data = mysqli_fetch_array($result);
 		$newpid = $data['id'];
 
 		if (!$newpid) {
@@ -283,8 +283,8 @@ class RA_Upgrade {
 			$newbillingcycleraw = "monthly";
 		}
 
-		$result = select_query("tblpricing", $newbillingcycleraw, array("type" => "product", "currency" => $currency['id'], "relid" => $newpid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpricing", $newbillingcycleraw, array("type" => "product", "currency" => $currency['id'], "relid" => $newpid));
+		$data = mysqli_fetch_array($result);
 		$newamount = $data[$newbillingcycleraw];
 		$configoptionspricingarray = getCartConfigOptions($newpid, "", $newbillingcycle, $serviceid);
 		$configoptionsamount = 0;
@@ -459,8 +459,8 @@ class RA_Upgrade {
 	public function setPromoCode($promocode) {
 		global $_LANG;
 
-		$result = select_query("tblpromotions", "", array("code" => $promocode));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpromotions", "", array("code" => $promocode));
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 		$recurringtype = $data['type'];
 		$recurringvalue = $data['value'];
@@ -515,8 +515,8 @@ class RA_Upgrade {
 
 
 		if ($onceperclient) {
-			$result = select_query("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
-			$orderCount = mysql_fetch_array($result);
+			$result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
+			$orderCount = mysqli_fetch_array($result);
 
 			if (0 < $orderCount[0]) {
 				return $_LANG['promoonceperclient'];

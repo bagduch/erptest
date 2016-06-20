@@ -29,10 +29,10 @@ if (!$CONFIG['DomainSyncEnabled']) {
 $registrarconfigops = array();
 logActivity("Domain Sync Cron: Starting");
 $transfersreport = "";
-$result = select_query("tbldomains", "id,domain,registrar,registrationperiod,status,dnsmanagement,emailforwarding,idprotection", "registrar!='' AND status='Pending Transfer'", "id", "ASC");
+$result = select_query_i("tbldomains", "id,domain,registrar,registrationperiod,status,dnsmanagement,emailforwarding,idprotection", "registrar!='' AND status='Pending Transfer'", "id", "ASC");
 $curlerrorregistrars = array();
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$domainid = $data['id'];
 	$domain = $data['domain'];
 	$registrar = $data['registrar'];
@@ -138,9 +138,9 @@ if (!$totalunsynced) {
 	update_query("tbldomains", array("synced" => "0"), "");
 }
 
-$result = select_query("tbldomains", "id,domain,expirydate,nextduedate,registrar,status", "registrar!='' AND status='Active' AND synced=0", "status` DESC, `id", "ASC", "0,50");
+$result = select_query_i("tbldomains", "id,domain,expirydate,nextduedate,registrar,status", "registrar!='' AND status='Active' AND synced=0", "status` DESC, `id", "ASC", "0,50");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$domainid = $data['id'];
 	$domain = $data['domain'];
 	$registrar = $data['registrar'];

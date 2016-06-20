@@ -12,14 +12,14 @@ require(ROOTDIR.'/includes/countries.php');
 
 $clientstats = array();
 $query = "SELECT country, COUNT(*) FROM tblclients WHERE status='Active' GROUP BY country ORDER BY country";
-$result = full_query($query);
-while ($data = mysql_fetch_array($result)) {
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
     $clientstats[$data[0]] = $data[1];
 }
 
 $query = "SELECT country, COUNT(*) FROM  tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE servicestatus='Active' GROUP BY country ORDER BY country";
-$result = full_query($query);
-while ($data = mysql_fetch_array($result)) {
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
 
     $countryname = $countries[$data[0]];
     if ($countryname) {

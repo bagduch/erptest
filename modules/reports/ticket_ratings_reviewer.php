@@ -12,8 +12,8 @@ if (!$enddate) $enddate = fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m"),date
 $rsel[$rating] = ' selected';
 
 $query = "SELECT tblticketreplies.*,tbltickets.tid AS ticketid FROM tblticketreplies INNER JOIN tbltickets ON tbltickets.id=tblticketreplies.tid WHERE tblticketreplies.admin!='' AND tblticketreplies.rating='".(int)$rating."' AND tblticketreplies.date BETWEEN '".db_make_safe_human_date($startdate)."' AND '".db_make_safe_human_date($enddate)."' ORDER BY date DESC";
-$result = full_query($query);
-$num_rows = mysql_num_rows($result);
+$result = full_query_i($query);
+$num_rows = mysqli_num_rows($result);
 
 $reportdata["title"] = "Support Ticket Ratings Reviewer";
 $reportdata["description"] = "This report is showing all $num_rows ticket replies rated $rating between $startdate & $enddate for review";
@@ -24,7 +24,7 @@ $reportdata["headertext"] = '<form method="post" action="reports.php?report=tick
 
 $reportdata["tableheadings"] = array("Ticket #","Date","Message","Admin","Rating");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$tid = $data["tid"];
     $ticketid = $data["ticketid"];
 	$date = $data["date"];

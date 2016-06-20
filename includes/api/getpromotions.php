@@ -20,10 +20,10 @@ if ($code) {
 	$where['code'] = $code;
 }
 
-$result = select_query("tblpromotions", "", $where, "code", "ASC");
-$apiresults = array("result" => "success", "totalresults" => mysql_num_rows($result));
+$result = select_query_i("tblpromotions", "", $where, "code", "ASC");
+$apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$apiresults['promotions']['promotion'][] = $data;
 }
 

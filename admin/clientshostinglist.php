@@ -133,8 +133,8 @@ if ($customfieldvalue) {
 	}
 }
 
-$result = full_query("SELECT COUNT(tblcustomerservices.id) " . $query);
-$data = mysql_fetch_array($result);
+$result = full_query_i("SELECT COUNT(tblcustomerservices.id) " . $query);
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 echo "
@@ -200,9 +200,9 @@ echo $aInt->lang("global", "any");
 echo "</option>
 ";
 $servers = $disabledservers = "";
-$result2 = select_query("tblservers", "id,name,disabled", "", "name", "ASC");
+$result2 = select_query_i("tblservers", "id,name,disabled", "", "name", "ASC");
 
-while ($data = mysql_fetch_array($result2)) {
+while ($data = mysqli_fetch_array($result2)) {
 	$id = $data['id'];
 	$servername = $data['name'];
 	$serverdisabled = $data['disabled'];
@@ -259,9 +259,9 @@ echo "<s";
 echo "elect name=\"customfield\" style=\"width:200px;\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
-$result2 = select_query("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,tblservices.name", array("tblcustomfields.type" => "product"), "", "", "", "tblservices ON tblservices.id=tblcustomfields.relid");
+$result2 = select_query_i("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,tblservices.name", array("tblcustomfields.type" => "product"), "", "", "", "tblservices ON tblservices.id=tblcustomfields.relid");
 
-while ($data = mysql_fetch_array($result2)) {
+while ($data = mysqli_fetch_array($result2)) {
 	$fieldid = $data['id'];
 	$fieldname = $data['fieldname'];
 	$fieldprodname = $data['name'];
@@ -315,9 +315,9 @@ else {
 
 $query .= " " . $order;
 $query = "SELECT tblcustomerservices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$regdate = $data['regdate'];

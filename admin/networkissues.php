@@ -123,31 +123,31 @@ if ($action == "delete") {
 }
 
 $t_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'type'";
-$t_result = full_query($t_query);
+$t_result = full_query_i($t_query);
 
-if (0 < mysql_num_rows($t_result)) {
-	$t_row = mysql_fetch_row($t_result);
+if (0 < mysqli_num_rows($t_result)) {
+	$t_row = mysqli_fetch_row($t_result);
 	$type_options = explode('\',\'', preg_replace('/(enum|set)\(\'(.+?)\'\)/', '$1', $t_row[1]));
 }
 
 $p_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'priority'";
-$p_result = full_query($p_query);
+$p_result = full_query_i($p_query);
 
-if (0 < mysql_num_rows($p_result)) {
-	$p_row = mysql_fetch_row($p_result);
+if (0 < mysqli_num_rows($p_result)) {
+	$p_row = mysqli_fetch_row($p_result);
 	$priority_options = explode('\',\'', preg_replace( '/(enum|set)\(\'(.+?)\'\)/', '$1', $p_row[1]));
 }
 
 $s_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'status'";
-$s_result = full_query($s_query);
+$s_result = full_query_i($s_query);
 
-if (0 < mysql_num_rows($s_result)) {
-	$s_row = mysql_fetch_row($s_result);
+if (0 < mysqli_num_rows($s_result)) {
+	$s_row = mysqli_fetch_row($s_result);
 	$status_options = explode('\',\'', preg_replace( '/(enum|set)\(\'(.+?)\'\)/', '$1', $s_row[1]));
 }
 
 $server_query = "SELECT id, name FROM tblservers";
-$server_result = full_query($server_query);
+$server_result = full_query_i($server_query);
 ob_start();
 
 if ($action == "") {
@@ -166,7 +166,7 @@ if ($action == "") {
 		}
 	}
 
-	$result = select_query("tblnetworkissues", "*,(select name from tblservers where id = tblnetworkissues.server) as server", $where, "lastupdate", "DESC");
+	$result = select_query_i("tblnetworkissues", "*,(select name from tblservers where id = tblnetworkissues.server) as server", $where, "lastupdate", "DESC");
 	$aInt->deleteJSConfirm("doDelete", "global", "deleteconfirm", "?action=delete&id=");
 	echo "
 <p>";
@@ -190,9 +190,9 @@ if ($action == "") {
 ";
 	$aInt->sortableTableInit("nopagination");
 
-	if (mysql_num_rows($result)) {
+	if (mysqli_num_rows($result)) {
 
-		while ($open_row = mysql_fetch_assoc($result)) {
+		while ($open_row = mysqli_fetch_assoc($result)) {
 			$enddate = $open_row['enddate'];
 			$enddate = ($enddate ? fromMySQLDate($enddate, true) : "None");
 
@@ -227,8 +227,8 @@ else {
 
 		if ($id) {
 			$pagetitle = "Modify Existing Issue";
-			$result = select_query("tblnetworkissues", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblnetworkissues", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$title = $data['title'];
 			$startdate = $data['startdate'];
 			$enddate = $data['enddate'];
@@ -332,7 +332,7 @@ $(\"#enddate\").datetimepicker({showSecond:false,ampm:false,";
 		echo "<s";
 		echo "elect name=\"server\">";
 
-		while ($server_options = mysql_fetch_assoc($server_result)) {
+		while ($server_options = mysqli_fetch_assoc($server_result)) {
 			echo "<option value=\"" . $server_options['id'] . "\"";
 
 			if ($server_options['id'] == $server) {

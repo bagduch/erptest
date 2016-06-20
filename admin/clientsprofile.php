@@ -11,8 +11,8 @@ if ($ra->get_req_var("save")) {
 	check_token("RA.admin.default");
 	$email = trim($email);
 	$password = trim($password);
-	$result = select_query("tblclients", "COUNT(*)", "email='" . db_escape_string($email) . "' AND id!='" . db_escape_string($userid) . "'");
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "COUNT(*)", "email='" . db_escape_string($email) . "' AND id!='" . db_escape_string($userid) . "'");
+	$data = mysqli_fetch_array($result);
 
 	if ($data[0]) {
 		redir("userid=" . $userid . "&emailexists=1");
@@ -313,9 +313,9 @@ echo "<s";
 echo "elect name=\"billingcid\" tabindex=\"22\"><option value=\"0\">";
 echo $aInt->lang("global", "default");
 echo "</option>";
-$result = select_query("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	echo "<option value=\"" . $data['id'] . "\"";
 
 	if ($data['id'] == $billingcid) {
@@ -412,9 +412,9 @@ echo $aInt->lang("currencies", "currency");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"currency\" tabindex=\"25\">";
-$result = select_query("tblcurrencies", "id,code", "", "code", "ASC");
+$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	echo "<option value=\"" . $data['id'] . "\"";
 
 	if ($data['id'] == $currency) {
@@ -432,9 +432,9 @@ echo "elect name=\"groupid\" tabindex=\"27\"><option value=\"0\">";
 echo $aInt->lang("global", "none");
 echo "</option>
 ";
-$result = select_query("tblclientgroups", "", "", "groupname", "ASC");
+$result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$group_id = $data['id'];
 	$group_name = $data['groupname'];
 	$group_colour = $data['groupcolour'];

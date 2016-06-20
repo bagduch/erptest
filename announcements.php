@@ -77,15 +77,15 @@ if (!$id) {
 
 	$templatefile = "announcements";
 	$announcements = array();
-	$result = select_query("tblannouncements", "", array("published" => "on"), "date", "DESC", ($page - 1) * $pagelimit . ("," . $pagelimit));
+	$result = select_query_i("tblannouncements", "", array("published" => "on"), "date", "DESC", ($page - 1) * $pagelimit . ("," . $pagelimit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$date = $data['date'];
 		$title = $data['title'];
 		$announcement = $data['announcement'];
-		$result2 = select_query("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+		$data = mysqli_fetch_array($result2);
 
 		if ($data['title']) {
 			$title = $data['title'];
@@ -102,8 +102,8 @@ if (!$id) {
 	}
 
 	$smarty->assign("announcements", $announcements);
-	$result = select_query("tblannouncements", "COUNT(*)", array("published" => "on"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblannouncements", "COUNT(*)", array("published" => "on"));
+	$data = mysqli_fetch_array($result);
 	$numannouncements = $data[0];
 	$totalpages = ceil($numannouncements / $pagelimit);
 	$prevpage = $nextpage = "";
@@ -130,8 +130,8 @@ if (!$id) {
 }
 else {
 	$templatefile = "viewannouncement";
-	$result = select_query("tblannouncements", "", array("published" => "on", "id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblannouncements", "", array("published" => "on", "id" => $id));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 
 	if (!$id) {
@@ -143,8 +143,8 @@ else {
 	$announcement = $data['announcement'];
 	$timestamp = strtotime($date);
 	$date = fromMySQLDate($date, true);
-	$result2 = select_query("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
-	$data = mysql_fetch_array($result2);
+	$result2 = select_query_i("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+	$data = mysqli_fetch_array($result2);
 
 	if ($data['title']) {
 		$title = $data['title'];

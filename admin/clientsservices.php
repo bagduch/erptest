@@ -54,9 +54,9 @@ WHERE tblcustomerservices.id=" . $id
 . ' AND tblservicegroups.type="service"';
 
 
-$result = full_query($query);
-//$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservices.servertype,tblservices.type", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-$service_data = mysql_fetch_array($result);
+$result = full_query_i($query);
+//$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.servertype,tblservices.type", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+$service_data = mysqli_fetch_array($result);
 $id = $service_data['id'];
 
 if (!$id) {
@@ -310,7 +310,7 @@ if ($action == "delete") {
     delete_query("tblcustomerservices", array("id" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
-    full_query("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
+    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
     logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
 }

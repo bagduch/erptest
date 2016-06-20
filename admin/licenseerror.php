@@ -20,7 +20,7 @@ function getConfigurationFileContentWithNewLicenseKey($key) {
 	$db_name = "";
 	$cc_encryption_hash = "";
 	$templates_compiledir = "";
-	$mysql_charset = "";
+	$mysqli_charset = "";
 	$api_access_key = "";
 	$autoauthkey = "";
 	$display_errors = false;
@@ -28,8 +28,8 @@ function getConfigurationFileContentWithNewLicenseKey($key) {
 	sprintf("<?php%s" . "$license = '%s';%s" . "$db_host = '%s';%s" . "$db_username = '%s';%s" . "$db_password = '%s';%s" . "$db_name = '%s';%s" . "$cc_encryption_hash = '%s';%s" . "$templates_compiledir = '%s';%s", $newline, $key, $newline, $db_host, $newline, $db_username, $newline, $db_password, $newline, $db_name, $newline, $cc_encryption_hash, $newline, $templates_compiledir, $newline);
 	$output = $newline = "\r\n";
 
-	if ($mysql_charset) {
-		$output .= sprintf("$mysql_charset = '%s';%s", $mysql_charset, $newline);
+	if ($mysqli_charset) {
+		$output .= sprintf("$mysqli_charset = '%s';%s", $mysqli_charset, $newline);
 	}
 
 

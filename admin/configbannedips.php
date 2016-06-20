@@ -144,9 +144,9 @@ if ($filterfor = $ra->get_req_var("filterfor")) {
 	}
 }
 
-$result = select_query("tblbannedips", "", $where, "id", "DESC");
+$result = select_query_i("tblbannedips", "", $where, "id", "DESC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$ip = $data['ip'];
 	$reason = $data['reason'];

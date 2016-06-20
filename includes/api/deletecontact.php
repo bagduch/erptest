@@ -14,8 +14,8 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblcontacts", "id", array("id" => $contactid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcontacts", "id", array("id" => $contactid));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Contact ID Not Found");

@@ -20,8 +20,8 @@ $aInt->requiredFiles(array("clientfunctions", "invoicefunctions", "gatewayfuncti
 
 if ($processwindow) {
 	check_token("RA.admin.default");
-	$result = select_query("tblinvoices", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$date = $data['date'];
@@ -239,12 +239,12 @@ else {
 }
 
 $query .= " " . db_escape_string($order);
-$numresults = full_query($query);
-$numrows = mysql_num_rows($numresults);
+$numresults = full_query_i($query);
+$numrows = mysqli_num_rows($numresults);
 $query .= " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$date = $data['date'];

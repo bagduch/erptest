@@ -867,18 +867,18 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		}
 
 		$predefinedaddons = array();
-		$result = select_query("tbladdons", "", "");
+		$result = select_query_i("tbladdons", "", "");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$addon_id = $data['id'];
 			$addon_name = $data['name'];
 			$addon_welcomeemail = $data['welcomeemail'];
 			$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 		}
 
-		$result = select_query("tblserviceaddons", "", array("orderid" => $id));
+		$result = select_query_i("tblserviceaddons", "", array("orderid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$aid = $data['id'];
 			$hostingid = $data['hostingid'];
 			$addonid = $data['addonid'];
@@ -901,9 +901,9 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			}
 		}
 
-		$result = select_query("tbldomains", "", array("orderid" => $id));
+		$result = select_query_i("tbldomains", "", array("orderid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$domainid = $data['id'];
 			$type = $data['type'];
 			$domain = $data['domain'];
@@ -954,8 +954,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 				$renewal = explode("=", $renewal);
 				$domainid = $renewal[0];
 				$registrationperiod = $renewal[1];
-				$result = select_query("tbldomains", "", array("id" => $domainid));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tbldomains", "", array("id" => $domainid));
+				$data = mysqli_fetch_array($result);
 				$domainid = $data['id'];
 				$type = $data['type'];
 				$domain = $data['domain'];
@@ -998,8 +998,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 
 		if (substr($promovalue, 0, 2) == "DR") {
 			$domainid = substr($promovalue, 2);
-			$result = select_query("tbldomains", "", array("id" => $domainid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldomains", "", array("id" => $domainid));
+			$data = mysqli_fetch_array($result);
 			$domainid = $data['id'];
 			$type = $data['type'];
 			$domain = $data['domain'];
@@ -1055,9 +1055,9 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			}
 		}
 
-		$result = select_query("tblupgrades", "", array("orderid" => $id));
+		$result = select_query_i("tblupgrades", "", array("orderid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$upgradeid = $data['id'];
 			$type = $data['type'];
 			$relid = $data['relid'];
@@ -1067,19 +1067,19 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$data = mysqli_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];
 
 			if ($type == "package") {
-				$result2 = select_query("tblservices", "name", array("id" => $originalvalue));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblservices", "name", array("id" => $originalvalue));
+				$data = mysqli_fetch_array($result2);
 				$oldpackagename = $data['name'];
 				$newvalue = explode(",", $newvalue);
 				$newpackageid = $newvalue[0];
-				$result2 = select_query("tblservices", "name", array("id" => $newpackageid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblservices", "name", array("id" => $newpackageid));
+				$data = mysqli_fetch_array($result2);
 				$newpackagename = $data['name'];
 				$newbillingcycle = $newvalue[1];
 				$details = "<a href=\"clientshosting.php?userid=" . $userid . "&id=" . $relid . "\">" . $oldpackagename . " => " . $newpackagename . "</a><br />";
@@ -1096,17 +1096,17 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 				$tempvalue = explode("=>", $originalvalue);
 				$configid = $tempvalue[0];
 				$oldoptionid = $tempvalue[1];
-				$result2 = select_query("tblserviceconfigoptions", "", array("id" => $configid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+				$data = mysqli_fetch_array($result2);
 				$configname = $data['optionname'];
 				$optiontype = $data['optiontype'];
 
 				if ($optiontype == 1 || $optiontype == 2) {
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
+					$data = mysqli_fetch_array($result2);
 					$oldoptionname = $data['optionname'];
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $newvalue));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $newvalue));
+					$data = mysqli_fetch_array($result2);
 					$newoptionname = $data['optionname'];
 				}
 				else {
@@ -1122,8 +1122,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 					}
 					else {
 						if ($optiontype == 4) {
-							$result2 = select_query("tblserviceconfigoptionssub", "", array("configid" => $configid));
-							$data = mysql_fetch_array($result2);
+							$result2 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $configid));
+							$data = mysqli_fetch_array($result2);
 							$optionname = $data['optionname'];
 							$oldoptionname = $oldoptionid;
 							$newoptionname = $newvalue . " x " . $optionname;

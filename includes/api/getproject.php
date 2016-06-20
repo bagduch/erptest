@@ -20,8 +20,8 @@ if (!isset($_REQUEST['projectid'])) {
 	return null;
 }
 
-$result = select_query("mod_project", "", array("id" => (int)$projectid));
-$data = mysql_fetch_assoc($result);
+$result = select_query_i("mod_project", "", array("id" => (int)$projectid));
+$data = mysqli_fetch_assoc($result);
 $projectid = $data['id'];
 
 if (!$projectid) {
@@ -30,13 +30,13 @@ if (!$projectid) {
 }
 
 $apiresults['projectinfo'] = $data;
-$result_task = select_query("mod_projecttasks", "", array("projectid" => (int)$projectid));
+$result_task = select_query_i("mod_projecttasks", "", array("projectid" => (int)$projectid));
 
-while ($data_tasks = mysql_fetch_assoc($result_task)) {
+while ($data_tasks = mysqli_fetch_assoc($result_task)) {
 	$data_tasks['timelogs'] = array();
-	$result_time = select_query("mod_projecttimes", "", array("taskid" => (int)$data_tasks['id']));
+	$result_time = select_query_i("mod_projecttimes", "", array("taskid" => (int)$data_tasks['id']));
 
-	while ($DATA = mysql_fetch_assoc($result_time)) {
+	while ($DATA = mysqli_fetch_assoc($result_time)) {
 		$DATA['starttime'] = date("Y-m-d H:i:s", $DATA['start']);
 		$DATA['endtime'] = date("Y-m-d H:i:s", $DATA['end']);
 		$data_tasks['timelogs']['timelog'][] = $DATA;
@@ -46,9 +46,9 @@ while ($data_tasks = mysql_fetch_assoc($result_task)) {
 }
 
 $apiresults['messages'] = array();
-$result_message = select_query("mod_projectmessages", "", array("projectid" => (int)$projectid));
+$result_message = select_query_i("mod_projectmessages", "", array("projectid" => (int)$projectid));
 
-while ($DATA_message = mysql_fetch_assoc($result_message)) {
+while ($DATA_message = mysqli_fetch_assoc($result_message)) {
 	$apiresults['messages']['message'][] = $DATA_message;
 }
 

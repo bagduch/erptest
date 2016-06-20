@@ -34,8 +34,8 @@ if ($action == "savequestion") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query("tblclients", "", array("securityqid" => $id));
-	$numaccounts = mysql_num_rows($result);
+	$result = select_query_i("tblclients", "", array("securityqid" => $id));
+	$numaccounts = mysqli_num_rows($result);
 
 	if (0 < $numaccounts) {
 		header("Location: configsecurityqs.php?deleteerror=true");
@@ -78,11 +78,11 @@ echo "</h2>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query("tbladminsecurityquestions", "", "");
+$result = select_query_i("tbladminsecurityquestions", "", "");
 
-while ($data = mysql_fetch_assoc($result)) {
-	$count = select_query("tblclients", "count(securityqid) as cnt", array("securityqid" => $data['id']));
-	$count_data = mysql_fetch_assoc($count);
+while ($data = mysqli_fetch_assoc($result)) {
+	$count = select_query_i("tblclients", "count(securityqid) as cnt", array("securityqid" => $data['id']));
+	$count_data = mysqli_fetch_assoc($count);
 	$cnt = (is_null($count_data['cnt']) ? "0" : $count_data['cnt']);
 	$tabledata[] = array(decrypt($data['question']), $cnt, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
 }
@@ -92,8 +92,8 @@ echo "
 <h2>";
 
 if ($action == "edit") {
-	$result = select_query("tbladminsecurityquestions", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladminsecurityquestions", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$question = decrypt($data['question']);
 	echo $aInt->lang("securityquestionconfig", "edit");
 }

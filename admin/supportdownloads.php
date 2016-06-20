@@ -68,8 +68,8 @@ if ($action == "") {
 
 	if ($sub == "delete") {
 		check_token("RA.admin.default");
-		$result = select_query("tbldownloads", "location", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldownloads", "location", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$filename = $data['location'];
 
 		if ((substr($filename, 0, 7) == "http://" || substr($filename, 0, 8) == "https://") || substr($filename, 0, 6) == "ftp://") {
@@ -98,8 +98,8 @@ if ($action == "") {
 	$breadcrumbnav = "";
 
 	if ($catid != "0") {
-		$result = select_query("tbldownloadcats", "", array("id" => $catid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldownloadcats", "", array("id" => $catid));
+		$data = mysqli_fetch_array($result);
 		$catid = $data['id'];
 
 		if (!$catid) {
@@ -111,8 +111,8 @@ if ($action == "") {
 		$catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $catid . "\">" . $catname . "</a>";
 
 		while ($catparentid != "0") {
-			$result = select_query("tbldownloadcats", "", array("id" => $catparentid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldownloadcats", "", array("id" => $catparentid));
+			$data = mysqli_fetch_array($result);
 			$cattempid = $data['id'];
 			$catparentid = $data['parentid'];
 			$catname = $data['name'];
@@ -235,8 +235,8 @@ if ($action == "") {
 
 ";
 	echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "dlhome") . "</a> " . $breadcrumbnav . "</p>";
-	$result = select_query("tbldownloadcats", "", array("parentid" => $catid), "name", "ASC");
-	$numcats = mysql_num_rows($result);
+	$result = select_query_i("tbldownloadcats", "", array("parentid" => $catid), "name", "ASC");
+	$numcats = mysqli_num_rows($result);
 	echo "
 ";
 
@@ -253,27 +253,27 @@ if ($action == "") {
 			$catid = "0";
 		}
 
-		$result = select_query("tbldownloadcats", "", array("parentid" => $catid), "name", "ASC");
+		$result = select_query_i("tbldownloadcats", "", array("parentid" => $catid), "name", "ASC");
 		$i = 0;
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
 			$description = $data['description'];
 			$hidden = $data['hidden'];
 			$idnumbers = "";
 			$idnumbers[] = $id;
-			$result3 = select_query("tbldownloadcats", "id", array("parentid" => $id));
+			$result3 = select_query_i("tbldownloadcats", "id", array("parentid" => $id));
 
-			if ($data3 = mysql_fetch_array($result3)) {
+			if ($data3 = mysqli_fetch_array($result3)) {
 				$idnumbers[] = $data3['id'];
-				$result4 = select_query("tbldownloadcats", "id", array("parentid" => $data3['id']));
+				$result4 = select_query_i("tbldownloadcats", "id", array("parentid" => $data3['id']));
 
-				if ($data4 = mysql_fetch_array($result4)) {
+				if ($data4 = mysqli_fetch_array($result4)) {
 					$idnumbers[] = $data4['id'];
-					$result5 = select_query("tbldownloadcats", "id", array("parentid" => $data4['id']));
+					$result5 = select_query_i("tbldownloadcats", "id", array("parentid" => $data4['id']));
 
-					if ($data5 = mysql_fetch_array($result5)) {
+					if ($data5 = mysqli_fetch_array($result5)) {
 						$idnumbers[] = $data5['id'];
 					}
 				}
@@ -285,8 +285,8 @@ if ($action == "") {
 			}
 
 			$queryreport = substr($queryreport, 4);
-			$result2 = select_query("tbldownloads", "COUNT(*)", $queryreport);
-			$data2 = mysql_fetch_array($result2);
+			$result2 = select_query_i("tbldownloads", "COUNT(*)", $queryreport);
+			$data2 = mysqli_fetch_array($result2);
 			$numarticles = $data2[0];
 			echo "<td width=33%><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"" . $PHP_SELF . "?catid=" . $id . "\"><b>" . $name . "</b></a> (" . $numarticles . ") <a href=\"" . $PHP_SELF . "?action=editcat&id=" . $id . "\"><img src=\"images/edit.gif\" align=\"absmiddle\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\" /></a> <a href=\"#\" onClick=\"doDeleteCat(" . $id . ")\"><img src=\"images/delete.gif\" align=\"absmiddle\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\" /></a>";
 
@@ -308,8 +308,8 @@ if ($action == "") {
 ";
 	}
 
-	$result = select_query("tbldownloads", "", array("category" => $catid), "title", "ASC");
-	$numarticles = mysql_num_rows($result);
+	$result = select_query_i("tbldownloads", "", array("category" => $catid), "title", "ASC");
+	$numarticles = mysqli_num_rows($result);
 
 	if ($numarticles != "0") {
 		echo "
@@ -319,9 +319,9 @@ if ($action == "") {
 
 <table width=100%><tr>
 ";
-		$result = select_query("tbldownloads", "", array("category" => $catid), "title", "ASC");
+		$result = select_query_i("tbldownloads", "", array("category" => $catid), "title", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$category = $data['category'];
 			$title = $data['title'];
@@ -362,8 +362,8 @@ if ($action == "") {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tbldownloads", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldownloads", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$category = $data['category'];
 		$type = $data['type'];
 		$title = $data['title'];
@@ -388,9 +388,9 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"category\">";
-		$result = select_query("tbldownloadcats", "", "", "parentid` ASC,`name", "ASC");
+		$result = select_query_i("tbldownloadcats", "", "", "parentid` ASC,`name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$catid = $data['id'];
 			$category2 = $data['name'];
 			echo "<option value=\"" . $catid . "\"";
@@ -508,8 +508,8 @@ else {
 	}
 	else {
 		if ($action == "editcat") {
-			$result = select_query("tbldownloadcats", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldownloadcats", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$parentid = $data['parentid'];
 			$name = $data['name'];
 			$description = $data['description'];
@@ -530,9 +530,9 @@ else {
 			echo "<s";
 			echo "elect name=\"parentcategory\"><option value=\"\">";
 			echo $aInt->lang("support", "toplevel");
-			$result = select_query("tbldownloadcats", "", "", "parentid` ASC,`name", "ASC");
+			$result = select_query_i("tbldownloadcats", "", "", "parentid` ASC,`name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$category2 = $data['name'];
 				echo "<option value=\"" . $id . "\"";

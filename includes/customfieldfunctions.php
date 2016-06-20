@@ -27,16 +27,16 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
     }
     if ($type == 'product') {
         $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;
-        $result = full_query($query);
+        $result = full_query_i($query);
     } else if ($type == 'service') {
         $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;
-        $result = full_query($query);
+        $result = full_query_i($query);
     } else {
-        $result = select_query("tblcustomfields", "", $where, "sortorder` ASC,`id", "ASC");
+        $result = select_query_i("tblcustomfields", "", $where, "sortorder` ASC,`id", "ASC");
     }
 
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
      //   echo "<pre>", print_r($data, 1), "</pre>";
         $id = $data['id'];
         $fieldname = $data['fieldname'];
@@ -149,16 +149,16 @@ function saveCustomFields($relid, $customfields, $type = "") {
 
             if ($type) {
                 $where = array("id" => $id, "type" => $type);
-                $result = select_query("tblcustomfields", "", $where);
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblcustomfields", "", $where);
+                $data = mysqli_fetch_array($result);
 
                 if (!$data['id']) {
                     continue;
                 }
             }
 
-            $result = select_query("tblcustomfieldsvalues", "", array("fieldid" => $id, "relid" => $relid));
-            $num_rows = mysql_num_rows($result);
+            $result = select_query_i("tblcustomfieldsvalues", "", array("fieldid" => $id, "relid" => $relid));
+            $num_rows = mysqli_num_rows($result);
 
             if ($num_rows == "0") {
                 insert_query("tblcustomfieldsvalues", array("fieldid" => $id, "relid" => $relid, "value" => $value));
@@ -172,8 +172,8 @@ function saveCustomFields($relid, $customfields, $type = "") {
 
 function migrateCustomFieldsBetweenProducts($serviceid, $newpid, $save = false) {
     $customfieldsarray = array();
-    $result = select_query("tblcustomerservices", "packageid", array("id" => $serviceid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblcustomerservices", "packageid", array("id" => $serviceid));
+    $data = mysqli_fetch_array($result);
     $existingpid = $data[0];
 
     if ($save) {

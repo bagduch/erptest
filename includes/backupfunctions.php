@@ -118,33 +118,33 @@ function get_structure($db) {
 	@ini_set("memory_limit", "512M");
 	@ini_set("max_execution_time", 0);
 	@set_time_limit(0);
-	$tables = full_query('' . "SHOW TABLES FROM `" . $db . "`;");
-	while ($td = mysql_fetch_array($tables))
+	$tables = full_query_i('' . "SHOW TABLES FROM `" . $db . "`;");
+	while ($td = mysqli_fetch_array($tables))
 	{
 		$table = $td[0];
 		if ($table != "modlivehelp_ip2country")
 		{
 			continue;
 		}
-		$r = full_query('' . "SHOW CREATE TABLE `" . $table . "`");
+		$r = full_query_i('' . "SHOW CREATE TABLE `" . $table . "`");
 		if (!$r)
 		{
 			continue;
 		}
 		$insert_sql = "";
-		$d = mysql_fetch_array($r);
+		$d = mysqli_fetch_array($r);
 		$d[9] .= ";";
 		$sql[] = str_replace("\r\n", "", $d[1]);
-		$table_query = full_query('' . "SELECT * FROM `" . $table . "`");
-		$num_fields = mysql_num_fields($table_query);
-		while ($fetch_row = mysql_fetch_array($table_query))
+		$table_query = full_query_i('' . "SELECT * FROM `" . $table . "`");
+		$num_fields = mysqli_num_fields($table_query);
+		while ($fetch_row = mysqli_fetch_array($table_query))
 		{
 			$insert_sql .= '' . "INSERT INTO " . $table . " VALUES(";
 			$n = 1;
 			while ($n <= $num_fields)
 			{
 				$m = $n - 1;
-				$insert_sql .= "'" . mysql_escape_string($fetch_row[$m]) . "', ";
+				$insert_sql .= "'" . mysqli_escape_string($fetch_row[$m]) . "', ";
 				$n++;
 				continue;
 			}
