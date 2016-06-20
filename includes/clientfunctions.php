@@ -20,8 +20,8 @@ function getClientsDetails($userid = "", $contactid = "") {
         $userid = $_SESSION['uid'];
     }
 
-    $result = select_query("tblclients", "", array("id" => $userid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "", array("id" => $userid));
+    $data = mysqli_fetch_array($result);
 
     if ($contactid == "billing") {
         $contactid = $data['billingcid'];
@@ -29,10 +29,10 @@ function getClientsDetails($userid = "", $contactid = "") {
 
 
     if ($contactid) {
-        $result = select_query("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
+        $result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
 
-        if (mysql_num_rows($result)) {
-            $data = array_merge($data, mysql_fetch_array($result));
+        if (mysqli_num_rows($result)) {
+            $data = array_merge($data, mysqli_fetch_array($result));
             $data['id'] = $userid;
         } else {
             update_query("tblclients", array("billingcid" => ""), array("id" => $userid));
@@ -140,21 +140,21 @@ function getClientsStats($userid) {
 
     $currency = getCurrency($userid);
     $stats = array();
-    $result = select_query("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0),(SELECT SUM(amountin-fees-amountout) FROM tblaccounts WHERE userid=" . (int) $userid . "),(SELECT credit FROM tblclients WHERE id=" . (int) $userid . ")", array("userid" => $userid, "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0),(SELECT SUM(amountin-fees-amountout) FROM tblaccounts WHERE userid=" . (int) $userid . "),(SELECT credit FROM tblclients WHERE id=" . (int) $userid . ")", array("userid" => $userid, "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
+    $data = mysqli_fetch_array($result);
     $stats['numdueinvoices'] = $data[0];
     $stats['dueinvoicesbalance'] = formatCurrency($data[1]);
     $stats['income'] = formatCurrency($data[2]);
     $stats['incredit'] = (0 < $data[3] ? true : false);
     $stats['creditbalance'] = formatCurrency($data[3]);
-    $result = select_query("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0)", array("userid" => $userid, "status" => "Unpaid", "duedate" => array("sqltype" => "<", "value" => date("Ymd")), "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblinvoices", "COUNT(*),SUM(total)-COALESCE(SUM((SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0)", array("userid" => $userid, "status" => "Unpaid", "duedate" => array("sqltype" => "<", "value" => date("Ymd")), "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)));
+    $data = mysqli_fetch_array($result);
     $stats['numoverdueinvoices'] = $data[0];
     $stats['overdueinvoicesbalance'] = formatCurrency($data[1]);
     $invoicestats = array();
-    $result = select_query("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
+    $result = select_query_i("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $invoicestats[$data[0]] = $data;
     }
 
@@ -169,9 +169,9 @@ function getClientsStats($userid) {
     $stats['numcollectionsinvoices'] = (isset($invoicestats['Collections'][1]) ? $invoicestats['Collections'][1] : 0);
     $stats['collectionsinvoicesamount'] = (isset($invoicestats['Collections'][2]) ? formatCurrency($invoicestats['Collections'][2]) : 0);
     $productstats = array();
-    $result = full_query("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int) $userid . " GROUP BY servicestatus,tblservices.type");
+    $result = full_query_i("SELECT tblservices.type,servicestatus,COUNT(*) FROM tblcustomerservices INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.userid=" . (int) $userid . " GROUP BY servicestatus,tblservices.type");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $productstats[$data[0]][$data[1]] = $data[2];
     }
 
@@ -224,9 +224,9 @@ function getClientsStats($userid) {
      $stats['productsnumpending'] = $stats['productsnumpendinghosting'] + $stats['productsnumpendingreseller'] + $stats['productsnumpendingservers'] + $stats['productsnumpendingother'];
     $stats['productsnumtotal'] = $stats['productsnumhosting'] + $stats['productsnumreseller'] + $stats['productsnumservers'] + $stats['productsnumother'];
     $domainstats = array();
-    select_query("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
+    select_query_i("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainstats[$data[0]] = $data[1];
     }
 
@@ -237,9 +237,9 @@ function getClientsStats($userid) {
     }
 
     $quotestats = array();
-    $result = select_query("tblquotes", "stage,COUNT(*)", "userid=" . (int) $userid . " GROUP BY stage");
+    $result = select_query_i("tblquotes", "stage,COUNT(*)", "userid=" . (int) $userid . " GROUP BY stage");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $quotestats[$data[0]] = $data[1];
     }
 
@@ -250,16 +250,16 @@ function getClientsStats($userid) {
     }
 
     $statusfilter = array();
-    $result = select_query("tblticketstatuses", "title", array("showactive" => "1"));
+    $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $statusfilter[] = $data[0];
     }
 
     $ticketstats = array();
-    $result = select_query("tbltickets", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
+    $result = select_query_i("tbltickets", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $ticketstats[$data[0]] = $data[1];
     }
 
@@ -273,8 +273,8 @@ function getClientsStats($userid) {
         $stats['numtickets'] += $count;
     }
 
-    $result = select_query("tblaffiliatesaccounts", "COUNT(*)", array("clientid" => $userid), "", "", "", "tblaffiliates ON tblaffiliatesaccounts.affiliateid=tblaffiliates.id");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblaffiliatesaccounts", "COUNT(*)", array("clientid" => $userid), "", "", "", "tblaffiliates ON tblaffiliatesaccounts.affiliateid=tblaffiliates.id");
+    $data = mysqli_fetch_array($result);
     $stats['numaffiliatesignups'] = $data[0];
     return $stats;
 }
@@ -493,28 +493,28 @@ function deleteClient($userid) {
     delete_query("tblclients", array("id" => $userid));
     delete_query("tblcontacts", array("userid" => $userid));
     delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
-    $result = select_query("tblcustomerservices", "id", array("userid" => $userid));
+    $result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainlistid = $data['id'];
         delete_query("tblserviceaddons", array("hostingid" => $domainlistid));
     }
 
-    $result = select_query("tblcustomfields", "id", array("type" => "client"));
+    $result = select_query_i("tblcustomfields", "id", array("type" => "client"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $customfieldid = $data['id'];
         delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $userid));
     }
 
-    $result = select_query("tblcustomfields", "id,relid", array("type" => "product"));
+    $result = select_query_i("tblcustomfields", "id,relid", array("type" => "product"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $customfieldid = $data['id'];
         $customfieldpid = $data['relid'];
-        $result2 = select_query("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
+        $result2 = select_query_i("tblcustomerservices", "id", array("userid" => $userid, "packageid" => $customfieldpid));
 
-        while ($data = mysql_fetch_array($result2)) {
+        while ($data = mysqli_fetch_array($result2)) {
             $hostingid = $data['id'];
             delete_query("tblcustomfieldsvalues", array("fieldid" => $customfieldid, "relid" => $hostingid));
         }
@@ -538,14 +538,14 @@ function deleteClient($userid) {
 
 function getSecurityQuestions($questionid = "") {
     if ($questionid) {
-        $query = select_query("tbladminsecurityquestions", "", array("question" => $questionid));
+        $query = select_query_i("tbladminsecurityquestions", "", array("question" => $questionid));
     } else {
-        $query = select_query("tbladminsecurityquestions", "", "");
+        $query = select_query_i("tbladminsecurityquestions", "", "");
     }
 
     $results = array();
 
-    while ($data = mysql_fetch_assoc($query)) {
+    while ($data = mysqli_fetch_assoc($query)) {
         $results[] = array("id" => $data['id'], "question" => decrypt($data['question']));
     }
 
@@ -580,8 +580,8 @@ function checkContactPermission($reqperm, $noredirect = "") {
         return true;
     }
 
-    $result = select_query("tblcontacts", "permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblcontacts", "permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+    $data = mysqli_fetch_array($result);
     $permissions = $data['permissions'];
     $permissions = explode(",", $permissions);
 
@@ -650,21 +650,21 @@ function validateClientLogin($username, $password, $twofadone = false) {
         $where['status'] = array("sqltype" => "NEQ", "value" => "Closed");
     }
 
-    $result = select_query("tblclients", "", $where);
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "", $where);
+    $data = mysqli_fetch_array($result);
     $login_uid = $data['id'];
     $login_pwd = $data['password'];
     $language = $data['language'];
     $authmodule = $data['authmodule'];
 
     if (!$login_uid) {
-        $result = select_query("tblcontacts", "", array("email" => $username, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "", array("email" => $username, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
+        $data = mysqli_fetch_array($result);
         $login_cid = $data['id'];
         $login_uid = $data['userid'];
         $login_pwd = $data['password'];
-        $result = select_query("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+        $data = mysqli_fetch_array($result);
         $login_uid = $data['id'];
         $language = $data['language'];
     }
@@ -679,12 +679,12 @@ function validateClientLogin($username, $password, $twofadone = false) {
                 $hookemail = $hookres['email'];
 
                 if ($hookid) {
-                    $result = select_query("tblclients", "", array("id" => $hookid));
+                    $result = select_query_i("tblclients", "", array("id" => $hookid));
                 } else {
-                    $result = select_query("tblclients", "", array("email" => $hookemail));
+                    $result = select_query_i("tblclients", "", array("email" => $hookemail));
                 }
 
-                $data = mysql_fetch_array($result);
+                $data = mysqli_fetch_array($result);
                 $login_uid = $data['id'];
 
                 if ($login_uid) {
@@ -805,8 +805,8 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 
             if ($recurringamount <= 0) {
                 $currency = getCurrency($userid);
-                $result = select_query("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                $data = mysqli_fetch_array($result);
                 $domaindnsmanagementprice = $data['msetupfee'] * $regperiod;
                 $domainemailforwardingprice = $data['qsetupfee'] * $regperiod;
                 $domainidprotectionprice = $data['ssetupfee'] * $regperiod;
@@ -840,13 +840,13 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
         run_hook("CancellationRequest", array("userid" => $userid, "relid" => $serviceid, "reason" => $reason, "type" => $type));
 
         if ($CONFIG['CancelInvoiceOnCancellation']) {
-            $result = select_query("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Hosting", "relid" => $serviceid, "status" => "Unpaid", "tblinvoices.userid" => $userid), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+            $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Hosting", "relid" => $serviceid, "status" => "Unpaid", "tblinvoices.userid" => $userid), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $itemid = $data['id'];
                 $invoiceid = $data['invoiceid'];
-                $result2 = select_query("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
-                $data = mysql_fetch_array($result2);
+                $result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
+                $data = mysqli_fetch_array($result2);
                 $itemcount = $data[0];
 
                 if (1 < $itemcount && $itemcount <= 4) {
@@ -878,8 +878,8 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
 
 function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billingcycle = "", $configoptionsrecurring = "empty", $promoid = 0, $includesetup = false) {
     if ((!$userid || !$pid) || !$billingcycle) {
-        $result = select_query("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcustomerservices", "userid,packageid,billingcycle", array("id" => $serviceid));
+        $data = mysqli_fetch_array($result);
 
         if (!$userid) {
             $userid = $data['userid'];
@@ -899,8 +899,8 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
     global $currency;
 
     $currency = getCurrency($userid);
-    $result = select_query("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $data = mysqli_fetch_array($result);
 
     if ($billingcycle == "Monthly") {
         $amount = $data['monthly'];
@@ -966,9 +966,9 @@ function closeClient($userid) {
     update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Pending"));
     update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Active"));
     update_query("tblcustomerservices", array("servicestatus" => "Terminated"), array("userid" => $userid, "servicestatus" => "Suspended"));
-    $result = select_query("tblcustomerservices", "id", array("userid" => $userid));
+    $result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $domainlistid = $data['id'];
         update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Pending"));
         update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $domainlistid, "status" => "Active"));
@@ -1300,8 +1300,8 @@ function recalcPromoAmount($pid, $userid, $serviceid, $billingcycle, $recurringa
 
     $currency = getCurrency($userid);
     $recurringdiscount = $used = "";
-    $result = select_query("tblpromotions", "", array("id" => $promoid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpromotions", "", array("id" => $promoid));
+    $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $type = $data['type'];
     $recurring = $data['recurring'];
@@ -1346,16 +1346,16 @@ function doResetPWEmail($email, $answer = "") {
         return $_LANG['pwresetemailrequired'];
     }
 
-    $result = select_query("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $password = $data['password'];
     $securityqid = $data['securityqid'];
     $securityqans = $data['securityqans'];
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $password = $data['password'];
@@ -1368,8 +1368,8 @@ function doResetPWEmail($email, $answer = "") {
 
 
     if ($securityqid) {
-        $result = select_query("tbladminsecurityquestions", "", array("id" => $securityqid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tbladminsecurityquestions", "", array("id" => $securityqid));
+        $data = mysqli_fetch_array($result);
         $securityquestion = decrypt($data['question']);
 
         if (!$answer) {
@@ -1399,14 +1399,14 @@ function doResetPWEmail($email, $answer = "") {
 function doResetPWKeyCheck($key) {
     global $_LANG;
 
-    $result = select_query("tblclients", "id,pwresetexpiry", array("pwresetkey" => $key));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,pwresetexpiry", array("pwresetkey" => $key));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $pwresetexpiry = $data['pwresetexpiry'];
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "id,userid,pwresetexpiry", array("pwresetkey" => $key));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "id,userid,pwresetexpiry", array("pwresetkey" => $key));
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $pwresetexpiry = $data['pwresetexpiry'];
@@ -1433,15 +1433,15 @@ function doResetPW($key, $newpw, $confirmpw) {
         return $_LANG['pwresetemailrequired'];
     }
 
-    $result = select_query("tblclients", "id,email,pwresetexpiry", array("pwresetkey" => $key));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblclients", "id,email,pwresetexpiry", array("pwresetkey" => $key));
+    $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $email = $data['email'];
     $pwresetexpiry = $data['pwresetexpiry'];
 
     if (!$userid) {
-        $result = select_query("tblcontacts", "id,email,userid,pwresetexpiry", array("pwresetkey" => $key));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblcontacts", "id,email,userid,pwresetexpiry", array("pwresetkey" => $key));
+        $data = mysqli_fetch_array($result);
         $contactid = $data['id'];
         $userid = $data['userid'];
         $pwresetexpiry = $data['pwresetexpiry'];
