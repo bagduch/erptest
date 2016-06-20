@@ -80,13 +80,13 @@ if ($lastmodified) {
 	$where['lastmodified'] = array("sqltype" => "LIKE", "value" => $lastmodified);
 }
 
-$result = select_query("mod_project", "COUNT(*)", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("mod_project", "COUNT(*)", $where);
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result = select_query("mod_project", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
-$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result), "projects" => array());
+$result = select_query_i("mod_project", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
+$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result), "projects" => array());
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$apiresults['projects']['project'] = $data;
 }
 

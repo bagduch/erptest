@@ -8,8 +8,8 @@ $reportdata["description"] = "An overview of affiliates for the current year";
 
 $reportdata["tableheadings"] = array('Affiliate ID','Affiliate Name','Visitors','Pending Commissions','Available to Withdraw','Withdrawn Amount','YTD Total Commissions Paid');
 
-$result = select_query("tblaffiliates","tblaffiliates.id,tblaffiliates.clientid,tblaffiliates.visitors,tblaffiliates.balance,tblaffiliates.withdrawn,tblclients.firstname,tblclients.lastname,tblclients.companyname","","visitors","DESC","","tblclients ON tblclients.id=tblaffiliates.clientid");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tblaffiliates","tblaffiliates.id,tblaffiliates.clientid,tblaffiliates.visitors,tblaffiliates.balance,tblaffiliates.withdrawn,tblclients.firstname,tblclients.lastname,tblclients.companyname","","visitors","DESC","","tblclients ON tblclients.id=tblaffiliates.clientid");
+while ($data = mysqli_fetch_array($result)) {
 
     $affid = $data['id'];
     $clientid = $data['clientid'];
@@ -23,13 +23,13 @@ while ($data = mysql_fetch_array($result)) {
     $name = $firstname.' '.$lastname;
     if ($companyname) $name .= ' ('.$companyname.')';
 
-    $result2 = select_query("tblaffiliatespending","COUNT(*),SUM(tblaffiliatespending.amount)",array("affiliateid"=>$affid),"clearingdate","DESC","","tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
-    $data = mysql_fetch_array($result2);
+    $result2 = select_query_i("tblaffiliatespending","COUNT(*),SUM(tblaffiliatespending.amount)",array("affiliateid"=>$affid),"clearingdate","DESC","","tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblhosting ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+    $data = mysqli_fetch_array($result2);
     $pendingcommissions = $data[0];
     $pendingcommissionsamount = $data[1];
 
-    $result2 = select_query("tblaffiliateshistory","SUM(amount)","affiliateid=$affid AND date LIKE '".date("Y")."-%'");
-    $data = mysql_fetch_array($result2);
+    $result2 = select_query_i("tblaffiliateshistory","SUM(amount)","affiliateid=$affid AND date LIKE '".date("Y")."-%'");
+    $data = mysqli_fetch_array($result2);
     $ytdtotal = $data[0];
 
     $currency = getCurrency($clientid);

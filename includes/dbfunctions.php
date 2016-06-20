@@ -5,7 +5,7 @@
 function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
 	global $CONFIG;
 	global $query_count;
-	global $mysql_errors;
+	global $mysqli_errors;
 	global $ramysqli;
 
 	if (!$fields) {
@@ -132,144 +132,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 }
 
 
-function select_query($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
-	global $CONFIG;
-	global $query_count;
-	global $mysql_errors;
-	global $ramysql;
-
-	if (!$fields) {
-		$fields = "*";
-	}
-
-	$query = "SELECT " . $fields . " FROM " . db_make_safe_field($table);
-
-	if ($innerjoin) {
-		$query .= " INNER JOIN " . db_escape_string($innerjoin) . "";
-	}
-
-
-	if ($where) {
-		if (is_array($where)) {
-			$criteria = array();
-			foreach ($where as $origkey => $value) {
-				$key = db_make_safe_field($origkey);
-
-				if (is_array($value)) {
-					if ($key == "default") {
-						$key = "`default`";
-					}
-
-
-					if ($value['sqltype'] == "LIKE") {
-						$criteria[] = "" . $key . " LIKE '%" . db_escape_string($value['value']) . "%'";
-						continue;
-					}
-
-
-					if ($value['sqltype'] == "NEQ") {
-						$criteria[] = "" . $key . "!='" . db_escape_string($value['value']) . "'";
-						continue;
-					}
-
-
-					if ($value['sqltype'] == ">" && db_is_valid_amount($value['value'])) {
-						$criteria[] = "" . $key . ">" . $value['value'];
-						continue;
-					}
-
-
-					if ($value['sqltype'] == "<" && db_is_valid_amount($value['value'])) {
-						$criteria[] = "" . $key . "<" . $value['value'];
-						continue;
-					}
-
-
-					if ($value['sqltype'] == "<=" && db_is_valid_amount($value['value'])) {
-						$criteria[] = "" . $origkey . "<=" . $value['value'];
-						continue;
-					}
-
-
-					if ($value['sqltype'] == ">=" && db_is_valid_amount($value['value'])) {
-						$criteria[] = "" . $origkey . ">=" . $value['value'];
-						continue;
-					}
-
-
-					if ($value['sqltype'] == "TABLEJOIN") {
-						$criteria[] = "" . $key . "=" . db_escape_string($value['value']) . "";
-						continue;
-					}
-
-
-					if ($value['sqltype'] == "IN") {
-						$criteria[] = "" . $key . " IN (" . db_build_in_array($value['values']) . ")";
-						continue;
-					}
-
-					exit("Invalid input condition");
-					continue;
-				}
-
-
-				if (substr($key, 0, 3) == "MD5") {
-					$key = explode("(", $origkey, 2);
-					$key = explode(")", $key[1], 2);
-					$key = db_make_safe_field($key[0]);
-					$key = "MD5(" . $key . ")";
-				}
-				else {
-					$key = db_build_quoted_field($key);
-				}
-
-				$criteria[] = "" . $key . "='" . db_escape_string($value) . "'";
-			}
-
-			$query .= " WHERE " . implode(" AND ", $criteria);
-		}
-		else {
-			$query .= " WHERE " . $where;
-		}
-	}
-
-
-	if ($orderby) {
-		$orderbysql = tokenizeOrderby($orderby, $orderbyorder);
-		$query .= " ORDER BY " . implode(",", $orderbysql);
-	}
-
-
-	if ($limit) {
-		if (strpos($limit, ",")) {
-			$limit = explode(",", $limit);
-			$limit = (int)$limit[0] . "," . (int)$limit[1];
-		}
-		else {
-			$limit = (int)$limit;
-		}
-
-		$query .= " LIMIT " . $limit;
-	}
-
-	$result = mysql_query($query, $ramysql);
-
-    if ($_SESSION['adminid'] == 3) {
-            echo "<pre>GUYGUYGUY";
-            echo __LINE__;
-            echo __FILE__;
-            var_dump($query);
-            var_dump($result);
-            echo "</pre>";
-    }
-
-	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-		logActivity("SQL Error: " . mysql_error($ramysql) . " - Full Query: " . $query);
-	}
-
-	++$query_count;
-	return $result;
-}
 
 function tokenizeOrderby($input, $default_ordering = "ASC") {
 	$field_separator = ",";
@@ -366,7 +228,7 @@ function tokenizeOrderby($input, $default_ordering = "ASC") {
 function update_query($table, $array, $where) {
 	global $CONFIG;
 	global $query_count;
-	global $mysql_errors;
+	global $mysqli_errors;
 	global $ramysql;
 
 	$query = "UPDATE " . db_make_safe_field($table) . " SET ";
@@ -437,10 +299,10 @@ function update_query($table, $array, $where) {
 		}
 	}
 
-	$result = mysql_query($query, $ramysql);
+	$result = mysqli_query($query, $ramysql);
 
-	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-		logActivity("SQL Error: " . mysql_error($ramysql) . " - Full Query: " . $query);
+	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
@@ -449,7 +311,7 @@ function update_query($table, $array, $where) {
 function insert_query($table, $array) {
 	global $CONFIG;
 	global $query_count;
-	global $mysql_errors;
+	global $mysqli_errors;
 	global $ramysqli;
 
 	$fieldnamelist = $fieldvaluelist = "";
@@ -495,7 +357,7 @@ function insert_query($table, $array) {
 function delete_query($table, $where) {
 	global $CONFIG;
 	global $query_count;
-	global $mysql_errors;
+	global $mysqli_errors;
 	global $ramysqli;
 
 	$query = "DELETE FROM " . db_make_safe_field($table) . " WHERE ";
@@ -527,6 +389,7 @@ function db_build_quoted_field($key) {
 		$clean_name = db_make_safe_field($name);
 
 		if ($clean_name !== $name) {
+            error_log("key is ".$key."and clean name is ".$clean_name." and name is ".$name);
 			exit("Unexpected input field parameter in database query.");
 		}
 
@@ -536,33 +399,17 @@ function db_build_quoted_field($key) {
 	return implode(".", $parts);
 }
 
-function full_query($query, $userHandle = null) {
-	global $CONFIG;
-	global $query_count;
-	global $mysql_errors;
-	global $ramysql;
-
-	$handle = (is_resource($userHandle) ? $userHandle : $ramysql);
-	$result = mysql_query($query, $handle);
-
-	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-		logActivity("SQL Error: " . mysql_error($handle) . " - Full Query: " . $query);
-	}
-
-	++$query_count;
-	return $result;
-}
 
 function full_query_i($query, $userHandle = null) {
     global $CONFIG;
     global $query_count;
-    global $mysql_errors;
+    global $mysqli_errors;
     global $ramysqli;
 
     $handle = (is_resource($userHandle) ? $userHandle : $ramysqli);
     $result = mysqli_query($handle,$query);
 
-    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
+    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($handle) . " - Full Query: " . $query);
     }
 
@@ -584,7 +431,8 @@ function get_query_vals($table, $field, $where, $orderby = "", $orderbyorder = "
 }
 
 function db_escape_string($string) {
-	$string = mysql_real_escape_string($string);
+    global $ramysqli;
+	$string = mysqli_real_escape_string($ramysqli,$string);
 	return $string;
 }
 
@@ -620,6 +468,7 @@ function db_build_in_array($array, $allow_empty = false) {
 }
 
 function db_make_safe_field($field) {
+    error_log($field." becomes ".preg_replace("/[^a-z0-9_.,]/i", "", $field));
 	return db_escape_string(preg_replace("/[^a-z0-9_.,]/i", "", $field));
 }
 

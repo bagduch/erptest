@@ -30,9 +30,9 @@ class RA_Clients extends RA_TableModel {
 		$this->getPageObj()->setNumResults($data[0]);
 		$clients = array();
 		$query = "SELECT id,firstname,lastname,companyname,email,datecreated,groupid,status FROM tblclients" . $customfieldjoin . $where . " ORDER BY " . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$firstname = $data['firstname'];
 			$lastname = $data['lastname'];
@@ -148,9 +148,9 @@ class RA_Clients extends RA_TableModel {
 		}
 
 		$this->groups = array();
-		$result = select_query("tblclientgroups", "", "");
+		$result = select_query_i("tblclientgroups", "", "");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$this->groups[$data['id']] = array("name" => $data['groupname'], "colour" => $data['groupcolour'], "discountpercent" => $data['discountpercent'], "susptermexempt" => $data['susptermexempt'], "separateinvoices" => $data['separateinvoices']);
 		}
 

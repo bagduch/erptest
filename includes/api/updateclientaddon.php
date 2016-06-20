@@ -14,8 +14,8 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblserviceaddons", "id,addonid,hostingid,status", array("id" => $id));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblserviceaddons", "id,addonid,hostingid,status", array("id" => $id));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Addon ID Not Found");

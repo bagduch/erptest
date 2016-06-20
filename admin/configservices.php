@@ -17,8 +17,8 @@ function printProductDownlads($downloads) {
 
     echo "<ul class=\"jqueryFileTree\">";
     foreach ($downloads as $downloadid) {
-        $result = select_query("tbldownloads", "", array("id" => $downloadid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tbldownloads", "", array("id" => $downloadid));
+        $data = mysqli_fetch_array($result);
         $downid = $data['id'];
         $downtitle = $data['title'];
         $downfilename = $data['location'];
@@ -33,9 +33,9 @@ function buildCategoriesList($level, $parentlevel) {
     global $categorieslist;
     global $categories;
 
-    $result = select_query("tbldownloadcats", "", array("parentid" => $level), "name", "ASC");
+    $result = select_query_i("tbldownloadcats", "", array("parentid" => $level), "name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $parentid = $data['parentid'];
         $category = $data['name'];
@@ -70,17 +70,17 @@ if ($action == "getdownloads") {
     $dir = $_POST['dir'];
     $dir = preg_replace("/[^0-9]/", "", $dir);
     echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
-    $result = select_query("tbldownloadcats", "", array("parentid" => $dir), "name", "ASC");
+    $result = select_query_i("tbldownloadcats", "", array("parentid" => $dir), "name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $catid = $data['id'];
         $catname = $data['name'];
         echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"dir" . $catid . "/\">" . $catname . "</a></li>";
     }
 
-    $result = select_query("tbldownloads", "", array("category" => $dir), "title", "ASC");
+    $result = select_query_i("tbldownloads", "", array("category" => $dir), "title", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $downid = $data['id'];
         $downtitle = $data['title'];
         $downfilename = $data['location'];
@@ -100,8 +100,8 @@ if ($action == "managedownloads") {
         exit("Access Denied");
     }
 
-    $result = select_query("tblservices", "downloads", array("id" => $id));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "downloads", array("id" => $id));
+    $data = mysqli_fetch_array($result);
     $downloads = $data['downloads'];
     $downloads = unserialize($downloads);
 
@@ -177,8 +177,8 @@ if ($action == "uploadfile") {
     move_uploaded_file($_FILES['uploadfile']['tmp_name'], $downloads_dir . $filename);
     $adddl = insert_query("tbldownloads", array("category" => $catid, "type" => "zip", "title" => $title, "description" => html_entity_decode($description), "location" => $filename, "clientsonly" => "on", "productdownload" => "on"));
     logActivity("Added New Product Download - " . $title);
-    $result = select_query("tblservices", "downloads", array("id" => $id));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "downloads", array("id" => $id));
+    $data = mysqli_fetch_array($result);
     $downloads = $data['downloads'];
     $downloads = unserialize($downloads);
 
@@ -321,8 +321,8 @@ if ($sub == "deletecustomfield") {
 if ($action == "duplicatenow") {
     check_token("RA.admin.default");
     checkPermission("Create New Products/Services");
-    $result = select_query("tblservices", "", array("id" => $existingservice));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "", array("id" => $existingservice));
+    $data = mysqli_fetch_array($result);
     $addstr = "";
     foreach ($data as $key => $value) {
 
@@ -342,11 +342,11 @@ if ($action == "duplicatenow") {
     }
 
     $addstr = substr($addstr, 0, 0 - 1);
-    full_query("INSERT INTO tblservices VALUES (" . $addstr . ")");
-    $newproductid = mysql_insert_id();
-    $result = select_query("tblpricing", "", array("type" => "product", "relid" => $existingservice));
+    full_query_i("INSERT INTO tblservices VALUES (" . $addstr . ")");
+    $newproductid = mysqli_insert_id();
+    $result = select_query_i("tblpricing", "", array("type" => "product", "relid" => $existingservice));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $addstr = "";
         foreach ($data as $key => $value) {
 
@@ -366,12 +366,12 @@ if ($action == "duplicatenow") {
         }
 
         $addstr = substr($addstr, 0, 0 - 1);
-        full_query("INSERT INTO tblpricing VALUES (" . $addstr . ")");
+        full_query_i("INSERT INTO tblpricing VALUES (" . $addstr . ")");
     }
 
-    $result2 = select_query("tblcustomfields", "", array("type" => "product", "relid" => $existingservice), "id", "ASC");
+    $result2 = select_query_i("tblcustomfields", "", array("type" => "product", "relid" => $existingservice), "id", "ASC");
 
-    while ($data = mysql_fetch_array($result2)) {
+    while ($data = mysqli_fetch_array($result2)) {
         $addstr = "";
         foreach ($data as $key => $value) {
 
@@ -391,7 +391,7 @@ if ($action == "duplicatenow") {
         }
 
         $addstr = substr($addstr, 0, 0 - 1);
-        full_query("INSERT INTO tblcustomfields VALUES (" . $addstr . ")");
+        full_query_i("INSERT INTO tblcustomfields VALUES (" . $addstr . ")");
     }
 
     redir("action=edit&id=" . $newproductid);
@@ -437,7 +437,7 @@ if ($sub == "delete") {
     delete_query("tblservices", array("id" => $id));
     delete_query("tblserviceconfiglinks", array("pid" => $id));
     delete_query("tblcustomfields", array("type" => "product", "relid" => $id));
-    full_query("DELETE FROM tblcustomfieldsvalues WHERE fieldid NOT IN (SELECT id FROM tblcustomfields)");
+    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE fieldid NOT IN (SELECT id FROM tblcustomfields)");
     redir();
 }
 
@@ -445,8 +445,8 @@ if ($sub == "delete") {
 if ($sub == "moveup") {
     check_token("RA.admin.default");
     checkPermission("Manage Product Groups");
-    $result = select_query("tblservicegroups", "", array("`order`" => $order));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservicegroups", "", array("`order`" => $order));
+    $data = mysqli_fetch_array($result);
     $premid = $data['id'];
     $order1 = $order - 1;
     update_query("tblservicegroups", array("order" => $order), array("`order`" => $order1));
@@ -458,8 +458,8 @@ if ($sub == "moveup") {
 if ($sub == "movedown") {
     check_token("RA.admin.default");
     checkPermission("Manage Product Groups");
-    $result = select_query("tblservicegroups", "", array("`order`" => $order));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservicegroups", "", array("`order`" => $order));
+    $data = mysqli_fetch_array($result);
     $premid = $data['id'];
     $order1 = $order + 1;
     update_query("tblservicegroups", array("order" => $order), array("`order`" => $order1));
@@ -481,11 +481,11 @@ if ($action == "updatesort") {
 ob_start();
 
 if ($action == "") {
-    $result = select_query("tblservicegroups", "COUNT(*)", "");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservicegroups", "COUNT(*)", "");
+    $data = mysqli_fetch_array($result);
     $num_rows = $data[0];
-    $result = select_query("tblservices", "COUNT(*)", "");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "COUNT(*)", "");
+    $data = mysqli_fetch_array($result);
     $num_rows2 = $data[0];
     $aInt->deleteJSConfirm("doDelete", "services", "deleteserviceconfirm", "?sub=delete&id=");
     $aInt->deleteJSConfirm("doGroupDelete", "services", "deletegroupconfirm", "?sub=deletegroup&id=");
@@ -536,21 +536,21 @@ if ($action == "") {
     echo "</th><th>";
     echo $aInt->lang("services", "autosetup");
     echo "</th><th width=\"20\"></th><th width=\"20\"></th></tr>";
-    $result = select_query("tblservicegroups", "", "", "order", "DESC");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
+    $data = mysqli_fetch_array($result);
     $lastorder = $data['order'];
-    $result2 = select_query("tblservicegroups", "", "", "order", "ASC");
+    $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
     $k = 0;
 
-    while ($data = mysql_fetch_array($result2)) {
+    while ($data = mysqli_fetch_array($result2)) {
         ++$k;
         $groupid = $data['id'];
         update_query("tblservicegroups", array("order" => $k), array("id" => $groupid));
         $name = $data['name'];
         $hidden = $data['hidden'];
         $order = $data['order'];
-        $result = select_query("tblservices", "COUNT(*)", array("gid" => $groupid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblservices", "COUNT(*)", array("gid" => $groupid));
+        $data = mysqli_fetch_array($result);
         $num_rows = $data[0];
 
         if (0 < $num_rows) {
@@ -576,11 +576,11 @@ if ($action == "") {
         }
 
         echo "</div></td><td style=\"background-color:#ffffdd;\" align=center><a href=\"" . $PHP_SELF . "?action=editgroup&ids=" . $groupid . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\"></td><td  style=\"background-color:#ffffdd;\" align=center><a href=\"#\" onClick=\"" . $deletelink . ";return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\"></a></td></tr>";
-        $result = select_query("tblservices", "id,type,name,paytype,autosetup,proratabilling,servertype,hidden,`order`,(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.packageid=tblservices.id) AS usagecount", array("gid" => $groupid), "order` ASC,`name", "ASC");
+        $result = select_query_i("tblservices", "id,type,name,paytype,autosetup,proratabilling,servertype,hidden,`order`,(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.packageid=tblservices.id) AS usagecount", array("gid" => $groupid), "order` ASC,`name", "ASC");
 
         $i = 0;
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
 
             $id = $data['id'];
             $type = $data['type'];
@@ -691,8 +691,8 @@ if ($action == "") {
 ";
 } else {
     if ($action == "edit") {
-        $result = select_query("tblservices", "", array("id" => $id));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblservices", "", array("id" => $id));
+        $data = mysqli_fetch_array($result);
         $id = $data['id'];
         $type = $data['type'];
         $groupid = $gid = $data['gid'];
@@ -838,9 +838,9 @@ $(\"#showadddownloadcat\").click(
         echo "</td><td class=\"fieldarea\">";
         echo "<s";
         echo "elect name=\"gid\">";
-        $result = select_query("tblservicegroups", "", "", "order", "ASC");
+        $result = select_query_i("tblservicegroups", "", "", "order", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $select_gid = $data['id'];
             $select_name = $data['name'];
             echo "<option value=\"" . $select_gid . "\"";
@@ -884,9 +884,9 @@ $(\"#showadddownloadcat\").click(
         echo "</option>";
         $emails = array("Hosting Account Welcome Email", "Reseller Account Welcome Email", "Dedicated/VPS Server Welcome Email", "Other Product/Service Welcome Email");
         foreach ($emails as $email) {
-            $result = select_query("tblemailtemplates", "id,name", array("type" => "product", "name" => $email, "language" => ""));
+            $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "name" => $email, "language" => ""));
 
-            while ($data = mysql_fetch_array($result)) {
+            while ($data = mysqli_fetch_array($result)) {
                 $mid = $data['id'];
                 $name = $data['name'];
                 echo "<option value=\"" . $mid . "\"";
@@ -899,9 +899,9 @@ $(\"#showadddownloadcat\").click(
             }
         }
 
-        $result = select_query("tblemailtemplates", "id,name", array("type" => "product", "custom" => "1", "language" => ""), "name", "ASC");
+        $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "custom" => "1", "language" => ""), "name", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $mid = $data['id'];
             $name = $data['name'];
             echo "<option value=\"" . $mid . "\"";
@@ -1003,19 +1003,19 @@ $(\"#showadddownloadcat\").click(
         echo $aInt->lang("billingcycles", "triennially");
         echo "</td></tr>
 ";
-        $result = select_query("tblcurrencies", "id,code", "", "code", "ASC");
+        $result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $currency_id = $data['id'];
             $currency_code = $data['code'];
-            $result2 = select_query("tblpricing", "", array("type" => "product", "currency" => $currency_id, "relid" => $id));
-            $data = mysql_fetch_array($result2);
+            $result2 = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency_id, "relid" => $id));
+            $data = mysqli_fetch_array($result2);
             $pricing_id = $data['id'];
 
             if (!$pricing_id) {
                 insert_query("tblpricing", array("type" => "product", "currency" => $currency_id, "relid" => $id));
-                $result2 = select_query("tblpricing", "", array("type" => "product", "currency" => $currency_id, "relid" => $id));
-                $data = mysql_fetch_array($result2);
+                $result2 = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency_id, "relid" => $id));
+                $data = mysqli_fetch_array($result2);
             }
 
             $msetupfee = $data['msetupfee'];
@@ -1070,9 +1070,9 @@ $(\"#showadddownloadcat\").click(
         echo "elect name=\"autoterminateemail\"><option value=\"0\">";
         echo $aInt->lang("global", "none");
         echo "</option>";
-        $result = select_query("tblemailtemplates", "id,name", array("type" => "product", "language" => ""));
+        $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "language" => ""));
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $mid = $data['id'];
             $name = $data['name'];
             echo "<option value=\"" . $mid . "\"";
@@ -1133,9 +1133,9 @@ $(\"#showadddownloadcat\").click(
             echo "elect name=\"servergroup\"><option value=\"0\">";
             echo $aInt->lang("global", "none");
             echo "</option>";
-            $result2 = select_query("tblservergroups", "", "", "name", "ASC");
+            $result2 = select_query_i("tblservergroups", "", "", "name", "ASC");
 
-            while ($data2 = mysql_fetch_array($result2)) {
+            while ($data2 = mysqli_fetch_array($result2)) {
                 $groupid = $data2['id'];
                 $groupname = $data2['name'];
                 echo "<option value=\"" . $groupid . "\"";
@@ -1252,15 +1252,15 @@ $(\"#showadddownloadcat\").click(
         echo "elect name=\"configoptionlinks[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
         $configoptionlinks = array();
-        $result = select_query("tblserviceconfiglinks", "", array("pid" => $id));
+        $result = select_query_i("tblserviceconfiglinks", "", array("pid" => $id));
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $configoptionlinks[] = $data['gid'];
         }
 
-        $result = select_query("tblserviceconfiggroups", "", "", "name", "ASC");
+        $result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $confgroupid = $data['id'];
             $name = $data['name'];
             $description = $data['description'];
@@ -1387,9 +1387,9 @@ $(\"#showadddownloadcat\").click(
         echo "<s";
         echo "elect name=\"freedomaintlds[]\" size=\"5\" multiple>";
         $query = "SELECT DISTINCT extension FROM tbldomainpricing ORDER BY `order` ASC";
-        $result = full_query($query);
+        $result = full_query_i($query);
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $extension = $data['extension'];
             echo "<option";
 
@@ -1609,9 +1609,9 @@ $(\"#showadddownloadcat\").click(
             echo "<s";
             echo "elect name=\"gid\">";
             $query2 = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
-            $result2 = full_query($query2);
+            $result2 = full_query_i($query2);
 
-            while ($data = mysql_fetch_array($result2)) {
+            while ($data = mysqli_fetch_array($result2)) {
                 $gid = $data['id'];
                 $gname = $data['name'];
                 echo "<option value=\"" . $gid . "\"";
@@ -1652,15 +1652,15 @@ $(\"#showadddownloadcat\").click(
                 echo "<s";
                 echo "elect name=\"existingservice\">";
                 $query = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
-                $result = full_query($query);
+                $result = full_query_i($query);
 
-                while ($data = mysql_fetch_array($result)) {
+                while ($data = mysqli_fetch_array($result)) {
                     $gid = $data['id'];
                     $gname = $data['name'];
                     $query2 = "SELECT * FROM tblservices WHERE gid=" . (int) $gid;
-                    $result2 = full_query($query2);
+                    $result2 = full_query_i($query2);
 
-                    while ($data = mysql_fetch_array($result2)) {
+                    while ($data = mysqli_fetch_array($result2)) {
                         $pid = $data['id'];
                         $prodname = $data['name'];
                         echo "<option value=\"" . $pid . "\">" . $gname . " - " . $prodname;
@@ -1681,8 +1681,8 @@ $(\"#showadddownloadcat\").click(
             } else {
                 if ($action == "creategroup" || $action == "editgroup") {
                     checkPermission("Manage Product Groups");
-                    $result = select_query("tblservicegroups", "", array("id" => $ids));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblservicegroups", "", array("id" => $ids));
+                    $data = mysqli_fetch_array($result);
                     $ids = $data['id'];
                     $name = $data['name'];
                     $orderfrmtpl = $data['orderfrmtpl'];

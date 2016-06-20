@@ -32,8 +32,8 @@ else {
 	$where = array("domain" => $domain);
 }
 
-$result = select_query("tbldomains", "id", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "id", $where);
+$data = mysqli_fetch_array($result);
 $domainid = $data['id'];
 
 if (!$domainid) {
@@ -144,8 +144,8 @@ if ($autorecalc) {
 		$where = array("domain" => $domain);
 	}
 
-	$result = select_query("tbldomains", "id,userid,domain,registrationperiod,dnsmanagement,emailforwarding,idprotection", $where);
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("tbldomains", "id,userid,domain,registrationperiod,dnsmanagement,emailforwarding,idprotection", $where);
+	$data = mysqli_fetch_assoc($result);
 	$domainid = $data['id'];
 	$domain = $data['domain'];
 	$userid = $data['userid'];
@@ -156,8 +156,8 @@ if ($autorecalc) {
 	$domainparts = explode(".", $domain, 2);
 	$temppricelist = getTLDPriceList("." . $domainparts[1], "", true, $userid);
 	$recurringamount = $temppricelist[$regperiod]['renew'];
-	$result = select_query("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpricing", "msetupfee,qsetupfee,ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+	$data = mysqli_fetch_array($result);
 	$domaindnsmanagementprice = $data['msetupfee'] * $regperiod;
 	$domainemailforwardingprice = $data['qsetupfee'] * $regperiod;
 	$domainidprotectionprice = $data['ssetupfee'] * $regperiod;
@@ -200,7 +200,7 @@ if ($updatens) {
 		$where = array("domain" => $domain);
 	}
 
-	$result = select_query("tbldomains", "id,domain,registrar,registrationperiod", $where);
+	$result = select_query_i("tbldomains", "id,domain,registrar,registrationperiod", $where);
 
 	if (!($ns1 && $ns2)) {
 		$apiresults = array("result" => "error", "message" => "ns1 and ns2 required");

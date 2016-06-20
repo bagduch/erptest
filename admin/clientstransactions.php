@@ -100,8 +100,8 @@ if ($action == "") {
 	}
 
 	echo $infobox;
-	$result = select_query("tblaccounts", "SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout)", array("userid" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout)", array("userid" => $userid));
+	$data = mysqli_fetch_array($result);
 	echo "
 <table width=90% cellspacing=1 cellpadding=5 bgcolor=\"#CCCCCC\" align=\"center\"><tr bgcolor=\"#f4f4f4\" style=\"text-align:center\"><td><a href=\"";
 	echo $PHP_SELF;
@@ -131,12 +131,12 @@ if ($action == "") {
 
 ";
 	$aInt->sortableTableInit("date", "DESC");
-	$result = select_query("tblaccounts", "COUNT(*)", array("userid" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "COUNT(*)", array("userid" => $userid));
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
-	$result = select_query("tblaccounts", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
+	$result = select_query_i("tblaccounts", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$ide = $data['id'];
 		$date = $data['date'];
 		$date = fromMySQLDate($date);
@@ -163,8 +163,8 @@ if ($action == "") {
 			$description .= " - Trans ID: " . $transid;
 		}
 
-		$result2 = select_query("tblpaymentgateways", "", array("gateway" => $gateway, "setting" => "name"));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblpaymentgateways", "", array("gateway" => $gateway, "setting" => "name"));
+		$data = mysqli_fetch_array($result2);
 		$gateway = $data['value'];
 		$tabledata[] = array($date, $gateway, $description, $amountin, $fees, $amountout, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $ide . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $ide . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
 	}
@@ -227,8 +227,8 @@ else {
 	}
 	else {
 		if ($action == "edit") {
-			$result = select_query("tblaccounts", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblaccounts", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$date = $data['date'];
 			$date = fromMySQLDate($date);

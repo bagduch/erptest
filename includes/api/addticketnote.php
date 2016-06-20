@@ -26,13 +26,13 @@ if (!function_exists("AddNote")) {
 
 
 if ($ticketnum) {
-	$result = select_query("tbltickets", "id", array("tid" => $ticketnum));
+	$result = select_query_i("tbltickets", "id", array("tid" => $ticketnum));
 }
 else {
-	$result = select_query("tbltickets", "id", array("id" => $ticketid));
+	$result = select_query_i("tbltickets", "id", array("id" => $ticketid));
 }
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $ticketid = $data['id'];
 
 if (!$ticketid) {

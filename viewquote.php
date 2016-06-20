@@ -85,13 +85,13 @@ if ($action == "accept") {
 
 
 if (isset($_SESSION['adminid'])) {
-	$result = select_query("tblquotes", "", array("id" => $id));
+	$result = select_query_i("tblquotes", "", array("id" => $id));
 }
 else {
-	$result = select_query("tblquotes", "", array("id" => $id, "userid" => $_SESSION['uid'], "stage" => array("sqltype" => "NEQ", "value" => "Draft")));
+	$result = select_query_i("tblquotes", "", array("id" => $id, "userid" => $_SESSION['uid'], "stage" => array("sqltype" => "NEQ", "value" => "Draft")));
 }
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $id = $data['id'];
 $stage = $data['stage'];
 $userid = $data['userid'];
@@ -184,9 +184,9 @@ if ($taxrate2 != "0.00") {
 $smarty->assign("stage", $stage);
 $smarty->assign("validuntil", $validuntil);
 $quoteitems = array();
-$result = select_query("tblquoteitems", "quantity,description,unitprice,discount,taxable", array("quoteid" => $id), "id", "ASC");
+$result = select_query_i("tblquoteitems", "quantity,description,unitprice,discount,taxable", array("quoteid" => $id), "id", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$qty = $data[0];
 	$description = $data[1];
 	$unitprice = $data[2];

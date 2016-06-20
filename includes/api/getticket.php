@@ -21,13 +21,13 @@ if (!function_exists("AddReply")) {
 
 
 if ($ticketnum) {
-	$result = select_query("tbltickets", "", array("tid" => $ticketnum));
+	$result = select_query_i("tbltickets", "", array("tid" => $ticketnum));
 }
 else {
-	$result = select_query("tbltickets", "", array("id" => $ticketid));
+	$result = select_query_i("tbltickets", "", array("id" => $ticketid));
 }
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $id = $data['id'];
 $tid = $data['tid'];
 $deptid = $data['did'];
@@ -55,8 +55,8 @@ if (!$id) {
 
 
 if ($userid) {
-	$result2 = select_query("tblclients", "", array("id" => $userid));
-	$data = mysql_fetch_array($result2);
+	$result2 = select_query_i("tblclients", "", array("id" => $userid));
+	$data = mysqli_fetch_array($result2);
 	$name = $data['firstname'] . " " . $data['lastname'];
 
 	if ($data['companyname']) {
@@ -74,9 +74,9 @@ if ($sortorder == "ASC") {
 	$apiresults['replies']['reply'][] = $first_reply;
 }
 
-$result = select_query("tblticketreplies", "", array("tid" => $id), "id", $sortorder);
+$result = select_query_i("tblticketreplies", "", array("tid" => $id), "id", $sortorder);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$userid = $data['userid'];
 	$name = $data['name'];
 	$email = $data['email'];
@@ -88,8 +88,8 @@ while ($data = mysql_fetch_array($result)) {
 	$message = strip_tags($message);
 
 	if ($userid) {
-		$result2 = select_query("tblclients", "", array("id" => $userid));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblclients", "", array("id" => $userid));
+		$data = mysqli_fetch_array($result2);
 		$name = $data['firstname'] . " " . $data['lastname'];
 
 		if ($data['companyname']) {
@@ -108,9 +108,9 @@ if ($sortorder != "ASC") {
 }
 
 $apiresults['notes'] = "";
-$result = select_query("tblticketnotes", "", array("ticketid" => $id), "id", "ASC");
+$result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "id", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$noteid = $data['id'];
 	$admin = $data['admin'];
 	$date = $data['date'];

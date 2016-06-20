@@ -26,13 +26,13 @@ if (!function_exists("saveCustomFields")) {
 
 
 if ($clientemail) {
-	$result = select_query("tblclients", "id", array("email" => $clientemail));
+	$result = select_query_i("tblclients", "id", array("email" => $clientemail));
 }
 else {
-	$result = select_query("tblclients", "id", array("id" => $clientid));
+	$result = select_query_i("tblclients", "id", array("id" => $clientid));
 }
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $clientid = $data['id'];
 
 if (!$clientid) {
@@ -42,10 +42,10 @@ if (!$clientid) {
 
 
 if ($_POST['email']) {
-	$result = select_query("tblclients", "id", array("email" => $_POST['email'], "id" => array("sqltype" => "NEQ", "value" => $clientid)));
-	$data = mysql_fetch_array($result);
-	$result = select_query("tblcontacts", "id", array("email" => $_POST['email'], "subaccount" => "1"));
-	$data2 = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("email" => $_POST['email'], "id" => array("sqltype" => "NEQ", "value" => $clientid)));
+	$data = mysqli_fetch_array($result);
+	$result = select_query_i("tblcontacts", "id", array("email" => $_POST['email'], "subaccount" => "1"));
+	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {
 		$apiresults = array("result" => "error", "message" => "Duplicate Email Address");
@@ -114,7 +114,7 @@ foreach ($fieldsarray as $fieldname) {
 }
 
 $query = "UPDATE tblclients SET " . substr($updatequery, 0, 0 - 1) . " WHERE id=" . (int)$clientid;
-$result = full_query($query);
+$result = full_query_i($query);
 
 if ($customfields) {
 	$customfields = base64_decode($customfields);

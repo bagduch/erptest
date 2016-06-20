@@ -18,9 +18,9 @@ $aInt->sidebar = "config";
 $aInt->icon = "massmail";
 $aInt->helplink = "Email Templates";
 $activelanguages = array();
-$result = select_query("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
+$result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$activelanguage = $data['language'];
 
 	if ($activelanguage) {
@@ -41,8 +41,8 @@ if ($action == "new") {
 if ($action == "delatt") {
 	check_token("RA.admin.default");
 	checkPermission("Create/Edit Email Templates");
-	$result = select_query("tblemailtemplates", "attachments", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblemailtemplates", "attachments", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$attachments = $data['attachments'];
 	$attachments = explode(",", $attachments);
 	$i = (int)$_GET['i'];
@@ -60,9 +60,9 @@ if ($action == "") {
 	if ($addlanguage) {
 		check_token("RA.admin.default");
 		checkPermission("Manage Email Template Languages");
-		$result = select_query("tblemailtemplates", "", array("language" => ""));
+		$result = select_query_i("tblemailtemplates", "", array("language" => ""));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$type = $data['type'];
 			$name = $data['name'];
 			$subject = $data['subject'];
@@ -76,9 +76,9 @@ if ($action == "") {
 
 		$activelanguages = "";
 		$activelanguages = array();
-		$result = select_query("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
+		$result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$activelanguage = $data['language'];
 
 			if ($activelanguage) {
@@ -96,9 +96,9 @@ if ($action == "") {
 		delete_query("tblemailtemplates", array("language" => $dislang));
 		$activelanguages = "";
 		$activelanguages = array();
-		$result = select_query("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
+		$result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$activelanguage = $data['language'];
 
 			if ($activelanguage) {
@@ -123,8 +123,8 @@ if ($action == "") {
 			$fromemail = "";
 		}
 
-		$result = select_query("tblemailtemplates", "attachments", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblemailtemplates", "attachments", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$attachments = $data['attachments'];
 		$attachments = ($attachments ? explode(",", $attachments) : array());
 
@@ -232,9 +232,9 @@ if ($action == "") {
 	function outputEmailTpls($type) {
 		global $aInt;
 
-		$result2 = select_query("tblemailtemplates", "", array("type" => $type, "language" => ""), "name", "ASC");
+		$result2 = select_query_i("tblemailtemplates", "", array("type" => $type, "language" => ""), "name", "ASC");
 
-		while ($data = mysql_fetch_array($result2)) {
+		while ($data = mysqli_fetch_array($result2)) {
 			$id = $data['id'];
 			$name = $data['name'];
 			$disabled = $data['disabled'];
@@ -277,9 +277,9 @@ if ($action == "") {
 	outputEmailTpls("support");
 	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typeadmin")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
 	outputEmailTpls("admin");
-	$result = select_query("tblemailtemplates", "DISTINCT type", "type NOT IN ('general','product','domain','invoice','support','admin')", "type", "ASC");
+	$result = select_query_i("tblemailtemplates", "DISTINCT type", "type NOT IN ('general','product','domain','invoice','support','admin')", "type", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$type = $data['type'];
 		echo "<h2>" . ucfirst($aInt->lang("emailtpls", "type" . $type)) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
 		outputEmailTpls($type);
@@ -350,8 +350,8 @@ if ($action == "") {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tblemailtemplates", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblemailtemplates", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$type = $data['type'];
 		$name = $data['name'];
 		$subject = $data['subject'];
@@ -471,9 +471,9 @@ else {
 <br>
 ";
 		$activelanguages = array();
-		$result = select_query("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
+		$result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$activelanguage = $data['language'];
 
 			if ($activelanguage) {
@@ -481,8 +481,8 @@ else {
 			}
 		}
 
-		$result = select_query("tblemailtemplates", "", array("type" => $type, "name" => $name, "language" => ""));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblemailtemplates", "", array("type" => $type, "name" => $name, "language" => ""));
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 		$default_subject = $data['subject'];
 		$default_message = $data['message'];
@@ -495,8 +495,8 @@ else {
 ";
 		$i = 0;
 		foreach ($activelanguages as $language) {
-			$result = select_query("tblemailtemplates", "", array("type" => $type, "name" => $name, "language" => $language));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblemailtemplates", "", array("type" => $type, "name" => $name, "language" => $language));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$subject = $data['subject'];
 			$message = $data['message'];

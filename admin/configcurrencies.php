@@ -47,8 +47,8 @@ if ($action == "save") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query("tblclients", "COUNT(*)", array("currency" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "COUNT(*)", array("currency" => $id));
+	$data = mysqli_fetch_array($result);
 	$inuse = $data[0];
 
 	if (!$inuse) {
@@ -85,9 +85,9 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	echo "<p>" . $aInt->lang("currencies", "info") . "</p>";
 	$aInt->sortableTableInit("nopagination");
 	$totalcurrencies = 0;
-	$result = select_query("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$code = $data['code'];
 		$prefix = $data['prefix'];
@@ -116,8 +116,8 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 
 
 		if ($id != 1) {
-			$result2 = select_query("tblclients", "COUNT(*)", array("currency" => $id));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblclients", "COUNT(*)", array("currency" => $id));
+			$data = mysqli_fetch_array($result2);
 			$inuse = $data[0];
 			$deletelink = "<a href=\"#\" onClick=\"";
 
@@ -198,8 +198,8 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tblcurrencies", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcurrencies", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$code = $data['code'];
 		$prefix = $data['prefix'];
 		$suffix = $data['suffix'];

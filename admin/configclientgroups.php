@@ -36,8 +36,8 @@ if ($action == "updategroup") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query("tblclients", "", array("groupid" => $id));
-	$numaccounts = mysql_num_rows($result);
+	$result = select_query_i("tblclients", "", array("groupid" => $id));
+	$numaccounts = mysqli_num_rows($result);
 
 	if (0 < $numaccounts) {
 		header("Location: configclientgroups.php?deleteerror=true");
@@ -52,8 +52,8 @@ if ($action == "delete") {
 
 
 if ($action == "edit") {
-	$result = select_query("tblclientgroups", "", array("id" => $id));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("tblclientgroups", "", array("id" => $id));
+	$data = mysqli_fetch_assoc($result);
 	foreach ($data as $name => $value) {
 		$$name = $value;
 	}
@@ -92,9 +92,9 @@ echo "</p>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query("tblclientgroups", "", "");
+$result = select_query_i("tblclientgroups", "", "");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$suspterm = ($data['susptermexempt'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
 	$separateinv = ($data['separateinvoices'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
 	$groupcol = ($data['groupcolour'] ? "<div style=\"width:75px;background-color:" . $data['groupcolour'] . "\">" . $aInt->lang("clientgroups", "sample") . "</div>" : "");

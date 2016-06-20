@@ -117,16 +117,16 @@ function getAdminHomeStats($type = "") {
 	$currency = getCurrency(0, 1);
 
 	if (!$type || $type == "income") {
-		$result = full_query("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-d") . "%'");
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-d") . "%'");
+		$data = mysqli_fetch_array($result);
 		$todaysincome = formatCurrency($data[0]);
 		$stats['income']['today'] = $todaysincome;
-		$result = full_query("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-") . "%'");
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-") . "%'");
+		$data = mysqli_fetch_array($result);
 		$todaysincome = formatCurrency($data[0]);
 		$stats['income']['thismonth'] = $todaysincome;
-		$result = full_query("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-") . "%'");
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-") . "%'");
+		$data = mysqli_fetch_array($result);
 		$todaysincome = formatCurrency($data[0]);
 		$stats['income']['thisyear'] = $todaysincome;
 
@@ -135,38 +135,38 @@ function getAdminHomeStats($type = "") {
 		}
 	}
 
-	$result = full_query("SELECT SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices WHERE tblinvoices.status='Unpaid' AND duedate<'" . date("Ymd") . "'");
-	$data = mysql_fetch_array($result);
+	$result = full_query_i("SELECT SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices WHERE tblinvoices.status='Unpaid' AND duedate<'" . date("Ymd") . "'");
+	$data = mysqli_fetch_array($result);
 	$overdueinvoices = $data[0];
 	$stats['invoices']['overduebalance'] = $data[1];
-	$result = full_query("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
-	$data = mysql_fetch_array($result);
+	$result = full_query_i("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
+	$data = mysqli_fetch_array($result);
 	$stats['cancellations']['pending'] = $data[0];
 	$stats['orders']['today']['active'] = $stats['orders']['today']['fraud'] = $stats['orders']['today']['pending'] = $stats['orders']['today']['cancelled'] = 0;
 	$query = "SELECT status,COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-d") . "%' GROUP BY status";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$stats['orders']['today'][strtolower($data[0])] = $data[1];
 	}
 
 	$stats['orders']['today']['total'] = $stats['orders']['today']['active'] + $stats['orders']['today']['fraud'] + $stats['orders']['today']['pending'] + $stats['orders']['today']['cancelled'];
 	$stats['orders']['yesterday']['active'] = $stats['orders']['yesterday']['fraud'] = $stats['orders']['yesterday']['pending'] = $stats['orders']['yesterday']['cancelled'] = 0;
 	$query = "SELECT status,COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))) . "%' GROUP BY status";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$stats['orders']['yesterday'][strtolower($data[0])] = $data[1];
 	}
 
 	$stats['orders']['yesterday']['total'] = $stats['orders']['yesterday']['active'] + $stats['orders']['yesterday']['fraud'] + $stats['orders']['yesterday']['pending'] + $stats['orders']['yesterday']['cancelled'];
 	$query = "SELECT COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-") . "%'";
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 	$stats['orders']['thismonth']['total'] = $data[0];
 	$query = "SELECT COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-") . "%'";
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 	$stats['orders']['thisyear']['total'] = $data[0];
 	global $disable_admin_ticket_page_counts;
 
@@ -174,9 +174,9 @@ function getAdminHomeStats($type = "") {
 		$allactive = $awaitingreply = 0;
 		$ticketcounts = array();
 		$query = "SELECT tblticketstatuses.title,(SELECT COUNT(*) FROM tbltickets WHERE tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$stats['tickets'][preg_replace("/[^a-z0-9]/", "", strtolower($data[0]))] = $data[1];
 
 			if ($data['showactive']) {
@@ -198,12 +198,12 @@ function getAdminHomeStats($type = "") {
 	}
 
 	$query = "SELECT COUNT(*) FROM tbltodolist WHERE status!='Completed' AND status!='Postponed' AND duedate<='" . date("Y-m-d") . "'";
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 	$stats['todoitems']['due'] = $data[0];
 	$query = "SELECT COUNT(*) FROM tblnetworkissues WHERE status!='Scheduled' AND status!='Resolved'";
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 	$stats['networkissues']['open'] = $data[0];
 	$result = select_query_i("tblbillableitems", "COUNT(*)", array("invoicecount" => "0"));
 	$data = mysqli_fetch_array($result);

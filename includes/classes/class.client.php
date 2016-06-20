@@ -140,9 +140,9 @@ class RA_Client {
 
 	private function getContactsData($where) {
 		$contactsarray = array();
-		$result = select_query("tblcontacts", "id,firstname,lastname,email", $where, "firstname` ASC,`lastname", "ASC");
+		$result = select_query_i("tblcontacts", "id,firstname,lastname,email", $where, "firstname` ASC,`lastname", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$contactsarray[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname'], "email" => $data['email']);
 		}
 
@@ -150,8 +150,8 @@ class RA_Client {
 	}
 
 	public function getContact($contactid) {
-		$result = select_query("tblcontacts", "", array("userid" => $this->userid, "id" => $contactid));
-		$data = mysql_fetch_assoc($result);
+		$result = select_query_i("tblcontacts", "", array("userid" => $this->userid, "id" => $contactid));
+		$data = mysqli_fetch_assoc($result);
 		$data['permissions'] = explode(",", $data['permissions']);
 		return isset($data['id']) ? $data : false;
 	}
@@ -171,9 +171,9 @@ class RA_Client {
 		}
 
 		$files = array();
-		$result = select_query("tblclientsfiles", "", $where, "title", "ASC");
+		$result = select_query_i("tblclientsfiles", "", $where, "title", "ASC");
 
-		while ($data = mysql_fetch_assoc($result)) {
+		while ($data = mysqli_fetch_assoc($result)) {
 			$id = $data['id'];
 			$title = $data['title'];
 			$adminonly = $data['adminonly'];
@@ -197,10 +197,10 @@ class RA_Client {
 
 	public function getEmailTemplates() {
 		$query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 		$emailtpls = array();
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$messagename = $data['name'];
 			$custom = $data['custom'];
 			$emailtpls[] = array("name" => $messagename, "custom" => $custom);

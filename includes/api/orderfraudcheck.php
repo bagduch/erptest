@@ -24,8 +24,8 @@ if (!function_exists("runFraudCheck")) {
 	require ROOTDIR . "/includes/fraudfunctions.php";
 }
 
-$result = select_query("tblorders", "id,userid,ipaddress,invoiceid", array("id" => $orderid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblorders", "id,userid,ipaddress,invoiceid", array("id" => $orderid));
+$data = mysqli_fetch_array($result);
 $orderid = $data[0];
 
 if (!$orderid) {
@@ -54,21 +54,21 @@ else {
 	if ($results['error']) {
 		$status = "Fail";
 		update_query("tblorders", array("status" => "Fraud"), array("id" => $orderid));
-		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
+		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblcustomerservices", array("servicestatus" => "Fraud"), array("id" => $data['id'], "servicestatus" => "Pending"));
 		}
 
-		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));
+		$result = select_query_i("tblserviceaddons", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblserviceaddons", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
 		}
 
-		$result = select_query("tbldomains", "id", array("orderid" => $orderid));
+		$result = select_query_i("tbldomains", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tbldomains", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
 		}
 
@@ -77,21 +77,21 @@ else {
 	else {
 		$status = "Pass";
 		update_query("tblorders", array("status" => "Pending"), array("id" => $orderid));
-		$result = select_query("tblcustomerservices", "id", array("orderid" => $orderid));
+		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblcustomerservices", array("servicestatus" => "Pending"), array("id" => $data['id'], "servicestatus" => "Fraud"));
 		}
 
-		$result = select_query("tblserviceaddons", "id", array("orderid" => $orderid));
+		$result = select_query_i("tblserviceaddons", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblserviceaddons", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
 		}
 
-		$result = select_query("tbldomains", "id", array("orderid" => $orderid));
+		$result = select_query_i("tbldomains", "id", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			update_query("tbldomains", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
 		}
 

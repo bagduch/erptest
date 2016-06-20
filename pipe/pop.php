@@ -22,8 +22,8 @@ $type = array( "text", "multipart", "message", "application", "audio", "image", 
 $encoding = array( "7bit", "8bit", "binary", "base64", "quoted-printable", "other" );
 echo "<b>POP Import Log</b><br>Date: " . date("d/m/Y H:i:s") . "<hr>";
 $query = "SELECT * FROM tblticketdepartments WHERE host!='' AND port!='' AND login!='' ORDER BY `order` ASC";
-$result = full_query($query);
-while( $data = mysql_fetch_array($result) ) 
+$result = full_query_i($query);
+while( $data = mysqli_fetch_array($result) ) 
 {
     $host = $data["host"];
     $port = $data["port"];

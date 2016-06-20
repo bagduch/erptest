@@ -95,8 +95,8 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
 
 
 	if (!$rate) {
-		$result = select_query("tblcurrencies", "rate", array("id" => $currencyid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcurrencies", "rate", array("id" => $currencyid));
+		$data = mysqli_fetch_array($result);
 		$rate = $data['rate'];
 	}
 
@@ -115,9 +115,9 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
 function updateInvoiceTotal($id) {
 	global $CONFIG;
 
-	$result = select_query("tblinvoiceitems", "", array("invoiceid" => $id));
+	$result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		if ($data['taxed'] == "1") {
 			$taxsubtotal += $data['amount'];
 		}
@@ -126,8 +126,8 @@ function updateInvoiceTotal($id) {
 	}
 
 	$subtotal = $total = $nontaxsubtotal + $taxsubtotal;
-	$result = select_query("tblinvoices", "userid,credit,taxrate,taxrate2", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "userid,credit,taxrate,taxrate2", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$credit = $data['credit'];
 	$taxrate = $data['taxrate'];
@@ -202,13 +202,13 @@ function updateInvoiceTotal($id) {
 }
 
 function addInvoicePayment($invoiceid, $transid, $amount, $fees, $gateway, $noemail = "", $date = "") {
-	$result = select_query("tblinvoices", "userid,total,status", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "userid,total,status", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$total = $data['total'];
 	$status = $data['status'];
-	$result = select_query("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$amountpaid = $data[0];
 	$balance = $total - $amountpaid;
 
@@ -238,8 +238,8 @@ function addInvoicePayment($invoiceid, $transid, $amount, $fees, $gateway, $noem
 
 
 	if ($balance <= 0) {
-		$result2 = select_query("tblcredit", "sum(amount)", array("relid" => $invoiceid));
-		$data2 = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblcredit", "sum(amount)", array("relid" => $invoiceid));
+		$data2 = mysqli_fetch_array($result2);
 		$amountcredited = $data2[0];
 		$balance = $balance + $amountcredited;
 
@@ -253,8 +253,8 @@ function addInvoicePayment($invoiceid, $transid, $amount, $fees, $gateway, $noem
 }
 
 function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = "", $sendemail = true, $refundtransid = "") {
-	$result = select_query("tblaccounts", "", array("id" => $transid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "", array("id" => $transid));
+	$data = mysqli_fetch_array($result);
 	$transid = $data['id'];
 
 	if (!$transid) {
@@ -269,8 +269,8 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 	$gatewaytransid = $data['transid'];
 	$rate = $data['rate'];
 	$gateway = RA_Gateways::makesafename($gateway);
-	$result = select_query("tblaccounts", "SUM(amountout),SUM(fees)", array("refundid" => $transid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "SUM(amountout),SUM(fees)", array("refundid" => $transid));
+	$data = mysqli_fetch_array($result);
 	$alreadyrefunded = $data[0];
 	$alreadyrefundedfees = $data[1];
 	$fullamount -= $alreadyrefunded;
@@ -280,8 +280,8 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 		$fees = 0;
 	}
 
-	$result = select_query("tblaccounts", "SUM(amountin),SUM(amountout)", array("invoiceid" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "SUM(amountin),SUM(amountout)", array("invoiceid" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$invoicetotalpaid = $data[0];
 	$invoicetotalrefunded = $data[1];
 
@@ -316,13 +316,13 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 		return "creditsuccess";
 	}
 
-	$result = select_query("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "convertto"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "convertto"));
+	$data = mysqli_fetch_array($result);
 	$convertto = $data['value'];
 
 	if ($convertto) {
-		$result = select_query("tblclients", "currency", array("id" => $userid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "currency", array("id" => $userid));
+		$data = mysqli_fetch_array($result);
 		$fromcurrencyid = $data['currency'];
 		$convertedamount = convertCurrency($amount, $fromcurrencyid, $convertto, $rate);
 	}
@@ -346,8 +346,8 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 		}
 
 		$gatewayresult = $gatewayresult['status'];
-		$result = select_query("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "name"));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "name"));
+		$data = mysqli_fetch_array($result);
 		$gatewayname = $data['value'];
 		logTransaction($gatewayname . " Refund", $rawdata, ucfirst($gatewayresult));
 	}
@@ -360,8 +360,8 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 	if ($gatewayresult == "success" || $gatewayresult == "manual") {
 		addTransaction($userid, 0, "Refund of Transaction ID " . $gatewaytransid, 0, $fees * (0 - 1), $amount, $gateway, $refundtransid, $invoiceid, "", $transid, $rate);
 		logActivity("Refunded Invoice Payment - Invoice ID: " . $invoiceid . " - Transaction ID: " . $transid, $userid);
-		$result = select_query("tblinvoices", "total", array("id" => $invoiceid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+		$data = mysqli_fetch_array($result);
 		$invoicetotal = $data[0];
 
 		if ($invoicetotalpaid - $invoicetotalrefunded - $amount <= 0) {
@@ -381,8 +381,8 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 	global $CONFIG;
 
-	$result = select_query("tblinvoices", "invoicenum,userid,status", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "invoicenum,userid,status", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$invoicestatus = $data['status'];
 	$invoicenum = $data['invoicenum'];
@@ -410,9 +410,9 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 		sendMessage("Invoice Payment Confirmation", $invoiceid);
 	}
 
-	$result = select_query("tblinvoiceitems", "", "invoiceid='" . mysql_real_escape_string($invoiceid) . "' AND type!=''", "id", "ASC");
+	$result = select_query_i("tblinvoiceitems", "", "invoiceid='" . mysqli_real_escape_string($invoiceid) . "' AND type!=''", "id", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['userid'];
 		$type = $data['type'];
 		$relid = $data['relid'];
@@ -527,22 +527,22 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 function getTaxRate($level, $state, $country) {
 	global $_LANG;
 
-	$result = select_query("tbltax", "", array("level" => $level, "state" => $state, "country" => $country));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbltax", "", array("level" => $level, "state" => $state, "country" => $country));
+	$data = mysqli_fetch_array($result);
 	$taxname = $data['name'];
 	$taxrate = $data['taxrate'];
 
 	if (!$taxrate) {
-		$result = select_query("tbltax", "", array("level" => $level, "state" => "", "country" => $country));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbltax", "", array("level" => $level, "state" => "", "country" => $country));
+		$data = mysqli_fetch_array($result);
 		$taxname = $data['name'];
 		$taxrate = $data['taxrate'];
 	}
 
 
 	if (!$taxrate) {
-		$result = select_query("tbltax", "", array("level" => $level, "state" => "", "country" => ""));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbltax", "", array("level" => $level, "state" => "", "country" => ""));
+		$data = mysqli_fetch_array($result);
 		$taxname = $data['name'];
 		$taxrate = $data['taxrate'];
 	}
@@ -577,8 +577,8 @@ function makeHostingPayment($func_domainid) {
 	global $CONFIG;
 	global $disable_to_do_list_entries;
 
-	$result = select_query("tblcustomerservices", "", array("id" => $func_domainid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "", array("id" => $func_domainid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$billingcycle = $data['billingcycle'];
 	$domain = $data['domain'];
@@ -589,8 +589,8 @@ function makeHostingPayment($func_domainid) {
 	$server = $data['server'];
 	$paymentmethod = $data['paymentmethod'];
 	$suspendreason = $data['suspendreason'];
-	$result = select_query("tblservices", "", array("id" => $packageid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "", array("id" => $packageid));
+	$data = mysqli_fetch_array($result);
 	$producttype = $data['type'];
 	$productname = $data['name'];
 	$module = $data['servertype'];
@@ -659,13 +659,13 @@ function makeHostingPayment($func_domainid) {
 	}
 
 	AffiliatePayment("", $func_domainid);
-	$result = select_query("tblserviceaddons", "id,addonid", "hostingid=" . (int)$func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
+	$result = select_query_i("tblserviceaddons", "id,addonid", "hostingid=" . (int)$func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$aid = $data['id'];
 		$addonid = $data['addonid'];
-		$result = select_query("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
+		$data = mysqli_fetch_array($result);
 		$autoactivate = $data['autoactivate'];
 		$welcomeemail = $data['welcomeemail'];
 
@@ -673,8 +673,8 @@ function makeHostingPayment($func_domainid) {
 			update_query("tblserviceaddons", array("status" => "Active"), array("id" => $aid));
 
 			if ($welcomeemail) {
-				$result = select_query("tblemailtemplates", "name", array("id" => $welcomeemail));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+				$data = mysqli_fetch_array($result);
 				$welcomeemailname = $data['name'];
 				sendMessage($welcomeemailname, $func_domainid);
 			}
@@ -688,8 +688,8 @@ function makeHostingPayment($func_domainid) {
 function makeDomainPayment($func_domainid, $type = "") {
 	global $ra;
 
-	$result = select_query("tbldomains", "", array("id" => $func_domainid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "", array("id" => $func_domainid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$orderid = $data['orderid'];
 	$registrationperiod = $data['registrationperiod'];
@@ -720,8 +720,8 @@ function makeDomainPayment($func_domainid, $type = "") {
 
 
 	if ($domaintype == "Register" || $domaintype == "Transfer") {
-		$result = select_query("tbldomainpricing", "autoreg", array("extension" => "." . $tld));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldomainpricing", "autoreg", array("extension" => "." . $tld));
+		$data = mysqli_fetch_array($result);
 		$autoreg = $data[0];
 
 		if ($status == "Pending") {
@@ -835,8 +835,8 @@ function makeDomainPayment($func_domainid, $type = "") {
 function makeAddonPayment($func_addonid) {
 	global $CONFIG;
 
-	$result = select_query("tblserviceaddons", "", array("id" => $func_addonid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblserviceaddons", "", array("id" => $func_addonid));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$hostingid = $data['hostingid'];
 	$addonid = $data['addonid'];
@@ -855,8 +855,8 @@ function makeAddonPayment($func_addonid) {
 		$paymentmethod = $gateway;
 	}
 
-	$result = select_query("tblcustomerservices", "userid,domain", array("id" => $hostingid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "userid,domain", array("id" => $hostingid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$domain = $data['domain'];
 
@@ -868,8 +868,8 @@ function makeAddonPayment($func_addonid) {
 	update_query("tblserviceaddons", array("nextduedate" => $nextduedate), array("id" => $func_addonid));
 
 	if ($status == "Pending") {
-		$result = select_query("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
+		$data = mysqli_fetch_array($result);
 		$autoactivate = $data['autoactivate'];
 		$welcomeemail = $data['welcomeemail'];
 
@@ -877,8 +877,8 @@ function makeAddonPayment($func_addonid) {
 			update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
 
 			if ($welcomeemail) {
-				$result = select_query("tblemailtemplates", "name", array("id" => $welcomeemail));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+				$data = mysqli_fetch_array($result);
 				$welcomeemailname = $data['name'];
 				sendMessage($welcomeemailname, $hostingid);
 			}
@@ -892,13 +892,13 @@ function makeAddonPayment($func_addonid) {
 		update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
 
 		if ($addonid) {
-			$result2 = select_query("tbladdons", "suspendproduct", array("id" => $addonid));
-			$data2 = mysql_fetch_array($result2);
+			$result2 = select_query_i("tbladdons", "suspendproduct", array("id" => $addonid));
+			$data2 = mysqli_fetch_array($result2);
 			$suspendproduct = $data2[0];
 
 			if ($suspendproduct) {
-				$result2 = select_query("tblcustomerservices", "servertype", array("tblcustomerservices.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-				$data2 = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblcustomerservices", "servertype", array("tblcustomerservices.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+				$data2 = mysqli_fetch_array($result2);
 				$module = $data2[0];
 				logActivity("Unsuspending Parent Service for Addon Payment - Service ID: " . $hostingid, $userid);
 
@@ -917,8 +917,8 @@ function getProrataValues($billingcycle, $amount, $proratadate, $proratachargene
 	global $CONFIG;
 
 	if ($CONFIG['ProrataClientsAnniversaryDate']) {
-		$result = select_query("tblclients", "datecreated", array("id" => $userid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "datecreated", array("id" => $userid));
+		$data = mysqli_fetch_array($result);
 		$clientregdate = $data[0];
 		$clientregdate = explode("-", $clientregdate);
 		$proratadate = $clientregdate[2];
@@ -1005,10 +1005,10 @@ function getNewClientAutoProvisionStatus($userid) {
 	global $CONFIG;
 
 	if ($CONFIG['AutoProvisionExistingOnly']) {
-		$result = select_query("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "servicestatus" => "Active"));
-		$data = mysql_fetch_array($result);
-		$result = select_query("tbldomains", "COUNT(*)", array("userid" => $userid, "status" => "Active"));
-		$data2 = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "COUNT(*)", array("userid" => $userid, "servicestatus" => "Active"));
+		$data = mysqli_fetch_array($result);
+		$result = select_query_i("tbldomains", "COUNT(*)", array("userid" => $userid, "status" => "Active"));
+		$data2 = mysqli_fetch_array($result);
 
 		if ($data[0] + $data2[0]) {
 			return true;
@@ -1027,11 +1027,11 @@ function applyCredit($invoiceid, $userid, $amount, $noemail = "") {
 	insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Applied to Invoice #" . $invoiceid, "amount" => $amount * (0 - 1)));
 	logActivity("Credit Applied - Amount: " . $amount . " - Invoice ID: " . $invoiceid, $userid);
 	updateInvoiceTotal($invoiceid);
-	$result = select_query("tblinvoices", "total", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$total = $data['total'];
-	$result = select_query("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$amountpaid = $data[0];
 	$balance = $total - $amountpaid;
 

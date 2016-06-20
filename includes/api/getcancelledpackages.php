@@ -19,14 +19,14 @@ if (!$limitstart) {
 	$limitstart = 0;
 }
 
-$result = select_query("`tblcancelrequests", "COUNT(*)", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("`tblcancelrequests", "COUNT(*)", $where);
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
 $query = "SELECT * FROM tblcancelrequests LIMIT " . (int)$limitstart . "," . (int)$limitnum;
-$result2 = full_query($query);
-$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result), "packages" => array());
+$result2 = full_query_i($query);
+$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result), "packages" => array());
 
-while ($data = mysql_fetch_assoc($result2)) {
+while ($data = mysqli_fetch_assoc($result2)) {
 	$apiresults['packages']['package'][] = $data;
 }
 

@@ -18,16 +18,16 @@ $aInt->sidebar = "clients";
 $aInt->icon = "clientsprofile";
 $aInt->requiredFiles(array("clientfunctions", "registrarfunctions"));
 ob_start();
-$result = select_query("tbldomains", "", array("id" => $domainid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "", array("id" => $domainid));
+$data = mysqli_fetch_array($result);
 $userid = $data['userid'];
 $domain = $data['domain'];
 $registrar = $data['registrar'];
 $registrationperiod = $data['registrationperiod'];
 $contactsarray = array();
-$result = select_query("tblcontacts", "id,firstname,lastname", array("userid" => $userid, "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("tblcontacts", "id,firstname,lastname", array("userid" => $userid, "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$contactsarray[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname']);
 }
 

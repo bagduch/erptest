@@ -12,8 +12,8 @@ $currency = getCurrency($userid);
 $clientsdetails = getClientsDetails($userid);
 
 
-$result = select_query("tblclients", "", array("id" => $userid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "", array("id" => $userid));
+$data = mysqli_fetch_array($result);
 $name = stripslashes($data['firstname'] . " " . $data['lastname']);
 $creditbalance = $data['credit'];
 
@@ -53,8 +53,8 @@ if ($action == "") {
 	if ($sub == "delete") {
 		checkPermission("Manage Credits");
 		check_token("RA.admin.default");
-		$result = select_query("tblcredit", "", array("id" => $ide));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcredit", "", array("id" => $ide));
+		$data = mysqli_fetch_array($result);
 		$amount = $data['amount'];
 		$creditbalance = $creditbalance - $amount;
 
@@ -69,8 +69,8 @@ if ($action == "") {
 		exit();
 	}
 
-	$result = select_query("tblclients", "", array("id" => $userid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "", array("id" => $userid));
+	$data = mysqli_fetch_array($result);
 	$creditbalance = formatCurrency($data['credit']);
 	echo "
 <p>";
@@ -122,9 +122,9 @@ window.location='";
 	$patterns = $replacements = array();
 	$patterns[] = "/ Invoice #(.*?) /";
 	$replacements[] = " <a href=\"invoices.php?action=edit&id=$1\" target=\"_blank\">Invoice #$1</a>";
-	$result = select_query("tblcredit", "", array("clientid" => $userid), "date", "DESC");
+	$result = select_query_i("tblcredit", "", array("clientid" => $userid), "date", "DESC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$date = $data['date'];
 		$date = fromMySQLDate($date);
@@ -155,8 +155,8 @@ else {
 			$title = $aInt->lang("credit", "removecredit");
 		}
 
-		$result = select_query("tblclients", "", array("id" => $userid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "", array("id" => $userid));
+		$data = mysqli_fetch_array($result);
 		$creditbalance = formatCurrency($data['credit']);
 		echo "
 <form method=\"post\" action=\"";
@@ -210,8 +210,8 @@ else {
 	else {
 		if ($action == "edit") {
 			checkPermission("Manage Credits");
-			$result = select_query("tblcredit", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblcredit", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$date = $data['date'];
 			$date = fromMySQLDate($date);

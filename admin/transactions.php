@@ -54,8 +54,8 @@ if ($action == "add") {
 			$invoiceids = substr($invoiceids, 0, 0 - 1);
 		}
 
-		$query = select_query("tblinvoices", "SUM(total)", "id IN (" . $invoiceids . ")");
-		$data = mysql_fetch_assoc($query);
+		$query = select_query_i("tblinvoices", "SUM(total)", "id IN (" . $invoiceids . ")");
+		$data = mysqli_fetch_assoc($query);
 		$invoicestotal = $data[0];
 		$invoices = explode(",", $invoiceids);
 		$totalleft = $amountin;
@@ -63,11 +63,11 @@ if ($action == "add") {
 		foreach ($invoices as $invoiceid) {
 
 			if (0 < $totalleft) {
-				$result = select_query("tblinvoices", "total", array("id" => $invoiceid));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+				$data = mysqli_fetch_array($result);
 				$invoicetotal = $data[0];
-				$result2 = select_query("tblaccounts", "SUM(amountin)", array("invoiceid" => $invoiceid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblaccounts", "SUM(amountin)", array("invoiceid" => $invoiceid));
+				$data = mysqli_fetch_array($result2);
 				$totalin = $data[0];
 				$paymentdue = $invoicetotal - $totalin;
 
@@ -276,9 +276,9 @@ if (!$action) {
 	echo "</td><td class=\"fieldarea\">";
 	echo "<s";
 	echo "elect name=\"currency\">";
-	$result = select_query("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		echo "<option value=\"" . $data['id'] . "\"";
 
 		if ($data['default']) {
@@ -406,9 +406,9 @@ if (!$action) {
 
 	$totals = array();
 	$fullquery = "SELECT tblclients.currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM tblaccounts,tblclients " . ($query ? $query . " AND" : "WHERE") . " tblclients.id=tblaccounts.userid GROUP BY tblclients.currency";
-	$result = full_query($fullquery);
+	$result = full_query_i($fullquery);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$currency = $data['currency'];
 		$totalin = $data[1];
 		$totalfees = $data[2];
@@ -418,9 +418,9 @@ if (!$action) {
 	}
 
 	$fullquery = "SELECT currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM tblaccounts " . ($query ? $query . " AND" : "WHERE") . " userid=0 GROUP BY currency";
-	$result = full_query($fullquery);
+	$result = full_query_i($fullquery);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$currency = $data['currency'];
 		$totalin = $data[1];
 		$totalfees = $data[2];
@@ -434,13 +434,13 @@ if (!$action) {
 
 	$gatewaysarray = getGatewaysArray();
 	$query .= " ORDER BY tblaccounts.date DESC,tblaccounts.id DESC";
-	$result = full_query("SELECT COUNT(*) FROM tblaccounts" . $query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i("SELECT COUNT(*) FROM tblaccounts" . $query);
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$query = "SELECT tblaccounts.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency AS currencyid FROM tblaccounts LEFT JOIN tblclients ON tblclients.id=tblaccounts.userid" . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$userid = $data['userid'];
 		$currency = $data['currency'];
@@ -509,8 +509,8 @@ if (!$action) {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tblaccounts", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblaccounts", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 		$userid = $data['userid'];
 		$date = $data['date'];

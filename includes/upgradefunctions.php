@@ -20,8 +20,8 @@ function SumUpPackageUpgradeOrder($id, $newproductid, $newproductbillingcycle, $
 	global $applytax;
 
 	$_SESSION['upgradeids'] = "";
-	$result = select_query("tblcustomerservices", "tblservices.name,tblservices.id,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.domain", array("userid" => $_SESSION['uid'], "tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "tblservices.name,tblservices.id,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.domain", array("userid" => $_SESSION['uid'], "tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+	$data = mysqli_fetch_array($result);
 	$oldproductid = $data['id'];
 	$oldproductname = $data['name'];
 	$domain = $data['domain'];
@@ -48,8 +48,8 @@ function SumUpPackageUpgradeOrder($id, $newproductid, $newproductbillingcycle, $
 		}
 	}
 
-	$result = select_query("tblservices", "id,name,tax,paytype", array("id" => $newproductid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "id,name,tax,paytype", array("id" => $newproductid));
+	$data = mysqli_fetch_array($result);
 	$newproductid = $data['id'];
 	$newproductname = $data['name'];
 	$applytax = $data['tax'];
@@ -71,8 +71,8 @@ function SumUpPackageUpgradeOrder($id, $newproductid, $newproductbillingcycle, $
 		$newproductbillingcycle = "monthly";
 	}
 
-	$result = select_query("tblpricing", $newproductbillingcycle, array("type" => "product", "currency" => $currency['id'], "relid" => $newproductid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpricing", $newproductbillingcycle, array("type" => "product", "currency" => $currency['id'], "relid" => $newproductid));
+	$data = mysqli_fetch_array($result);
 	$newamount = $data[$newproductbillingcycle];
 
 	if (($paytype == "onetime" || $paytype == "recurring") && $newamount < 0) {
@@ -254,14 +254,14 @@ function SumUpConfigOptionsOrder($id, $configoptions, $promocode, $paymentmethod
 	global $applytax;
 
 	$_SESSION['upgradeids'] = array();
-	$result = select_query("tblcustomerservices", "packageid,domain,nextduedate,billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcustomerservices", "packageid,domain,nextduedate,billingcycle", array("userid" => $_SESSION['uid'], "id" => $id));
+	$data = mysqli_fetch_array($result);
 	$packageid = $data['packageid'];
 	$domain = $data['domain'];
 	$nextduedate = $data['nextduedate'];
 	$billingcycle = $data['billingcycle'];
-	$result = select_query("tblservices", "name,tax", array("id" => $packageid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "name,tax", array("id" => $packageid));
+	$data = mysqli_fetch_array($result);
 	$productname = $data['name'];
 	$applytax = $data['tax'];
 
@@ -487,8 +487,8 @@ function createUpgradeOrder($id, $ordernotes, $promocode, $paymentmethod) {
 
 
 	if ($promocode) {
-		$result = select_query("tblpromotions", "upgradeconfig", array("code" => $promocode));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpromotions", "upgradeconfig", array("code" => $promocode));
+		$data = mysqli_fetch_array($result);
 		$upgradeconfig = $data['upgradeconfig'];
 		$upgradeconfig = unserialize($upgradeconfig);
 		$promo_type = $upgradeconfig['discounttype'];
@@ -513,8 +513,8 @@ function createUpgradeOrder($id, $ordernotes, $promocode, $paymentmethod) {
 	$invoiceid = createInvoices($_SESSION['uid'], true);
 
 	if ($invoiceid) {
-		$result = select_query("tblinvoiceitems", "invoiceid", "type='Upgrade' AND relid IN (" . db_build_in_array(db_escape_numarray($_SESSION['upgradeids'])) . ")", "invoiceid", "DESC");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblinvoiceitems", "invoiceid", "type='Upgrade' AND relid IN (" . db_build_in_array(db_escape_numarray($_SESSION['upgradeids'])) . ")", "invoiceid", "DESC");
+		$data = mysqli_fetch_array($result);
 		$invoiceid = $data['invoiceid'];
 	}
 
@@ -531,17 +531,17 @@ function createUpgradeOrder($id, $ordernotes, $promocode, $paymentmethod) {
 	}
 
 	update_query("tblorders", array("invoiceid" => $invoiceid), array("id" => $orderid));
-	$result = select_query("tblclients", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $_SESSION['uid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $_SESSION['uid']));
+	$data = mysqli_fetch_array($result);
 	list($firstname,$lastname,$companyname,$email,$address1,$address2,$city,$state,$postcode,$country,$phonenumber,$ip,$host) = $data;
 	$nicegatewayname = get_query_val("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "Name"));
 	$ordertotal = get_query_val("tblinvoices", "total", array("id" => $invoiceid));
 	$adminemailitems = "";
 
 	if ($invoiceid) {
-		$result = select_query("tblinvoiceitems", "description", "type='Upgrade' AND relid IN (" . db_build_in_array(db_escape_numarray($_SESSION['upgradeids'])) . ")", "invoiceid", "DESC");
+		$result = select_query_i("tblinvoiceitems", "description", "type='Upgrade' AND relid IN (" . db_build_in_array(db_escape_numarray($_SESSION['upgradeids'])) . ")", "invoiceid", "DESC");
 
-		while ($invoicedata = mysql_fetch_assoc($result)) {
+		while ($invoicedata = mysqli_fetch_assoc($result)) {
 			$adminemailitems .= $invoicedata['description'] . "<br />";
 		}
 	}
@@ -559,8 +559,8 @@ function processUpgradePayment($upgradeid, $paidamount, $fees, $invoice = "", $g
 }
 
 function doUpgrade($upgradeid) {
-	$result = select_query("tblupgrades", "", array("id" => $upgradeid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblupgrades", "", array("id" => $upgradeid));
+	$data = mysqli_fetch_array($result);
 	$orderid = $data['orderid'];
 	$type = $data['type'];
 	$relid = $data['relid'];
@@ -568,8 +568,8 @@ function doUpgrade($upgradeid) {
 	$newvalue = $data['newvalue'];
 	$upgradeamount = $data['amount'];
 	$recurringchange = $data['recurringchange'];
-	$result = select_query("tblorders", "promocode", array("id" => $orderid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblorders", "promocode", array("id" => $orderid));
+	$data = mysqli_fetch_array($result);
 	$promocode = $data['promocode'];
 
 	if ($type == "package") {
@@ -619,8 +619,8 @@ function doUpgrade($upgradeid) {
 			}
 		}
 
-		$result = select_query("tblcustomerservices", "billingcycle", array("id" => $relid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "billingcycle", array("id" => $relid));
+		$data = mysqli_fetch_array($result);
 		$billingcycle = $data['billingcycle'];
 
 		if ($billingcycle == "Free Account") {
@@ -635,15 +635,15 @@ function doUpgrade($upgradeid) {
 
 		migrateCustomFieldsBetweenProducts($relid, $newpackageid);
 		update_query("tblcustomerservices", array("packageid" => $newpackageid, "billingcycle" => $newbillingcycle, "" . $changevalue => "+=" . $recurringchange), array("id" => $relid));
-		$result = full_query("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT tblinvoiceitems.id,tblinvoiceitems.invoiceid FROM tblinvoices INNER JOIN tblinvoiceitems ON tblinvoiceitems.invoiceid=tblinvoices.id INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoices.status='Unpaid' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.id=" . (int)$relid . " ORDER BY tblinvoiceitems.duedate DESC");
+		$data = mysqli_fetch_array($result);
 		$invitemid = $data['id'];
 		$inviteminvoiceid = $data['invoiceid'];
 
 		if ($invitemid) {
 			update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $inviteminvoiceid));
 			update_query("tblinvoiceitems", array("duedate" => "0000-00-00"), array("id" => $invitemid));
-			full_query("UPDATE tblcustomerservices SET nextinvoicedate=nextduedate WHERE id=" . (int)$relid);
+			full_query_i("UPDATE tblcustomerservices SET nextinvoicedate=nextduedate WHERE id=" . (int)$relid);
 		}
 
 
@@ -653,8 +653,8 @@ function doUpgrade($upgradeid) {
 
 		$configoptions = getCartConfigOptions($newpackageid, "", $newbillingcycle);
 		foreach ($configoptions as $configoption) {
-			$result = select_query("tblhostingconfigoptions", "COUNT(*)", array("relid" => $relid, "configid" => $configoption['id']));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblhostingconfigoptions", "COUNT(*)", array("relid" => $relid, "configid" => $configoption['id']));
+			$data = mysqli_fetch_array($result);
 
 			if (!$data[0]) {
 				insert_query("tblhostingconfigoptions", array("relid" => $relid, "configid" => $configoption['id'], "optionid" => $configoption['selectedvalue']));
@@ -668,11 +668,11 @@ function doUpgrade($upgradeid) {
 		if ($type == "configoptions") {
 			$tempvalue = explode("=>", $originalvalue);
 			$configid = $tempvalue[0];
-			$result = select_query("tblserviceconfigoptions", "", array("id" => $configid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+			$data = mysqli_fetch_array($result);
 			$optiontype = $data['optiontype'];
-			$result = select_query("tblhostingconfigoptions", "COUNT(*)", array("relid" => $relid, "configid" => $configid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblhostingconfigoptions", "COUNT(*)", array("relid" => $relid, "configid" => $configid));
+			$data = mysqli_fetch_array($result);
 
 			if (!$data[0]) {
 				insert_query("tblhostingconfigoptions", array("relid" => $relid, "configid" => $configid));
@@ -695,8 +695,8 @@ function doUpgrade($upgradeid) {
 
 
 	if ($promocode) {
-		$result = select_query("tblpromotions", "id,type,recurring,value", array("code" => $promocode));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblpromotions", "id,type,recurring,value", array("code" => $promocode));
+		$data = mysqli_fetch_array($result);
 		$promoid = $data[0];
 		$promotype = $data[1];
 		$promorecurring = $data[2];
@@ -728,8 +728,8 @@ function doUpgrade($upgradeid) {
 		$data = get_query_vals("tblcustomerservices", "userid,packageid", array("id" => $relid));
 		$userid = $data['userid'];
 		$pid = $data['packageid'];
-		$result = select_query("tblservices", "servertype,upgradeemail", array("id" => $pid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservices", "servertype,upgradeemail", array("id" => $pid));
+		$data = mysqli_fetch_array($result);
 		$servertype = $data['servertype'];
 		$upgradeemail = $data['upgradeemail'];
 
@@ -747,8 +747,8 @@ function doUpgrade($upgradeid) {
 				logActivity("Automatic Product/Service Upgrade Successful - Service ID: " . $relid, $userid);
 
 				if ($upgradeemail) {
-					$result = select_query("tblemailtemplates", "name", array("id" => $upgradeemail));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblemailtemplates", "name", array("id" => $upgradeemail));
+					$data = mysqli_fetch_array($result);
 					$emailtplname = $data[0];
 					sendMessage($emailtplname, $relid);
 				}
@@ -765,8 +765,8 @@ function doUpgrade($upgradeid) {
 function validateUpgradePromo($promocode) {
 	global $_LANG;
 
-	$result = select_query("tblpromotions", "", array("code" => $promocode));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpromotions", "", array("code" => $promocode));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$recurringtype = $data['type'];
 	$recurringvalue = $data['value'];
@@ -821,8 +821,8 @@ function validateUpgradePromo($promocode) {
 
 
 	if ($onceperclient) {
-		$result = select_query("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
-		$orderCount = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
+		$orderCount = mysqli_fetch_array($result);
 
 		if (0 < $orderCount[0]) {
 			return $_LANG['promoonceperclient'];

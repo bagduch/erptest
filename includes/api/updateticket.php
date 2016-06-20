@@ -19,8 +19,8 @@ if (!function_exists("closeTicket")) {
 	require ROOTDIR . "/includes/ticketfunctions.php";
 }
 
-$result = select_query("tbltickets", "id", array("id" => $ticketid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbltickets", "id", array("id" => $ticketid));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Ticket ID Not Found");

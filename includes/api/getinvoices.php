@@ -41,13 +41,13 @@ if ($status) {
 }
 
 $where = implode(" AND ", $where);
-$result = select_query("tblinvoices", "COUNT(*)", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblinvoices", "COUNT(*)", $where);
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result = select_query("tblinvoices", "tblinvoices.id,tblinvoices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.*", $where, "tblinvoices`.`duedate", "DESC", "" . $limitstart . "," . $limitnum, "tblclients ON tblclients.id=tblinvoices.userid");
-$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result), "invoices" => array());
+$result = select_query_i("tblinvoices", "tblinvoices.id,tblinvoices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.*", $where, "tblinvoices`.`duedate", "DESC", "" . $limitstart . "," . $limitnum, "tblclients ON tblclients.id=tblinvoices.userid");
+$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result), "invoices" => array());
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$currency = getCurrency($userid);
 	$data['currencycode'] = $currency['code'];
 	$data['currencyprefix'] = $currency['prefix'];

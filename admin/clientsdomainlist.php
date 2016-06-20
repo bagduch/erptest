@@ -157,8 +157,8 @@ if ($notes) {
 	$query .= "AND tbldomains.additionalnotes LIKE '%" . db_escape_string($notes) . "%' ";
 }
 
-$result = full_query("SELECT COUNT(tbldomains.id) " . $query);
-$data = mysql_fetch_array($result);
+$result = full_query_i("SELECT COUNT(tbldomains.id) " . $query);
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 $query .= "ORDER BY ";
 
@@ -171,9 +171,9 @@ else {
 
 $query .= " " . $order;
 $query = "SELECT tbldomains.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$userid = $data['userid'];
 	$domain = $data['domain'];

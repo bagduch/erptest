@@ -66,8 +66,8 @@ if (count($incfields)) {
         }
     }
 
-    $result = select_query("tblclients",implode(',',$fieldlist),$filters);
-    while ($data = mysql_fetch_assoc($result)) {
+    $result = select_query_i("tblclients",implode(',',$fieldlist),$filters);
+    while ($data = mysqli_fetch_assoc($result)) {
         if (isset($data['currency'])) $data['currency'] = get_query_val("tblcurrencies","code",array("id"=>$data['currency']));
         $reportdata["tablevalues"][] = $data;
     }

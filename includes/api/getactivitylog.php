@@ -29,14 +29,14 @@ if (!$limitnum) {
 	$limitnum = 25;
 }
 
-$result = select_query("tblactivitylog", "COUNT(id)", "");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblactivitylog", "COUNT(id)", "");
+$data = mysqli_fetch_array($result);
 $totalresults = $data[0];
 $apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart);
-$result = select_query("tblactivitylog", "id, date, description, user", "", "id", "DESC", "" . $limitstart . "," . $limitnum);
-$apiresults['numreturned'] = mysql_num_rows($result);
+$result = select_query_i("tblactivitylog", "id, date, description, user", "", "id", "DESC", "" . $limitstart . "," . $limitnum);
+$apiresults['numreturned'] = mysqli_num_rows($result);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$date = $data['date'];
 	$description = $data['description'];

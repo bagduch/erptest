@@ -9,8 +9,8 @@ $reportdata["description"] = "This report shows sales tax liability for the sele
 $reportdata["currencyselections"] = true;
 
 $query = "select year(min(date)) as minimum, year(max(date)) as maximum from tblaccounts;";
-$result = full_query($query);
-$data = mysql_fetch_array($result);
+$result = full_query_i($query);
+$data = mysqli_fetch_array($result);
 $minyear = $data['minimum'];
 $maxyear = $data['maximum'];
 
@@ -19,8 +19,8 @@ $reportdata["headertext"] = "<form method=\"post\" action=\"$PHP_SELF?report=$re
 if ($calculate) {
 
 	$query = "SELECT COUNT(*),SUM(total),SUM(tblinvoices.credit),SUM(tax),SUM(tax2) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE datepaid>='".db_make_safe_human_date($startdate)."' AND datepaid<='".db_make_safe_human_date($enddate)." 23:59:59' AND tblinvoices.status='Paid' AND currency=".(int)$currencyid;
-	$result = full_query($query);
-	$data = mysql_fetch_array($result);
+	$result = full_query_i($query);
+	$data = mysqli_fetch_array($result);
 	$numinvoices = $data[0];
 	$total = $data[1] + $data[2];
 	$tax = $data[3];
@@ -38,8 +38,8 @@ $reportdata["headertext"] .= "</center>";
 $reportdata["tableheadings"] = array("Invoice ID","Client Name","Invoice Date","Date Paid","Subtotal","Tax","Credit","Total");
 
 $query = "SELECT tblinvoices.*,tblclients.firstname,tblclients.lastname FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE datepaid>='".db_make_safe_human_date($startdate)."' AND datepaid<='".db_make_safe_human_date($enddate)." 23:59:59' AND tblinvoices.status='Paid' AND currency=".(int)$currencyid." ORDER BY date ASC";
-$result = full_query($query);
-while ($data = mysql_fetch_array($result)) {
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data["id"];
     $userid = $data["userid"];
 	$client = $data["firstname"]." ".$data["lastname"];

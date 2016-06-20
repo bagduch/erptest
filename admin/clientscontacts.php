@@ -13,10 +13,10 @@ if ($action == "save") {
 
 	if ($subaccount) {
 		$subaccount = "1";
-		$result = select_query("tblclients", "COUNT(*)", array("email" => $email));
-		$data = mysql_fetch_array($result);
-		$result = select_query("tblcontacts", "COUNT(*)", array("email" => $email, "id" => array("sqltype" => "NEQ", "value" => $contactid)));
-		$data2 = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
+		$data = mysqli_fetch_array($result);
+		$result = select_query_i("tblcontacts", "COUNT(*)", array("email" => $email, "id" => array("sqltype" => "NEQ", "value" => $contactid)));
+		$data2 = mysqli_fetch_array($result);
 
 		if ($data[0] + $data2[0]) {
 			$querystring = "";
@@ -129,9 +129,9 @@ echo ": ";
 echo "<s";
 echo "elect name=\"contactid\" onChange=\"submit();\">
 ";
-$result = select_query("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$contactlistid = $data['id'];
 
 	if (!$contactid) {
@@ -183,8 +183,8 @@ if ($resetpw) {
 
 
 if ($contactid && $contactid != "addnew") {
-	$result = select_query("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
+	$data = mysqli_fetch_array($result);
 	$contactid = $data['id'];
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];

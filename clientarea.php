@@ -85,16 +85,16 @@ if ($action == "") {
     require "includes/ticketfunctions.php";
     $tickets = array();
     $statusfilter = "";
-    $result = select_query("tblticketstatuses", "title", array("showactive" => "1"));
+    $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $statusfilter .= "'" . $data[0] . "',";
     }
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
-    $result = select_query("tbltickets", "", "userid='" . mysql_real_escape_string($client->getID()) . ("' AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
+    $result = select_query_i("tbltickets", "", "userid='" . mysqli_real_escape_string($client->getID()) . ("' AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $tid = $data['tid'];
         $c = $data['c'];
@@ -130,15 +130,15 @@ if ($action == "") {
     $ca->assign("files", $files);
     $ca->assign("addfundsenabled", $CONFIG['AddFundsEnabled']);
     $announcements = array();
-    $result = select_query("tblannouncements", "", array("published" => "on"), "date", "DESC", "0,3");
+    $result = select_query_i("tblannouncements", "", array("published" => "on"), "date", "DESC", "0,3");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $date = $data['date'];
         $title = $data['title'];
         $announcement = $data['announcement'];
-        $result2 = select_query("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
-        $data = mysql_fetch_array($result2);
+        $result2 = select_query_i("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+        $data = mysqli_fetch_array($result2);
 
         if ($data['title']) {
             $title = $data['title'];
@@ -382,16 +382,16 @@ if ($action == "") {
                     $gotpm = false;
 
                     if (!$gotpm) {
-                        $result = select_query("tblpaymentgateways", "gateway", array("setting" => "type", "value" => "CC"));
+                        $result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "type", "value" => "CC"));
                     }
 
-                    while ($data = mysql_fetch_array($result)) {
+                    while ($data = mysqli_fetch_array($result)) {
                         $gateway = $data['gateway'];
 
                         if (function_exists($gateway . "_remoteupdate")) {
                             $params = getGatewayVariables($gateway);
-                            $result = select_query("tblclients", "gatewayid", array("id" => $client->getID()));
-                            $data = mysql_fetch_array($result);
+                            $result = select_query_i("tblclients", "gatewayid", array("id" => $client->getID()));
+                            $data = mysqli_fetch_array($result);
                             $params['gatewayid'] = $data['gatewayid'];
                             $remoteupdatecode = call_user_func($gateway . "_remoteupdate", $params);
 
@@ -453,12 +453,12 @@ if ($action == "") {
                             $confirmpw = html_entity_decode($confirmpw);
 
                             if ($_SESSION['cid']) {
-                                $result = select_query("tblcontacts", "password", array("id" => $_SESSION['cid'], "userid" => $client->getID()));
+                                $result = select_query_i("tblcontacts", "password", array("id" => $_SESSION['cid'], "userid" => $client->getID()));
                             } else {
-                                $result = select_query("tblclients", "password", array("id" => $client->getID()));
+                                $result = select_query_i("tblclients", "password", array("id" => $client->getID()));
                             }
 
-                            $data = mysql_fetch_array($result);
+                            $data = mysqli_fetch_array($result);
 
                             if ($CONFIG['NOMD5']) {
                                 $existingpwd = decrypt($data['password']);
@@ -686,8 +686,8 @@ if ($action == "") {
                                 }
 
                                 $innerjoin = "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid";
-                                $result = select_query($table, $fields, $where, "", "", "", $innerjoin);
-                                $data = mysql_fetch_array($result);
+                                $result = select_query_i($table, $fields, $where, "", "", "", $innerjoin);
+                                $data = mysqli_fetch_array($result);
                                 $numitems = $data[0];
                                 list($orderby, $sort, $limit) = clientAreaTableInit("prod", "product", "ASC", $numitems);
                                 $smartyvalues['orderby'] = $orderby;
@@ -713,9 +713,9 @@ if ($action == "") {
 
                                 $accounts = array();
                                 $fields = "tblcustomerservices.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.tax,tblservices.upgradepackages,tblservices.downloads,tblservices.servertype";
-                                $result = select_query($table, $fields, $where, $orderby, $sort, $limit, $innerjoin);
+                                $result = select_query_i($table, $fields, $where, $orderby, $sort, $limit, $innerjoin);
 
-                                while ($data = mysql_fetch_array($result)) {
+                                while ($data = mysqli_fetch_array($result)) {
                                     $id = $data['id'];
                                     $regdate = $data['regdate'];
                                     $domain = $data['domain'];
@@ -747,8 +747,8 @@ if ($action == "") {
                                     $serverarray = array();
 
                                     if ($server) {
-                                        $result2 = select_query("tblservers", "", array("id" => $server));
-                                        $serverarray = mysql_fetch_array($result2);
+                                        $result2 = select_query_i("tblservers", "", array("id" => $server));
+                                        $serverarray = mysqli_fetch_array($result2);
                                     }
 
                                     if ($tax) {
@@ -1019,8 +1019,8 @@ if ($action == "") {
                                             $smartyvalues['q'] = $q;
                                         }
 
-                                        $result = select_query("tbldomains", "COUNT(*)", $where);
-                                        $data = mysql_fetch_array($result);
+                                        $result = select_query_i("tbldomains", "COUNT(*)", $where);
+                                        $data = mysqli_fetch_array($result);
                                         $numitems = $data[0];
                                         list($orderby, $sort, $limit) = clientAreaTableInit("dom", "domain", "ASC", $numitems);
                                         $smartyvalues['orderby'] = $orderby;
@@ -1049,9 +1049,9 @@ if ($action == "") {
                                         }
 
                                         $domains = array();
-                                        $result = select_query("tbldomains", "", $where, $orderby, $sort, ($page - 1) * $pagelimit . ("," . $pagelimit));
+                                        $result = select_query_i("tbldomains", "", $where, $orderby, $sort, ($page - 1) * $pagelimit . ("," . $pagelimit));
 
-                                        while ($data = mysql_fetch_array($result)) {
+                                        while ($data = mysqli_fetch_array($result)) {
                                             $id = $data['id'];
                                             $registrationdate = $data['registrationdate'];
                                             $domain = $data['domain'];
@@ -1163,8 +1163,8 @@ if ($action == "") {
                                             }
 
                                             $ca->assign("addonscount", $addonscount);
-                                            $result = select_query("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-                                            $data = mysql_fetch_array($result);
+                                            $result = select_query_i("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                                            $data = mysqli_fetch_array($result);
                                             $domaindnsmanagementprice = $data['msetupfee'];
                                             $domainemailforwardingprice = $data['qsetupfee'];
                                             $domainidprotectionprice = $data['ssetupfee'];
@@ -1644,8 +1644,8 @@ if ($action == "") {
                                                                         if ($action == "emails") {
                                                                             checkContactPermission("emails");
                                                                             $ca->setTemplate("clientareaemails");
-                                                                            $result = select_query("tblemails", "COUNT(*)", array("userid" => $client->getID()), "id", "DESC");
-                                                                            $data = mysql_fetch_array($result);
+                                                                            $result = select_query_i("tblemails", "COUNT(*)", array("userid" => $client->getID()), "id", "DESC");
+                                                                            $data = mysqli_fetch_array($result);
                                                                             $numitems = $data[0];
                                                                             list($orderby, $sort, $limit) = clientAreaTableInit("emails", "date", "DESC", $numitems);
                                                                             $smartyvalues['orderby'] = $orderby;
@@ -1658,9 +1658,9 @@ if ($action == "") {
                                                                             }
 
                                                                             $emails = array();
-                                                                            $result = select_query("tblemails", "", array("userid" => $client->getID()), $orderby, $sort, $limit);
+                                                                            $result = select_query_i("tblemails", "", array("userid" => $client->getID()), $orderby, $sort, $limit);
 
-                                                                            while ($data = mysql_fetch_array($result)) {
+                                                                            while ($data = mysqli_fetch_array($result)) {
                                                                                 $id = $data['id'];
                                                                                 $date = $data['date'];
                                                                                 $subject = $data['subject'];
@@ -1741,8 +1741,8 @@ if ($action == "") {
                                                                                     $addfundsmaxbal = convertCurrency($CONFIG['AddFundsMaximumBalance'], 1, $clientsdetails['currency']);
                                                                                     $addfundsmax = convertCurrency($CONFIG['AddFundsMaximum'], 1, $clientsdetails['currency']);
                                                                                     $addfundsmin = convertCurrency($CONFIG['AddFundsMinimum'], 1, $clientsdetails['currency']);
-                                                                                    $result = select_query("tblorders", "COUNT(*)", array("userid" => $client->getID(), "status" => "Active"));
-                                                                                    $data = mysql_fetch_array($result);
+                                                                                    $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $client->getID(), "status" => "Active"));
+                                                                                    $data = mysqli_fetch_array($result);
                                                                                     $numactiveorders = $data[0];
 
                                                                                     if (!$CONFIG['AddFundsRequireOrder']) {
@@ -1790,8 +1790,8 @@ if ($action == "") {
                                                                                                     $invoiceid = createInvoices($client->getID());
                                                                                                     insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $amount, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
                                                                                                     $invoiceid = createInvoices($client->getID(), "", true);
-                                                                                                    $result = select_query("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
-                                                                                                    $data = mysql_fetch_array($result);
+                                                                                                    $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+                                                                                                    $data = mysqli_fetch_array($result);
                                                                                                     $gatewaytype = $data['value'];
 
                                                                                                     if ($gatewaytype == "CC" || $gatewaytype == "OfflineCC") {
@@ -1810,8 +1810,8 @@ if ($action == "") {
                                                                                                         }
                                                                                                     }
 
-                                                                                                    $result = select_query("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
-                                                                                                    $data = mysql_fetch_array($result);
+                                                                                                    $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
+                                                                                                    $data = mysqli_fetch_array($result);
                                                                                                     $id = $data['id'];
                                                                                                     $total = $data['total'];
                                                                                                     $paymentmethod = $data['paymentmethod'];
@@ -1850,9 +1850,9 @@ if ($action == "") {
 
                                                                                         if ($all) {
                                                                                             $invoiceids = array();
-                                                                                            $result = select_query("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)), "id", "DESC");
+                                                                                            $result = select_query_i("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)), "id", "DESC");
 
-                                                                                            while ($data = mysql_fetch_array($result)) {
+                                                                                            while ($data = mysqli_fetch_array($result)) {
                                                                                                 $invoiceids[] = $data['id'];
                                                                                             }
                                                                                         } else {
@@ -1865,9 +1865,9 @@ if ($action == "") {
                                                                                                 } else {
                                                                                                     $tmp_invoiceids = db_escape_numarray($invoiceids);
                                                                                                     $invoiceids = array();
-                                                                                                    $result = select_query("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "id" => array("sqltype" => "IN", "values" => $tmp_invoiceids)), "id", "DESC");
+                                                                                                    $result = select_query_i("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "id" => array("sqltype" => "IN", "values" => $tmp_invoiceids)), "id", "DESC");
 
-                                                                                                    while ($data = mysql_fetch_array($result)) {
+                                                                                                    while ($data = mysqli_fetch_array($result)) {
                                                                                                         $invoiceids[] = $data['id'];
                                                                                                     }
                                                                                                 }
@@ -1875,9 +1875,9 @@ if ($action == "") {
                                                                                         }
 
                                                                                         $xmasspays = array();
-                                                                                        $result = select_query("tblinvoiceitems", "invoiceid,relid", array("tblinvoiceitems.userid" => $client->getID(), "tblinvoiceitems.type" => "Invoice", "tblinvoices.status" => "Unpaid"), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+                                                                                        $result = select_query_i("tblinvoiceitems", "invoiceid,relid", array("tblinvoiceitems.userid" => $client->getID(), "tblinvoiceitems.type" => "Invoice", "tblinvoices.status" => "Unpaid"), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-                                                                                        while ($data = mysql_fetch_array($result)) {
+                                                                                        while ($data = mysqli_fetch_array($result)) {
                                                                                             $xmasspays[$data[0]][$data[1]] = 1;
                                                                                         }
 
@@ -1919,8 +1919,8 @@ if ($action == "") {
                                                                                         $subtotal = $credit = $tax = $tax2 = $total = $partialpayments = 0;
                                                                                         $invoiceitems = array();
                                                                                         foreach ($invoiceids as $invoiceid) {
-                                                                                            $result = select_query("tblinvoices", "", array("id" => (int) $invoiceid, "userid" => $client->getID()));
-                                                                                            $data = mysql_fetch_array($result);
+                                                                                            $result = select_query_i("tblinvoices", "", array("id" => (int) $invoiceid, "userid" => $client->getID()));
+                                                                                            $data = mysqli_fetch_array($result);
                                                                                             $invoiceid = $data['id'];
 
                                                                                             if ($invoiceid) {
@@ -1930,8 +1930,8 @@ if ($action == "") {
                                                                                                 $tax2 += $data['tax2'];
                                                                                                 $thistotal = $data['total'];
                                                                                                 $total += $thistotal;
-                                                                                                $result = select_query("tblaccounts", "SUM(amountin)", array("invoiceid" => (int) $invoiceid));
-                                                                                                $data = mysql_fetch_array($result);
+                                                                                                $result = select_query_i("tblaccounts", "SUM(amountin)", array("invoiceid" => (int) $invoiceid));
+                                                                                                $data = mysqli_fetch_array($result);
                                                                                                 $thispayments = $data[0];
                                                                                                 $partialpayments += $thispayments;
                                                                                                 $thistotal = $thistotal - $thispayments;
@@ -1940,9 +1940,9 @@ if ($action == "") {
                                                                                                     insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "Invoice", "relid" => (int) $invoiceid, "description" => $_LANG['invoicenumber'] . (int) $invoiceid, "amount" => $thistotal, "duedate" => "now()", "paymentmethod" => $paymentmethod));
                                                                                                 }
 
-                                                                                                $result = select_query("tblinvoiceitems", "", array("invoiceid" => (int) $invoiceid));
+                                                                                                $result = select_query_i("tblinvoiceitems", "", array("invoiceid" => (int) $invoiceid));
 
-                                                                                                while ($data = mysql_fetch_array($result)) {
+                                                                                                while ($data = mysqli_fetch_array($result)) {
                                                                                                     $invoiceitems[(int) $invoiceid][] = array("id" => $data['id'], "description" => nl2br($data['description']), "amount" => formatCurrency($data['amount']), "tax" => $data['tax']);
                                                                                                 }
 
@@ -1958,8 +1958,8 @@ if ($action == "") {
                                                                                             require "includes/processinvoices.php";
                                                                                             $invoiceid = createInvoices($client->getID(), true, true);
                                                                                             $invoiceid = (int) $invoiceid;
-                                                                                            $result = select_query("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
-                                                                                            $data = mysql_fetch_array($result);
+                                                                                            $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+                                                                                            $data = mysqli_fetch_array($result);
                                                                                             $gatewaytype = $data['value'];
 
                                                                                             if ($gatewaytype == "CC" || $gatewaytype == "OfflineCC") {
@@ -1978,8 +1978,8 @@ if ($action == "") {
                                                                                                 }
                                                                                             }
 
-                                                                                            $result = select_query("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
-                                                                                            $data = mysql_fetch_array($result);
+                                                                                            $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
+                                                                                            $data = mysqli_fetch_array($result);
                                                                                             $id = $data['id'];
                                                                                             $total = $data['total'];
                                                                                             $paymentmethod = $data['paymentmethod'];
@@ -2022,8 +2022,8 @@ if ($action == "") {
                                                                                         if ($action == "quotes") {
                                                                                             $ca->setTemplate("clientareaquotes");
                                                                                             require ROOTDIR . "/includes/quotefunctions.php";
-                                                                                            $result = select_query("tblquotes", "COUNT(*)", array("userid" => $client->getID()));
-                                                                                            $data = mysql_fetch_array($result);
+                                                                                            $result = select_query_i("tblquotes", "COUNT(*)", array("userid" => $client->getID()));
+                                                                                            $data = mysqli_fetch_array($result);
                                                                                             $numitems = $data[0];
                                                                                             list($orderby, $sort, $limit) = clientAreaTableInit("quote", "id", "DESC", $numitems);
 
@@ -2034,9 +2034,9 @@ if ($action == "") {
                                                                                             $smartyvalues['orderby'] = $orderby;
                                                                                             $smartyvalues['sort'] = strtolower($sort);
                                                                                             $quotes = array();
-                                                                                            $result = select_query("tblquotes", "", array("userid" => $client->getID(), "stage" => array("sqltype" => "NEQ", "value" => "Draft")), $orderby, $sort, $limit);
+                                                                                            $result = select_query_i("tblquotes", "", array("userid" => $client->getID(), "stage" => array("sqltype" => "NEQ", "value" => "Draft")), $orderby, $sort, $limit);
 
-                                                                                            while ($data = mysql_fetch_assoc($result)) {
+                                                                                            while ($data = mysqli_fetch_assoc($result)) {
                                                                                                 $data['datecreated'] = fromMySQLDate($data['datecreated'], 0, 1);
                                                                                                 $data['validuntil'] = fromMySQLDate($data['validuntil'], 0, 1);
                                                                                                 $data['lastmodified'] = fromMySQLDate($data['lastmodified'], 0, 1);
@@ -2058,9 +2058,9 @@ if ($action == "") {
                                                                                                 $domainids = substr($domainids, 0, 0 - 1);
                                                                                                 $queryfilter = "userid=" . (int) $client->getID() . (" AND id IN (" . $domainids . ")");
                                                                                                 $domains = $domainids = $errors = array();
-                                                                                                $result = select_query("tbldomains", "id,domain", $queryfilter, "domain", "ASC");
+                                                                                                $result = select_query_i("tbldomains", "id,domain", $queryfilter, "domain", "ASC");
 
-                                                                                                while ($data = mysql_fetch_assoc($result)) {
+                                                                                                while ($data = mysqli_fetch_assoc($result)) {
                                                                                                     $domainids[] = $data['id'];
                                                                                                     $domains[] = $data['domain'];
                                                                                                 }
@@ -2279,8 +2279,8 @@ if ($action == "") {
                                                                                                     $smartyvalues['domainid'] = $domainid;
                                                                                                     $smartyvalues['domain'] = $data['domain'];
                                                                                                     $domainparts = explode(".", $data['domain'], 2);
-                                                                                                    $result = select_query("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-                                                                                                    $pricingdata = mysql_fetch_array($result);
+                                                                                                    $result = select_query_i("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                                                                                                    $pricingdata = mysqli_fetch_array($result);
                                                                                                     $domaindnsmanagementprice = $pricingdata['msetupfee'];
                                                                                                     $domainemailforwardingprice = $pricingdata['qsetupfee'];
                                                                                                     $domainidprotectionprice = $pricingdata['ssetupfee'];

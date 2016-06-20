@@ -129,9 +129,9 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	echo "</td><td class=\"fieldarea\">";
 	echo "<s";
 	echo "elect name=\"admin\"><option value=\"\">Any";
-	$result2 = select_query("tbladmins", "id,username", "", "username", "ASC");
+	$result2 = select_query_i("tbladmins", "id,username", "", "username", "ASC");
 
-	while ($data2 = mysql_fetch_array($result2)) {
+	while ($data2 = mysqli_fetch_array($result2)) {
 		$admin_id = $data2['id'];
 		$admin_username = $data2['username'];
 		echo "<option value=\"" . $admin_id . "\"";
@@ -223,9 +223,9 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	echo "</td><td class=\"fieldarea\">";
 	echo "<s";
 	echo "elect name=\"admin\"><option value=\"\">None";
-	$result2 = select_query("tbladmins", "id,firstname,lastname", array("disabled" => "0"), "username", "ASC");
+	$result2 = select_query_i("tbladmins", "id,firstname,lastname", array("disabled" => "0"), "username", "ASC");
 
-	while ($data2 = mysql_fetch_array($result2)) {
+	while ($data2 = mysqli_fetch_array($result2)) {
 		$admin_id = $data2['id'];
 		$admin_name = $data2['firstname'] . " " . $data2['lastname'];
 		echo "<option value=\"" . $admin_id . "\">" . $admin_name . "</option>";
@@ -289,13 +289,13 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	}
 
 	$table = "tbltodolist";
-	$result = select_query($table, "COUNT(*)", $where, $orderby, $order);
-	$data = mysql_fetch_array($result);
+	$result = select_query_i($table, "COUNT(*)", $where, $orderby, $order);
+	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$AdminsArray = array();
-	$result = select_query($table, "", $where, $orderby, $order, $page * $limit . ("," . $limit));
+	$result = select_query_i($table, "", $where, $orderby, $order, $page * $limit . ("," . $limit));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		++$i;
 		$id = $data['id'];
 		$date = $data['date'];
@@ -324,8 +324,8 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 				$admin = $AdminsArray[$adminid];
 			}
 			else {
-				$result2 = select_query("tbladmins", "firstname,lastname", array("id" => $adminid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tbladmins", "firstname,lastname", array("id" => $adminid));
+				$data = mysqli_fetch_array($result2);
 				$admin = $data['firstname'] . " " . $data['lastname'];
 				$AdminsArray[$adminid] = $admin;
 			}
@@ -346,8 +346,8 @@ else {
 		$table = "tbltodolist";
 		$fields = "";
 		$where = array("id" => $id);
-		$result = select_query($table, $fields, $where);
-		$data = mysql_fetch_array($result);
+		$result = select_query_i($table, $fields, $where);
+		$data = mysqli_fetch_array($result);
 		$date = $data['date'];
 		$title = $data['title'];
 		$description = $data['description'];
@@ -388,9 +388,9 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"admin\"><option value=\"\">None";
-		$result2 = select_query("tbladmins", "id,firstname,lastname,disabled", "", "username", "ASC");
+		$result2 = select_query_i("tbladmins", "id,firstname,lastname,disabled", "", "username", "ASC");
 
-		while ($data2 = mysql_fetch_array($result2)) {
+		while ($data2 = mysqli_fetch_array($result2)) {
 			$admin_id = $data2['id'];
 			$admin_name = $data2['firstname'] . " " . $data2['lastname'];
 			$admin_disabled = $data2['disabled'];

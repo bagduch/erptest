@@ -27,8 +27,8 @@ else {
 	$where = array("domain" => $domain);
 }
 
-$result = select_query("tbldomains", "id,domain,registrar,registrationperiod", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbldomains", "id,domain,registrar,registrationperiod", $where);
+$data = mysqli_fetch_array($result);
 $domainid = $data[0];
 
 if (!$domainid) {

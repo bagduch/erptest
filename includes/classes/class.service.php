@@ -43,8 +43,8 @@ class RA_Service
 			$where["tblcustomerservices.userid"] = $this->userid;
 		}
 
-		$result = select_query("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$data = mysqli_fetch_array($result);
 
 		if ($data['id']) {
 			$data['pid'] = $data['packageid'];
@@ -79,8 +79,8 @@ class RA_Service
 			return array();
 		}
 
-		$result = select_query("tblservers", "", array("id" => $this->getData("server")));
-		$serverarray = mysql_fetch_assoc($result);
+		$result = select_query_i("tblservers", "", array("id" => $this->getData("server")));
+		$serverarray = mysqli_fetch_assoc($result);
 		return $serverarray;
 	}
 
@@ -166,9 +166,9 @@ class RA_Service
 
 	public function getPredefinedAddons() {
 		$this->addons_names = array();
-		$result = select_query("tbladdons", "", "");
+		$result = select_query_i("tbladdons", "", "");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$addon_id = $data['id'];
 			$addon_packages = $data['packages'];
 			$addon_packages = explode(",", $addon_packages);
@@ -220,9 +220,9 @@ class RA_Service
 
 		$predefinedaddons = $this->getPredefinedAddonsOnce();
 		$addons = array();
-		$result = select_query("tblserviceaddons", "", array("hostingid" => $this->getID()), "id", "DESC");
+		$result = select_query_i("tblserviceaddons", "", array("hostingid" => $this->getID()), "id", "DESC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$addon_id = $data['id'];
 			$addon_addonid = $data['addonid'];
 			$addon_regdate = $data['regdate'];
@@ -324,9 +324,9 @@ class RA_Service
 		}
 
 		$downloadsarray = array();
-		$result = select_query("tbldownloads", "", "id IN (" . db_build_in_array(db_escape_numarray($this->associated_download_ids)) . ")", "id", "DESC");
+		$result = select_query_i("tbldownloads", "", "id IN (" . db_build_in_array(db_escape_numarray($this->associated_download_ids)) . ")", "id", "DESC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$dlid = $data['id'];
 			$category = $data['category'];
 			$type = $data['type'];
@@ -499,9 +499,9 @@ class RA_Service
 		}
 
 		$customfields = array();
-		$result = full_query("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid='" . (int)$this->getData("id") . "' AND tblcustomfields.relid='" . (int)$this->getData("pid") . "'");
+		$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid='" . (int)$this->getData("id") . "' AND tblcustomfields.relid='" . (int)$this->getData("pid") . "'");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$customfieldname = $data[0];
 			$customfieldvalue = $data[1];
 
@@ -521,9 +521,9 @@ class RA_Service
 
 		$params['customfields'] = $customfields;
 		$configoptions = array();
-		$result = full_query("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid='" . (int)$this->getData("id") . "' AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid='" . (int)$this->getData("pid") . "'");
+		$result = full_query_i("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid='" . (int)$this->getData("id") . "' AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid='" . (int)$this->getData("pid") . "'");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$configoptionname = $data[0];
 			$configoptiontype = $data[1];
 			$configoptionvalue = $data[2];

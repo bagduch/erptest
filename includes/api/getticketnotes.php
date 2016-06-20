@@ -15,9 +15,9 @@ if (!defined("RA")) {
 }
 
 $notes = array();
-$result = select_query("tblticketnotes", "id,admin,date,message", array("ticketid" => $ticketid), "date", "ASC");
+$result = select_query_i("tblticketnotes", "id,admin,date,message", array("ticketid" => $ticketid), "date", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$notes[] = $data;
 }
 

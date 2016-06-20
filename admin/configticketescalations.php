@@ -103,9 +103,9 @@ if ($action == "") {
 
 ";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tblticketescalations", "", "", "name", "ASC");
+	$result = select_query_i("tblticketescalations", "", "", "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$name = $data['name'];
 		$tabledata[] = array($name, "<a href=\"" . $_SERVER['PHP_SELF'] . ("?action=manage&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"") . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
@@ -117,8 +117,8 @@ else {
 	if ($action == "manage") {
 		if ($id) {
 			$edittitle = "Edit Rule";
-			$result = select_query("tblticketescalations", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketescalations", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$name = $data['name'];
 			$departments = $data['departments'];
@@ -168,9 +168,9 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"departments[]\" size=\"4\" multiple=\"true\">";
-		$result = select_query("tblticketdepartments", "", "", "name", "ASC");
+		$result = select_query_i("tblticketdepartments", "", "", "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$departmentid = $data['id'];
 			$departmentname = $data['name'];
 			echo "<option value=\"" . $departmentid . "\"";
@@ -189,9 +189,9 @@ else {
 		echo "<s";
 		echo "elect name=\"statuses[]\" size=\"4\" multiple=\"true\">
 ";
-		$result = select_query("tblticketstatuses", "", "", "sortorder", "ASC");
+		$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
-		while ($data = mysql_fetch_assoc($result)) {
+		while ($data = mysqli_fetch_assoc($result)) {
 			$title = $data['title'];
 			echo "<option";
 
@@ -255,9 +255,9 @@ else {
 		echo "elect name=\"newdepartment\"><option value=\"\">- ";
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>";
-		$result = select_query("tblticketdepartments", "", "", "name", "ASC");
+		$result = select_query_i("tblticketdepartments", "", "", "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$departmentid = $data['id'];
 			$departmentname = $data['name'];
 			echo "<option value=\"" . $departmentid . "\"";
@@ -278,9 +278,9 @@ else {
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>
 ";
-		$result = select_query("tblticketstatuses", "", "", "sortorder", "ASC");
+		$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
-		while ($data = mysql_fetch_assoc($result)) {
+		while ($data = mysqli_fetch_assoc($result)) {
 			$title = $data['title'];
 			echo "<option";
 
@@ -334,9 +334,9 @@ else {
 		echo "elect name=\"flagto\"><option value=\"\">- ";
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>";
-		$result = select_query("tbladmins", "", "", "username", "ASC");
+		$result = select_query_i("tbladmins", "", "", "username", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$flag_adminid = $data['id'];
 			$flag_adminusername = $data['username'];
 			echo "<option value=\"" . $flag_adminid . "\"";
@@ -365,9 +365,9 @@ else {
 		echo $aInt->lang("supportticketescalations", "alsonotify");
 		echo ":</div>
 ";
-		$result = select_query("tbladmins", "", "", "username", "ASC");
+		$result = select_query_i("tbladmins", "", "", "username", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			echo "<label><input type=\"checkbox\" name=\"notify[]\" value=\"" . $data['id'] . "\"";
 
 			if (in_array($data['id'], $notify)) {

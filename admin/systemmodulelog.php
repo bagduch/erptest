@@ -49,9 +49,9 @@ if ($reset) {
 if (!$id) {
 	$aInt->sortableTableInit("id");
 	$numrows = get_query_val("tblmodulelog", "COUNT(*)", "", "id", "DESC");
-	$result = select_query("tblmodulelog", "", "", "id", "DESC", $page * $limit . "," . $limit);
+	$result = select_query_i("tblmodulelog", "", "", "id", "DESC", $page * $limit . "," . $limit);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$date = $data['date'];
 		$module = $data['module'];
@@ -84,8 +84,8 @@ if (!$id) {
 " . $aInt->sortableTable(array(array("", $aInt->lang("fields", "date"), 120), array("", $aInt->lang("fields", "module"), 120), array("", $aInt->lang("fields", "action"), 150), $aInt->lang("fields", "request"), $aInt->lang("fields", "response")), $tabledata);
 }
 else {
-	$result = select_query("tblmodulelog", "", array("id" => $id));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblmodulelog", "", array("id" => $id));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$date = $data['date'];
 	$module = $data['module'];

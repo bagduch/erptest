@@ -20,8 +20,8 @@ $aInt->requiredFiles(array("clientfunctions", "customfieldfunctions", "gatewayfu
 
 if ($action == "add") {
 	check_token("RA.admin.default");
-	$result = select_query("tblclients", "COUNT(*)", array("email" => $email));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
+	$data = mysqli_fetch_array($result);
 
 	if ($data[0]) {
 		infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
@@ -40,9 +40,9 @@ if ($action == "add") {
 					infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
 				}
 				else {
-					$query = "subaccount=1 AND email='" . mysql_real_escape_string($email) . "'";
-					$result = select_query("tblcontacts", "COUNT(*)", $query);
-					$data = mysql_fetch_array($result);
+					$query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
+					$result = select_query_i("tblcontacts", "COUNT(*)", $query);
+					$data = mysqli_fetch_array($result);
 
 					if ($data[0]) {
 						infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
@@ -190,9 +190,9 @@ echo "<s";
 echo "elect name=\"billingcid\" tabindex=\"21\"><option value=\"\">";
 echo $aInt->lang("global", "default");
 echo "</option>";
-$result = select_query("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	echo "<option value=\"" . $data['id'] . "\"";
 
 	if ($data['id'] == $billingcid) {
@@ -283,9 +283,9 @@ echo $aInt->lang("currencies", "currency");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"currency\" tabindex=\"24\">";
-$result = select_query("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	echo "<option value=\"" . $data['id'] . "\"";
 
 	if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
@@ -308,9 +308,9 @@ echo "elect name=\"groupid\" tabindex=\"26\"><option value=\"0\">";
 echo $aInt->lang("global", "none");
 echo "</option>
 ";
-$result = select_query("tblclientgroups", "", "", "groupname", "ASC");
+$result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$group_id = $data['id'];
 	$group_name = $data['groupname'];
 	$group_colour = $data['groupcolour'];

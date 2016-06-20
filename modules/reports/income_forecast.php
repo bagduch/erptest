@@ -14,8 +14,8 @@ $reportdata["tableheadings"] = array("Month","Monthly","Quarterly","Semi-Annual"
 
 $totals = array();
 
-$result = select_query("tblcustomerservices","",array("servicestatus"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tblcustomerservices.userid");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tblcustomerservices","",array("servicestatus"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tblcustomerservices.userid");
+while ($data = mysqli_fetch_array($result)) {
     $recurringamount = $data["amount"];
     $nextduedate = $data["nextduedate"];
     $billingcycle = $data["billingcycle"];
@@ -42,8 +42,8 @@ while ($data = mysql_fetch_array($result)) {
     }
 }
 
-$result = select_query("tbldomains","",array("tbldomains.status"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tbldomains.userid");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tbldomains","",array("tbldomains.status"=>"Active","currency"=>(int)$currencyid),"","","","tblclients ON tblclients.id=tbldomains.userid");
+while ($data = mysqli_fetch_array($result)) {
     $recurringamount = $data["recurringamount"];
     $nextduedate = $data["nextduedate"];
     $regperiod = $data["registrationperiod"];

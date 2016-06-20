@@ -20,8 +20,8 @@ if (!function_exists("addInvoicePayment")) {
 }
 
 $query = "SELECT * FROM tblinvoices WHERE id='" . (int)$_POST['invoiceid'] . "'";
-$result = full_query($query);
-$data = mysql_fetch_array($result);
+$result = full_query_i($query);
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Invoice ID Not Found");

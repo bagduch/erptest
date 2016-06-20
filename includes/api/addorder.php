@@ -59,8 +59,8 @@ if ($promocode && !$promooverride) {
 	define("CLIENTAREA", true);
 }
 
-$result = select_query("tblclients", "id", array("id" => $_POST['clientid']));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "id", array("id" => $_POST['clientid']));
+$data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
 	$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -68,9 +68,9 @@ if (!$data['id']) {
 }
 
 $gatewaysarray = array();
-$result = select_query("tblpaymentgateways", "gateway", array("setting" => "name"));
+$result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "name"));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$gatewaysarray[] = $data['gateway'];
 }
 
@@ -201,8 +201,8 @@ if ($addonids) {
 
 if ($domainrenewals) {
 	foreach ($domainrenewals as $domain => $regperiod) {
-		$result = select_query("tbldomains", "id", array("userid" => $_SESSION['uid'], "domain" => $domain));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldomains", "id", array("userid" => $_SESSION['uid'], "domain" => $domain));
+		$data = mysqli_fetch_array($result);
 		$domainid = $data[0];
 
 		if ($domainid) {

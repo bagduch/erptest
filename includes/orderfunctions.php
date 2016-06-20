@@ -17,8 +17,8 @@ function getOrderStatusColour($status) {
 
 function getProductInfo($pid) {
 
-    $result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservices.type,tblservices.name AS prodname,tblservicegroups.name AS groupname,tblservices.description", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.type,tblservices.name AS prodname,tblservicegroups.name AS groupname,tblservices.description", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+    $data = mysqli_fetch_array($result);
     $productinfo = array();
     $productinfo['pid'] = $data['id'];
     $productinfo['gid'] = $data['gid'];
@@ -43,13 +43,13 @@ function getPricingInfo($pid, $inclconfigops = false, $upgrade = false) {
     global $_LANG;
     global $currency;
 
-    $result = select_query("tblservices", "", array("id" => $pid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblservices", "", array("id" => $pid));
+    $data = mysqli_fetch_array($result);
     $paytype = $data['paytype'];
     $freedescription = $data['freedescription'];
     $freedescriptionpaymentterms = $data['freedescriptionpaymentterms'];
-    $result = select_query("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $data = mysqli_fetch_array($result);
     $msetupfee = $data['msetupfee'];
     $qsetupfee = $data['qsetupfee'];
     $ssetupfee = $data['ssetupfee'];
@@ -455,8 +455,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $promotioncode = (array_key_exists("promo", $_SESSION['cart']) ? $_SESSION['cart']['promo'] : "");
 
     if ($promotioncode) {
-        $result = select_query("tblpromotions", "", array("code" => $promotioncode));
-        $promo_data = mysql_fetch_array($result);
+        $result = select_query_i("tblpromotions", "", array("code" => $promotioncode));
+        $promo_data = mysqli_fetch_array($result);
     }
 
 
@@ -491,8 +491,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
 
     if ($CONFIG['TaxInclusiveDeduct'] && ((!$taxrate && !$taxrate2) || $clientsdetails['taxexempt'])) {
-        $result = select_query("tbltax", "", "");
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tbltax", "", "");
+        $data = mysqli_fetch_array($result);
         $excltaxrate = 1 + $data['taxrate'] / 100;
     } else {
         $CONFIG['TaxInclusiveDeduct'] = 0;
@@ -503,8 +503,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
     if (array_key_exists("products", $_SESSION['cart']) && is_array($_SESSION['cart']['products'])) {
         foreach ($_SESSION['cart']['products'] as $key => $productdata) {
-            $result = select_query("tblservices", "tblservices.id,tblservices.gid,tblservicegroups.name AS groupname,tblservices.name,tblservices.paytype,tblservices.proratabilling,tblservices.proratadate,tblservices.proratachargenextmonth,tblservices.tax,tblservices.servertype,tblservices.servergroup", array("tblservices.id" => $productdata['pid']), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservicegroups.name AS groupname,tblservices.name,tblservices.paytype,tblservices.proratabilling,tblservices.proratadate,tblservices.proratachargenextmonth,tblservices.tax,tblservices.servertype,tblservices.servergroup", array("tblservices.id" => $productdata['pid']), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+            $data = mysqli_fetch_array($result);
             $pid = $data['id'];
             $gid = $data['gid'];
             $groupname = $data['groupname'];
@@ -871,8 +871,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
             if ($addons) {
                 foreach ($addons as $addonid) {
-                    $result = select_query("tbladdons", "name,description,billingcycle,tax", array("id" => $addonid));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tbladdons", "name,description,billingcycle,tax", array("id" => $addonid));
+                    $data = mysqli_fetch_array($result);
                     $addon_name = $data['name'];
                     $addon_description = $data['description'];
                     $addon_billingcycle = $data['billingcycle'];
@@ -882,8 +882,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         $addon_tax = "";
                     }
 
-                    $result = select_query("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $data = mysqli_fetch_array($result);
                     $addon_setupfee = $data['msetupfee'];
                     $addon_recurring = $data['monthly'];
                     $hookret = run_hook("OrderAddonPricingOverride", array("key" => $key, "pid" => $pid, "addonid" => $addonid, "proddata" => $productdata));
@@ -1066,8 +1066,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         foreach ($_SESSION['cart']['addons'] as $key => $addon) {
             $addonid = $addon['id'];
             $serviceid = $addon['productid'];
-            $result = select_query("tbladdons", "name,description,billingcycle,tax", array("id" => $addonid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tbladdons", "name,description,billingcycle,tax", array("id" => $addonid));
+            $data = mysqli_fetch_array($result);
             $addon_name = $data['name'];
             $addon_description = $data['description'];
             $addon_billingcycle = $data['billingcycle'];
@@ -1077,8 +1077,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $addon_tax = "";
             }
 
-            $result = select_query("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+            $data = mysqli_fetch_array($result);
             $addon_setupfee = $data['msetupfee'];
             $addon_recurring = $data['monthly'];
             $hookret = run_hook("OrderAddonPricingOverride", array("key" => $key, "addonid" => $addonid, "serviceid" => $serviceid));
@@ -1162,8 +1162,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 }
             }
 
-            $result = select_query("tblcustomerservices", "tblservices.name,tblcustomerservices.description", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblcustomerservices", "tblservices.name,tblcustomerservices.description", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+            $data = mysqli_fetch_array($result);
             $productname = $data['name'];
             $descriptionname = $data['description'];
             $addonsarray[] = array("name" => $addon_name, "productname" => $productname, "descriptionname" => $descriptionname, "pricingtext" => $pricing_text);
@@ -1176,8 +1176,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $totaldescriptionprice = 0;
 
     if (array_key_exists("descriptions", $_SESSION['cart']) && is_array($_SESSION['cart']['descriptions'])) {
-        $result = select_query("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+        $data = mysqli_fetch_array($result);
         $descriptiondnsmanagementprice = $data['msetupfee'];
         $descriptionemailforwardingprice = $data['qsetupfee'];
         $descriptionidprotectionprice = $data['ssetupfee'];
@@ -1375,14 +1375,14 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $orderrenewals = "";
 
     if (array_key_exists("renewals", $_SESSION['cart']) && is_array($_SESSION['cart']['renewals'])) {
-        $result = select_query("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+        $data = mysqli_fetch_array($result);
         $descriptiondnsmanagementprice = $data['msetupfee'];
         $descriptionemailforwardingprice = $data['qsetupfee'];
         $descriptionidprotectionprice = $data['ssetupfee'];
         foreach ($_SESSION['cart']['renewals'] as $descriptionid => $regperiod) {
-            $result = select_query("tbldescriptions", "", array("id" => $descriptionid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tbldescriptions", "", array("id" => $descriptionid));
+            $data = mysqli_fetch_array($result);
             $descriptionname = $data['description'];
             $expirydate = $data['expirydate'];
 
@@ -1470,13 +1470,13 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $tax = ($CONFIG['TaxDomains'] ? "1" : "0");
                 update_query("tbldescriptions", array("registrationperiod" => $regperiod, "recurringamount" => $description_renew_price_db), array("id" => $descriptionid));
                 insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Domain", "relid" => $descriptionid, "description" => $descriptiondesc, "amount" => $description_renew_price_db, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
-                $result = select_query("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $descriptionid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+                $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $descriptionid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-                while ($data = mysql_fetch_array($result)) {
+                while ($data = mysqli_fetch_array($result)) {
                     $itemid = $data['id'];
                     $invoiceid = $data['invoiceid'];
-                    $result2 = select_query("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
-                    $data = mysql_fetch_array($result2);
+                    $result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
+                    $data = mysqli_fetch_array($result2);
                     $itemcount = $data[0];
 
                     if ($itemcount == 1) {
@@ -1609,8 +1609,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
         if ($invoiceid) {
             update_query("tblorders", array("invoiceid" => $invoiceid), array("id" => $orderid));
-            $result = select_query("tblinvoices", "status", array("id" => $invoiceid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+            $data = mysqli_fetch_array($result);
             $status = $data['status'];
 
             if ($status == "Paid") {
@@ -1621,8 +1621,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
         if (!$_SESSION['adminid']) {
             if (isset($_COOKIE['RAAffiliateID'])) {
-                $result = select_query("tblaffiliates", "clientid", array("id" => (int) $_COOKIE['RAAffiliateID']));
-                $data = mysql_fetch_array($result);
+                $result = select_query_i("tblaffiliates", "clientid", array("id" => (int) $_COOKIE['RAAffiliateID']));
+                $data = mysqli_fetch_array($result);
                 $clientid = $data['clientid'];
 
                 if ($clientid && $_SESSION['uid'] != $clientid) {
@@ -1638,8 +1638,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             }
         }
 
-        $result = select_query("tblclients", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $userid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblclients", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $userid));
+        $data = mysqli_fetch_array($result);
         list($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $ip, $host) = $data;
         $customfields = getCustomFields("client", "", $userid, "", true);
         $clientcustomfields = "";
@@ -1647,8 +1647,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             $clientcustomfields .= "" . $customfield['name'] . ": " . $customfield['value'] . "<br />\r\n";
         }
 
-        $result = select_query("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
+        $data = mysqli_fetch_array($result);
         $nicegatewayname = $data['value'];
         sendAdminMessage("New Order Notification", array("order_id" => $orderid, "order_number" => $order_number, "order_date" => fromMySQLDate(date("Y-m-d H:i:s"), true), "invoice_id" => $invoiceid, "order_payment_method" => $nicegatewayname, "order_total" => formatCurrency($cart_total), "client_id" => $userid, "client_first_name" => $firstname, "client_last_name" => $lastname, "client_email" => $email, "client_company_name" => $companyname, "client_address1" => $address1, "client_address2" => $address2, "client_city" => $city, "client_state" => $state, "client_postcode" => $postcode, "client_country" => $country, "client_phonenumber" => $phonenumber, "client_customfields" => $clientcustomfields, "order_items" => $adminemailitems, "order_notes" => nl2br($ordernotes), "client_ip" => $ip, "client_hostname" => $host), "account");
 
@@ -1697,8 +1697,8 @@ function SetPromoCode($promotioncode) {
     global $_LANG;
 
     $_SESSION['cart']['promo'] = "";
-    $result = select_query("tblpromotions", "", array("code" => $promotioncode));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblpromotions", "", array("code" => $promotioncode));
+    $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $maxuses = $data['maxuses'];
     $uses = $data['uses'];
@@ -1743,8 +1743,8 @@ function SetPromoCode($promotioncode) {
 
 
     if ($newsignups && $_SESSION['uid']) {
-        $result = select_query("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
+        $data = mysqli_fetch_array($result);
         $previousorders = $data[0];
 
         if (0 < $previousorders) {
@@ -1756,8 +1756,8 @@ function SetPromoCode($promotioncode) {
 
     if ($existingclient) {
         if ($_SESSION['uid']) {
-            $result = select_query("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
-            $orderCount = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $orderCount = mysqli_fetch_array($result);
 
             if ($orderCount[0] == 0) {
                 $promoerrormessage = $_LANG['promoexistingclient'];
@@ -1772,8 +1772,8 @@ function SetPromoCode($promotioncode) {
 
     if ($onceperclient) {
         if ($_SESSION['uid']) {
-            $result = select_query("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
-            $orderCount = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
+            $orderCount = mysqli_fetch_array($result);
 
             if (0 < $orderCount[0]) {
                 $promoerrormessage = $_LANG['promoonceperclient'];
@@ -1803,8 +1803,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
         $newsignups = $promo_data['newsignups'];
 
         if ($newsignups && $_SESSION['uid']) {
-            $result = select_query("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
+            $data = mysqli_fetch_array($result);
             $previousorders = $data[0];
 
             if (2 <= $previousorders) {
@@ -1816,8 +1816,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
         $onceperclient = $promo_data['onceperclient'];
 
         if ($existingclient) {
-            $result = select_query("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
-            $orderCount = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $orderCount = mysqli_fetch_array($result);
 
             if ($orderCount[0] < 1) {
                 return false;
@@ -1826,8 +1826,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
         if ($onceperclient) {
-            $result = select_query("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
-            $orderCount = mysql_fetch_array($result);
+            $result = select_query_i("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
+            $orderCount = mysqli_fetch_array($result);
 
             if (0 < $orderCount[0]) {
                 return false;
@@ -1959,8 +1959,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if (count($requiredproducts)) {
-                    $result = select_query("tblcustomerservices", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND packageid IN (" . db_build_in_array($requiredproducts) . ") AND servicestatus='Active'");
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblcustomerservices", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND packageid IN (" . db_build_in_array($requiredproducts) . ") AND servicestatus='Active'");
+                    $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
                         $hasrequired = true;
@@ -1969,8 +1969,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if (count($requiredaddons)) {
-                    $result = select_query("tblserviceaddons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblserviceaddons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+                    $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
                         $hasrequired = true;
@@ -1979,8 +1979,8 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if ($requireddescriptions) {
-                    $result = select_query("tbldescriptions", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND status='Active' AND (" . substr($requireddescriptions, 0, 0 - 4) . ")");
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tbldescriptions", "COUNT(*)", "userid='" . (int) $_SESSION['uid'] . "' AND status='Active' AND (" . substr($requireddescriptions, 0, 0 - 4) . ")");
+                    $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
                         $hasrequired = true;
@@ -2073,9 +2073,9 @@ function acceptOrder($orderid, $vars = array()) {
 
     $errors = array();
     run_hook("AcceptOrder", array("orderid" => $orderid));
-    $result = select_query("tblcustomerservices", "", array("orderid" => $orderid, "servicestatus" => "Pending"));
+    $result = select_query_i("tblcustomerservices", "", array("orderid" => $orderid, "servicestatus" => "Pending"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $productid = $data['id'];
         $updateqry = array();
 
@@ -2113,8 +2113,8 @@ function acceptOrder($orderid, $vars = array()) {
             update_query("tblcustomerservices", $updateqry, array("id" => $productid));
         }
 
-        $result2 = select_query("tblcustomerservices", "tblservices.servertype,tblservices.autosetup", array("tblcustomerservices.id" => $productid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-        $data = mysql_fetch_array($result2);
+        $result2 = select_query_i("tblcustomerservices", "tblservices.servertype,tblservices.autosetup", array("tblcustomerservices.id" => $productid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $data = mysqli_fetch_array($result2);
         $module = $data['servertype'];
         $autosetup = $data['autosetup'];
         $autosetup = ($autosetup ? true : false);
@@ -2163,16 +2163,16 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    $result = select_query("tblserviceaddons", "", array("orderid" => $orderid, "status" => "Pending"));
+    $result = select_query_i("tblserviceaddons", "", array("orderid" => $orderid, "status" => "Pending"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $aid = $data['id'];
         $hostingid = $data['hostingid'];
         $addonid = $data['addonid'];
 
         if ($addonid) {
-            $result2 = select_query("tbladdons", "", array("id" => $addonid));
-            $data = mysql_fetch_array($result2);
+            $result2 = select_query_i("tbladdons", "", array("id" => $addonid));
+            $data = mysqli_fetch_array($result2);
             $welcomeemail = $data['welcomeemail'];
             $sendwelcome = ($welcomeemail ? true : false);
 
@@ -2187,16 +2187,16 @@ function acceptOrder($orderid, $vars = array()) {
 
 
             if ($welcomeemail && $sendwelcome) {
-                $result3 = select_query("tblemailtemplates", "name", array("id" => $welcomeemail));
-                $data = mysql_fetch_array($result3);
+                $result3 = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+                $data = mysqli_fetch_array($result3);
                 $welcomeemailname = $data['name'];
                 sendMessage($welcomeemailname, $hostingid);
             }
 
 
             if (!$userid) {
-                $result3 = select_query("tblorders", "userid", array("id" => $orderid));
-                $data = mysql_fetch_array($result3);
+                $result3 = select_query_i("tblorders", "userid", array("id" => $orderid));
+                $data = mysqli_fetch_array($result3);
                 $userid = $data['userid'];
             }
 
@@ -2205,9 +2205,9 @@ function acceptOrder($orderid, $vars = array()) {
     }
 
     update_query("tblserviceaddons", array("status" => "Active"), array("orderid" => $orderid, "status" => "Pending"));
-    $result = select_query("tbldescriptions", "", array("orderid" => $orderid, "status" => "Pending"));
+    $result = select_query_i("tbldescriptions", "", array("orderid" => $orderid, "status" => "Pending"));
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $descriptionid = $data['id'];
         $regtype = $data['type'];
         $description = $data['description'];
@@ -2311,8 +2311,8 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    $result = select_query("tblorders", "userid,promovalue", array("id" => $orderid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblorders", "userid,promovalue", array("id" => $orderid));
+    $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $promovalue = $data['promovalue'];
 
@@ -2378,9 +2378,9 @@ function changeOrderStatus($orderid, $status) {
     update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
     if ($status == "Cancelled" || $status == "Fraud") {
-        $result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $productid = $data['id'];
             $prodstatus = $data['servicestatus'];
             $module = $data['servertype'];
@@ -2420,9 +2420,9 @@ function changeOrderStatus($orderid, $status) {
     update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
 
     if ($status == "Pending") {
-        $result = select_query("tbldescriptions", "id,type", array("orderid" => $orderid));
+        $result = select_query_i("tbldescriptions", "id,type", array("orderid" => $orderid));
 
-        while ($data = mysql_fetch_assoc($result)) {
+        while ($data = mysqli_fetch_assoc($result)) {
             if ($data['type'] == "Transfer") {
                 $status = "Pending Transfer";
             } else {
@@ -2435,8 +2435,8 @@ function changeOrderStatus($orderid, $status) {
         update_query("tbldescriptions", array("status" => $status), array("orderid" => $orderid));
     }
 
-    $result = select_query("tblorders", "userid,invoiceid", array("id" => $orderid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+    $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoiceid = $data['invoiceid'];
 
@@ -2451,19 +2451,19 @@ function changeOrderStatus($orderid, $status) {
 }
 
 function cancelRefundOrder($orderid) {
-    $result = select_query("tblorders", "invoiceid", array("id" => $orderid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblorders", "invoiceid", array("id" => $orderid));
+    $data = mysqli_fetch_array($result);
     $invoiceid = $data['invoiceid'];
     $orderid = (int) $orderid;
 
     if ($invoiceid) {
-        $result = select_query("tblinvoices", "status", array("id" => $invoiceid));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+        $data = mysqli_fetch_array($result);
         $invoicestatus = $data['status'];
 
         if ($invoicestatus == "Paid") {
-            $result = select_query("tblaccounts", "id", array("invoiceid" => $invoiceid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblaccounts", "id", array("invoiceid" => $invoiceid));
+            $data = mysqli_fetch_array($result);
             $transid = $data['id'];
             $gatewayresult = refundInvoicePayment($transid, "", true);
 
@@ -2494,8 +2494,8 @@ function deleteOrder($orderid) {
 
     $orderid = (int) $orderid;
     run_hook("DeleteOrder", array("orderid" => $orderid));
-    $result = select_query("tblorders", "userid,invoiceid", array("id" => $orderid));
-    $data = mysql_fetch_array($result);
+    $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+    $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoiceid = $data['invoiceid'];
     delete_query("tblcustomerservicesconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
@@ -2519,9 +2519,9 @@ function getAddons($pid, $addons) {
     }
 
     $addonsarray = array();
-    $result = select_query("tbladdons", "", array("showorder" => "on"), "weight` ASC,`name", "ASC");
+    $result = select_query_i("tbladdons", "", array("showorder" => "on"), "weight` ASC,`name", "ASC");
 
-    while ($data = mysql_fetch_array($result)) {
+    while ($data = mysqli_fetch_array($result)) {
         $addon_id = $data['id'];
         $addon_packages = $data['packages'];
         $addon_name = $data['name'];
@@ -2530,8 +2530,8 @@ function getAddons($pid, $addons) {
         $addon_setupfee = $data['setupfee'];
         $addon_billingcycle = $data['billingcycle'];
         $addon_free = $data['free'];
-        $result2 = select_query("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addon_id));
-        $data = mysql_fetch_array($result2);
+        $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addon_id));
+        $data = mysqli_fetch_array($result2);
         $addon_setupfee = $data['msetupfee'];
         $addon_recurring = $data['monthly'];
         $addon_packages = explode(",", $addon_packages);
@@ -2570,11 +2570,11 @@ function getAvailableOrderPaymentGateways() {
 
     if ($_SESSION['cart']['products']) {
         foreach ($_SESSION['cart']['products'] as $values) {
-            $result = select_query("tblservices", "gid", array("id" => $values['pid']));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblservices", "gid", array("id" => $values['pid']));
+            $data = mysqli_fetch_array($result);
             $gid = $data['gid'];
-            $result = select_query("tblservicegroups", "disabledgateways", array("id" => $gid));
-            $data = mysql_fetch_array($result);
+            $result = select_query_i("tblservicegroups", "disabledgateways", array("id" => $gid));
+            $data = mysqli_fetch_array($result);
             $disabledgateways .= $data['disabledgateways'];
         }
     }

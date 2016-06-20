@@ -17,12 +17,12 @@ $aInt->title = $aInt->lang("system", "emailmessagelog");
 $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
 $aInt->sortableTableInit("date");
-$result = select_query("tblemails,tblclients", "COUNT(tblemails.id)", "tblemails.userid=tblclients.id");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblemails,tblclients", "COUNT(tblemails.id)", "tblemails.userid=tblclients.id");
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query("tblemails,tblclients", "tblemails.id,tblemails.date,tblemails.subject,tblemails.userid,tblclients.firstname,tblclients.lastname", "tblemails.userid=tblclients.id", "tblemails`.`id", "DESC", $page * $limit . ("," . $limit));
+$result = select_query_i("tblemails,tblclients", "tblemails.id,tblemails.date,tblemails.subject,tblemails.userid,tblclients.firstname,tblclients.lastname", "tblemails.userid=tblclients.id", "tblemails`.`id", "DESC", $page * $limit . ("," . $limit));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$date = $data['date'];
 	$subject = $data['subject'];

@@ -14,8 +14,8 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query("tblinvoices", "", array("id" => $invoiceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblinvoices", "", array("id" => $invoiceid));
+$data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 
 if (!$invoiceid) {
@@ -38,24 +38,24 @@ $taxrate2 = $data['taxrate2'];
 $status = $data['status'];
 $paymentmethod = $data['paymentmethod'];
 $notes = $data['notes'];
-$result = select_query("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+$data = mysqli_fetch_array($result);
 $amountpaid = $data[0];
 $balance = $total - $amountpaid;
 $balance = format_as_currency($balance);
 $gatewaytype = get_query_val("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
 $ccgateway = (($gatewaytype == "CC" || $gatewaytype == "OfflineCC") ? true : false);
 $apiresults = array("result" => "success", "invoiceid" => $invoiceid, "invoicenum" => $invoicenum, "userid" => $userid, "date" => $date, "duedate" => $duedate, "datepaid" => $datepaid, "subtotal" => $subtotal, "credit" => $credit, "tax" => $tax, "tax2" => $tax2, "total" => $total, "balance" => $balance, "taxrate" => $taxrate, "taxrate2" => $taxrate2, "status" => $status, "paymentmethod" => $paymentmethod, "notes" => $notes, "ccgateway" => $ccgateway);
-$result = select_query("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
+$result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$apiresults['items']['item'][] = array("id" => $data['id'], "type" => $data['type'], "relid" => $data['relid'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $data['taxed']);
 }
 
 $apiresults['transactions'] = "";
-$result = select_query("tblaccounts", "", array("invoiceid" => $invoiceid));
+$result = select_query_i("tblaccounts", "", array("invoiceid" => $invoiceid));
 
-while ($data = mysql_fetch_assoc($result)) {
+while ($data = mysqli_fetch_assoc($result)) {
 	$apiresults['transactions']['transaction'][] = $data;
 }
 

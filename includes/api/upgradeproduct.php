@@ -29,8 +29,8 @@ if (!function_exists("getCartConfigOptions")) {
 	require ROOTDIR . "/includes/configoptionsfunctions.php";
 }
 
-$result = select_query("tblcustomerservices", "id,userid", array("id" => $serviceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcustomerservices", "id,userid", array("id" => $serviceid));
+$data = mysqli_fetch_array($result);
 $serviceid = $data['id'];
 $clientid = $data['userid'];
 
@@ -47,9 +47,9 @@ $checkout = ($calconly ? false : true);
 
 if ($checkout) {
 	$gatewaysarray = array();
-	$result = select_query("tblpaymentgateways", "gateway", array("setting" => "name"));
+	$result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "name"));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$gatewaysarray[] = $data['gateway'];
 	}
 
@@ -69,8 +69,8 @@ if ($type == "product") {
 else {
 	if ($type == "configoptions") {
 		$subtotal = 0;
-		$result = select_query("tblcustomerservices", "packageid,billingcycle", array("id" => $serviceid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "packageid,billingcycle", array("id" => $serviceid));
+		$data = mysqli_fetch_array($result);
 		$pid = $data[0];
 		$billingcycle = $data[1];
 		$configoption = getCartConfigOptions($pid, "", $billingcycle, $serviceid);

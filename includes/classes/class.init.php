@@ -46,7 +46,7 @@ class RA_Init {
     private $customadminpath = "";
     public $remote_ip = "";
     private $clientlang = "";
-    private $protected_variables = array(0 => "RA", 1 => "smtp_debug", 2 => "attachments_dir", 3 => "downloads_dir", 4 => "customadminpath", 5 => "mysql_charset", 6 => "overidephptimelimit", 7 => "orderform", 8 => "smartyvalues", 9 => "usingsupportmodule", 10 => "copyrighttext", 11 => "adminorder", 12 => "revokelocallicense", 13 => "allow_idn_domains", 14 => "templatefile", 15 => "_LANG", 16 => "_ADMINLANG", 17 => "display_errors", 18 => "debug_output", 19 => "mysql_errors", 20 => "moduleparams", 21 => "errormessage");
+    private $protected_variables = array(0 => "RA", 1 => "smtp_debug", 2 => "attachments_dir", 3 => "downloads_dir", 4 => "customadminpath", 5 => "mysqli_charset", 6 => "overidephptimelimit", 7 => "orderform", 8 => "smartyvalues", 9 => "usingsupportmodule", 10 => "copyrighttext", 11 => "adminorder", 12 => "revokelocallicense", 13 => "allow_idn_domains", 14 => "templatefile", 15 => "_LANG", 16 => "_ADMINLANG", 17 => "display_errors", 18 => "debug_output", 19 => "mysqli_errors", 20 => "moduleparams", 21 => "errormessage");
     private $danger_vars = array(0 => "_GET", 1 => "_POST", 2 => "_REQUEST", 3 => "_SERVER", 4 => "_COOKIE", 5 => "_FILES", 6 => "_ENV", 7 => "GLOBALS");
 
     /**
@@ -197,7 +197,7 @@ class RA_Init {
                 continue;
             }
 
-            $data[$k] = mysql_real_escape_string(substr($v, 0, 70));
+            $data[$k] = mysqli_real_escape_string(substr($v, 0, 70));
         }
 
         return $data;
@@ -352,7 +352,7 @@ class RA_Init {
         global $pleskpacketversion;
         global $smtp_debug;
 
-        $license = $db_host = $db_name = $db_username = $db_password = $mysql_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_admin_ticket_page_counts = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
+        $license = $db_host = $db_name = $db_username = $db_password = $mysqli_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_admin_ticket_page_counts = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
 
         if (file_exists(ROOTDIR . "/configuration.php")) {
             ob_start();
@@ -374,8 +374,8 @@ class RA_Init {
         $this->db_name = $db_name;
         $this->cc_hash = $cc_encryption_hash;
 
-        if ($mysql_charset) {
-            $this->db_sqlcharset = $mysql_charset;
+        if ($mysqli_charset) {
+            $this->db_sqlcharset = $mysqli_charset;
         }
 
 
@@ -419,22 +419,22 @@ class RA_Init {
     }
 
     private function database_connect() {
-        global $ramysql;
+        //global $ramysql;
         global $ramysqli;
 
-        $ramysql = @mysql_connect($this->db_host, $this->db_username, $this->db_password);
+        //$ramysql = @mysqli_connect($this->db_host, $this->db_username, $this->db_password);
         $ramysqli = @mysqli_connect("p:".$this->db_host, $this->db_username, $this->db_password,$this->db_name);
 
-        $selected_db = @mysql_select_db($this->db_name);
+        
 
-        if (!$selected_db) {
+        if (!$ramysqli) {
             return false;
         }
 
-        full_query("SET SESSION wait_timeout=600");
+        full_query_i("SET SESSION wait_timeout=600");
 
         if ($this->db_sqlcharset) {
-            full_query("SET NAMES '" . db_escape_string($this->db_sqlcharset) . "'");
+            full_query_i("SET NAMES '" . db_escape_string($this->db_sqlcharset) . "'");
         }
 
         return true;
@@ -579,9 +579,9 @@ class RA_Init {
 
     private function load_config_vars() {
         $CONFIG = array();
-        $result = select_query("tblconfiguration", "", "");
+        $result = select_query_i("tblconfiguration", "", "");
 
-        while ($data = @mysql_fetch_array($result)) {
+        while ($data = @mysqli_fetch_array($result)) {
             $setting = $data['setting'];
             $value = $data['value'];
             $CONFIG[$setting] = $value;
@@ -647,12 +647,12 @@ class RA_Init {
 
     private function enforce_ip_bans() {
         if (substr($_SERVER['PHP_SELF'], 0 - 10, 10) != "banned.php") {
-            $result = full_query("DELETE FROM tblbannedips WHERE expires<now()");
+            $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
             $bannedipcheck = explode(".", $this->remote_ip);
             $remote_ip1 = $bannedipcheck[0] . "." . $bannedipcheck[1] . "." . $bannedipcheck[2] . ".*";
             $remote_ip2 = $bannedipcheck[0] . "." . $bannedipcheck[1] . ".*.*";
-            $result = full_query("SELECT * FROM tblbannedips WHERE ip NOT LIKE '113.21.227.201' AND (ip='" . db_escape_string($this->remote_ip) . "' OR ip='" . db_escape_string($remote_ip1) . "' OR ip='" . db_escape_string($remote_ip2) . "') ORDER BY id DESC");
-            $data = @mysql_fetch_array($result);
+            $result = full_query_i("SELECT * FROM tblbannedips WHERE ip NOT LIKE '113.21.227.201' AND (ip='" . db_escape_string($this->remote_ip) . "' OR ip='" . db_escape_string($remote_ip1) . "' OR ip='" . db_escape_string($remote_ip2) . "') ORDER BY id DESC");
+            $data = @mysqli_fetch_array($result);
 
             if ($data['id']) {
                 return true;
@@ -695,14 +695,14 @@ class RA_Init {
                 session_destroy();
             } else {
                 if (!isset($_SESSION['adminid'])) {
-                    $result = select_query("tblclients", "password", array("id" => $_SESSION['uid']));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblclients", "password", array("id" => $_SESSION['uid']));
+                    $data = mysqli_fetch_array($result);
                     $cid = "";
 
                     if (isset($_SESSION['cid']) && is_numeric($_SESSION['cid'])) {
                         $cid = $_SESSION['cid'];
-                        $result = select_query("tblcontacts", "password", array("id" => $_SESSION['cid']));
-                        $data = mysql_fetch_array($result);
+                        $result = select_query_i("tblcontacts", "password", array("id" => $_SESSION['cid']));
+                        $data = mysqli_fetch_array($result);
                     }
 
 

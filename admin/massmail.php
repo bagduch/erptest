@@ -95,9 +95,9 @@ echo "<s";
 echo "elect name=\"clientlanguage[]\" size=\"4\" multiple=\"true\"><option value=\"\" selected>";
 echo $aInt->lang("global", "default");
 echo "</option>";
-$result = select_query("tblclients", "DISTINCT language", "", "language", "ASC");
+$result = select_query_i("tblclients", "DISTINCT language", "", "language", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$language = $displanguage = $data['language'];
 
 	if (trim($language)) {
@@ -134,9 +134,9 @@ echo $aInt->lang("fields", "product");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"productids[]\" size=\"10\" multiple=\"true\">";
-$result = select_query("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`tblservices`.`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+$result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`tblservices`.`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$name = $data['name'];
 	$groupname = $data['groupname'];
@@ -173,9 +173,9 @@ echo $aInt->lang("massmail", "assignedserver");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"server[]\" size=\"5\" multiple=\"true\">";
-$result = select_query("tblservers", "", "", "name", "ASC");
+$result = select_query_i("tblservers", "", "", "name", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$name = $data['name'];
 	echo "<option value=\"" . $id . "\">" . $name . "</option>";
@@ -204,9 +204,9 @@ echo $aInt->lang("fields", "addon");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"addonids[]\" size=\"10\" multiple=\"true\">";
-$result = select_query("tbladdons", "id,name", "", "name", "ASC");
+$result = select_query_i("tbladdons", "id,name", "", "name", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$addonname = $data['name'];
 	echo "<option value=\"" . $id . "\">" . $addonname . "</option>";

@@ -13,9 +13,9 @@
 function buildCategoriesList($level, $parentlevel, $exclude = "") {
 	global $catid;
 
-	$result = select_query("tblticketpredefinedcats", "", array("parentid" => $level), "name", "ASC");
+	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $level), "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$parentid = $data['parentid'];
 		$category = $data['name'];
@@ -45,9 +45,9 @@ function buildCategoriesList($level, $parentlevel, $exclude = "") {
 }
 
 function deletePreDefCat($catid) {
-	$result = select_query("tblticketpredefinedcats", "", array("parentid" => $catid));
+	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		delete_query("tblticketpredefinedreplies", array("catid" => $id));
 		delete_query("tblticketpredefinedcats", array("id" => $id));
@@ -253,15 +253,15 @@ if ($action == "") {
 
 
 	if ($catid != "0") {
-		$result = select_query("tblticketpredefinedcats", "", array("id" => $catid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblticketpredefinedcats", "", array("id" => $catid));
+		$data = mysqli_fetch_array($result);
 		$catparentid = $data['parentid'];
 		$catname = $data['name'];
 		$catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $catid . "\">" . $catname . "</a>";
 
 		while ($catparentid != "0") {
-			$result = select_query("tblticketpredefinedcats", "", array("id" => $catparentid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketpredefinedcats", "", array("id" => $catparentid));
+			$data = mysqli_fetch_array($result);
 			$cattempid = $data['id'];
 			$catparentid = $data['parentid'];
 			$catname = $data['name'];
@@ -272,8 +272,8 @@ if ($action == "") {
 		echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "toplevel") . "</a> " . $breadcrumbnav . "</p>";
 	}
 
-	$result = select_query("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
-	$numcats = mysql_num_rows($result);
+	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
+	$numcats = mysqli_num_rows($result);
 	echo "
 ";
 
@@ -290,14 +290,14 @@ if ($action == "") {
 			$catid = "0";
 		}
 
-		$result = select_query("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
+		$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
 		$i = 0;
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
-			$result3 = select_query("tblticketpredefinedreplies", "id", array("catid" => $id));
-			$numarticles = mysql_num_rows($result3);
+			$result3 = select_query_i("tblticketpredefinedreplies", "id", array("catid" => $id));
+			$numarticles = mysqli_num_rows($result3);
 			echo "<td width=33%><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"" . $PHP_SELF . "?catid=" . $id . "\"><b>" . $name . "</b></a> (" . $numarticles . ") <a href=\"" . $PHP_SELF . "?action=editcat&id=" . $id . "\"><img src=\"images/edit.gif\" align=\"absmiddle\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\" /></a> <a href=\"#\" onClick=\"doDeleteCat(" . $id . ");return false\"><img src=\"images/delete.gif\" align=\"absmiddle\" border=\"0\"alt=\"") . $aInt->lang("global", "delete") . ("\" /></a><br>" . $description . "</td>");
 			++$i;
 
@@ -338,8 +338,8 @@ if ($action == "") {
 		$where = substr($where, 5);
 	}
 
-	$result = select_query("tblticketpredefinedreplies", "", $where, "name", "ASC");
-	$numarticles = mysql_num_rows($result);
+	$result = select_query_i("tblticketpredefinedreplies", "", $where, "name", "ASC");
+	$numarticles = mysqli_num_rows($result);
 
 	if ($search) {
 		echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "toplevel") . ("</a>  > <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("global", "search") . "</a></p>";
@@ -354,9 +354,9 @@ if ($action == "") {
 
 <table width=100%><tr>
 ";
-		$result = select_query("tblticketpredefinedreplies", "", $where, "name", "ASC");
+		$result = select_query_i("tblticketpredefinedreplies", "", $where, "name", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
 			$reply = strip_tags(stripslashes($data['reply']));
@@ -379,8 +379,8 @@ if ($action == "") {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query("tblticketpredefinedreplies", "", array("id" => $id));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblticketpredefinedreplies", "", array("id" => $id));
+		$data = mysqli_fetch_array($result);
 		$catid = $data['catid'];
 		$name = $data['name'];
 		$reply = $data['reply'];
@@ -426,8 +426,8 @@ else {
 	}
 	else {
 		if ($action == "editcat") {
-			$result = select_query("tblticketpredefinedcats", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketpredefinedcats", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$parentid = $catid = $data['parentid'];
 			$name = stripslashes($data['name']);
 			echo "

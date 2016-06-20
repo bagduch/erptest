@@ -220,16 +220,16 @@ class RA_Carts {
                 $fraudmodule = getActiveFraudModule();
 
                 if ($CONFIG['SkipFraudForExisting']) {
-                    $result = select_query("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
-                    $data = mysql_fetch_array($result);
+                    $result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+                    $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
                         $fraudmodule = "";
                     }
                 }
 
-                $result = full_query("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
-                $data = mysql_fetch_array($result);
+                $result = full_query_i("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
+                $data = mysqli_fetch_array($result);
 
                 if ($data[0]) {
                     $fraudmodule = "";
@@ -420,9 +420,9 @@ class RA_Carts {
         }
 
         $domaincontacts = array();
-        $result = select_query("tblcontacts", "", array("userid" => $_SESSION['uid'], "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
+        $result = select_query_i("tblcontacts", "", array("userid" => $_SESSION['uid'], "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $domaincontacts[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname']);
         }
 

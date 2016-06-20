@@ -19,9 +19,9 @@ $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
 
 if ($manageoptions) {
-	$result = select_query("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$curr_id = $data['id'];
 		$curr_code = $data['code'];
 		$currenciesarray[$curr_id] = $curr_code;
@@ -80,8 +80,8 @@ if ($manageoptions) {
 	}
 
 	$aInt->title = "Configurable Options";
-	$result = select_query("tblserviceconfigoptions", "", array("id" => $cid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblserviceconfigoptions", "", array("id" => $cid));
+	$data = mysqli_fetch_array($result);
 	$cid = $data['id'];
 	$optionname = $data['optionname'];
 	$optiontype = $data['optiontype'];
@@ -166,9 +166,9 @@ function closewindow() {
 ";
 	$x = 0;
 	$query = "SELECT * FROM tblserviceconfigoptionssub WHERE configid=" . (int)$cid . " ORDER BY sortorder ASC,id ASC";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		++$x;
 		$optionid = $data['id'];
 		$optionname = $data['optionname'];
@@ -183,14 +183,14 @@ function closewindow() {
 		echo "</td>";
 		$firstcurrencydone = false;
 		foreach ($currenciesarray as $curr_id => $curr_code) {
-			$result2 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+			$data = mysqli_fetch_array($result2);
 			$pricing_id = $data['id'];
 
 			if (!$pricing_id) {
 				insert_query("tblpricing", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-				$result2 = select_query("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+				$data = mysqli_fetch_array($result2);
 			}
 
 			$val[1] = $data['msetupfee'];
@@ -286,8 +286,8 @@ if ($action == "savegroup") {
 if ($action == "duplicate") {
 	check_token("RA.admin.default");
 	checkPermission("Create New Products/Services");
-	$result = select_query("tblserviceconfiggroups", "", array("id" => $existinggroupid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblserviceconfiggroups", "", array("id" => $existinggroupid));
+	$data = mysqli_fetch_array($result);
 	$addstr = "";
 	foreach ($data as $key => $value) {
 
@@ -307,11 +307,11 @@ if ($action == "duplicate") {
 	}
 
 	$addstr = substr($addstr, 0, 0 - 1);
-	full_query("INSERT INTO tblserviceconfiggroups VALUES (" . $addstr . ")");
-	$newgroupid = mysql_insert_id();
-	$result = select_query("tblserviceconfigoptions", "", array("gid" => $existinggroupid));
+	full_query_i("INSERT INTO tblserviceconfiggroups VALUES (" . $addstr . ")");
+	$newgroupid = mysqli_insert_id();
+	$result = select_query_i("tblserviceconfigoptions", "", array("gid" => $existinggroupid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$configid = $data['id'];
 		$addstr = "";
 		foreach ($data as $key => $value) {
@@ -332,11 +332,11 @@ if ($action == "duplicate") {
 		}
 
 		$addstr = substr($addstr, 0, 0 - 1);
-		full_query("INSERT INTO tblserviceconfigoptions VALUES (" . $addstr . ")");
-		$newconfigid = mysql_insert_id();
-		$result2 = select_query("tblserviceconfigoptionssub", "", array("configid" => $configid));
+		full_query_i("INSERT INTO tblserviceconfigoptions VALUES (" . $addstr . ")");
+		$newconfigid = mysqli_insert_id();
+		$result2 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $configid));
 
-		while ($data = mysql_fetch_array($result2)) {
+		while ($data = mysqli_fetch_array($result2)) {
 			$optionid = $data['id'];
 			$addstr = "";
 			foreach ($data as $key => $value) {
@@ -357,11 +357,11 @@ if ($action == "duplicate") {
 			}
 
 			$addstr = substr($addstr, 0, 0 - 1);
-			full_query("INSERT INTO tblserviceconfigoptionssub VALUES (" . $addstr . ")");
-			$newoptionid = mysql_insert_id();
-			$result3 = select_query("tblpricing", "", array("type" => "configoptions", "relid" => $optionid));
+			full_query_i("INSERT INTO tblserviceconfigoptionssub VALUES (" . $addstr . ")");
+			$newoptionid = mysqli_insert_id();
+			$result3 = select_query_i("tblpricing", "", array("type" => "configoptions", "relid" => $optionid));
 
-			while ($data = mysql_fetch_array($result3)) {
+			while ($data = mysqli_fetch_array($result3)) {
 				$addstr = "";
 				foreach ($data as $key => $value) {
 
@@ -381,7 +381,7 @@ if ($action == "duplicate") {
 				}
 
 				$addstr = substr($addstr, 0, 0 - 1);
-				full_query("INSERT INTO tblpricing VALUES (" . $addstr . ")");
+				full_query_i("INSERT INTO tblpricing VALUES (" . $addstr . ")");
 			}
 		}
 	}
@@ -405,9 +405,9 @@ if ($action == "deleteoption") {
 if ($action == "deletegroup") {
 	check_token("RA.admin.default");
 	checkPermission("Delete Products/Services");
-	$result = select_query("tblserviceconfigoptions", "", array("gid" => $id));
+	$result = select_query_i("tblserviceconfigoptions", "", array("gid" => $id));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$opid = $data['id'];
 		delete_query("tblserviceconfigoptions", array("id" => $opid));
 		delete_query("tblserviceconfigoptionssub", array("configid" => $opid));
@@ -448,9 +448,9 @@ if ($action == "") {
 
 ";
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query("tblserviceconfiggroups", "", "", "name", "ASC");
+	$result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$name = $data['name'];
 		$description = $data['description'];
@@ -463,15 +463,15 @@ else {
 	if ($action == "managegroup") {
 		if ($id) {
 			$steptitle = "Manage Group";
-			$result = select_query("tblserviceconfiggroups", "", array("id" => $id));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblserviceconfiggroups", "", array("id" => $id));
+			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$name = $data['name'];
 			$description = $data['description'];
 			$productlinks = array();
-			$result = select_query("tblserviceconfiglinks", "", array("gid" => $id));
+			$result = select_query_i("tblserviceconfiglinks", "", array("gid" => $id));
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$productlinks[] = $data['pid'];
 			}
 		}
@@ -514,9 +514,9 @@ function doDelete(id,opid) {
 		echo "<s";
 		echo "elect name=\"productlinks[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-		$result = select_query("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+		$result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$pid = $data['id'];
 			$groupname = $data['groupname'];
 			$name = $data['name'];
@@ -542,9 +542,9 @@ function doDelete(id,opid) {
 
 ";
 			$aInt->sortableTableInit("nopagination");
-			$result = select_query("tblserviceconfigoptions", "", array("gid" => $id), "order` ASC,`id", "ASC");
+			$result = select_query_i("tblserviceconfigoptions", "", array("gid" => $id), "order` ASC,`id", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$configid = $data['id'];
 				$optionname = $data['optionname'];
 				$configorder = $data['order'];
@@ -580,9 +580,9 @@ function doDelete(id,opid) {
 <tr><td width=150 class=\"fieldlabel\">Existing Group</td><td class=\"fieldarea\">";
 			echo "<s";
 			echo "elect name=\"existinggroupid\">";
-			$result = select_query("tblserviceconfiggroups", "", "", "name", "ASC");
+			$result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
 				$name = $data['name'];
 				$description = $data['description'];

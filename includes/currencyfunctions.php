@@ -35,14 +35,14 @@ function currencyUpdateRates() {
 		}
 	}
 
-	$result = select_query("tblcurrencies", "", array("`default`" => "1"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcurrencies", "", array("`default`" => "1"));
+	$data = mysqli_fetch_array($result);
 	$currencycode = $data['code'];
 	$baserate = $exchrate[$currencycode];
 	$return = "";
-	$result = select_query("tblcurrencies", "", array("`default`" => array("sqltype" => "NEQ", "value" => "1")), "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", array("`default`" => array("sqltype" => "NEQ", "value" => "1")), "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$code = $data['code'];
 		$coderate = $exchrate[$code];
@@ -70,8 +70,8 @@ function currencyUpdateRates() {
 }
 
 function currencyUpdatePricing($currencyid = "") {
-	$result = select_query("tblcurrencies", "id", array("`default`" => "1"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblcurrencies", "id", array("`default`" => "1"));
+	$data = mysqli_fetch_array($result);
 	$defaultcurrencyid = $data['id'];
 	$where = array();
 	$where['id'] = array("sqltype" => "NEQ", "value" => $defaultcurrencyid);
@@ -81,15 +81,15 @@ function currencyUpdatePricing($currencyid = "") {
 	}
 
 	$currencies = array();
-	$result = select_query("tblcurrencies", "id,rate", $where);
+	$result = select_query_i("tblcurrencies", "id,rate", $where);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$currencies[$data['id']] = $data['rate'];
 	}
 
-	$result = select_query("tblpricing", "", array("currency" => $defaultcurrencyid));
+	$result = select_query_i("tblpricing", "", array("currency" => $defaultcurrencyid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$type = $data['type'];
 		$relid = $data['relid'];
 		$msetupfee = $data['msetupfee'];
@@ -120,13 +120,13 @@ function currencyUpdatePricing($currencyid = "") {
 
 
 			if ($domaintype) {
-				$result2 = select_query("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
+				$result2 = select_query_i("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
 			}
 			else {
-				$result2 = select_query("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid));
+				$result2 = select_query_i("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid));
 			}
 
-			$data = mysql_fetch_array($result2);
+			$data = mysqli_fetch_array($result2);
 			$pricing_id = $data['id'];
 
 			if (!$pricing_id) {

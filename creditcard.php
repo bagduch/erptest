@@ -27,8 +27,8 @@ if (!$_SESSION['uid'] || !$invoiceid) {
 	redir("", "clientarea.php");
 }
 
-$result = select_query("tblinvoices", "", array("id" => $invoiceid, "userid" => $_SESSION['uid']));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblinvoices", "", array("id" => $invoiceid, "userid" => $_SESSION['uid']));
+$data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 $status = $data['status'];
 $total = $data['total'];
@@ -88,8 +88,8 @@ if ($action == "submit") {
 
 
 		if (!$errormessage) {
-			$result = select_query("tblclients", "", array("id" => $_SESSION['uid']));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblclients", "", array("id" => $_SESSION['uid']));
+			$data = mysqli_fetch_array($result);
 			$old_firstname = $data['firstname'];
 			$old_lastname = $data['lastname'];
 			$old_address1 = $data['address1'];
@@ -197,8 +197,8 @@ if (!$errormessage || $fromorderform) {
 }
 
 include "includes/countries.php";
-$result = select_query("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+$data = mysqli_fetch_array($result);
 $amountpaid = $data[0];
 $balance = $total - $amountpaid;
 $smartyvalues = array("firstname" => $firstname, "lastname" => $lastname, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "countriesdropdown" => getCountriesDropDown($country), "phonenumber" => $phonenumber, "acceptedcctypes" => explode(",", $CONFIG['AcceptedCardTypes']), "ccinfo" => $ccinfo, "cardtype" => $cardtype, "cardnum" => $cardnum, "cctype" => $cctype, "ccnumber" => $ccnumber, "ccexpirymonth" => $ccexpirymonth, "ccexpiryyear" => $ccexpiryyear, "ccstartmonth" => $ccstartmonth, "ccstartyear" => $ccstartyear, "ccissuenum" => $ccissuenum, "cccvv" => $cccvv, "errormessage" => $errormessage, "invoiceid" => $invoiceid, "total" => formatCurrency($total), "balance" => formatCurrency($balance), "showccissuestart" => $CONFIG['ShowCCIssueStart'], "shownostore" => $CONFIG['CCAllowCustomerDelete']);

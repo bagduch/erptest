@@ -30,8 +30,8 @@ for ( $day = 1; $day <= 31; $day += 1) {
 	$date = $year."-".$pmonth."-".str_pad($day,2,"0",STR_PAD_LEFT);
 		
 	$query = "SELECT `admin`,COUNT(tid) AS totalreplies,COUNT(DISTINCT tid) AS totaltickets FROM `tblticketreplies` WHERE date LIKE '".db_make_safe_date($date)."%' AND admin!='' GROUP BY `admin` ORDER BY `admin`";
-	$result = full_query($query);
-	while ($data = mysql_fetch_array($result)) {
+	$result = full_query_i($query);
+	while ($data = mysqli_fetch_array($result)) {
 		$adminname = $data[0];
 		$totalreplies = $data[1];
 		$totaltickets = $data[2];	

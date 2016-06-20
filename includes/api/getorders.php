@@ -31,17 +31,17 @@ $query = " FROM tblorders o
 $where = array();
 
 if ($id) {
-	$where[] = "o.id=" . mysql_real_escape_string($id);
+	$where[] = "o.id=" . mysqli_real_escape_string($id);
 }
 
 
 if ($userid) {
-	$where[] = "o.userid=" . mysql_real_escape_string($userid);
+	$where[] = "o.userid=" . mysqli_real_escape_string($userid);
 }
 
 
 if ($status) {
-	$where[] = "o.status='" . mysql_real_escape_string($status) . "'";
+	$where[] = "o.status='" . mysqli_real_escape_string($status) . "'";
 }
 
 
@@ -49,13 +49,13 @@ if (count($where)) {
 	$query .= " WHERE " . implode(" AND ", $where);
 }
 
-$result_count = full_query("SELECT COUNT(o.id)" . $query);
-$data = mysql_fetch_array($result_count);
+$result_count = full_query_i("SELECT COUNT(o.id)" . $query);
+$data = mysqli_fetch_array($result_count);
 $totalresults = $data[0];
-$result = full_query("SELECT o.*, p.value AS paymentmethodname, i.status AS paymentstatus, CONCAT(c.firstname,' ',c.lastname) AS name" . $query . " ORDER BY o.id DESC LIMIT " . (int)$limitstart . "," . (int)$limitnum);
-$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysql_num_rows($result));
+$result = full_query_i("SELECT o.*, p.value AS paymentmethodname, i.status AS paymentstatus, CONCAT(c.firstname,' ',c.lastname) AS name" . $query . " ORDER BY o.id DESC LIMIT " . (int)$limitstart . "," . (int)$limitnum);
+$apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result));
 
-while ($orderdata = mysql_fetch_assoc($result)) {
+while ($orderdata = mysqli_fetch_assoc($result)) {
 	$orderid = $orderdata['id'];
 	$userid = $orderdata['userid'];
 	$fraudmodule = $orderdata['fraudmodule'];
@@ -87,17 +87,17 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 	$orderdata['fraudoutput'] = $fraudoutput;
 	$orderdata['frauddata'] = $frauddata;
 	$lineitems = array();
-	$result2 = select_query("tblcustomerservices", "", array("orderid" => $orderid));
+	$result2 = select_query_i("tblcustomerservices", "", array("orderid" => $orderid));
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$serviceid = $data['id'];
 		$domain = $data['domain'];
 		$billingcycle = $data['billingcycle'];
 		$hostingstatus = $data['servicestatus'];
 		$firstpaymentamount = formatCurrency($data['firstpaymentamount']);
 		$packageid = $data['packageid'];
-		$result3 = select_query("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-		$data = mysql_fetch_array($result3);
+		$result3 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+		$data = mysqli_fetch_array($result3);
 		$groupname = $data['groupname'];
 		$productname = $data['name'];
 		$producttype = $data['type'];
@@ -125,18 +125,18 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 	}
 
 	$predefinedaddons = array();
-	$result2 = select_query("tbladdons", "", "");
+	$result2 = select_query_i("tbladdons", "", "");
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$addon_id = $data['id'];
 		$addon_name = $data['name'];
 		$addon_welcomeemail = $data['welcomeemail'];
 		$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 	}
 
-	$result2 = select_query("tblserviceaddons", "", array("orderid" => $orderid));
+	$result2 = select_query_i("tblserviceaddons", "", array("orderid" => $orderid));
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$aid = $data['id'];
 		$hostingid = $data['hostingid'];
 		$addonid = $data['addonid'];
@@ -155,9 +155,9 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 		$lineitems['lineitem'][] = array("type" => "addon", "relid" => $aid, "producttype" => "Addon", "product" => $name, "domain" => "", "billingcycle" => $billingcycle, "amount" => $addonamount, "status" => $addonstatus);
 	}
 
-	$result2 = select_query("tbldomains", "", array("orderid" => $orderid));
+	$result2 = select_query_i("tbldomains", "", array("orderid" => $orderid));
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$domainid = $data['id'];
 		$type = $data['type'];
 		$domain = $data['domain'];
@@ -181,8 +181,8 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 			$renewal = explode("=", $renewal);
 			$domainid = $renewal[0];
 			$registrationperiod = $renewal[1];
-			$result = select_query("tbldomains", "", array("id" => $domainid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbldomains", "", array("id" => $domainid));
+			$data = mysqli_fetch_array($result);
 			$domainid = $data['id'];
 			$type = $data['type'];
 			$domain = $data['domain'];
@@ -199,9 +199,9 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 		}
 	}
 
-	$result2 = select_query("tblupgrades", "", array("orderid" => $orderid));
+	$result2 = select_query_i("tblupgrades", "", array("orderid" => $orderid));
 
-	while ($data = mysql_fetch_array($result2)) {
+	while ($data = mysqli_fetch_array($result2)) {
 		$upgradeid = $data['id'];
 		$type = $data['type'];
 		$relid = $data['relid'];
@@ -213,13 +213,13 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 		$paid = $data['paid'];
 
 		if ($type == "package") {
-			$result2 = select_query("tblservices", "name", array("id" => $originalvalue));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblservices", "name", array("id" => $originalvalue));
+			$data = mysqli_fetch_array($result2);
 			$oldpackagename = $data['name'];
 			$newvalue = explode(",", $newvalue);
 			$newpackageid = $newvalue[0];
-			$result2 = select_query("tblservices", "name", array("id" => $newpackageid));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblservices", "name", array("id" => $newpackageid));
+			$data = mysqli_fetch_array($result2);
 			$newpackagename = $data['name'];
 			$details = "Package Upgrade: " . $oldpackagename . " => " . $newpackagename . "<br>";
 		}
@@ -228,17 +228,17 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 				$tempvalue = explode("=>", $originalvalue);
 				$configid = $tempvalue[0];
 				$oldoptionid = $tempvalue[1];
-				$result2 = select_query("tblserviceconfigoptions", "", array("id" => $configid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+				$data = mysqli_fetch_array($result2);
 				$configname = $data['optionname'];
 				$optiontype = $data['optiontype'];
 
 				if ($optiontype == 1 || $optiontype == 2) {
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
+					$data = mysqli_fetch_array($result2);
 					$oldoptionname = $data['optionname'];
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $newvalue));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $newvalue));
+					$data = mysqli_fetch_array($result2);
 					$newoptionname = $data['optionname'];
 				}
 				else {
@@ -254,8 +254,8 @@ while ($orderdata = mysql_fetch_assoc($result)) {
 					}
 					else {
 						if ($optiontype == 4) {
-							$result2 = select_query("tblserviceconfigoptionssub", "", array("configid" => $configid));
-							$data = mysql_fetch_array($result2);
+							$result2 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $configid));
+							$data = mysqli_fetch_array($result2);
 							$optionname = $data['optionname'];
 							$oldoptionname = $oldoptionid;
 							$newoptionname = $newvalue . " x " . $optionname;

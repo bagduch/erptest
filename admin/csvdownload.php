@@ -20,9 +20,9 @@ function csv_clean($var) {
 function csv_output($query) {
 	global $fields;
 
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		foreach ($fields as $field) {
 			echo csv_clean($data[$field]) . ",";
 		}
@@ -53,9 +53,9 @@ if ($report) {
 	require "../includes/reportfunctions.php";
 	$chart = new RAChart();
 	$currencies = array();
-	$result = select_query("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$code = $data['code'];
 		$currencies[$id] = $code;
@@ -138,9 +138,9 @@ if ($type == "pdfbatch") {
 	require ROOTDIR . "/includes/clientfunctions.php";
 	require ROOTDIR . "/includes/invoicefunctions.php";
 	$ra->load_class("tcpdf");
-	$result = select_query("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$gatewaysarray[$data['gateway']] = $data['value'];
 	}
 
@@ -190,8 +190,8 @@ if ($type == "pdfbatch") {
 	$statuses_in_clause = db_build_in_array($statuses);
 	$paymentmethods_in_clause = db_build_in_array($paymentmethods);
 	$batchpdf_where_clause = "tblinvoices." . $filterby . " >= '" . toMySQLDate($datefrom) . ("' AND tblinvoices." . $filterby . "<='") . toMySQLDate($dateto) . "' AND tblinvoices.status IN (" . $statuses_in_clause . ")" . " AND tblinvoices.paymentmethod IN (" . $paymentmethods_in_clause . ")" . $clientWhere;
-	$batchpdfresult = select_query("tblinvoices", "tblinvoices.id", $batchpdf_where_clause, $orderby, "ASC", "", "tblclients ON tblclients.id=tblinvoices.userid");
-	$numrows = mysql_num_rows($batchpdfresult);
+	$batchpdfresult = select_query_i("tblinvoices", "tblinvoices.id", $batchpdf_where_clause, $orderby, "ASC", "", "tblclients ON tblclients.id=tblinvoices.userid");
+	$numrows = mysqli_num_rows($batchpdfresult);
 
 	if (!$numrows) {
 		redir("report=pdf_batch&noresults=1", "reports.php");
@@ -201,7 +201,7 @@ if ($type == "pdfbatch") {
 	}
 
 
-	while ($data = mysql_fetch_array($batchpdfresult)) {
+	while ($data = mysqli_fetch_array($batchpdfresult)) {
 		$invoice->pdfInvoicePage($data['id']);
 	}
 

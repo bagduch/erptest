@@ -683,9 +683,9 @@ else {
 
 $templatevars['messages'] = "<select name=\"messagename\"><option value=\"newmessage\">" . $aInt->lang("global", "newmessage") . "</option>";
 $query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$messagename = $data['name'];
 	$custom = $data['custom'];
 	$templatevars->messages .= "<option value=\"" . $messagename . "\"";

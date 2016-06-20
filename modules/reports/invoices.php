@@ -67,8 +67,8 @@ if (count($incfields)) {
         }
     }
 
-    $result = select_query("tblinvoices",implode(',',$fieldlist),$filters);
-    while ($data = mysql_fetch_assoc($result)) {
+    $result = select_query_i("tblinvoices",implode(',',$fieldlist),$filters);
+    while ($data = mysqli_fetch_assoc($result)) {
         if (isset($data['paymentmethod'])) $data['paymentmethod'] = $gateways->getDisplayName($data['paymentmethod']);
         $reportdata["tablevalues"][] = $data;
     }

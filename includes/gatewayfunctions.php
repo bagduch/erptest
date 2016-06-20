@@ -59,9 +59,9 @@ function paymentMethodsSelection($blankselection = "", $tabindex = false) {
 		$code .= "<option value=\"\">" . $blankselection . "</option>";
 	}
 
-	$result = select_query("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$dbcongateway = $data['gateway'];
 		$dbconvalue = $data['value'];
 		$code .= "<option value=\"" . $dbcongateway . "\"";
@@ -87,9 +87,9 @@ function checkActiveGateway() {
 
 function getGatewaysArray() {
 	global $gatewayarray;
-	$result = select_query("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$gatewayarray[$data['gateway']] = $data['value'];
 	}
 
@@ -107,16 +107,16 @@ function showPaymentGatewaysList($disabledgateways = "") {
 		$disabledgateways = array();
 	}
 
-	$result = select_query("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$spgwgateway = $data['gateway'];
 		$spgwvalue = $data['value'];
-		$result2 = select_query("tblpaymentgateways", "value", array("setting" => "type", "gateway" => $spgwgateway));
-		$data2 = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblpaymentgateways", "value", array("setting" => "type", "gateway" => $spgwgateway));
+		$data2 = mysqli_fetch_array($result2);
 		$gatewaytype = $data2[0];
-		$result2 = select_query("tblpaymentgateways", "value", array("setting" => "visible", "gateway" => $spgwgateway));
-		$data2 = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblpaymentgateways", "value", array("setting" => "visible", "gateway" => $spgwgateway));
+		$data2 = mysqli_fetch_array($result2);
 
 		if ($data2['value'] == "on" && !in_array($spgwgateway, $disabledgateways)) {
 			$gateway[$spgwgateway] = array("sysname" => $spgwgateway, "name" => $spgwvalue, "type" => $gatewaytype);
@@ -150,9 +150,9 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
 
 	$GATEWAY = array();
 	$GATEWAY['paymentmethod'] = $gateway;
-	$result = select_query("tblpaymentgateways", "", array("gateway" => $gateway));
+	$result = select_query_i("tblpaymentgateways", "", array("gateway" => $gateway));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$gVgwsetting = $data['setting'];
 		$gVgwvalue = $data['value'];
 		$GATEWAY["" . $gVgwsetting] = "" . $gVgwvalue;
@@ -178,8 +178,8 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
 		}
 
 		$clientsdetails['state'] = convertStateToCode($clientsdetails['state'], $clientsdetails['country']);
-		$result = select_query("tblclients", "tblinvoices.invoicenum,tblclients.currency,tblcurrencies.code", array("tblinvoices.id" => $invoiceid), "", "", "", "tblinvoices ON tblinvoices.userid=tblclients.id INNER JOIN tblcurrencies ON tblcurrencies.id=tblclients.currency");
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "tblinvoices.invoicenum,tblclients.currency,tblcurrencies.code", array("tblinvoices.id" => $invoiceid), "", "", "", "tblinvoices ON tblinvoices.userid=tblclients.id INNER JOIN tblcurrencies ON tblcurrencies.id=tblclients.currency");
+		$data = mysqli_fetch_array($result);
 		$invoicenum = $data['invoicenum'];
 		$invoice_currency_id = $data['currency'];
 		$invoice_currency_code = $data['code'];
@@ -194,8 +194,8 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
 		$GATEWAY['returnurl'] = $GATEWAY['systemurl'] . "/viewinvoice.php?id=" . $invoiceid;
 
 		if ($GATEWAY['convertto']) {
-			$result = select_query("tblcurrencies", "code", array("id" => $GATEWAY['convertto']));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblcurrencies", "code", array("id" => $GATEWAY['convertto']));
+			$data = mysqli_fetch_array($result);
 			$converto_currency_code = $data['code'];
 			$converto_amount = convertCurrency($amount, $invoice_currency_id, $GATEWAY['convertto']);
 			$GATEWAY['amount'] = format_as_currency($converto_amount);
@@ -250,8 +250,8 @@ function logTransaction($gateway, $data, $result) {
 }
 
 function checkCbInvoiceID($invoiceid, $gateway = "Unknown") {
-	$result = select_query("tblinvoices", "id", array("id" => (int)$invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "id", array("id" => (int)$invoiceid));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 
 	if (!$id) {
@@ -263,8 +263,8 @@ function checkCbInvoiceID($invoiceid, $gateway = "Unknown") {
 }
 
 function checkCbTransID($transid) {
-	$result = select_query("tblaccounts", "id", array("transid" => $transid));
-	$num_rows = mysql_num_rows($result);
+	$result = select_query_i("tblaccounts", "id", array("transid" => $transid));
+	$num_rows = mysqli_num_rows($result);
 
 	if ($num_rows) {
 		exit();
@@ -310,8 +310,8 @@ function getRecurringBillingValues($invoiceid) {
 
 	$firstcycleperiod = $firstcycleunits = "";
 	$invoiceid = (int)$invoiceid;
-	$result = select_query("tblinvoiceitems", "tblinvoiceitems.relid,tblinvoiceitems.taxed,tblcustomerservices.userid,tblcustomerservices.amount,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblcustomerservices.regdate,tblcustomerservices.nextduedate", array("invoiceid" => $invoiceid, "type" => "Hosting"), "tblinvoiceitems`.`id", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid");
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoiceitems", "tblinvoiceitems.relid,tblinvoiceitems.taxed,tblcustomerservices.userid,tblcustomerservices.amount,tblcustomerservices.billingcycle,tblcustomerservices.packageid,tblcustomerservices.regdate,tblcustomerservices.nextduedate", array("invoiceid" => $invoiceid, "type" => "Hosting"), "tblinvoiceitems`.`id", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid");
+	$data = mysqli_fetch_array($result);
 	$relid = $data['relid'];
 	$taxed = $data['taxed'];
 	$userid = $data['userid'];
@@ -325,8 +325,8 @@ function getRecurringBillingValues($invoiceid) {
 		return false;
 	}
 
-	$result = select_query("tblinvoices", "total,taxrate,taxrate2,paymentmethod,(SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id) AS amountpaid", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "total,taxrate,taxrate2,paymentmethod,(SELECT SUM(amountin)-SUM(amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id) AS amountpaid", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$total = $data['total'];
 	$taxrate = $data['taxrate'];
 	$taxrate2 = $data['taxrate2'];
@@ -343,9 +343,9 @@ function getRecurringBillingValues($invoiceid) {
 
 	$recurringamount = 0;
 	$query = "SELECT tblcustomerservices.amount,tblinvoiceitems.taxed FROM tblinvoiceitems INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Hosting' AND tblcustomerservices.billingcycle='" . db_escape_string($billingcycle) . "'";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$prodamount = $data[0];
 		$taxed = $data[1];
 
@@ -363,9 +363,9 @@ function getRecurringBillingValues($invoiceid) {
 	}
 
 	$query = "SELECT tblserviceaddons.recurring,tblserviceaddons.tax FROM tblinvoiceitems INNER JOIN tblserviceaddons ON tblserviceaddons.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type='Addon' AND tblserviceaddons.billingcycle='" . db_escape_string($billingcycle) . "'";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$addonamount = $data[0];
 		$addontax = $data[1];
 
@@ -386,8 +386,8 @@ function getRecurringBillingValues($invoiceid) {
 	if (in_array($billingcycle, array("Annually", "Biennially", "Triennially"))) {
 		$cycleregperiods = array("Annually" => "1", "Biennially" => "2", "Triennially" => "3");
 		$query = "SELECT SUM(tbldomains.recurringamount) FROM tblinvoiceitems INNER JOIN tbldomains ON tbldomains.id=tblinvoiceitems.relid WHERE tblinvoiceitems.invoiceid='" . (int)$invoiceid . "' AND tblinvoiceitems.type IN ('DomainRegister','DomainTransfer','Domain') AND tbldomains.registrationperiod='" . db_escape_string($cycleregperiods[$billingcycle]) . "'";
-		$result = full_query($query);
-		$data = mysql_fetch_array($result);
+		$result = full_query_i($query);
+		$data = mysqli_fetch_array($result);
 		$domainamount = $data[0];
 
 		if ($CONFIG['TaxType'] == "Exclusive" && $CONFIG['TaxDomains']) {
@@ -403,13 +403,13 @@ function getRecurringBillingValues($invoiceid) {
 		$recurringamount += $domainamount;
 	}
 
-	$result = select_query("tblinvoices", "duedate", array("id" => $invoiceid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblinvoices", "duedate", array("id" => $invoiceid));
+	$data = mysqli_fetch_array($result);
 	$invoiceduedate = $data['duedate'];
 	$invoiceduedate = str_replace("-", "", $invoiceduedate);
 	$overdue = ($invoiceduedate < date("Ymd") ? true : false);
-	$result = select_query("tblservices", "proratabilling,proratadate,proratachargenextmonth", array("id" => $packageid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblservices", "proratabilling,proratadate,proratachargenextmonth", array("id" => $packageid));
+	$data = mysqli_fetch_array($result);
 	$proratabilling = $data['proratabilling'];
 	$proratadate = $data['proratadate'];
 	$proratachargenextmonth = $data['proratachargenextmonth'];
@@ -438,8 +438,8 @@ function getRecurringBillingValues($invoiceid) {
 		$firstcycleunits = $recurringcycleunits;
 	}
 
-	$result = select_query("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "convertto"));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "convertto"));
+	$data = mysqli_fetch_array($result);
 	$convertto = $data[0];
 
 	if ($convertto) {

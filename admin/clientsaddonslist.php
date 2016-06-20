@@ -19,9 +19,9 @@ $aInt->icon = "productaddons";
 $aInt->requiredFiles(array("gatewayfunctions"));
 ob_start();
 $predefinedaddons = array();
-$result = select_query("tbladdons", "", "");
+$result = select_query_i("tbladdons", "", "");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$addon_id = $data['id'];
 	$addon_name = $data['name'];
 	$predefinedaddons[$addon_id] = $addon_name;
@@ -74,8 +74,8 @@ if ($domain != "") {
 	$query .= "AND tblcustomerservices.domain LIKE '%" . db_escape_string($domain) . "%' ";
 }
 
-$result = full_query("SELECT COUNT(tblserviceaddons.id) " . $query);
-$data = mysql_fetch_array($result);
+$result = full_query_i("SELECT COUNT(tblserviceaddons.id) " . $query);
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 echo "
@@ -96,9 +96,9 @@ echo "elect name=\"addon\">
 echo $aInt->lang("global", "any");
 echo "</option>
 ";
-$result = select_query("tbladdons", "id,name", "", "name", "ASC");
+$result = select_query_i("tbladdons", "id,name", "", "name", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$addon_id = $data['id'];
 	$addon_name = $data['name'];
 	$predefinedaddons[$addon_id] = $addon_name;
@@ -112,9 +112,9 @@ while ($data = mysql_fetch_array($result)) {
 }
 
 $query2 = "SELECT DISTINCT name FROM tblserviceaddons WHERE name!='' ORDER BY name ASC";
-$result2 = full_query($query2);
+$result2 = full_query_i($query2);
 
-while ($data = mysql_fetch_array($result2)) {
+while ($data = mysqli_fetch_array($result2)) {
 	$addon_name = $data['name'];
 	echo "<option";
 
@@ -240,9 +240,9 @@ else {
 
 $query .= " " . $order;
 $query = "SELECT tblserviceaddons.*,tblserviceaddons.name AS addonname,tblcustomerservices.domain,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$aid = $data['id'];
 	$id = $data['hostingid'];
 	$addonid = $data['addonid'];

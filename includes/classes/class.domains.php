@@ -33,8 +33,8 @@ class RA_Domains {
 	}
 
 	public function getDomainsData($where = "") {
-		$result = select_query("tbldomains", "", $where);
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldomains", "", $where);
+		$data = mysqli_fetch_array($result);
 
 		if ($data['id']) {
 			$this->id = $data['id'];
@@ -112,9 +112,9 @@ class RA_Domains {
 
 	private function buildParams($vars = "") {
 		$params = array();
-		$result = select_query("tblregistrars", "", array("registrar" => $this->getModule()));
+		$result = select_query_i("tblregistrars", "", array("registrar" => $this->getModule()));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$setting = $data['setting'];
 			$value = $data['value'];
 			$params[$setting] = decrypt($value);
@@ -154,8 +154,8 @@ class RA_Domains {
 		$serverid = get_query_val("tblcustomerservices", "server", array("domain" => $this->getData("domain")));
 
 		if ($serverid) {
-			$result = select_query("tblservers", "nameserver1,nameserver2,nameserver3,nameserver4,nameserver5", array("id" => $serverid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblservers", "nameserver1,nameserver2,nameserver3,nameserver4,nameserver5", array("id" => $serverid));
+			$data = mysqli_fetch_array($result);
 			$i = 1;
 
 			while ($i <= 5) {

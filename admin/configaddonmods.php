@@ -71,9 +71,9 @@ $action = $ra->get_req_var("action");
 if ($action == "save") {
 	check_token("RA.admin.default");
 	$exvars = array();
-	$result = select_query("tbladdonmodules", "", "");
+	$result = select_query_i("tbladdonmodules", "", "");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$exvars[$data['module']][$data['setting']] = $data['value'];
 	}
 
@@ -255,9 +255,9 @@ if ($action == "") {
 <tr><th>" . $aInt->lang("addonmodules", "module") . "</th><th width=\"100\">" . $aInt->lang("global", "version") . "</th><th width=\"100\">" . $aInt->lang("addonmodules", "author") . "</th><th width=\"350\"></th></tr>
 ";
 	$modulevars = $addonmodulesperms = array();
-	$result = select_query("tbladdonmodules", "", "");
+	$result = select_query_i("tbladdonmodules", "", "");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$modulevars[$data['module']][$data['setting']] = $data['value'];
 	}
 
@@ -329,9 +329,9 @@ if ($action == "") {
 
 			echo "<tr><td width=\"20%\" class=\"fieldlabel\">" . $aInt->lang("addonmodules", "accesscontrol") . "</td><td class=\"fieldarea\">" . $aInt->lang("addonmodules", "rolechoose") . ":<br />";
 			$allowedroles = explode(",", $modulevars[$module]['access']);
-			$result = select_query("tbladminroles", "", "", "name", "ASC");
+			$result = select_query_i("tbladminroles", "", "", "name", "ASC");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$checked = "";
 
 				if (in_array($data['id'], $allowedroles)) {

@@ -68,8 +68,8 @@ if (count($incfields)) {
     }
     if (in_array('currency',$incfields) && !in_array('userid',$incfields)) $fieldlist[] = 'userid';
 
-    $result = select_query("tblaccounts",implode(',',$fieldlist),$filters);
-    while ($data = mysql_fetch_assoc($result)) {
+    $result = select_query_i("tblaccounts",implode(',',$fieldlist),$filters);
+    while ($data = mysqli_fetch_assoc($result)) {
         if (isset($data['currency'])) {
             $currency = getCurrency($data['userid'],$data['currency']);
             $data['currency'] = $currency['code'];

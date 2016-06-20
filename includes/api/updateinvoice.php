@@ -24,8 +24,8 @@ if (!function_exists("updateInvoiceTotal")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$result = select_query("tblinvoices", "id", array("id" => $invoiceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblinvoices", "id", array("id" => $invoiceid));
+$data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 
 if (!$invoiceid) {

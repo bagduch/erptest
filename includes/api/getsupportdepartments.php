@@ -16,9 +16,9 @@ if (!defined("RA")) {
 
 $activestatuses = $awaitingreplystatuses = array();
 $query = "SELECT title,showactive,showawaiting FROM tblticketstatuses";
-$result = full_query($query);
+$result = full_query_i($query);
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	if ($data['showactive']) {
 		$activestatuses[] = $data[0];
 	}
@@ -32,8 +32,8 @@ while ($data = mysql_fetch_array($result)) {
 $deptfilter = "";
 
 if (!$ignore_dept_assignments) {
-	$result = select_query("tbladmins", "supportdepts", array("id" => $_SESSION['adminid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "supportdepts", array("id" => $_SESSION['adminid']));
+	$data = mysqli_fetch_array($result);
 	$supportdepts = $data[0];
 	$supportdepts = explode(",", $supportdepts);
 	$deptids = array();
@@ -51,10 +51,10 @@ if (!$ignore_dept_assignments) {
 	}
 }
 
-$result = full_query("SELECT id,name,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($awaitingreplystatuses) . ")) AS awaitingreply,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($activestatuses) . ")) AS opentickets FROM tblticketdepartments " . $deptfilter . "ORDER BY name ASC");
-$apiresults = array("result" => "success", "totalresults" => mysql_num_rows($result));
+$result = full_query_i("SELECT id,name,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($awaitingreplystatuses) . ")) AS awaitingreply,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($activestatuses) . ")) AS opentickets FROM tblticketdepartments " . $deptfilter . "ORDER BY name ASC");
+$apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$apiresults['departments']['department'][] = array("id" => $data['id'], "name" => $data['name'], "awaitingreply" => $data['awaitingreply'], "opentickets" => $data['opentickets']);
 }
 

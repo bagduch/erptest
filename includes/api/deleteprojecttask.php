@@ -28,8 +28,8 @@ if (!$taskid) {
 	return null;
 }
 
-$result = select_query("mod_project", "", array("id" => (int)$projectid));
-$data = mysql_fetch_assoc($result);
+$result = select_query_i("mod_project", "", array("id" => (int)$projectid));
+$data = mysqli_fetch_assoc($result);
 $projectid = $data['id'];
 
 if (!$projectid) {
@@ -37,8 +37,8 @@ if (!$projectid) {
 	return null;
 }
 
-$result_taskid = select_query("mod_projecttasks", "id", array("id" => $_REQUEST['taskid']));
-$data_taskid = mysql_fetch_array($result_taskid);
+$result_taskid = select_query_i("mod_projecttasks", "id", array("id" => $_REQUEST['taskid']));
+$data_taskid = mysqli_fetch_array($result_taskid);
 
 if (!$data_taskid['id']) {
 	$apiresults = array("result" => "error", "message" => "Task ID Not Found");

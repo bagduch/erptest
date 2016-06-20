@@ -21,13 +21,13 @@ if (!function_exists("RegRegisterDomain")) {
 
 
 if ($domainid) {
-	$result = select_query("tbldomains", "id", array("id" => $domainid));
+	$result = select_query_i("tbldomains", "id", array("id" => $domainid));
 }
 else {
-	$result = select_query("tbldomains", "id", array("domain" => $domain));
+	$result = select_query_i("tbldomains", "id", array("domain" => $domain));
 }
 
-$data = mysql_fetch_array($result);
+$data = mysqli_fetch_array($result);
 $domainid = $data[0];
 
 if (!$domainid) {

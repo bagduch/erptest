@@ -19,8 +19,8 @@ if (!function_exists("addContact")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query("tblclients", "id", array("id" => $clientid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "id", array("id" => $clientid));
+$data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
 	$apiresults = array("result" => "error", "message" => "Client ID Not Found");
@@ -30,10 +30,10 @@ if (!$data[0]) {
 $permissions = $permissions ? explode(",", $permissions) : array();
 
 if (count($permissions)) {
-	$result = select_query("tblclients", "id", array("email" => $email));
-	$data = mysql_fetch_array($result);
-	$result = select_query("tblcontacts", "id", array("email" => $email, "subaccount" => "1"));
-	$data2 = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id", array("email" => $email));
+	$data = mysqli_fetch_array($result);
+	$result = select_query_i("tblcontacts", "id", array("email" => $email, "subaccount" => "1"));
+	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {
 		$apiresults = array("result" => "error", "message" => "Duplicate Email Address");

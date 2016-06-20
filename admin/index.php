@@ -130,7 +130,7 @@ if ($ra->get_req_var("saveorder")) {
 if ($ra->get_req_var("dismissgs")) {
     $roleid = get_query_val("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
     $result = select_query_i("tbladminroles", "widgets", array("id" => $roleid));
-    $data = mysql_fetch_array($result);
+    $data = mysqli_fetch_array($result);
     $widgets = $data['widgets'];
     $widgets = explode(",", $widgets);
     foreach ($widgets as $k => $v) {
@@ -166,8 +166,8 @@ if ($licensing->getKeyData("productname") == "15 Day Free Trial") {
 
 $templatevars['infobox'] = $infobox;
 $query = "SELECT COUNT(*) FROM tblpaymentgateways WHERE setting='type' AND value='CC'";
-$result = full_query($query);
-$data = mysql_fetch_array($result);
+$result = full_query_i($query);
+$data = mysqli_fetch_array($result);
 
 if ($data[0]) {
     $templatevars['showattemptccbutton'] = true;

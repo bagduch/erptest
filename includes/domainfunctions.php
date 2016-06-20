@@ -22,9 +22,9 @@ function getTLDList($type = "register") {
 
 	$checkfields = array("msetupfee", "qsetupfee", "ssetupfee", "asetupfee", "bsetupfee", "tsetupfee", "monthly", "quarterly", "semiannually", "annually", "biennially", "triennially");
 	$extensions = array();
-	$result = select_query("tbldomainpricing", "id,extension", "", "order", "ASC");
+	$result = select_query_i("tbldomainpricing", "id,extension", "", "order", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$extension = $data['extension'];
 		$wherequery = "";
@@ -56,8 +56,8 @@ function getTLDList($type = "register") {
 
 
 		if ($wherequery) {
-			$result2 = select_query("tblpricing", "COUNT(*)", "type='domain" . $type . ("' AND currency='" . $currency_id . "' AND relid='" . $id . "' AND tsetupfee=" . $pricinggroup . " AND (") . substr($wherequery, 0, 0 - 4) . ")");
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblpricing", "COUNT(*)", "type='domain" . $type . ("' AND currency='" . $currency_id . "' AND relid='" . $id . "' AND tsetupfee=" . $pricinggroup . " AND (") . substr($wherequery, 0, 0 - 4) . ")");
+			$data = mysqli_fetch_array($result2);
 
 			if ($data[0]) {
 				$extensions[] = $extension;
@@ -76,8 +76,8 @@ function getTLDPriceList($tld, $display = "", $renewpricing = "", $userid = "") 
 	}
 
 	$currency_id = $currency['id'];
-	$result = select_query("tbldomainpricing", "id", array("extension" => $tld));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomainpricing", "id", array("extension" => $tld));
+	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 
 	if (!$userid && isset($_SESSION['uid'])) {
@@ -290,13 +290,13 @@ function disableAutoRenew($domainid) {
 		logActivity("Client Disabled Domain Auto Renew - Domain ID: " . $domainid . " - Domain: " . $domainname);
 	}
 
-	$result = select_query("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $domainid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+	$result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $domainid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$itemid = $data['id'];
 		$invoiceid = $data['invoiceid'];
-		$result2 = select_query("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
-		$data = mysql_fetch_array($result2);
+		$result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
+		$data = mysqli_fetch_array($result2);
 		$itemcount = $data[0];
 		$otheritemcount = 0;
 

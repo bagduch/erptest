@@ -36,17 +36,17 @@ class RA_Orders extends RA_TableModel
 			$query .= " WHERE " . implode(" AND ", $filters);
 		}
 
-		$result = full_query("SELECT COUNT(tblorders.id) " . $query);
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT COUNT(tblorders.id) " . $query);
+		$data = mysqli_fetch_array($result);
 		$this->getPageObj()->setNumResults($data[0]);
 		$query .= " ORDER BY tblorders." . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection();
 		$gateways = new RA_Gateways();
 		$invoices = new RA_Invoices();
 		$orders = array();
 		$query = "SELECT tblorders.id,tblorders.ordernum,tblorders.userid,tblorders.date,tblorders.amount,tblorders.paymentmethod,tblorders.status,tblorders.invoiceid,tblorders.ipaddress,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus " . $query . " LIMIT " . $this->getQueryLimit();
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$ordernum = $data['ordernum'];
 			$userid = $data['userid'];
@@ -104,9 +104,9 @@ class RA_Orders extends RA_TableModel
 			if (($criteria['status'] == "Pending" || $criteria['status'] == "Active") || $criteria['status'] == "Cancelled") {
 				$statusfilter = "";
 				$where = array("show" . strtolower($criteria['status']) => "1");
-				$result = select_query("tblorderstatuses", "title", $where);
+				$result = select_query_i("tblorderstatuses", "title", $where);
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$statusfilter .= "'" . $data[0] . "',";
 				}
 
@@ -164,9 +164,9 @@ class RA_Orders extends RA_TableModel
 
 	public function getStatuses() {
 		$statuses = array();
-		$result = select_query("tblorderstatuses", "title,color", "", "sortorder", "ASC");
+		$result = select_query_i("tblorderstatuses", "title,color", "", "sortorder", "ASC");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$statuses[$data['title']] = "<span style=\"color:" . $data['color'] . "\">" . $data['title'] . "</span>";
 		}
 
@@ -189,8 +189,8 @@ class RA_Orders extends RA_TableModel
 	}
 
 	public function loadData() {
-		$result = select_query("tblorders", "", array("id" => $this->orderid));
-		$this->orderdata = mysql_fetch_assoc($result);
+		$result = select_query_i("tblorders", "", array("id" => $this->orderid));
+		$this->orderdata = mysqli_fetch_assoc($result);
 		return $this->orderdata;
 	}
 
@@ -227,8 +227,8 @@ class RA_Orders extends RA_TableModel
 
 		$orderid = (int)$orderid;
 		run_hook("DeleteOrder", array("orderid" => $orderid));
-		$result = select_query("tblorders", "userid,invoiceid", array("id" => $orderid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+		$data = mysqli_fetch_array($result);
 		$userid = $data['userid'];
 		$invoiceid = $data['invoiceid'];
 		delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
@@ -292,9 +292,9 @@ class RA_Orders extends RA_TableModel
 		update_query("tblorders", array("status" => $status), array("id" => $orderid));
 
 		if ($status == "Cancelled" || $status == "Fraud") {
-			$result = select_query("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$productid = $data['id'];
 				$prodstatus = $data['servicestatus'];
 				$module = $data['servertype'];
@@ -335,9 +335,9 @@ class RA_Orders extends RA_TableModel
 		update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
 
 		if ($status == "Pending") {
-			$result = select_query("tbldomains", "id,type", array("orderid" => $orderid));
+			$result = select_query_i("tbldomains", "id,type", array("orderid" => $orderid));
 
-			while ($data = mysql_fetch_assoc($result)) {
+			while ($data = mysqli_fetch_assoc($result)) {
 				if ($data['type'] == "Transfer") {
 					$status = "Pending Transfer";
 				}
@@ -352,8 +352,8 @@ class RA_Orders extends RA_TableModel
 			update_query("tbldomains", array("status" => $status), array("orderid" => $orderid));
 		}
 
-		$result = select_query("tblorders", "userid,invoiceid", array("id" => $orderid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+		$data = mysqli_fetch_array($result);
 		$userid = $data['userid'];
 		$invoiceid = $data['invoiceid'];
 
@@ -373,9 +373,9 @@ class RA_Orders extends RA_TableModel
 
 		$orderid = $this->orderid;
 		$items = array();
-		$result = select_query("tblcustomerservices", "", array("orderid" => $orderid));
+		$result = select_query_i("tblcustomerservices", "", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$hostingid = $data['id'];
 			$domain = $data['domain'];
 			$billingcycle = $data['billingcycle'];
@@ -388,8 +388,8 @@ class RA_Orders extends RA_TableModel
 			$nextduedate = $data['nextduedate'];
 			$serverusername = $data['username'];
 			$serverpassword = decrypt($data['password']);
-			$result2 = select_query("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$data = mysqli_fetch_array($result2);
 			$groupname = $data['groupname'];
 			$productname = $data['name'];
 			$producttype = $data['type'];
@@ -420,18 +420,18 @@ class RA_Orders extends RA_TableModel
 		}
 
 		$predefinedaddons = array();
-		$result = select_query("tbladdons", "", "");
+		$result = select_query_i("tbladdons", "", "");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$addon_id = $data['id'];
 			$addon_name = $data['name'];
 			$addon_welcomeemail = $data['welcomeemail'];
 			$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 		}
 
-		$result = select_query("tblserviceaddons", "", array("orderid" => $orderid));
+		$result = select_query_i("tblserviceaddons", "", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$aid = $data['id'];
 			$hostingid = $data['hostingid'];
 			$addonid = $data['addonid'];
@@ -450,9 +450,9 @@ class RA_Orders extends RA_TableModel
 			$items[] = array("type" => "addon", "producttype" => $aInt->lang("orders", "addon"), "description" => $name, "domain" => "", "billingcycle" => $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($billingcycle2))), "amount" => $addonamount, "paymentstatus" => $paymentstatus, "status" => $aInt->lang("status", strtolower($addonstatus)));
 		}
 
-		$result = select_query("tbldomains", "", array("orderid" => $orderid));
+		$result = select_query_i("tbldomains", "", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$domainid = $data['id'];
 			$type = $data['type'];
 			$domain = $data['domain'];
@@ -484,9 +484,9 @@ class RA_Orders extends RA_TableModel
 			$items[] = array("type" => "domain", "producttype" => $aInt->lang("fields", "domain"), "description" => $type, "domain" => $domain, "billingcycle" => $registrationperiod . " " . $aInt->lang("domains", "year" . $regperiods), "amount" => $domainamount, "paymentstatus" => $paymentstatus, "status" => $aInt->lang("status", strtolower(str_replace(" ", "", $status))));
 		}
 
-		$result = select_query("tblupgrades", "", array("orderid" => $orderid));
+		$result = select_query_i("tblupgrades", "", array("orderid" => $orderid));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$upgradeid = $data['id'];
 			$type = $data['type'];
 			$relid = $data['relid'];
@@ -496,19 +496,19 @@ class RA_Orders extends RA_TableModel
 			$newrecurringamount = $data['newrecurringamount'];
 			$status = $data['status'];
 			$paid = $data['paid'];
-			$result2 = select_query("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+			$data = mysqli_fetch_array($result2);
 			$productname = $data['productname'];
 			$domain = $data['domain'];
 
 			if ($type == "package") {
-				$result2 = select_query("tblservices", "name", array("id" => $originalvalue));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblservices", "name", array("id" => $originalvalue));
+				$data = mysqli_fetch_array($result2);
 				$oldpackagename = $data['name'];
 				$newvalue = explode(",", $newvalue);
 				$newpackageid = $newvalue[0];
-				$result2 = select_query("tblservices", "name", array("id" => $newpackageid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblservices", "name", array("id" => $newpackageid));
+				$data = mysqli_fetch_array($result2);
 				$newpackagename = $data['name'];
 				$newbillingcycle = $newvalue[1];
 				$details = "<a href=\"clientshosting.php?userid=" . $userid . "&id=" . $relid . "\">" . $oldpackagename . " => " . $newpackagename . "</a><br />";
@@ -525,17 +525,17 @@ class RA_Orders extends RA_TableModel
 				$tempvalue = explode("=>", $originalvalue);
 				$configid = $tempvalue[0];
 				$oldoptionid = $tempvalue[1];
-				$result2 = select_query("tblserviceconfigoptions", "", array("id" => $configid));
-				$data = mysql_fetch_array($result2);
+				$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+				$data = mysqli_fetch_array($result2);
 				$configname = $data['optionname'];
 				$optiontype = $data['optiontype'];
 
 				if ($optiontype == 1 || $optiontype == 2) {
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
+					$data = mysqli_fetch_array($result2);
 					$oldoptionname = $data['optionname'];
-					$result2 = select_query("tblserviceconfigoptionssub", "", array("id" => $newvalue));
-					$data = mysql_fetch_array($result2);
+					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $newvalue));
+					$data = mysqli_fetch_array($result2);
 					$newoptionname = $data['optionname'];
 				}
 				else {
@@ -551,8 +551,8 @@ class RA_Orders extends RA_TableModel
 					}
 					else {
 						if ($optiontype == 4) {
-							$result2 = select_query("tblserviceconfigoptionssub", "", array("configid" => $configid));
-							$data = mysql_fetch_array($result2);
+							$result2 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $configid));
+							$data = mysqli_fetch_array($result2);
 							$optionname = $data['optionname'];
 							$oldoptionname = $oldoptionid;
 							$newoptionname = $newvalue . " x " . $optionname;

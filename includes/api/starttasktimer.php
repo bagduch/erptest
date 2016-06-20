@@ -32,8 +32,8 @@ if (!isset($_REQUEST['projectid'])) {
 
 
 if (isset($_REQUEST['projectid'])) {
-	$result = select_query("mod_project", "", array("id" => (int)$projectid));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("mod_project", "", array("id" => (int)$projectid));
+	$data = mysqli_fetch_assoc($result);
 	$projectid = $data['id'];
 
 	if (!$projectid) {
@@ -49,8 +49,8 @@ if (!isset($_REQUEST['adminid'])) {
 
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query("tbladmins", "id", array("id" => $_REQUEST['adminid']));
-	$data_adminid = mysql_fetch_array($result_adminid);
+	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {
 		$apiresults = array("result" => "error", "message" => "Admin ID Not Found");
@@ -66,8 +66,8 @@ if (!isset($_REQUEST['taskid'])) {
 
 
 if (isset($_REQUEST['taskid'])) {
-	$result_taskid = select_query("mod_projecttasks", "id", array("id" => $_REQUEST['taskid']));
-	$data_taskid = mysql_fetch_array($result_taskid);
+	$result_taskid = select_query_i("mod_projecttasks", "id", array("id" => $_REQUEST['taskid']));
+	$data_taskid = mysqli_fetch_array($result_taskid);
 
 	if (!$data_taskid['id']) {
 		$apiresults = array("result" => "error", "message" => "Task ID Not Found");

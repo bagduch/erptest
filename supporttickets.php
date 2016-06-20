@@ -39,17 +39,17 @@ if (isset($_SESSION['uid'])) {
 		}
 	}
 
-	$result = select_query("tbltickets", "COUNT(id)", "userid='" . mysql_real_escape_string($_SESSION['uid']) . "' AND status!='Closed'");
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbltickets", "COUNT(id)", "userid='" . mysqli_real_escape_string($_SESSION['uid']) . "' AND status!='Closed'");
+	$data = mysqli_fetch_array($result);
 	$smartyvalues['numopentickets'] = $data[0];
 
 	if ($searchterm = $ra->get_req_var("searchterm")) {
 		check_token();
 		$smartyvalues['searchterm'] = $smartyvalues['q'] = $searchterm;
-		$searchterm = mysql_real_escape_string(trim($searchterm));
-		$where = "tbltickets.userid='" . mysql_real_escape_string($_SESSION['uid']) . ("' AND (tbltickets.tid='" . $searchterm . "' OR (tbltickets.title LIKE '%" . $searchterm . "%' OR tbltickets.message LIKE '%" . $searchterm . "%' OR tblticketreplies.message LIKE '%" . $searchterm . "%'))");
-		$result = full_query("SELECT COUNT(DISTINCT tbltickets.id) FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where);
-		$data = mysql_fetch_array($result);
+		$searchterm = mysqli_real_escape_string(trim($searchterm));
+		$where = "tbltickets.userid='" . mysqli_real_escape_string($_SESSION['uid']) . ("' AND (tbltickets.tid='" . $searchterm . "' OR (tbltickets.title LIKE '%" . $searchterm . "%' OR tbltickets.message LIKE '%" . $searchterm . "%' OR tblticketreplies.message LIKE '%" . $searchterm . "%'))");
+		$result = full_query_i("SELECT COUNT(DISTINCT tbltickets.id) FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where);
+		$data = mysqli_fetch_array($result);
 		$numtickets = $data[0];
 		$smartyvalues['numtickets'] = $numtickets;
 		list($orderby, $sort, $limit) = clientAreaTableInit("tickets", "lastreply", "DESC", $numtickets);
@@ -103,12 +103,12 @@ if (isset($_SESSION['uid'])) {
 		}
 
 		$tickets = array();
-		$result = full_query("SELECT DISTINCT tbltickets.id FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where . (" ORDER BY " . $orderby . " " . $sort . " LIMIT " . $limit));
+		$result = full_query_i("SELECT DISTINCT tbltickets.id FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where . (" ORDER BY " . $orderby . " " . $sort . " LIMIT " . $limit));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
-			$result2 = select_query("tbltickets", "", array("userid" => $_SESSION['uid'], "id" => $id));
-			$data = mysql_fetch_array($result2);
+			$result2 = select_query_i("tbltickets", "", array("userid" => $_SESSION['uid'], "id" => $id));
+			$data = mysqli_fetch_array($result2);
 			$tid = $data['tid'];
 			$c = $data['c'];
 			$deptid = $data['did'];
@@ -127,8 +127,8 @@ if (isset($_SESSION['uid'])) {
 		}
 	}
 	else {
-		$result = select_query("tbltickets", "COUNT(id)", array("userid" => $_SESSION['uid']));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbltickets", "COUNT(id)", array("userid" => $_SESSION['uid']));
+		$data = mysqli_fetch_array($result);
 		$numtickets = $data[0];
 		$smartyvalues['numtickets'] = $numtickets;
 		list($orderby, $sort, $limit) = clientAreaTableInit("tickets", "lastreply", "DESC", $numtickets);
@@ -168,9 +168,9 @@ if (isset($_SESSION['uid'])) {
 		}
 
 		$tickets = array();
-		$result = select_query("tbltickets", "tbltickets.*,tblticketdepartments.name AS deptname", array("userid" => $_SESSION['uid']), $orderby, $sort, $limit, " tblticketdepartments ON tblticketdepartments.id=tbltickets.did");
+		$result = select_query_i("tbltickets", "tbltickets.*,tblticketdepartments.name AS deptname", array("userid" => $_SESSION['uid']), $orderby, $sort, $limit, " tblticketdepartments ON tblticketdepartments.id=tbltickets.did");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$tid = $data['tid'];
 			$c = $data['c'];

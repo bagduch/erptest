@@ -60,9 +60,9 @@ if ($intellisearch) {
 		}
 
 		$query .= " LIMIT 0,10";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$userid = $data['id'];
 			$firstname = $data['firstname'];
 			$lastname = $data['lastname'];
@@ -93,9 +93,9 @@ if ($intellisearch) {
 		}
 
 		$query .= " LIMIT 0,10";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$contactid = $data['id'];
 			$userid = $data['userid'];
 			$firstname = $data['firstname'];
@@ -127,9 +127,9 @@ if ($intellisearch) {
 
 		$query .= " domain LIKE '%" . $value . "%' OR username LIKE '%" . $value . "%' OR dedicatedip LIKE '%" . $value . "%' OR tblcustomerservices.notes LIKE '%" . $value . "%'";
 		$query .= " LIMIT 0,10";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$productid = $data['id'];
 			$userid = $data['userid'];
 			$firstname = $data['firstname'];
@@ -168,9 +168,9 @@ if ($intellisearch) {
 
 		$query .= " domain LIKE '%" . $value . "%' OR tbldomains.additionalnotes LIKE '%" . $value . "%'";
 		$query .= " LIMIT 0,10";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$domainid = $data['id'];
 			$userid = $data['userid'];
 			$firstname = $data['firstname'];
@@ -201,9 +201,9 @@ if ($intellisearch) {
 	if (is_numeric($value)) {
 		if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
 			$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.id='" . $value . "'";
-			$result = full_query($query);
+			$result = full_query_i($query);
 
-			while ($data = mysql_fetch_array($result)) {
+			while ($data = mysqli_fetch_array($result)) {
 				$invoiceid = $data['id'];
 				$userid = $data['userid'];
 				$firstname = $data['firstname'];
@@ -224,9 +224,9 @@ if ($intellisearch) {
 
 	if (checkPermission("List Support Tickets", true) || checkPermission("View Support Ticket", true)) {
 		$query = "SELECT id,tid,title FROM tbltickets WHERE tbltickets.tid='" . $value . "' OR tbltickets.title LIKE '%" . $value . "%' ORDER BY lastreply DESC LIMIT 0,10";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$ticketid = $data['id'];
 			$tid = $data['tid'];
 			$title = $data['title'];
@@ -237,9 +237,9 @@ if ($intellisearch) {
 
 	if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
 		$query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.invoicenum='" . $value . "'";
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$invoiceid = $data['id'];
 			$userid = $data['userid'];
 			$firstname = $data['firstname'];
@@ -299,9 +299,9 @@ if ($clientsearch || $ticketclientsearch) {
 	$value = db_escape_string($value);
 	$tempmatches = "";
 	$query = "SELECT id,firstname,lastname,companyname,email FROM tblclients WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR email LIKE '%" . $value . "%' LIMIT 0,5";
-	$result = full_query($query);
+	$result = full_query_i($query);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['id'];
 		$firstname = $data['firstname'];
 		$lastname = $data['lastname'];

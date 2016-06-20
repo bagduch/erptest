@@ -42,8 +42,8 @@ if ($CONFIG['SupportModule']) {
 	}
 }
 
-$result = select_query("tbltickets", "", array("tid" => $tid, "c" => $c));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tbltickets", "", array("tid" => $tid, "c" => $c));
+$data = mysqli_fetch_array($result);
 $id = $data['id'];
 $tid = $data['tid'];
 $c = $data['c'];
@@ -90,9 +90,9 @@ else {
 
 		$smartyvalues['ratings'] = $ratings;
 		$staffinvolved = array();
-		$result = select_query("tblticketreplies", "DISTINCT admin", array("tid" => $id));
+		$result = select_query_i("tblticketreplies", "DISTINCT admin", array("tid" => $id));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			if (trim($data[0])) {
 				$staffinvolved[get_query_val("tbladmins", "id", "CONCAT(firstname,' ',lastname)='" . db_escape_string($data[0]) . "'")] = $data[0];
 			}
@@ -284,9 +284,9 @@ else {
 	$smarty->assign("ratingenabled", $CONFIG['TicketRatingEnabled']);
 	$replies = $ascreplies = array();
 	$ascreplies[] = array("id" => "", "userid" => $userid, "contactid" => $contactid, "name" => ($admin ? $admin : $clientname), "email" => ($admin ? "" : $clientemail), "admin" => ($admin ? true : false), "user" => $user, "admin" => $admin, "date" => $date, "message" => $message, "attachments" => $attachments, "rating" => $rating);
-	$result = select_query("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+	$result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$ids = $data['id'];
 		$userid = $data['userid'];
 		$contactid = $data['contactid'];

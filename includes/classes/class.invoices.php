@@ -22,8 +22,8 @@ class RA_Invoices extends RA_TableModel {
 		$query = " FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid";
 		$filters = $this->buildCriteria($criteria);
 		$query .= (count($filters) ? " WHERE " . implode(" AND ", $filters) : "");
-		$result = full_query("SELECT COUNT(*)" . $query);
-		$data = mysql_fetch_array($result);
+		$result = full_query_i("SELECT COUNT(*)" . $query);
+		$data = mysqli_fetch_array($result);
 		$this->getPageObj()->setNumResults($data[0]);
 		$gateways = new RA_Gateways();
 		$orderby = $this->getPageObj()->getOrderBy();
@@ -39,9 +39,9 @@ class RA_Invoices extends RA_TableModel {
 
 		$invoices = array();
 		$query = "SELECT tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency" . $query . " ORDER BY " . $orderby . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$invoicenum = $data['invoicenum'];
 			$userid = $data['userid'];
@@ -209,21 +209,21 @@ class RA_Invoices extends RA_TableModel {
 		global $currency;
 
 		$invoicesummary = array();
-		$result = full_query("SELECT currency,COUNT(tblinvoices.id),SUM(total) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Paid' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Paid' GROUP BY tblclients.currency");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['paid'] = $data[2];
 		}
 
-		$result = full_query("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate>='" . date("Ymd") . "' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate>='" . date("Ymd") . "' GROUP BY tblclients.currency");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['unpaid'] = $data[2];
 		}
 
-		$result = full_query("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "' GROUP BY tblclients.currency");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['overdue'] = $data[2];
 		}
 

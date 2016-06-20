@@ -35,9 +35,9 @@ echo $aInt->lang("fields", "username");
 echo ": ";
 echo "<s";
 echo "elect name=\"username\"><option value=\"\">Any</option>";
-$result = select_query("tblactivitylog", "DISTINCT user", "", "user", "ASC");
+$result = select_query_i("tblactivitylog", "DISTINCT user", "", "user", "ASC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$user = $data['user'];
 	echo "<option";
 
@@ -87,8 +87,8 @@ if ($where) {
 	$where = substr($where, 0, 0 - 5);
 }
 
-$result = select_query("tblactivitylog", "COUNT(*)", $where, "id", "DESC");
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblactivitylog", "COUNT(*)", $where, "id", "DESC");
+$data = mysqli_fetch_array($result);
 $numrows = $data[0];
 $patterns[] = "/- User ID: (.*?) /";
 $patterns[] = "/Service ID: (.*?) /";
@@ -104,9 +104,9 @@ $replacements[] = "<a href=\"invoices.php?action=edit&id=$1\">Invoice ID: $1</a>
 $replacements[] = "<a href=\"quotes.php?action=manage&id=$1\">Quote ID: $1</a> ";
 $replacements[] = "<a href=\"orders.php?action=view&id=$1\">Order ID: $1</a> ";
 $replacements[] = "<a href=\"transactions.php?action=edit&id=$1\">Transaction ID: $1</a> ";
-$result = select_query("tblactivitylog", "", $where, "id", "DESC", $page * $limit . ("," . $limit));
+$result = select_query_i("tblactivitylog", "", $where, "id", "DESC", $page * $limit . ("," . $limit));
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$description = $data['description'];
 	$username = $data['user'];

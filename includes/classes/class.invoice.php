@@ -38,8 +38,8 @@ class RA_Invoice {
             return false;
         }
 
-        $result = select_query("tblinvoices", "tblinvoices.*,(SELECT value FROM tblpaymentgateways WHERE gateway=tblinvoices.paymentmethod AND setting='name' LIMIT 1) AS gateway,IFNULL((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),0) as amountpaid", array("id" => $this->invoiceid));
-        $data = mysql_fetch_assoc($result);
+        $result = select_query_i("tblinvoices", "tblinvoices.*,(SELECT value FROM tblpaymentgateways WHERE gateway=tblinvoices.paymentmethod AND setting='name' LIMIT 1) AS gateway,IFNULL((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),0) as amountpaid", array("id" => $this->invoiceid));
+        $data = mysqli_fetch_assoc($result);
 
         if (!$data['id']) {
             return false;
@@ -110,9 +110,9 @@ class RA_Invoice {
         $clientsdetails['country'] = $clientsdetails['countryname'];
         $this->output['clientsdetails'] = $clientsdetails;
         $customfields = array();
-        $result = select_query("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.id AND tblcustomfieldsvalues.relid=" . (int) $this->getData("userid") . ") AS value", array("type" => "client", "showinvoice" => "on"));
+        $result = select_query_i("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.id AND tblcustomfieldsvalues.relid=" . (int) $this->getData("userid") . ") AS value", array("type" => "client", "showinvoice" => "on"));
 
-        while ($data = mysql_fetch_assoc($result)) {
+        while ($data = mysqli_fetch_assoc($result)) {
             if ($data['value']) {
                 $customfields[] = $data;
             }
@@ -179,13 +179,13 @@ class RA_Invoice {
         $invoiceitems = array();
 
         if ($ra->get_config("GroupSimilarLineItems")) {
-            $result = full_query("SELECT COUNT(*),id,type,relid,description,amount,taxed FROM tblinvoiceitems WHERE invoiceid=" . (int) $invoiceid . " GROUP BY `description`,`amount` ORDER BY id ASC");
+            $result = full_query_i("SELECT COUNT(*),id,type,relid,description,amount,taxed FROM tblinvoiceitems WHERE invoiceid=" . (int) $invoiceid . " GROUP BY `description`,`amount` ORDER BY id ASC");
         } else {
-            $result = select_query("tblinvoiceitems", "0,id,type,relid,description,amount,taxed", array("invoiceid" => $invoiceid), "id", "ASC");
+            $result = select_query_i("tblinvoiceitems", "0,id,type,relid,description,amount,taxed", array("invoiceid" => $invoiceid), "id", "ASC");
         }
 
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $qty = $data[0];
             $description = $data[4];
             $amount = $data[5];
@@ -212,9 +212,9 @@ class RA_Invoice {
     public function getTransactions() {
         $invoiceid = $this->invoiceid;
         $transactions = array();
-        $result = select_query("tblaccounts", "id,date,transid,amountin,amountout,(SELECT value FROM tblpaymentgateways WHERE gateway=tblaccounts.gateway AND setting='name' LIMIT 1) AS gateway", array("invoiceid" => $invoiceid), "date` ASC,`id", "ASC");
+        $result = select_query_i("tblaccounts", "id,date,transid,amountin,amountout,(SELECT value FROM tblpaymentgateways WHERE gateway=tblaccounts.gateway AND setting='name' LIMIT 1) AS gateway", array("invoiceid" => $invoiceid), "date` ASC,`id", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $tid = $data['id'];
             $date = $data['date'];
             $gateway = $data['gateway'];
@@ -345,9 +345,9 @@ class RA_Invoice {
 
         $where["(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')"] = array("sqltype" => "<=", "value" => 0);
         $invoices = array();
-        $result = select_query("tblinvoices", "tblinvoices.*,total-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0) AS balance", $where, $orderby, $sort, $limit);
+        $result = select_query_i("tblinvoices", "tblinvoices.*,total-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0) AS balance", $where, $orderby, $sort, $limit);
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
             $invoicenum = $data['invoicenum'];
             $date = $data['date'];
@@ -376,7 +376,23 @@ class RA_Invoice {
         return $invoices;
     }
 
+<<<<<<< HEAD
 
+=======
+    public function getOverdueInvoice($userid) {
+
+        $where = array();
+        $where[] = "tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "'";
+        if ($userid) {
+            $where['userid'] = $userid;
+        }
+        $result = select_query_i("tblinvoices", "tblinvoices.*,total-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0) AS balance", $where, $orderby, $sort, $limit);
+
+        while ($data = mysqli_fetch_array($result)) {
+            
+        }
+    }
+>>>>>>> guy
 
     public function getTotalBalance() {
         return $this->totalbalance;
@@ -389,9 +405,9 @@ class RA_Invoice {
     public function getEmailTemplates() {
         $status = $this->getData("status");
         $validtpls = array();
-        $result = select_query("tblemailtemplates", "id,name", array("type" => "invoice", "language" => ""), "name", "ASC");
+        $result = select_query_i("tblemailtemplates", "id,name", array("type" => "invoice", "language" => ""), "name", "ASC");
 
-        while ($data = mysql_fetch_array($result)) {
+        while ($data = mysqli_fetch_array($result)) {
             $validtpls[$data['name']] = $data['id'];
         }
 
@@ -427,8 +443,8 @@ class RA_Invoice {
         global $aInt;
 
         $credit = $this->getData("credit");
-        $result = select_query("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $this->getData("id")));
-        $data = mysql_fetch_array($result);
+        $result = select_query_i("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $this->getData("id")));
+        $data = mysqli_fetch_array($result);
         $transcount = $data[0];
         $amountpaid = $data[1];
 

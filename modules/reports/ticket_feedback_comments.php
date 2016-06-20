@@ -10,8 +10,8 @@ if (!$fromdate) $fromdate = fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m"),da
 if (!$todate) $todate = getTodaysDate();
 
 $reportdata["headertext"] = "<form method=\"post\" action=\"$PHP_SELF?".((isset($_REQUEST['module']))?'module='.$_REQUEST['module'].'&':'')."report=$report&currencyid=$currencyid&calculate=true\"><center>Staff Name: <select name=\"staffid\"><option value=\"0\">- Any -</option>";
-$result = select_query("tbladmins","id,CONCAT(firstname,' ',lastname)","","firstname","ASC");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tbladmins","id,CONCAT(firstname,' ',lastname)","","firstname","ASC");
+while ($data = mysqli_fetch_array($result)) {
     $reportdata["headertext"] .= "<option value=\"".$data[0]."\"".(($data[0]==$staffid)?" selected":"").">".$data[1]."</option>";
 }
 $reportdata["headertext"] .= "</select> &nbsp;&nbsp;&nbsp; Start Date: <input type=\"text\" name=\"fromdate\" value=\"$fromdate\" class=\"datepick\" /> &nbsp;&nbsp;&nbsp; End Date: <input type=\"text\" name=\"todate\" value=\"$todate\" class=\"datepick\" /> &nbsp;&nbsp;&nbsp; <input type=\"submit\" value=\"Generate Report\" /></form>";
@@ -24,8 +24,8 @@ $reportdata["tableheadings"][] = "Rating";
 $reportdata["tableheadings"][] = "Comments";
 $reportdata["tableheadings"][] = "IP Address";
 
-$result = select_query("tblticketfeedback","tblticketfeedback.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblticketfeedback.adminid) AS adminname,(SELECT CONCAT(tid,'|||',title) FROM tbltickets WHERE tbltickets.id=tblticketfeedback.ticketid) AS ticketinfo","datetime>='".db_make_safe_human_date($fromdate)."' AND datetime<='".db_make_safe_human_date($todate)." 23:59:59'".(($staffid)?" AND adminid=".(int)$staffid:""),"datetime","ASC");
-while ($data = mysql_fetch_array($result)) {
+$result = select_query_i("tblticketfeedback","tblticketfeedback.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblticketfeedback.adminid) AS adminname,(SELECT CONCAT(tid,'|||',title) FROM tbltickets WHERE tbltickets.id=tblticketfeedback.ticketid) AS ticketinfo","datetime>='".db_make_safe_human_date($fromdate)."' AND datetime<='".db_make_safe_human_date($todate)." 23:59:59'".(($staffid)?" AND adminid=".(int)$staffid:""),"datetime","ASC");
+while ($data = mysqli_fetch_array($result)) {
 
     $id = $data['id'];
     $ticketid = $data['ticketid'];

@@ -23,15 +23,15 @@ System SSL URL: " . $CONFIG['SystemSSLURL'] . "</textarea>";
 $language = ((isset($_REQUEST['language']) && in_array($_REQUEST['language'], $ra->getValidLanguages())) ? $_REQUEST['language'] : "");
 header("Content-Type: application/rss+xml; charset=" . $CONFIG['Charset']);
 echo "<?xml version=\"1.0\" encoding=\"" . $CONFIG['Charset'] . "\"?>\n<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n<atom:link href=\"" . $CONFIG['SystemURL'] . "/announcementsrss.php\" rel=\"self\" type=\"application/rss+xml\" />\n<title><![CDATA[" . $CONFIG['CompanyName'] . "]]></title>\n<description><![CDATA[" . $CONFIG['CompanyName'] . " " . $_LANG['announcementstitle'] . " " . $_LANG['rssfeed'] . "]]></description>\n<link>" . $CONFIG['SystemURL'] . "/announcements.php</link>";
-$result = select_query("tblannouncements", "*", array("published" => "on"), "date", "DESC");
+$result = select_query_i("tblannouncements", "*", array("published" => "on"), "date", "DESC");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$date = $data['date'];
 	$title = $data['title'];
 	$announcement = $data['announcement'];
-	$result2 = select_query("tblannouncements", "", array("parentid" => $id, "language" => $language));
-	$data = mysql_fetch_array($result2);
+	$result2 = select_query_i("tblannouncements", "", array("parentid" => $id, "language" => $language));
+	$data = mysqli_fetch_array($result2);
 
 	if ($data['title']) {
 		$title = $data['title'];

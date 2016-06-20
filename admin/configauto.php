@@ -71,9 +71,9 @@ echo "
 <form method=\"post\" action=\"";
 echo $PHP_SELF;
 echo "?sub=save\">";
-$result = select_query("tblconfiguration", "", "");
+$result = select_query_i("tblconfiguration", "", "");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$setting = $data['setting'];
 	$value = $data['value'];
 	$CONFIG["" . $setting] = "" . $value;

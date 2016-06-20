@@ -25,9 +25,9 @@ function getRegistrarsDropdownMenu($registrar, $name = "registrar") {
 	global $aInt;
 
 	$code = "<select name=\"" . $name . "\"><option value=\"\">" . $aInt->lang("global", "none") . "</option>";
-	$result = select_query("tblregistrars", "DISTINCT registrar", "", "registrar", "ASC");
+	$result = select_query_i("tblregistrars", "DISTINCT registrar", "", "registrar", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$code .= "<option value=\"" . $data[0] . "\"";
 
 		if ($registrar == $data[0]) {
@@ -110,9 +110,9 @@ function RegCallFunction($params, $func, $noarr = false) {
 
 function getRegistrarConfigOptions($registrar) {
 	$configoptions = array();
-	$result = select_query("tblregistrars", "", array("registrar" => $registrar));
+	$result = select_query_i("tblregistrars", "", array("registrar" => $registrar));
 
-	while ($data = @mysql_fetch_array($result)) {
+	while ($data = @mysqli_fetch_array($result)) {
 		$setting = $data['setting'];
 		$value = $data['value'];
 		$configoptions[$setting] = decrypt($value);
@@ -206,8 +206,8 @@ function RegSaveDNS($params) {
 
 function RegRenewDomain($params) {
 	$domainid = $params['domainid'];
-	$result = select_query("tbldomains", "", array("id" => $domainid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "", array("id" => $domainid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$domain = $data['domain'];
 	$orderid = $data['orderid'];
@@ -241,8 +241,8 @@ function RegRenewDomain($params) {
 		run_hook("AfterRegistrarRenewalFailed", array("params" => $params, "error" => $values['error']));
 	}
 	else {
-		$result = select_query("tbldomains", "expirydate,registrationperiod", array("id" => $domainid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbldomains", "expirydate,registrationperiod", array("id" => $domainid));
+		$data = mysqli_fetch_array($result);
 		$expirydate = $data['expirydate'];
 		$registrationperiod = $data['registrationperiod'];
 		$year = substr($expirydate, 0, 4);
@@ -262,8 +262,8 @@ function RegRegisterDomain($paramvars) {
 	global $CONFIG;
 
 	$domainid = $paramvars['domainid'];
-	$result = select_query("tbldomains", "", array("id" => $domainid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "", array("id" => $domainid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$domain = $data['domain'];
 	$orderid = $data['orderid'];
@@ -273,8 +273,8 @@ function RegRegisterDomain($paramvars) {
 	$emailforwarding = ($data['emailforwarding'] ? true : false);
 	$idprotection = ($data['idprotection'] ? true : false);
 	$domainparts = explode(".", $domain, 2);
-	$result = select_query("tblorders", "contactid", array("id" => $orderid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblorders", "contactid", array("id" => $orderid));
+	$data = mysqli_fetch_array($result);
 	$contactid = $data['contactid'];
 
 	if (!function_exists("getClientsDetails")) {
@@ -337,16 +337,16 @@ function RegRegisterDomain($paramvars) {
 	$params['adminfullphonenumber'] = "+" . $admincountrycode . "." . $adminphonenumber;
 
 	if (!$params['ns1'] && !$params['ns2']) {
-		$result = select_query("tblorders", "nameservers", array("id" => $orderid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "nameservers", array("id" => $orderid));
+		$data = mysqli_fetch_array($result);
 		$nameservers = $data['nameservers'];
-		$result = select_query("tblcustomerservices", "server", array("domain" => $domain));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "server", array("domain" => $domain));
+		$data = mysqli_fetch_array($result);
 		$server = $data['server'];
 
 		if ($server) {
-			$result = select_query("tblservers", "", array("id" => $server));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblservers", "", array("id" => $server));
+			$data = mysqli_fetch_array($result);
 			$i = 1;
 
 			while ($i <= 5) {
@@ -383,9 +383,9 @@ function RegRegisterDomain($paramvars) {
 		}
 	}
 
-	$result = select_query("tbldomainsadditionalfields", "", array("domainid" => $domainid));
+	$result = select_query_i("tbldomainsadditionalfields", "", array("domainid" => $domainid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$field_name = $data['name'];
 		$field_value = $data['value'];
 		$params['additionalfields'][$field_name] = $field_value;
@@ -427,8 +427,8 @@ function RegTransferDomain($paramvars) {
 
 	$domainid = $paramvars['domainid'];
 	$passedepp = $paramvars['transfersecret'];
-	$result = select_query("tbldomains", "", array("id" => $domainid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "", array("id" => $domainid));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$domain = $data['domain'];
 	$orderid = $data['orderid'];
@@ -438,8 +438,8 @@ function RegTransferDomain($paramvars) {
 	$emailforwarding = ($data['emailforwarding'] ? true : false);
 	$idprotection = ($data['idprotection'] ? true : false);
 	$domainparts = explode(".", $domain, 2);
-	$result = select_query("tblorders", "contactid,nameservers,transfersecret", array("id" => $orderid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblorders", "contactid,nameservers,transfersecret", array("id" => $orderid));
+	$data = mysqli_fetch_array($result);
 	$contactid = $data['contactid'];
 	$nameservers = $data['nameservers'];
 	$transfersecret = $data['transfersecret'];
@@ -503,16 +503,16 @@ function RegTransferDomain($paramvars) {
 	$params['adminfullphonenumber'] = "+" . $admincountrycode . "." . $adminphonenumber;
 
 	if (!$params['ns1'] && !$params['ns2']) {
-		$result = select_query("tblorders", "nameservers", array("id" => $orderid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblorders", "nameservers", array("id" => $orderid));
+		$data = mysqli_fetch_array($result);
 		$nameservers = $data['nameservers'];
-		$result = select_query("tblcustomerservices", "server", array("domain" => $domain));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblcustomerservices", "server", array("domain" => $domain));
+		$data = mysqli_fetch_array($result);
 		$server = $data['server'];
 
 		if ($server) {
-			$result = select_query("tblservers", "", array("id" => $server));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblservers", "", array("id" => $server));
+			$data = mysqli_fetch_array($result);
 			$i = 1;
 
 			while ($i <= 5) {
@@ -549,9 +549,9 @@ function RegTransferDomain($paramvars) {
 		}
 	}
 
-	$result = select_query("tbldomainsadditionalfields", "", array("domainid" => $domainid));
+	$result = select_query_i("tbldomainsadditionalfields", "", array("domainid" => $domainid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$field_name = $data['name'];
 		$field_value = $data['value'];
 		$params['additionalfields'][$field_name] = $field_value;
@@ -603,12 +603,12 @@ function RegGetContactDetails($params) {
 }
 
 function RegSaveContactDetails($params) {
-	$result = select_query("tbldomains", "id", array("domain" => $params['sld'] . "." . $params['tld']));
-	$result = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "id", array("domain" => $params['sld'] . "." . $params['tld']));
+	$result = mysqli_fetch_array($result);
 	$domainid = $data['id'];
-	$result = select_query("tbldomainsadditionalfields", "", array("domainid" => $domainid));
+	$result = select_query_i("tbldomainsadditionalfields", "", array("domainid" => $domainid));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$field_name = $data['name'];
 		$field_value = $data['value'];
 		$params['additionalfields'][$field_name] = $field_value;
@@ -623,8 +623,8 @@ function RegSaveContactDetails($params) {
 		return false;
 	}
 
-	$result = select_query("tbldomains", "userid", array("id" => $params['domainid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbldomains", "userid", array("id" => $params['domainid']));
+	$data = mysqli_fetch_array($result);
 	$userid = $data[0];
 
 	if ($values['error']) {
@@ -685,8 +685,8 @@ function RegDeleteNameserver($params) {
 
 function RegIDProtectToggle($params) {
 	$domainid = $params['domainid'];
-	$result = select_query("tbldomains", "idprotection", array("id" => $domainid));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("tbldomains", "idprotection", array("id" => $domainid));
+	$data = mysqli_fetch_assoc($result);
 	$idprotection = ($data['idprotection'] ? true : false);
 	$params['protectenable'] = $idprotection;
 	return RegCallFunction($params, "IDProtectToggle");
@@ -694,8 +694,8 @@ function RegIDProtectToggle($params) {
 
 function RegClientAreaOutput($params) {
 	$domainid = $params['domainid'];
-	$result = select_query("tbldomains", "idprotection", array("id" => $domainid));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("tbldomains", "idprotection", array("id" => $domainid));
+	$data = mysqli_fetch_assoc($result);
 	$idprotection = ($data['idprotection'] ? true : false);
 	$params['protectenable'] = $idprotection;
 	$values = "";
@@ -708,8 +708,8 @@ function RegGetDefaultNameservers($params, $domain) {
 	$serverid = get_query_val("tblcustomerservices", "server", array("domain" => $domain));
 
 	if ($serverid) {
-		$result = select_query("tblservers", "", array("id" => $serverid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblservers", "", array("id" => $serverid));
+		$data = mysqli_fetch_array($result);
 		$i = 1;
 
 		while ($i <= 5) {

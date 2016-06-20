@@ -20,8 +20,8 @@ function doUnsubscribe($email, $key) {
 		return $_LANG['pwresetemailrequired'];
 	}
 
-	$result = select_query("tblclients", "id,email,emailoptout", array("email" => $email));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblclients", "id,email,emailoptout", array("email" => $email));
+	$data = mysqli_fetch_array($result);
 	$userid = $data['id'];
 	$email = $data['email'];
 	$emailoptout = $data['emailoptout'];

@@ -42,9 +42,9 @@ if ($m = $ra->get_req_var("m")) {
 	}
 
 	$modulevars = array();
-	$result = select_query("tbladdonmodules", "", array("module" => $module));
+	$result = select_query_i("tbladdonmodules", "", array("module" => $module));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$modulevars[$data['setting']] = $data['value'];
 	}
 
@@ -146,15 +146,15 @@ if ($ra->get_config("DefaultToClientArea")) {
 }
 
 $announcements = array();
-$result = select_query("tblannouncements", "", array("published" => "on"), "date", "DESC", "0,3");
+$result = select_query_i("tblannouncements", "", array("published" => "on"), "date", "DESC", "0,3");
 
-while ($data = mysql_fetch_array($result)) {
+while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$date = $data['date'];
 	$title = $data['title'];
 	$announcement = $data['announcement'];
-	$result2 = select_query("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
-	$data = mysql_fetch_array($result2);
+	$result2 = select_query_i("tblannouncements", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+	$data = mysqli_fetch_array($result2);
 
 	if ($data['title']) {
 		$title = $data['title'];

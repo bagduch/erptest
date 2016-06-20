@@ -30,8 +30,8 @@ else {
 	}
 }
 
-$result = select_query("tblclients", "id", $where);
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblclients", "id", $where);
+$data = mysqli_fetch_array($result);
 $clientid = $data['id'];
 
 if (!$clientid) {
@@ -40,8 +40,8 @@ if (!$clientid) {
 }
 
 $clientsdetails = getClientsDetails($clientid);
-$currency_result = full_query("SELECT code FROM tblcurrencies WHERE id=" . (int)$clientsdetails['currency']);
-$currency = mysql_fetch_assoc($currency_result);
+$currency_result = full_query_i("SELECT code FROM tblcurrencies WHERE id=" . (int)$clientsdetails['currency']);
+$currency = mysqli_fetch_assoc($currency_result);
 $clientsdetails['currency_code'] = $currency['code'];
 
 if ($responsetype == "xml") {

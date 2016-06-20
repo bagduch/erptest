@@ -26,8 +26,8 @@ if (!function_exists("saveCustomFields")) {
 
 
 if (isset($_REQUEST['projectid'])) {
-	$result = select_query("mod_project", "", array("id" => (int)$projectid));
-	$data = mysql_fetch_assoc($result);
+	$result = select_query_i("mod_project", "", array("id" => (int)$projectid));
+	$data = mysqli_fetch_assoc($result);
 	$projectid = $data['id'];
 
 	if (!$projectid) {
@@ -44,8 +44,8 @@ if (!isset($_REQUEST['timerid'])) {
 
 
 if (isset($_REQUEST['timerid'])) {
-	$result = select_query("mod_projecttimes", "", array("id" => $_REQUEST['timerid']));
-	$data_timerid = mysql_fetch_assoc($result);
+	$result = select_query_i("mod_projecttimes", "", array("id" => $_REQUEST['timerid']));
+	$data_timerid = mysqli_fetch_assoc($result);
 	$timerid = $data_timerid['id'];
 
 	if (!$timerid) {
@@ -57,8 +57,8 @@ if (isset($_REQUEST['timerid'])) {
 $timerid = $data_timerid['id'];
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query("tbladmins", "id", array("id" => $_REQUEST['adminid']));
-	$data_adminid = mysql_fetch_array($result_adminid);
+	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {
 		$apiresults = array("result" => "error", "message" => "Admin ID Not Found");

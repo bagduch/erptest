@@ -29,8 +29,8 @@ if (!function_exists("getCartConfigOptions")) {
 	require ROOTDIR . "/includes/configoptionsfunctions.php";
 }
 
-$result = select_query("tblcustomerservices", "id,billingcycle,promoid", array("id" => $serviceid));
-$data = mysql_fetch_array($result);
+$result = select_query_i("tblcustomerservices", "id,billingcycle,promoid", array("id" => $serviceid));
+$data = mysqli_fetch_array($result);
 $serviceid = $data['id'];
 
 if (!$serviceid) {

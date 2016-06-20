@@ -268,7 +268,7 @@ else {
 		}
 
 		$query = "SELECT DISTINCT id FROM tblknowledgebase WHERE " . $searchqry . " AND (SELECT categoryid FROM tblknowledgebaselinks WHERE ((articleid=tblknowledgebase.id) OR (articleid=tblknowledgebase.parentid)) LIMIT 1) IN (" . db_build_in_array($idnumbers) . ") ORDER BY `order` ASC,`title` ASC";
-		$result = full_query($query);
+		$result = full_query_i($query);
 		$articleids = array();
 
 		while ($data = mysqli_fetch_array($result)) {
@@ -432,7 +432,7 @@ else {
 			$catlist = "";
 			$result = select_query_i("tblknowledgebaselinks", "", array("articleid" => $id));
 
-			while ($data = mysql_fetch_assoc($result)) {
+			while ($data = mysqli_fetch_assoc($result)) {
 				$catlist .= $data['categoryid'] . ",";
 			}
 
