@@ -221,7 +221,7 @@ function getClientsStats($userid) {
 
     $stats['productsnumactive'] = $stats['productsnumactivehosting'] + $stats['productsnumactivereseller'] + $stats['productsnumactiveservers'] + $stats['productsnumactiveother'];
     $stats['productsnumpending'] = $stats['productsnumpendinghosting'] + $stats['productsnumpendingreseller'] + $stats['productsnumpendingservers'] + $stats['productsnumpendingother'];
-     $stats['productsnumpending'] = $stats['productsnumpendinghosting'] + $stats['productsnumpendingreseller'] + $stats['productsnumpendingservers'] + $stats['productsnumpendingother'];
+    $stats['productsnumcancelled'] = $stats['productsnumcancelledhosting'] + $stats['productsnumcancelledreseller'] + $stats['productsnumcancelledservers'] + $stats['productsnumcancelledother'];
     $stats['productsnumtotal'] = $stats['productsnumhosting'] + $stats['productsnumreseller'] + $stats['productsnumservers'] + $stats['productsnumother'];
     $domainstats = array();
     select_query_i("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");

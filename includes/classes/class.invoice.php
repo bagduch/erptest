@@ -376,27 +376,6 @@ class RA_Invoice {
         return $invoices;
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-=======
-    public function getOverdueInvoice($userid) {
-
-        $where = array();
-        $where[] = "tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "'";
-        if ($userid) {
-            $where['userid'] = $userid;
-        }
-        $result = select_query_i("tblinvoices", "tblinvoices.*,total-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0) AS balance", $where, $orderby, $sort, $limit);
-
-        while ($data = mysqli_fetch_array($result)) {
-            
-        }
-    }
->>>>>>> guy
-
->>>>>>> peter
     public function getTotalBalance() {
         return $this->totalbalance;
     }
