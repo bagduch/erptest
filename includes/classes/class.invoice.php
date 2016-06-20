@@ -377,6 +377,8 @@ class RA_Invoice {
     }
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 
 =======
     public function getOverdueInvoice($userid) {
@@ -394,6 +396,7 @@ class RA_Invoice {
     }
 >>>>>>> guy
 
+>>>>>>> peter
     public function getTotalBalance() {
         return $this->totalbalance;
     }
