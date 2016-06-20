@@ -462,7 +462,6 @@ function insert_query($table, $array) {
 			continue;
 		}
 
-        error_log("$key \$value is ".print_r($value,1)."and isnull is ".is_null($value));
 		if (($value === "NULL") || ($value === "") || is_null($value)) {
 			$fieldvaluelist .= "NULL,";
 			continue;
@@ -560,11 +559,11 @@ function full_query_i($query, $userHandle = null) {
     global $mysql_errors;
     global $ramysqli;
 
-    $handle = (is_resource($userHandle) ? $userHandle : $ramysql);
-    $result = mysqli_query($query);
+    $handle = (is_resource($userHandle) ? $userHandle : $ramysqli);
+    $result = mysqli_query($handle,$query);
 
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysql_errors)) {
-        logActivity("SQL Error: " . mysql_error($handle) . " - Full Query: " . $query);
+        logActivity("SQL Error: " . mysqli_error($handle) . " - Full Query: " . $query);
     }
 
     ++$query_count;

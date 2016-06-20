@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+
 
 function getShortLastReplyTime($lastreply) {
 	$datetime = strtotime("now");
@@ -131,8 +122,8 @@ function AddtoLog($tid, $action) {
 }
 
 function getDepartmentName($deptid) {
-	$result = select_query("tblticketdepartments", "name", array("id" => $deptid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketdepartments", "name", array("id" => $deptid));
+	$data = mysqli_fetch_array($result);
 	$department = $data['name'];
 	return $department;
 }
@@ -150,9 +141,7 @@ function openNewTicket(
     $ccemail = "", 
     $noemail = "", 
     $admin = "") {
-    
-    error_log('userid is '.print_r($userid,1));
-    
+      
 	global $CONFIG;
 
 	$result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
@@ -285,7 +274,6 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
 	global $CONFIG;
 	if ($admin) {
 		$data = get_query_vals("tbltickets", "userid,contactid,name,email", array("id" => $ticketid));
-        //error_log("during addreply, data userid is ".type($data['userid']));
 		if (0 < $data['userid']) {
 			if (0 < $data['contactid']) {
 				$data = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $data['contactid'], "userid" => $data['userid']));
@@ -324,10 +312,9 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
         "adminname" => $adminname, 
         "attachment" => $attachfile
         );
-    error_log("replying with ".print_r($array,1));
 	$ticketreplyid = insert_query($table, $array);
-	$result = select_query("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));
+	$data = mysqli_fetch_array($result);
 	$tid = $data['tid'];
 	$deptid = $data['did'];
 	$tickettitle = $data['title'];
@@ -335,8 +322,8 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
 	$flagadmin = $data['flag'];
 
 	if ($userid) {
-		$result = select_query("tblclients", "firstname,lastname", array("id" => $userid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tblclients", "firstname,lastname", array("id" => $userid));
+		$data = mysqli_fetch_array($result);
 		$clientname = $data['firstname'] . " " . $data['lastname'];
 	}
 	else {
@@ -401,9 +388,9 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 	$subject = $decodestring[0];
 	$message = $decodestring[1];
 	$raw_message = $message;
-	$result = select_query("tblticketspamfilters", "", "");
+	$result = select_query_i("tblticketspamfilters", "", "");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$type = $data['type'];
 		$content = $data['content'];
@@ -439,8 +426,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 		else {
 			$tid = substr($subject, $pos + 12);
 			$tid = substr($tid, 0, strpos($tid, "]"));
-			$result = select_query("tbltickets", "", array("tid" => $tid));
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tbltickets", "", array("tid" => $tid));
+			$data = mysqli_fetch_array($result);
 			$tid = $data['id'];
 		}
 
@@ -450,8 +437,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 		foreach ($toemails as $toemail) {
 
 			if (!$deptid) {
-				$result = select_query("tblticketdepartments", "", array("email" => trim(strtolower($toemail))));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tblticketdepartments", "", array("email" => trim(strtolower($toemail))));
+				$data = mysqli_fetch_array($result);
 				$deptid = $data['id'];
 				$to = $data['email'];
 				$deptclientsonly = $data['clientsonly'];
@@ -462,8 +449,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 
 
 		if (!$deptid) {
-			$result = select_query("tblticketdepartments", "", array("hidden" => ""), "order", "ASC", "1");
-			$data = mysql_fetch_array($result);
+			$result = select_query_i("tblticketdepartments", "", array("hidden" => ""), "order", "ASC", "1");
+			$data = mysqli_fetch_array($result);
 			$deptid = $data['id'];
 			$to = $data['email'];
 			$deptclientsonly = $data['clientsonly'];
@@ -480,9 +467,9 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 			}
 			else {
 				$messagebackup = $message;
-				$result = select_query("tblticketbreaklines", "", "", "id", "ASC");
+				$result = select_query_i("tblticketbreaklines", "", "", "id", "ASC");
 
-				while ($data = mysql_fetch_array($result)) {
+				while ($data = mysqli_fetch_array($result)) {
 					$breakpos = strpos($message, $data['breakline']);
 
 					if ($breakpos) {
@@ -496,8 +483,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 				}
 
 				$message = trim($message);
-				$result = select_query("tbladmins", "id", array("email" => $email));
-				$data = mysql_fetch_array($result);
+				$result = select_query_i("tbladmins", "id", array("email" => $email));
+				$data = mysqli_fetch_array($result);
 				$adminid = $data['id'];
 
 				if ($adminid) {
@@ -512,13 +499,13 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 					}
 				}
 				else {
-					$result = select_query("tblclients", "id", array("email" => $email));
-					$data = mysql_fetch_array($result);
+					$result = select_query_i("tblclients", "id", array("email" => $email));
+					$data = mysqli_fetch_array($result);
 					$userid = $data['id'];
 
 					if (!$userid) {
-						$result = select_query("tblcontacts", "id,userid", array("email" => $email));
-						$data = mysql_fetch_array($result);
+						$result = select_query_i("tblcontacts", "id,userid", array("email" => $email));
+						$data = mysqli_fetch_array($result);
 						$userid = $data['userid'];
 						$contactid = $data['id'];
 
@@ -530,8 +517,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 
 					if ($deptclientsonly == "on" && !$userid) {
 						$mailstatus = "Unregistered Email Address";
-						$result = select_query("tblticketdepartments", "", array("id" => $deptid));
-						$data = mysql_fetch_array($result);
+						$result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
+						$data = mysqli_fetch_array($result);
 						$noautoresponder = $data['noautoresponder'];
 
 						if (!$noautoresponder) {
@@ -552,8 +539,8 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 						}
 
 						$query .= ")";
-						$result = full_query($query);
-						$data = mysql_fetch_array($result);
+						$result = full_query_i($query);
+						$data = mysqli_fetch_array($result);
 						$numtickets = $data[0];
 
 						if (10 < $numtickets) {
@@ -725,27 +712,27 @@ function closeInactiveTickets() {
 
 	if (0 < $ra->get_config("CloseInactiveTickets")) {
 		$departmentresponders = array();
-		$result = select_query("tblticketdepartments", "id,noautoresponder", "");
+		$result = select_query_i("tblticketdepartments", "id,noautoresponder", "");
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$noautoresponder = $data['noautoresponder'];
 			$departmentresponders[$id] = $noautoresponder;
 		}
 
 		$closetitles = array();
-		$result = select_query("tblticketstatuses", "title", array("autoclose" => "1"));
+		$result = select_query_i("tblticketstatuses", "title", array("autoclose" => "1"));
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$closetitles[] = $data[0];
 		}
 
 		$ticketclosedate = date("Y-m-d H:i:s", mktime(date("H") - $ra->get_config("CloseInactiveTickets"), date("i"), date("s"), date("m"), date("d"), date("Y")));
 		$i = 0;
 		$query = "SELECT id,did,title FROM tbltickets WHERE status IN (" . db_build_in_array($closetitles) . (") AND lastreply<='" . $ticketclosedate . "'");
-		$result = full_query($query);
+		$result = full_query_i($query);
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$did = $data['did'];
 			$subject = $data['title'];
@@ -781,9 +768,9 @@ function deleteTicket($ticketid, $replyid = "") {
 		$where = array("id" => $replyid);
 	}
 
-	$result = select_query("tblticketreplies", "", $where);
+	$result = select_query_i("tblticketreplies", "", $where);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$attachment = $data['attachment'];
 
 		if ($attachment) {
@@ -796,8 +783,8 @@ function deleteTicket($ticketid, $replyid = "") {
 
 
 	if (!$replyid) {
-		$result = select_query("tbltickets", "", array("id" => $ticketid));
-		$data = mysql_fetch_array($result);
+		$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+		$data = mysqli_fetch_array($result);
 		$attachment = $data['attachment'];
 
 		if ($attachment) {
@@ -964,9 +951,9 @@ function getKBAutoSuggestionsQuery($field, $textparts, $limit, $existingkbarticl
 		}
 	}
 
-	$result = full_query("SELECT id,parentid FROM tblknowledgebase WHERE " . $where . " ORDER BY useful DESC LIMIT 0," . (int)$limit);
+	$result = full_query_i("SELECT id,parentid FROM tblknowledgebase WHERE " . $where . " ORDER BY useful DESC LIMIT 0," . (int)$limit);
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$articleid = $data['id'];
 		$parentid = $data['parentid'];
 
@@ -974,13 +961,13 @@ function getKBAutoSuggestionsQuery($field, $textparts, $limit, $existingkbarticl
 			$articleid = $parentid;
 		}
 
-		$result2 = full_query("SELECT tblknowledgebaselinks.categoryid FROM tblknowledgebase INNER JOIN tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid INNER JOIN tblknowledgebasecats ON tblknowledgebasecats.id=tblknowledgebaselinks.categoryid WHERE (tblknowledgebase.id=" . (int)$articleid . " OR tblknowledgebase.parentid=" . (int)$articleid . ") AND tblknowledgebasecats.hidden=''");
-		$data = mysql_fetch_array($result2);
+		$result2 = full_query_i("SELECT tblknowledgebaselinks.categoryid FROM tblknowledgebase INNER JOIN tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid INNER JOIN tblknowledgebasecats ON tblknowledgebasecats.id=tblknowledgebaselinks.categoryid WHERE (tblknowledgebase.id=" . (int)$articleid . " OR tblknowledgebase.parentid=" . (int)$articleid . ") AND tblknowledgebasecats.hidden=''");
+		$data = mysqli_fetch_array($result2);
 		$categoryid = $data['categoryid'];
 
 		if ($categoryid) {
-			$result2 = full_query("SELECT * FROM tblknowledgebase WHERE (id=" . (int)$articleid . " OR parentid=" . (int)$articleid . ") AND (language='" . db_escape_string($_SESSION['Language']) . "' OR language='') ORDER BY language DESC");
-			$data = mysql_fetch_array($result2);
+			$result2 = full_query_i("SELECT * FROM tblknowledgebase WHERE (id=" . (int)$articleid . " OR parentid=" . (int)$articleid . ") AND (language='" . db_escape_string($_SESSION['Language']) . "' OR language='') ORDER BY language DESC");
+			$data = mysqli_fetch_array($result2);
 			$title = $data['title'];
 			$article = $data['article'];
 			$views = $data['views'];
@@ -1015,9 +1002,9 @@ function ticketsummary($text, $length = 100) {
 
 function getTicketContacts($userid) {
 	$contacts = "";
-	$result = select_query("tblcontacts", "", array("userid" => $userid, "email" => array("sqltype" => "NEQ", "value" => "")));
+	$result = select_query_i("tblcontacts", "", array("userid" => $userid, "email" => array("sqltype" => "NEQ", "value" => "")));
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$contacts .= "<option value=\"" . $data['id'] . "\"";
 
 		if (isset($_POST['contactid']) && $_POST['contactid'] == $data['id']) {
@@ -1061,8 +1048,8 @@ function getAdminDepartmentAssignments() {
 		return $DepartmentIDs;
 	}
 
-	$result = select_query("tbladmins", "supportdepts", array("id" => $_SESSION['adminid']));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tbladmins", "supportdepts", array("id" => $_SESSION['adminid']));
+	$data = mysqli_fetch_array($result);
 	$supportdepts = $data['supportdepts'];
 	$supportdepts = explode(",", $supportdepts);
 	foreach ($supportdepts as $k => $v) {
@@ -1079,10 +1066,10 @@ function getAdminDepartmentAssignments() {
 
 function getDepartments() {
 	$departmentsarray = array();
-	$result = select_query("tblticketdepartments", "id,name", "");
+	$result = select_query_i("tblticketdepartments", "id,name", "");
 	$departmentsarray = array();
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$name = $data['name'];
 		$departmentsarray[$id] = $name;
@@ -1092,13 +1079,16 @@ function getDepartments() {
 }
 
 function buildAdminTicketListArray($result) {
+    
 	global $departmentsarray;
 	global $tabledata;
 	global $aInt;
 	global $tickets;
-
-
+    global $ramysqli;
+       
+    
 	while ($data = mysqli_fetch_array($result)) {
+        error_log("fetcharray loop ".$data);
 		$id = $data['id'];
 		$ticketnumber = $data['tid'];
 		$did = $data['did'];
@@ -1218,10 +1208,10 @@ function genPredefinedRepliesList($cat, $predefq = "") {
 			$cat = 0;
 		}
 
-		$result = select_query("tblticketpredefinedcats", "", array("parentid" => $cat), "name", "ASC");
+		$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $cat), "name", "ASC");
 		$i = 0;
 
-		while ($data = mysql_fetch_array($result)) {
+		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
 			$catscontent .= "<td width=\"33%\"><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"#\" onclick=\"selectpredefcat('" . $id . "');return false\">" . $name . "</a></td>";
@@ -1235,9 +1225,9 @@ function genPredefinedRepliesList($cat, $predefq = "") {
 	}
 
 	$where = ($predefq ? array("name" => array("sqltype" => "LIKE", "value" => $predefq)) : array("catid" => $cat));
-	$result = select_query("tblticketpredefinedreplies", "", $where, "name", "ASC");
+	$result = select_query_i("tblticketpredefinedreplies", "", $where, "name", "ASC");
 
-	while ($data = mysql_fetch_array($result)) {
+	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$name = $data['name'];
 		$reply = strip_tags($data['reply']);
@@ -1273,8 +1263,8 @@ function genPredefinedRepliesList($cat, $predefq = "") {
 		}
 	}
 
-	$result = select_query("tblticketpredefinedcats", "parentid", array("id" => $cat));
-	$data = mysql_fetch_array($result);
+	$result = select_query_i("tblticketpredefinedcats", "parentid", array("id" => $cat));
+	$data = mysqli_fetch_array($result);
 
 	if (0 < $cat || $predefq) {
 		$content .= "<br /><a href=\"#\" onclick=\"selectpredefcat('0');return false\"><img src=\"images/icons/navrotate.png\" align=\"top\" /> " . $aInt->lang("support", "toplevel") . "</a>";
