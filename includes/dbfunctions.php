@@ -1,8 +1,11 @@
 <?php
 
+// dbfunctions.php: DB wrapper functions which actually require access to db
+// contrast with dbfunctions_simple.php, which don't require db access
 
 // conversion of select_query to select_query_i by guy@hd.net.nz 2016-08-13
 function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
+    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -11,7 +14,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 	if (!$fields) {
 		$fields = "*";
 	}
-
 	$query = "SELECT " . $fields . " FROM " . db_make_safe_field($table);
 
 	if ($innerjoin) {
@@ -113,15 +115,14 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
 		$query .= " LIMIT " . $limit;
 	}
+    
+            // GUYGUYGUY logging
+    if ($_SESSION['adminid'] == 3) {
+            error_log($query);
+    }
 
 	$result = mysqli_query($ramysqli, $query);
-    if (false && ($_SESSION['adminid']  == 3)) {
-            echo "<pre>GUYGUYGUY";
-            var_dump($query);
-            var_dump($result);
-            echo "</pre>";
-            var_dump(mysqli_error($ramysqli));
-    }  
+
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
@@ -131,105 +132,12 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 	return $result;
 }
 
-
-
-function tokenizeOrderby($input, $default_ordering = "ASC") {
-	$field_separator = ",";
-	$field_begin = "`";
-	$field_end = "`";
-	$seg_qualifier = ".";
-	$qualifier = $field_end . $seg_qualifier . $field_begin;
-	$order_up_rev = "CSA ";
-	$order_down_rev = "CSED ";
-
-	if ($default_ordering) {
-		$default_ordering = trim($default_ordering);
-	}
-	else {
-		$default_ordering = "ASC";
-	}
-
-	$default_ordering_rev = strrev(" " . $default_ordering);
-
-	if ($default_ordering_rev != $order_up_rev && $default_ordering_rev != $order_down_rev) {
-		$default_ordering_rev = $order_up_rev;
-	}
-
-	$tokenizedFields = array();
-	$i = 0;
-	$field = strtok($input, $field_separator);
-
-	while ($i < 30 && $field !== false) {
-		$field = trim($field);
-
-		if (!$field) {
-			continue;
-		}
-
-
-		while (strpos($field, $field_begin) === 0) {
-			$field = substr($field, 1);
-		}
-
-		$rev_field = strrev($field);
-		$ordering_field_rev = "";
-
-		if (strpos($rev_field, $order_up_rev) === 0) {
-			$ordering_field_rev .= $order_up_rev;
-			$rev_field = substr($rev_field, strlen($order_up_rev));
-		}
-		else {
-			if (strpos($rev_field, $order_down_rev) === 0) {
-				$ordering_field_rev .= $order_down_rev;
-				$rev_field = substr($rev_field, strlen($order_down_rev));
-			}
-			else {
-				$ordering_field_rev .= $default_ordering_rev;
-			}
-		}
-
-
-		while (strpos($rev_field, $field_end) === 0) {
-			$rev_field = substr($rev_field, 1);
-		}
-
-		$field = strrev($rev_field);
-		$field_parts = explode($qualifier, $field, 2);
-		$safe_field_parts = array();
-		foreach ($field_parts as $key => $part) {
-			$tmp_part = db_make_safe_field($part);
-
-			if ($tmp_part === trim($part)) {
-				$safe_field_parts[] = $tmp_part;
-				continue;
-			}
-		}
-
-
-		if (1 < count($safe_field_parts)) {
-			$field = implode($qualifier, $safe_field_parts);
-		}
-		else {
-			$field = array_shift($safe_field_parts);
-		}
-
-
-		if ($field) {
-			$tokenizedFields[] = $field_begin . $field . $field_end . strrev($ordering_field_rev);
-		}
-
-		$field = strtok($field_separator);
-		++$i;
-	}
-
-	return $tokenizedFields;
-}
-
 function update_query($table, $array, $where) {
+    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
-	global $ramysql;
+	global $ramysqli;
 
 	$query = "UPDATE " . db_make_safe_field($table) . " SET ";
 	foreach ($array as $key => $value) {
@@ -298,17 +206,29 @@ function update_query($table, $array, $where) {
 			$query .= " WHERE " . $where;
 		}
 	}
+    
+    if ((int)$_SESSION['adminid'] == 3) {
+        error_log($query);
+    }
+    
+    
+        // GUYGUYGUY logging
+    if ($_SESSION['adminid'] == 3) {
+            error_log($query);
+    }
 
-	$result = mysqli_query($query, $ramysql);
+	$result = mysqli_query($query, $ramysqli);
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
-		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
+		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
 }
 
 function insert_query($table, $array) {
+    error_log(__METHOD__);
+
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -337,16 +257,13 @@ function insert_query($table, $array) {
 	$query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
 	$result = mysqli_query($ramysqli, $query);
 
-    if ($_SESSION['adminid'] > 0) {
-            echo "<pre>GUYGUYGUY";
-            var_dump($query);
-            var_dump($result);
-            error_log($query);
-            echo "</pre>";
+    // GUYGUYGUY logging
+    if ($_SESSION['adminid'] == 3) {
+            error_log(__METHOD__.$query);
     }
 
 	if (!$result && ($CONFIG['SQLErrorReporting'])) {
-		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
+		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
@@ -355,6 +272,7 @@ function insert_query($table, $array) {
 }
 
 function delete_query($table, $where) {
+    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -372,35 +290,25 @@ function delete_query($table, $where) {
 	else {
 		$query .= $where;
 	}
+    
+    if ($_SESSION['adminid'] == 3) {
+        error_log("__FUNCTION__".$query);
+    }
 
 	$result = mysqli_query($ramysqli, $query);
 
 	if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
-		logActivity("SQL Error: " . mysqli_error($ramysql) . " - Full Query: " . $query);
+		logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
 	}
 
 	++$query_count;
 }
 
-function db_build_quoted_field($key) {
-	$field_quote = "`";
-	$parts = explode(".", $key, 3);
-	foreach ($parts as $k => $name) {
-		$clean_name = db_make_safe_field($name);
-
-		if ($clean_name !== $name) {
-            error_log("key is ".$key."and clean name is ".$clean_name." and name is ".$name);
-			exit("Unexpected input field parameter in database query.");
-		}
-
-		$parts[$k] = $field_quote . $clean_name . $field_quote;
-	}
-
-	return implode(".", $parts);
-}
-
-
 function full_query_i($query, $userHandle = null) {
+    error_log(__METHOD__);
+    if ($_SESSION['adminid'] == 3) {
+        error_log($query);
+    }
     global $CONFIG;
     global $query_count;
     global $mysqli_errors;
@@ -416,7 +324,6 @@ function full_query_i($query, $userHandle = null) {
     ++$query_count;
     return $result;
 }
-
 
 function get_query_val($table, $field, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
 	$result = select_query_i($table, $field, $where, $orderby, $orderbyorder, $limit, $innerjoin);
@@ -434,82 +341,6 @@ function db_escape_string($string) {
     global $ramysqli;
 	$string = mysqli_real_escape_string($ramysqli,$string);
 	return $string;
-}
-
-function db_escape_array($array) {
-	$array = array_map("db_escape_string", $array);
-	return $array;
-}
-
-function db_escape_numarray($array) {
-	$array = array_map("intval", $array);
-	return $array;
-}
-
-function db_build_in_array($array, $allow_empty = false) {
-	$in = "";
-	foreach ($array as $k => $v) {
-
-		if (!trim($v) && !$allow_empty) {
-			unset($array[$k]);
-			continue;
-		}
-
-
-		if (is_numeric($v)) {
-			$v;
-			continue;
-		}
-
-		$array[$k] = "'" . db_escape_string($v) . "'";
-	}
-
-	return implode(",", $array);
-}
-
-function db_make_safe_field($field) {
-	return db_escape_string(preg_replace("/[^a-z0-9_.,]/i", "", $field));
-}
-
-function db_build_update_array($fields, $arrayhandler = "serialize") {
-	global $ra;
-
-	$array = array();
-	foreach ($fields as $key) {
-		$array[$key] = $ra->get_req_var($key);
-
-		if (is_array($array[$key])) {
-			if ($arrayhandler == "serialize") {
-				$array[$key] = serialize($array[$key]);
-				continue;
-			}
-
-
-			if ($arrayhandler == "implode") {
-				$array[$key] = implode(",", $array[$key]);
-				continue;
-			}
-
-			continue;
-		}
-	}
-
-	return $array;
-}
-
-function db_make_safe_date($date) {
-	$dateparts = explode("-", $date);
-	$date = (int)$dateparts[0] . "-" . str_pad((int)$dateparts[1], 2, "0", STR_PAD_LEFT) . "-" . str_pad((int)$dateparts[2], 2, "0", STR_PAD_LEFT);
-	return db_escape_string($date);
-}
-
-function db_make_safe_human_date($date) {
-	$date = toMySQLDate($date);
-	return db_make_safe_date($date);
-}
-
-function db_is_valid_amount($amount) {
-	return preg_match('/^-?[0-9\.]+$/', $amount) === 1 ? true : false;
 }
 
 $query_count = 0;

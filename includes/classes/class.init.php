@@ -12,7 +12,9 @@
  * */
 define("RA", true);
 define("ROOTDIR", realpath(dirname(__FILE__) . "/../../"));
+include_once ROOTDIR . "/includes/dbfunctions_simple.php";
 include_once ROOTDIR . "/includes/dbfunctions.php";
+
 include_once ROOTDIR . "/includes/functions.php";
 
 if (!defined("WHMCSDBCONNECT")) {

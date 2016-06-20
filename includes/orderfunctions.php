@@ -2346,8 +2346,6 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    update_query("tblupgrades", array("status" => "Completed"), array("orderid" => $orderid));
-
     if (!count($errors)) {
         update_query("tblorders", array("status" => "Active"), array("id" => $orderid));
         logActivity("Order Accepted - Order ID: " . $orderid, $userid);
@@ -2503,7 +2501,6 @@ function deleteOrder($orderid) {
     delete_query("tblcustomerservices", array("orderid" => $orderid));
     delete_query("tblserviceaddons", array("orderid" => $orderid));
     delete_query("tbldescriptions", array("orderid" => $orderid));
-    delete_query("tblupgrades", array("orderid" => $orderid));
     delete_query("tblorders", array("id" => $orderid));
     delete_query("tblinvoices", array("id" => $invoiceid));
     delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));

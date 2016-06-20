@@ -236,7 +236,6 @@ class RA_Orders extends RA_TableModel
 		delete_query("tblcustomerservices", array("orderid" => $orderid));
 		delete_query("tblserviceaddons", array("orderid" => $orderid));
 		delete_query("tbldomains", array("orderid" => $orderid));
-		delete_query("tblupgrades", array("orderid" => $orderid));
 		delete_query("tblorders", array("id" => $orderid));
 		delete_query("tblinvoices", array("id" => $invoiceid));
 		delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
@@ -483,90 +482,6 @@ class RA_Orders extends RA_TableModel
 
 			$items[] = array("type" => "domain", "producttype" => $aInt->lang("fields", "domain"), "description" => $type, "domain" => $domain, "billingcycle" => $registrationperiod . " " . $aInt->lang("domains", "year" . $regperiods), "amount" => $domainamount, "paymentstatus" => $paymentstatus, "status" => $aInt->lang("status", strtolower(str_replace(" ", "", $status))));
 		}
-
-		$result = select_query_i("tblupgrades", "", array("orderid" => $orderid));
-
-		while ($data = mysqli_fetch_array($result)) {
-			$upgradeid = $data['id'];
-			$type = $data['type'];
-			$relid = $data['relid'];
-			$originalvalue = $data['originalvalue'];
-			$newvalue = $data['newvalue'];
-			$upgradeamount = formatCurrency($data['amount']);
-			$newrecurringamount = $data['newrecurringamount'];
-			$status = $data['status'];
-			$paid = $data['paid'];
-			$result2 = select_query_i("tblcustomerservices", "tblservices.name AS productname,domain", array("tblcustomerservices.id" => $relid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-			$data = mysqli_fetch_array($result2);
-			$productname = $data['productname'];
-			$domain = $data['domain'];
-
-			if ($type == "package") {
-				$result2 = select_query_i("tblservices", "name", array("id" => $originalvalue));
-				$data = mysqli_fetch_array($result2);
-				$oldpackagename = $data['name'];
-				$newvalue = explode(",", $newvalue);
-				$newpackageid = $newvalue[0];
-				$result2 = select_query_i("tblservices", "name", array("id" => $newpackageid));
-				$data = mysqli_fetch_array($result2);
-				$newpackagename = $data['name'];
-				$newbillingcycle = $newvalue[1];
-				$details = "<a href=\"clientshosting.php?userid=" . $userid . "&id=" . $relid . "\">" . $oldpackagename . " => " . $newpackagename . "</a><br />";
-
-				if ($domain) {
-					$details .= $domain;
-				}
-
-				$items[] = array("type" => "upgrade", "producttype" => "Product Upgrade", "description" => $details, "domain" => "", "billingcycle" => $aInt->lang("billingcycles", $newbillingcycle), "amount" => $upgradeamount, "paymentstatus" => $paymentstatus, "status" => $aInt->lang("status", strtolower($status)));
-			}
-
-
-			if ($type == "configoptions") {
-				$tempvalue = explode("=>", $originalvalue);
-				$configid = $tempvalue[0];
-				$oldoptionid = $tempvalue[1];
-				$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
-				$data = mysqli_fetch_array($result2);
-				$configname = $data['optionname'];
-				$optiontype = $data['optiontype'];
-
-				if ($optiontype == 1 || $optiontype == 2) {
-					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $oldoptionid));
-					$data = mysqli_fetch_array($result2);
-					$oldoptionname = $data['optionname'];
-					$result2 = select_query_i("tblserviceconfigoptionssub", "", array("id" => $newvalue));
-					$data = mysqli_fetch_array($result2);
-					$newoptionname = $data['optionname'];
-				}
-				else {
-					if ($optiontype == 3) {
-						if ($oldoptionid) {
-							$oldoptionname = "Yes";
-							$newoptionname = "No";
-						}
-						else {
-							$oldoptionname = "No";
-							$newoptionname = "Yes";
-						}
-					}
-					else {
-						if ($optiontype == 4) {
-							$result2 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $configid));
-							$data = mysqli_fetch_array($result2);
-							$optionname = $data['optionname'];
-							$oldoptionname = $oldoptionid;
-							$newoptionname = $newvalue . " x " . $optionname;
-						}
-					}
-				}
-
-				$details = "<a href=\"clientshosting.php?userid=" . $userid . "&id=" . $relid . "\">" . $productname;
-				$details .= " - " . $domain;
-				$details .= "</a><br />" . $configname . ": " . $oldoptionname . " => " . $newoptionname . "<br>";
-				$items[] = array("type" => "upgrade", "producttype" => "Options Upgrade", "description" => $details, "domain" => "", "billingcycle" => "", "amount" => $upgradeamount, "paymentstatus" => $paymentstatus, "status" => $aInt->lang("status", strtolower($status)));
-			}
-		}
-
 		return $items;
 	}
 }

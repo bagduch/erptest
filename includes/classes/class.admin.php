@@ -1316,6 +1316,7 @@ window.location='" . $url . "'+id+'" . generate_token("link") . "';
 
     }
 
+    // validate User ID
     public function valUserID($tempuid) {
         global $userid;
         global $clientsdetails;

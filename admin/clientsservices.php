@@ -10,52 +10,55 @@ $hostingid = (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
+
+// Check if modifications are being made
 $modop = $ra->get_req_var("modop");
-
-
-if ($modop) {
-    checkPermission("Perform Server Operations");
+if ($modop) {     
+    checkPermission("Perform Server Operations"); 
 }
 
+// I assume that hostingid has been deprecated by id?
 if (!$id && $hostingid) {
     $id = $hostingid;
 }
 
+// if neither userid nor id are defined after that, I guess we just take the very first service?
 if (!$userid && !$id) {
     $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
 }
 
+// if only userid is supplied, then validate
 if ($userid && !$id) {
     $aInt->valUserID($userid);
 
     if (!$userid) {
         $aInt->gracefulExit("Invalid User ID");
     }
-
+    // and supply first available service
     $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
 }
 
-
+// if we can't determine a suitable product ID to show, reject
 if (!$id) {
     $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
 }
 
 $query = "
-select
+SELECT
     tblcustomerservices.*,
     tblservices.servertype,
     tblservices.type 
-from tblcustomerservices 
+FROM tblcustomerservices 
 INNER JOIN tblservices 
     ON tblservices.id=tblcustomerservices.packageid 
 INNER JOIN tblservicegroups 
     ON (tblservices.gid=tblservicegroups.id ) 
-WHERE tblcustomerservices.id=" . $id
+WHERE tblcustomerservices.id=" . (int)$id
 . ' AND tblservicegroups.type="service"';
 
 
 $result = full_query_i($query);
-//$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.servertype,tblservices.type", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+
 $service_data = mysqli_fetch_array($result);
 $id = $service_data['id'];
 
@@ -71,7 +74,7 @@ $orderid = $service_data['orderid'];
 $packageid = $service_data['packageid'];
 $server = $service_data['server'];
 $regdate = $service_data['regdate'];
-$domain = $service_data['domain'];
+$description = $service_data['description'];
 $paymentmethod = $service_data['paymentmethod'];
 $firstpaymentamount = $service_data['firstpaymentamount'];
 $amount = $service_data['amount'];
@@ -82,17 +85,9 @@ $username = $service_data['username'];
 $password = decrypt($service_data['password']);
 $notes = $service_data['notes'];
 $subscriptionid = $service_data['subscriptionid'];
-$promoid = $service_data['promoid'];
 $suspendreason = $service_data['suspendreason'];
 $overideautosuspend = $service_data['overideautosuspend'];
-$ns1 = $service_data['ns1'];
-$ns2 = $service_data['ns2'];
-$dedicatedip = $service_data['dedicatedip'];
-$assignedips = $service_data['assignedips'];
-$diskusage = $service_data['diskusage'];
-$disklimit = $service_data['disklimit'];
-$bwusage = $service_data['bwusage'];
-$bwlimit = $service_data['bwlimit'];
+
 $lastupdate = $service_data['lastupdate'];
 $overidesuspenduntil = $service_data['overidesuspenduntil'];
 $frm = new RA_Form();
@@ -112,7 +107,6 @@ if ($frm->issubmitted()) {
     $nextduedate = $ra->get_req_var("nextduedate");
     $paymentmethod = $ra->get_req_var("paymentmethod");
     $tax = $ra->get_req_var("tax");
-    $promoid = $ra->get_req_var("promoid");
     $notes = $ra->get_req_var("notes");
     $configoption = $ra->get_req_var("configoption");
 
@@ -143,7 +137,7 @@ if ($frm->issubmitted()) {
             if ($oldstatus != "Active" && $status == "Active") {
                 run_hook("AddonActivated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             } elseif ($oldstatus != "Suspended" && $status == "Suspended") {
-                    run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+                run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             } elseif ($oldstatus != "Terminated" && $status == "Terminated") {
                 run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             } elseif ($oldstatus != "Cancelled" && $status == "Cancelled") {
@@ -212,7 +206,7 @@ if ($frm->issubmitted()) {
     $newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
     migrateCustomFieldsBetweenProducts($id, $packageid, true);
     $changelog = array();
-    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "domain" => "Domain", "dedicatedip" => "Dedicated IP", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "servicestatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
+    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "description" => "Description", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "servicestatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
     foreach ($logchangefields as $fieldname => $displayname) {
         $newval = $ra->get_req_var($fieldname);
         $oldval = $service_data[$fieldname];
@@ -237,7 +231,7 @@ if ($frm->issubmitted()) {
     }
 
     $updatearr = array();
-    $updatefields = array("server", "packageid", "domain", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "promoid", "overideautosuspend", "overidesuspenduntil", "ns1", "ns2", "servicestatus", "dedicatedip", "assignedips");
+    $updatefields = array("server", "packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "overideautosuspend", "overidesuspenduntil", "servicestatus");
     foreach ($updatefields as $fieldname) {
         $newval = $ra->get_req_var($fieldname);
 
@@ -456,8 +450,10 @@ if ($canceltype == "End of Billing Period") {
 if (!$server) {
     $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
 
-    if ($server) {
+    if ((int)$server) {
         update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
+    } else {
+        update_query("tblcustomerservices", array("server" => null), array("id" => $id));
     }
 }
 
@@ -532,16 +528,16 @@ if (count($clientnotes)) {
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.domain,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
 while ($data = mysqli_fetch_array($result)) {
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
-    $servicelist_domain = $data['domain'];
+    $servicelist_domain = $data['description'];
     $servicelist_status = $data['servicestatus'];
 
-    if ($servicelist_domain) {
-        $servicelist_product .= " - " . $servicelist_domain;
+    if ($servicelist_description) {
+        $servicelist_product .= " - " . $servicelist_description;
     }
 
 
@@ -743,20 +739,12 @@ if ($aid) {
     $tbl->add($aInt->lang("fields", "recurringamount"), $frm->text("amount", $amount, "10") . " " . $frm->checkbox("autorecalcrecurringprice", $aInt->lang("services", "autorecalc"), ($autorecalcdefault ? true : false)));
     $tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "description")), $frm->text("Description", $domain));
     $tbl->add($aInt->lang("fields", "nextduedate"), (in_array($billingcycle, array("One Time", "Free Account")) ? "N/A" : $frm->hidden("oldnextduedate", $nextduedate) . $frm->date("nextduedate", $nextduedate)));
-    $tbl->add($aInt->lang("fields", "dedicatedip"), $frm->text("dedicatedip", $dedicatedip, "25"));
     $tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle));
     $tbl->add($aInt->lang("fields", "username"), $frm->text("username", $username, "20") . (function_exists($module . "_LoginLink") ? " " . ServerLoginLink($id) : ""));
     $tbl->add($aInt->lang("fields", "paymentmethod"), paymentMethodsSelection() . " <a href=\"clientsinvoices.php?userid=" . $userid . "&serviceid=" . $id . "\">" . $aInt->lang("invoices", "viewinvoices") . "</a>");
     $tbl->add($aInt->lang("fields", "password"), $frm->text("password", $password, "20"));
-    $tbl->add($aInt->lang("fields", "promocode"), $frm->dropdown("promoid", $promoarr, $promoid, "", "", true) . " (" . $aInt->lang("services", "noaffect") . ")");
     $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($servicestatus, false, "servicestatus", "prodstatus") . ($servicestatus == "Suspended" ? " (" . $aInt->lang("services", "suspendreason") . ": " . (!$suspendreason ? $_LANG['suspendreasonoverdue'] : $suspendreason) . ")" : ""));
     $tbl->add($aInt->lang("fields", "subscriptionid"), $frm->text("subscriptionid", $subscriptionid, "25"));
-
-    if ($producttype == "server") {
-        $tbl->add($aInt->lang("fields", "assignedips"), $frm->textarea("assignedips", $assignedips, "4", "30"), 1);
-        $tbl->add($aInt->lang("fields", "nameserver") . " 1", $frm->text("ns1", $ns1, "35"), 1);
-        $tbl->add($aInt->lang("fields", "nameserver") . " 2", $frm->text("ns2", $ns2, "35"), 1);
-    }
 
     $configoptions = array();
     $configoptions = getCartConfigOptions($packageid, "", $billingcycle, $id);
