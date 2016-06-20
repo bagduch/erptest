@@ -1,6 +1,6 @@
 <?php
-echo "<pre>".dirname(__FILE__)."</pre>";
-
+//echo "<pre>".dirname(__FILE__)."</pre>";
+ 
 ini_set("log_errors", 1);
 ini_set("display_startup_errors", 1);
 ini_set("error_log", "/tmp/php_errors.log");
@@ -29,7 +29,7 @@ if (!class_exists("RA_Init")) {
 }
 
 $ra = new RA_Init();
-$test = $ra->init();
+$ra = $ra->init();
 
 if ((defined("CLIENTAREA") && $CONFIG['MaintenanceMode']) && !$_SESSION['adminid']) {
 	if ($CONFIG['MaintenanceModeURL']) {
