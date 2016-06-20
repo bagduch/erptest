@@ -1,6 +1,16 @@
 <?php
+<<<<<<< HEAD
 echo "<pre>Current working directory is ".dirname(__FILE__)."</pre>";
 
+=======
+<<<<<<< HEAD
+//echo "<pre>".dirname(__FILE__)."</pre>";
+ 
+=======
+echo "<pre>Current working directory is ".dirname(__FILE__)."</pre>";
+
+>>>>>>> guy
+>>>>>>> peter
 ini_set("log_errors", 1);
 ini_set("display_errors", 1);
 ini_set("display_startup_errors", 1);
