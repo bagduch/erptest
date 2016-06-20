@@ -30,7 +30,7 @@ if (!class_exists("RA_Init")) {
 }
 
 $ra = new RA_Init();
-$test = $ra->init();
+$ra = $ra->init();
 
 if ((defined("CLIENTAREA") && $CONFIG['MaintenanceMode']) && !$_SESSION['adminid']) {
 	if ($CONFIG['MaintenanceModeURL']) {

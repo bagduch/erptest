@@ -117,10 +117,12 @@ if ($action == "") {
     $invoice = new RA_Invoice();
     $invoices = $invoice->getInvoices("Unpaid", $client->getID(), "id", "DESC");
     $exdetails = $client->getDetails();
+
     $ca->assign("clientfirstname", $ra->get_req_var_if($e, "firstname", $exdetails));
     $ca->assign("clientlastname", $ra->get_req_var_if($e, "lastname", $exdetails));
     $ca->assign("clientcompanyname", $ra->get_req_var_if($e, "companyname", $exdetails));
     $ca->assign("invoices", $invoices);
+
     $ca->assign("totalbalance", $invoice->getTotalBalanceFormatted());
     $ca->assign("masspay", $CONFIG['EnableMassPay']);
     $ca->assign("defaultpaymentmethod", getGatewayName($clientsdetails['defaultgateway']));

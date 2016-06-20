@@ -20,7 +20,20 @@
                 </h4>
             </div>
             <div class="info-details">
-                <p>{$LANG.clientareaactive}<span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumactive}</span> </p>
+                <table class='full-width-table'>
+                    <tr>
+                        <td>{$LANG.clientareaactive}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumactive}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareapending}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumpending}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareacancelled}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumcancelled}</span></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -44,7 +57,7 @@
                     </tr>
                     <tr>
                         <td>{$LANG.invoicesoverdue}</td>
-                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.dueinvoicesbalance}</span></td>
+                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.overdueinvoicesbalance}</span></td>
                     </tr>
                 </table>
             </div>
