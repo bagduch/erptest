@@ -1,5 +1,8 @@
 <?php
-echo "<pre>Current working directory is ".dirname(__FILE__)."</pre>";
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    echo "<pre>Current working directory is ".dirname(__FILE__)."</pre>";
+}
+
 
 ini_set("log_errors", 1);
 ini_set("display_errors", 1);
@@ -30,7 +33,7 @@ if (!class_exists("RA_Init")) {
 }
 
 $ra = new RA_Init();
-$ra = $ra->init();
+$test = $ra->init();
 
 if ((defined("CLIENTAREA") && $CONFIG['MaintenanceMode']) && !$_SESSION['adminid']) {
 	if ($CONFIG['MaintenanceModeURL']) {

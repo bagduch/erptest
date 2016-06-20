@@ -65,8 +65,9 @@ if ($action == "getconfigoptions") {
 
     $options = "";
     $configoptions = getCartConfigOptions($pid, "", $cycle);
+    error_log(print_r($configoptions,1));
 
-    if (count($configoptions)) {
+    if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
         foreach ($configoptions as $configoption) {
@@ -207,6 +208,7 @@ if ($action == "getdomainaddlfields") {
 if ($ra->get_req_var("submitorder")) {
     check_token("RA.admin.default");
     $userid = get_query_val("tblclients", "id", array("id" => $userid));
+    error_log("userid is ".$userid);
 
     if (!$userid && !$calconly) {
         infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");

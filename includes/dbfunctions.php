@@ -468,7 +468,6 @@ function db_build_in_array($array, $allow_empty = false) {
 }
 
 function db_make_safe_field($field) {
-    error_log($field." becomes ".preg_replace("/[^a-z0-9_.,]/i", "", $field));
 	return db_escape_string(preg_replace("/[^a-z0-9_.,]/i", "", $field));
 }
 
