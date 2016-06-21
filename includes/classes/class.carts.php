@@ -320,7 +320,7 @@ class RA_Carts {
 
         $smartyvalues['promotioncode'] = $_SESSION['cart']['promo'];
         $ignorenoconfig = ($cartsummary ? true : false);
-        $carttotals = calcCartTotals("", $ignorenoconfig);
+        $carttotals = calcCartTotals($check, $ignorenoconfig);
         $promotype = $carttotals['promotype'];
         $promovalue = $carttotals['promovalue'];
         $promorecurring = $carttotals['promorecurring'];

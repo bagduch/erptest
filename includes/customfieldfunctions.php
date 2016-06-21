@@ -11,8 +11,6 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
     $where['type'] = $type;
 
 
-
-
     if ($relid) {
 
         $where['relid'] = $relid;
@@ -26,10 +24,14 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
         $where['showorder'] = "on";
     }
     if ($type == 'product') {
-        $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;
+        $query = "select tblcustomfields.* from tblcustomfields 
+INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id 
+LEFT OUTER Join tblcustomfieldsgrouplinks on tblcustomfieldsgrouplinks.gid=tblcustomfieldsgroup.id 
+LEFT OUTER JOIN tblservices on tblservices.id = tblcustomfieldsgrouplinks.relid where tblservices.id=" . $relid;
         $result = full_query_i($query);
     } else if ($type == 'service') {
         $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;
+
         $result = full_query_i($query);
     } else {
         $result = select_query_i("tblcustomfields", "", $where, "sortorder` ASC,`id", "ASC");
@@ -37,7 +39,7 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
 
 
     while ($data = mysqli_fetch_array($result)) {
-     //   echo "<pre>", print_r($data, 1), "</pre>";
+        //   echo "<pre>", print_r($data, 1), "</pre>";
         $id = $data['id'];
         $fieldname = $data['fieldname'];
 

@@ -682,7 +682,9 @@ if ($a == "confservice") {
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
+
     $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
+
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
