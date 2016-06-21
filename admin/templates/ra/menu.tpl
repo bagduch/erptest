@@ -147,6 +147,7 @@
     <li class="expand"><a href="#">{$_ADMINLANG.setup.products}</a>
         <ul>
         {if in_array("View Products/Services",$admin_perms)}<li><a href="configproducts.php">{$_ADMINLANG.setup.products}</a></li>{/if}
+        {if in_array("View Products/Services",$admin_perms)}<li><a href="configservices.php">{$_ADMINLANG.setup.services}</a></li>{/if}
         {if in_array("View Products/Services",$admin_perms)}<li><a href="configproductoptions.php">{$_ADMINLANG.setup.configoptions}</a></li>{/if}
         {if in_array("Configure Product Addons",$admin_perms)}<li><a href="configaddons.php">{$_ADMINLANG.setup.addons}</a></li>{/if}
         {if in_array("Configure Product Bundles",$admin_perms)}<li><a href="configbundles.php">{$_ADMINLANG.setup.bundles}</a></li>{/if}
