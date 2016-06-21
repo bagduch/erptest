@@ -179,16 +179,13 @@ if ($CONFIG['AllowTransfer']) {
     $smartyvalues['transferdomainenabled'] = true;
 }
 
-
 if ($CONFIG['AllowOwnDomain']) {
     $smartyvalues['owndomainenabled'] = true;
 }
-
 $captcha = clientAreaInitCaptcha();
 
 if (!empty(RA_Session::get("uid"))) {
     $client = new RA_Client(RA_Session::get("uid"));
-
     $exdetails = $client->getDetails();
     $smartyvalues['name'] = $ra->get_req_var_if($e, "firstname", $exdetails) . " " . $ra->get_req_var_if($e, "lastname", $exdetails);
 } else {
