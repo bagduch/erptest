@@ -1104,7 +1104,7 @@ $(\"#showadddownloadcat\").click(
         $modulesarray = array();
         $dh = opendir(ROOTDIR . "/modules/servers/");
 
-        while (false !== $file = readdir($dh)) {
+        foreach(readdir($dh) as $file) {
             if (is_file(ROOTDIR . ("/modules/servers/" . $file . "/" . $file . ".php"))) {
                 $modulesarray[] = $file;
             }
