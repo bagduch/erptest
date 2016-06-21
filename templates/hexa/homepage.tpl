@@ -5,7 +5,7 @@
                 <span class="pull-right qsl"><a href="#" data-original-title="Quick Server Logins"><span aria-hidden="true" class="icon icon-settings settings-toggle"></span></a></span>
                     {/if}
         </h3>  
-        <h2>{$LANG.headertext}</h2>	
+        <h2>Welcome Back {$name}</h2>	
         <br />   
     </div>
 </div>
