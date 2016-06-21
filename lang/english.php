@@ -1165,6 +1165,7 @@ $_LANG['bundlewarningdomainaddon'] = "The selected bundle requires you select th
 $_LANG['navservices'] = "Services";
 $_LANG['navproduct'] = "Products";
 $_LANG['navservicesorder'] = "Order New Services";
+$_LANG['navsproductsorder'] = "Order New Product";
 $_LANG['navdomains'] = "Domains";
 $_LANG['navrenewdomains'] = "Renew Domains";
 $_LANG['navregisterdomain'] = "Register a New Domain";

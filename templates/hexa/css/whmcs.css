@@ -14,6 +14,16 @@ body{font-family:'Open Sans', sans-serif;background: #6ed7fe url(img/whmcs-city-
 {
     width: 55%
 }
+.leftbox{
+    float: left;
+    padding: 20px 10px 20px 20px!important;
+    margin-right: 10px;
+}
+.leftbox span{
+
+    font-size: 40px!important;
+}
+
 .full-width-table
 {
     width: 100%;
@@ -354,7 +364,7 @@ input[type="submit"],input[type="button"]{font-family:FontAwesome;}
     .mails{margin-top:60px;}
     .right-sidebar{display:none;}
 }
-@media max-width 480px {
+@media (max-width :480px) {
     #pwstrengthbox{display:block;margin:10px auto 0;}
 }
 

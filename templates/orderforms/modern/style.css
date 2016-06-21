@@ -49,12 +49,12 @@ Master
     display: none;
     margin: 10px auto 10px auto;
     padding: 10px 15px;
-	background-color: #FBEEEB;
-	border: 1px dashed #cc0000;
+    background-color: #FBEEEB;
+    border: 1px dashed #cc0000;
     width: 90%;
-	font-weight: bold;
-	color: #cc0000;
-	text-align: center;
+    font-weight: bold;
+    color: #cc0000;
+    text-align: center;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     -o-border-radius: 6px;
@@ -160,18 +160,22 @@ Product Listing
 }
 
 #order-modern .product {
-/*    margin: 10px;
-    padding: 15px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;*/
+    /*    margin: 10px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;*/
+}
+.border:hover
+{
+    background: #f8f8f8;
 }
 
 #order-modern .product:hover {
-    background-color: #E6EDFF;
+
     cursor: pointer;
     cursor: hand;
 }
@@ -336,9 +340,9 @@ Domain Registrations
 }
 
 #order-modern .domainbox {
-     background-color:#fff;
-     width:550px;
-     padding:15px;
+    background-color:#fff;
+    width:550px;
+    padding:15px;
 }
 
 #order-modern .domainavailable {
@@ -377,23 +381,23 @@ Domain Registrations
     width: 80%;
 }
 #order-modern table.domainsuggestions th {
-	background-color: #1A4D80;
+    background-color: #1A4D80;
     font-size: 11px;
-	font-weight: bold;
-	text-align: center;
+    font-weight: bold;
+    text-align: center;
     padding: 2px;
     line-height: 20px;
     color: #fff;
 }
 #order-modern table.domainsuggestions td {
-	background-color: #FFF;
+    background-color: #FFF;
     text-align: center;
-	border-bottom: 1px solid #EBEBEB;
-	font-size: 11px;
+    border-bottom: 1px solid #EBEBEB;
+    font-size: 11px;
     line-height: 25px;
 }
 #order-modern table.domainsuggestions td select {
-	font-size: 11px;
+    font-size: 11px;
 }
 
 #order-modern #domainconfig {
@@ -606,33 +610,33 @@ Domain Renewals
     width: 100%;
 }
 #order-modern table.renewals th {
-	background-color: #666;
+    background-color: #666;
     font-size: 12px;
-	font-weight: bold;
-	text-align: center;
+    font-weight: bold;
+    text-align: center;
     padding: 3px;
     line-height: 20px;
 }
 #order-modern table.renewals td {
-	background-color: #FFF;
+    background-color: #FFF;
     text-align: center;
-	border-bottom: 1px solid #EBEBEB;
-	font-size: 12px;
+    border-bottom: 1px solid #EBEBEB;
+    font-size: 12px;
     line-height: 28px;
 }
 #order-modern table.renewals tr.rowhighlight td {
-	background-color: #EFF2F9;
+    background-color: #EFF2F9;
 }
 #order-modern table.renewals tr:hover td {
-	background-color: #EFF2F9;
+    background-color: #EFF2F9;
 }
 #order-modern table.renewals th, table.datatable th a, table.datatable th a:visited {
-	color: #FFF;
-	text-decoration: none;
+    color: #FFF;
+    text-decoration: none;
 }
 #order-modern table.renewals th a:hover {
-	color: #FFF;
-	text-decoration: underline;
+    color: #FFF;
+    text-decoration: underline;
 }
 
 /*
@@ -643,10 +647,10 @@ Shopping Cart
     width: 100%;
 }
 #order-modern table.cart th {
-	background-color: #666;
+    background-color: #666;
     font-size: 12px;
-	font-weight: bold;
-	text-align: center;
+    font-weight: bold;
+    text-align: center;
     padding: 3px;
     line-height: 20px;
     -moz-border-radius: 5px;
@@ -655,60 +659,60 @@ Shopping Cart
     border-radius: 5px;
 }
 #order-modern table.cart td {
-	background-color: #FFF;
-	border-bottom: 1px solid #EBEBEB;
-	font-size: 12px;
+    background-color: #FFF;
+    border-bottom: 1px solid #EBEBEB;
+    font-size: 12px;
     padding: 4px;
 }
 #order-modern table.cart tr.subtotal td {
-	background-color: #F5F5F5;
-	border-bottom: 1px solid #EBEBEB;
-	font-size: 12px;
+    background-color: #F5F5F5;
+    border-bottom: 1px solid #EBEBEB;
+    font-size: 12px;
     padding: 4px;
 }
 #order-modern table.cart tr.subtotal:hover td {
-	background-color: #F5F5F5;
+    background-color: #F5F5F5;
 }
 #order-modern table.cart tr.promotion td {
-	background-color: #FFFFDA;
-	border-bottom: 1px solid #EBEBEB;
-	font-size: 12px;
+    background-color: #FFFFDA;
+    border-bottom: 1px solid #EBEBEB;
+    font-size: 12px;
     padding: 4px;
 }
 #order-modern table.cart tr.promotion:hover td {
-	background-color: #FFFFDA;
+    background-color: #FFFFDA;
 }
 #order-modern table.cart tr.total td {
-	background-color: #E7FFDA;
+    background-color: #E7FFDA;
     color: #339100;
-	border-bottom: 0;
-	font-size: 16px;
+    border-bottom: 0;
+    font-size: 16px;
     font-weight: normal;
     padding: 4px;
 }
 #order-modern table.cart tr.total:hover td {
-	background-color: #E7FFDA;
+    background-color: #E7FFDA;
 }
 #order-modern table.cart tr.recurring td {
-	background-color: #F1EFDC;
-	border-bottom: 2px solid #666;
-	font-size: 12px;
+    background-color: #F1EFDC;
+    border-bottom: 2px solid #666;
+    font-size: 12px;
     font-weight: normal;
     padding: 4px;
 }
 #order-modern table.cart tr.recurring:hover td {
-	background-color: #F1EFDC;
+    background-color: #F1EFDC;
 }
 #order-modern table.cart tr:hover td {
-	background-color: #EFF2F9;
+    background-color: #EFF2F9;
 }
 #order-modern table.cart th, #order-modern table.datatable th a, #order-modern table.datatable th a:visited {
-	color: #FFF;
-	text-decoration: none;
+    color: #FFF;
+    text-decoration: none;
 }
 #order-modern table.cart th a:hover {
-	color: #FFF;
-	text-decoration: underline;
+    color: #FFF;
+    text-decoration: underline;
 }
 
 #order-modern .cartedit {
