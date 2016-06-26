@@ -24,10 +24,24 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
         $where['showorder'] = "on";
     }
     if ($type == 'product') {
-        $query = "select tblcustomfields.* from tblcustomfields 
-INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id 
-LEFT OUTER Join tblcustomfieldsgrouplinks on tblcustomfieldsgrouplinks.gid=tblcustomfieldsgroup.id 
-LEFT OUTER JOIN tblservices on tblservices.id = tblcustomfieldsgrouplinks.relid where tblservices.id=" . $relid;
+
+
+        $query = "SELECT tc.* FROM tblcustomfields as tc
+              LEFT OUTER JOIN 
+              (SELECT tgm.cfid,tcgl.serviceid from tblcustomfieldsgroupmembers as tgm  
+              INNER JOIN tblcustomfieldsgroupnames as tcfg ON tcfg.cfgid = tgm.cfgid  
+              INNER JOIN tblcustomfieldsgrouplinks as tcgl ON tcgl.cfgid = tcfg.cfgid)
+              as optionone ON optionone.cfid = tc.cfid 
+              LEFT OUTER JOIN tblcustomfieldslinks as tcfl ON tcfl.cfid = tc.cfid
+                INNER JOIN tblservices as ts ON (ts.id = optionone.serviceid or ts.id=tcfl.serviceid)
+                WHERE ts.id = " . $relid;
+
+//        echo $querys;
+//        
+//        $query = "select tblcustomfields.* from tblcustomfields 
+//INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id 
+//LEFT OUTER Join tblcustomfieldsgrouplinks on tblcustomfieldsgrouplinks.gid=tblcustomfieldsgroup.id 
+//LEFT OUTER JOIN tblservices on tblservices.id = tblcustomfieldsgrouplinks.relid where tblservices.id=" . $relid;
         $result = full_query_i($query);
     } else if ($type == 'service') {
         $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;

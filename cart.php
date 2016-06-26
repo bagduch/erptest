@@ -7,6 +7,7 @@
 define("CLIENTAREA", true);
 require "init.php";
 require "includes/orderfunctions.php";
+//require "includes/customfieldfunctions.php";
 require "includes/domainfunctions.php";
 require "includes/whoisfunctions.php";
 require "includes/configoptionsfunctions.php";
@@ -157,16 +158,13 @@ if (!$a) {
         $smartyvalues['registerdomainenabled'] = true;
     }
 
-
     if ($CONFIG['AllowTransfer']) {
         $smartyvalues['transferdomainenabled'] = true;
     }
 
-
     if ($CONFIG['EnableDomainRenewalOrders']) {
         $smartyvalues['renewalsenabled'] = true;
     }
-
 
     if ($gid == "domains") {
         redir("a=add&domain=register");
@@ -561,7 +559,6 @@ if ($a == "confservice") {
         $result = select_query_i("tblproducts", "type", array("id" => $pid));
         $data = mysqli_fetch_array($result);
         $producttype = $data['type'];
-
         if ($producttype == "server") {
             if (!$hostname) {
                 $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
@@ -682,9 +679,7 @@ if ($a == "confservice") {
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
-
     $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
-
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 

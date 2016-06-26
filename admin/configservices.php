@@ -247,6 +247,7 @@ if ($action == "save") {
         "type" => $type,
         "gid" => $gid,
         "name" => $name,
+        "customefield" => $customefield,
         "description" => html_entity_decode($description),
         "hidden" => $hidden,
         "welcomeemail" => $welcomeemail,
@@ -415,7 +416,10 @@ if ($sub == "savegroup") {
     if ($ids) {
         update_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
     } else {
-        insert_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
+        $id = insert_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
+        foreach ($customefield as $row) {
+            insert_query("tblcustomerfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => '', 'servicegid' => $id));
+        }
     }
 
     redir();
@@ -836,8 +840,7 @@ $(\"#showadddownloadcat\").click(
 <tr><td class=\"fieldlabel\">";
         echo $aInt->lang("services", "servicegroup");
         echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"gid\">";
+        echo "<select name=\"gid\">";
         $result = select_query_i("tblservicegroups", "", "", "order", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
@@ -885,7 +888,6 @@ $(\"#showadddownloadcat\").click(
         $emails = array("Hosting Account Welcome Email", "Reseller Account Welcome Email", "Dedicated/VPS Server Welcome Email", "Other Product/Service Welcome Email");
         foreach ($emails as $email) {
             $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "name" => $email, "language" => ""));
-
             while ($data = mysqli_fetch_array($result)) {
                 $mid = $data['id'];
                 $name = $data['name'];
@@ -898,9 +900,7 @@ $(\"#showadddownloadcat\").click(
                 echo ">" . $name . "</option>";
             }
         }
-
         $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "custom" => "1", "language" => ""), "name", "ASC");
-
         while ($data = mysqli_fetch_array($result)) {
             $mid = $data['id'];
             $name = $data['name'];
@@ -912,17 +912,13 @@ $(\"#showadddownloadcat\").click(
 
             echo ">" . $name . "</option>";
         }
-
         echo "</select></td></tr>
-
 <tr><td class=\"fieldlabel\">";
         echo $aInt->lang("services", "applytax");
         echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"tax\"";
-
         if ($tax == "1") {
             echo " checked";
         }
-
         echo "> ";
         echo $aInt->lang("services", "applytaxdesc");
         echo "</label></td></tr>
@@ -940,11 +936,9 @@ $(\"#showadddownloadcat\").click(
 <tr><td class=\"fieldlabel\">";
         echo $aInt->lang("services", "retired");
         echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"retired\" value=\"1\"";
-
         if ($retired) {
             echo " checked";
         }
-
         echo "> ";
         echo $aInt->lang("services", "retireddesc");
         echo "</label></td></tr>
@@ -1104,7 +1098,7 @@ $(\"#showadddownloadcat\").click(
         $modulesarray = array();
         $dh = opendir(ROOTDIR . "/modules/servers/");
 
-        foreach(readdir($dh) as $file) {
+        foreach (readdir($dh) as $file) {
             if (is_file(ROOTDIR . ("/modules/servers/" . $file . "/" . $file . ".php"))) {
                 $modulesarray[] = $file;
             }
@@ -1619,10 +1613,8 @@ $(\"#showadddownloadcat\").click(
                 if ($gid == $groupid) {
                     echo " SELECTED";
                 }
-
                 echo ">" . $gname;
             }
-
             echo "</select></td></tr>
 <tr><td class=\"fieldlabel\">";
             echo $aInt->lang("services", "productname");
@@ -1666,18 +1658,15 @@ $(\"#showadddownloadcat\").click(
                         echo "<option value=\"" . $pid . "\">" . $gname . " - " . $prodname;
                     }
                 }
-
                 echo "</select></td></tr>
 <tr><td class=\"fieldlabel\">";
                 echo $aInt->lang("services", "newservicename");
                 echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"newservicename\" size=\"50\"></td></tr>
 </table>
-<P ALIGN=\"center\"><input type=\"submit\" value=\"";
+<p ALIGN=\"center\"><input type=\"submit\" value=\"";
                 echo $aInt->lang("global", "continue");
                 echo " >>\" class=\"button\"></P>
-</form>
-
-";
+</form>";
             } else {
                 if ($action == "creategroup" || $action == "editgroup") {
                     checkPermission("Manage Product Groups");
@@ -1689,12 +1678,12 @@ $(\"#showadddownloadcat\").click(
                     $disabledgateways = $data['disabledgateways'];
                     $hidden = $data['hidden'];
                     $disabledgateways = explode(",", $disabledgateways);
-                    echo "
-<h2>";
+                    $queryone = "SELECT * FROM tblcustomfieldsgroupnames";
+                    $result = full_query_i($queryone);
+                    $option = mysqli_fetch_array($query);
+                    echo "<h2>";
                     echo $aInt->lang("services", ($action == "creategroup" ? "creategroup" : "editgroup"));
-                    echo "</h2>
-
-<form method=\"post\" action=\"";
+                    echo "</h2><form method=\"post\" action=\"";
                     echo $PHP_SELF;
                     echo "?sub=savegroup&ids=";
                     echo $ids;
@@ -1705,7 +1694,13 @@ $(\"#showadddownloadcat\").click(
                     echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"name\" size=\"40\" value=\"";
                     echo $name;
                     echo "\"></td></tr>
-<tr><td class=\"fieldlabel\"><br></td><td class=\"fieldarea\"></td></tr>
+<tr><td class=\"fieldlabel\"><label>Customer Fields Group</lable><br></td><td class=\"fieldarea\">
+<select name=\"customefield\" multiple>";
+                    while ($data = mysqli_fetch_array($result)) {
+                        echo "<option value='" . $data['cfgid'] . "'>" . $data['name'] . "</option>";
+                    }
+                    echo "</select>
+</td></tr>
 <tr><td class=\"fieldlabel\">";
                     echo $aInt->lang("services", "orderfrmtpl");
                     echo "</td><td class=\"fieldarea\">

@@ -3,7 +3,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(array("clientfunctions", "servicefunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
+$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
 $id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -93,7 +93,7 @@ if ($frm->issubmitted()) {
     $nextduedate = $ra->get_req_var("nextduedate");
     $paymentmethod = $ra->get_req_var("paymentmethod");
     $tax = $ra->get_req_var("tax");
-    $notes = $ra->get_req_var("notes");
+    $notes = $ra->get_req_var("notes"); 
     $configoption = $ra->get_req_var("configoption");
 
     if ($aid = $ra->get_req_var("aid")) {
@@ -101,7 +101,6 @@ if ($frm->issubmitted()) {
             $setupfee = $recurring = 0;
             $nextduedate = fromMySQLDate("0000-00-00");
         }
-
 
         if (is_numeric($aid)) {
             $oldstatus = get_query_val("tblserviceaddons", "status", array("id" => $aid));
