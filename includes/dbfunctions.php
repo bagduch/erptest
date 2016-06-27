@@ -5,7 +5,6 @@
 
 // conversion of select_query to select_query_i by guy@hd.net.nz 2016-08-13
 function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = "", $limit = "", $innerjoin = "") {
-    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -133,7 +132,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 }
 
 function update_query($table, $array, $where) {
-    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -212,7 +210,6 @@ function update_query($table, $array, $where) {
     }
     
     
-        // GUYGUYGUY logging
     if ($_SESSION['adminid'] == 3) {
             error_log($query);
     }
@@ -227,9 +224,7 @@ function update_query($table, $array, $where) {
 }
 
 function insert_query($table, $array) {
-    error_log(__METHOD__);
-
-	global $CONFIG;
+    global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
 	global $ramysqli;
@@ -272,7 +267,6 @@ function insert_query($table, $array) {
 }
 
 function delete_query($table, $where) {
-    error_log(__METHOD__);
 	global $CONFIG;
 	global $query_count;
 	global $mysqli_errors;
@@ -305,8 +299,8 @@ function delete_query($table, $where) {
 }
 
 function full_query_i($query, $userHandle = null) {
-    error_log(__METHOD__);
     if ($_SESSION['adminid'] == 3) {
+        error_log(__METHOD__);
         error_log($query);
     }
     global $CONFIG;
