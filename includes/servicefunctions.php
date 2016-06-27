@@ -37,7 +37,7 @@ function getServiceData($id = NULL) {
     ." AND tblservicegroups.type='service'";
 
     $result = full_query_i($query);
-    $service_data = mysqli_fetch_array($result);
+    $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
     //echo "<pre>".print_r($service_data, 1)."</pre>";
     return $service_data;
 }
@@ -45,16 +45,11 @@ function getServiceData($id = NULL) {
 // return all custom fields and values for product, 
 // even if value not populated (return null)
 // if id is supplied but not gid, determine gid
-//function getCustomFields(int $id = null, int $gid = null) {
-//    // find gid of product
-//    if (is_null((int) $gid)) {
-//        return true;
-//    }
-//}
 
 // sid is the id from tblservices
 // csid is the id from tblcustomerservices (if applicable) for population of values
 function getServiceCustomFields($sid, $csid=null) {
+    $csid = null;
     global $ramysqli;
     error_log("calling getServiceCustomFields with sid ".$sid." and csid ".$csid);
     if (!is_int($sid)) {
@@ -62,8 +57,8 @@ function getServiceCustomFields($sid, $csid=null) {
     }
     $query_selectvals=
         "SELECT
-            tblcustomfields.name,
-            tblcustomfieldsvalues.value ";
+            tblcustomfields.cfid,
+            tblcustomfields.fieldname";
     $query_tables = 
       " FROM
             tblservices
@@ -82,21 +77,21 @@ function getServiceCustomFields($sid, $csid=null) {
             ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
     if (is_int($csid)) {
+        $query_selectvals .= ", tblcustomfieldsvalues.value ";
         $query_tables .= 
       " LEFT JOIN tblcustomfieldsvalues
-            ON (tblcustomfieldsvalues.cfid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=?) ";
+            ON (tblcustomfieldsvalues.cfid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=".(int)$csid.") ";
     }
-    $query_where = " WHERE tblservices.id=?";
+    $query_where = " WHERE tblservices.id=".(int)$sid;
     $query = $query_selectvals . $query_tables . $query_where;
+    $result = full_query_i($query);
     $returnvals = array();
-    if ($stmt = $ramysqli->prepare($query)) {
-        $stmt->bind_param("ii",$csid,$sid);
-        $stmt->execute();
-        $stmt->bind_result($name,$val);
-        while ($stmt->fetch()) {
-            $returnvals[$name]=$val;
-        }
+    $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    
+    while ($row = mysqli_fetch_assoc($result)) {
+            $returnvals[$row["fieldname"]]=$row["value"];   
     }
+
     return $returnvals;
     
 }
