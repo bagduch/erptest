@@ -3,7 +3,17 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
+$aInt->requiredFiles(   
+    array(
+        "clientfunctions", 
+        "gatewayfunctions", 
+        "modulefunctions", 
+        "servicefunctions", 
+        "customfieldfunctions", 
+        "configoptionsfunctions", 
+        "invoicefunctions", 
+        "processinvoices")
+);
 $aInt->inClientsProfile = true;
 $id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -543,6 +553,8 @@ while ($data = mysqli_fetch_array($result)) {
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
 
+echo "<pre>servicedata\n".print_r(getServiceData(19),1)."</pre>";
+echo "<pre>customfields\n".print_r(getServiceCustomFields(3,19),1)."</pre>";
 $frmsub = new RA_Form("frm2");
 echo $frmsub->form("", "", "", "get", true);
 echo $frmsub->hidden("userid", $userid);
