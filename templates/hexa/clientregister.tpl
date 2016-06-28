@@ -176,7 +176,9 @@
 					<h4>{$LANG.captchatitle}</h4><small>{$LANG.captchaverify}</small>
 				</div>
 				<div class="panel-body">
+                                  
 					{if $capatacha eq "recaptcha"}
+                                         
 					<div align="center">{$recapatchahtml}</div>
 					{else}
 					<div class="col-lg-2">

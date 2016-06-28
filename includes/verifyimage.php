@@ -1,21 +1,18 @@
 <?php
 /**
  *
- * @ RA
+ * @ WHMCS FULL DECODED & NULLED
  *
- * 
- * 
- * 
- * 
+ * @ Version  : 5.2.15
+ * @ Author   : MTIMER
+ * @ Release on : 2013-12-24
+ * @ Website  : http://www.mtimer.cn
  *
  **/
-
 require "../init.php";
-
 if (!function_exists("imagecreatefrompng")) {
 	exit("You need to recompile with the GD library included in PHP for this feature to be able to function");
 }
-
 $rand = generateNewCaptchaCode();
 $image = imagecreatefrompng("../images/verify.png");
 $textColor = imagecolorallocate($image, 0, 0, 0);
