@@ -20,6 +20,7 @@ require "includes/fraudfunctions.php";
 require "includes/modulefunctions.php";
 require "includes/ccfunctions.php";
 require "includes/cartfunctions.php";
+require 'includes/servicefunctions.php';
 initialiseClientArea($_LANG['carttitle'], "", "<a href=\"cart.php\">" . $_LANG['carttitle'] . "</a>");
 checkContactPermission("orders");
 $orderfrm = new RA_OrderForm();
@@ -679,7 +680,10 @@ if ($a == "confservice") {
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
-    $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
+    $customfields = getServiceCustomFields($pid);
+
+    $customefieldshtml = getCustomerFieldHtml($customfields);
+
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
@@ -728,7 +732,7 @@ if ($a == "confservice") {
     $smartyvalues['server'] = $serverarray;
     $smartyvalues['configurableoptions'] = $configurableoptions;
     $smartyvalues['addons'] = $addonsarray;
-    $smartyvalues['customfields'] = $customfields;
+    $smartyvalues['customfields'] = $customefieldshtml;
     $smartyvalues['domain'] = $domain;
 }
 
