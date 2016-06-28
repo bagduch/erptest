@@ -315,6 +315,7 @@ function getCountriesDropDown($selected = "", $fieldname = "", $tabindex = "") {
 
 function checkDetailsareValid($uid = "", $signup = false, $checkemail = true, $captcha = true, $checkcustomfields = true) {
     global $ra;
+    global $CONFIG;
 
     $validate = new RA_Validate();
     $validate->setOptionalFields($ra->get_config("ClientsProfileOptionalFields"));
@@ -366,7 +367,17 @@ function checkDetailsareValid($uid = "", $signup = false, $checkemail = true, $c
 
 
         if ($captcha) {
-            $validate->validate("captcha", "code", "captchaverifyincorrect");
+            require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
+
+            $publickey = $CONFIG['ReCAPTCHAPublicKey'];
+            $privatekey = $CONFIG['ReCAPTCHAPrivateKey'];
+            $recaptcha = new ReCaptcha($privatekey);
+            $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
+            if ($resp->isSuccess()) {
+                // verified!
+            } else {
+                $errormessage = $resp->getErrorCodes();
+            }
         }
 
 

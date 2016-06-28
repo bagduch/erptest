@@ -9,7 +9,6 @@
  * 
  *
  **/
-
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("Add New Client", false);
