@@ -96,4 +96,11 @@ function getServiceCustomFields($sid, $csid=null) {
     
 }
 
+// takes csid per above, and an array of fieldname->values
+function updateServiceCustomFieldValues($csid, $valarray) {
+    foreach ($valarray as $fieldname => $value) {
+        // get list of cfids
+    }
+}
+
 ?>
