@@ -680,10 +680,8 @@ if ($a == "confservice") {
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
+    
     $customfields = getServiceCustomFields($pid);
-
-    $customefieldshtml = getCustomerFieldHtml($customfields);
-
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
@@ -732,7 +730,7 @@ if ($a == "confservice") {
     $smartyvalues['server'] = $serverarray;
     $smartyvalues['configurableoptions'] = $configurableoptions;
     $smartyvalues['addons'] = $addonsarray;
-    $smartyvalues['customfields'] = $customefieldshtml;
+    $smartyvalues['customfields'] = $customfields;
     $smartyvalues['domain'] = $domain;
 }
 

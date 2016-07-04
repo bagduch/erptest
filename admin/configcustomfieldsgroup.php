@@ -10,8 +10,9 @@ $aInt->title = "Product/Service Custom Fields";
 $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
+//$aInt->template= "configcustomfieldsgroup";
 $action = $ra->get_req_var("action");
-
+$id = $ra->get_req_var("id");
 if ($manageoptions) {
     $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
     while ($data = mysqli_fetch_array($result)) {
@@ -216,12 +217,12 @@ if ($action == "savegroup") {
     }
 
     //mail('peter@hd.net.nz','hello',print_r($fieldname));
-         echo print_r($value);
+    echo print_r($value);
 
-   
+
     if ($fieldname) {
         foreach ($fieldname as $fid => $value) {
-         
+
             update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $fieldtype[$fid], "description" => $description[$fid], "fieldoptions" => $fieldoptions[$fid], "regexpr" => html_entity_decode($regexpr[$fid]), "adminonly" => $adminonly[$fid], "required" => $required[$fid], "showorder" => $showorder[$fid], "showinvoice" => $showinvoice[$fid], "sortorder" => $sortorder[$fid]), array("id" => $fid));
         }
     }
@@ -380,51 +381,48 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=deletegroup&id='+id+'" . ge
 }}";
 
 if ($action == "") {
+    $aInt->template = "configcustomfieldsgroup";
     if ($deleted) {
         infoBox("Success", "The option group has been deleted successfully!");
     }
-
 
     if ($duplicated) {
         infoBox("Success", "The option group has been duplicated successfully!");
     }
 
     echo $infobox;
-    echo "
-<p>Product/Service Custom Fields options allow you to customize the product/service field to enter customer details</p>
-
-<p><b>Options:</b> <a href=\"";
-    echo $_SERVER['PHP_SELF'];
-    echo "?action=managegroup\">Create a Customer Field Group</a> | <a href=\"";
-    echo $_SERVER['PHP_SELF'];
-    echo "?action=duplicategroup\">Duplicate a Group</a></p>
-
-";
     $aInt->sortableTableInit("nopagination");
-    $result = select_query_i("tblcustomfieldsgroup", "", "", "name", "ASC");
+    $result = select_query_i("tblcustomfieldsgroupnames", "", "", "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
-        $id = $data['id'];
+        $id = $data['cfgid'];
         $name = $data['name'];
         $tabledata[] = array($name, "<a href=\"" . $_SERVER['PHP_SELF'] . ("?action=managegroup&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>"), "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
     }
-
-    echo $aInt->sortableTable(array("Name", "", ""), $tabledata);
+    $aInt->assign('tabledatas', $tabledata);
 } else {
     if ($action == "managegroup") {
+
         if ($id) {
             $action = "save";
             $steptitle = "Manage Group";
-            $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $id));
-            $data = mysqli_fetch_array($result);
-            $id = $data['id'];
-            $name = $data['name'];
-            $productlinks = array();
-            $result = select_query_i("tblservices", "", array("cpid" => $id));
-
+            $query = "select * from tblcustomfields left join tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ")";
+            $result = full_query_i($query);
             while ($data = mysqli_fetch_array($result)) {
-                $productlinks[] = $data['id'];
+                $datas[] = $data;
             }
+            $aInt->assign('datas', $datas);
+//            $data = mysqli_fetch_array($result);
+//            $id = $data['id'];
+//            $name = $data['name'];
+//            $productlinks = array();
+//            $result = select_query_i("tblservices", "", array("cpid" => $id));
+//
+//            while ($data = mysqli_fetch_array($result)) {
+//                $productlinks[] = $data['id'];
+//            }
+            $aInt->assign('id', $id);
+            $aInt->template = "managegroup";
         } else {
             $action = "savegroup";
             checkPermission("Create New Products/Services");
@@ -433,36 +431,6 @@ if ($action == "") {
             $productlinks = array();
         }
 
-        $jscode = "function manageconfigoptions(id) {
-    window.open('" . $_SERVER['PHP_SELF'] . "?manageoptions=true&cid='+id,'configoptions','width=900,height=500,scrollbars=yes');
-}
-function addconfigoption() {
-    window.open('" . $_SERVER['PHP_SELF'] . "?manageoptions=true&gid=" . $id . "','configoptions','width=800,height=500,scrollbars=yes');
-}
-function doDelete(id,opid) {
-    if (confirm(\"Are you sure you want to delete this configurable option?\")) {
-        window.location='" . $_SERVER['PHP_SELF'] . "?action=deleteoption&id='+id+'&opid='+opid+'" . generate_token("link") . "';
-    }
-}";
-        echo "
-<form method=\"post\" action=\"";
-        echo $_SERVER['PHP_SELF'];
-        echo "?action=savegroup&id=";
-        echo $id;
-        echo "\" name=\"managefrm\">
-
-<p><b>";
-        echo $steptitle;
-        echo "</b></p>
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">Name</td><td class=\"fieldarea\"><input type=\"text\" name=\"name\" size=\"40\" value=\"";
-        echo $name;
-        echo "\"></td></tr>
-
-<tr><td class=\"fieldlabel\">Assigned Products</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"productlinks[]\" size=\"8\" style=\"width:90%\" multiple>
-";
         $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
         while ($data = mysqli_fetch_array($result)) {
@@ -478,242 +446,7 @@ function doDelete(id,opid) {
             echo ">" . $groupname . " - " . $name . "</option>";
         }
 
-        echo "</select></td></tr>
-</table>
-";
-        if ($id) {
-            $result = select_query_i("tblcustomfields", "", array("type" => "product", "gid" => $id), "sortorder` ASC,`id", "ASC");
-            while ($data = mysqli_fetch_array($result)) {
-                $fid = $data['id'];
-                $fieldname = $data['fieldname'];
-                $fieldtype = $data['fieldtype'];
-                $description = $data['description'];
-                $fieldoptions = $data['fieldoptions'];
-                $regexpr = $data['regexpr'];
-                $adminonly = $data['adminonly'];
-                $required = $data['required'];
-                $showorder = $data['showorder'];
-                $showinvoice = $data['showinvoice'];
-                $sortorder = $data['sortorder'];
-                echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=100 class=\"fieldlabel\">";
-                echo $aInt->lang("customfields", "fieldname");
-                echo "</td><td class=\"fieldarea\"><table width=\"98%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td><input type=\"text\" name=\"customfieldname[";
-                echo $fid;
-                echo "]\" value=\"";
-                echo $fieldname;
-                echo "\" size=\"30\"></td><td align=\"right\">";
-                echo $aInt->lang("customfields", "order");
-                echo " <input type=\"text\" name=\"customsortorder[";
-                echo $fid;
-                echo "]\" value=\"";
-                echo $sortorder;
-                echo "\" size=\"5\"></td></tr></table></td></tr>
-<tr><td class=\"fieldlabel\">";
-                echo $aInt->lang("customfields", "fieldtype");
-                echo "</td><td class=\"fieldarea\">";
-                echo "<s";
-                echo "elect name=\"customfieldtype[";
-                echo $fid;
-                echo "]\">
-<option value=\"text\"";
-
-                if ($fieldtype == "text") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typetextbox");
-                echo "</option>
-<option value=\"link\"";
-
-                if ($fieldtype == "link") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typelink");
-                echo "</option>
-<option value=\"password\"";
-
-                if ($fieldtype == "password") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typepassword");
-                echo "</option>
-<option value=\"dropdown\"";
-
-                if ($fieldtype == "dropdown") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typedropdown");
-                echo "</option>
-<option value=\"tickbox\"";
-
-                if ($fieldtype == "tickbox") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typetickbox");
-                echo "</option>
-<option value=\"textarea\"";
-
-                if ($fieldtype == "textarea") {
-                    echo " selected";
-                }
-
-                echo ">";
-                echo $aInt->lang("customfields", "typetextarea");
-                echo "</option>
-</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-                echo $aInt->lang("fields", "description");
-                echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"customfielddesc[";
-                echo $fid;
-                echo "]\" value=\"";
-                echo $description;
-                echo "\" size=\"60\"> ";
-                echo $aInt->lang("customfields", "descriptioninfo");
-                echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-                echo $aInt->lang("customfields", "validation");
-                echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"customfieldregexpr[";
-                echo $fid;
-                echo "]\" value=\"";
-                echo $regexpr;
-                echo "\" size=\"60\"> ";
-                echo $aInt->lang("customfields", "validationinfo");
-                echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-                echo $aInt->lang("customfields", "selectoptions");
-                echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"customfieldoptions[";
-                echo $fid;
-                echo "]\" value=\"";
-                echo $fieldoptions;
-                echo "\" size=\"60\"> ";
-                echo $aInt->lang("customfields", "selectoptionsinfo");
-                echo "</td></tr>
-<tr><td class=\"fieldlabel\"></td><td class=\"fieldarea\"><table width=\"98%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td><input type=\"checkbox\" name=\"customadminonly[";
-                echo $fid;
-                echo "]\"";
-
-                if ($adminonly == "on") {
-                    echo " checked";
-                }
-
-                echo "> ";
-                echo $aInt->lang("customfields", "adminonly");
-                echo " <input type=\"checkbox\" name=\"customrequired[";
-                echo $fid;
-                echo "]\"";
-
-                if ($required == "on") {
-                    echo " checked";
-                }
-
-                echo "> ";
-                echo $aInt->lang("customfields", "requiredfield");
-                echo " <input type=\"checkbox\" name=\"customshoworder[";
-                echo $fid;
-                echo "]\"";
-
-                if ($showorder == "on") {
-                    echo " checked";
-                }
-
-                echo "> ";
-                echo $aInt->lang("customfields", "orderform");
-                echo " <input type=\"checkbox\" name=\"customshowinvoice[";
-                echo $fid;
-                echo "]\"";
-
-                if ($showinvoice) {
-                    echo " checked";
-                }
-
-                echo "> ";
-                echo $aInt->lang("customfields", "showinvoice");
-                echo "</td><td align=\"right\"><a href=\"#\" onClick=\"deletecustomfield('";
-                echo $fid;
-                echo "');return false\">";
-                echo $aInt->lang("customfields", "deletefield");
-                echo "</a></td></tr></table></td></tr>
-</table><br>
-";
-            }
-
-            echo "<b>";
-            echo $aInt->lang("customfields", "addfield");
-            echo "</b><br><br>
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=100 class=\"fieldlabel\">";
-            echo $aInt->lang("customfields", "fieldname");
-            echo "</td><td class=\"fieldarea\"><table width=\"98%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td><input type=\"text\" name=\"addfieldname\" size=\"30\"></td><td align=\"right\">";
-            echo $aInt->lang("customfields", "order");
-            echo " <input type=\"text\" name=\"addsortorder\" size=\"5\" value=\"0\"></td></tr></table></td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("customfields", "fieldtype");
-            echo "</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"addfieldtype\">
-<option value=\"text\">";
-            echo $aInt->lang("customfields", "typetextbox");
-            echo "</option>
-<option value=\"link\">";
-            echo $aInt->lang("customfields", "typelink");
-            echo "</option>
-<option value=\"password\">";
-            echo $aInt->lang("customfields", "typepassword");
-            echo "</option>
-<option value=\"dropdown\">";
-            echo $aInt->lang("customfields", "typedropdown");
-            echo "</option>
-<option value=\"tickbox\">";
-            echo $aInt->lang("customfields", "typetickbox");
-            echo "</option>
-<option value=\"textarea\">";
-            echo $aInt->lang("customfields", "typetextarea");
-            echo "</option>
-</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("fields", "description");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"addcustomfielddesc\" size=\"60\"> ";
-            echo $aInt->lang("customfields", "descriptioninfo");
-            echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("customfields", "validation");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"addregexpr\" size=\"60\"> ";
-            echo $aInt->lang("customfields", "validationinfo");
-            echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("customfields", "selectoptions");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"addfieldoptions\" size=\"60\"> ";
-            echo $aInt->lang("customfields", "selectoptionsinfo");
-            echo "</td></tr>
-<tr><td class=\"fieldlabel\"></td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"addadminonly\"> ";
-            echo $aInt->lang("customfields", "adminonly");
-            echo " <input type=\"checkbox\" name=\"addrequired\"> ";
-            echo $aInt->lang("customfields", "requiredfield");
-            echo " <input type=\"checkbox\" name=\"addshoworder\"> ";
-            echo $aInt->lang("customfields", "orderform");
-            echo " <input type=\"checkbox\" name=\"addshowinvoice\"> ";
-            echo $aInt->lang("customfields", "showinvoice");
-            echo "</td></tr>
-</table>
-";
-        }
-
-        echo "
-<P style='clear:both' ALIGN=\"center\"><input type=\"submit\" value=\"Save Changes\" class=\"button\" /> <input type=\"button\" value=\"Back to Groups List\" onClick=\"window.location='configproductoptions.php'\" class=\"button\" /></P>
-
-</form>
-
-";
+        echo "</select></td></tr></table>";
     } else {
         if ($action == "duplicategroup") {
             checkPermission("Create New Products/Services");

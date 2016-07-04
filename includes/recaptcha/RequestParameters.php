@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-namespace ReCaptcha;
 
 /**
  * Stores and formats the parameters for the request to the reCAPTCHA service.

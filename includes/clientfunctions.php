@@ -367,17 +367,7 @@ function checkDetailsareValid($uid = "", $signup = false, $checkemail = true, $c
 
 
         if ($captcha) {
-            require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
-
-            $publickey = $CONFIG['ReCAPTCHAPublicKey'];
-            $privatekey = $CONFIG['ReCAPTCHAPrivateKey'];
-            $recaptcha = new ReCaptcha($privatekey);
-            $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-            if ($resp->isSuccess()) {
-                // verified!
-            } else {
-                $errormessage = $resp->getErrorCodes();
-            }
+            $validate->validate("captcha", "code", "captchaverifyincorrect");
         }
 
 

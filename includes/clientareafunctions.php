@@ -428,13 +428,17 @@ function clientAreaTablePageNav($numitems) {
 }
 
 function clientAreaInitCaptcha() {
-    global $ra;
+    global $ra, $CONFIG;
+
 
     $capatacha = "";
 
     if ($ra->get_config("CaptchaSetting") == "on" || ($ra->get_config("CaptchaSetting") == "offloggedin" && !isset($_SESSION['uid']))) {
         if ($ra->get_config("CaptchaType") == "recaptcha") {
-            require ROOTDIR . "/includes/recaptchalib.php";
+            require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
+            $privatekey = $CONFIG['ReCAPTCHAPrivateKey'];
+            $recaptcha = new ReCaptcha($privatekey);
+            $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
             $capatacha = "recaptcha";
         } else {
             $capatacha = "default";
@@ -448,7 +452,7 @@ function clientAreaInitCaptcha() {
 function clientAreaReCaptchaHTML() {
     global $CONFIG;
 
-  //  require_once  ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
+    //  require_once  ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
 
     if ($GLOBALS['capatacha'] != "recaptcha") {
 
@@ -458,11 +462,11 @@ function clientAreaReCaptchaHTML() {
     $publickey = $CONFIG['ReCAPTCHAPublicKey'];
     $privatekey = $CONFIG['ReCAPTCHAPrivateKey'];
     $lang = $CONFIG['Language'];
-  //  $recapatcha = new ReCaptcha($privatekey);
+    //  $recapatcha = new ReCaptcha($privatekey);
     //  $recapatcha = recaptcha_get_html($publickey, null, true);
-    $html = "<div class='g-recaptcha' data-sitekey='".$publickey."'></div>
+    $html = "<div class='g-recaptcha' data-sitekey='" . $publickey . "'></div>
             <script type='text/javascript'
-                    src='https://www.google.com/recaptcha/api.js?hl=".$lang."'>
+                    src='https://www.google.com/recaptcha/api.js?hl=" . $lang . "'>
             </script>";
     return $html;
 }

@@ -29,6 +29,7 @@
  */
 require_once ROOTDIR . "/includes/recaptcha/RequestMethod/Post.php";
 require_once ROOTDIR . "/includes/recaptcha/Response.php";
+require_once ROOTDIR . "/includes/recaptcha/RequestParameters.php";
 class ReCaptcha {
 
     /**
