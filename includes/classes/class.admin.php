@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @ RA
@@ -8,9 +9,9 @@
  * 
  * 
  *
- **/
+ * */
+class RA_Admin {
 
-    class RA_Admin {
     public $loginRequired = true;
     public $requiredPermission = "";
     public $title = "";
@@ -72,12 +73,10 @@
 
         if ($reqpermission == "loginonly") {
             $this->loginRequired = true;
-        }
-        else {
+        } else {
             if ($reqpermission) {
                 $this->requiredPermission = $reqpermission;
-            }
-            else {
+            } else {
                 $this->loginRequired = false;
             }
         }
@@ -101,8 +100,7 @@
                 if ($auth->getAdminLanguage()) {
                     $this->language = $auth->getAdminLanguage();
                 }
-            }
-            else {
+            } else {
                 $auth->destroySession();
                 redir("", "login.php");
             }
@@ -159,7 +157,6 @@
                 require ROOTDIR . "/includes/" . $filename . ".php";
             }
         }
-
     }
 
     public function setTemplate($tplname) {
@@ -196,7 +193,7 @@
             $orderby = "companyname";
         }
 
-        $result = select_query_i("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int)$selectedval, $orderby, "ASC");
+        $result = select_query_i("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int) $selectedval, $orderby, "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $selectid = $data['id'];
@@ -212,16 +209,14 @@
                 if ($selectcompanyname) {
                     $selectfield .= " (" . $selectcompanyname . ")";
                 }
-            }
-            else {
+            } else {
                 if ($CONFIG['ClientDropdownFormat'] == 2) {
                     if ($selectcompanyname) {
                         $selectfield .= "" . $selectcompanyname . " - ";
                     }
 
                     $selectfield .= "" . $selectfirstname . " " . $selectlastname;
-                }
-                else {
+                } else {
                     $selectfield .= "#" . $selectid . " - " . $selectfirstname . " " . $selectlastname;
 
                     if ($selectcompanyname) {
@@ -390,7 +385,7 @@
             foreach ($admin_supportdepts as $deptid) {
 
                 if (trim($deptid)) {
-                    $admin_supportdepts_qry[] = (int)$deptid;
+                    $admin_supportdepts_qry[] = (int) $deptid;
                     continue;
                 }
             }
@@ -403,8 +398,7 @@
 
             if ($disable_admin_ticket_page_counts) {
                 $query = "SELECT tblticketstatuses.title,'x',showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
-            }
-            else {
+            } else {
                 $query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
             }
 
@@ -425,9 +419,9 @@
 
 
             if (!$disable_admin_ticket_page_counts) {
-                $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
+                $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
                 $data = mysqli_fetch_array($result);
-                echo "<pre class=test>".print_r($data,1)."</pre>";
+                echo "<pre class=test>" . print_r($data, 1) . "</pre>";
                 $flaggedtickets = $data[0];
                 $flaggedticketschecked = true;
             }
@@ -506,9 +500,8 @@
 
                 if ($flaggedticketschecked) {
                     $templatevars['tickets']['flagged'] = $flaggedtickets;
-                }
-                else {
-                    $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'";
+                } else {
+                    $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'";
                     $result = full_query_i($query);
                     $data = mysqli_fetch_array($result);
                     $templatevars['tickets']['flagged'] = $data[0];
@@ -537,7 +530,6 @@
         foreach ($this->templatevars as $key => $value) {
             $this->smarty->assign($key, $value);
         }
-
     }
 
     public function output() {
@@ -582,7 +574,6 @@
 
         if ($ra->getCurrentFilename() != "systemintegrationcode") {
             $content = preg_replace('/(<form\W[^>]*\bmethod=(\'|"|)POST(\'|"|)\b[^>]*>)/i', '$1' . "\n" . generate_token(), $content);
-
         }
 
 
@@ -658,8 +649,7 @@ $(\".tab\").click(function(){
         selectedTab = elid;
     }
     ";
-        }
-        else {
+        } else {
             $jquerycode .= "$(\".tabbox\").slideUp();
     if (elid != selectedTab) {
         selectedTab = elid;
@@ -709,8 +699,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
         if ($defaultsort == "nopagination") {
             $this->tablePagination = false;
-        }
-        else {
+        } else {
             $this->tablePagination = true;
             $sortdata = (isset($_COOKIE['sortdata']) ? $_COOKIE['sortdata'] : "");
             $sortdata = json_decode(base64_decode($sortdata), true);
@@ -735,8 +724,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             if ($xorderby == $orderby) {
                 if ($xorder == "ASC") {
                     $xorder = "DESC";
-                }
-                else {
+                } else {
                     $xorder = "ASC";
                 }
             }
@@ -775,8 +763,8 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $numrows;
         global $page;
 
-        $pages = max(ceil($numrows / $this->rowLimit),1);
-        
+        $pages = max(ceil($numrows / $this->rowLimit), 1);
+
         $content = "";
 
         if ($this->tablePagination) {
@@ -792,34 +780,32 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                         }
                         continue;
                     }
-                    $varsrecall .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\" />\r\n",$key,$value);
+                    $varsrecall .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\" />\r\n", $key, $value);
                     continue;
                 }
             }
 
-/* 
-<form method="post" action="/billing_hd_ems_007/supporttickets.php?filter=1">
-<input type="hidden" name="token" value="4b3c8bc5c547bf6f9f13b441e4871e916212f5fe" />
-<table width="100%" border="0" cellpadding="3" cellspacing="0"><tr>
-<td width="50%" align="left">14 Records Found, Page 1 of 1</td>
-<td width="50%" align="right">Jump to Page: <select name="page" onchange="submit()"><option value="1" selected>1</option></select> <input type="submit" value="Go" class="btn btn-xs btn-default" /></td>
-</tr></table>
-</form>
-*/
+            /*
+              <form method="post" action="/billing_hd_ems_007/supporttickets.php?filter=1">
+              <input type="hidden" name="token" value="4b3c8bc5c547bf6f9f13b441e4871e916212f5fe" />
+              <table width="100%" border="0" cellpadding="3" cellspacing="0"><tr>
+              <td width="50%" align="left">14 Records Found, Page 1 of 1</td>
+              <td width="50%" align="right">Jump to Page: <select name="page" onchange="submit()"><option value="1" selected>1</option></select> <input type="submit" value="Go" class="btn btn-xs btn-default" /></td>
+              </tr></table>
+              </form>
+             */
 
 
-            $content .= sprintf("<form method=\"post\" action=\"%s\">",$_SERVER['PHP_SELF']);
-            $content .= $varsrecall ; // token
+            $content .= sprintf("<form method=\"post\" action=\"%s\">", $_SERVER['PHP_SELF']);
+            $content .= $varsrecall; // token
             $content .= "<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
             $content .= "<tr>";
             //$printing .= sprintf("<td width=\"50%\" align=\"left\">" 
-            $content .= sprintf("<td width=\"50%%\" >%d %s",
-                            $numrows, 
-                            $this->lang("global", "recordsfound")
-                        );
-            $content .= ", " . $this->lang("global", "page") . " " ;
-            $content .= sprintf("%d %s %d</td>",($page + 1),$this->lang("global", "of"),$pages);
-            $content .= "<td width=\"50%\" align=\"right\">" . $this->lang("global", "jumppage") ;
+            $content .= sprintf("<td width=\"50%%\" >%d %s", $numrows, $this->lang("global", "recordsfound")
+            );
+            $content .= ", " . $this->lang("global", "page") . " ";
+            $content .= sprintf("%d %s %d</td>", ($page + 1), $this->lang("global", "of"), $pages);
+            $content .= "<td width=\"50%\" align=\"right\">" . $this->lang("global", "jumppage");
             $content .= ": <select name=\"page\" onchange=\"submit()\">";
 
 
@@ -867,8 +853,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 if (!$columnid) {
                     $sortableheader = false;
                 }
-            }
-            else {
+            } else {
                 $sortableheader = false;
                 $columnid = $width = "";
                 $columnname = $column;
@@ -936,17 +921,33 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
                 $content .= "</tr>\r\n";
             }
-        }
-        else {
+        } else {
             $content .= "<tr><td colspan=\"" . $totalcols . "\">" . $this->lang("global", "norecordsfound") . "</td></tr>\r\n";
         }
 
         $content .= "</table>\r\n</div>\r\n";
 
         if ($formbuttons) {
-            $content .= "" . $this->lang("global", "withselected") . ": " . $formbuttons . "\r\n</form>\r\n";
+            $content .= "<div class=\"left\">" . $this->lang("global", "withselected") . ": " . $formbuttons . "\r\n</form></div>\r\n";
+        }
+        $content .= "<div class=\"right\">" . $this->lang("global", "jumppage");
+        $content .= ": <select name=\"page\" onchange=\"submit()\">";
+
+
+        $i = 1;
+        while ($i <= $pages) {
+            $newpage = $i - 1;
+            $content .= "<option value=\"" . $newpage . "\"";
+
+            if ($page == $newpage) {
+                $content .= " selected";
+            }
+
+            $content .= ">" . $i . "</option>";
+            ++$i;
         }
 
+        $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn-small\" /></div>";
 
         if ($this->tablePagination) {
             $content .= "<p align=\"center\">";
@@ -975,16 +976,14 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 }
 
                 $content .= "page=" . $prevoffset . "\">" . $this->lang("global", "previouspage") . "</a> &nbsp; ";
-            }
-            else {
+            } else {
                 $content .= $this->lang("global", "previouspage") . " &nbsp;";
             }
 
 
             if (($page * $this->rowLimit + $this->rowLimit) / $this->rowLimit == $pages) {
                 $content .= $this->lang("global", "nextpage");
-            }
-            else {
+            } else {
                 $newoffset = $page + 1;
                 $content .= "<a href=\"" . $_SERVER['PHP_SELF'] . "?";
                 foreach ($_REQUEST as $key => $value) {
@@ -1019,7 +1018,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
     public function profileHeader() {
         global $CONFIG;
 
-        $uid = (int)$GLOBALS['userid'];
+        $uid = (int) $GLOBALS['userid'];
         $tabarray = array();
         $tabarray['clientssummary'] = $this->lang("clientsummary", "summary");
         $tabarray['clientsprofile'] = $this->lang("clientsummary", "profile");
@@ -1045,8 +1044,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             if ($selectcompanyname) {
                 echo " (" . $selectcompanyname . ")";
             }
-        }
-        else {
+        } else {
             echo $this->clientsDropDown($uid, true);
             echo " <input type=\"submit\" value=\"Go\">";
         }
@@ -1055,8 +1053,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
                 $class = "tabselected";
-            }
-            else {
+            } else {
                 $class = "tab";
             }
 //          echo " Link: " . $link ." Class: ". $class;
@@ -1227,8 +1224,7 @@ $(\"#\"+name).dialog('open');
         if ((!$firstname && !$lastname) && !$companyname) {
             if (isset($ClientOutputData[$userid])) {
                 $data = $ClientOutputData[$userid];
-            }
-            else {
+            } else {
                 $result = select_query_i("tblclients", "firstname,lastname,companyname,groupid", array("id" => $userid));
                 $data = mysqli_fetch_array($result);
                 $ClientOutputData[$userid] = $data;
@@ -1242,8 +1238,7 @@ $(\"#\"+name).dialog('open');
             if ($contactid) {
                 if (isset($ContactOutputData[$contactid])) {
                     $contactdata = $ContactOutputData[$contactid];
-                }
-                else {
+                } else {
                     $contactdata = get_query_vals("tblcontacts", "firstname,lastname", array("id" => $contactid, "userid" => $userid));
                     $ContactOutputData[$contactid] = $contactdata;
                 }
@@ -1259,20 +1254,17 @@ $(\"#\"+name).dialog('open');
         if ($CONFIG['ClientDisplayFormat'] == 2) {
             if ($companyname) {
                 $clientlink .= $companyname;
-            }
-            else {
+            } else {
                 $clientlink .= $firstname . " " . $lastname;
             }
-        }
-        else {
+        } else {
             if ($CONFIG['ClientDisplayFormat'] == 3) {
                 $clientlink .= $firstname . " " . $lastname;
 
                 if ($companyname) {
                     $clientlink .= " (" . $companyname . ")";
                 }
-            }
-            else {
+            } else {
                 $clientlink .= $firstname . " " . $lastname;
             }
         }
@@ -1313,7 +1305,6 @@ window.location='" . $url . "'+id+'" . generate_token("link") . "';
         if ($output) {
             echo "popupWin" . $this->popupwincount . "();return false";
         }
-
     }
 
     // validate User ID
@@ -1321,7 +1312,7 @@ window.location='" . $url . "'+id+'" . generate_token("link") . "';
         global $userid;
         global $clientsdetails;
 
-        $userid = (int)$tempuid;
+        $userid = (int) $tempuid;
 
         if (!function_exists("getClientsDetails")) {
             require ROOTDIR . "/includes/clientfunctions.php";
@@ -1333,7 +1324,6 @@ window.location='" . $url . "'+id+'" . generate_token("link") . "';
         if (!$userid) {
             $this->gracefulExit($this->lang("clients", "invalidclientid"));
         }
-
     }
 
     public function richTextEditor() {
@@ -1474,12 +1464,13 @@ function dialogChangeTab(id) {
 }
 
 ";
-        }
-
-        public function addHeadOutput($output) {
-            $this->headOutput[] = $output;
-            return true;
-        }
     }
+
+    public function addHeadOutput($output) {
+        $this->headOutput[] = $output;
+        return true;
+    }
+
+}
 
 ?>

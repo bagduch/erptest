@@ -7,7 +7,7 @@ $aInt = new RA_Admin("Add New Order", false);
 $aInt->title = $aInt->lang("orders", "addnew");
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
-$aInt->requiredFiles(array("orderfunctions", "domainfunctions", "whoisfunctions", "configoptionsfunctions", "customfieldfunctions", "clientfunctions", "invoicefunctions", "processinvoices", "gatewayfunctions", "fraudfunctions", "modulefunctions", "cartfunctions"));
+$aInt->requiredFiles(array("orderfunctions", "whoisfunctions", "configoptionsfunctions", "customfieldfunctions", "clientfunctions", "invoicefunctions", "processinvoices", "gatewayfunctions", "fraudfunctions", "modulefunctions", "cartfunctions"));
 $action = $ra->get_req_var("action");
 $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
@@ -251,14 +251,14 @@ if ($ra->get_req_var("submitorder")) {
             $validtlds[] = $data[0];
         }
 
-        foreach ($regaction as $k => $regact) {
-            $domainparts = explode(".", $regdomain[$k], 2);
-
-            if ($regact && in_array("." . $domainparts[1], $validtlds)) {
-                $_SESSION['cart']['domains'][] = array("type" => $regact, "domain" => $regdomain[$k], "regperiod" => $regperiod[$k], "dnsmanagement" => $dnsmanagement[$k], "emailforwarding" => $emailforwarding[$k], "idprotection" => $idprotection[$k], "eppcode" => $eppcode[$k], "fields" => $domflds[$k]);
-                continue;
-            }
-        }
+//        foreach ($regaction as $k => $regact) {
+//            $domainparts = explode(".", $regdomain[$k], 2);
+//
+//            if ($regact && in_array("." . $domainparts[1], $validtlds)) {
+//                $_SESSION['cart']['domains'][] = array("type" => $regact, "domain" => $regdomain[$k], "regperiod" => $regperiod[$k], "dnsmanagement" => $dnsmanagement[$k], "emailforwarding" => $emailforwarding[$k], "idprotection" => $idprotection[$k], "eppcode" => $eppcode[$k], "fields" => $domflds[$k]);
+//                continue;
+//            }
+//        }
 
 
         if ($promocode) {
@@ -444,8 +444,8 @@ if ($ra->get_req_var("submitorder")) {
 </div>";
             exit();
         }
-
-        $cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['domains']) + count($_SESSION['cart']['renewals']);
+// + count($_SESSION['cart']['domains']
+        $cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['renewals']);
 
         if (!$cartitems) {
             redir("noselections=1");

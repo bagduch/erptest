@@ -115,7 +115,7 @@ function enterNewCC() {
 <tr class="carttablesummary"><td class="left">{$LANG.ordertotalduetoday}: &nbsp;</td><td align="center">{$total}</td></tr>
 {if $totalrecurringmonthly || $totalrecurringquarterly || $totalrecurringsemiannually || $totalrecurringannually || $totalrecurringbiennially || $totalrecurringtriennially}
 <tr class="carttablesummary"><td class="left">{$LANG.ordertotalrecurring}: &nbsp;</td><td align="center">
-{if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthly}<br />{/if}
+{if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthlytext}<br />{/if}
 {if $totalrecurringquarterly}{$totalrecurringquarterly} {$LANG.orderpaymenttermquarterly}<br />{/if}
 {if $totalrecurringsemiannually}{$totalrecurringsemiannually} {$LANG.orderpaymenttermsemiannually}<br />{/if}
 {if $totalrecurringannually}{$totalrecurringannually} {$LANG.orderpaymenttermannually}<br />{/if}

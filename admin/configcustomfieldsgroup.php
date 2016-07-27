@@ -217,7 +217,7 @@ if ($action == "savegroup") {
     }
 
     //mail('peter@hd.net.nz','hello',print_r($fieldname));
-    echo print_r($value);
+    //echo print_r($value);
 
 
     if ($fieldname) {

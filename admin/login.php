@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -18,7 +8,6 @@ if (!function_exists("curl_init")) {
 	echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>Critical Error</strong><br>CURL is not installed or is disabled on your server and it is required for ra to run</div>";
 	exit();
 }
-
 
 
 
@@ -123,7 +112,7 @@ echo "ect {
 	color: #333;
 	background-color: #fff;
 	text-align: left;
-	width: 430px;
+	width: 550px;
 	padding: 10px;
 	margin: 0 auto 10px auto;
     -moz-b";
@@ -161,7 +150,7 @@ echo "r-radius: 10px;
 </style>
 </head>
 <body>
-<div id=\"logo\"><a href=\"login.php\"><img src=\"images/loginlogo.png\" alt=\"ra\" border=\"0\" /></a></div>
+<div id=\"logo\"></div>
 <div id";
 echo "=\"login_container\">
 ";
@@ -506,7 +495,7 @@ echo "<s";
 echo "trong>";
 echo $remote_ip;
 echo "</strong></td>
-        <td align=\"right\" valign=\"middle\">Powered by <a href=\"http://www.ra.com/\" target=\"_blank\">ra</a></td>
+        <td align=\"right\" valign=\"middle\">Powered by <a href=\"#\" target=\"_blank\">Robotic Accounting</a></td>
       </tr>
     </table>
   </div>

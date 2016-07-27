@@ -252,7 +252,7 @@ function outputClientArea($templatefile, $nowrapper = false) {
         }
     }
 
-
+  //  mail("peter@hd.net.nz", "form", $body_file);
     if ($nowrapper) {
         $template_output = $body_file;
     } else {

@@ -1,14 +1,11 @@
 <?php
-
 /**
- *
  * @ RA
  * */
 define("CLIENTAREA", true);
 require "init.php";
 require "includes/orderfunctions.php";
-//require "includes/customfieldfunctions.php";
-require "includes/domainfunctions.php";
+//require "includes/domainfunctions.php";
 require "includes/whoisfunctions.php";
 require "includes/configoptionsfunctions.php";
 require "includes/customfieldfunctions.php";
@@ -32,24 +29,17 @@ $aid = (int) $ra->get_req_var("aid");
 $ajax = $ra->get_req_var("ajax");
 $sld = $ra->get_req_var("sld");
 $tld = $ra->get_req_var("tld");
-$domains = $ra->get_req_var("domains");
+$description = $ra->get_req_var("description");
 $step = $ra->get_req_var("step");
 $submit = $ra->get_req_var("submit");
 $checkout = $ra->get_req_var("checkout");
 $validatepromo = $ra->get_req_var("validatepromo");
 $orderfrmtpl = $ra->get_config("OrderFormTemplate");
-
 if (!isValidforPath($orderfrmtpl)) {
     exit("Invalid Order Form Template Name");
 }
-
 $orderconf = array();
 $orderfrmconfig = ROOTDIR . "/templates/orderforms/" . $orderfrmtpl . "/config.php";
-
-//if (file_exists($orderfrmconfig)) {
-//    include $orderfrmconfig;
-//}
-
 
 if (((!$ajax && isset($orderconf['denynonajaxaccess'])) && is_array($orderconf['denynonajaxaccess'])) && in_array($a, $orderconf['denynonajaxaccess'])) {
     redir();
@@ -67,9 +57,9 @@ $smartyvalues['ipaddress'] = $remote_ip;
 $smartyvalues['ajax'] = ($ajax ? true : false);
 $numproducts = (isset($_SESSION['cart']['products']) ? count($_SESSION['cart']['products']) : 0);
 $numaddons = (isset($_SESSION['cart']['addons']) ? count($_SESSION['cart']['addons']) : 0);
-$numdomains = (isset($_SESSION['cart']['domains']) ? count($_SESSION['cart']['domains']) : 0);
+//$numdomains = (isset($_SESSION['cart']['domains']) ? count($_SESSION['cart']['domains']) : 0);
 $numrenewals = (isset($_SESSION['cart']['renewals']) ? count($_SESSION['cart']['renewals']) : 0);
-$smartyvalues['numitemsincart'] = $numproducts + $numaddons + $numdomains + $numrenewals;
+$smartyvalues['numitemsincart'] = $numproducts + $numaddons + $numrenewals;
 
 if (isset($_SESSION['cart']['lastconfigured'])) {
     bundlesStepCompleteRedirect($_SESSION['cart']['lastconfigured']);
@@ -107,8 +97,7 @@ if ($a == "remove") {
             $_SESSION['cart']['addons'] = array_values($_SESSION['cart']['addons']);
         } else {
             if ($r == "d") {
-                unset($_SESSION['cart']['domains'][$i]);
-                $_SESSION['cart']['domains'] = array_values($_SESSION['cart']['domains']);
+              
             } else {
                 if ($r == "r") {
                     unset($_SESSION['cart']['renewals'][$i]);
@@ -190,10 +179,10 @@ if (!$a) {
             }
 
             $productids = array();
-            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,domain,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
+            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,description,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
 
             while ($data = mysqli_fetch_array($result)) {
-                $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "domain" => $data['domain']);
+                $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "description" => $data['description']);
 
                 if (!in_array($data['packageid'], $productids)) {
                     $productids[] = $data['packageid'];
@@ -253,7 +242,6 @@ if (!$a) {
                         }
                     }
 
-
                     if (count($packageids)) {
                         $addons[] = array("id" => $addonid, "name" => $name, "description" => $description, "free" => $free, "setupfee" => $setupfee, "recurringamount" => formatCurrency($recurring), "billingcycle" => $billingcycle, "productids" => $packageids);
                     }
@@ -276,82 +264,82 @@ if (!$a) {
                     require "login.php";
                 }
 
-                $smarty->assign("gid", "renewals");
-                $templatefile = "domainrenewals";
-                $productgroups = $orderfrm->getProductGroups();
-                $smartyvalues['productgroups'] = $productgroups;
-                $DomainRenewalGracePeriods = $DomainRenewalMinimums = array();
-                require ROOTDIR . "/configuration.php";
-                $DomainRenewalGracePeriods = array_merge(array(".com" => "30", ".net" => "30", ".org" => "30", ".info" => "15", ".biz" => "30", ".mobi" => "30", ".name" => "30", ".asia" => "30", ".tel" => "30", ".in" => "15", ".mn" => "30", ".bz" => "30", ".cc" => "30", ".tv" => "30", ".eu" => "0", ".co.uk" => "97", ".org.uk" => "97", ".me.uk" => "97", ".us" => "30", ".ws" => "0", ".me" => "30", ".cn" => "30", ".nz" => "0", ".ca" => "30"), $DomainRenewalGracePeriods);
-                $DomainRenewalMinimums = array_merge(array(".co.uk" => "180", ".org.uk" => "180", ".me.uk" => "180", ".com.au" => "90", ".net.au" => "90", ".org.au" => "90"), $DomainRenewalMinimums);
-                $DomainRenewalPriceOptions = array();
-                $renewals = array();
-                $result = select_query_i("tbldomains", "", "userid='" . (int) $_SESSION['uid'] . "' AND (status='Active' OR status='Expired')", "expirydate", "ASC");
-
-                while ($data = mysqli_fetch_array($result)) {
-                    $id = $data['id'];
-                    $domain = $data['domain'];
-                    $expirydate = $data['expirydate'];
-                    $status = $data['status'];
-
-                    if ($expirydate == "0000-00-00") {
-                        $expirydate = $data['nextduedate'];
-                    }
-
-                    $todaysdatetime = strtotime(date("Ymd"));
-                    $expirydatetime = strtotime($expirydate);
-                    $daysuntilexpiry = round(($expirydatetime - $todaysdatetime) / 86400);
-                    $domainparts = explode(".", $domain, 2);
-                    $tld = "." . $domainparts[1];
-                    $beforerenewlimit = $ingraceperiod = $pastgraceperiod = false;
-
-                    if (array_key_exists($tld, $DomainRenewalMinimums)) {
-                        if ($DomainRenewalMinimums[$tld] < $daysuntilexpiry) {
-                            $beforerenewlimit = true;
-                        }
-                    }
-
-
-                    if (array_key_exists($tld, $DomainRenewalGracePeriods)) {
-                        if ($DomainRenewalGracePeriods[$tld] < $daysuntilexpiry * (0 - 1)) {
-                            $pastgraceperiod = true;
-                        }
-                    } else {
-                        if ($daysuntilexpiry < 0) {
-                            $pastgraceperiod = true;
-                        }
-                    }
-
-
-                    if (!$pastgraceperiod && $daysuntilexpiry < 0) {
-                        $ingraceperiod = true;
-                    }
-
-
-                    if (!array_key_exists($tld, $DomainRenewalPriceOptions)) {
-                        $temppricelist = getTLDPriceList($tld, true, true);
-                        $renewaloptions = array();
-                        foreach ($temppricelist as $regperiod => $options) {
-
-                            if ($options['renew']) {
-                                $renewaloptions[] = array("period" => $regperiod, "price" => $options['renew']);
-                                continue;
-                            }
-                        }
-
-                        $DomainRenewalPriceOptions[$tld] = $renewaloptions;
-                    } else {
-                        $renewaloptions[] = $DomainRenewalPriceOptions[$tld];
-                    }
-
-                    $rawstatus = RA_ClientArea::getrawstatus($status);
-
-                    if (count($renewaloptions)) {
-                        $renewals[] = array("id" => $id, "domain" => $domain, "tld" => $tld, "status" => $_LANG["clientarea" . $rawstatus], "expirydate" => fromMySQLDate($expirydate), "daysuntilexpiry" => $daysuntilexpiry, "beforerenewlimit" => $beforerenewlimit, "beforerenewlimitdays" => $DomainRenewalMinimums[$tld], "ingraceperiod" => $ingraceperiod, "pastgraceperiod" => $pastgraceperiod, "graceperioddays" => $DomainRenewalGracePeriods[$tld], "renewaloptions" => $DomainRenewalPriceOptions[$tld]);
-                    }
-                }
-
-                $smartyvalues['renewals'] = $renewals;
+//                $smarty->assign("gid", "renewals");
+//                $templatefile = "domainrenewals";
+//                $productgroups = $orderfrm->getProductGroups();
+//                $smartyvalues['productgroups'] = $productgroups;
+//                $DomainRenewalGracePeriods = $DomainRenewalMinimums = array();
+//                require ROOTDIR . "/configuration.php";
+//                $DomainRenewalGracePeriods = array_merge(array(".com" => "30", ".net" => "30", ".org" => "30", ".info" => "15", ".biz" => "30", ".mobi" => "30", ".name" => "30", ".asia" => "30", ".tel" => "30", ".in" => "15", ".mn" => "30", ".bz" => "30", ".cc" => "30", ".tv" => "30", ".eu" => "0", ".co.uk" => "97", ".org.uk" => "97", ".me.uk" => "97", ".us" => "30", ".ws" => "0", ".me" => "30", ".cn" => "30", ".nz" => "0", ".ca" => "30"), $DomainRenewalGracePeriods);
+//                $DomainRenewalMinimums = array_merge(array(".co.uk" => "180", ".org.uk" => "180", ".me.uk" => "180", ".com.au" => "90", ".net.au" => "90", ".org.au" => "90"), $DomainRenewalMinimums);
+//                $DomainRenewalPriceOptions = array();
+//                $renewals = array();
+//                $result = select_query_i("tbldomains", "", "userid='" . (int) $_SESSION['uid'] . "' AND (status='Active' OR status='Expired')", "expirydate", "ASC");
+//
+//                while ($data = mysqli_fetch_array($result)) {
+//                    $id = $data['id'];
+//                    $domain = $data['domain'];
+//                    $expirydate = $data['expirydate'];
+//                    $status = $data['status'];
+//
+//                    if ($expirydate == "0000-00-00") {
+//                        $expirydate = $data['nextduedate'];
+//                    }
+//
+//                    $todaysdatetime = strtotime(date("Ymd"));
+//                    $expirydatetime = strtotime($expirydate);
+//                    $daysuntilexpiry = round(($expirydatetime - $todaysdatetime) / 86400);
+//                    $domainparts = explode(".", $domain, 2);
+//                    $tld = "." . $domainparts[1];
+//                    $beforerenewlimit = $ingraceperiod = $pastgraceperiod = false;
+//
+//                    if (array_key_exists($tld, $DomainRenewalMinimums)) {
+//                        if ($DomainRenewalMinimums[$tld] < $daysuntilexpiry) {
+//                            $beforerenewlimit = true;
+//                        }
+//                    }
+//
+//
+//                    if (array_key_exists($tld, $DomainRenewalGracePeriods)) {
+//                        if ($DomainRenewalGracePeriods[$tld] < $daysuntilexpiry * (0 - 1)) {
+//                            $pastgraceperiod = true;
+//                        }
+//                    } else {
+//                        if ($daysuntilexpiry < 0) {
+//                            $pastgraceperiod = true;
+//                        }
+//                    }
+//
+//
+//                    if (!$pastgraceperiod && $daysuntilexpiry < 0) {
+//                        $ingraceperiod = true;
+//                    }
+//
+//
+//                    if (!array_key_exists($tld, $DomainRenewalPriceOptions)) {
+//                        $temppricelist = getTLDPriceList($tld, true, true);
+//                        $renewaloptions = array();
+//                        foreach ($temppricelist as $regperiod => $options) {
+//
+//                            if ($options['renew']) {
+//                                $renewaloptions[] = array("period" => $regperiod, "price" => $options['renew']);
+//                                continue;
+//                            }
+//                        }
+//
+//                        $DomainRenewalPriceOptions[$tld] = $renewaloptions;
+//                    } else {
+//                        $renewaloptions[] = $DomainRenewalPriceOptions[$tld];
+//                    }
+//
+//                    $rawstatus = RA_ClientArea::getrawstatus($status);
+//
+//                    if (count($renewaloptions)) {
+//                        $renewals[] = array("id" => $id, "domain" => $domain, "tld" => $tld, "status" => $_LANG["clientarea" . $rawstatus], "expirydate" => fromMySQLDate($expirydate), "daysuntilexpiry" => $daysuntilexpiry, "beforerenewlimit" => $beforerenewlimit, "beforerenewlimitdays" => $DomainRenewalMinimums[$tld], "ingraceperiod" => $ingraceperiod, "pastgraceperiod" => $pastgraceperiod, "graceperioddays" => $DomainRenewalGracePeriods[$tld], "renewaloptions" => $DomainRenewalPriceOptions[$tld]);
+//                    }
+//                }
+//
+//                $smartyvalues['renewals'] = $renewals;
             } else {
 
                 $templatefile = "services";
@@ -360,7 +348,7 @@ if (!$a) {
                 $smartyvalues['productgroups'] = $productgroups;
 
 
-                //    echo "<pre>",  print_r($_SESSION['cart'],1),"</pre>";
+//    echo "<pre>",  print_r($_SESSION['cart'],1),"</pre>";
 
                 $productservice = $orderfrm->getServiceGroups();
                 $smartyvalues['productservices'] = $productservice;
@@ -390,7 +378,7 @@ if (!$a) {
                 $smartyvalues['groupname'] = $groupinfo['name'];
                 $products = $orderfrm->getProducts($gid, true, true);
 
-                //$services = $orderfrm->getServices($gid, true, true);
+//$services = $orderfrm->getServices($gid, true, true);
                 $smartyvalues['products'] = $products;
                 $smartyvalues['productscount'] = count($products);
             }
@@ -403,132 +391,132 @@ if ($a == "add") {
     
 }
 
-
-if ($a == "domainoptions") {
-    $productinfo = $orderfrm->setPid($_SESSION['cart']['domainoptionspid']);
-
-    if ($checktype == "register" || $checktype == "transfer") {
-        if ($domain) {
-            $domainparts = explode(".", $domain, 2);
-            $sld = $domainparts[0];
-            $tld = $domainparts[1];
-        }
-
-        $sld = cleanDomainInput($sld);
-        $tld = cleanDomainInput($tld);
-        $domain = $sld . $tld;
-
-        if ((($sld != "www" && $sld) && $tld) && checkDomainisValid($sld, $tld)) {
-            if (substr($tld, 0, 1) != ".") {
-                $tld = "." . $tld;
-            }
-
-
-            if ($CONFIG['AllowDomainsTwice']) {
-                $result = select_query_i("tbldomains", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (status!='Expired' AND status!='Cancelled')");
-                $data = mysqli_fetch_array($result);
-                $domaincheck = $data[0];
-            }
-
-
-            if ($domaincheck) {
-                $smartyvalues['alreadyindb'] = true;
-            } else {
-                $regenabled = $CONFIG['AllowRegister'];
-                $transferenabled = $CONFIG['AllowTransfer'];
-                $owndomainenabled = $CONFIG['AllowOwnDomain'];
-                $whoislookup = lookupDomain($sld, $tld);
-                $servicestatus = $whoislookup['result'];
-
-                if (!$checktype) {
-                    $checktype = ($servicestatus == "available" ? "register" : "transfer");
-                }
-
-                $smartyvalues['status'] = $servicestatus;
-
-                if ($regenabled) {
-                    $regoptions = getTLDPriceList($tld, true);
-                    $smartyvalues['regoptionscount'] = count($regoptions);
-                    $smartyvalues['regoptions'] = $regoptions;
-                }
-
-                if ($transferenabled) {
-                    $transferoptions = getTLDPriceList($tld, true, "transfer");
-                    $smartyvalues['transferoptionscount'] = count($transferoptions);
-                    $smartyvalues['transferoptions'] = $transferoptions;
-                    $transferprice = current($transferoptions);
-                    $smartyvalues['transferterm'] = key($transferoptions);
-                    $smartyvalues['transferprice'] = $transferprice['transfer'];
-                }
-
-                $smartyvalues['domain'] = $domain;
-                $smartyvalues['checktype'] = $checktype;
-                $smartyvalues['regenabled'] = $regenabled;
-                $smartyvalues['transferenabled'] = $transferenabled;
-                $smartyvalues['owndomainenabled'] = $owndomainenabled;
-
-                if ($checktype == "register" && $regenabled) {
-                    $tldslist = $CONFIG['BulkCheckTLDs'];
-                    $othersuggestions = array();
-
-                    if ($tldslist) {
-                        $tldslist = explode(",", $tldslist);
-                        foreach ($tldslist as $lookuptld) {
-
-                            if ($lookuptld != $tld && checkDomainisValid($sld, $lookuptld)) {
-                                $result = lookupDomain($sld, $lookuptld);
-
-                                if ($result['result'] == "available") {
-                                    $othersuggestions[] = array("domain" => $sld . $lookuptld, "status" => $result['result'], "regoptions" => getTLDPriceList($lookuptld, true));
-                                    continue;
-                                }
-
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-                $smartyvalues['othersuggestions'] = $othersuggestions;
-            }
-        } else {
-            $smartyvalues['invalid'] = true;
-        }
-    } else {
-        if ($checktype == "owndomain" || $checktype == "subdomain") {
-            if (($sld && $tld) && checkDomainisValid($sld, $tld)) {
-                if (substr($tld, 0, 1) != ".") {
-                    $tld = "." . $tld;
-                }
-                if ($CONFIG['AllowDomainsTwice']) {
-                    $result = select_query_i("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (servicestatus!='Terminated' AND servicestatus!='Cancelled' AND servicestatus!='Fraud')");
-                    $data = mysqli_fetch_array($result);
-                    $domaincheck = $data[0];
-                    if ($domaincheck) {
-                        $smartyvalues['alreadyindb'] = true;
-                    }
-                }
-
-                $smartyvalues['checktype'] = $checktype;
-                $smartyvalues['sld'] = $sld;
-                $smartyvalues['tld'] = $tld;
-            } else {
-                $smartyvalues['invalid'] = true;
-            }
-        } else {
-            if ($checktype == "incart") {
-                $smartyvalues['checktype'] = "owndomain";
-                $domainparts = explode(".", $sld, 2);
-                $sld = $domainparts[0];
-                $tld = $domainparts[1];
-                $smartyvalues['sld'] = $sld;
-                $smartyvalues['tld'] = $tld;
-            }
-        }
-    }
-
-    $templatefile = "domainoptions";
-}
+//
+//if ($a == "domainoptions") {
+//    $productinfo = $orderfrm->setPid($_SESSION['cart']['domainoptionspid']);
+//
+//    if ($checktype == "register" || $checktype == "transfer") {
+//        if ($domain) {
+//            $domainparts = explode(".", $domain, 2);
+//            $sld = $domainparts[0];
+//            $tld = $domainparts[1];
+//        }
+//
+//        $sld = cleanDomainInput($sld);
+//        $tld = cleanDomainInput($tld);
+//        $domain = $sld . $tld;
+//
+//        if ((($sld != "www" && $sld) && $tld) && checkDomainisValid($sld, $tld)) {
+//            if (substr($tld, 0, 1) != ".") {
+//                $tld = "." . $tld;
+//            }
+//
+//
+//            if ($CONFIG['AllowDomainsTwice']) {
+//                $result = select_query_i("tbldomains", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (status!='Expired' AND status!='Cancelled')");
+//                $data = mysqli_fetch_array($result);
+//                $domaincheck = $data[0];
+//            }
+//
+//
+//            if ($domaincheck) {
+//                $smartyvalues['alreadyindb'] = true;
+//            } else {
+//                $regenabled = $CONFIG['AllowRegister'];
+//                $transferenabled = $CONFIG['AllowTransfer'];
+//                $owndomainenabled = $CONFIG['AllowOwnDomain'];
+//                $whoislookup = lookupDomain($sld, $tld);
+//                $servicestatus = $whoislookup['result'];
+//
+//                if (!$checktype) {
+//                    $checktype = ($servicestatus == "available" ? "register" : "transfer");
+//                }
+//
+//                $smartyvalues['status'] = $servicestatus;
+//
+//                if ($regenabled) {
+//                    $regoptions = getTLDPriceList($tld, true);
+//                    $smartyvalues['regoptionscount'] = count($regoptions);
+//                    $smartyvalues['regoptions'] = $regoptions;
+//                }
+//
+//                if ($transferenabled) {
+//                    $transferoptions = getTLDPriceList($tld, true, "transfer");
+//                    $smartyvalues['transferoptionscount'] = count($transferoptions);
+//                    $smartyvalues['transferoptions'] = $transferoptions;
+//                    $transferprice = current($transferoptions);
+//                    $smartyvalues['transferterm'] = key($transferoptions);
+//                    $smartyvalues['transferprice'] = $transferprice['transfer'];
+//                }
+//
+//                $smartyvalues['domain'] = $domain;
+//                $smartyvalues['checktype'] = $checktype;
+//                $smartyvalues['regenabled'] = $regenabled;
+//                $smartyvalues['transferenabled'] = $transferenabled;
+//                $smartyvalues['owndomainenabled'] = $owndomainenabled;
+//
+//                if ($checktype == "register" && $regenabled) {
+//                    $tldslist = $CONFIG['BulkCheckTLDs'];
+//                    $othersuggestions = array();
+//
+//                    if ($tldslist) {
+//                        $tldslist = explode(",", $tldslist);
+//                        foreach ($tldslist as $lookuptld) {
+//
+//                            if ($lookuptld != $tld && checkDomainisValid($sld, $lookuptld)) {
+//                                $result = lookupDomain($sld, $lookuptld);
+//
+//                                if ($result['result'] == "available") {
+//                                    $othersuggestions[] = array("domain" => $sld . $lookuptld, "status" => $result['result'], "regoptions" => getTLDPriceList($lookuptld, true));
+//                                    continue;
+//                                }
+//
+//                                continue;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                $smartyvalues['othersuggestions'] = $othersuggestions;
+//            }
+//        } else {
+//            $smartyvalues['invalid'] = true;
+//        }
+//    } else {
+//        if ($checktype == "owndomain" || $checktype == "subdomain") {
+//            if (($sld && $tld) && checkDomainisValid($sld, $tld)) {
+//                if (substr($tld, 0, 1) != ".") {
+//                    $tld = "." . $tld;
+//                }
+//                if ($CONFIG['AllowDomainsTwice']) {
+//                    $result = select_query_i("tblcustomerservices", "COUNT(*)", "domain='" . db_escape_string($sld . $tld) . "' AND (servicestatus!='Terminated' AND servicestatus!='Cancelled' AND servicestatus!='Fraud')");
+//                    $data = mysqli_fetch_array($result);
+//                    $domaincheck = $data[0];
+//                    if ($domaincheck) {
+//                        $smartyvalues['alreadyindb'] = true;
+//                    }
+//                }
+//
+//                $smartyvalues['checktype'] = $checktype;
+//                $smartyvalues['sld'] = $sld;
+//                $smartyvalues['tld'] = $tld;
+//            } else {
+//                $smartyvalues['invalid'] = true;
+//            }
+//        } else {
+//            if ($checktype == "incart") {
+//                $smartyvalues['checktype'] = "owndomain";
+//                $domainparts = explode(".", $sld, 2);
+//                $sld = $domainparts[0];
+//                $tld = $domainparts[1];
+//                $smartyvalues['sld'] = $sld;
+//                $smartyvalues['tld'] = $tld;
+//            }
+//        }
+//    }
+//
+//    $templatefile = "domainoptions";
+//}
 
 if ($a == "confservice") {
     $templatefile = "configureservice";
@@ -560,29 +548,29 @@ if ($a == "confservice") {
         $result = select_query_i("tblproducts", "type", array("id" => $pid));
         $data = mysqli_fetch_array($result);
         $producttype = $data['type'];
-        if ($producttype == "server") {
-            if (!$hostname) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
-            } else {
-                $result = select_query_i("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
-                $data = mysqli_fetch_array($result);
-                $existingcount = $data[0];
-
-                if ($existingcount) {
-                    $errormessage .= "<li>" . $_LANG['ordererrorserverhostnameinuse'];
-                }
-            }
-
-            if (!$ns1prefix || !$ns2prefix) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
-            }
-
-            if (!$rootpw) {
-                $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
-            }
-
-            $serverarray = array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw);
-        }
+//        if ($producttype == "server") {
+//            if (!$hostname) {
+//                $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
+//            } else {
+//                $result = select_query_i("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
+//                $data = mysqli_fetch_array($result);
+//                $existingcount = $data[0];
+//
+//                if ($existingcount) {
+//                    $errormessage .= "<li>" . $_LANG['ordererrorserverhostnameinuse'];
+//                }
+//            }
+//
+//            if (!$ns1prefix || !$ns2prefix) {
+//                $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
+//            }
+//
+//            if (!$rootpw) {
+//                $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
+//            }
+//
+//            $serverarray = array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw);
+//        }
 
 
         if ($configoption) {
@@ -665,27 +653,31 @@ if ($a == "confservice") {
             if ($ajax) {
                 exit();
             }
-            redir("a=confdomains");
+            redir("a=confservice");
             exit();
         }
     }
 
     $billingcycle = $_SESSION['cart']['products'][$i]['billingcycle'];
     $server = $_SESSION['cart']['products'][$i]['server'];
-    $customfields = $_SESSION['cart']['products'][$i]['customfields'];
     $configoptions = $_SESSION['cart']['products'][$i]['configoptions'];
     $addons = $_SESSION['cart']['products'][$i]['addons'];
-    $domain = $_SESSION['cart']['products'][$i]['domain'];
+    $description = $_SESSION['cart']['products'][$i]['description'];
     $noconfig = $_SESSION['cart']['products'][$i]['noconfig'];
     $billingcycle = $orderfrm->validateBillingCycle($billingcycle);
     $pricing = getPricingInfo($pid);
     $configurableoptions = getCartConfigOptions($pid, $configoptions, $billingcycle, "", true);
-    
     $customfields = getServiceCustomFields($pid);
+
+    if (!empty($_SESSION['cart']['products'][$i]['customfields'])) {
+        foreach ($_SESSION['cart']['products'][$i]['customfields'] as $key => $row) {
+            $customfields[$key]['value'] = $row;
+        } 
+    }
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
-    if ($pricing['type'] == "recurring") {
+    if ($pricing['type'] == "recurring") {  
         if (0 <= $pricing['rawpricing']['monthly']) {
             ++$recurringcycles;
         }
@@ -717,7 +709,7 @@ if ($a == "confservice") {
             exit();
         }
 
-        redir("a=confdomains");
+        redir("a=confservice");
         exit();
     }
     $serverarray = array("hostname" => $server['hostname'], "ns1prefix" => $server['ns1prefix'], "ns2prefix" => $server['ns2prefix'], "rootpw" => $server['rootpw']);
@@ -731,20 +723,18 @@ if ($a == "confservice") {
     $smartyvalues['configurableoptions'] = $configurableoptions;
     $smartyvalues['addons'] = $addonsarray;
     $smartyvalues['customfields'] = $customfields;
-    $smartyvalues['domain'] = $domain;
+    $smartyvalues['description'] = $description;
 }
 
 
 if ($a == "checkout") {
     $domainconfigerror = false;
-    // include "includes/additionaldomainfields.php";
+// include "includes/additionaldomainfields.php";
     $allowcheckout = true;
     $a = "view";
 }
 
-if ($a == "confdomains") {
-    
-}
+
 if ($a == "addcontact") {
     $allowcheckout = true;
     $addcontact = true;
@@ -752,15 +742,16 @@ if ($a == "addcontact") {
 }
 
 if ($a == "view") {
+
     if (($submit || $checkout) && !$validatepromo) {
         $viewdata = $cart->Viewcart(true);
     } else {
         $viewdata = $cart->Viewcart(false);
     }
-    // echo "<pre>", print_r($viewdata, 1), "<pre>";
+// echo "<pre>", print_r($viewdata, 1), "<pre>";
     $templatefile = $viewdata['template'];
     $smartyvalues = $viewdata['smarty'];
-    // echo "<pre>", print_r($smartyvalues, 1), "<pre>";
+// echo "<pre>", print_r($smartyvalues, 1), "<pre>";
 }
 
 if ($a == "login") {
@@ -847,12 +838,12 @@ if ($a == "fraudcheck") {
             }
         }
 
-
-        if ($_SESSION['orderdetails']['Domains']) {
-            foreach ($_SESSION['orderdetails']['Domains'] as $domainid) {
-                update_query("tbldomains", array("status" => "Pending"), array("id" => $domainid, "status" => "Fraud"));
-            }
-        }
+//
+//        if ($_SESSION['orderdetails']['Domains']) {
+//            foreach ($_SESSION['orderdetails']['Domains'] as $domainid) {
+//                update_query("tbldomains", array("status" => "Pending"), array("id" => $domainid, "status" => "Fraud"));
+//            }
+//        }
 
         update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $_SESSION['orderdetails']['InvoiceID'], "status" => "Cancelled"));
         logActivity("Order ID " . $orderid . " Passed Fraud Check");

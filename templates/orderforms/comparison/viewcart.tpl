@@ -116,7 +116,7 @@ function emptyCart(type,num) {
 <div class="checkoutbuttonsright">
 <div class="totalduetoday">{$LANG.ordertotalduetoday}: {$total}</div>
 {if $totalrecurringmonthly || $totalrecurringquarterly || $totalrecurringsemiannually || $totalrecurringannually || $totalrecurringbiennially || $totalrecurringtriennially}
-<div class="totalrecurring">{$LANG.ordertotalrecurring}: {if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthly}<br />{/if}
+<div class="totalrecurring">{$LANG.ordertotalrecurring}: {if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthlytext}<br />{/if}
 {if $totalrecurringquarterly}{$totalrecurringquarterly} {$LANG.orderpaymenttermquarterly}<br />{/if}
 {if $totalrecurringsemiannually}{$totalrecurringsemiannually} {$LANG.orderpaymenttermsemiannually}<br />{/if}
 {if $totalrecurringannually}{$totalrecurringannually} {$LANG.orderpaymenttermannually}<br />{/if}

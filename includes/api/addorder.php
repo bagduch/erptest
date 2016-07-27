@@ -116,7 +116,7 @@ if (is_array($pid)) {
 				$customfieldsarray = unserialize(base64_decode($customfields[$i]));
 			}
 
-			$productarray = array("pid" => $prodid, "domain" => $proddomain, "billingcycle" => $prodbillingcycle, "server" => (((($hostname[$i] || $ns1prefix[$i]) || $ns2prefix[$i]) || $rootpw[$i]) ? array("hostname" => $hostname[$i], "ns1prefix" => $ns1prefix[$i], "ns2prefix" => $ns2prefix[$i], "rootpw" => $rootpw[$i]) : ""), "configoptions" => $configoptionsarray, "customfields" => $customfieldsarray, "addons" => $addonsarray);
+			$productarray = array("pid" => $prodid, "description" => $proddomain, "billingcycle" => $prodbillingcycle, "server" => (((($hostname[$i] || $ns1prefix[$i]) || $ns2prefix[$i]) || $rootpw[$i]) ? array("hostname" => $hostname[$i], "ns1prefix" => $ns1prefix[$i], "ns2prefix" => $ns2prefix[$i], "rootpw" => $rootpw[$i]) : ""), "configoptions" => $configoptionsarray, "customfields" => $customfieldsarray, "addons" => $addonsarray);
 
 			if (strlen($priceoverride[$i])) {
 				$productarray['priceoverride'] = $priceoverride[$i];
@@ -150,7 +150,7 @@ else {
 			$customfieldsarray = unserialize($customfields);
 		}
 
-		$productarray = array("pid" => $pid, "domain" => $domain, "billingcycle" => $billingcycle, "server" => (((($hostname || $ns1prefix) || $ns2prefix) || $rootpw) ? array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw) : ""), "configoptions" => $configoptionsarray, "customfields" => $customfieldsarray, "addons" => $addonsarray);
+		$productarray = array("pid" => $pid, "description" => $domain, "billingcycle" => $billingcycle, "server" => (((($hostname || $ns1prefix) || $ns2prefix) || $rootpw) ? array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw) : ""), "configoptions" => $configoptionsarray, "customfields" => $customfieldsarray, "addons" => $addonsarray);
 
 		if (strlen($priceoverride)) {
 			$productarray['priceoverride'] = $priceoverride;
@@ -161,30 +161,30 @@ else {
 }
 
 
-if (is_array($domaintype)) {
-	foreach ($domaintype as $i => $type) {
-
-		if ($type) {
-			if ($domainfields[$i]) {
-				$domainfields[$i] = base64_decode($domainfields[$i]);
-				$domainfieldsarray[$i] = unserialize($domainfields[$i]);
-			}
-
-			$_SESSION['cart']['domains'][] = array("type" => $type, "domain" => $domain[$i], "regperiod" => $regperiod[$i], "dnsmanagement" => $dnsmanagement[$i], "emailforwarding" => $emailforwarding[$i], "idprotection" => $idprotection[$i], "eppcode" => $eppcode[$i], "fields" => $domainfieldsarray[$i]);
-			continue;
-		}
-	}
-}
-else {
-	if ($domaintype) {
-		if ($domainfields) {
-			$domainfields = base64_decode($domainfields);
-			$domainfieldsarray = unserialize($domainfields);
-		}
-
-		$_SESSION['cart']['domains'][] = array("type" => $domaintype, "domain" => $domain, "regperiod" => $regperiod, "dnsmanagement" => $dnsmanagement, "emailforwarding" => $emailforwarding, "idprotection" => $idprotection, "eppcode" => $eppcode, "fields" => $domainfieldsarray);
-	}
-}
+//if (is_array($domaintype)) {
+//	foreach ($domaintype as $i => $type) {
+//
+//		if ($type) {
+//			if ($domainfields[$i]) {
+//				$domainfields[$i] = base64_decode($domainfields[$i]);
+//				$domainfieldsarray[$i] = unserialize($domainfields[$i]);
+//			}
+//
+//			$_SESSION['cart']['domains'][] = array("type" => $type, "domain" => $domain[$i], "regperiod" => $regperiod[$i], "dnsmanagement" => $dnsmanagement[$i], "emailforwarding" => $emailforwarding[$i], "idprotection" => $idprotection[$i], "eppcode" => $eppcode[$i], "fields" => $domainfieldsarray[$i]);
+//			continue;
+//		}
+//	}
+//}
+//else {
+//	if ($domaintype) {
+//		if ($domainfields) {
+//			$domainfields = base64_decode($domainfields);
+//			$domainfieldsarray = unserialize($domainfields);
+//		}
+//
+//		$_SESSION['cart']['domains'][] = array("type" => $domaintype, "domain" => $domain, "regperiod" => $regperiod, "dnsmanagement" => $dnsmanagement, "emailforwarding" => $emailforwarding, "idprotection" => $idprotection, "eppcode" => $eppcode, "fields" => $domainfieldsarray);
+//	}
+//}
 
 
 if ($addonid) {
@@ -199,20 +199,20 @@ if ($addonids) {
 }
 
 
-if ($domainrenewals) {
-	foreach ($domainrenewals as $domain => $regperiod) {
-		$result = select_query_i("tbldomains", "id", array("userid" => $_SESSION['uid'], "domain" => $domain));
-		$data = mysqli_fetch_array($result);
-		$domainid = $data[0];
-
-		if ($domainid) {
-			$_SESSION['cart']['renewals'][$domainid] = $regperiod;
-			continue;
-		}
-	}
-}
-
-$cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['domains']) + count($_SESSION['cart']['renewals']);
+//if ($domainrenewals) {
+//	foreach ($domainrenewals as $domain => $regperiod) {
+//		$result = select_query_i("tbldomains", "id", array("userid" => $_SESSION['uid'], "domain" => $domain));
+//		$data = mysqli_fetch_array($result);
+//		$domainid = $data[0];
+//
+//		if ($domainid) {
+//			$_SESSION['cart']['renewals'][$domainid] = $regperiod;
+//			continue;
+//		}
+//	}
+//}
+// count($_SESSION['cart']['domains']) 
+$cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons'])+ count($_SESSION['cart']['renewals']);
 
 if (!$cartitems) {
 	$apiresults = array("result" => "error", "message" => "No items added to cart so order cannot proceed");
@@ -265,10 +265,10 @@ if (is_array($_SESSION['orderdetails']['Addons'])) {
 	$addonids = implode(",", $_SESSION['orderdetails']['Addons']);
 }
 
-
-if (is_array($_SESSION['orderdetails']['Domains'])) {
-	$domainids = implode(",", $_SESSION['orderdetails']['Domains']);
-}
+//
+//if (is_array($_SESSION['orderdetails']['Domains'])) {
+//	$domainids = implode(",", $_SESSION['orderdetails']['Domains']);
+//}
 
 $apiresults = array("result" => "success", "orderid" => $_SESSION['orderdetails']['OrderID'], "productids" => $productids, "addonids" => $addonids, "domainids" => $domainids);
 

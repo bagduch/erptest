@@ -216,7 +216,7 @@ function openNewTicket($datas = array(), $noemail = "", $admin = "") {
         "clientunread" => "1",
         "adminunread" => "0",
         "service" => $datas['relatedservice'],
-        "cc" => empty($datas['cc'])?"":$datas['cc']
+        "cc" => empty($datas['cc']) ? "" : $datas['cc']
     );
 
 
@@ -1123,7 +1123,7 @@ function buildAdminTicketListArray($result) {
 
         $clientinfo = ($puserid != "0" ? $aInt->outputClientLink($puserid, $firstname, $lastname, $companyname, $groupid) : $name);
         $ticketlink = ("<a href=\"?action=viewticket&id=" . $id . "\"") . ($alttitle ? " title=\"" . $alttitle . "\"" : "") . "" . $ainject . ">";
-        $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), $department, "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $tstatus, $lastreply);
+        $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), $department, "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $flaggedto, $tstatus, $lastreply);
     }
 }
 

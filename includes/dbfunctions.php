@@ -134,45 +134,45 @@ function update_query($table, $array, $where) {
 
     $query = "UPDATE " . db_make_safe_field($table) . " SET ";
     foreach ($array as $key => $value) {
-        $query .= db_build_quoted_field($key) . "=";
+        $query .= db_build_quoted_field($key) . " = ";
         $key = db_make_safe_field($key);
 
         if ($value === "now()") {
-            $query .= "'" . date("YmdHis") . "',";
+            $query .= "'" . date("YmdHis") . "', ";
             continue;
         }
 
 
         if ($value === "+1") {
-            $query .= "`" . $key . "`+1,";
+            $query .= "`" . $key . "`+1, ";
             continue;
         }
 
 
         if ((is_array($value) && isset($value['type'])) && $value['type'] == "AES_ENCRYPT") {
-            $query .= sprintf("AES_ENCRYPT('%s','%s'),", db_escape_string($value['text']), db_escape_string($value['hashkey']));
+            $query .= sprintf("AES_ENCRYPT('%s', '%s'), ", db_escape_string($value['text']), db_escape_string($value['hashkey']));
             continue;
         }
 
 
         if ($value === "NULL") {
-            $query .= "NULL,";
+            $query .= "NULL, ";
             continue;
         }
 
 
         if (substr($value, 0, 2) === "+=" && db_is_valid_amount(substr($value, 2))) {
-            $query .= "`" . $key . "`+" . substr($value, 2) . ",";
+            $query .= "`" . $key . "`+" . substr($value, 2) . ", ";
             continue;
         }
 
 
         if (substr($value, 0, 2) === "-=" && db_is_valid_amount(substr($value, 2))) {
-            $query .= "`" . $key . "`-" . substr($value, 2) . ",";
+            $query .= "`" . $key . "`-" . substr($value, 2) . ", ";
             continue;
         }
 
-        $query .= "'" . db_escape_string($value) . "',";
+        $query .= "'" . db_escape_string($value) . "', ";
     }
 
     $query = substr($query, 0, 0 - 1);
@@ -191,7 +191,7 @@ function update_query($table, $array, $where) {
                 }
             }
 
-            $query .= " " . $key . "='" . db_escape_string($value) . "' AND";
+            $query .= " " . $key . " = '" . db_escape_string($value) . "' AND";
         }
 
         $query = substr($query, 0, 0 - 4);
@@ -210,11 +210,16 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-    $result = mysqli_query($query, $ramysqli);
-
+//mail("peter@hd.net.nz", "update", $query);
+    $result = mysqli_query($ramysqli, $query);
+    // mail("peter@hd.net.nz", "update", $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
+    return $result;
+
+
 
     ++$query_count;
 }
@@ -246,7 +251,8 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-   echo $query;
+
+// mail('peter@hd.net.nz', "query", $query);
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging
@@ -263,7 +269,8 @@ function insert_query($table, $array) {
     return $id;
 }
 
-function delete_query($table, $where) {
+function delete_query(
+$table, $where) {
     global $CONFIG;
     global $query_count;
     global $mysqli_errors;
@@ -273,7 +280,7 @@ function delete_query($table, $where) {
 
     if (is_array($where)) {
         foreach ($where as $key => $value) {
-            $query .= db_build_quoted_field($key) . "='" . db_escape_string($value) . "' AND ";
+            $query .= db_build_quoted_field($key) . " = '" . db_escape_string($value) . "' AND ";
         }
 
         $query = substr($query, 0, 0 - 5);
@@ -291,7 +298,9 @@ function delete_query($table, $where) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
 
-    ++$query_count;
+    ++$query_count
+
+    ;
 }
 
 function full_query_i($query, $userHandle = null) {

@@ -75,10 +75,11 @@ class RA_Validate {
     public function validateCustomFields($type, $relid = "", $order = false) {
         global $ra;
 
-        $where = array("type" => $type, "adminonly" => "");
-
+        if ($type != "") {
+            $where = array("type" => $type, "adminonly" => "");
+        }
         if ($relid) {
-            $where['relid'] = $relid;
+            $where['id'] = $relid;
         }
 
 
@@ -299,14 +300,14 @@ class RA_Validate {
 //            if (!function_exists("recaptcha_check_answer")) {
 //                require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
 //            }
-            echo "<pre>",  print_r($ra->get_req_var(),1),"</pre>";
+       //     echo "<pre>", print_r($ra->get_req_var(), 1), "</pre>";
             require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
             $recaptcha = new ReCaptcha($ra->get_config("ReCAPTCHAPrivateKey"));
             $resp = $recaptcha->verify($ra->get_req_var("g-recaptcha-response"), $ra->get_user_ip());
             // $resp = recaptcha_check_answer($ra->get_config("ReCAPTCHAPrivateKey"), $ra->get_user_ip(), $ra->get_req_var("recaptcha_challenge_field"), $ra->get_req_var("recaptcha_response_field"));
 
 
-  
+
             if ($resp->isSuccess()) {
                 
             } else {

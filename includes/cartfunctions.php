@@ -31,16 +31,16 @@ function cartPreventDuplicateProduct($domain) {
 
 function cartPreventDuplicateDomain($domain) {
 	$domains = array();
-	foreach ($_SESSION['cart']['domains'] as $k => $values) {
-		$domains[$k] = $values['domain'];
-	}
-
-
-	if (in_array($domain, $domains)) {
-		$i = array_search($domain, $domains);
-		unset($_SESSION['cart']['domains'][$i]);
-		$_SESSION['cart']['domains'] = array_values($_SESSION['cart']['domains']);
-	}
+//	foreach ($_SESSION['cart']['domains'] as $k => $values) {
+//		$domains[$k] = $values['domain'];
+//	}
+//
+//
+//	if (in_array($domain, $domains)) {
+//		$i = array_search($domain, $domains);
+//		unset($_SESSION['cart']['domains'][$i]);
+//		$_SESSION['cart']['domains'] = array_values($_SESSION['cart']['domains']);
+//	}
 
 }
 

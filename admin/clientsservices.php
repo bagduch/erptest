@@ -3,27 +3,27 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(   
-    array(
-        "clientfunctions", 
-        "gatewayfunctions", 
-        "modulefunctions", 
-        "servicefunctions", 
-        "customfieldfunctions", 
-        "configoptionsfunctions", 
-        "invoicefunctions", 
-        "processinvoices")
+$aInt->requiredFiles(
+        array(
+            "clientfunctions",
+            "gatewayfunctions",
+            "modulefunctions",
+            "servicefunctions",
+            "customfieldfunctions",
+            "configoptionsfunctions",
+            "invoicefunctions",
+            "processinvoices")
 );
 $aInt->inClientsProfile = true;
-$id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
+$id = (int) $ra->get_req_var("id") ? : (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
 
 // Check if modifications are being made
 $modop = $ra->get_req_var("modop");
-if ($modop) {     
-    checkPermission("Perform Server Operations"); 
+if ($modop) {
+    checkPermission("Perform Server Operations");
 }
 
 // if neither userid nor id are defined after that, I guess we just take the very first service?
@@ -45,15 +45,12 @@ if ($userid && !$id) {
 // if we can't determine a suitable product ID to show, reject
 if (!$id) {
     //$aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
-    $aInt->gracefulExit("%s <a href=\"ordersadd.php?userid=%d\">%s</a>%s", 
-        $aInt->lang("services", "noproductsinfo"),
-        $userid,
-        $aInt->lang("global", "clickhere"),
-        $aInt->lang("orders", "toplacenew"));
+    $aInt->gracefulExit("%s <a href=\"ordersadd.php?userid=%d\">%s</a>%s", $aInt->lang("services", "noproductsinfo"), $userid, $aInt->lang("global", "clickhere"), $aInt->lang("orders", "toplacenew"));
 }
 
 
 $service_data = getServiceData($id);
+//echo "hello".print_r($service_data,1);
 
 
 $id = $service_data['id'];
@@ -83,12 +80,12 @@ $notes = $service_data['notes'];
 $subscriptionid = $service_data['subscriptionid'];
 $suspendreason = $service_data['suspendreason'];
 $overideautosuspend = $service_data['overideautosuspend'];
-
 $lastupdate = $service_data['lastupdate'];
 $overidesuspenduntil = $service_data['overidesuspenduntil'];
 $frm = new RA_Form();
 
 if ($frm->issubmitted()) {
+
     checkPermission("Edit Clients Products/Services");
     $packageid = $ra->get_req_var("packageid");
     $oldserviceid = $ra->get_req_var("oldserviceid");
@@ -103,8 +100,9 @@ if ($frm->issubmitted()) {
     $nextduedate = $ra->get_req_var("nextduedate");
     $paymentmethod = $ra->get_req_var("paymentmethod");
     $tax = $ra->get_req_var("tax");
-    $notes = $ra->get_req_var("notes"); 
+    $notes = $ra->get_req_var("notes");
     $configoption = $ra->get_req_var("configoption");
+    $customfield = $ra->get_req_var('customfield');
 
     if ($aid = $ra->get_req_var("aid")) {
         if ($billingcycle == "Free" || $billingcycle == "Free Account") {
@@ -176,6 +174,10 @@ if ($frm->issubmitted()) {
         redir("userid=" . $userid . "&id=" . $id . "&success=true");
     }
 
+    if ($customfield) {
+        //echo print_r($customfield);
+        updateServiceCustomFieldValues($id, $customfield);
+    }
 
     if (!$ra->get_req_var("packageid") && !$ra->get_req_var("billingcycle")) {
         redir("userid=" . $userid . "&id=" . $id);
@@ -201,7 +203,7 @@ if ($frm->issubmitted()) {
     $newamount = ($autorecalcrecurringprice ? recalcRecurringProductPrice($id, $userid, $packageid, $billingcycle, $configoptionsrecurring, $promoid) : "-1");
     migrateCustomFieldsBetweenProducts($id, $packageid, true);
     $changelog = array();
-    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "server" => "Server", "description" => "Description", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "servicestatus" => "Status", "username" => "Username", "password" => "Password", "subscriptionid" => "Subscription ID");
+    $logchangefields = array("regdate" => "Registration Date", "packageid" => "Service", "description" => "description", "paymentmethod" => "Payment Method", "firstpaymentamount" => "First Payment Amount", "amount" => "Recurring Amount", "billingcycle" => "Billing Cycle", "nextduedate" => "Next Due Date", "servicestatus" => "Status", "username" => "Username", "password" => "Password");
     foreach ($logchangefields as $fieldname => $displayname) {
         $newval = $ra->get_req_var($fieldname);
         $oldval = $service_data[$fieldname];
@@ -226,7 +228,7 @@ if ($frm->issubmitted()) {
     }
 
     $updatearr = array();
-    $updatefields = array("server", "packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "overideautosuspend", "overidesuspenduntil", "servicestatus");
+    $updatefields = array("packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "overideautosuspend", "overidesuspenduntil", "servicestatus");
     foreach ($updatefields as $fieldname) {
         $newval = $ra->get_req_var($fieldname);
 
@@ -244,11 +246,16 @@ if ($frm->issubmitted()) {
     }
 
 
+    // mail("peter@hd.net.nz", "value", $updatearr);
+
+
     if (toMySQLDate($ra->get_req_var("oldnextduedate")) != $updatearr['nextduedate']) {
         $updatearr['nextinvoicedate'] = $updatearr['nextduedate'];
     }
 
-    update_query("tblcustomerservices", $updatearr, array("id" => $id));
+    $log = update_query("tblcustomerservices", $updatearr, array("id" => $id));
+
+//    echo print_r($log);
     logActivity("Modified Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid);
     $cancelid = get_query_val("tblcancelrequests", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
 
@@ -288,7 +295,7 @@ if ($frm->issubmitted()) {
     run_hook("AdminClientServicesTabFieldsSave", $_REQUEST);
     run_hook("AdminServiceEdit", array("userid" => $userid, "serviceid" => $id));
     run_hook("ServiceEdit", array("userid" => $userid, "serviceid" => $id));
-    redir("userid=" . $userid . "&id=" . $id . "&success=true");
+redir("userid=" . $userid . "&id=" . $id . "&success=true");
 }
 
 
@@ -296,10 +303,10 @@ if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
-    delete_query("tblcustomerservices", array("hostingid" => $id));
+    delete_query("tblcustomerservices", array("id" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
-    delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
-    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
+  //  delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
+    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "'");
     logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
 }
@@ -442,55 +449,54 @@ if ($canceltype == "End of Billing Period") {
 }
 
 
-if (!$server) {
-    $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
-
-    if ((int)$server) {
-        update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
-    } else {
-        update_query("tblcustomerservices", array("server" => null), array("id" => $id));
-    }
-}
-
-$jscode = "function doDeleteAddon(id) {
-if (confirm(\"" . $aInt->lang("addons", "areyousuredelete", 1) . "\")) {
-window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=deladdon&aid='+id+'" . generate_token("link") . "';
-}}
-function runModuleCommand(cmd,custom) {
-    $(\"#mod\"+cmd).dialog(\"close\");
-
-    $(\"#modcmdbtns\").css(\"filter\",\"alpha(opacity=20)\");
-    $(\"#modcmdbtns\").css(\"-moz-opacity\",\"0.2\");
-    $(\"#modcmdbtns\").css(\"-khtml-opacity\",\"0.2\");
-    $(\"#modcmdbtns\").css(\"opacity\",\"0.2\");
-    var position = $(\"#modcmdbtns\").position();
-
-    $(\"#modcmdworking\").css(\"position\",\"absolute\");
-    $(\"#modcmdworking\").css(\"top\",position.top);
-    $(\"#modcmdworking\").css(\"left\",position.left);
-    $(\"#modcmdworking\").css(\"padding\",\"9px 50px 0\");
-    $(\"#modcmdworking\").fadeIn();
-
-    var reqstr = \"userid=" . $userid . "&id=" . $id . "&modop=\"+cmd+\"" . generate_token("link") . "\";
-    if (custom) reqstr += \"&ac=\"+custom;
-    else if (cmd==\"suspend\") reqstr += \"&suspreason=\"+encodeURIComponent($(\"#suspreason\").val())+\"&suspemail=\"+$(\"#suspemail\").is(\":checked\");
-
-    $.post(\"clientsservices.php\", reqstr,
-    function(data){
-        if (data.substr(0,9)==\"redirect|\") {
-            window.location = data.substr(9);
-        } else {
-            $(\"#servicecontent\").html(data);
-        }
-    });
-
-}
-";
-$aInt->jscode = $jscode;
+//if (!$server) {
+//    $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
+//
+//    if ((int) $server) {
+//        update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
+//    } else {
+//        update_query("tblcustomerservices", array("server" => null), array("id" => $id));
+//    }
+//}
+//$jscode = "function doDeleteAddon(id) {
+//if (confirm(\"" . $aInt->lang("addons", "areyousuredelete", 1) . "\")) {
+//window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=deladdon&aid='+id+'" . generate_token("link") . "';
+//}}
+//function runModuleCommand(cmd,custom) {
+//    $(\"#mod\"+cmd).dialog(\"close\");
+//
+//    $(\"#modcmdbtns\").css(\"filter\",\"alpha(opacity=20)\");
+//    $(\"#modcmdbtns\").css(\"-moz-opacity\",\"0.2\");
+//    $(\"#modcmdbtns\").css(\"-khtml-opacity\",\"0.2\");
+//    $(\"#modcmdbtns\").css(\"opacity\",\"0.2\");
+//    var position = $(\"#modcmdbtns\").position();
+//
+//    $(\"#modcmdworking\").css(\"position\",\"absolute\");
+//    $(\"#modcmdworking\").css(\"top\",position.top);
+//    $(\"#modcmdworking\").css(\"left\",position.left);
+//    $(\"#modcmdworking\").css(\"padding\",\"9px 50px 0\");
+//    $(\"#modcmdworking\").fadeIn();
+//
+//    var reqstr = \"userid=" . $userid . "&id=" . $id . "&modop=\"+cmd+\"" . generate_token("link") . "\";
+//    if (custom) reqstr += \"&ac=\"+custom;
+//    else if (cmd==\"suspend\") reqstr += \"&suspreason=\"+encodeURIComponent($(\"#suspreason\").val())+\"&suspemail=\"+$(\"#suspemail\").is(\":checked\");
+//
+//    $.post(\"clientsservices.php\", reqstr,
+//    function(data){
+//        if (data.substr(0,9)==\"redirect|\") {
+//            window.location = data.substr(9);
+//        } else {
+//            $(\"#servicecontent\").html(data);
+//        }
+//    });
+//
+//}
+//";
+//$aInt->jscode = $jscode;
 $clientnotes = array();
 $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
-var_dump($result);
-echo "guyresult";
+//var_dump($result);
+//echo "guyresult";
 
 
 while ($data = mysqli_fetch_assoc($result)) {
@@ -502,26 +508,26 @@ while ($data = mysqli_fetch_assoc($result)) {
 
 
 if (count($clientnotes)) {
-    echo "<div id=\"clientsimportantnotes\">";
-    foreach ($clientnotes as $data) {
-        echo "<div class=\"ticketstaffnotes\">
-    <table class=\"ticketstaffnotestable\">
-        <tr>
-            <td>" . $data['adminuser'] . "</td>
-            <td align=\"right\">" . $data['modified'] . "</td>
-        </tr>
-    </table>
-    <div>
-        " . $data['note'] . "
-        <div style=\"float:right;\"><a href=\"clientsnotes.php?userid=" . $userid . "&action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" align=\"absmiddle\" /></a></div>
-    </div>
-</div>";
-    }
-
-    echo "</div>";
+//    echo "<div id=\"clientsimportantnotes\">";
+//    foreach ($clientnotes as $data) {
+//        echo "<div class=\"ticketstaffnotes\">
+//    <table class=\"ticketstaffnotestable\">
+//        <tr>
+//            <td>" . $data['adminuser'] . "</td>
+//            <td align=\"right\">" . $data['modified'] . "</td>
+//        </tr>
+//    </table>
+//    <div>
+//        " . $data['note'] . "
+//        <div style=\"float:right;\"><a href=\"clientsnotes.php?userid=" . $userid . "&action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" align=\"absmiddle\" /></a></div>
+//    </div>
+//</div>";
+//    }
+//
+//    echo "</div>";
 }
 
-echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
+//echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 $servicesarr = array();
 $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
@@ -553,22 +559,20 @@ while ($data = mysqli_fetch_array($result)) {
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
 
-echo "<pre>servicedata\n".print_r(getServiceData(19),1)."</pre>";
-echo "<pre>customfields\n".print_r(getServiceCustomFields(3,19),1)."</pre>";
-$frmsub = new RA_Form("frm2");
-echo $frmsub->form("", "", "", "get", true);
-echo $frmsub->hidden("userid", $userid);
-echo "&nbsp;&nbsp;&nbsp; Products: " . $frmsub->dropdown("id", $servicesarr, $id, "submit()");
-echo " " . $frmsub->submit($aInt->lang("global", "go"), "btn btn-success");
-echo $frmsub->close();
-echo "</td><td align=\"right\">
+$aInt->assign('id', $id);
+$aInt->assign('servicesarr', $servicesarr);
 
-" . $frm->button($aInt->lang("services", "createupgorder"), "window.open('clientsupgrade.php?id=" . $id . "','','width=750,height=350,scrollbars=yes')") . " " . $frm->button($aInt->lang("services", "moveservice"), "window.open('clientsmove.php?type=hosting&id=" . $id . "','movewindow','width=500,height=300,top=100,left=100,scrollbars=yes')") . " &nbsp;&nbsp;&nbsp;
 
-</td></tr></table>
+//echo "<pre>servicedata\n" . print_r(getServiceData(19), 1) . "</pre>";
+//echo "<pre>customfields\n" . print_r(getServiceCustomFields(3, 19), 1) . "</pre>";
+//if (getServiceCustomFields($packageid, $id)) {
+//   // $aInt->assign('customfield', getServiceCustomFields($id, $userid));
+//    echo $id . $userid;
+//    echo "<pre>", print_r(getServiceCustomFields($packageid, $id), 1), "</pre>";
+//}
 
-<div id=\"modcmdresult\" style=\"display:none;\"></div>
-";
+
+
 
 if ($cancelid) {
     if (!$infobox) {
@@ -576,33 +580,54 @@ if ($cancelid) {
     }
 }
 
-echo $infobox ? $infobox : "<img src=\"images/spacer.gif\" height=\"10\" width=\"1\" /><br />";
+//echo $infobox ? $infobox : "<img src=\"images/spacer.gif\" height=\"10\" width=\"1\" /><br />";
 
 if ($lastupdate && $lastupdate != "0000-00-00 00:00:00") {
-    echo "<div class=\"contentbox\">
-<strong>" . $aInt->lang("services", "diskusage") . ":</strong> " . $diskusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "disklimit") . ":</strong> " . $disklimit . " " . $aInt->lang("fields", "mb") . ", ";
+
+    $lang = array(
+        'diskusage' => $aInt->lang("services", "diskusage"),
+        'mb' => $aInt->lang("fields", "mb"),
+        'disklimit' => $aInt->lang("services", "disklimit"),
+        'bwusage' => $aInt->lang("services", "bwusage"),
+        'used' => $aInt->lang("services", "used"),
+        'unlimited' => $aInt->lang("global", "unlimited"),
+        'lastupdated' => $aInt->lang("services", "lastupdated"),
+    );
+
+    $contentbox = array(
+        'diskusage' => $diskusage,
+        'diskusage_p' => round($diskusage / $disklimit * 100, 0),
+        'disklimit' => $disklimit,
+        'bwusage' => $bwusage,
+        'bwusage_p' => round($bwusage / $bwlimit * 100, 0),
+        'bwlimit' => $bwlimit,
+        'lastupdate' => fromMySQLDate($lastupdate, "time")
+    );
+
+
+//    echo "<div class=\"contentbox\">
+//<strong>" . $aInt->lang("services", "diskusage") . ":</strong> " . $diskusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "disklimit") . ":</strong> " . $disklimit . " " . $aInt->lang("fields", "mb") . ", ";
 
     if ($diskusage == $aInt->lang("global", "unlimited") || $disklimit == $aInt->lang("global", "unlimited")) {
         
     } else {
-        echo "<strong>" . round($diskusage / $disklimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong> :: ";
+//        echo "<strong>" . round($diskusage / $disklimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong> :: ";
     }
 
-    echo "<strong>" . $aInt->lang("services", "bwusage") . ":</strong> " . $bwusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "bwlimit") . ":</strong> " . $bwlimit . " " . $aInt->lang("fields", "mb") . ", ";
+//    echo "<strong>" . $aInt->lang("services", "bwusage") . ":</strong> " . $bwusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "bwlimit") . ":</strong> " . $bwlimit . " " . $aInt->lang("fields", "mb") . ", ";
 
     if ($bwusage == $aInt->lang("global", "unlimited") || $bwlimit == $aInt->lang("global", "unlimited")) {
         
     } else {
-        echo "<strong>" . round($bwusage / $bwlimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong><br>";
+//        echo "<strong>" . round($bwusage / $bwlimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong><br>";
     }
 
-    echo "<small>(" . $aInt->lang("services", "lastupdated") . ": " . fromMySQLDate($lastupdate, "time") . ")</small>
-</div>
-<br />
-";
+//    echo "<small>(" . $aInt->lang("services", "lastupdated") . ": " . fromMySQLDate($lastupdate, "time") . ")</small>
+//</div>
+//<br />
+//";
 }
 
-echo $frm->form("?userid=" . $userid . "&id=" . $id . ($aid ? "&aid=" . $aid : ""));
 
 if ($aid) {
     if ($aid == "add") {
@@ -631,7 +656,6 @@ if ($aid) {
         $nextduedate = fromMySQLDate($nextduedate);
     }
 
-    echo "<h2>" . $managetitle . "</h2>";
     $predefaddons = array();
     $result = select_query_i("tbladdons", "", "", "weight` ASC,`name", "ASC");
 
@@ -641,26 +665,26 @@ if ($aid) {
         $predefaddons[$preid] = $name;
     }
 
-    $tbl = new RA_Table();
-    $tbl->add($aInt->lang("fields", "product"), $frm->hidden("oldserviceid", $id) . $frm->dropdown("id", $servicesarr, $id), 1);
-    $tbl->add($aInt->lang("fields", "regdate"), $frm->date("regdate", $regdate));
-    $tbl->add($aInt->lang("fields", "setupfee"), $frm->text("setupfee", $setupfee, "10"));
-    $tbl->add($aInt->lang("addons", "predefinedaddon"), $frm->dropdown("addonid", $predefaddons, $addonid, "", "", true));
-    $tbl->add($aInt->lang("global", "recurring"), $frm->text("recurring", $recurring, "10") . ($aid == "add" ? " " . $frm->checkbox("defaultpricing", $aInt->lang("addons", "usedefault"), true) : ""));
-    $tbl->add($aInt->lang("addons", "customname"), $frm->text("name", $customname, "40"));
-    $tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle, "", "Free"));
-    $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($status));
-    $tbl->add($aInt->lang("fields", "nextduedate"), $frm->date("nextduedate", $nextduedate));
-    $tbl->add($aInt->lang("fields", "paymentmethod"), paymentMethodsSelection());
-    $tbl->add($aInt->lang("addons", "taxaddon"), $frm->checkbox("tax", "", $tax));
-    $tbl->add($aInt->lang("fields", "adminnotes"), $frm->textarea("notes", $notes, "4", "100%"), 1);
-    echo $tbl->output();
+//    $tbl = new RA_Table();
+//    $tbl->add($aInt->lang("fields", "product"), $frm->hidden("oldserviceid", $id) . $frm->dropdown("id", $servicesarr, $id), 1);
+//    $tbl->add($aInt->lang("fields", "regdate"), $frm->date("regdate", $regdate));
+//    $tbl->add($aInt->lang("fields", "setupfee"), $frm->text("setupfee", $setupfee, "10"));
+//    $tbl->add($aInt->lang("addons", "predefinedaddon"), $frm->dropdown("addonid", $predefaddons, $addonid, "", "", true));
+//    $tbl->add($aInt->lang("global", "recurring"), $frm->text("recurring", $recurring, "10") . ($aid == "add" ? " " . $frm->checkbox("defaultpricing", $aInt->lang("addons", "usedefault"), true) : ""));
+//    $tbl->add($aInt->lang("addons", "customname"), $frm->text("name", $customname, "40"));
+//    $tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle, "", "Free"));
+//    $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($status));
+//    $tbl->add($aInt->lang("fields", "nextduedate"), $frm->date("nextduedate", $nextduedate));
+//    $tbl->add($aInt->lang("fields", "paymentmethod"), paymentMethodsSelection());
+//    $tbl->add($aInt->lang("addons", "taxaddon"), $frm->checkbox("tax", "", $tax));
+//    $tbl->add($aInt->lang("fields", "adminnotes"), $frm->textarea("notes", $notes, "4", "100%"), 1);
+//    echo $tbl->output();
 
     if ($aid == "add") {
-        echo "<p align=\"center\"><input type=\"checkbox\" name=\"geninvoice\" id=\"geninvoice\" checked /> <label for=\"geninvoice\">" . $aInt->lang("addons", "geninvoice") . "</a></p>";
+//        echo "<p align=\"center\"><input type=\"checkbox\" name=\"geninvoice\" id=\"geninvoice\" checked /> <label for=\"geninvoice\">" . $aInt->lang("addons", "geninvoice") . "</a></p>";
     }
 
-    echo "<p align=\"center\">" . $frm->submit($aInt->lang("global", "savechanges"), "btn btn-primary") . " " . $frm->button($aInt->lang("global", "cancel"), "window.location='?userid=" . $userid . "&id=" . $id . "'") . "</p>";
+//    echo "<p align=\"center\">" . $frm->submit($aInt->lang("global", "savechanges"), "btn btn-primary") . " " . $frm->button($aInt->lang("global", "cancel"), "window.location='?userid=" . $userid . "&id=" . $id . "'") . "</p>";
 } else {
     $serversarr = $serversarr2 = array();
     $result = select_query_i("tblservers", "", array("type" => $module), "name", "ASC");
@@ -731,17 +755,15 @@ if ($aid) {
     $tbl->add($aInt->lang("fields", "ordernum"), $orderid . " - <a href=\"orders.php?action=view&id=" . $orderid . "\">" . $aInt->lang("orders", "vieworder") . "</a>");
     $tbl->add($aInt->lang("fields", "regdate"), $frm->date("regdate", $regdate));
     $tbl->add($aInt->lang("fields", "product"), $frm->hidden("oldpackageid", $packageid) . $frm->dropdown("packageid", $aInt->productDropDown($packageid), "", "submit()"));
-    //$tbl->add($aInt->lang("fields", "firstpaymentamount"), $frm->text("firstpaymentamount", $firstpaymentamount, "10"));
-//    $tbl->add($aInt->lang("fields", "server"), $frm->dropdown("server", $serversarr, $server, "submit()", "", true));
     $tbl->add($aInt->lang("fields", "recurringamount"), $frm->text("amount", $amount, "10") . " " . $frm->checkbox("autorecalcrecurringprice", $aInt->lang("services", "autorecalc"), ($autorecalcdefault ? true : false)));
-    $tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "description")), $frm->text("Description", $domain));
+    $tbl->add(($producttype == "server" ? $aInt->lang("fields", "hostname") : $aInt->lang("fields", "description")), $frm->text("description", $description));
+    $tbl->add($aInt->lang("fields", "firstpaymentamount"), $frm->text("firstpaymentamount", $firstpaymentamount, "10"));
     $tbl->add($aInt->lang("fields", "nextduedate"), (in_array($billingcycle, array("One Time", "Free Account")) ? "N/A" : $frm->hidden("oldnextduedate", $nextduedate) . $frm->date("nextduedate", $nextduedate)));
     $tbl->add($aInt->lang("fields", "billingcycle"), $aInt->cyclesDropDown($billingcycle));
     $tbl->add($aInt->lang("fields", "username"), $frm->text("username", $username, "20") . (function_exists($module . "_LoginLink") ? " " . ServerLoginLink($id) : ""));
     $tbl->add($aInt->lang("fields", "paymentmethod"), paymentMethodsSelection() . " <a href=\"clientsinvoices.php?userid=" . $userid . "&serviceid=" . $id . "\">" . $aInt->lang("invoices", "viewinvoices") . "</a>");
     $tbl->add($aInt->lang("fields", "password"), $frm->text("password", $password, "20"));
     $tbl->add($aInt->lang("fields", "status"), $aInt->productStatusDropDown($servicestatus, false, "servicestatus", "prodstatus") . ($servicestatus == "Suspended" ? " (" . $aInt->lang("services", "suspendreason") . ": " . (!$suspendreason ? $_LANG['suspendreasonoverdue'] : $suspendreason) . ")" : ""));
-    $tbl->add($aInt->lang("fields", "subscriptionid"), $frm->text("subscriptionid", $subscriptionid, "25"));
 
     $configoptions = array();
     $configoptions = getCartConfigOptions($packageid, "", $billingcycle, $id);
@@ -883,82 +905,71 @@ if ($aid) {
 
     $addonshtml = $aInt->sortableTable(array($aInt->lang("addons", "regdate"), $aInt->lang("addons", "name"), $aInt->lang("global", "pricing"), $aInt->lang("fields", "status"), $aInt->lang("fields", "nextduedate"), "", ""), $tabledata);
     $tbl->add($aInt->lang("addons", "title"), $addonshtml . "<div style=\"padding:5px 25px;\"><a href=\"clientsservices.php?userid=" . $userid . "&id=" . $id . "&aid=add\"><img src=\"images/icons/add.png\" border=\"0\" align=\"top\" /> Add New Addon</a></div>", 1);
-    $customfields = getCustomFields("product", $packageid, $id, true);
+    $customfields = getServiceCustomFields($packageid, $id);
     foreach ($customfields as $customfield) {
-        $tbl->add($customfield['name'], $customfield['input'], 1);
+
+        if ($customfield['fieldtype'] == 'text' || $customfield['fieldtype'] == 'password') {
+            $customfieldhtml = "<input type=\"text\" value=\"" . $customfield['value'] . "\" name=\"customfield[" . $customfield['cfid'] . "]\">";
+        } else if ($customfield['fieldtype'] == 'link') {
+            $customfieldhtml = "<a href=\"\">" . $customfield['value'] . "</a><input value=\"" . $customfield['value'] . "\" type=\"text\" value=\"\" name=\"customfield[" . $customfield['cfid'] . "]\">";
+        } else if ($customfield['fieldtype'] == 'dropdown') {
+            foreach ($fieldoptions as $key => $row) {
+                $options .= "<option value=" . $key . ">" . $row . "</option>";
+            }
+            $customfieldhtml = "<select name=\"customfield[" . $customfield['cfid'] . "]\">" . $options . "</select>";
+        } else if ($customfield['fieldtype'] == 'tickbox') {
+            $customfieldhtml = "<input type=\"text\" value=\"\" name=\"customfield[" . $customfield['cfid'] . "]\">";
+        } else if ($customfield['fieldtype'] == 'textarea') {
+            $customfieldhtml = "<input type=\"text\" value=\"\" name=\"customfield[" . $customfield['cfid'] . "]\">";
+        }
+
+        $tbl->add($customfield['fieldname'], $customfieldhtml, 1);
     }
 
     $tbl->add($aInt->lang("services", "overrideautosusp"), $frm->checkbox("overideautosuspend", $aInt->lang("services", "nosuspenduntil"), $overideautosuspend) . " " . $frm->date("overidesuspenduntil", $overidesuspenduntil), 1);
     $tbl->add($aInt->lang("services", "endofcycle"), $frm->checkbox("autoterminateendcycle", $aInt->lang("services", "reason"), $autoterminateendcycle) . " " . $frm->text("autoterminatereason", $autoterminatereason, "60"), 1);
     $tbl->add($aInt->lang("fields", "adminnotes"), $frm->textarea("notes", $notes, "4", "100%"), 1);
-    echo $tbl->output();
-    echo "
-<br />
-<div align=\"center\">" . $frm->submit($aInt->lang("global", "savechanges"), "btn btn-primary") . " " . $frm->reset($aInt->lang("global", "cancelchanges")) . "<br />
-<a href=\"#\" onclick=\"showDialog('delete');return false\" style=\"color:#cc0000\"><strong>" . $aInt->lang("global", "delete") . "</strong></a></div>";
+    $ordertable = $tbl->output();
+
+
+    $emailarr = array();
+    $emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
+    $result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
+
+    while ($data = mysqli_fetch_array($result)) {
+        $messagename = $data['name'];
+        $custom = $data['custom'];
+        $emailarr[$messagename] = ($custom ? array("#efefef", $messagename) : $messagename);
+    }
+
+
+
+
+
+    if ($ra->get_req_var("ajaxupdate")) {
+        $content = preg_replace('/(<form\W[^>]*\bmethod=(\'|"|)POST(\'|"|)\b[^>]*>)/i', '$1' . "\n" . generate_token(), $content);
+
+//        echo $content;
+//        exit();
+    } else {
+        $content = "";
+        $content .= $aInt->jqueryDialog("modcreate", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "createsure"), array($aInt->lang("global", "yes") => "runModuleCommand('create')", $aInt->lang("global", "no") => ""), "", "450");
+        $content .= $aInt->jqueryDialog("modsuspend", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "suspendsure") . "<br /><div align=\"center\">" . $aInt->lang("services", "suspendreason") . ": <input type=\"text\" id=\"suspreason\" size=\"20\" /><br /><br /><input type=\"checkbox\" id=\"suspemail\" /> " . $aInt->lang("services", "suspendsendemail") . "</div>", array($aInt->lang("global", "yes") => "runModuleCommand('suspend')", $aInt->lang("global", "no") => ""), "", "450");
+        $content .= $aInt->jqueryDialog("modunsuspend", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "unsuspendsure"), array($aInt->lang("global", "yes") => "runModuleCommand('unsuspend')", $aInt->lang("global", "no") => ""), "", "450");
+        $content .= $aInt->jqueryDialog("modterminate", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "terminatesure"), array($aInt->lang("global", "yes") => "runModuleCommand('terminate')", $aInt->lang("global", "no") => ""), "", "450");
+        $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
+        $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
+    }
 }
 
-echo $frm->close() . "
+$aInt->assign('test', $updatearr);
+$aInt->assign('lang', $lang);
+$aInt->assign('emaildropdown', $emailarr);
+$aInt->assign('userid', $userid);
+$aInt->assign('contentbox', $contentbox);
+$aInt->assign('ordertable', $ordertable);
+$aInt->assign('content', $content);
 
-<br />
-
-<div class=\"contentbox\">
-<table align=\"center\"><tr><td>
-<strong>" . $aInt->lang("global", "sendmessage") . "</strong>
-</td><td>
-";
-$frmsub = new RA_Form("frm3");
-echo $frmsub->form("clientsemails.php?userid=" . $userid);
-echo $frmsub->hidden("action", "send");
-echo $frmsub->hidden("type", "product");
-echo $frmsub->hidden("id", $id);
-$emailarr = array();
-$emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
-$result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
-
-while ($data = mysqli_fetch_array($result)) {
-    $messagename = $data['name'];
-    $custom = $data['custom'];
-    $emailarr[$messagename] = ($custom ? array("#efefef", $messagename) : $messagename);
-}
-
-echo $frmsub->dropdown("messagename", $emailarr);
-echo $frmsub->submit($aInt->lang("global", "sendmessage"));
-echo $frmsub->close();
-echo "</td><td>";
-$frmsub = new RA_Form("frm4");
-echo $frmsub->form("clientsemails.php?userid=" . $userid);
-echo $frmsub->hidden("action", "send");
-echo $frmsub->hidden("type", "product");
-echo $frmsub->hidden("id", $id);
-echo $frmsub->hidden("messagename", "defaultnewacc");
-echo $frmsub->submit($aInt->lang("emails", "senddefaultproductwelcome"));
-echo $frmsub->close();
-echo "</td></tr></table>
-</div>
-
-<form method=\"post\" action=\"whois.php\" target=\"_blank\" id=\"frmWhois\">
-<input type=\"hidden\" name=\"domain\" value=\"" . $domain . "\" />
-</form>
-";
-$content = ob_get_contents();
-ob_end_clean();
-
-if ($ra->get_req_var("ajaxupdate")) {
-    $content = preg_replace('/(<form\W[^>]*\bmethod=(\'|"|)POST(\'|"|)\b[^>]*>)/i', '$1' . "\n" . generate_token(), $content);
-
-    echo $content;
-    exit();
-} else {
-    $content = "<div id=\"servicecontent\">" . $content . "</div>";
-    $content .= $aInt->jqueryDialog("modcreate", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "createsure"), array($aInt->lang("global", "yes") => "runModuleCommand('create')", $aInt->lang("global", "no") => ""), "", "450");
-    $content .= $aInt->jqueryDialog("modsuspend", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "suspendsure") . "<br /><div align=\"center\">" . $aInt->lang("services", "suspendreason") . ": <input type=\"text\" id=\"suspreason\" size=\"20\" /><br /><br /><input type=\"checkbox\" id=\"suspemail\" /> " . $aInt->lang("services", "suspendsendemail") . "</div>", array($aInt->lang("global", "yes") => "runModuleCommand('suspend')", $aInt->lang("global", "no") => ""), "", "450");
-    $content .= $aInt->jqueryDialog("modunsuspend", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "unsuspendsure"), array($aInt->lang("global", "yes") => "runModuleCommand('unsuspend')", $aInt->lang("global", "no") => ""), "", "450");
-    $content .= $aInt->jqueryDialog("modterminate", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "terminatesure"), array($aInt->lang("global", "yes") => "runModuleCommand('terminate')", $aInt->lang("global", "no") => ""), "", "450");
-    $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
-    $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
-}
-
-$aInt->content = $content;
+$aInt->template = "clientsservices/view";
 $aInt->display();
 ?>

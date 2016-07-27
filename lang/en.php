@@ -598,6 +598,7 @@ $_LANG['orderpaymenttermannually'] = "Annually";
 $_LANG['orderpaymenttermbiennially'] = "Biennially";
 $_LANG['orderpaymenttermfreeaccount'] = "Free Account";
 $_LANG['orderpaymenttermmonthly'] = "/M";
+$_LANG['orderpaymenttermmonthlytext'] = "Monthly";
 $_LANG['orderpaymenttermonetime'] = "One Time";
 $_LANG['orderpaymenttermquarterly'] = "Quarterly";
 $_LANG['orderpaymenttermsemiannually'] = "Semi-Annually";

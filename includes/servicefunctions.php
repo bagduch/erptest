@@ -49,7 +49,7 @@ function getServiceData($id = NULL) {
 // csid is the id from tblcustomerservices (if applicable) for population of values
 function getServiceCustomFields($sid, $csid = null) {
 
-    $csid = null;
+
     global $ramysqli;
     $sid = intval($sid);
     error_log("calling getServiceCustomFields with sid " . $sid . " and csid " . $csid);
@@ -75,7 +75,7 @@ function getServiceCustomFields($sid, $csid = null) {
         LEFT JOIN tblcustomfields 
             ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
-    if (is_int($csid)) {
+    if (isset($csid)) {
         $query_selectvals .= ", tblcustomfieldsvalues.value ";
         $query_tables .=
                 " LEFT JOIN tblcustomfieldsvalues
@@ -89,7 +89,7 @@ function getServiceCustomFields($sid, $csid = null) {
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     while ($row = mysqli_fetch_assoc($result)) {
-        $returnvals[] = $row;
+        $returnvals[$row['cfid']] = $row;
 
         $data = explode(",", $row['fieldoptions']);
         foreach ($data as $value) {
@@ -101,10 +101,47 @@ function getServiceCustomFields($sid, $csid = null) {
     return $returnvals;
 }
 
+function getCustomfieldValue() {
+    
+}
+
+function addServiceCustomFieldVlues($csid, $valarray) {
+    $validate = new RA_Validate();
+
+    if (isset($csid) && !empty($valarray)) {
+        foreach ($valarray as $cfid => $value) {
+            // get list of cfids
+            if ($validate->validateCustomFields("", $cfid, $order)) {
+                insert_query('tblcustomfieldsvalues', array('cfid' => $cfid, 'relid' => $csid, 'value' => $value));
+                return true;
+            } else {
+                return $validate->errors_msgs;
+            }
+        }
+    }
+}
+
 // takes csid per above, and an array of fieldname->values
-function updateServiceCustomFieldValues($csid, $valarray) {
-    foreach ($valarray as $fieldname => $value) {
-        // get list of cfids
+function updateServiceCustomFieldValues($relid, $valarray = array()) {
+    global $query_count;
+    global $ramysqli;
+    $validate = new RA_Validate();
+    if (isset($relid) && !empty($valarray)) {
+        foreach ($valarray as $cfid => $value) {
+            // get list of cfids
+
+            if ($validate->validateCustomFields("", $cfid)) {
+                //update_query('tblcustomfieldsvalues', array('value' => $value), array('cfid' => $cfid, 'relid' => $relid));
+
+                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE 
+                     value=VALUES(value), cfid=VALUES(cfid),relid=VALUES(relid)";
+                mysqli_query($ramysqli, $query);
+                $query_count++;
+            } else {
+                return $validate->errors_msgs;
+            }
+        }
+        return true;
     }
 }
 

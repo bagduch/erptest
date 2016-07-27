@@ -480,13 +480,13 @@ if ($canceltype == "End of Billing Period") {
 }
 
 
-if (!$server) {
-    $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
-
-    if ($server) {
-        update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
-    }
-}
+//if (!$server) {
+//    $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
+//
+//    if ($server) {
+//        update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
+//    }
+//}
 
 $jscode = "function doDeleteAddon(id) {
 if (confirm(\"" . $aInt->lang("addons", "areyousuredelete", 1) . "\")) {

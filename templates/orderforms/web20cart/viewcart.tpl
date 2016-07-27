@@ -197,7 +197,7 @@ function enterNewCC() {
   {if $totalrecurringmonthly || $totalrecurringquarterly || $totalrecurringsemiannually || $totalrecurringannually || $totalrecurringbiennially || $totalrecurringtriennially}
   <tr class="recurring">
     <td align="right">{$LANG.ordertotalrecurring}: &nbsp;</td>
-    <td class="textcenter">{if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthly}<br />
+    <td class="textcenter">{if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthlytext}<br />
       {/if}
       {if $totalrecurringquarterly}{$totalrecurringquarterly} {$LANG.orderpaymenttermquarterly}<br />
       {/if}

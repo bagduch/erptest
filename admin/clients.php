@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @ RA
@@ -8,8 +9,7 @@
  * 
  * 
  *
- **/
-
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("List Clients");
@@ -27,169 +27,133 @@ $clientsModel = new RA_Clients($pageObj);
 $filters = new RA_Filter();
 ob_start();
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
-$userid = $filters->get("userid");
-$country = $filters->get("country");
-echo "<div id=\"tab0box\" class=\"tabbox\">
-  <div id=\"tab_content\">
 
-<form action=\"clients.php\" method=\"post\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-echo $aInt->lang("fields", "clientname");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"clientname\" size=\"30\" value=\"";
-echo $clientname = $filters->get("clientname");
-echo "\" /></td><td width=\"15%\" class=\"fieldlabel\">";
-echo $aInt->lang("fields", "companyname");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"companyname\" size=\"30\" value=\"";
-echo $companyname = $filters->get("companyname");
-echo "\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "email");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"email\" size=\"40\" value=\"";
-echo $email = $filters->get("email");
-echo "\" /></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "address");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"address\" size=\"30\" value=\"";
-echo $address = $filters->get("address");
-echo "\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "status");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"status\"><option value=\"\">";
-echo $aInt->lang("global", "any");
-echo "</option><option value=\"Active\"";
-$status = $filters->get("status");
 
-if ($status == "Active") {
-	echo " selected";
-}
 
-echo ">";
-echo $aInt->lang("status", "active");
-echo "</option><option value=\"Inactive\"";
+$langdata = array(
+    'searchfilterlang' => $aInt->lang("global", "searchfilter"),
+    'clientnamelang' => $aInt->lang("fields", "clientname"),
+    'companynamelang' => $aInt->lang("fields", "companyname"),
+    'emaillang' => $aInt->lang("fields", "email"),
+    'addresslang' => $aInt->lang("fields", "address"),
+    'anylang' => $aInt->lang("global", "any"),
+    'statuslang' => $aInt->lang("fields", "status"),
+    'activelang' => $aInt->lang("status", "active"),
+    'inactivelang' => $aInt->lang("status", "inactive"),
+    'closelang' => $aInt->lang("status", "closed"),
+    'statelang' => $aInt->lang("fields", "state"),
+    'clientgrouplang' => $aInt->lang("fields", "clientgroup"),
+    'activelang' => $aInt->lang("status", "active"),
+    'cardlast4lang' => $aInt->lang("fields", "cardlast4"),
+    'searchlng' => $aInt->lang("global", "search"),
+    'phonenumberlang' => $aInt->lang("fields", "phonenumber"),
+    'currencylang' => $aInt->lang("currencies", "currency"),
+);
 
-if ($status == "Inactive") {
-	echo " selected";
-}
 
-echo ">";
-echo $aInt->lang("status", "inactive");
-echo "</option><option value=\"Closed\"";
-
-if ($status == "Closed") {
-	echo " selected";
-}
-
-echo ">";
-echo $aInt->lang("status", "closed");
-echo "</option></select></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "state");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"state\" size=\"30\" value=\"";
-echo $state = $filters->get("state");
-echo "\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "clientgroup");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"clientgroup\"><option value=\"\">";
-echo $aInt->lang("global", "any");
-echo "</option>";
-$clientgroup = $filters->get("clientgroup");
+$clientgroup = array();
 foreach ($clientsModel->getGroups() as $id => $values) {
-	echo "<option value=\"" . $id . "\"";
-
-	if ($id == $clientgroup) {
-		echo " selected";
-	}
-
-	echo ">" . $values['name'] . "</option>";
+    $clientgroup [$id] = $values['name'];
 }
 
-echo "</select></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "phonenumber");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"phonenumber\" size=\"30\" value=\"";
-echo $phonenumber = $filters->get("phonenumber");
-echo "\" /></td></tr>
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-echo $aInt->lang("currencies", "currency");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"currency\"><option value=\"\">";
-echo $aInt->lang("global", "any");
-echo "</option>";
-$currency = $filters->get("currency");
 $result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
-
+$currencys = array();
 while ($data = mysqli_fetch_assoc($result)) {
-	echo "<option value=\"" . $data['id'] . "\"";
-
-	if ($currency == $data['id']) {
-		echo " selected";
-	}
-
-	echo ">" . $data['code'] . "</option>";
+    $currencys[$data['id']] = $data['code'];
 }
 
-echo "</select></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "cardlast4");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"cardlastfour\" size=\"15\" value=\"";
-echo $cardlastfour = $filters->get("cardlastfour");
-echo "\" /></td></tr>
-";
-$customfields = $filters->get("customfields");
+
+//if ($status == "Active") {
+//    echo " selected";
+//}
+//
+//
+//echo $aInt->lang("status", "active");
+//echo "</option><option value=\"Inactive\"";
+//
+//if ($status == "Inactive") {
+//    echo " selected";
+//}
+//
+//
+//echo $aInt->lang("status", "inactive");
+//echo "</option><option value=\"Closed\"";
+//
+//if ($status == "Closed") {
+//    echo " selected";
+//}
+
+
+$filterdata = array(
+    "userid" => $filters->get("userid"),
+    "clientname" => $filters->get("clientname"),
+    "companyname" => $filters->get("companyname"),
+    "email" => $filters->get("email"),
+    "address" => $filters->get("address"),
+    "country" => $filters->get("country"),
+    "status" => $filters->get("status"),
+    "state" => $filters->get("state"),
+    "clientgroup" => $filters->get("clientgroup"),
+    "phonenumber" => $filters->get("phonenumber"),
+    "currency" => $filters->get("currency"),
+    "cardlastfour" => $filters->get("cardlastfour"),
+    "customfields" => $filters->get("customfields")
+);
+
+
+
+
+
+
+
+
 $result = select_query_i("tblcustomfields", "id,fieldname", array("type" => "client"));
 
 while ($data = mysqli_fetch_array($result)) {
-	$fieldid = $data['id'];
-	$fieldname = $data['fieldname'];
-	echo "<tr><td class=\"fieldlabel\">" . $fieldname . "</td><td class=\"fieldarea\" colspan=\"3\"><input type=\"text\" name=\"customfields[" . $fieldid . "]\" size=\"30\" value=\"" . $customfields[$fieldid] . "\" /></td></tr>";
+    $fieldid = $data['id'];
+    $fieldname = $data['fieldname'];
+    echo "<tr><td class=\"fieldlabel\">" . $fieldname . "</td><td class=\"fieldarea\" colspan=\"3\"><input type=\"text\" name=\"customfields[" . $fieldid . "]\" size=\"30\" value=\"" . $customfields[$fieldid] . "\" /></td></tr>";
 }
 
-echo "</table>
-<p align=\"center\"><input type=\"submit\" value=\"";
-echo $aInt->lang("global", "search");
-echo "\" class=\"button\"></p>
-</form>
 
-  </div>
-</div>
-
-<br />
-
-";
 $filters->store();
-$criteria = array("userid" => $userid, "clientname" => $clientname, "companyname" => $companyname, "email" => $email, "address" => $address, "country" => $country, "status" => $status, "state" => $state, "clientgroup" => $clientgroup, "phonenumber" => $phonenumber, "currency" => $currency, "cardlastfour" => $cardlastfour, "customfields" => $customfields);
-$clientsModel->execute($criteria);
+
+$clientsModel->execute($filterdata);
 $numresults = $pageObj->getNumResults();
 
+
 if ($filters->isActive() && $numresults == 1) {
-	$client = $pageObj->getOne();
-	redir("userid=" . $client['id'], "clientssummary.php");
-}
-else {
-	$clientlist = $pageObj->getData();
-	foreach ($clientlist as $client) {
-		$linkopen = "<a href=\"clientssummary.php?userid=" . $client['id'] . "\"" . ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "") . ">";
-		$linkclose = "</a>";
-		$tbl->addRow(
-			array(
-				"<input type=\"checkbox\" name=\"selectedclients[]\" value=\"" . $client['id'] . "\" class=\"checkall\">", 
-				$linkopen . $client['id'] . $linkclose, 
-				$linkopen . $client['firstname'] . $linkclose, $linkopen . $client['lastname'] . $linkclose, $client['companyname'], 
-				"<a href=\"mailto:" . $client['email'] . "\">" . $client['email'] . "</a>", 
-				$client['services'] . " (" . $client['totalservices'] . ")", 
-				"prods: ".$client['products'],  $client['datecreated'], 
-				"<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
-	}
+    $client = $pageObj->getOne();
+    redir("userid=" . $client['id'], "clientssummary.php");
+} else {
+    $clientlist = $pageObj->getData();
+    foreach ($clientlist as $client) {
+        $linkopen = "<a href=\"clientssummary.php?userid=" . $client['id'] . "\"" . ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "") . ">";
+        $linkclose = "</a>";
+        $tbl->addRow(
+                array(
+                    "<input type=\"checkbox\" name=\"selectedclients[]\" value=\"" . $client['id'] . "\" class=\"checkall\">",
+                    $linkopen . $client['id'] . $linkclose,
+                    $linkopen . $client['firstname'] . $linkclose, $linkopen . $client['lastname'] . $linkclose, $client['companyname'],
+                    "<a href=\"mailto:" . $client['email'] . "\">" . $client['email'] . "</a>",
+                    $client['services'] . " (" . $client['totalservices'] . ")",
+                    "prods: " . $client['products'], $client['datecreated'],
+                    "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
+    }
 
-	echo $tbl->output();
-	unset($clientlist);
-	unset($clientsModel);
-}
 
+    $table = $tbl->output();
+    unset($clientlist);
+    unset($clientsModel);
+}
+$aInt->assign('table', $table);
+$aInt->assign('lang', $langdata);
+$aInt->assign('filterdata', $filterdata);
+$aInt->assign('clientgroups', $clientgroup);
+$aInt->assign('currencys', $currencys);
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
+$aInt->template = 'client/clients';
 $aInt->display();
 ?>

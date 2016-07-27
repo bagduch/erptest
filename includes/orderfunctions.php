@@ -406,7 +406,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     }
 
 
-    
+
     if ($checkout) {
         if (!$_SESSION['cart']) {
             return false;
@@ -437,17 +437,17 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             return false;
         }
 
-        $orderid = insert_query("tblorders", 
-        array(
-            "ordernum" => $order_number, 
-            "userid" => $userid, 
+        $orderid = insert_query("tblorders", array(
+            "ordernum" => $order_number,
+            "userid" => $userid,
 //          "contactid" => $_SESSION['cart']['contact'], 
-            "date" => "now()", 
-            "status" => "Pending", 
-            "paymentmethod" => $paymentmethod, 
-            "ipaddress" => $remote_ip, 
+            "date" => "now()",
+            "status" => "Pending",
+            "paymentmethod" => $paymentmethod,
+            "ipaddress" => $remote_ip,
             "notes" => $ordernotes)
         );
+        $hostid = insert_query($table, $array);
         logActivity("New Order Placed - Order ID: " . $orderid . " - User ID: " . $userid);
         $descriptioneppcodes = array();
     }
@@ -502,6 +502,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $recurring_cycles_total = array("monthly" => 0, "quarterly" => 0, "semiannually" => 0, "annually" => 0, "biennially" => 0, "triennially" => 0);
 
     if (array_key_exists("products", $_SESSION['cart']) && is_array($_SESSION['cart']['products'])) {
+
         foreach ($_SESSION['cart']['products'] as $key => $productdata) {
             $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservicegroups.name AS groupname,tblservices.name,tblservices.paytype,tblservices.proratabilling,tblservices.proratadate,tblservices.proratachargenextmonth,tblservices.tax,tblservices.servertype,tblservices.servergroup", array("tblservices.id" => $productdata['pid']), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
             $data = mysqli_fetch_array($result);
@@ -516,9 +517,6 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             $tax = $data['tax'];
             $servertype = $data['servertype'];
             $servergroup = $data['servergroup'];
-
-
-
             $productinfo = getProductInfo($pid);
             $productdata['productinfo'] = $productinfo;
 
@@ -526,8 +524,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 require ROOTDIR . "/includes/customfieldfunctions.php";
             }
 
-            $customfields = getCustomFields("product", $pid, "", true, "", $productdata['customfields']);
-            $productdata['customfields'] = $customfields;
+            // $customfields = getCustomFields("product", $pid, "", true, "", $productdata['customfields']);
+            // $productdata['customfields'] = $customfields;
             $pricing = getPricingInfo($pid);
 
             if ($pricing['type'] == "recurring") {
@@ -552,10 +550,10 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         $billingcycle = "semiannually";
                     } elseif (0 <= $pricing['rawpricing']['annually']) {
                         $billingcycle = "annually";
-                     } elseif (0 <= $pricing['rawpricing']['biennially']) {
+                    } elseif (0 <= $pricing['rawpricing']['biennially']) {
                         $billingcycle = "biennially";
                     } elseif (0 <= $pricing['rawpricing']['triennially']) {
-                            $billingcycle = "triennially";
+                        $billingcycle = "triennially";
                     }
                 }
             } else {
@@ -755,33 +753,30 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $multiqtyids = array();
                 $qtycount = 1;
                 $qty = 1;
+
                 while ($qtycount <= $qty) {
-                    $serverid = ($servertype ? getServerID($servertype, $servergroup) : "0");
+
+                    $serverid = ($servertype ? getServerID($servertype, $servergroup) : "");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
-                    $serviceid = insert_query("tblcustomerservices", 
-                            array(  
-                                "userid" => $userid, 
-                                "orderid" => $orderid, 
-                                "packageid" => $pid, 
-//                                "server" => $serverid, 
-                                "regdate" => "now()", 
-                                "description" => $description, 
-                                "paymentmethod" => $paymentmethod, 
-                                "firstpaymentamount" => $product_total_today_db, 
-                                "amount" => $product_recurring_db, 
-                                "billingcycle" => $databasecycle, 
-                                "nextduedate" => $hostingquerydates, 
-                                "nextinvoicedate" => $hostingquerydates, 
-                                "servicestatus" => "Pending", 
-                                "password" => $serverrootpw //, 
-//                                "promoid" => $promoid
+                    $serviceid = insert_query("tblcustomerservices", array(
+                        "userid" => $userid,
+                        "orderid" => $orderid,
+                        "packageid" => $pid,
+                        "server" => $serverid,
+                        "regdate" => "now()",
+                        "description" => $description,
+                        "paymentmethod" => $paymentmethod,
+                        "firstpaymentamount" => $product_total_today_db,
+                        "amount" => $product_recurring_db,
+                        "billingcycle" => $databasecycle,
+                        "nextduedate" => $hostingquerydates,
+                        "nextinvoicedate" => $hostingquerydates,
+                        "servicestatus" => "Pending",
+                        "password" => $serverrootpw
                             )
                     );
-                                    $multiqtyids[$qtycount] = $serviceid;
-                                    $orderproductids[] = $serviceid;
-
-
-
+                    $multiqtyids[$qtycount] = $serviceid;
+                    $orderproductids[] = $serviceid;
 
                     if ($configoptionsdb) {
                         foreach ($configoptionsdb as $key => $value) {
@@ -789,9 +784,12 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         }
                     }
 
-                    foreach ($productdata['customfields'] as $key => $value) {
-                        insert_query("tblcustomfieldsvalues", array("fieldid" => $value['id'], "relid" => $serviceid, "value" => $value['rawvalue']));
+                    if (!empty($productdata['customfields'])) {
+                        foreach ($productdata['customfields'] as $key => $value) {
+                            insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $serviceid, "value" => $value));
+                        }
                     }
+
 
                     $productdetails = getInvoiceProductDetails($serviceid, $pid, date("Y-m-d"), $hostingquerydates, $databasecycle, $description);
                     $invoice_description = $productdetails['description'];
@@ -1587,6 +1585,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         update_query("tblorders", array("amount" => $cart_total, "nameservers" => $ordernameservers, "transfersecret" => $descriptioneppcodes, "renewals" => substr($orderrenewals, 0, 0 - 1), "orderdata" => serialize($orderdata)), array("id" => $orderid));
         $invoiceid = 0;
 
+        mail("peter@hd.net.nz", 'invoice', print_r($_SESSION['cart'],1));
         if (!$_SESSION['cart']['geninvoicedisabled']) {
             if (!$userid) {
                 exit("An Error Occurred");

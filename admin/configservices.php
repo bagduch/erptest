@@ -1802,5 +1802,6 @@ ob_end_clean();
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
+
 $aInt->display();
 ?>

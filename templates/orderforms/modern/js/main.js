@@ -45,7 +45,7 @@ function addtocart(gid) {
     jQuery.post("cart.php", 'ajax=1&a=confservice&' + jQuery("#orderfrm").serialize(),
             function (data) {
                 if (data) {
-                    console.log(data);
+                   // console.log(data);
                     jQuery("#configproducterror").html(data);
                     jQuery("#configproducterror").slideDown();
                     jQuery("#loading1").slideUp();

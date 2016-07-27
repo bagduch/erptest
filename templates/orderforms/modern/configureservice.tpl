@@ -118,25 +118,25 @@
                             <tr><td class="fieldlabel"><label>{$customfield.fieldname}{if $customfield.required}*{/if}</label></td>
                                 <td class="fieldarea">
                                     {if $customfield.fieldtype eq "text" or ($customfield.fieldtype eq "password" AND $customfield.adminonly eq 1)}
-                                        <input type="text" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" size="30">
+                                        <input type="text" name="customfield[{$customfield.cfid}]" value="{$customfield.value}" id="customfield{$customfield.cfid}" size="30">
                                     {else}
                                         {if  $customfield.fieldtype eq "link"}
-                                            <input type="text" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" size="30">
+                                            <input type="text" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" size="30"  value="{$customfield.value}" >
                                             <a href="{$customfield.description}">{$customfield.description}</a>
                                         {else}
 
                                             {if  $customfield.fieldtype eq "password"}
-                                                <input type="password" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" size="30">
+                                                <input type="password" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" size="30"  value="{$customfield.value}" >
                                             {elseif  $customfield.fieldtype eq "textarea"}
-                                                <textarea name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" style="width: 90%" rows="3"></textarea>
+                                                <textarea name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" style="width: 90%" rows="3">{$customfield.value}</textarea>
                                             {elseif  $customfield.fieldtype eq "dropdown"}
                                                 <select name="customfield[{$customfield.cfid}]">
                                                     {foreach key=num item=fieldoptions from=$customfield['fieldoptions']}
-                                                        <option value="{$fieldoptions}"></option>
+                                                        <option value="{$fieldoptions}" {if $fieldoptions eq $customfield.value}selected{/if}></option>
                                                     {/foreach}
                                                 </select>
                                             {elseif  $customfield.fieldtype eq "tickbox"}
-                                                <input type="checkbox" name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}">
+                                                <input type="checkbox" {if $$customfield.value}checked{/if} name="customfield[{$customfield.cfid}]" id="customfield{$customfield.cfid}" >
                                             {else}
                                             {/if}
 

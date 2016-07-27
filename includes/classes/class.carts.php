@@ -4,11 +4,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
 include "../functions.php";
 include "../orderfunctions.php";
@@ -132,10 +127,8 @@ class RA_Carts {
         $securityquestions = getSecurityQuestions();
 
         if ($check) {
-
             $_SESSION['cart']['paymentmethod'] = $paymentmethod;
             $_SESSION['cart']['notes'] = $notes;
-
             if (!$_SESSION['uid']) {
                 if ($custtype == "existing") {
                     if (!validateClientLogin($loginemail, $loginpw)) {
@@ -146,8 +139,6 @@ class RA_Carts {
                     $errormessage = checkDetailsareValid("", true, true, false);
                 }
             }
-
-
 
             if ($contact == "new") {
                 redir("a=addcontact");

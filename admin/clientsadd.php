@@ -1,14 +1,10 @@
 <?php
+
 /**
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
- **/
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("Add New Client", false);
@@ -18,50 +14,63 @@ $aInt->icon = "clientsadd";
 $aInt->requiredFiles(array("clientfunctions", "customfieldfunctions", "gatewayfunctions"));
 
 if ($action == "add") {
-	check_token("RA.admin.default");
-	$result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
-	$data = mysqli_fetch_array($result);
+    check_token("RA.admin.default");
+    $result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
+    $data = mysqli_fetch_array($result);
 
-	if ($data[0]) {
-		infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
-	}
-	else {
-		if (!trim($email) && !$cccheck) {
-			infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
-		}
-		else {
-			if (!$cccheck && trim($email)) {
-				$emaildomain = explode("@", $email, 2);
-				$emaildomain = $emaildomain[1];
+    if ($data[0]) {
+        infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
+    } else {
+        if (!trim($email) && !$cccheck) {
+            infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
+        } else {
+            if (!$cccheck && trim($email)) {
+                $emaildomain = explode("@", $email, 2);
+                $emaildomain = $emaildomain[1];
 
-				if (!preg_match('/^([a-zA-Z0-9&\'.])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
-					$errormessage .= "<li>" . $_LANG['clientareaerroremailinvalid'];
-					infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
-				}
-				else {
-					$query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
-					$result = select_query_i("tblcontacts", "COUNT(*)", $query);
-					$data = mysqli_fetch_array($result);
+                if (!preg_match('/^([a-zA-Z0-9&\'.])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
+                    $errormessage .= "<li>" . $_LANG['clientareaerroremailinvalid'];
+                    infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
+                } else {
+                    $query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
+                    $result = select_query_i("tblcontacts", "COUNT(*)", $query);
+                    $data = mysqli_fetch_array($result);
 
-					if ($data[0]) {
-						infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
-					}
-				}
-			}
+                    if ($data[0]) {
+                        infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
+                    }
+                }
+            }
 
 
-			if (!$infobox) {
-				$_SESSION['currency'] = $currency;
-				$userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans, $sendemail, array("notes" => $notes, "status" => $status, "credit" => $credit, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "language" => $language, "billingcid" => $billingcid, "lastlogin" => "00000000000000", "groupid" => $groupid, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "defaultgateway" => $paymentmethod));
-				unset($_SESSION['uid']);
-				unset($_SESSION['upw']);
-				redir("userid=" . $userid, "clientssummary.php");
-			}
-		}
-	}
+            if (!$infobox) {
+                $_SESSION['currency'] = $currency;
+                $userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans, $sendemail, array("notes" => $notes, "status" => $status, "credit" => $credit, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "language" => $language, "billingcid" => $billingcid, "lastlogin" => "00000000000000", "groupid" => $groupid, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "defaultgateway" => $paymentmethod));
+                unset($_SESSION['uid']);
+                unset($_SESSION['upw']);
+                redir("userid=" . $userid, "clientssummary.php");
+            }
+        }
+    }
 }
 
 releaseSession();
+
+
+$lang = array(
+    'firstnamelang' => $aInt->lang("fields", "firstname"),
+    'lastnamelang' => $aInt->lang("fields", "lastname"),
+    'address1lang' => $aInt->lang("fields", "address1"),
+    'address2lang' => $aInt->lang("fields", "address2"),
+    'companynamelang' => $aInt->lang("fields", "companyname"),
+    'citylang' => $aInt->lang("fields", "city"),
+    'emaillang' => $aInt->lang("fields", "email"),
+    'statelang' => $aInt->lang("fields", "state"),
+    'passwordlang' => $aInt->lang("fields", "password"),
+    'postcodelang' => $aInt->lang("fields", "postcode"),
+    'securityquestionlang' => $aInt->lang("fields", "securityquestion"),
+);
+
 ob_start();
 $questions = getSecurityQuestions("");
 echo $infobox;
@@ -132,13 +141,13 @@ echo "elect name=\"securityqid\" style=\"width:225px;\" tabindex=\"6\"><option v
 echo $aInt->lang("global", "none");
 echo "</option>";
 foreach ($questions as $quest => $ions) {
-	echo "<option value=" . $ions['id'] . "";
+    echo "<option value=" . $ions['id'] . "";
 
-	if ($ions['id'] == $securityqid) {
-		echo " selected";
-	}
+    if ($ions['id'] == $securityqid) {
+        echo " selected";
+    }
 
-	echo ">" . $ions['question'] . "</option>";
+    echo ">" . $ions['question'] . "</option>";
 }
 
 echo "</select></td><td class=\"fieldlabel\">";
@@ -162,7 +171,7 @@ echo $aInt->lang("clients", "latefees");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"latefeeoveride\"";
 
 if ($latefeeoveride == "on") {
-	echo " checked";
+    echo " checked";
 }
 
 echo " tabindex=\"15\"> ";
@@ -177,7 +186,7 @@ echo $aInt->lang("clients", "overduenotices");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"overideduenotices\"";
 
 if ($overideduenotices == "on") {
-	echo " checked";
+    echo " checked";
 }
 
 echo " tabindex=\"16\"> ";
@@ -192,13 +201,13 @@ echo "</option>";
 $result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
-	echo "<option value=\"" . $data['id'] . "\"";
+    echo "<option value=\"" . $data['id'] . "\"";
 
-	if ($data['id'] == $billingcid) {
-		echo " selected";
-	}
+    if ($data['id'] == $billingcid) {
+        echo " selected";
+    }
 
-	echo ">" . $data['firstname'] . " " . $data['lastname'] . "</option>";
+    echo ">" . $data['firstname'] . " " . $data['lastname'] . "</option>";
 }
 
 echo "</select></td></tr>
@@ -207,7 +216,7 @@ echo $aInt->lang("clients", "taxexempt");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"taxexempt\"";
 
 if ($taxexempt == "on") {
-	echo " checked";
+    echo " checked";
 }
 
 echo " tabindex=\"17\"> ";
@@ -220,7 +229,7 @@ echo "elect name=\"language\" tabindex=\"22\"><option value=\"\">";
 echo $aInt->lang("global", "default");
 echo "</option>";
 foreach ($ra->getValidLanguages() as $lang) {
-	echo "<option value=\"" . $lang . "\">" . ucfirst($lang) . "</option>";
+    echo "<option value=\"" . $lang . "\">" . ucfirst($lang) . "</option>";
 }
 
 echo "</select></td></tr>
@@ -229,7 +238,7 @@ echo $aInt->lang("clients", "separateinvoices");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"separateinvoices\"";
 
 if ($separateinvoices == "on") {
-	echo " checked";
+    echo " checked";
 }
 
 echo " tabindex=\"18\">";
@@ -242,7 +251,7 @@ echo "elect name=\"status\" tabindex=\"23\">
 <option value=\"Active\"";
 
 if ($status == "Active") {
-	echo " selected";
+    echo " selected";
 }
 
 echo ">";
@@ -251,7 +260,7 @@ echo "</option>
 <option value=\"Inactive\"";
 
 if ($status == "Inactive") {
-	echo " selected";
+    echo " selected";
 }
 
 echo ">";
@@ -260,7 +269,7 @@ echo "</option>
 <option value=\"Closed\"";
 
 if ($status == "Closed") {
-	echo " selected";
+    echo " selected";
 }
 
 echo ">";
@@ -272,7 +281,7 @@ echo $aInt->lang("clients", "disableccprocessing");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"disableautocc\"";
 
 if ($disableautocc == "on") {
-	echo " checked";
+    echo " checked";
 }
 
 echo " tabindex=\"19\">";
@@ -285,13 +294,13 @@ echo "elect name=\"currency\" tabindex=\"24\">";
 $result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
-	echo "<option value=\"" . $data['id'] . "\"";
+    echo "<option value=\"" . $data['id'] . "\"";
 
-	if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
-		echo " selected";
-	}
+    if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
+        echo " selected";
+    }
 
-	echo ">" . $data['code'] . "</option>";
+    echo ">" . $data['code'] . "</option>";
 }
 
 echo "</select></td></tr>
@@ -310,16 +319,16 @@ echo "</option>
 $result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
-	$group_id = $data['id'];
-	$group_name = $data['groupname'];
-	$group_colour = $data['groupcolour'];
-	echo "<option style=\"background-color:" . $group_colour . "\" value=" . $group_id . "";
+    $group_id = $data['id'];
+    $group_name = $data['groupname'];
+    $group_colour = $data['groupcolour'];
+    echo "<option style=\"background-color:" . $group_colour . "\" value=" . $group_id . "";
 
-	if ($group_id == $groupid) {
-		echo " selected";
-	}
+    if ($group_id == $groupid) {
+        echo " selected";
+    }
 
-	echo ">" . $group_name . "</option>";
+    echo ">" . $group_name . "</option>";
 }
 
 echo "</select></td></tr>
@@ -328,14 +337,14 @@ $taxindex = 27;
 $customfields = getCustomFields("client", "", $userid, "on", "");
 $x = 0;
 foreach ($customfields as $customfield) {
-	++$x;
-	echo "<td class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . str_replace(array("<input", "<select", "<textarea"), array("<input tabindex=\"" . $taxindex . "\"", "<select tabindex=\"" . $taxindex . "\"", "<textarea tabindex=\"" . $taxindex . "\""), $customfield['input']) . "</td>";
+    ++$x;
+    echo "<td class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . str_replace(array("<input", "<select", "<textarea"), array("<input tabindex=\"" . $taxindex . "\"", "<select tabindex=\"" . $taxindex . "\"", "<textarea tabindex=\"" . $taxindex . "\""), $customfield['input']) . "</td>";
 
-	if ($x % 2 == 0 || $x == count($customfields)) {
-		echo "</tr><tr>";
-	}
+    if ($x % 2 == 0 || $x == count($customfields)) {
+        echo "</tr><tr>";
+    }
 
-	++$taxindex;
+    ++$taxindex;
 }
 
 echo "<td class=\"fieldlabel\">";
@@ -346,7 +355,6 @@ echo "\">";
 echo $notes;
 echo "</textarea></td></tr>
 </table>
-
 <br />
 <label><input type=\"checkbox\" name=\"sendemail\" checked tabindex=\"";
 echo $taxindex++;
@@ -368,4 +376,5 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->display();
+//$aInt->template = 'client/clientsadd';
 ?>

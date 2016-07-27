@@ -8,7 +8,7 @@
 
 <div class="footerbar">
 <div class="right"><a href="#">Top</a></div>
-<div class="left">Copyright &copy; <a href="http://www.ra.com/" target="_blank">Robotic Accounting</a>.  All Rights Reserved.</div>
+<div class="left">Copyright &copy; <a href="#" target="_blank">Robotic Accounting</a>.  All Rights Reserved.</div>
 </div>
 
 <div class="intellisearch">
