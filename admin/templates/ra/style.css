@@ -48,8 +48,8 @@ input {
 	padding: 2px;
 }
 select {
-	border: 1px solid #ccc;
-	padding: 2px;
+	border: 1px solid #ccc; 
+/*	padding: 2px; */
 }
 .left {
 	float: left;

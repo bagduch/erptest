@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 require "init.php";
 $id = (int)$ra->get_req_var("id");
