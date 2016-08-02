@@ -9,8 +9,6 @@ require "init.php";
 require "includes/clientfunctions.php";
 require "includes/gatewayfunctions.php";
 require "includes/ccfunctions.php";
-require "includes/domainfunctions.php";
-require "includes/registrarfunctions.php";
 require "includes/customfieldfunctions.php";
 require "includes/invoicefunctions.php";
 require "includes/configoptionsfunctions.php";
@@ -92,7 +90,7 @@ if ($action == "") {
     }
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
-    $result = select_query_i("tbltickets", "", "userid='" . mysqli_real_escape_string($client->getID()) . ("' AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
+    $result = select_query_i("tbltickets", "", "userid=" . (int)($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
