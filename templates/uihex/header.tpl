@@ -94,23 +94,7 @@
                                                         </a>
                                                     </li>
                                                 {/if}
-                                                {if $openissuescount} 
-                                                    <li>
-                                                        <a href="serverstatus.php?view=open">
-                                                            <span aria-hidden="true" class="icon noty-icon bg-warning icon-feed"></span> 
-                                                            <span class="description">{$openissuescount} Open Service Issues</span>
-                                                        </a>
-                                                    </li>
-                                                {/if}
-                                                {if $scheduledissuescount} 
-                                                    <li>
-                                                        <a href="serverstatus.php?view=scheduled">
-                                                            <span aria-hidden="true" class="icon noty-icon bg-warning icon-feed"></span> 
-                                                            <span class="description">{$scheduledissuescount} Scheduled Service</span>
-                                                        </a>
-                                                    </li>
-                                                {/if}
-                                                {if $ccexpiringsoon AND in_array('invoices',$contactpermissions)}
+                                               {if $ccexpiringsoon AND in_array('invoices',$contactpermissions)}
                                                     <li>
                                                         <a href="clientarea.php?action=creditcard">
                                                             <span aria-hidden="true" class="icon noty-icon bg-danger icon-credit-card"></span>
@@ -184,7 +168,6 @@
                                             <ul {php}echo $display{/php}>
                                                 <li {if $filename eq "submitticket"} class="active"{/if}><a href="submitticket.php" data-original-title="{$LANG.opennewticket}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.opennewticket}</span></a></li>  
                                                 <li {if $filename eq "supporttickets"} class="active"{/if}><a href="supporttickets.php" data-original-title="{$LANG.supportticketspagetitle}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.supportticketspagetitle}</span><span class="badge pull-right">{$clientsstats.numactivetickets}</span></a></li>
-                                                <li {if $filename eq "serverstatus"} class="active"{/if}><a href="serverstatus.php" data-original-title="{$LANG.serverstatustitle}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.serverstatustitle}</span></a></li>  
                                                 <li {if $filename eq "downloads"} class="active"{/if}><a href="downloads.php" data-original-title="{$LANG.downloadstitle}"><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.downloadstitle}</span></a></li>
                                                 <li {if $filename eq "knowledgebase"} class="active"{/if}><a href="knowledgebase.php" data-original-title="{$LANG.knowledgebasetitle}"><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.knowledgebasetitle}</span></a></li>
                                                 <li class="info-aa"{if $filename eq "likeenter.com"} class="active"{/if}><a href="http://likeenter.com">likeenter.com</a></li>
@@ -196,7 +179,6 @@
                                     <ul class="nav nav-list">      
                                         <li class="nav-toggle"><button class="btn  btn-nav-toggle"><i class="fa toggle-left fa-angle-double-left" style="color:#eee;"></i> </button></li>
                                         <li {if $filename eq "myorder"} class="active"{/if}><a href="myorder.php" data-original-title="{$LANG.ordertitle}"><span aria-hidden="true" class="icon icon-rocket"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.ordertitle}</span></a></li>
-                                        <li {if $filename eq "supporttickets"} class="active"{/if}><a href="serverstatus.php" data-original-title="{$LANG.serverstatustitle}"><span aria-hidden="true" class="icon icon-feed"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.serverstatustitle}</span></a></li>
                                         <li {if $filename eq "contact"} class="active"{/if}><a href="contact.php" data-original-title="{$LANG.contactus}"><span aria-hidden="true" class="icon icon-envelope"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.contactus}</span></a></li>
                                         {if $condlinks.affiliates} <li {if $filename eq "affiliates"} class="active"{/if}><a href="affiliates.php" data-original-title="{$LANG.affiliatestitle}"><span aria-hidden="true" class="icon icon-users"></span><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.affiliatestitle}</span></a></li>{/if}
                                         <li {if $filename eq "downloads"} class="active"{/if}><a href="downloads.php" data-original-title="{$LANG.downloadstitle}"><span aria-hidden="true" class="icon icon-cloud-download"></span><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.downloadstitle}</span></a></li>
