@@ -26,7 +26,7 @@ $aInt->title = $aInt->lang("orders", "manage");
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
 //$aInt->helplink = "Order Management";
-$aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunctions", "domainfunctions", "invoicefunctions", "processinvoices", "clientfunctions", "ccfunctions", "registrarfunctions", "fraudfunctions"));
+$aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunctions", "invoicefunctions", "processinvoices", "clientfunctions", "ccfunctions", "registrarfunctions", "fraudfunctions"));
 
 if ($ra->get_req_var("rerunfraudcheck")) {
 	check_token("RA.admin.default");
@@ -519,7 +519,7 @@ function pendingOrder() {
 }
 function deleteOrder() {
     if (confirm(\"" . $aInt->lang("orders", "confirmdelete") . "\"))
-        window.location=\"" . $_SERVER['PHP_SELF'] . "?sub=delete&id=" . $id . "" . generate_token("link") . "\";
+        window.location=\"" . $_SERVER['PHP_SELF'] . "?action=delete&id=" . $id . "" . generate_token("link") . "\";
 }";
 		$currency = getCurrency($userid);
 		$amount = formatCurrency($amount);
@@ -630,11 +630,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo $userid;
 		echo "\">";
 		echo $client;
-		echo "</a> <a href=\"http://www.dnsstuff.com/tools/freemail/?domain=";
-		echo $clientemail;
-		echo "\" target=\"_blank\" title=\"";
-		echo $aInt->lang("orders", "checkfreeemail");
-		echo "\"><img src=\"images/info.gif\" border=\"0\" align=\"absmiddle\" /></a><br />";
+        echo "</a>";
+		echo "<br />";
 		echo $address;
 		echo "</td><td class=\"fieldlabel\">";
 		echo $aInt->lang("fields", "invoicenum");

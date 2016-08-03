@@ -14,9 +14,15 @@ form {
 	padding: 0;
 }
 a, a:visited {
-	color: #202F60;
+	color: #FFFFFF;
 	text-decoration: underline;
 }
+
+table.datatable td a {
+    color: #000000;
+}
+    
+
 a:hover {
 	text-decoration: none;
 }
@@ -849,8 +855,11 @@ table.form td.fieldlabel {
 	font-weight:bold;
 }
 table.form td.fieldarea {
-	background-color: #E2E7E9;
+	background-color: #f7f7f7;
 	text-align: left;
+}
+table.form td.fieldarea a {
+    color: #000000;
 }
 table.datatable {
 	padding: 0;
@@ -1119,6 +1128,10 @@ table.datatable tr:hover td {
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;
 	border-radius: 5px;
+    color: #FFFFFF;
+}
+.clientssummarybox a.visited {
+    color: #FFFFFF;
 }
 .clientssummarybox .title {
 	text-align: left;

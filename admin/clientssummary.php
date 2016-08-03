@@ -602,6 +602,7 @@ if ($affactivated) {
 
 echo $infobox;
 $clientstats = getClientsStats($userid);
+var_dump($clientstats);
 $clientsdetails['status'] = $aInt->lang("status", strtolower($clientsdetails['status']));
 $clientsdetails['autocc'] = ($clientsdetails['disableautocc'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
 $clientsdetails['taxstatus'] = ($clientsdetails['taxexempt'] ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));

@@ -63,27 +63,6 @@ while ($data = mysqli_fetch_assoc($result)) {
 }
 
 
-//if ($status == "Active") {
-//    echo " selected";
-//}
-//
-//
-//echo $aInt->lang("status", "active");
-//echo "</option><option value=\"Inactive\"";
-//
-//if ($status == "Inactive") {
-//    echo " selected";
-//}
-//
-//
-//echo $aInt->lang("status", "inactive");
-//echo "</option><option value=\"Closed\"";
-//
-//if ($status == "Closed") {
-//    echo " selected";
-//}
-
-
 $filterdata = array(
     "userid" => $filters->get("userid"),
     "clientname" => $filters->get("clientname"),
@@ -128,16 +107,31 @@ if ($filters->isActive() && $numresults == 1) {
 } else {
     $clientlist = $pageObj->getData();
     foreach ($clientlist as $client) {
-        $linkopen = "<a href=\"clientssummary.php?userid=" . $client['id'] . "\"" . ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "") . ">";
+	    $linkopen = sprintf("<a href=\"clientssummary.php?userid=%d\"%s>",
+		    $client['id'],
+		    ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "")
+	    );
+
+        
         $linkclose = "</a>";
         $tbl->addRow(
                 array(
-                    "<input type=\"checkbox\" name=\"selectedclients[]\" value=\"" . $client['id'] . "\" class=\"checkall\">",
+                    sprintf(
+                        "<input type=\"checkbox\" name=\"selectedclients[]\" value=\"%d\" class=\"checkall\">",
+                        $client['id']
+                    ),
                     $linkopen . $client['id'] . $linkclose,
-                    $linkopen . $client['firstname'] . $linkclose, $linkopen . $client['lastname'] . $linkclose, $client['companyname'],
-                    "<a href=\"mailto:" . $client['email'] . "\">" . $client['email'] . "</a>",
-                    $client['services'] . " (" . $client['totalservices'] . ")",
-                    "prods: " . $client['products'], $client['datecreated'],
+                    $linkopen . $client['firstname'] . $linkclose, 
+                    $linkopen . $client['lastname'] . $linkclose, 
+                    $client['companyname'],
+                    sprintf(
+                        "<a href=\"sendmessage.php?type=general&id=%d\">%s</a>",
+                        $client['id'],
+                        $client['email']
+                    ),
+                    sprintf("%s (%s)",$client['services'],$client['totalservices']),
+                    sprintf("%s (%s)",$client['products'],$client['totalproducts']),
+                    $client['datecreated'],
                     "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
     }
 
