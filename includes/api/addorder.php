@@ -25,11 +25,6 @@ if (!function_exists("getCartConfigOptions")) {
 }
 
 
-if (!function_exists("checkDomainisValid")) {
-	require ROOTDIR . "/includes/domainfunctions.php";
-}
-
-
 if (!function_exists("updateInvoiceTotal")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }

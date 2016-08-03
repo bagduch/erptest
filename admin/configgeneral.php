@@ -989,19 +989,7 @@ echo $aInt->lang("general", "bulkchecktlds");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"bulkchecktlds[]\" size=\"6\" multiple>";
-require "../includes/domainfunctions.php";
 $currency = getCurrency();
-$tldslist = getTLDList();
-$bulkchecktlds = explode(",", $CONFIG['BulkCheckTLDs']);
-foreach ($tldslist as $tld) {
-	echo "<option";
-
-	if (in_array($tld, $bulkchecktlds)) {
-		echo " selected";
-	}
-
-	echo ">" . $tld . "</option>";
-}
 
 echo "</select><br>";
 echo $aInt->lang("general", "bulkchecktldsinfo");

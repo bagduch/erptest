@@ -7,7 +7,6 @@
  * */
 include "../functions.php";
 include "../orderfunctions.php";
-include "../domainfunctions.php";
 include "../whoisfunctions.php";
 include "../configoptionsfunctions.php";
 include "../customfieldfunctions.php";

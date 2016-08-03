@@ -813,10 +813,6 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
                 $domainidprotectionprice = $data['ssetupfee'] * $regperiod;
                 $domainparts = explode(".", $domain, 2);
 
-                if (!function_exists("getTLDPriceList")) {
-                    require ROOTDIR . "/includes/domainfunctions.php";
-                }
-
                 $temppricelist = getTLDPriceList("." . $domainparts[1], "", true, $userid);
                 $recurringamount = $temppricelist[$regperiod]['renew'];
 

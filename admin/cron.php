@@ -20,7 +20,6 @@ include ROOTDIR . "/includes/invoicefunctions.php";
 include ROOTDIR . "/includes/backupfunctions.php";
 include ROOTDIR . "/includes/ticketfunctions.php";
 include ROOTDIR . "/includes/currencyfunctions.php";
-include ROOTDIR . "/includes/domainfunctions.php";
 $cron = RA_Cron::init();
 $cron->raiseLimits();
 releaseSession();

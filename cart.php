@@ -5,7 +5,6 @@
 define("CLIENTAREA", true);
 require "init.php";
 require "includes/orderfunctions.php";
-//require "includes/domainfunctions.php";
 require "includes/whoisfunctions.php";
 require "includes/configoptionsfunctions.php";
 require "includes/customfieldfunctions.php";
