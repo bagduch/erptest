@@ -38,18 +38,22 @@ function getProductInfo($pid) {
     return $productinfo;
 }
 
-function getPricingInfo($pid, $inclconfigops = false, $upgrade = false) {
+function getPricingInfo($pid, $inclconfigops = false, $upgrade = false, $currencs = array()) {
     global $CONFIG;
     global $_LANG;
     global $currency;
+    if (empty($currency)) {
+        $currency = $currencs;
+    }
 
     $result = select_query_i("tblservices", "", array("id" => $pid));
     $data = mysqli_fetch_array($result);
     $paytype = $data['paytype'];
     $freedescription = $data['freedescription'];
     $freedescriptionpaymentterms = $data['freedescriptionpaymentterms'];
-    $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $result = select_query_i("tblpricing", "*", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
     $data = mysqli_fetch_array($result);
+    //mail("peter@hd.net.nz", "hello", print_r($data, 1));
     $msetupfee = $data['msetupfee'];
     $qsetupfee = $data['qsetupfee'];
     $ssetupfee = $data['ssetupfee'];
@@ -1585,7 +1589,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         update_query("tblorders", array("amount" => $cart_total, "nameservers" => $ordernameservers, "transfersecret" => $descriptioneppcodes, "renewals" => substr($orderrenewals, 0, 0 - 1), "orderdata" => serialize($orderdata)), array("id" => $orderid));
         $invoiceid = 0;
 
-        mail("peter@hd.net.nz", 'invoice', print_r($_SESSION['cart'],1));
+        mail("peter@hd.net.nz", 'invoice', print_r($_SESSION['cart'], 1));
         if (!$_SESSION['cart']['geninvoicedisabled']) {
             if (!$userid) {
                 exit("An Error Occurred");

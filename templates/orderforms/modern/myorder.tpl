@@ -13,53 +13,121 @@
         <div class="container row">
             <h1>UI Order Process</h1>
             <div class="form-container">
-                <form class="form form-horizontal step-one" role="form" method="post">
+                <form class="form form-horizontal" role="form" method="post">
                     <h2 class="text-center">Registration</h2>
-                    <div class="row">
-                      {$error}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label  for="#fname">First Name</label>
-                                <input type="text" id="fname" class="form-control" name="rfname" >
+
+                    {if $step==""}
+                        <div class="row step-one">
+                            {$error}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="#fname">First Name</label>
+                                    <input type="text" id="fname" class="form-control" name="rfname" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="#fname">Last Name</label>
+                                    <input type="text" id="fname" class="form-control" name="rfname">
+                                </div>
+                                <div class="form-group">
+                                    <label for="#fname">Email</label>
+                                    <input type="text" id="fname" class="form-control" name="remail">
+                                </div>
+                                <div class="form-group">
+                                    <label for="#password">Password</label>
+                                    <input type="password" id="password" class="form-control" name="rpassword">
+                                </div>
+                                <div class="form-group">
+                                    <label for="#password2">Confirm Password</label>
+                                    <input type="password" id="password2" class="form-control" name="rpassword2">
+                                </div>
+                                <div class="form-group">
+                                    <input class="btn btn-default" name="signup" type="submit" value="Sign Up">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="#fname">Last Name</label>
-                                <input type="text" id="fname" class="form-control" name="rfname">
-                            </div>
-                            <div class="form-group">
-                                <label for="#fname">Email</label>
-                                <input type="text" id="fname" class="form-control" name="remail">
-                            </div>
-                            <div class="form-group">
-                                <label for="#password">Password</label>
-                                <input type="password" id="password" class="form-control" name="rpassword">
-                            </div>
-                            <div class="form-group">
-                                <label for="#password2">Confirm Password</label>
-                                <input type="password" id="password2" class="form-control" name="rpassword2">
-                            </div>
-                            <div class="form-group">
-                                <input class="btn btn-default" name="signup" type="submit" value="Sign Up">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label  for="#username">Username</label>
+                                    <input type="text" id="username" class="form-control" name="username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="#password">Password</label>
+                                    <input type="text" id="password" class="form-control" name="password">
+                                </div>
+                                <div class="remember">
+                                    <label class="checkbox-inline rememberme"><input type="checkbox" name="rememberme" id="rememberme">Remember Me</label>
+                                    <a href="pwreset.php" class="forgot" style="float:right;">Request a Password Reset</a>
+                                </div>
+                                <div class="form-group">
+                                    <input class="btn btn-default" name="login" type="submit" value="Login">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                    {elseif $step==2}
+                        <div class="row step-two">
                             <div class="form-group">
-                                <label  for="#username">Username</label>
-                                <input type="text" id="username" class="form-control" name="username">
+                                <div class="bg-info">
+                                    <label class="checkbox-inline rememberme">
+                                        <input type="checkbox" name=""> is Contract
+                                    </label>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="#password">Password</label>
-                                <input type="text" id="password" class="form-control" name="password">
+                                <div class="">
+                                    <input type="text" id="password" class="form-control" name="password">
+                                    <label for="#password">ETF</label>
+                                </div>
+                                <div class="">
+                                    <input type="text" id="password" class="form-control" name="password">
+                                    <label for="#password">Terms</label>
+                                </div>
                             </div>
-                            <div class="remember">
-                                <label class="checkbox-inline rememberme"><input type="checkbox" name="rememberme" id="rememberme">Remember Me</label>
-                                <a href="pwreset.php" class="forgot" style="float:right;">Request a Password Reset</a>
+
+                            <div class="addons">
+                                <table width="100%" cellspacing="0" cellpadding="0" class="configtable">
+                                    <tbody>
+                                        {foreach from=$addons item=addon}
+                                            <tr>
+                                                <td class="radiofield">{$addon.checkbox}</td>
+                                                <td class="fieldarea">
+                                                    <label for="a2"><strong>{$addon.name}</strong> - {$addon.pricing}
+                                                        <br>{$addon.description}
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        {/foreach}
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="form-group">
-                                <input class="btn btn-default" name="login" type="submit" value="Login">
+                            <div class="sum">
+                                <div class="">
+                                    <table>
+                                        <tr>
+                                            <td colspan="3">{$product.groupname} - {$product.name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{$product.name}</td>
+                                            <td></td>
+                                            <td>{$pricing.minprice.price}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Setup Fees:</td>
+                                            <td></td>
+                                            <td>{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Setup Fees:</td>
+                                            <td></td>
+                                            <td>{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
+                    {elseif $step==3}
+
+                    {elseif $step==4}
+                    {/if}
                 </form>
             </div>
         </div>

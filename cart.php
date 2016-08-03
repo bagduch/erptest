@@ -548,30 +548,6 @@ if ($a == "confservice") {
         $result = select_query_i("tblproducts", "type", array("id" => $pid));
         $data = mysqli_fetch_array($result);
         $producttype = $data['type'];
-//        if ($producttype == "server") {
-//            if (!$hostname) {
-//                $errormessage .= "<li>" . $_LANG['ordererrorservernohostname'];
-//            } else {
-//                $result = select_query_i("tblcustomfields", "COUNT(*)", array("domain" => $hostname . "." . $_SESSION['cart']['products'][$i]['domain'], "servicestatus" => array("sqltype" => "NEQ", "value" => "Cancelled"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Terminated"), "servicestatus" => array("sqltype" => "NEQ", "value" => "Fraud")));
-//                $data = mysqli_fetch_array($result);
-//                $existingcount = $data[0];
-//
-//                if ($existingcount) {
-//                    $errormessage .= "<li>" . $_LANG['ordererrorserverhostnameinuse'];
-//                }
-//            }
-//
-//            if (!$ns1prefix || !$ns2prefix) {
-//                $errormessage .= "<li>" . $_LANG['ordererrorservernonameservers'];
-//            }
-//
-//            if (!$rootpw) {
-//                $errormessage .= "<li>" . $_LANG['ordererrorservernorootpw'];
-//            }
-//
-//            $serverarray = array("hostname" => $hostname, "ns1prefix" => $ns1prefix, "ns2prefix" => $ns2prefix, "rootpw" => $rootpw);
-//        }
-
 
         if ($configoption) {
             foreach ($configoption as $opid => $opid2) {

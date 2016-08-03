@@ -178,10 +178,43 @@ if (!empty($login)) {
     }
 
     if (!$istwofa && !$loginsuccess) {
-          $infobox = '<p class="text-danger bg-danger text-alert " id="login-error"><strong><span aria-hidden="true" class="icon icon-ban"></span> </strong><br>Login Details Incorrect. Please try again.</p>';
+        $infobox = '<p class="text-danger bg-danger text-alert " id="login-error"><strong><span aria-hidden="true" class="icon icon-ban"></span> </strong><br>Login Details Incorrect. Please try again.</p>';
+    } else {
+        
     }
-   
- 
+}
+
+if ($step == "2") {
+    $pid = 3;
+    $errormessage = "";
+    $result = full_query_i("SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id where tblservices.id =" . $pid);
+    $data = mysqli_fetch_assoc($result);
+    // $producttype = $data['type'];
+
+
+    if (!empty($data)) {
+        $currecy = getCurrency();
+        $addons = getAddons($data['id']);
+        $pricing = getPricingInfo(3, $inclconfigops = false, $upgrade = false, $currecy);
+        // $currecy = getCurrency();
+    }
+   foreach ($pricing['rawpricing'] as $key => $item) {
+
+        if ($item == -1) {
+            unset($pricing['rawpricing'][$key]);
+        } else {
+            
+        }
+    }
+    echo "<pre>", print_r($pricing, 1), "</pre>";
+    echo "<pre>", print_r($currecy, 1), "</pre>";
+    $smartyvalues['currecy'] = $currecy;
+    $smartyvalues['product'] = $data;
+    $smartyvalues['addons'] = $addons;
+    $smartyvalues['pricing'] = $pricing;
+}
+if ($step == "3") {
+    
 }
 
 $templatefile = "myorder";
@@ -189,6 +222,8 @@ if (!$templatefile) {
     redir();
     exit();
 }
+
+$smartyvalues['step'] = $step;
 $smartyvalues['error'] = $infobox;
 $smartyvalues['carttpl'] = $orderfrm->getTemplate();
 outputClientArea($templatefile, true);

@@ -9,7 +9,7 @@ input , select { outline: none; }
 .tl {text-align: left !important;}
 
 body {
-    background:#6ed7fe url(/templates/hexa/css/img/whmcs-city-bg.jpg) no-repeat top center;
+    background:#6ed7fe url(/templates/uihex/css/img/whmcs-city-bg.jpg) no-repeat top center;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
@@ -87,4 +87,14 @@ body > .container {
 .pager > li.left {
     float: left;
     display: block;
+}
+.ordersummary{
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+    margin-bottom: 20px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
 }
