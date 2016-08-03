@@ -39,17 +39,11 @@ class RA_Admin {
 
     public function __construct($reqpermission, $releaseSession = true) {
         global $CONFIG;
-        global $licensing;
         global $_ADMINLANG;
         global $infobox;
         global $ra;
 
         $infobox = "";
-        $licensing->remoteCheck();
-
-        if ($licensing->getStatus() != "Active") {
-            redir("licenseerror=" . $licensing->getStatus(), "licenseerror.php");
-        }
 
 
         if ($CONFIG['AdminForceSSL'] && $CONFIG['SystemSSLURL']) {

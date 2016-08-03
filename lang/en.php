@@ -1351,16 +1351,6 @@ $_LANG['billableitemshour'] = "Hour";
 $_LANG['invoicefilename'] = "Invoice-";
 $_LANG['quotefilename'] = "Quote-";
 
-# Licensing Addon
-
-$_LANG['licensingkey'] = "License Key";
-$_LANG['licensingvaliddomains'] = "Valid Domains";
-$_LANG['licensingvalidips'] = "Valid IPs";
-$_LANG['licensingvaliddirectory'] = "Valid Directory";
-$_LANG['licensingstatus'] = "License Status";
-$_LANG['licensingreissue'] = "Reissue License";
-$_LANG['licensingreissued'] = "The Valid Domain, IP and Directory will be detected & saved the next time the license is used.";
-
 # Domain Addons
 
 $_LANG['domainaddons'] = "Addons";

@@ -358,7 +358,6 @@ class RA_ClientArea
 
 	public function output() {
 		global $ra;
-		global $licensing;
 		global $smartyvalues;
 
 		if (!$this->templatefile) {
@@ -428,7 +427,6 @@ class RA_ClientArea
 		}
 
 		$this->smarty->clear_all_assign();
-		$copyrighttext = ($licensing->getBrandingRemoval() ? "" : "<p style=\"text-align:center;\">Powered by <a href=\"http://www.ra.com/\" target=\"_blank\">Robotic Accounting</a></p>");
 
 		if (isset($_SESSION['adminid'])) {
 			$adminloginlink = "<div style=\"position:absolute;top:0px;right:0px;padding:5px;background-color:#000066;font-family:Tahoma;font-size:11px;color:#ffffff\" class=\"adminreturndiv\">Logged in as Administrator | <a href=\"" . $ra->get_admin_folder_name() . "/";

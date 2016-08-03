@@ -1,5 +1,5 @@
 <?php
-    $license = 'Owned-f9f530be1f13fa8342ff';
+//    $lNOiNOtense = 'Owned-f9f530be1f13fa8342ff';
     $db_host = 'mysql1.hd.net.nz';
     $db_username = 'hdrobot';
     $db_password = 'F8A5hqz5EBbPNeg2';

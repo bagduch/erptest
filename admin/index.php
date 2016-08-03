@@ -64,11 +64,6 @@ if (!function_exists("curl_init")) {
 define("ADMINAREA", true);
 require "../init.php";
 
-if (!$licensing->checkOwnedUpdates()) {
-    redir("licenseerror=version", "licenseerror.php");
-}
-
-
 if (!checkPermission("Main Homepage", true) && checkPermission("Support Center Overview", true)) {
     redir("", "supportcenter.php");
 }
@@ -156,12 +151,6 @@ if ($ra->get_req_var("getincome")) {
     $stats = getAdminHomeStats("income");
     echo "<a href=\"transactions.php\"><img src=\"images/icons/transactions.png\" align=\"absmiddle\" border=\"0\"> <b>" . $aInt->lang("billing", "income") . "</b></a> " . $aInt->lang("billing", "incometoday") . ": <span class=\"textgreen\"><b>" . $stats['income']['today'] . "</b></span> " . $aInt->lang("billing", "incomethismonth") . ": <span class=\"textred\"><b>" . $stats['income']['thismonth'] . "</b></span> " . $aInt->lang("billing", "incomethisyear") . ": <span class=\"textblack\"><b>" . $stats['income']['thisyear'] . "</b></span>";
     exit();
-}
-
-$templatevars['licenseinfo'] = array("registeredname" => $licensing->getKeyData("registeredname"), "productname" => $licensing->getKeyData("productname"), "expires" => $licensing->getExpiryDate(), "currentversion" => $CONFIG['Version'], "latestversion" => $licensing->getKeyData("latestversion"));
-
-if ($licensing->getKeyData("productname") == "15 Day Free Trial") {
-    $templatevars['freetrial'] = true;
 }
 
 $templatevars['infobox'] = $infobox;

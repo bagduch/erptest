@@ -11,24 +11,6 @@ if (!function_exists("curl_init")) {
 
 
 
-$result = select_query_i("tblconfiguration", "COUNT(*)", array("setting" => "License"));
-$data = mysqli_fetch_array($result);
-
-if (!$data[0]) {
-	insert_query("tblconfiguration", array("setting" => "License"));
-}
-
-$licensing->remoteCheck();
-
-if ($licensing->getStatus() != "Active") {
-	redir("licenseerror=" . $licensing->getStatus(), "licenseerror.php");
-}
-
-
-if (!$licensing->checkOwnedUpdates()) {
-	redir("licenseerror=version", "licenseerror.php");
-}
-
 
 if (isset($_SESSION['adminid']) && !isset($_SESSION['2fabackupcodenew'])) {
 	redir("", "index.php");

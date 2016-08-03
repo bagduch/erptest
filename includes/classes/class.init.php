@@ -37,7 +37,6 @@ class RA_Init {
     private $config = array();
     private $clean_variables = array("int" => array(0 => "id", 1 => "userid", 2 => "kbcid", 3 => "invoiceid", 4 => "idkb", 5 => "currency"), "a-z" => array(0 => "systpl", 1 => "carttpl", 2 => "language"));
     public $db_variables = array(0 => "sld", 1 => "tld", 2 => "domains");
-    private $license = "";
     private $db_host = "";
     private $db_username = "";
     private $db_password = "";
@@ -340,7 +339,6 @@ class RA_Init {
     }
 
     private function load_config_file() {
-        global $license;
         global $cc_encryption_hash;
         global $templates_compiledir;
         global $attachments_dir;
@@ -354,7 +352,7 @@ class RA_Init {
         global $pleskpacketversion;
         global $smtp_debug;
 
-        $license = $db_host = $db_name = $db_username = $db_password = $mysqli_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_admin_ticket_page_counts = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
+        $db_host = $db_name = $db_username = $db_password = $mysqli_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_admin_ticket_page_counts = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
 
         if (file_exists(ROOTDIR . "/configuration.php")) {
             ob_start();
@@ -369,7 +367,6 @@ class RA_Init {
             return false;
         }
 
-        $this->license = $license;
         $this->db_host = $db_host;
         $this->db_username = $db_username;
         $this->db_password = $db_password;
@@ -414,10 +411,6 @@ class RA_Init {
         $this->templates_compiledir = $templates_compiledir;
         $this->customadminpath = $customadminpath;
         return true;
-    }
-
-    public function get_license_key() {
-        return $this->license;
     }
 
     private function database_connect() {

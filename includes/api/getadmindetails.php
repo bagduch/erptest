@@ -41,38 +41,15 @@ $apiresults->departments .= $supportdepts;
 $apiresults['allowedpermissions'] = substr($apiresults['allowedpermissions'], 0, 0 - 1);
 
 if ($iphone) {
-	if (defined("IPHONELICENSE")) {
-		exit("License Hacking Attempt Detected");
-	}
-
-	global $licensing;
-
-	define("IPHONELICENSE", $licensing->isActiveAddon("iPhone App"));
-	$apiresults['iphone'] = IPHONELICENSE;
+	$apiresults['iphone'] = true;
 }
-
 
 if ($windows8app) {
-	if (defined("WINDOWS8APPLICENSE")) {
-		exit("License Hacking Attempt Detected");
-	}
-
-	global $licensing;
-
-	define("WINDOWS8APPLICENSE", $licensing->isActiveAddon("Windows 8 App"));
-	$apiresults['windows8app'] = WINDOWS8APPLICENSE;
+	$apiresults['windows8app'] = true;
 }
 
-
 if ($android) {
-	if (defined("ANDROIDLICENSE")) {
-		exit("License Hacking Attempt Detected");
-	}
-
-	global $licensing;
-
-	define("ANDROIDLICENSE", $licensing->isActiveAddon("Android App"));
-	$apiresults['android'] = ANDROIDLICENSE;
+	$apiresults['android'] = true;
 	$statuses = array();
 	$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 

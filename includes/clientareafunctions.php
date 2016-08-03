@@ -145,18 +145,10 @@ function outputClientArea($templatefile, $nowrapper = false) {
     global $smartyvalues;
     global $orderform;
     global $usingsupportmodule;
-    global $licensing;
     global $orderfrm;
 
     if (!$templatefile) {
         exit("Invalid Entity Requested");
-    }
-
-
-    if ($licensing->getBrandingRemoval()) {
-        $copyrighttext = "";
-    } else {
-        $copyrighttext = "<p style=\"text-align:center;\">Powered by <a href=\"http://www.ra.com/\" target=\"_blank\">Robotic Accounting</a></p>";
     }
 
 

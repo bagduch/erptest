@@ -27,10 +27,6 @@ if ($frm->issubmitted()) {
 
 ob_start();
 
-if ($purchased) {
-	$licensing->forceRemoteCheck();
-	redir();
-}
 
 $twofasettings = $ra->get_config("2fasettings");
 $twofasettings = unserialize($twofasettings);

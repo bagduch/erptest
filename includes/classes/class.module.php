@@ -71,7 +71,6 @@ class RA_Module {
 
 	public function load($module) {
 		global $ra;
-		global $licensing;
 
 		$module = $ra->sanitize("0-9a-z_-", $module);
 		$modpath = ROOTDIR . "/modules/" . $this->getType() . ("/" . $module . "/" . $module . ".php");
@@ -87,7 +86,6 @@ class RA_Module {
 
 	public function call($name, $params = array()) {
 		global $ra;
-		global $licensing;
 
 		if ($this->isExists($name)) {
 			$response = call_user_func($this->getLoadedModule() . "_" . $name, $params);

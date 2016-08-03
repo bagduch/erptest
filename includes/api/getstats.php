@@ -47,14 +47,7 @@ $data = mysqli_fetch_array($result);
 $apiresults['staff_online'] = $data[0];
 
 if ($iphone) {
-	if (defined("IPHONELICENSE")) {
-		exit("License Hacking Attempt Detected");
-	}
-
-	global $licensing;
-
-	define("IPHONELICENSE", $licensing->isActiveAddon("iPhone App"));
-	$apiresults['iphone'] = IPHONELICENSE;
+	$apiresults['iphone'] = true;
 }
 
 ?>

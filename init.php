@@ -43,8 +43,6 @@ if ((defined("CLIENTAREA") && $CONFIG['MaintenanceMode']) && !$_SESSION['adminid
     echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><br>" . $CONFIG['MaintenanceModeMessage'] . "</div>";
     exit();
 }
-$licensing = RA_License::init();
-
 
 
 if ((defined("CLIENTAREA") && isset($_SESSION['uid'])) && !isset($_SESSION['adminid'])) {

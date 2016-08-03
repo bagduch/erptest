@@ -1095,8 +1095,6 @@ $_ADMINLANG['setup']['orderstatuses'] = "Order Statuses";
 $_ADMINLANG['help']['title'] = "Help";
 $_ADMINLANG['help']['docs'] = "Documentation";
 $_ADMINLANG['help']['videotutorials'] = "Video Tutorials";
-$_ADMINLANG['help']['licenseinfo'] = "License Information";
-$_ADMINLANG['help']['changelicense'] = "Change License Key";
 $_ADMINLANG['help']['updates'] = "Check for Updates";
 $_ADMINLANG['help']['support'] = "Get Help";
 $_ADMINLANG['help']['forums'] = "Community Forums";
@@ -2086,26 +2084,9 @@ $_ADMINLANG['supportreq']['yourname'] = "Your Name";
 $_ADMINLANG['supportreq']['youremail'] = "Your Email";
 $_ADMINLANG['supportreq']['support'] = "Support";
 $_ADMINLANG['supportreq']['sales'] = "Sales";
-$_ADMINLANG['supportreq']['licensing'] = "Licensing";
 $_ADMINLANG['supportreq']['send'] = "Send Request";
 $_ADMINLANG['supportreq']['debuginfo'] = "You may delete the debug information if you do not wish to send this information to us but it usually helps us assist you with your problem and reach a resolution more quickly.";
 $_ADMINLANG['supportreq']['cancel'] = "Cancel";
-
-# License
-$_ADMINLANG['license']['title'] = "License Information";
-$_ADMINLANG['license']['regto'] = "Registered To";
-$_ADMINLANG['license']['key'] = "License Key";
-$_ADMINLANG['license']['type'] = "License Type";
-$_ADMINLANG['license']['validdomain'] = "Valid Domain";
-$_ADMINLANG['license']['validip'] = "Valid IP";
-$_ADMINLANG['license']['validdir'] = "Valid Directory";
-$_ADMINLANG['license']['brandingremoval'] = "Branding Removal";
-$_ADMINLANG['license']['addons'] = "Addons";
-$_ADMINLANG['license']['created'] = "Created";
-$_ADMINLANG['license']['expires'] = "Expires";
-$_ADMINLANG['license']['reissue1'] = "If you are planning to move your ra System to a new location then you will need to get your license reissued.  See";
-$_ADMINLANG['license']['reissue2'] = "for more info...";
-$_ADMINLANG['license']['updateavailable'] = "An update is available!";
 
 # Banned Emails
 $_ADMINLANG['bans']['emailtitle'] = "Banned Email Domains";
