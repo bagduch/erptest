@@ -234,7 +234,7 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-   // $savefreedomainpaymentterms = ($freedomainpaymentterms ? implode(",", $freedomainpaymentterms) : "");
+    // $savefreedomainpaymentterms = ($freedomainpaymentterms ? implode(",", $freedomainpaymentterms) : "");
 
 
     if ($tax == "on") {
@@ -488,6 +488,9 @@ if ($action == "updatesort") {
 ob_start();
 
 if ($action == "") {
+
+    $templatefile = "service/default.tpl";
+
     $result = select_query_i("tblservicegroups", "COUNT(*)", "");
     $data = mysqli_fetch_array($result);
     $num_rows = $data[0];
