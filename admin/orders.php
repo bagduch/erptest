@@ -519,7 +519,7 @@ function pendingOrder() {
 }
 function deleteOrder() {
     if (confirm(\"" . $aInt->lang("orders", "confirmdelete") . "\"))
-        window.location=\"" . $_SERVER['PHP_SELF'] . "?sub=delete&id=" . $id . "" . generate_token("link") . "\";
+        window.location=\"" . $_SERVER['PHP_SELF'] . "?action=delete&id=" . $id . "" . generate_token("link") . "\";
 }";
 		$currency = getCurrency($userid);
 		$amount = formatCurrency($amount);

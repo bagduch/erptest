@@ -2,7 +2,6 @@
 
 define("ADMINAREA", true);
 require "../init.php";
-include "../includes/additionaldomainfields.php";
 $aInt = new RA_Admin("Add New Order", false);
 $aInt->title = $aInt->lang("orders", "addnew");
 $aInt->sidebar = "orders";
@@ -156,55 +155,6 @@ if ($action == "getconfigoptions") {
 }
 
 
-if ($action == "getdomainaddlfields") {
-    check_token("RA.admin.default");
-    $domainparts = explode(".", $domain, 2);
-    $tempdomainfields = $additionaldomainfields["." . $domainparts[1]];
-    $addlfieldscode = "";
-
-    if ($tempdomainfields) {
-        foreach ($tempdomainfields as $key => $values) {
-
-            if ($values['Name']) {
-                $addlfieldscode .= "<tr class=\"domainaddlfields" . $order . "\"><td width=\"130\" class=\"fieldlabel\">" . $values['Name'] . "</td><td class=\"fieldarea\">";
-
-                if ($values['Type'] == "dropdown") {
-                    $addlfieldscode .= "<select name=\"domflds[" . $order . "][" . $key . "]\">";
-                    foreach (explode(",", $values['Options']) as $option) {
-                        $addlfieldscode .= "<option value=\"" . $option . "\">" . $option . "</option>";
-                    }
-
-                    $addlfieldscode .= "</select>";
-                }
-
-
-                if ($values['Type'] == "text") {
-                    $addlfieldscode .= "<input type=\"text\" name=\"domflds[" . $order . "][" . $key . "]\" />";
-                }
-
-
-                if ($values['Type'] == "tickbox") {
-                    $addlfieldscode .= "<input type=\"checkbox\" name=\"domflds[" . $order . "][" . $key . "]\" /> " . $values['Description'];
-                }
-
-
-                if ($values['Type'] == "radio") {
-                    foreach (explode(",", $values['Options']) as $option) {
-                        $addlfieldscode .= "<input type=\"radio\" name=\"domflds[" . $order . "][" . $key . "]\" value=\"" . $option . "\" /> " . $option . "<br />";
-                    }
-                }
-
-                $addlfieldscode .= "</td></tr>";
-                continue;
-            }
-        }
-    }
-
-    echo $addlfieldscode;
-    exit();
-}
-
-
 if ($ra->get_req_var("submitorder")) {
     check_token("RA.admin.default");
     $userid = get_query_val("tblclients", "id", array("id" => $userid));
@@ -244,21 +194,6 @@ if ($ra->get_req_var("submitorder")) {
             }
         }
 
-        $validtlds = array();
-        $result = select_query_i("tbldomainpricing", "extension", "");
-
-        while ($data = mysqli_fetch_array($result)) {
-            $validtlds[] = $data[0];
-        }
-
-//        foreach ($regaction as $k => $regact) {
-//            $domainparts = explode(".", $regdomain[$k], 2);
-//
-//            if ($regact && in_array("." . $domainparts[1], $validtlds)) {
-//                $_SESSION['cart']['domains'][] = array("type" => $regact, "domain" => $regdomain[$k], "regperiod" => $regperiod[$k], "dnsmanagement" => $dnsmanagement[$k], "emailforwarding" => $emailforwarding[$k], "idprotection" => $idprotection[$k], "eppcode" => $eppcode[$k], "fields" => $domflds[$k]);
-//                continue;
-//            }
-//        }
 
 
         if ($promocode) {
@@ -342,37 +277,6 @@ if ($ra->get_req_var("submitorder")) {
             }
 
 
-            if (is_array($ordervals['domains'])) {
-                foreach ($ordervals['domains'] as $cartdom) {
-                    echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $aInt->lang("fields", "domain") . " " . $aInt->lang("domains", $cartdom['type']) . "</div>" . $cartdom['domain'] . " (" . $cartdom['regperiod'] . " " . $aInt->lang("domains", "years") . ")";
-
-                    if ($cartdom['dnsmanagement']) {
-                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "dnsmanagement");
-                    }
-
-
-                    if ($cartdom['emailforwarding']) {
-                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "emailforwarding");
-                    }
-
-
-                    if ($cartdom['idprotection']) {
-                        echo "<br />&nbsp;&raquo;&nbsp;" . $aInt->lang("domains", "idprotection");
-                    }
-
-                    echo "<div class=\"itempricing\">";
-
-                    if ($cartdom['priceoverride']) {
-                        echo formatCurrency($cartdom['priceoverride']) . "*";
-                    }
-                    else {
-                        echo $cartdom['price'];
-                    }
-
-                    echo "</div>";
-                }
-            }
-
             $cartitems = 0;
             foreach (array("products", "addons", "domains", "renewals") as $k) {
 
@@ -444,7 +348,6 @@ if ($ra->get_req_var("submitorder")) {
 </div>";
             exit();
         }
-// + count($_SESSION['cart']['domains']
         $cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['renewals']);
 
         if (!$cartitems) {
@@ -466,12 +369,6 @@ if ($ra->get_req_var("submitorder")) {
                 }
             }
 
-
-            if (is_array($_SESSION['orderdetails']['Domains'])) {
-                foreach ($_SESSION['orderdetails']['Domains'] as $domainid) {
-                    update_query("tbldomains", array("status" => "Active"), array("id" => $domainid));
-                }
-            }
         }
 
         getUsersLang(0);
@@ -481,14 +378,6 @@ if ($ra->get_req_var("submitorder")) {
 }
 
 releaseSession();
-$regperiods = $regperiodss = "";
-$regperiod = 1;
-
-while ($regperiod <= 10) {
-    $regperiods .= "<option value=\"" . $regperiod . "\">" . $regperiod . " " . $aInt->lang("domains", "year" . $regperiodss) . "</option>";
-    $regperiodss = "s";
-    ++$regperiod;
-}
 
 $jquerycode = "
 $(function(){
@@ -773,53 +662,6 @@ echo "</td></tr>
 
 <p style=\"padding-left:20px;\"><a href=\"#\" class=\"addproduct\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
 echo $aInt->lang("orders", "anotherproduct");
-echo "</a></p>
-
-<p><b>";
-echo $aInt->lang("domains", "domainreg");
-echo "</b></p>
-
-<div id=\"domains\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"130\" class=\"fieldlabel\">";
-echo $aInt->lang("domains", "regtype");
-echo "</td><td class=\"fieldarea\"><input type=\"radio\" name=\"regaction[0]\" id=\"domnon0\" value=\"\" onclick=\"loaddomainoptions(this,0);updatesummary()\" checked /> <label for=\"domnon0\">";
-echo $aInt->lang("global", "none");
-echo "</label> <input type=\"radio\" name=\"regaction[0]\" value=\"register\" id=\"domreg0\" onclick=\"loaddomainoptions(this,1);updatesummary()\" /> <label for=\"domreg0\">";
-echo $aInt->lang("domains", "register");
-echo "</label> <input type=\"radio\" name=\"regaction[0]\" value=\"transfer\" id=\"domtrf0\" onclick=\"loaddomainoptions(this,2);updatesummary()\" /> <label for=\"domtrf0\">";
-echo $aInt->lang("domains", "transfer");
-echo "</label></td></tr>
-<tr class=\"hiddenrow\" id=\"domrowdn0\" style=\"display:none;\"><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "domain");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" class=\"regdomain\" name=\"regdomain[0]\" size=\"40\" id=\"regdomain0\" onkeyup=\"updatesummary()\" /></td></tr>
-<tr class=\"hiddenrow\" id=\"domrowrp0\" style=\"display:none;\"><td class=\"fieldlabel\">";
-echo $aInt->lang("domains", "regperiod");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect id=\"regperiod1\" name=\"regperiod[0]\" onchange=\"updatesummary()\">";
-echo $regperiods;
-echo "</select></td></tr>
-<tr class=\"hiddentransrow\" id=\"domrowep0\" style=\"display:none;\"><td class=\"fieldlabel\">";
-echo $aInt->lang("domains", "eppcode");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"eppcode[0]\" size=\"20\" /></td></tr>
-<tr class=\"hiddenrow\" id=\"domrowad0\" style=\"display:none;\"><td class=\"fieldlabel\">";
-echo $aInt->lang("domains", "addons");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"dnsmanagement[0]\" onclick=\"updatesummary()\" /> ";
-echo $aInt->lang("domains", "dnsmanagement");
-echo "</label> <label><input type=\"checkbox\" name=\"emailforwarding[0]\" onclick=\"updatesummary()\" /> ";
-echo $aInt->lang("domains", "emailforwarding");
-echo "</label> <label><input type=\"checkbox\" name=\"idprotection[0]\" onclick=\"updatesummary()\" /> ";
-echo $aInt->lang("domains", "idprotection");
-echo "</label></td></tr>
-<tr id=\"domainaddlfieldserase0\" style=\"display:none;\"></tr>
-</table>
-
-</div>
-
-<p style=\"padding-left:20px;\"><a href=\"#\" class=\"adddomain\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
-echo $aInt->lang("orders", "anotherdomain");
 echo "</a></p>
 
 </td><td valign=\"top\">
