@@ -13,10 +13,6 @@ form {
 	margin: 0;
 	padding: 0;
 }
-a, a:visited {
-	color: #FFFFFF;
-	text-decoration: underline;
-}
 
 table.datatable td a {
     color: #000000;
@@ -29,7 +25,7 @@ a:hover {
 a img {
 	border: 0;
 }
-a.highlight, a.highlight:visited, a.highlight:hover {
+a.highlight {
 	color: #CC0000;
 }
 h1 {
@@ -604,6 +600,10 @@ input[type="button"].btn-inverse, input[type="submit"].btn-inverse, input[type="
 	text-decoration: none;
 	display: block;
 }
+div.searchresult a strong {
+    color:#000;
+}
+
 #clientsearchresults {
 	background-color: #fff;
 	border: 1px solid #ccc;
@@ -635,6 +635,7 @@ input[type="button"].btn-inverse, input[type="submit"].btn-inverse, input[type="
 	background-color: #f4f4f4;
 	border-top: 3px solid #fff;
 	padding: 2px 0 2px 5px;
+    color: #000;
 }
 #clientsearchresults .searchresult .desc, #ticketclientsearchresults .searchresult .desc {
 	color: #888;
@@ -1128,10 +1129,10 @@ table.datatable tr:hover td {
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;
 	border-radius: 5px;
-    color: #FFFFFF;
+    color: #000;
 }
-.clientssummarybox a.visited {
-    color: #FFFFFF;
+.clientssummarybox a {
+    color: #000;
 }
 .clientssummarybox .title {
 	text-align: left;
