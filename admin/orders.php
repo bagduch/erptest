@@ -630,11 +630,8 @@ $.post(\"" . $_SERVER['PHP_SELF'] . "?action=ajaxchangeorderstatus&id=" . $id . 
 		echo $userid;
 		echo "\">";
 		echo $client;
-		echo "</a> <a href=\"http://www.dnsstuff.com/tools/freemail/?domain=";
-		echo $clientemail;
-		echo "\" target=\"_blank\" title=\"";
-		echo $aInt->lang("orders", "checkfreeemail");
-		echo "\"><img src=\"images/info.gif\" border=\"0\" align=\"absmiddle\" /></a><br />";
+        echo "</a>";
+		echo "<br />";
 		echo $address;
 		echo "</td><td class=\"fieldlabel\">";
 		echo $aInt->lang("fields", "invoicenum");

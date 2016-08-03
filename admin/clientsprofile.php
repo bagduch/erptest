@@ -203,9 +203,8 @@ echo "\" tabindex=\"10\"></td></tr>
 echo $aInt->lang("fields", "email");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"35\" name=\"email\" value=\"";
 echo $email;
-echo "\" tabindex=\"4\"> <a href=\"http://www.dnsstuff.com/tools/freemail/?domain=";
-echo $email;
-echo "\" target=\"_blank\" title=\"Check if Free Email Account\"><img src=\"images/info.gif\" border=\"0\" align=\"absmiddle\" /></a></td><td class=\"fieldlabel\">";
+echo "\" tabindex=\"4\">";
+echo "</td><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "state");
 echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"25\" name=\"state\" value=\"";
 echo $state;
