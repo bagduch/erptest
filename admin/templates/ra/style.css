@@ -184,7 +184,7 @@ select {
 	width: auto;
 }
 #sidebar a {
-/*	color: #FFFFFF; */
+	color: #FFFFFF; 
 	text-decoration:none;
 }
 #sidebar .smallfont {
@@ -1128,6 +1128,10 @@ table.datatable tr:hover td {
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;
 	border-radius: 5px;
+    color: #FFFFFF;
+}
+.clientssummarybox a.visited {
+    color: #FFFFFF;
 }
 .clientssummarybox .title {
 	text-align: left;
