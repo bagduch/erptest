@@ -63,27 +63,6 @@ while ($data = mysqli_fetch_assoc($result)) {
 }
 
 
-//if ($status == "Active") {
-//    echo " selected";
-//}
-//
-//
-//echo $aInt->lang("status", "active");
-//echo "</option><option value=\"Inactive\"";
-//
-//if ($status == "Inactive") {
-//    echo " selected";
-//}
-//
-//
-//echo $aInt->lang("status", "inactive");
-//echo "</option><option value=\"Closed\"";
-//
-//if ($status == "Closed") {
-//    echo " selected";
-//}
-
-
 $filterdata = array(
     "userid" => $filters->get("userid"),
     "clientname" => $filters->get("clientname"),
@@ -152,6 +131,7 @@ if ($filters->isActive() && $numresults == 1) {
                     ),
                     sprintf("%s (%s)",$client['services'],$client['totalservices']),
                     sprintf("%s (%s)",$client['products'],$client['totalproducts']),
+                    $client['datecreated'],
                     "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
     }
 
