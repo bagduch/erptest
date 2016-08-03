@@ -65,13 +65,13 @@ if ($action == "save") {
 			update_query("tbladmins", array("roleid" => $roleid, "username" => $username, "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "disabled" => $disabled, "notes" => $notes, "template" => $template, "language" => $language, "supportdepts" => $supportdepts, "ticketnotifications" => $ticketnotify), array("id" => $id));
 
 			if ($password) {
-				update_query("tbladmins", array("password" => md5(trim($password))), array("id" => $id));
+				update_query("tbladmins", array("password" => password_hash($password,PASSWORD_DEFAULT)), array("id" => $id));
 			}
 
 			redir("saved=true");
 		}
 		else {
-			insert_query("tbladmins", array("roleid" => $roleid, "username" => $username, "password" => md5(trim($password)), "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "supportdepts" => $supportdepts, "ticketnotifications" => $ticketnotify));
+			insert_query("tbladmins", array("roleid" => $roleid, "username" => $username, "password" => password_hash(trim($password),PASSWORD_DEFAULT), "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "supportdepts" => $supportdepts, "ticketnotifications" => $ticketnotify));
 			redir("added=true");
 		}
 

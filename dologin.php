@@ -57,56 +57,6 @@ if ($ra->get_req_var("newbackupcode")) {
 }
 
 $loginsuccess = $istwofa = false;
-$twofa = new RA_2FA();
-
-if ($twofa->isActiveClients() && isset($_SESSION['2faverifyc'])) {
-	$twofa->setClientID($_SESSION['2faclientid']);
-
-	if ($ra->get_req_var("backupcode")) {
-		$success = $twofa->verifyBackupCode($ra->get_req_var("code"));
-	}
-	else {
-		$success = $twofa->moduleCall("verify");
-	}
-
-
-	if ($success) {
-		validateClientLogin(get_query_val("tblclients", "email", array("id" => $_SESSION['2faclientid'])), "", true);
-
-		if ($_SESSION['2farememberme']) {
-			wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
-		}
-		else {
-			wDelCookie("User");
-		}
-
-		RA_Session::delete("2faclientid");
-		RA_Session::delete("2farememberme");
-		RA_Session::delete("2faverifyc");
-
-		if ($ra->get_req_var("backupcode")) {
-			RA_Session::set("2fabackupcodenew", true);
-			$gotourl = "clientarea.php?newbackupcode=true";
-			header("Location: " . $gotourl);
-			exit();
-		}
-
-		$loginsuccess = true;
-	}
-	else {
-		if (strpos($gotourl, "?")) {
-			$gotourl .= "&";
-		}
-		else {
-			$gotourl .= "?";
-		}
-
-		$gotourl .= "incorrect=true";
-		header("Location: " . $gotourl);
-		exit();
-	}
-}
-
 
 if (!$loginsuccess) {
 	if (validateClientLogin($username, $password)) {

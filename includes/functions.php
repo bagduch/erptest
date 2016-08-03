@@ -653,10 +653,6 @@ if (!function_exists("emailtpl_template")) {
 			$datecreated = fromMySQLDate($data2['datecreated'], 0, 1);
 			$password = "**********";
 
-			if ($CONFIG['NOMD5']) {
-				$password = decrypt($data2['password']);
-			}
-
 			$cardtype = $data2['cardtype'];
 			$cardnum = $data2['cardlastfour'];
 
@@ -671,7 +667,7 @@ if (!function_exists("emailtpl_template")) {
 			$balance = get_query_val("tblinvoices", "SUM(total)-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0)", array("userid" => $userid, "status" => "Unpaid"));
 			$email_merge_fields['client_due_invoices_balance'] = formatCurrency($balance);
 
-			if ($func_messagename == "Automated Password Reset" && !$CONFIG['NOMD5']) {
+			if ($func_messagename == "Automated Password Reset") {
 				$length = 10;
 				$seeds = "ABCDEFGHIJKLMNPQRSTUVYXYZ0123456789abcdefghijklmnopqrstuvwxyz";
 				$seeds_count = strlen($seeds) - 1;
