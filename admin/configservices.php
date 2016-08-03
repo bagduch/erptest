@@ -247,6 +247,9 @@ if ($action == "save") {
         "type" => $type,
         "gid" => $gid,
         "name" => $name,
+        'contract' => $contract,
+        'etf' => $etf,
+        'term' => $term,
         "customefield" => $customefield,
         "description" => html_entity_decode($description),
         "hidden" => $hidden,
@@ -711,6 +714,9 @@ if ($action == "") {
         $autosetup = $data['autosetup'];
         $servergroup = $data['servergroup'];
         $stockcontrol = $data['stockcontrol'];
+        $contract = $data['contract'];
+        $etf = $data['etf'];
+        $term = $data['term'];
         $qty = $data['qty'];
         $proratabilling = $data['proratabilling'];
         $proratadate = $data['proratadate'];
@@ -766,6 +772,14 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $id . "&tab=4&s
     $.post(\"configservices.php?action=managedownloads&id=" . $id . generate_token("link") . "&adddl=\"+file, function(data) {
         $(\"#productdownloadslist\").html(data);
     });
+});
+$(\"input[name=\'contract\']\").click(function(){
+if($(this).is(\":checked\"))
+{
+    $(\"#contractop\").show();
+}else{
+ $(\"#contractop\").hide();
+}
 });
 $(\".removedownload\").livequery(\"click\", function(event) {
     var dlid = $(this).attr(\"rel\");
@@ -942,6 +956,8 @@ $(\"#showadddownloadcat\").click(
         echo "> ";
         echo $aInt->lang("services", "retireddesc");
         echo "</label></td></tr>
+            <tr><td class=\"fieldlabel\">Contract</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"contract\" value=\"1\">Tick if this service is contract</label></tr>
+ <tr><td></td><td class=\"fieldarea\"><div style=\"display:none\" id=\"contractop\"><input style=\"width:40px\" type=\"text\" name=\"etf\"> <label>ETF</label> <input style=\"width:40px\" type=\"text\" name=\"term\"> <label>Term (Months)</label></div></td></tr>
 </table>
 
   </div>

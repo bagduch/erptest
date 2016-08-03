@@ -15,7 +15,7 @@
 <form id="frmintellisearch">
 <input type="hidden" name="intellisearch" value="1" />
 <input type="hidden" name="token" value="{$csrfToken}" />
-<input type="text" name="value" id="intellisearchval" />
+<input type="text" name="value" id="intellisearchval" autocomplete="off"/>
 <input type="submit" style="display:none;">
 </form>
 </div>
