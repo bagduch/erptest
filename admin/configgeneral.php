@@ -116,8 +116,10 @@ if ($action == "save") {
 			$systemsslurl = "";
 		}
 
-		$save_arr = array("CompanyName" => html_entity_decode($companyname), "Email" => $email, "Domain" => $domain, "LogoURL" => $logourl, "SystemURL" => $systemurl, "SystemSSLURL" => $systemsslurl, "Template" => $template, "MaintenanceModeURL" => $maintenancemodeurl, "ClientDateFormat" => $clientdateformat, "FreeDomainAutoRenewRequiresProduct" => $freedomainautorenewrequiresproduct, "DomainToDoListEntries" => $domaintodolistentries, "AllowIDNDomains" => $allowidndomains, "BulkCheckTLDs" => $bulkchecktldsstring, "DomainSyncEnabled" => $domainsyncenabled, "DomainSyncNextDueDate" => $domainsyncnextduedate, "DomainSyncNextDueDateDays" => $domainsyncnextduedatedays, "DomainSyncNotifyOnly" => $domainsyncnotifyonly, "DefaultNameserver1" => $ns1, "DefaultNameserver2" => $ns2, "DefaultNameserver3" => $ns3, "DefaultNameserver4" => $ns4, "DefaultNameserver5" => $ns5, "RegistrarAdminFirstName" => $domfirstname, "RegistrarAdminLastName" => $domlastname, "RegistrarAdminCompanyName" => $domcompanyname, "RegistrarAdminEmailAddress" => $domemail, "RegistrarAdminAddress1" => $domaddress1, "RegistrarAdminAddress2" => $domaddress2, "RegistrarAdminCity" => $domcity, "RegistrarAdminStateProvince" => $domstate, "RegistrarAdminPostalCode" => $dompostcode, "RegistrarAdminCountry" => $domcountry, "RegistrarAdminPhone" => $domphone, "RegistrarAdminUseClientDetails" => $domuseclientsdetails, "SMTPHost" => $smtphost, "SMTPUsername" => $smtpusername, "SMTPPassword" => encrypt(html_entity_decode($smtppassword)), "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "AdminForceSSL" => $adminforcessl, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting);
-		foreach ($save_arr as $k => $v) {
+        $save_arr = array("CompanyName" => html_entity_decode($companyname), "Email" => $email, "Domain" => $domain, "LogoURL" => $logourl, "SystemURL" => $systemurl, "SystemSSLURL" => $systemsslurl, "Template" => $template, "MaintenanceModeURL" => $maintenancemodeurl, "ClientDateFormat" => $clientdateformat, "FreeDomainAutoRenewRequiresProduct" => $freedomainautorenewrequiresproduct, "DomainToDoListEntries" => $domaintodolistentries, "AllowIDNDomains" => $allowidndomains, "BulkCheckTLDs" => $bulkchecktldsstring, "DomainSyncEnabled" => $domainsyncenabled, "DomainSyncNextDueDate" => $domainsyncnextduedate, "DomainSyncNextDueDateDays" => $domainsyncnextduedatedays, "DomainSyncNotifyOnly" => $domainsyncnotifyonly, "DefaultNameserver1" => $ns1, "DefaultNameserver2" => $ns2, "DefaultNameserver3" => $ns3, "DefaultNameserver4" => $ns4, "DefaultNameserver5" => $ns5, "RegistrarAdminFirstName" => $domfirstname, "RegistrarAdminLastName" => $domlastname, "RegistrarAdminCompanyName" => $domcompanyname, "RegistrarAdminEmailAddress" => $domemail, "RegistrarAdminAddress1" => $domaddress1, "RegistrarAdminAddress2" => $domaddress2, "RegistrarAdminCity" => $domcity, "RegistrarAdminStateProvince" => $domstate, "RegistrarAdminPostalCode" => $dompostcode, "RegistrarAdminCountry" => $domcountry, "RegistrarAdminPhone" => $domphone, "RegistrarAdminUseClientDetails" => $domuseclientsdetails, "SMTPHost" => $smtphost, "SMTPUsername" => $smtpusername, "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
+            "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "AdminForceSSL" => $adminforcessl, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting);
+
+        foreach ($save_arr as $k => $v) {
 			$ra->set_config($k, trim($v));
 		}
 
@@ -213,32 +215,6 @@ if ($action == "save") {
 		}
 
 
-			$result = select_query_i("tblcontacts", "id, password", array("subaccount" => "1"));
-
-			while ($data = mysqli_fetch_assoc($result)) {
-				$id = $data['id'];
-
-				if ($nomd5 == "on") {
-					$length = 10;
-					$seeds = "ABCDEFGHIJKLMNPQRSTUVYXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-					$seeds_count = strlen($seeds) - 1;
-					$password = "";
-					$i = 0;
-
-					while ($i < $length) {
-						$password .= $seeds[rand(0, $seeds_count)];
-						++$i;
-					}
-
-					$password = encrypt($password);
-				}
-				else {
-					$password = decrypt($data['password']);
-					$password = generateClientPW($password, "", true);
-				}
-
-				update_query("tblcontacts", array("password" => $password), array("id" => $id));
-			}
 		}
 
 		global $ra;
@@ -247,11 +223,11 @@ if ($action == "save") {
 		$token_manager->processAdminHTMLSave($ra);
 		redir("success=true&tab=" . $tab);
 		exit();
-	}
-} // end of action==save
+	} // end of action==save
 
 releaseSession();
 ob_start();
+
 $jquerycode .= "$(\"#removewhitelistedip\").click(function () {
     var removeip = $('#whitelistedips option:selected;').text();
     $('#whitelistedips option:selected').remove();
@@ -277,8 +253,29 @@ function addapiip(ipaddress,note) {
     return false;
 };
 ";
-echo $aInt->jqueryDialog("addwhitelistip", $aInt->lang("general", "addwhitelistedip"), "<table><tr><td>" . $aInt->lang("fields", "ipaddress") . ":</td><td><input type=\"text\" id=\"ipaddress\" size=\"20\" /></td></tr><tr><td>" . $aInt->lang("fields", "reason") . ":</td><td><input type=\"text\" id=\"notes\" size=\"40\" /></td></tr></table>", array($aInt->lang("general", "addip") => "addwhitelistedip($(\"#ipaddress\").val(),$(\"#notes\").val());", $aInt->lang("global", "cancel") => ""), "", "350", "");
-echo $aInt->jqueryDialog("addapiip", $aInt->lang("general", "addwhitelistedip"), "<table><tr><td>" . $aInt->lang("fields", "ipaddress") . ":</td><td><input type=\"text\" id=\"ipaddress2\" size=\"20\" /></td></tr><tr><td>" . $aInt->lang("fields", "notes") . ":</td><td><input type=\"text\" id=\"notes2\" size=\"40\" /></td></tr></table>", array($aInt->lang("general", "addip") => "addapiip($(\"#ipaddress2\").val(),$(\"#notes2\").val());", $aInt->lang("global", "cancel") => ""), "", "350", "");
+echo $aInt->jqueryDialog("addwhitelistip", 
+    $aInt->lang("general", "addwhitelistedip"), 
+    "<table><tr><td>" . $aInt->lang("fields", "ipaddress") . ":</td>".
+        "<td><input type=\"text\" id=\"ipaddress\" size=\"20\" /></td></tr>".
+        "<tr><td>" . $aInt->lang("fields", "reason") . ":</td>".
+        "<td><input type=\"text\" id=\"notes\" size=\"40\" /></td></tr></table>", 
+        array(
+                $aInt->lang("general", "addip") => "addwhitelistedip($(\"#ipaddress\").val(),$(\"#notes\").val());", 
+                $aInt->lang("global", "cancel") => ""), 
+                "", 
+                "350", 
+                ""
+            );
+
+echo $aInt->jqueryDialog("addapiip", 
+    $aInt->lang("general", "addwhitelistedip"), 
+    "<table><tr><td>" . $aInt->lang("fields", "ipaddress") . ":</td><td><input type=\"text\" id=\"ipaddress2\" size=\"20\" /></td></tr><tr><td>" . $aInt->lang("fields", "notes") . ":</td><td><input type=\"text\" id=\"notes2\" size=\"40\" /></td></tr></table>", 
+    array($aInt->lang("general", "addip") => "addapiip($(\"#ipaddress2\").val(),$(\"#notes2\").val());", 
+        $aInt->lang("global", "cancel") => ""), 
+        "", 
+        "350", 
+        ""
+    );
 
 if ($success) {
 	infoBox($aInt->lang("general", "changesuccess"), $aInt->lang("general", "changesuccessinfo"));
@@ -293,13 +290,26 @@ while ($data = mysqli_fetch_array($result)) {
 	$CONFIG["" . $setting] = "" . $value;
 }
 
-echo $aInt->Tabs(array($aInt->lang("general", "tabgeneral"), $aInt->lang("general", "tablocalisation"), $aInt->lang("general", "tabordering"), $aInt->lang("general", "tabdomains"), $aInt->lang("general", "tabmail"), $aInt->lang("general", "tabsupport"), $aInt->lang("general", "tabinvoices"), $aInt->lang("general", "tabcredit"), $aInt->lang("general", "tabaffiliates"), $aInt->lang("general", "tabsecurity"), $aInt->lang("general", "tabsocial"), $aInt->lang("general", "tabother")));
-echo "
-<form method=\"post\" action=\"";
-echo $PHP_SELF;
-echo "?action=save\" name=\"configfrm\">
+echo $aInt->Tabs(
+    array(
+        $aInt->lang("general", "tabgeneral"), 
+        $aInt->lang("general", "tablocalisation"), 
+        $aInt->lang("general", "tabordering"), 
+        $aInt->lang("general", "tabdomains"), 
+        $aInt->lang("general", "tabmail"), 
+        $aInt->lang("general", "tabsupport"), 
+        $aInt->lang("general", "tabinvoices"), 
+        $aInt->lang("general", "tabcredit"), 
+        $aInt->lang("general", "tabaffiliates"), 
+        $aInt->lang("general", "tabsecurity"), 
+        $aInt->lang("general", "tabsocial"), 
+        $aInt->lang("general", "tabother")
+    )
+);
 
-<!-- General -->
+sprintf("<form method=\"post\" action=\"%s?action=save\" name=\"configfrm\">",$PHP_SELF);
+
+echo "<!-- General -->
 <div id=\"tab0box\" class=\"tabbox\">
   <div id=\"tab_content\">
 
@@ -358,6 +368,7 @@ echo $aInt->lang("general", "template");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"template\">";
+
 $tplfolder = ROOTDIR . "/templates/";
 
 if (is_dir($tplfolder)) {
