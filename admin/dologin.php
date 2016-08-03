@@ -1,22 +1,10 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
 session_regenerate_id();
 $username = $ra->get_req_var("username");
 $password = $ra->get_req_var("password");
-//$username="ben";
-//$password="ben";
 $auth = new RA_Auth();
 $twofa = new RA_2FA();
 
@@ -101,9 +89,8 @@ if (!trim($username) || !trim($password)) {
 }
 
 $adminfound = $auth->getInfobyUsername($username);
-
 if ($adminfound) {
-	if ($auth->comparePassword($password)) {
+    if ($auth->comparePassword($password)) {
 		if ($ra->get_req_var("language")) {
 			$_SESSION['adminlang'] = $ra->get_req_var("language");
 		}

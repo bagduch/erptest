@@ -163,7 +163,7 @@ if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];
 	$username = $data['username'];
-	$email = $data['email'];
+    $email = $data['email'];
 	$verifyval = md5($email . $timestamp . $adminid . $cc_encryption_hash);
 
 	if (($adminid && $verify == $verifyval) && mktime(date("H"), date("i") - 30, date("s"), date("m"), date("d"), date("Y")) <= $timestamp) {
@@ -179,7 +179,11 @@ if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp
 		}
 
 		$newpassword = $str;
-		update_query("tbladmins", array("password" => md5($newpassword), "loginattempts" => "0"), array("email" => $email));
+        update_query("tbladmins", 
+            array(
+                    "passwordhash" => password_hash($newpassword,PASSWORD_DEFAULT),
+                    "loginattempts" => "0"), 
+            array("email" => $email));
 		$message .= "Dear " . $firstname . ",
 
 As requested, your password for the admin area has now been reset.  Your new login details are as follows:

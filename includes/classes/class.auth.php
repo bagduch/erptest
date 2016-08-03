@@ -21,7 +21,7 @@ class RA_Auth {
 
 	private function getInfo($where) {
 		$where['disabled'] = "0";
-		$result = select_query_i("tbladmins", "id,username,password,template,language,authmodule,loginattempts", $where);
+        $result = select_query_i("tbladmins", "id,username,template,language,authmodule,loginattempts,passwordhash", $where);
 		$data = mysqli_fetch_assoc($result);
 		$this->admindata = $data;
 		return $data['id'] ? true : false;
@@ -32,16 +32,17 @@ class RA_Auth {
 	}
 
 	public function getInfobyUsername($username) {
-		$this->inputusername = $username;
+            $this->inputusername = $username;
 		return $this->getInfo(array("username" => $username));
 	}
 
-	public function comparePassword($password) {
-		if ( !trim($password) || !isset($this->admindata['password']) || !trim($this->admindata['password'])) {
+    public function comparePassword($password) {
+               
+		if ( !trim($password) || !isset($this->admindata['passwordhash'])) {
 			return false;
 		}
 
-		return md5($password) === $this->admindata['password'] ? true : false;
+		return (password_verify($password,$this->admindata['passwordhash']));
 	}
 
 	public function isTwoFactor() {
@@ -57,7 +58,7 @@ class RA_Auth {
 	}
 
 	public function getAdminPWHash() {
-		return $this->admindata['password'];
+		return $this->admindata['passwordhash'];
 	}
 
 	public function getAdminTemplate() {

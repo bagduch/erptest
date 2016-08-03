@@ -175,7 +175,7 @@ function update_query($table, $array, $where) {
         $query .= "'" . db_escape_string($value) . "', ";
     }
 
-    $query = substr($query, 0, 0 - 1);
+    $query = substr($query, 0, 0 - 2).' ';
 
     if (is_array($where)) {
         $query .= " WHERE";

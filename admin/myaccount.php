@@ -151,7 +151,11 @@ if ($action == "save") {
         logActivity("Administrator Account Modified (" . $firstname . " " . $lastname . ")");
 
         if ($password) {
-            update_query("tbladmins", array("password" => md5(trim($password))), array("id" => $_SESSION['adminid']));
+                update_query("tbladmins", array(
+                        "password" => md5(trim($password)), 
+                        "passwordhash" => password_hash($password, PASSWORD_DEFAULT)
+                ), array("id" => $_SESSION['adminid'])
+            );
         }
 
         redir("success=true");
