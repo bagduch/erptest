@@ -2510,12 +2510,15 @@ function deleteOrder($orderid) {
     logActivity("Deleted Order - Order ID: " . $orderid, $userid);
 }
 
-function getAddons($pid, $addons) {
+function getAddons($pid, $addons, $currencs = array()) {
     global $currency;
     global $_LANG;
 
     if (!$addons) {
         $addons = array();
+    }
+    if (empty($currency)) {
+        $currency = $currencs;
     }
 
     $addonsarray = array();
@@ -2558,7 +2561,7 @@ function getAddons($pid, $addons) {
                 }
             }
 
-            $addonsarray[] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => $addon_status);
+            $addonsarray[] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "value" => $addon_setupfee + $addon_recurring, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => $addon_status);
         }
     }
 

@@ -89,7 +89,7 @@
                                             <tr>
                                                 <td class="radiofield">{$addon.checkbox}</td>
                                                 <td class="fieldarea">
-                                                    <label for="a2"><strong>{$addon.name}</strong> - {$addon.pricing}
+                                                    <label for="a{$addon.id}"><strong>{$addon.name}</strong> - {$addon.pricing}
                                                         <br>{$addon.description}
                                                     </label>
                                                 </td>
@@ -115,21 +115,93 @@
                                             <td>{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}</td>
                                         </tr>
                                         <tr>
-                                            <td>Setup Fees:</td>
+                                            <td>Billing Cycle:</td>
                                             <td></td>
-                                            <td>{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}</td>
+                                            <td>{$pricing.cycles.monthly}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">{$currecy.prefix}{$total|number_format:2} {$currecy.code}</td>
                                         </tr>
                                     </table>
                                 </div>
-
                             </div>
                         </div>
                     {elseif $step==3}
+                        <div class="">
+                            <div class="checkoutcol1">
+
+                                <div class="signupfields padded">
+                                    <h2>Promotional Code</h2>
+                                    <input type="text" name="promocode" size="20" value=""> <input type="submit" name="validatepromo" value="Validate Code >>">            </div>
+
+
+                            </div>
+                            <div class="checkoutcol2">
+                                <div class="signupfields padded">
+                                    <h2>Payment Method</h2>
+                                    {foreach from=$availablegateways item=row}
+                                        <label>
+                                            <input type="radio" name="paymentmethod" value="{$row.sysname}" id="pgbtn{$row.sysname}" onclick="hideCCForm()"> {$row.name}
+                                        </label>
+                                    {/foreach}
+                                    <br><br>
+                                    <div id="ccinputform" class="signupfields hidden" style="">
+                                        <table width="100%" cellspacing="0" cellpadding="0" class="configtable textleft">
+                                            <input type="hidden" name="ccinfo" value="new">                          
+                                            <tbody><tr class="newccinfo">
+                                                    <td class="fieldlabel">Card Type</td><td class="fieldarea">
+                                                        <select name="cctype">
+                                                            <option selected=""></option>
+                                                        </select></td></tr>
+                                                <tr class="newccinfo"><td class="fieldlabel">Card Number</td><td class="fieldarea"><input type="text" name="ccnumber" size="30" value="" autocomplete="off"></td></tr>
+                                                <tr class="newccinfo"><td class="fieldlabel">Expiry Date</td><td class="fieldarea">
+                                                        <select name="ccexpirymonth" id="ccexpirymonth" class="newccinfo">
+                                                            {foreach from=$months key=value item=row}
+                                                                <option>{$row}</option>
+                                                            {/foreach}
+                                                        </select> / <select name="ccexpiryyear" class="newccinfo">
+                                                            <option>2016</option>
+                                                            <option>2017</option>
+                                                            <option>2018</option>
+                                                            <option>2019</option>
+                                                            <option>2020</option>
+                                                            <option>2021</option>
+                                                            <option>2022</option>
+                                                            <option>2023</option>
+                                                            <option>2024</option>
+                                                            <option>2025</option>
+                                                            <option>2026</option>
+                                                            <option>2027</option>
+                                                            <option>2028</option>
+                                                        </select></td></tr>
+                                                <tr><td class="fieldlabel">CVV/CVC2 Number</td><td class="fieldarea"><input type="text" name="cccvv" value="" size="5" autocomplete="off"> <a href="#" onclick="window.open('images/ccv.gif', '', 'width=280,height=200,scrollbars=no,top=100,left=100');
+                                                        return false">Where do I find this?</a></td></tr>
+                                            </tbody></table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
 
                     {elseif $step==4}
                     {/if}
                 </form>
             </div>
         </div>
+        {literal}
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("input[name^='addons']").click(function () {
+
+
+                    });
+
+                });
+            </script>
+        {/literal}
     </body>
 </html>

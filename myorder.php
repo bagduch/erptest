@@ -194,27 +194,42 @@ if ($step == "2") {
 
     if (!empty($data)) {
         $currecy = getCurrency();
-        $addons = getAddons($data['id']);
+        $addons = getAddons($data['id'], array(), $currecy);
+
         $pricing = getPricingInfo(3, $inclconfigops = false, $upgrade = false, $currecy);
         // $currecy = getCurrency();
     }
-   foreach ($pricing['rawpricing'] as $key => $item) {
-
+    $total = 0;
+    foreach ($pricing['rawpricing'] as $key => $item) {
         if ($item == -1) {
             unset($pricing['rawpricing'][$key]);
         } else {
-            
+            $total +=$item;
         }
     }
-    echo "<pre>", print_r($pricing, 1), "</pre>";
-    echo "<pre>", print_r($currecy, 1), "</pre>";
+
+
+    // echo "<pre>", print_r($addons, 1), "</pre>";
+//    echo "<pre>", print_r($currecy, 1), "</pre>";
+
+
+    $smartyvalues['total'] = $total;
     $smartyvalues['currecy'] = $currecy;
     $smartyvalues['product'] = $data;
     $smartyvalues['addons'] = $addons;
     $smartyvalues['pricing'] = $pricing;
 }
 if ($step == "3") {
-    
+    $gateways = new RA_Gateways();
+    $availablegateways = getAvailableOrderPaymentGateways();
+    $securityquestions = getSecurityQuestions();
+
+    echo "<pre>", print_r($gateways->getCCDateMonths(), 1), "</pre>";
+
+    $smartyvalues['availablegateways'] = $availablegateways;
+    $smartyvalues['months'] = $gateways->getCCDateMonths();
+    $smartyvalues['startyears'] = $gateways->getCCStartDateYears();
+    $smartyvalues['expiryyears'] = $smartyvalues['years'] = $gateways->getCCExpiryDateYears();
 }
 
 $templatefile = "myorder";
