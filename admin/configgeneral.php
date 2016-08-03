@@ -1,53 +1,7 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
-function cleanSystemURL($url, $secure = false, $keepempty = false) {
-	global $ra;
+include_once ROOTDIR . ("/includes/configgeneral.inc.php");
 
-	if ($url == "" || !preg_match('/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i', $url)) {
-		if ($keepempty == true) {
-			return "";
-		}
-
-
-		if ($secure == true) {
-			$url = "https://" . $_SERVER['SERVER_NAME'] . preg_replace('#/[^/]*\.php$#simU', '/', $_SERVER['PHP_SELF']);
-		}
-		else {
-			$url = "http://" . $_SERVER['SERVER_NAME'] . preg_replace('#/[^/]*\.php$#simU', '/', $_SERVER['PHP_SELF']);
-		}
-	}
-	else {
-		$url = str_replace('\\', '', trim($url));
-
-			if (!preg_match('~^(?:ht)tps?://~i', $url)) {
-			if ($secure == true) {
-				$url = "https://" . $url;
-			}
-			else {
-				$url = "http://" . $url;
-			}
-		}
-
-		$url = preg_replace('~^https?://[^/]+$~', ';/', $url);
-	}
-
-
-	if (substr($url, 0 - 1) != "/") {
-		$url .= "/";
-	}
-
-	return str_replace("/" . $ra->get_admin_folder_name() . "/", "/", $url);
-}
 
 define("ADMINAREA", true);
 require "../init.php";
@@ -56,7 +10,7 @@ $aInt->title = $aInt->lang("general", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "config";
 $aInt->helplink = "General Settings";
-$aInt->requiredFiles(array("clientfunctions"));
+$aInt->requiredFiles(array("clientfunctions", "configgeneral"));
 
 if ($action == "addwhitelistip") {
 	check_token("RA.admin.default");
@@ -294,7 +248,7 @@ if ($action == "save") {
 		redir("success=true&tab=" . $tab);
 		exit();
 	}
-}
+} // end of action==save
 
 releaseSession();
 ob_start();
