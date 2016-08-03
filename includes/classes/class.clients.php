@@ -43,16 +43,24 @@ class RA_Clients extends RA_TableModel {
 			$status = $data['status'];
 			$datecreated = fromMySQLDate($datecreated);
 			$groupcolor = (isset($clientgroups[$groupid]['colour']) ? $clientgroups[$groupid]['colour'] . "\"" : "");
-			$services = $totalservices = "-";
+            $services = $totalservices = "-";
+            $products = $totalproducts = 0;
 
 			if (!$disable_clients_list_services_summary) {
-				$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS services,(SELECT COUNT(*) FROM tblhosting WHERE userid=tblclients.id)+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblhosting WHERE userid=tblclients.id))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id) AS totalservices FROM tblclients WHERE tblclients.id=" . (int)$id . " LIMIT 1");
-				$data = mysqli_fetch_array($result2);
-				$services = $data['services'];
-				$totalservices = $data['totalservices'];
+                $result2 = full_query_i("SELECT
+                    COALESCE(SUM(servicestatus IN ('Pending','Active','Suspended')),0) AS services,
+                    COUNT(*) AS totalservices
+                    FROM tblcustomerservices WHERE userid=".(int)$id);
+                $data = mysqli_fetch_array($result2);
+            
+                $services = $data['services'];
+                $totalservices = $data['totalservices'];
 			}
 
-			$clients[] = array("id" => $id, "firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "groupid" => $groupid, "groupcolor" => $groupcolor, "email" => $email, "services" => $services, "totalservices" => $totalservices, "datecreated" => $datecreated, "status" => $status);
+            $clients[] = array(
+                "id" => $id, 
+                "firstname" => $firstname, 
+                "lastname" => $lastname, "companyname" => $companyname, "groupid" => $groupid, "groupcolor" => $groupcolor, "email" => $email, "services" => $services, "totalservices" => $totalservices, "products" => $products, "totalproducts" => $totalproducts, "datecreated" => $datecreated, "status" => $status);
 		}
 
 		return $clients;
