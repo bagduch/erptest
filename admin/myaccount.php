@@ -152,7 +152,6 @@ if ($action == "save") {
 
         if ($password) {
                 update_query("tbladmins", array(
-                        "password" => md5(trim($password)), 
                         "passwordhash" => password_hash($password, PASSWORD_DEFAULT)
                 ), array("id" => $_SESSION['adminid'])
             );

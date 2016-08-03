@@ -27,10 +27,6 @@ $data = mysqli_fetch_array($result);
 if ($data['id']) {
 	$password = $data['password'];
 
-	if ($CONFIG['NOMD5']) {
-		$password = decrypt($password);
-	}
-
 	$apiresults = array("result" => "success", "password" => $password);
 	return 1;
 }

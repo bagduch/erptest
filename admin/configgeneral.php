@@ -258,35 +258,6 @@ if ($action == "save") {
 			full_query_i("ALTER TABLE tblinvoices AUTO_INCREMENT = " . (int)$invoicestartnumber);
 		}
 
-		update_query("tblconfiguration", array("value" => $nomd5), array("setting" => "NOMD5"));
-
-		if ($CONFIG['NOMD5'] != $nomd5) {
-			$result = select_query_i("tblclients", "id, password", "");
-
-			while ($data = mysqli_fetch_assoc($result)) {
-				$id = $data['id'];
-
-				if ($nomd5 == "on") {
-					$length = 10;
-					$seeds = "ABCDEFGHIJKLMNPQRSTUVYXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-					$seeds_count = strlen($seeds) - 1;
-					$password = "";
-					$i = 0;
-
-					while ($i < $length) {
-						$password .= $seeds[rand(0, $seeds_count)];
-						++$i;
-					}
-
-					$password = encrypt($password);
-				}
-				else {
-					$password = decrypt($data['password']);
-					$password = generateClientPW($password, "", true);
-				}
-
-				update_query("tblclients", array("password" => $password), array("id" => $id));
-			}
 
 			$result = select_query_i("tblcontacts", "id, password", array("subaccount" => "1"));
 
@@ -2051,17 +2022,7 @@ echo "> ";
 echo $aInt->lang("general", "allowccdeleteinfo");
 echo "</label></td></tr>
 <tr><td class=\"fieldlabel\">";
-echo $aInt->lang("general", "disablemd5");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"nomd5\" ";
 
-if ($CONFIG['NOMD5']) {
-	echo " checked";
-}
-
-echo "> ";
-echo $aInt->lang("general", "disablemd5info");
-echo "</label></td></tr>
-<tr><td class=\"fieldlabel\">";
 echo $aInt->lang("general", "disablesessionip");
 echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"disablesessionipcheck\"";
 

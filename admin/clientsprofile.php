@@ -51,16 +51,8 @@ if ($ra->get_req_var("save")) {
 		update_query($table, $array, $where);
 
 		if ($password && $password != $aInt->lang("fields", "entertochange")) {
-			if ($CONFIG['NOMD5']) {
-				if ($password != decrypt($oldclientsdetails['password'])) {
-					update_query("tblclients", array("password" => generateClientPW($password)), array("id" => $userid));
-					run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
-				}
-			}
-			else {
-				update_query("tblclients", array("password" => generateClientPW($password)), array("id" => $userid));
-				run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
-			}
+		    update_query("tblclients", array("password" => generateClientPW($password)), array("id" => $userid));
+			run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
 		}
 
 		$customfields = getCustomFields("client", "", $userid, "on", "");
@@ -160,12 +152,7 @@ $securityqans = $clientsdetails['securityqans'];
 $groupid = $clientsdetails['groupid'];
 $twofaenabled = $clientsdetails['twofaenabled'];
 
-if ($CONFIG['NOMD5']) {
-	$password = decrypt($clientsdetails['password']);
-}
-else {
-	$password = $aInt->lang("fields", "entertochange");
-}
+$password = $aInt->lang("fields", "entertochange");
 
 $questions = getSecurityQuestions("");
 echo "

@@ -207,7 +207,7 @@ if ($contactid && $contactid != "addnew") {
 	$invoiceemails = $data['invoiceemails'];
 	$supportemails = $data['supportemails'];
 	$affiliateemails = $data['affiliateemails'];
-	$password = ($CONFIG['NOMD5'] ? decrypt($data['password']) : $aInt->lang("fields", "entertochange"));
+	$password = $aInt->lang("fields", "entertochange"));
 }
 
 

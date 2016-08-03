@@ -458,14 +458,10 @@ if ($action == "") {
 
                             $data = mysqli_fetch_array($result);
 
-                            if ($CONFIG['NOMD5']) {
-                                $existingpwd = decrypt($data['password']);
-                            } else {
-                                $existingpwd = $data['password'];
-                                $salt = explode(":", $existingpwd);
-                                $salt = $salt[1];
-                                $existingpw = generateClientPW($existingpw, $salt);
-                            }
+                            $existingpwd = $data['password'];
+                            $salt = explode(":", $existingpwd);
+                            $salt = $salt[1];
+                            $existingpw = generateClientPW($existingpw, $salt);
 
                             if ($validate->validate("match_value", "existingpwd", "existingpasswordincorrect", array($existingpw, $existingpwd))) {
                                 if ($validate->validate("required", "newpw", "ordererrorpassword")) {
@@ -500,132 +496,6 @@ if ($action == "") {
 
                             if ($ra->get_req_var("successful")) {
                                 $smartyvalues['successful'] = true;
-                            }
-
-                            $twofa = new RA_2FA();
-                            $twofa->setClientID($ca->getUserID());
-
-                            if ($twofa->isActiveClients()) {
-                                $ca->assign("twofaavailable", true);
-
-                                if ($ra->get_req_var("2fasetup")) {
-                                    if (!$twofa->isActiveClients()) {
-                                        exit("Access denied");
-                                    }
-
-                                    ob_start();
-
-                                    if ($twofa->isEnabled()) {
-                                        echo "<div class=\"content\"><div style=\"padding:15px;\">";
-                                        $disabled = $incorrect = false;
-
-                                        if ($password = $ra->get_req_var("pwverify")) {
-                                            $dbpwd = get_query_val("tblclients", "password", array("id" => $ca->getUserID()));
-
-                                            if ($ra->get_config("NOMD5")) {
-                                                $check_pwd = decrypt($dbpwd);
-                                            } else {
-                                                $salt = explode(":", $dbpwd);
-                                                $salt = $salt[1];
-                                                $password = generateClientPW($password, $salt);
-                                                $check_pwd = $dbpwd;
-                                            }
-
-                                            if ($password == $check_pwd) {
-                                                $twofa->disableUser();
-                                                $disabled = true;
-                                            } else {
-                                                $incorrect = true;
-                                            }
-                                        }
-
-                                        echo "<h2>" . $ra->get_lang("twofadisable") . "</h2>";
-
-                                        if (!$disabled) {
-                                            echo "<p>" . $ra->get_lang("twofadisableintro") . "</p>";
-
-                                            if ($incorrect) {
-                                                echo "<div class=\"errorbox\"><strong>Password Incorrect</strong><br />Please try again...</div>";
-                                            }
-
-                                            echo "<form onsubmit=\"dialogSubmit();return false\"><input type=\"hidden\" name=\"2fasetup\" value=\"1\" /><p>" . $ra->get_lang("twofaconfirmpw") . ": <input type=\"password\" name=\"pwverify\" value=\"\" size=\"20\" /><p><p><input type=\"button\" value=\"" . $ra->get_lang("twofadisable") . "\" class=\"btn\" onclick=\"dialogSubmit()\" /></p></form>";
-                                        } else {
-                                            echo "<p>" . $ra->get_lang("twofadisableconfirmation") . "</p><form method=\"post\" action=\"clientarea.php?action=security\"><p><input type=\"submit\" value=\"" . $ra->get_lang("returnclient") . "\" class=\"btn\" /></p></form>";
-                                        }
-
-                                        echo "</div></div>";
-                                    } else {
-                                        $modules = $twofa->getAvailableModules();
-
-                                        if (isset($module) && in_array($module, $modules)) {
-                                            $output = $twofa->moduleCall("activate", $module);
-
-                                            if (is_array($output) && isset($output['completed'])) {
-                                                $msg = (isset($output['msg']) ? $output['msg'] : "");
-                                                $settings = (isset($output['settings']) ? $output['settings'] : array());
-                                                $backupcode = $twofa->activateUser($module, $settings);
-                                                $output = "";
-
-                                                if ($backupcode) {
-                                                    $output = "<h2>" . $ra->get_lang("twofaactivationcomplete") . "</h2>";
-
-                                                    if ($msg) {
-                                                        $output .= "<div style=\"margin:20px;padding:10px;background-color:#f7f7f7;border:1px dashed #cccccc;text-align:center;\">" . $msg . "</div>";
-                                                    }
-
-                                                    $output .= "<h2>" . $ra->get_lang("twofabackupcodeis") . ":</h2><div style=\"margin:20px auto;padding:10px;width:280px;background-color:#F2D4CE;border:1px dashed #AE432E;text-align:center;font-size:20px;\">" . $backupcode . "</div><p>" . $ra->get_lang("twofabackupcodeexpl") . "</p>";
-                                                    $output .= "<form method=\"post\" action=\"clientarea.php?action=security\"><p><input type=\"submit\" value=\"" . $ra->get_lang("returnclient") . "\" class=\"btn\" /></p></form>";
-                                                } else {
-                                                    $output = $ra->get_lang("twofaactivationerror");
-                                                }
-                                            } else {
-                                                if ($output) {
-                                                    $output = "<div class=\"textleft\">" . $output . "</div>";
-                                                }
-                                            }
-
-                                            if (!$output) {
-                                                echo $ra->get_lang("twofageneralerror");
-                                            } else {
-                                                echo $output;
-                                            }
-                                        } else {
-                                            echo "<h2>" . $ra->get_lang("twofasetup") . "</h2>";
-
-                                            if ($ra->get_req_var("enforce")) {
-                                                echo "<br /><div class=\"errorbox\">" . $ra->get_lang("twofaenforced") . "</div>";
-                                            }
-
-                                            echo "<p class=\"textleft\">" . $ra->get_lang("twofaactivationintro") . "</p>
-<form><input type=\"hidden\" name=\"2fasetup\" value=\"1\" />";
-
-                                            if (1 < count($modules)) {
-                                                echo "<p>" . $ra->get_lang("twofaactivationmultichoice") . "</p>
-<div style=\"margin:0 auto;width:400px;\">";
-                                                $mod = new RA_Module("security");
-                                                $first = true;
-                                                foreach ($modules as $module) {
-                                                    $mod->load($module);
-                                                    $configarray = $mod->call("config");
-                                                    echo "<label class=\"radio textleft\"><input type=\"radio\" name=\"module\" value=\"" . $module . "\"" . ($first ? " checked" : "") . " /> " . (isset($configarray['FriendlyName']['Value']) ? $configarray['FriendlyName']['Value'] : ucfirst($module)) . "</label>";
-                                                    $first = false;
-                                                }
-
-                                                echo "</div>";
-                                            } else {
-                                                echo "<input type=\"hidden\" name=\"module\" value=\"" . $modules[0] . "\" />";
-                                            }
-
-                                            echo "<p align=\"center\"><br /><input type=\"button\" value=\"" . $ra->get_lang("twofasetupgetstarted") . " &raquo;\" onclick=\"dialogSubmit()\" class=\"btn btn-primary\" /></form>";
-                                        }
-                                    }
-
-                                    $content = ob_get_contents();
-                                    ob_end_clean();
-                                    $ca->assign("twofaactivation", $content);
-                                }
-
-                                $ca->assign("twofastatus", $twofa->isEnabled());
                             }
 
                             $securityquestions = getSecurityQuestions("");

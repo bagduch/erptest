@@ -554,26 +554,7 @@ function getSecurityQuestions($questionid = "") {
 }
 
 function generateClientPW($plain, $salt = "", $ignoreconfig = false) {
-    global $CONFIG;
-
-    if ($CONFIG['NOMD5'] && !$ignoreconfig) {
-        $pw = encrypt($plain);
-    } else {
-        if (!$salt) {
-            $seeds = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ#!%()#!%()#!%()";
-            $seeds_count = strlen($seeds) - 1;
-            $i = 0;
-
-            while ($i < 5) {
-                $salt .= $seeds[rand(0, $seeds_count)];
-                ++$i;
-            }
-        }
-
-        $pw = md5($salt . html_entity_decode($plain)) . ":" . $salt;
-    }
-
-    return $pw;
+    return password_hash(html_entity_decode($plain),PASSWORD_DEFAULT);
 }
 
 function checkContactPermission($reqperm, $noredirect = "") {
@@ -708,14 +689,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
 
 
     if ($login_uid) {
-        if ($CONFIG['NOMD5']) {
-            $check_pwd = decrypt($login_pwd);
-        } else {
-            $salt = explode(":", $login_pwd);
-            $salt = $salt[1];
-            $password = generateClientPW($password, $salt);
-            $check_pwd = $login_pwd;
-        }
+        $check_pwd = $login_pwd;
 
         $adminallowedclientlogin = false;
 
@@ -725,15 +699,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
         }
 
 
-        if ((($password === $check_pwd || (isset($_SESSION['adminid']) && $adminallowedclientlogin)) || $loginsharematch) || $twofadone) {
-            $twofa = new RA_2FA();
-
-            if ((($twofa->isActiveClients() && $authmodule) && !$twofadone) && !isset($_SESSION['adminid'])) {
-                $_SESSION['2faverifyc'] = true;
-                $_SESSION['2faclientid'] = $login_uid;
-                $_SESSION['2farememberme'] = $ra->get_req_var("rememberme");
-                return false;
-            }
+        if (((password_verify($password,$check_pwd) || (isset($_SESSION['adminid']) && $adminallowedclientlogin)) || $loginsharematch) ) {
 
 
             if (!isset($_SESSION['adminid'])) {
