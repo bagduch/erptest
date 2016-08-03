@@ -26,7 +26,7 @@ $aInt->title = $aInt->lang("orders", "manage");
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
 //$aInt->helplink = "Order Management";
-$aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunctions", "domainfunctions", "invoicefunctions", "processinvoices", "clientfunctions", "ccfunctions", "registrarfunctions", "fraudfunctions"));
+$aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunctions", "invoicefunctions", "processinvoices", "clientfunctions", "ccfunctions", "registrarfunctions", "fraudfunctions"));
 
 if ($ra->get_req_var("rerunfraudcheck")) {
 	check_token("RA.admin.default");
