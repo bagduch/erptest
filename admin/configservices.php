@@ -234,7 +234,7 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-    $savefreedomainpaymentterms = ($freedomainpaymentterms ? implode(",", $freedomainpaymentterms) : "");
+   // $savefreedomainpaymentterms = ($freedomainpaymentterms ? implode(",", $freedomainpaymentterms) : "");
 
 
     if ($tax == "on") {

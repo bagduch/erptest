@@ -8,7 +8,6 @@ ini_set("display_errors", 1);
 ini_set("display_startup_errors", 1);
 ini_set("error_log", "/tmp/php_errors.log");
 error_reporting(E_ALL);
-error_log("Hello, errors!");
 
 function getValidLanguages($admin = "") {
     global $ra;
