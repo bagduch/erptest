@@ -178,7 +178,7 @@ select {
 	width: auto;
 }
 #sidebar a {
-/*	color: #FFFFFF; */
+	color: #FFFFFF; 
 	text-decoration:none;
 }
 #sidebar .smallfont {
