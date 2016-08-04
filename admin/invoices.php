@@ -40,13 +40,21 @@ else {
 $aInt->title = $pagetitle;
 $aInt->sidebar = "billing";
 $aInt->icon = $pageicon;
-$aInt->requiredFiles(array("clientfunctions", "invoicefunctions", "gatewayfunctions", "processinvoices", "ccfunctions"));
+$aInt->requiredFiles(
+    array(
+        "clientfunctions", 
+        "invoicefunctions", 
+        "gatewayfunctions", 
+        "processinvoices", 
+        "ccfunctions"
+    )
+);
 $invoiceid = (int)$ra->get_req_var("invoiceid");
 $status = $ra->get_req_var("status");
 
-if (!in_array($status, array("Unpaid", "Overdue", "Paid", "Cancelled", "Refunded", "Collections"))) {
+/* if (!in_array($status, array("Unpaid", "Overdue", "Paid", "Cancelled", "Refunded", "Collections"))) {
 	$status = "";
-}
+} */
 
 
 if ($action == "invtooltip") {
@@ -104,7 +112,7 @@ if ($action == "createinvoice") {
 	}
 
 	$duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['CreateInvoiceDaysBefore'], date("Y")));
-	$invoiceid = insert_query("tblinvoices", array("date" => "now()", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "paymentmethod" => $gateway, "taxrate" => $taxrate, "taxrate2" => $taxrate2));
+	$invoiceid = insert_query("tblinvoices", array("date" => "now()", "duedate" => $duedate, "userid" => $userid, "status" => "Draft", "paymentmethod" => $gateway, "taxrate" => $taxrate, "taxrate2" => $taxrate2));
 	logActivity("Created Manual Invoice - Invoice ID: " . $invoiceid, $userid);
 
 	if (1 < $CONFIG['InvoiceIncrement']) {
@@ -220,6 +228,7 @@ if ($ra->get_req_var("delete")) {
 	$filters->redir();
 }
 
+echo "OBSTART STARTS HERE";
 ob_start();
 
 if ($action == "") {
@@ -230,7 +239,20 @@ if ($action == "") {
 	$pageObj = new RA_Pagination($name, $orderby, $sort);
 	$pageObj->digestCookieData();
 	$tbl = new RA_ListTable($pageObj);
-	$tbl->setColumns(array("checkall", array("id", $aInt->lang("fields", "invoicenum")), array("clientname", $aInt->lang("fields", "clientname")), array("date", $aInt->lang("fields", "invoicedate")), array("duedate", $aInt->lang("fields", "duedate")), array("total", $aInt->lang("fields", "total")), array("paymentmethod", $aInt->lang("fields", "paymentmethod")), array("status", $aInt->lang("fields", "status")), "", ""));
+    $tbl->setColumns(
+        array(
+            "checkall", 
+            array("id", $aInt->lang("fields", "invoicenum")), 
+            array("clientname", $aInt->lang("fields", "clientname")), 
+            array("date", $aInt->lang("fields", "invoicedate")), 
+            array("duedate", $aInt->lang("fields", "duedate")), 
+            array("total", $aInt->lang("fields", "total")), 
+            array("paymentmethod", $aInt->lang("fields", "paymentmethod")), 
+            array("status", $aInt->lang("fields", "status")), 
+            "", 
+            ""
+        )
+    );
 	$invoicesModel = new RA_Invoices($pageObj);
 
 	if (checkPermission("View Income Totals", true)) {
@@ -239,7 +261,11 @@ if ($action == "") {
 		if (count($invoicetotals)) {
 			echo "<div class=\"contentbox\" style=\"font-size:18px;\">";
 			foreach ($invoicetotals as $vals) {
-				echo "<b>" . $vals['currencycode'] . "</b> " . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> " . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> " . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
+                echo "<b>" . $vals['currencycode'] . "</b> " 
+                    . $aInt->lang("status", "draft") . ": <span class=\"textgreen\"><b>" . $vals['draft'] . "</b></span> " 
+                    . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> " 
+                    . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> " 
+                    . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
 			}
 
 			echo "</div><br />";
@@ -377,8 +403,7 @@ if ($action == "") {
 <br />
 
 ";
-	echo "<s";
-	echo "cript src=\"../includes/jscript/jquerytt.js\"></script>
+	echo "<script src=\"../includes/jscript/jquerytt.js\"></script>
 
 ";
 	$jquerycode = "$(\".invtooltip\").tooltip({cssClass:\"invoicetooltip\"});";
@@ -485,7 +510,15 @@ else {
 
 
 			if ($adddescription) {
-				insert_query("tblinvoiceitems", array("invoiceid" => $id, "userid" => $userid, "description" => $adddescription, "amount" => $addamount, "taxed" => $addtaxed));
+                insert_query("tblinvoiceitems", 
+                    array(
+                        "invoiceid" => $id, 
+                        "userid" => $userid, 
+                        "description" => $adddescription, 
+                        "amount" => $addamount, 
+                        "taxed" => $addtaxed
+                    )
+                );
 			}
 
 
@@ -856,46 +889,10 @@ else {
 </td><td align=center width=50%>
 ";
 
-		if ($status == "Unpaid") {
-			echo "<s";
-			echo "pan class=\"textred\" style=\"font-family:Arial;font-size:20px;font-weight:bold;text-transform:uppercase\">";
-			echo $aInt->lang("status", "unpaid");
-			echo "</span>";
-		}
-		else {
-			if ($status == "Paid") {
-				echo "<s";
-				echo "pan class=\"textgreen\" style=\"font-family:Arial;font-size:20px;font-weight:bold;text-transform:uppercase\">";
-				echo $aInt->lang("status", "paid");
-				echo "</span><br><b>";
-				echo $datepaid;
-				echo "</b>";
-			}
-			else {
-				if ($status == "Cancelled") {
-					echo "<s";
-					echo "pan class=\"textgrey\" style=\"font-family:Arial;font-size:20px;font-weight:bold;text-transform:uppercase\">";
-					echo $aInt->lang("status", "cancelled");
-					echo "</span>";
-				}
-				else {
-					if ($status == "Refunded") {
-						echo "<s";
-						echo "pan class=\"textblue\" style=\"font-family:Arial;font-size:20px;font-weight:bold;text-transform:uppercase\">";
-						echo $aInt->lang("status", "refunded");
-						echo "</span>";
-					}
-					else {
-						if ($status == "Collections") {
-							echo "<s";
-							echo "pan class=\"textgold\" style=\"font-family:Arial;font-size:20px;font-weight:bold;text-transform:uppercase\">";
-							echo $aInt->lang("status", "collections");
-							echo "</span>";
-						}
-					}
-				}
-			}
-		}
+        printf("<span class=\"invoicestatus %s\">%s</span>",
+            $status,
+            $status
+        );
 
 		echo "<br>";
 		echo $aInt->lang("fields", "paymentmethod");
@@ -1515,4 +1512,5 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->display();
+echo "OB ENDS HERE";
 ?>

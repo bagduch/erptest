@@ -54,7 +54,15 @@ if ($action == "add") {
 			$state = "";
 		}
 
-		insert_query("tbltax", array("level" => $level, "name" => $name, "state" => $state, "country" => $country, "taxrate" => $taxrate));
+        insert_query("tbltax", 
+            array(
+                "level" => $level, 
+                "name" => $name, 
+                "state" => $state, 
+                "country" => $country, 
+                "taxrate" => $taxrate
+            )
+        );
 		redir();
 		exit();
 	}

@@ -990,6 +990,24 @@ table.datatable tr:hover td {
 	padding: 5px;
 	z-index: 100;
 }
+span.invoicestatus {
+    font-family:Arial;
+    font-size:20px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+span.unpaid {
+    color: #f00;
+}
+span.paid {
+    color: #0f0;
+}
+span.collections {
+    color: #00f;
+}
+span.draft {
+    color: gray;
+}
 .gracefulexit {
 	margin: 100px auto;
 	padding: 40px 25px;

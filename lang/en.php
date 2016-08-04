@@ -417,6 +417,7 @@ $_LANG['invoicesinvoicenotes'] = "Invoice Notes";
 $_LANG['invoicesnoinvoices'] = "No Invoices";
 $_LANG['invoicesnotes'] = "Notes";
 $_LANG['invoicesoutstandinginvoices'] = "Outstanding Invoices";
+$_LANG['invoicesdraft'] = "Paid";
 $_LANG['invoicespaid'] = "Paid";
 $_LANG['invoicespaynow'] = "Pay Now";
 $_LANG['invoicespayto'] = "Pay To";
