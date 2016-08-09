@@ -463,8 +463,8 @@ This link will only be valid for the next 30 minutes so if you didn't request th
           <td align=\"left\" valign=\"middle\"><input type=\"text\" name=\"email\" size=\"30\" /></td>
         </tr>
         <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\">&nbsp;</td>
-          <td align=\"left\" valign=\"middle\"><input type=\"submit\" value=\"Reset Password\" class=\"button\" /></td>
+          <td width=\"30%\" align=\"right\" valign=\"middle\"></td>
+          <td><input type=\"submit\" value=\"Reset Password\"/></td>
         </tr>
       </table>
     </form>
