@@ -3,7 +3,6 @@
 <ul class="menu">
     <li><a href="clientsadd.php"><img src="images/icons/clientsadd.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.clients.addnew}</a></li>
     <li><a href="ordersadd.php"><img src="images/icons/ordersadd.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.orders.addnew}</a></li>
-    <li><a href="quotes.php?action=manage"><img src="images/icons/quotes.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.quotes.createnew}</a></li>
     <li><a href="todolist.php"><img src="images/icons/todolist.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.utilities.todolistcreatenew}</a></li>
     <li><a href="supporttickets.php?action=open"><img src="images/icons/tickets.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.support.opennewticket}</a></li>
 </ul>
@@ -53,6 +52,7 @@
 <span class="header"><img src="images/icons/invoices.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.invoices.title}</span>
 <ul class="menu">
     <li><a href="invoices.php">{$_ADMINLANG.invoices.listall}</a></li>
+    <li><a href="invoices.php?status=Draft">- Draft</a></li>
     <li><a href="invoices.php?status=Paid">- {$_ADMINLANG.status.paid}</a></li>
     <li><a href="invoices.php?status=Unpaid">- {$_ADMINLANG.status.unpaid}</a></li>
     <li><a href="invoices.php?status=Overdue">- {$_ADMINLANG.status.overdue}</a></li>
@@ -67,14 +67,6 @@
     <li><a href="billableitems.php?status=Uninvoiced">- {$_ADMINLANG.billableitems.uninvoiced}</a></li>
     <li><a href="billableitems.php?status=Recurring">- {$_ADMINLANG.billableitems.recurring}</a></li>
     <li><a href="billableitems.php?action=manage">{$_ADMINLANG.billableitems.addnew}</a></li>
-</ul>
-
-<span class="header"><img src="images/icons/quotes.png" class="absmiddle" width="16" height="16" /> {$_ADMINLANG.quotes.title}</span>
-<ul class="menu">
-    <li><a href="quotes.php">{$_ADMINLANG.quotes.listall}</a></li>
-    <li><a href="quotes.php?validity=Valid">- {$_ADMINLANG.status.valid}</a></li>
-    <li><a href="quotes.php?validity=Expired">- {$_ADMINLANG.status.expired}</a></li>
-    <li><a href="quotes.php?action=manage">{$_ADMINLANG.quotes.createnew}</a></li>
 </ul>
 
 {elseif $sidebar eq "support"}
