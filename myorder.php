@@ -56,10 +56,8 @@ $nowrapper = false;
 
 
 if (!empty($login)) {
-
     $loginsuccess = $istwofa = false;
     $twofa = new RA_2FA();
-
     if ($twofa->isActiveClients() && isset($_SESSION['2faverifyc'])) {
         $twofa->setClientID($_SESSION['2faclientid']);
 

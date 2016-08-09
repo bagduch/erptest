@@ -970,6 +970,6 @@ $aInt->assign('contentbox', $contentbox);
 $aInt->assign('ordertable', $ordertable);
 $aInt->assign('content', $content);
 
-$aInt->template = "clientsservices/view";
+$aInt->template = "clientsservices/view.";
 $aInt->display();
 ?>

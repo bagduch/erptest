@@ -132,6 +132,8 @@ function update_query($table, $array, $where) {
     global $mysqli_errors;
     global $ramysqli;
 
+
+
     $query = "UPDATE " . db_make_safe_field($table) . " SET ";
     foreach ($array as $key => $value) {
         $query .= db_build_quoted_field($key) . " = ";
@@ -175,7 +177,7 @@ function update_query($table, $array, $where) {
         $query .= "'" . db_escape_string($value) . "', ";
     }
 
-    $query = substr($query, 0, 0 - 2).' ';
+    $query = substr($query, 0, 0 - 2) . ' ';
 
     if (is_array($where)) {
         $query .= " WHERE";
@@ -210,9 +212,8 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-//mail("peter@hd.net.nz", "update", $query);
+    //mail('peter@hd.net.nz', "hello", print_r($query, 1));
     $result = mysqli_query($ramysqli, $query);
-    // mail("peter@hd.net.nz", "update", $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);

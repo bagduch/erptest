@@ -55,7 +55,6 @@ function buildCategoriesList($level, $parentlevel) {
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Products/Services");
-$aInt->title = $aInt->lang("services", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
@@ -234,53 +233,53 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-    // $savefreedomainpaymentterms = ($freedomainpaymentterms ? implode(",", $freedomainpaymentterms) : "");
-
 
     if ($tax == "on") {
         $tax = "1";
     }
 
-    $overagesenabled = ($overagesenabled ? "1," . $overageunitsdisk . "," . $overageunitsbw : "");
+    // $overagesenabled = ($overagesenabled ? "1," . $overageunitsdisk . "," . $overageunitsbw : "");
+    if ($_POST['welcomeemail'] == 0) {
+        $welcomeemail = "NULL";
+    } else {
+        $welcomeemail = $_POST['welcomeemail'];
+    }
     $table = "tblservices";
     $array = array(
-        "type" => $type,
-        "gid" => $gid,
-        "name" => $name,
-        'contract' => $contract,
-        'etf' => $etf,
-        'term' => $term,
-        "customefield" => $customefield,
-        "description" => html_entity_decode($description),
-        "hidden" => $hidden,
+        "type" => $_POST['type'],
+        "gid" => $_POST['gid'],
+        "name" => $_POST['name'],
+        'contract' => $_POST['contract'] == "on" ? 1 : 0,
+        'etf' => $_POST['etf'],
+        'term' => $_POST['term'],
+        "description" => html_entity_decode($_POST['description']),
+        "hidden" => $_POST['hidden'],
         "welcomeemail" => $welcomeemail,
-        "proratabilling" => $proratabilling,
-        "proratadate" => $proratadate,
-        "proratachargenextmonth" => $proratachargenextmonth,
-        "paytype" => $paytype,
-        "subdomain" => $subdomain,
-        "autosetup" => $autosetup,
-        "servertype" => $servertype,
-        "servergroup" => $servergroup,
-        "recurringcycles" => $recurringcycles,
-        "autoterminatedays" => $autoterminatedays,
-        "autoterminateemail" => $autoterminateemail,
+        "paytype" => $_POST['paytype'],
+        "servertype" => $_POST['servertype'],
+        "recurringcycles" => $_POST['recurringcycles'],
+        "autoterminatedays" => $_POST['autoterminatedays'],
+        "autoterminateemail" => $_POST['autoterminateemail'],
         "tax" => $tax,
-        "affiliatepaytype" => $affiliatepaytype,
-        "affiliatepayamount" => $affiliatepayamount,
-        "affiliateonetime" => $affiliateonetime,
-        "order" => $order,
-        "retired" => $retired
+        'affiliateonetime' => $_POST['affiliateonetime'],
+        "affiliatepaytype" => $_POST['affiliatepaytype'],
+        "affiliatepayamount" => $_POST['affiliatepayamount'],
     );
-    $counter = 1;
 
-    while ($counter <= 24) {
-        $array["configoption" . $counter] = trim($packageconfigoption[$counter]);
-        $counter += 1;
-    }
 
-    $where = array("id" => $id);
-    update_query($table, $array, $where);
+//    $counter = 1;
+//
+//
+//    while ($counter <= 24) {
+//        $array["configoption" . $counter] = trim($packageconfigoption[$counter]);
+//        $counter += 1;
+//    }
+
+
+
+    update_query("tblservices", $array, array("id" => $id));
+
+
     foreach ($_POST['currency'] as $currency_id => $pricing) {
         update_query("tblpricing", $pricing, array("type" => "product", "currency" => $currency_id, "relid" => $id));
     }
@@ -305,9 +304,9 @@ if ($action == "save") {
         }
     }
 
-    RebuildModuleHookCache();
-    run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
-    run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
+    //RebuildModuleHookCache();
+    //  run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
+    // run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
     redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
@@ -488,9 +487,6 @@ if ($action == "updatesort") {
 ob_start();
 
 if ($action == "") {
-
-    $templatefile = "service/default.tpl";
-
     $result = select_query_i("tblservicegroups", "COUNT(*)", "");
     $data = mysqli_fetch_array($result);
     $num_rows = $data[0];
@@ -700,20 +696,72 @@ if ($action == "") {
 
 ";
 } else {
+
+
+    $lang = array(
+        'fields' => $aInt->lang("fields", "producttype"),
+        'hostingaccount' => $aInt->lang("services", "hostingaccount"),
+        'reselleraccount' => $aInt->lang("services", "reselleraccount"),
+        'server' => $aInt->lang("services", "dedicatedvpsserver"),
+        'other' => $aInt->lang("setup", "other"),
+        'servicegroup' => $aInt->lang("services", "servicegroup"),
+        'servicename' => $aInt->lang("services", "servicename"),
+        'servicedesc' => $aInt->lang("services", "servicedesc"),
+        'htmlallowed' => $aInt->lang("services", "htmlallowed"),
+        'htmlnewline' => $aInt->lang("services", "htmlnewline"),
+        'htmlbold' => $aInt->lang("services", "htmlbold"),
+        'htmlitalics' => $aInt->lang("services", "htmlitalics"),
+        'welcomeemail' => $aInt->lang("services", "welcomeemail"),
+        'none' => $aInt->lang("global", "none"),
+        'applytax' => $aInt->lang("services", "applytax"),
+        'applytaxdesc' => $aInt->lang("serivce", "applytaxdesc"),
+        'hidden' => $aInt->lang("fields", "hidden"),
+        'hiddendesc' => $aInt->lang("services", "hiddendesc"),
+        'retired' => $aInt->lang("services", "retired"),
+        'retireddesc' => $aInt->lang("services", "retireddesc"),
+        'contract' => $aInt->lang("services", "contract"),
+        'contractdes' => $aInt->lang("services", "contractdes"),
+        'etf' => $aInt->lang("services", "etf"),
+        'term' => $aInt->lang("services", "term"),
+        'paymenttype' => $aInt->lang("services", "paymenttype"),
+        'free' => $aInt->lang("billingcycles", "free"),
+        'onetime' => $aInt->lang("billingcycles", "onetime"),
+        'monthly' => $aInt->lang("billingcycles", "monthly"),
+        'quarterly' => $aInt->lang("billingcycles", "quarterly"),
+        'semiannually' => $aInt->lang("billingcycles", "semiannually"),
+        'annually' => $aInt->lang("billingcycles", "annually"),
+        'biennially' => $aInt->lang("billingcycles", "biennially"),
+        'disablepaymenttermdesc' => $aInt->lang("services", "disablepaymenttermdesc"),
+        'triennially' => $aInt->lang("billingcycles", "triennially"),
+        'allowqty' => $aInt->lang("services", "allowqtydesc"),
+        'recurringcycleslimit' => $aInt->lang("services", "recurringcycleslimit"),
+        'recurringcycleslimitdesc' => $aInt->lang("services", "recurringcycleslimitdesc"),
+        'autoterminatefixedterm' => $aInt->lang("services", "autoterminatefixedterm"),
+        'autoterminatefixedtermdesc' => $aInt->lang("services", "autoterminatefixedtermdesc"),
+        'terminationemail' => $aInt->lang("services", "terminationemail"),
+        'chooseemailtplfixedtermend' => $aInt->lang("services", "chooseemailtplfixedtermend"),
+        'modulename' => $aInt->lang("services", "modulename"),
+        'none' => $aInt->lang("global", "none"),
+        'setupfee' => $aInt->lang("fields", "setupfee")
+    );
+    $result2 = select_query_i('tblservicegroups', '*', "", 'order', 'ASC');
+    $servicegroups = array();
+    while ($groups = mysqli_fetch_assoc($result2)) {
+        $servicegroups[$groups['id']] = $groups['name'];
+    }
+
     if ($action == "edit") {
         $result = select_query_i("tblservices", "", array("id" => $id));
-        $data = mysqli_fetch_array($result);
+        $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
         $type = $data['type'];
         $groupid = $gid = $data['gid'];
         $name = $data['name'];
         $description = $data['description'];
-        $showdomainops = $data['showdomainoptions'];
         $hidden = $data['hidden'];
         $welcomeemail = $data['welcomeemail'];
         $paytype = $data['paytype'];
         $allowqty = $data['allowqty'];
-        $subdomain = $data['subdomain'];
         $autosetup = $data['autosetup'];
         $servergroup = $data['servergroup'];
         $stockcontrol = $data['stockcontrol'];
@@ -726,15 +774,17 @@ if ($action == "") {
         $proratachargenextmonth = $data['proratachargenextmonth'];
         $servertype = $data['servertype'];
 
+
+        $aInt->assign('data', $data);
+
         $counter = 1;
 
         while ($counter <= 24) {
             $packageconfigoption[$counter] = $data["configoption" . $counter];
             $counter += 1;
         }
+        // $aInt->assign('services', $data);
 
-        $freedomainpaymentterms = $data['freedomainpaymentterms'];
-        $freedomaintlds = $data['freedomaintlds'];
         $recurringcycles = $data['recurringcycles'];
         $autoterminatedays = $data['autoterminatedays'];
         $autoterminateemail = $data['autoterminateemail'];
@@ -751,273 +801,21 @@ if ($action == "") {
         $affiliateonetime = $data['affiliateonetime'];
         $downloads = $data['downloads'];
         $retired = $data['retired'];
-        $freedomainpaymentterms = explode(",", $freedomainpaymentterms);
-        $freedomaintlds = explode(",", $freedomaintlds);
         $overagesenabled = explode(",", $overagesenabled);
         $downloads = unserialize($downloads);
         $order = $data['order'];
-        echo "<script type=\"text/javascript\" src=\"../includes/jscript/jquerylq.js\"></script>
-<script type=\"text/javascript\" src=\"../includes/jscript/jqueryFileTree.js\"></script>
-<link href=\"../includes/jscript/css/jqueryFileTree.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />
 
-<h2>Edit Product</h2>
-<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?action=save&id=" . $id;
-        echo "\" name=\"packagefrm\">";
-        $jscode = "function deletecustomfield(id) {
-if (confirm(\"Are you sure you want to delete this field and ALL DATA associated with it?\")) {
-window.location='" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $id . "&tab=3&sub=deletecustomfield&fid='+id+'" . generate_token("link") . "';
-}}
-function deleteoption(id) {
-if (confirm(\"Are you sure you want to delete this product configuration?\")) {
-window.location='" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $id . "&tab=4&sub=deleteoption&confid='+id+'" . generate_token("link") . "';
-}}";
-        $jquerycode = "$('#productdownloadsbrowser').fileTree({ root: '0', script: 'configservices.php?action=getdownloads" . generate_token("link") . "', folderEvent: 'click', expandSpeed: 1, collapseSpeed: 1 }, function(file) {
-    $.post(\"configservices.php?action=managedownloads&id=" . $id . generate_token("link") . "&adddl=\"+file, function(data) {
-        $(\"#productdownloadslist\").html(data);
-    });
-});
-$(\"input[name=\'contract\']\").click(function(){
-if($(this).is(\":checked\"))
-{
-    $(\"#contractop\").show();
-}else{
- $(\"#contractop\").hide();
-}
-});
-$(\".removedownload\").livequery(\"click\", function(event) {
-    var dlid = $(this).attr(\"rel\");
-    $.post(\"configservices.php?action=managedownloads&id=" . $id . generate_token("link") . "&remdl=\"+dlid, function(data) {
-        $(\"#productdownloadslist\").html(data);
-    });
-});
-$(\"#showquickupload\").click(
-    function() {
-        $(\"#quickupload\").dialog(\"open\");
-        $(\"#quickupload\").load(\"configservices.php?action=quickupload&id=" . $id . generate_token("link") . "\");
-        return false;
-    }
-);
-$(\"#showadddownloadcat\").click(
-    function() {
-        $(\"#adddownloadcat\").dialog(\"open\");
-        $(\"#adddownloadcat\").load(\"configservices.php?action=adddownloadcat&id=" . $id . generate_token("link") . "\");
-        return false;
-    }
-);
-";
 
         if ($success) {
             infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
         }
 
-        echo $infobox;
-        echo $aInt->Tabs(array($aInt->lang("services", "tabsdetails"), $aInt->lang("global", "pricing"), $aInt->lang("services", "tabsmodulesettings"), $aInt->lang("setup", "configoptions"), $aInt->lang("setup", "other")));
-        echo "
-<div id=\"tab0box\" class=\"tabbox\">
-  <div id=\"tab_content\">
 
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("fields", "producttype");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"type\" onChange=\"doFieldUpdate()\"><option value=\"hostingaccount\"";
 
-        if ($type == "hostingaccount") {
-            echo " SELECTED";
-        }
 
-        echo ">";
-        echo $aInt->lang("services", "hostingaccount");
-        echo "<option value=\"reselleraccount\"";
 
-        if ($type == "reselleraccount") {
-            echo " SELECTED";
-        }
-
-        echo ">";
-        echo $aInt->lang("services", "reselleraccount");
-        echo "<option value=\"server\"";
-
-        if ($type == "server") {
-            echo " SELECTED";
-        }
-
-        echo ">";
-        echo $aInt->lang("services", "dedicatedvpsserver");
-        echo "<option value=\"other\"";
-
-        if ($type == "other") {
-            echo " SELECTED";
-        }
-
-        echo ">";
-        echo $aInt->lang("setup", "other");
-        echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "servicegroup");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<select name=\"gid\">";
-        $result = select_query_i("tblservicegroups", "", "", "order", "ASC");
-
-        while ($data = mysqli_fetch_array($result)) {
-            $select_gid = $data['id'];
-            $select_name = $data['name'];
-            echo "<option value=\"" . $select_gid . "\"";
-
-            if ($select_gid == $groupid) {
-                echo " selected";
-            }
-
-            echo ">" . $select_name . "</option>";
-        }
-
-        echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "productname");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"40\" name=\"name\" value=\"";
-        echo $name;
-        echo "\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "servicedesc");
-        echo "</td><td class=\"fieldarea\"><table cellsapcing=0 cellpadding=0><tr><td><textarea name=\"description\" cols=60 rows=5>";
-        echo $description;
-        echo "</textarea></td><td>";
-        echo $aInt->lang("services", "htmlallowed");
-        echo "<br>&lt;br /&gt; ";
-        echo $aInt->lang("services", "htmlnewline");
-        echo "<br>&lt;strong&gt;";
-        echo $aInt->lang("services", "htmlbold");
-        echo "&lt;/strong&gt; <b>";
-        echo $aInt->lang("services", "htmlbold");
-        echo "</b><br>&lt;em&gt;";
-        echo $aInt->lang("services", "htmlitalics");
-        echo "&lt;/em&gt; <i>";
-        echo $aInt->lang("services", "htmlitalics");
-        echo "</i></td></tr></table></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "welcomeemail");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"welcomeemail\"><option value=\"0\">";
-        echo $aInt->lang("global", "none");
-        echo "</option>";
-        $emails = array("Hosting Account Welcome Email", "Reseller Account Welcome Email", "Dedicated/VPS Server Welcome Email", "Other Product/Service Welcome Email");
-        foreach ($emails as $email) {
-            $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "name" => $email, "language" => ""));
-            while ($data = mysqli_fetch_array($result)) {
-                $mid = $data['id'];
-                $name = $data['name'];
-                echo "<option value=\"" . $mid . "\"";
-
-                if ($welcomeemail == $mid) {
-                    echo " selected";
-                }
-
-                echo ">" . $name . "</option>";
-            }
-        }
-        $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "custom" => "1", "language" => ""), "name", "ASC");
-        while ($data = mysqli_fetch_array($result)) {
-            $mid = $data['id'];
-            $name = $data['name'];
-            echo "<option value=\"" . $mid . "\"";
-
-            if ($welcomeemail == $mid) {
-                echo " selected";
-            }
-
-            echo ">" . $name . "</option>";
-        }
-        echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "applytax");
-        echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"tax\"";
-        if ($tax == "1") {
-            echo " checked";
-        }
-        echo "> ";
-        echo $aInt->lang("services", "applytaxdesc");
-        echo "</label></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("fields", "hidden");
-        echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"hidden\"";
-
-        if ($hidden == "on") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("services", "hiddendesc");
-        echo "</label></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "retired");
-        echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"retired\" value=\"1\"";
-        if ($retired) {
-            echo " checked";
-        }
-        echo "> ";
-        echo $aInt->lang("services", "retireddesc");
-        echo "</label></td></tr>
-            <tr><td class=\"fieldlabel\">Contract</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"contract\" value=\"1\">Tick if this service is contract</label></tr>
- <tr><td></td><td class=\"fieldarea\"><div style=\"display:none\" id=\"contractop\"><input style=\"width:40px\" type=\"text\" name=\"etf\"> <label>ETF</label> <input style=\"width:40px\" type=\"text\" name=\"term\"> <label>Term (Months)</label></div></td></tr>
-</table>
-
-  </div>
-</div>
-<div id=\"tab1box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "paymenttype");
-        echo "</td><td class=\"fieldarea\"><label><input type=\"radio\" name=\"paytype\" value=\"free\"";
-
-        if ($paytype == "free") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("billingcycles", "free");
-        echo "</label> <label><input type=\"radio\" name=\"paytype\" value=\"onetime\"";
-
-        if ($paytype == "onetime") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("billingcycles", "onetime");
-        echo "</label> <label><input type=\"radio\" name=\"paytype\" value=\"recurring\"";
-
-        if ($paytype == "recurring") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("global", "recurring");
-        echo "</label></td></tr>
-<tr><td colspan=\"2\" align=\"center\"><br>
-<table cellspacing=\"1\" bgcolor=\"#cccccc\">
-<tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold\"><td width=80>";
-        echo $aInt->lang("currencies", "currency");
-        echo "</td><td width=80></td><td width=120>";
-        echo $aInt->lang("billingcycles", "onetime");
-        echo "/";
-        echo $aInt->lang("billingcycles", "monthly");
-        echo "</td><td width=90>";
-        echo $aInt->lang("billingcycles", "quarterly");
-        echo "</td><td width=100>";
-        echo $aInt->lang("billingcycles", "semiannually");
-        echo "</td><td width=90>";
-        echo $aInt->lang("billingcycles", "annually");
-        echo "</td><td width=90>";
-        echo $aInt->lang("billingcycles", "biennially");
-        echo "</td><td width=90>";
-        echo $aInt->lang("billingcycles", "triennially");
-        echo "</td></tr>
-";
+        $tabledata = array();
         $result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
-
         while ($data = mysqli_fetch_array($result)) {
             $currency_id = $data['id'];
             $currency_code = $data['code'];
@@ -1043,138 +841,44 @@ $(\"#showadddownloadcat\").click(
             $annually = $data['annually'];
             $biennially = $data['biennially'];
             $triennially = $data['triennially'];
-            echo "<tr bgcolor=\"#ffffff\" style=\"text-align:center\"><td rowspan=\"2\" bgcolor=\"#efefef\"><b>" . $currency_code . "</b></td><td>" . $aInt->lang("fields", "setupfee") . ((((((("</td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[msetupfee]\" size=\"10\" value=\"" . $msetupfee . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[qsetupfee]\" size=\"10\" value=\"" . $qsetupfee . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[ssetupfee]\" size=\"10\" value=\"" . $ssetupfee . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[asetupfee]\" size=\"10\" value=\"" . $asetupfee . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[bsetupfee]\" size=\"10\" value=\"" . $bsetupfee . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[tsetupfee]\" size=\"10\" value=\"" . $tsetupfee . "\"></td></tr><tr bgcolor=\"#ffffff\" style=\"text-align:center\"><td>") . $aInt->lang("fields", "price") . ((((((("</td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[monthly]\" size=\"10\" value=\"" . $monthly . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[quarterly]\" size=\"10\" value=\"" . $quarterly . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[semiannually]\" size=\"10\" value=\"" . $semiannually . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[annually]\" size=\"10\" value=\"" . $annually . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[biennially]\" size=\"10\" value=\"" . $biennially . "\"></td><td><input type=\"text\" name=\"currency[" . $currency_id . "]") . "[triennially]\" size=\"10\" value=\"" . $triennially . "\"></td></tr>");
+            $tabledata[$currency_id] = $data;
         }
 
-        echo "</table><br>
-(";
-        echo $aInt->lang("services", "disablepaymenttermdesc");
-        echo ")<br /><br />
-</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "allowqty");
-        echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"allowqty\" value=\"1\"";
 
-        if ($allowqty) {
-            echo " checked";
-        }
 
-        echo " /> ";
-        echo $aInt->lang("services", "allowqtydesc");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "recurringcycleslimit");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"recurringcycles\" value=\"";
-        echo $recurringcycles;
-        echo "\" size=\"7\" /> ";
-        echo $aInt->lang("services", "recurringcycleslimitdesc");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "autoterminatefixedterm");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"autoterminatedays\" value=\"";
-        echo $autoterminatedays;
-        echo "\" size=\"7\" /> ";
-        echo $aInt->lang("services", "autoterminatefixedtermdesc");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "terminationemail");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"autoterminateemail\"><option value=\"0\">";
-        echo $aInt->lang("global", "none");
-        echo "</option>";
         $result = select_query_i("tblemailtemplates", "id,name", array("type" => "product", "language" => ""));
-
+        $autoemail = array();
         while ($data = mysqli_fetch_array($result)) {
-            $mid = $data['id'];
-            $name = $data['name'];
-            echo "<option value=\"" . $mid . "\"";
-
-            if ($autoterminateemail == $mid) {
-                echo " selected";
-            }
-
-            echo ">" . $name . "</option>";
+            $autoemail[$data['id']] = array(
+                'name' => $data['name'],
+                'select' => $welcomeemail == $data['id'] ? "selected" : "",
+                'termninate' => $autoterminateemail == $data['id'] ? "selected" : ""
+            );
         }
 
-        echo "</select> ";
-        echo $aInt->lang("services", "chooseemailtplfixedtermend");
-        echo "</td></tr>
-</table>
-
-  </div>
-</div>
-<div id=\"tab2box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\" width=150>";
-        echo $aInt->lang("services", "modulename");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"servertype\" onChange=\"submit()\"><option value=\"\">";
-        echo $aInt->lang("global", "none");
         $modulesarray = array();
-        $dh = opendir(ROOTDIR . "/modules/servers/");
+        $dh = opendir(ROOTDIR . "/modules/service/");
 
-        foreach (readdir($dh) as $file) {
-            if (is_file(ROOTDIR . ("/modules/servers/" . $file . "/" . $file . ".php"))) {
-                $modulesarray[] = $file;
-            }
-        }
 
-        closedir($dh);
-        sort($modulesarray);
-        foreach ($modulesarray as $module) {
-            echo "<option value=\"" . $module . "\"";
 
-            if ($module == $servertype) {
-                echo " selected";
-            }
+        if (!empty($dh)) {
+            while ($file = readdir($dh)) {
+                if (is_file(ROOTDIR . ("/modules/service/" . $file . "/" . $file . ".php"))) {
 
-            echo ">" . ucfirst($module) . "</option>";
-        }
-
-        echo "</select></td></tr>
-";
-
-        if ($servertype) {
-            echo "<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("services", "servergroup");
-            echo "</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"servergroup\"><option value=\"0\">";
-            echo $aInt->lang("global", "none");
-            echo "</option>";
-            $result2 = select_query_i("tblservergroups", "", "", "name", "ASC");
-
-            while ($data2 = mysqli_fetch_array($result2)) {
-                $groupid = $data2['id'];
-                $groupname = $data2['name'];
-                echo "<option value=\"" . $groupid . "\"";
-
-                if ($groupid == $servergroup) {
-                    echo " selected";
+                    $modulesarray [] = array(
+                        'name' => $file,
+                        'select' => $file == $servertype ? 'selected' : '',
+                    );
                 }
-
-                echo ">" . $groupname . "</option>";
             }
-
-            echo "</select>";
-            echo "</td></tr>
-";
+            closedir($dh);
+            sort($modulesarray);
         }
 
-        echo "</table>
-
-<br>
-
-";
+        $aInt->assign("modulesarray", $modulesarray);
 
         if ($servertype && in_array($servertype, $modulesarray)) {
-            echo "
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\"><tr>
-";
+
 
             if (!isValidforPath($servertype)) {
                 exit("Invalid Server Module Name");
@@ -1199,493 +903,60 @@ $(\"#showadddownloadcat\").click(
                     if ($i % 2) {
                         continue;
                     }
-
-                    echo "</tr><tr>";
                 }
             }
 
-            echo "</tr></table>
+            $configoptionlinks = array();
+            $result = select_query_i("tblserviceconfiglinks", "", array("pid" => $id));
 
-<br>
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=20><input type=\"radio\" name=\"autosetup\" value=\"order\"";
-
-            if ($autosetup == "order") {
-                echo " CHECKED";
+            while ($data = mysqli_fetch_array($result)) {
+                $configoptionlinks[] = $data['gid'];
             }
 
-            echo "></td><td class=\"fieldarea\">";
-            echo $aInt->lang("services", "asetupinstantlyafterorderdesc");
-            echo "</td></tr>
-<tr><td><input type=\"radio\" name=\"autosetup\" value=\"payment\"";
+            $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
 
-            if ($autosetup == "payment") {
-                echo " CHECKED";
-            }
+            $result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
 
-            echo "></td><td class=\"fieldarea\">";
-            echo $aInt->lang("services", "asetupafterpaydesc");
-            echo "</td></tr>
-<tr><td><input type=\"radio\" name=\"autosetup\" value=\"on\"";
+            while ($data = mysqli_fetch_array($result)) {
+                $confgroupid = $data['id'];
+                $name = $data['name'];
+                $description = $data['description'];
+                echo "<option value=\"" . $confgroupid . "\"";
 
-            if ($autosetup == "on") {
-                echo " CHECKED";
-            }
-
-            echo "></td><td class=\"fieldarea\">";
-            echo $aInt->lang("services", "asetupmadesc");
-            echo "</td></tr>
-<tr><td><input type=\"radio\" name=\"autosetup\" value=\"\"";
-
-            if ($autosetup == "") {
-                echo " CHECKED";
-            }
-
-            echo "></td><td class=\"fieldarea\">";
-            echo $aInt->lang("services", "noautosetupdesc");
-            echo "</td></tr>
-</table>
-
-";
-        }
-
-        echo "
-  </div>
-</div>
-
-<div id=\"tab3box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"150\" class=\"fieldlabel\">";
-        echo $aInt->lang("services", "assignedoptiongroups");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"configoptionlinks[]\" size=\"8\" style=\"width:90%\" multiple>
-";
-        $configoptionlinks = array();
-        $result = select_query_i("tblserviceconfiglinks", "", array("pid" => $id));
-
-        while ($data = mysqli_fetch_array($result)) {
-            $configoptionlinks[] = $data['gid'];
-        }
-
-        $result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
-
-        while ($data = mysqli_fetch_array($result)) {
-            $confgroupid = $data['id'];
-            $name = $data['name'];
-            $description = $data['description'];
-            echo "<option value=\"" . $confgroupid . "\"";
-
-            if (in_array($confgroupid, $configoptionlinks)) {
-                echo " selected";
-            }
-
-            echo ">" . $name . " - " . $description . "</option>";
-        }
-
-        echo "</select></td></tr>
-</table>
-
-  </div>
-</div>
-
-<div id=\"tab4box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "tabsfreedomain");
-        echo "</td><td class=\"fieldarea\"><input type=\"radio\" name=\"freedomain\" value=\"\"";
-
-        if (!$freedomain) {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("global", "none");
-        echo "<br /><input type=\"radio\" name=\"freedomain\" value=\"once\"";
-
-        if ($freedomain == "once") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("services", "freedomainrenewnormal");
-        echo "<br /><input type=\"radio\" name=\"freedomain\" value=\"on\"";
-
-        if ($freedomain == "on") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("services", "freedomainfreerenew");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "freedomainpayterms");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"freedomainpaymentterms[]\" size=\"6\" multiple>
-<option value=\"onetime\"";
-
-        if (in_array("onetime", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "onetime");
-        echo "</option>
-<option value=\"monthly\"";
-
-        if (in_array("monthly", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "monthly");
-        echo "</option>
-<option value=\"quarterly\"";
-
-        if (in_array("quarterly", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "quarterly");
-        echo "</option>
-<option value=\"semiannually\"";
-
-        if (in_array("semiannually", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "semiannually");
-        echo "</option>
-<option value=\"annually\"";
-
-        if (in_array("annually", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "annually");
-        echo "</option>
-<option value=\"biennially\"";
-
-        if (in_array("biennially", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "biennially");
-        echo "</option>
-<option value=\"triennially\"";
-
-        if (in_array("triennially", $freedomainpaymentterms)) {
-            echo " selected";
-        }
-
-        echo ">";
-        echo $aInt->lang("billingcycles", "triennially");
-        echo "</option>
-</select><br>";
-        echo $aInt->lang("services", "selectfreedomainpayterms");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "selectfreedomainpayterms");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"freedomaintlds[]\" size=\"5\" multiple>";
-        $query = "SELECT DISTINCT extension FROM tbldomainpricing ORDER BY `order` ASC";
-        $result = full_query_i($query);
-
-        while ($data = mysqli_fetch_array($result)) {
-            $extension = $data['extension'];
-            echo "<option";
-
-            if (in_array($extension, $freedomaintlds)) {
-                echo " selected";
-            }
-
-            echo ">" . $extension;
-        }
-
-        echo "</select><br>";
-        echo $aInt->lang("services", "usectrlclickpayterms");
-        echo "</td></tr>
-</table>
-
-  </div>
-</div>
-<div id=\"tab5box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-";
-        $producteditfieldsarray = run_hook("AdminProductConfigFields", array("pid" => $id));
-
-        if (is_array($producteditfieldsarray)) {
-            foreach ($producteditfieldsarray as $pv) {
-                foreach ($pv as $k => $v) {
-                    echo "<tr><td class=\"fieldlabel\">" . $k . "</td><td class=\"fieldarea\">" . $v . "</td></tr>";
+                if (in_array($confgroupid, $configoptionlinks)) {
+                    echo " selected";
                 }
+
+                echo ">" . $name . " - " . $description . "</option>";
             }
         }
-
-        echo "<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "customaffiliatepayout");
-        echo "</td><td class=\"fieldarea\"><input type=\"radio\" name=\"affiliatepaytype\" value=\"\"";
-
-        if ($affiliatepaytype == "") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("affiliates", "usedefault");
-        echo " <input type=\"radio\" name=\"affiliatepaytype\" value=\"percentage\"";
-
-        if ($affiliatepaytype == "percentage") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("affiliates", "percentage");
-        echo " <input type=\"radio\" name=\"affiliatepaytype\" value=\"fixed\"";
-
-        if ($affiliatepaytype == "fixed") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("affiliates", "fixedamount");
-        echo " <input type=\"radio\" name=\"affiliatepaytype\" value=\"none\"";
-
-        if ($affiliatepaytype == "none") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("affiliates", "nocommission");
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("affiliates", "affiliatepayamount");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"affiliatepayamount\" value=\"";
-        echo $affiliatepayamount;
-        echo "\" size=\"10\"> <input type=\"checkbox\" name=\"affiliateonetime\"";
-
-        if ($affiliateonetime == "on") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("affiliates", "onetimepayout");
-        echo "</td></tr>
-
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "associateddownloads");
-        echo "</td><td class=\"fieldarea\">";
-        echo $aInt->lang("services", "associateddownloadsdesc");
-        echo "<br />
-<table align=\"center\"><tr><td valign=\"top\">
-<div align=\"center\">";
-        echo "<s";
-        echo "trong>";
-        echo $aInt->lang("services", "availablefiles");
-        echo "</strong></div>
-<div id=\"productdownloadsbrowser\" style=\"width: 250px;height: 200px;border-top: solid 1px #BBB;border-left: solid 1px #BBB;border-bottom: solid 1px #FFF;border-right: solid 1px #FFF;background: #FFF;overflow: scroll;padding: 5px;\"></div>
-</td><td><></td><td valign=\"top\">
-<div align=\"center\">";
-        echo "<s";
-        echo "trong>";
-        echo $aInt->lang("services", "selectedfiles");
-        echo "</strong></div>
-<div id=\"productdownloadslist\" style=\"width: 250px;height: 200px;border-top: solid 1px #BBB;border-left: solid 1px #BBB;border-bottom: solid 1px #FFF;border-right: solid 1px #FFF;background: #FFF;overflow: scroll;padding: 5px;\">";
-        printProductDownlads($downloads);
-        echo "</div>
-</td></tr></table>
-<div align=\"center\"><input type=\"button\" value=\"";
-        echo $aInt->lang("services", "addcategory");
-        echo "\" class=\"button\" id=\"showadddownloadcat\" /> <input type=\"button\" value=\"";
-        echo $aInt->lang("services", "quickupload");
-        echo "\" class=\"button\" id=\"showquickupload\" /></div>
-</td></tr>
-
-</table>
-
-  </div>
-</div>
-<div id=\"tab8box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "directscartlink");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"100\" value=\"";
-        echo $CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL'];
-        echo "/cart.php?a=add&pid=";
-        echo $id;
-        echo "\" readonly></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "directscarttpllink");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"100\" value=\"";
-        echo $CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL'];
-        echo "/cart.php?a=add&pid=";
-        echo $id;
-        echo "&carttpl=cart\" readonly></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "directscartdomlink");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"100\" value=\"";
-        echo $CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL'];
-        echo "/cart.php?a=add&pid=";
-        echo $id;
-        echo "&sld=ra&tld=.com\" readonly></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("services", "servicegcartlink");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"100\" value=\"";
-        echo $CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL'];
-        echo "/cart.php?gid=";
-        echo $gid;
-        echo "\" readonly></td></tr>
-</table>
-
-  </div>
-</div>
-
-<p align=\"center\"><input type=\"submit\" value=\"Save Changes\" class=\"button\"> <input type=\"button\" value=\"";
-        echo $aInt->lang("services", "backtoservicelist");
-        echo "\" onClick=\"window.location='configservices.php'\" class=\"button\"></p>
-
-<input type=\"hidden\" name=\"tab\" id=\"tab\" value=\"";
-        echo $_REQUEST['tab'];
-        echo "\" />
-
-</form>
-
-";
-        echo $aInt->jqueryDialog("quickupload", "Quick File Upload", "Loading...", array("Save" => "$('#quickuploadfrm').submit();
-", "Cancel" => ""));
-        echo $aInt->jqueryDialog("adddownloadcat", "Add Category", "Loading...", array("Save" => "$('#adddownloadcatfrm').submit();
-", "Cancel" => ""));
+        $templatefile = 'services/edit';
     } else {
         if ($action == "create") {
             checkPermission("Create New Products/Services");
-            echo "
-<h2>Add New Product</h2>
 
-<form method=\"post\" action=\"";
-            echo $PHP_SELF;
-            echo "?action=add\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=150 class=\"fieldlabel\">";
-            echo $aInt->lang("fields", "producttype");
-            echo "</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"type\"><option value=\"hostingaccount\"";
 
-            if ($type == "hostingaccount") {
-                echo " SELECTED";
-            }
-
-            echo ">";
-            echo $aInt->lang("services", "hostingaccount");
-            echo "<option value=\"reselleraccount\"";
-
-            if ($type == "reselleraccount") {
-                echo " SELECTED";
-            }
-
-            echo ">";
-            echo $aInt->lang("services", "reselleraccount");
-            echo "<option value=\"server\"";
-
-            if ($type == "server") {
-                echo " SELECTED";
-            }
-
-            echo ">";
-            echo $aInt->lang("services", "dedicatedvpsserver");
-            echo "<option value=\"other\"";
-
-            if ($type == "other") {
-                echo " SELECTED";
-            }
-
-            echo ">";
-            echo $aInt->lang("services", "otherproductservice");
-            echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("services", "productgroup");
-            echo "</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"gid\">";
-            $query2 = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
-            $result2 = full_query_i($query2);
-
-            while ($data = mysqli_fetch_array($result2)) {
-                $gid = $data['id'];
-                $gname = $data['name'];
-                echo "<option value=\"" . $gid . "\"";
-
-                if ($gid == $groupid) {
-                    echo " SELECTED";
-                }
-                echo ">" . $gname;
-            }
-            echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("services", "productname");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"productname\" size=\"50\"></td></tr>
-</table>
-<P ALIGN=\"center\"><input type=\"submit\" value=\"";
-            echo $aInt->lang("global", "continue");
-            echo " >>\" class=\"button\"></P>
-</form>
-
-";
+            $templatefile = 'services/create';
         } else {
             if ($action == "duplicate") {
                 checkPermission("Create New Products/Services");
-                echo "
-<h2>";
-                echo $aInt->lang("services", "duplicateservice");
-                echo "</h2>
-
-<form method=\"post\" action=\"";
-                echo $PHP_SELF;
-                echo "?action=duplicatenow\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=150 class=\"fieldlabel\">";
-                echo $aInt->lang("services", "existingservice");
-                echo "</td><td class=\"fieldarea\">";
-                echo "<s";
-                echo "elect name=\"existingservice\">";
                 $query = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
                 $result = full_query_i($query);
-
+                $service = array();
                 while ($data = mysqli_fetch_array($result)) {
                     $gid = $data['id'];
                     $gname = $data['name'];
                     $query2 = "SELECT * FROM tblservices WHERE gid=" . (int) $gid;
                     $result2 = full_query_i($query2);
-
                     while ($data = mysqli_fetch_array($result2)) {
-                        $pid = $data['id'];
-                        $prodname = $data['name'];
-                        echo "<option value=\"" . $pid . "\">" . $gname . " - " . $prodname;
+                        $service [$data['id']] = array(
+                            'gname' => $gname,
+                            'prodname' => $data['name']
+                        );
                     }
                 }
-                echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-                echo $aInt->lang("services", "newservicename");
-                echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"newservicename\" size=\"50\"></td></tr>
-</table>
-<p ALIGN=\"center\"><input type=\"submit\" value=\"";
-                echo $aInt->lang("global", "continue");
-                echo " >>\" class=\"button\"></P>
-</form>";
+                $aInt->assign('service', $service);
+                $templatefile = 'services/duplicate';
             } else {
                 if ($action == "creategroup" || $action == "editgroup") {
                     checkPermission("Manage Product Groups");
@@ -1700,127 +971,65 @@ $(\"#showadddownloadcat\").click(
                     $queryone = "SELECT * FROM tblcustomfieldsgroupnames";
                     $result = full_query_i($queryone);
                     $option = mysqli_fetch_array($query);
-                    echo "<h2>";
-                    echo $aInt->lang("services", ($action == "creategroup" ? "creategroup" : "editgroup"));
-                    echo "</h2><form method=\"post\" action=\"";
-                    echo $PHP_SELF;
-                    echo "?sub=savegroup&ids=";
-                    echo $ids;
-                    echo "\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"25%\" class=\"fieldlabel\">";
-                    echo $aInt->lang("services", "servicegroupname");
-                    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"name\" size=\"40\" value=\"";
-                    echo $name;
-                    echo "\"></td></tr>
-<tr><td class=\"fieldlabel\"><label>Customer Fields Group</lable><br></td><td class=\"fieldarea\">
-<select name=\"customefield\" multiple>";
-                    while ($data = mysqli_fetch_array($result)) {
-                        echo "<option value='" . $data['cfgid'] . "'>" . $data['name'] . "</option>";
+                    $cdata = array();
+                    while ($data = mysqli_fetch_assoc($result)) {
+                        $cdata[] = $data;
                     }
-                    echo "</select>
-</td></tr>
-<tr><td class=\"fieldlabel\">";
-                    echo $aInt->lang("services", "orderfrmtpl");
-                    echo "</td><td class=\"fieldarea\">
-<div><label><input type=\"radio\" name=\"orderfrmtpl\" value=\"\"";
-
-                    if (!$orderfrmtpl) {
-                        echo " checked";
-                    }
-
-                    echo " /> Use Default</label></div>
-<div class=\"clear\"></div>
-";
                     $ordertemplates = array();
                     $ordertplfolder = ROOTDIR . "/templates/orderforms/";
-
                     if (is_dir($ordertplfolder)) {
                         $dh = opendir($ordertplfolder);
 
                         while (false !== $folder = readdir($dh)) {
                             if (file_exists($ordertplfolder . $folder . "/services.tpl")) {
-                                $ordertemplates[] = $folder;
+                                $thumbnail = "../templates/orderforms/" . $folder . "/thumbnail.gif";
+                                if (!file_exists($thumbnail)) {
+                                    $thumbnail = "images/ordertplpreview.gif";
+                                }
+                                $ordertemplates[] = array(
+                                    'template' => $folder,
+                                    'thumb' => $thumbnail,
+                                    'checked' => $template == $orderfrmtpl ? "checked" : ""
+                                );
                             }
                         }
 
                         closedir($dh);
                     }
 
-                    sort($ordertemplates);
-                    foreach ($ordertemplates as $template) {
-                        $thumbnail = "../templates/orderforms/" . $template . "/thumbnail.gif";
 
-                        if (!file_exists($thumbnail)) {
-                            $thumbnail = "images/ordertplpreview.gif";
-                        }
-
-                        echo "<div style=\"float:left;padding:10px;text-align:center;\"><label><img src=\"" . $thumbnail . "\" width=\"165\" height=\"90\" style=\"border:5px solid #fff;\" /><br /><input type=\"radio\" name=\"orderfrmtpl\" value=\"" . $template . "\"";
-
-                        if ($template == $orderfrmtpl) {
-                            echo " checked";
-                        }
-
-                        echo "> " . ucfirst($template) . "</label></div>";
-                    }
-
-                    echo "</td></tr>
-<tr><td class=\"fieldlabel\"><br></td><td class=\"fieldarea\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-                    echo $aInt->lang("services", "availablepgways");
-                    echo "</td><td class=\"fieldarea\">";
+                    $avaiablegateways = array();
                     $gateways = getGatewaysArray();
                     foreach ($gateways as $gateway => $name) {
-                        echo "<label><input type=\"checkbox\" name=\"gateways[" . $gateway . "]\"" . (!in_array($gateway, $disabledgateways) ? " checked" : "") . " /> " . $name . "</label><br />";
+                        $avaiablegateway [] = array(
+                            'value' => $gateway,
+                            'name' => $name,
+                            'check' => !in_array($gateway, $disabledgateways) ? " checked" : ""
+                        );
                     }
-
-                    echo "</td></tr>
-<tr><td class=\"fieldlabel\"><br></td><td class=\"fieldarea\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-                    echo $aInt->lang("fields", "hidden");
-                    echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"hidden\"";
-
-                    if ($hidden == "on") {
-                        echo " checked";
-                    }
-
-                    echo "> ";
-                    echo $aInt->lang("services", "hiddengroupdesc");
-                    echo "</label></td></tr>
-";
-
-                    if ($ids) {
-                        echo "<tr><td class=\"fieldlabel\"><br></td><td class=\"fieldarea\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-                        echo $aInt->lang("services", "directcartlink");
-                        echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"100\" value=\"";
-                        echo $CONFIG['SystemURL'];
-                        echo "/cart.php?gid=";
-                        echo ltrim($ids, 0);
-                        echo "\" readonly></td></tr>
-";
-                    }
-
-                    echo "</table>
-<p align=\"center\"><input type=\"submit\" value=\"";
-                    echo $aInt->lang("global", "savechanges");
-                    echo "\" class=\"btn btn-primary\" /> <input type=\"button\" value=\"";
-                    echo $aInt->lang("global", "cancelchanges");
-                    echo "\" onclick=\"window.location='configservices.php'\" class=\"btn\" /></p>
-</form>
-
-";
+                    $aInt->assign('cdata', $cdata);
+                    $aInt->assign('ordertemplates', $ordertemplates);
+                    $aInt->assign('avaiablegateway', $avaiablegateway);
+                    $templatefile = 'services/creategroup';
                 }
             }
         }
     }
+
+    $aInt->assign('autoemail', $autoemail);
+    $aInt->assign('servicegroups', $servicegroups);
+    $aInt->assign('langs', $lang);
+    $aInt->assign('infobox', $infobox);
+    $aInt->assign('tabledata', $tabledata);
+    //  echo print_r($servicegroups);
+    $aInt->template = $templatefile;
 }
 
 $content = ob_get_contents();
 ob_end_clean();
+
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
-$aInt->jscode = $jscode;
+
 
 $aInt->display();
 ?>
