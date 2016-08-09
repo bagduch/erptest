@@ -63,7 +63,7 @@
                     <ul>
                         {if in_array("View Products/Services",$admin_perms)}<li><a href="configservices.php">{$_ADMINLANG.setup.services}</a></li>{/if}
                         {if in_array("View Products/Services",$admin_perms)}<li><a href="configservices.php?action=creategroup">{$_ADMINLANG.setup.cservicesg}</a></li>{/if}
-                        {if in_array("View Products/Services",$admin_perms)}<li><a href="configcustomfieldsgroup.php">{$_ADMINLANG.setup.services}</a></li>{/if}
+                        {if in_array("View Products/Services",$admin_perms)}<li><a href="configcustomfieldsgroup.php">{$_ADMINLANG.setup.customefield}</a></li>{/if}
                         {if in_array("View Products/Services",$admin_perms)}<li><a href="configproductoptions.php">{$_ADMINLANG.setup.configoptions}</a></li>{/if}
                         {if in_array("Configure Product Addons",$admin_perms)}<li><a href="configaddons.php">{$_ADMINLANG.setup.saddons}</a></li>{/if}
                     </ul>

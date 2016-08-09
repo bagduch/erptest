@@ -67,6 +67,6 @@ while ($data = mysqli_fetch_array($result)) {
 
 $aInt->assign('cfids', $cfid);
 $aInt->assign('infobox', $infobox);
-$aInt->template = "configcustomfields";
+$aInt->template = "customefieldgroup/configcustomfields";
 $aInt->display();
 ?>

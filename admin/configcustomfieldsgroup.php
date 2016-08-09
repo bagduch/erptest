@@ -381,7 +381,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=deletegroup&id='+id+'" . ge
 }}";
 
 if ($action == "") {
-    $aInt->template = "configcustomfieldsgroup";
+    $aInt->template = "customefieldgroup/configcustomfieldsgroup";
     if ($deleted) {
         infoBox("Success", "The option group has been deleted successfully!");
     }
@@ -406,11 +406,13 @@ if ($action == "") {
         if ($id) {
             $action = "save";
             $steptitle = "Manage Group";
-            $query = "select * from tblcustomfields left join tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ")";
+            $query = "select * from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ";
             $result = full_query_i($query);
             while ($data = mysqli_fetch_array($result)) {
                 $datas[] = $data;
             }
+
+            $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
             $aInt->assign('datas', $datas);
 //            $data = mysqli_fetch_array($result);
 //            $id = $data['id'];
@@ -422,13 +424,14 @@ if ($action == "") {
 //                $productlinks[] = $data['id'];
 //            }
             $aInt->assign('id', $id);
-            $aInt->template = "managegroup";
+            $aInt->template = "customefieldgroup/managegroup";
         } else {
             $action = "savegroup";
             checkPermission("Create New Products/Services");
             $steptitle = "Create a New Group";
             $id = "";
             $productlinks = array();
+            $aInt->template = "customefieldgroup/creategroup";
         }
 
         $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
