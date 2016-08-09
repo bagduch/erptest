@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 ini_set("log_errors", 1);
 ini_set("display_errors", 1);
 ini_set("display_startup_errors", 1);
-ini_set("error_log", "/tmp/php_errors.log");
+ini_set("error_log", "templates_c/php_errors.log");
 error_reporting(E_ALL);
 
 function getValidLanguages($admin = "") {
