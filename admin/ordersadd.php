@@ -158,7 +158,6 @@ if ($action == "getconfigoptions") {
 if ($ra->get_req_var("submitorder")) {
     check_token("RA.admin.default");
     $userid = get_query_val("tblclients", "id", array("id" => $userid));
-    error_log("userid is ".$userid);
 
     if (!$userid && !$calconly) {
         infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");

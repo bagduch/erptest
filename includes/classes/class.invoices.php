@@ -140,69 +140,8 @@ class RA_Invoices extends RA_TableModel {
 		return $filters;
 	}
 
-	public function formatStatus($status) {
-		if (defined("ADMINAREA")) {
-			global $aInt;
-
-			if ($status == "Unpaid") {
-				$status = "<span class=\"textred\">" . $aInt->lang("status", "unpaid") . "</span>";
-			}
-			else {
-				if ($status == "Paid") {
-					$status = "<span class=\"textgreen\">" . $aInt->lang("status", "paid") . "</span>";
-				}
-				else {
-					if ($status == "Cancelled") {
-						$status = "<span class=\"textgrey\">" . $aInt->lang("status", "cancelled") . "</span>";
-					}
-					else {
-						if ($status == "Refunded") {
-							$status = "<span class=\"textblack\">" . $aInt->lang("status", "refunded") . "</span>";
-						}
-						else {
-							if ($status == "Collections") {
-								$status = "<span class=\"textgold\">" . $aInt->lang("status", "collections") . "</span>";
-							}
-							else {
-								$status = "Unrecognised";
-							}
-						}
-					}
-				}
-			}
-		}
-		else {
-			global $_LANG;
-
-			if ($status == "Unpaid") {
-				$status = "<span class=\"textred\">" . $_LANG['invoicesunpaid'] . "</span>";
-			}
-			else {
-				if ($status == "Paid") {
-					$status = "<span class=\"textgreen\">" . $_LANG['invoicespaid'] . "</span>";
-				}
-				else {
-					if ($status == "Cancelled") {
-						$status = "<span class=\"textgrey\">" . $_LANG['invoicescancelled'] . "</span>";
-					}
-					else {
-						if ($status == "Refunded") {
-							$status = "<span class=\"textblack\">" . $_LANG['invoicesrefunded'] . "</span>";
-						}
-						else {
-							if ($status == "Collections") {
-								$status = "<span class=\"textgold\">" . $_LANG['invoicescollections'] . "</span>";
-							}
-							else {
-								$status = "Unrecognised";
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $status;
+    public function formatStatus($status) {
+        return sprintf("<span class=\"%s\">%s</span>",$status,$status);
 	}
 
 	public function getInvoiceTotals() {
