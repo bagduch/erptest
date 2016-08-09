@@ -24,12 +24,13 @@ var datepickerformat = "{$datepickerformat}";
 <body>
 {$headeroutput}
 <div class="topbar">
-  <div class="left"><a href="index.php">{$_ADMINLANG.home.title}</a> | <a href="myaccount.php">Staff Account</a> | <a href="orders.php?status=Pending"><span class="stat">{$sidebarstats.orders.pending}</span> {$_ADMINLANG.stats.pendingorders}</a> | <a href="invoices.php?status=Overdue"><span class="stat">{$sidebarstats.invoices.overdue}</span> {$_ADMINLANG.stats.overdueinvoices}</a> | <a href="supporttickets.php"><span class="stat">{$sidebarstats.tickets.awaitingreply}</span> {$_ADMINLANG.stats.ticketsawaitingreply}</a> |  <a id="logout" href="logout.php">{$_ADMINLANG.global.logout}</a></div>
+  <div class="left"><a href="index.php">{$_ADMINLANG.home.title}</a> | <a href="myaccount.php">Staff Account</a> | <a href="orders.php?status=Pending"><span class="stat">{$sidebarstats.orders.pending}</span> {$_ADMINLANG.stats.pendingorders}</a> | <a href="invoices.php?status=Overdue"><span class="stat">{$sidebarstats.invoices.overdue}</span> {$_ADMINLANG.stats.overdueinvoices}</a> | <a href="supporttickets.php"><span class="stat">{$sidebarstats.tickets.awaitingreply}</span> {$_ADMINLANG.stats.ticketsawaitingreply}</a> | <a id="logout" href="logout.php">{$_ADMINLANG.global.logout}</a></div>
   <div class="right date"> {$smarty.now|date_format:"%A, %d %B %Y, %H:%M"} </div>
 </div>
-<div class="header">
-</div>
+<div class="header"> </div>
+
 {include file="$template/menu.tpl"}
+
 <div id="sidebaropen"{if !$minsidebar} style="display:none;"{/if}> <a href="#" onclick="sidebarOpen();return false"><img src="templates/{$template}/images/opensidebar.png" border="0" /></a> </div>
 <div id="sidebar"{if $minsidebar} style="display:none;"{/if}> {include file="$template/sidebar.tpl"} </div>
 <div class="contentarea" id="contentarea"{if !$minsidebar} style="margin-left:209px;"{/if}>
