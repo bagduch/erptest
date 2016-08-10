@@ -15,9 +15,6 @@ if (!defined("RA")) {
 }
 
 
-if (!function_exists("getRegistrarConfigOptions")) {
-	require ROOTDIR . "/includes/registrarfunctions.php";
-}
 
 
 if (!function_exists("ModuleBuildParams")) {

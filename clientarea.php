@@ -44,11 +44,6 @@ if (in_array($action, array("products", "cancel"))) {
 }
 
 
-if (in_array($action, array("domains", "domaindetails", "domaincontacts", "domaindns", "domainemailforwarding", "domaingetepp", "domainregisterns"))) {
-    $ca->addToBreadCrumb("clientarea.php?action=domains", $ra->get_lang("clientareanavdomains"));
-}
-
-
 if ($action == "invoices") {
     $ca->addToBreadCrumb("clientarea.php?action=invoices", $ra->get_lang("invoices"));
 }
@@ -152,20 +147,6 @@ if ($action == "") {
     }
 
     $smartyvalues['announcements'] = $announcements;
-
-    if ($CONFIG['AllowRegister']) {
-        $smartyvalues['registerdomainenabled'] = true;
-    }
-
-
-    if ($CONFIG['AllowTransfer']) {
-        $smartyvalues['transferdomainenabled'] = true;
-    }
-
-
-    if ($CONFIG['AllowOwnDomain']) {
-        $smartyvalues['owndomainenabled'] = true;
-    }
 
     $captcha = clientAreaInitCaptcha();
     $smartyvalues['captcha'] = $captcha;
@@ -313,7 +294,6 @@ if ($action == "") {
             $smartyvalues['permissions'] = $ra->get_req_var_if($e, "permissions", $contact_data);
             $smartyvalues['generalemails'] = $ra->get_req_var_if($e, "generalemails", $contact_data);
             $smartyvalues['productemails'] = $ra->get_req_var_if($e, "productemails", $contact_data);
-            $smartyvalues['domainemails'] = $ra->get_req_var_if($e, "domainemails", $contact_data);
             $smartyvalues['invoiceemails'] = $ra->get_req_var_if($e, "invoiceemails", $contact_data);
             $smartyvalues['supportemails'] = $ra->get_req_var_if($e, "supportemails", $contact_data);
         } else {
@@ -363,7 +343,6 @@ if ($action == "") {
                 $smartyvalues['permissions'] = $permissions;
                 $smartyvalues['generalemails'] = $generalemails;
                 $smartyvalues['productemails'] = $productemails;
-                $smartyvalues['domainemails'] = $domainemails;
                 $smartyvalues['invoiceemails'] = $invoiceemails;
                 $smartyvalues['supportemails'] = $supportemails;
             } else {
@@ -573,7 +552,7 @@ if ($action == "") {
                                             if ($orderby == "status") {
                                                 $orderby = "servicestatus";
                                             } else {
-                                                $orderby = "domain` " . $sort . ",`tblservices`.`name";
+                                                $orderby = "description` " . $sort . ",`tblservices`.`name";
                                             }
                                         }
                                     }
@@ -975,7 +954,6 @@ if ($action == "") {
                                             $dnsmanagement = $domains->getData("dnsmanagement");
                                             $emailforwarding = $domains->getData("emailforwarding");
                                             $idprotection = $domains->getData("idprotection");
-                                            $registrar = $domains->getModule();
                                             $gatewaysarray = getGatewaysArray();
                                             $paymentmethod = $gatewaysarray[$paymentmethod];
                                             $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain);
@@ -1037,23 +1015,6 @@ if ($action == "") {
                                             $domainemailforwardingprice = $data['qsetupfee'];
                                             $domainidprotectionprice = $data['ssetupfee'];
                                             $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($domaindnsmanagementprice), "emailforwarding" => formatCurrency($domainemailforwardingprice), "idprotection" => formatCurrency($domainidprotectionprice)));
-
-                                            if ($servicestatus == "Active" && $domains->getModule()) {
-                                                $registrarclientarea = "";
-                                                $ca->assign("registrar", $registrar);
-
-                                                if ($sub == "savens") {
-                                                    check_token();
-                                                    checkContactPermission("managedomains");
-                                                    $nameservers = ($nschoice == "default" ? $domains->getDefaultNameservers() : array("ns1" => $ns1, "ns2" => $ns2, "ns3" => $ns3, "ns4" => $ns4, "ns5" => $ns5));
-                                                    $success = $domains->moduleCall("SaveNameservers", $nameservers);
-
-                                                    if ($success) {
-                                                        $smartyvalues['updatesuccess'] = true;
-                                                    } else {
-                                                        $smartyvalues['error'] = $domains->getLastError();
-                                                    }
-                                                }
 
                                                 if ($sub == "savereglock") {
                                                     check_token();
@@ -1146,92 +1107,7 @@ if ($action == "") {
                                                     }
                                                 }
 
-                                                $allowedclientregistrarfunctions = array();
 
-                                                if ($domains->hasFunction("ClientAreaAllowedFunctions")) {
-                                                    $success = $domains->moduleCall("ClientAreaAllowedFunctions");
-                                                    $registrarallowedfunctions = $domains->getModuleReturn();
-
-                                                    if (is_array($registrarallowedfunctions)) {
-                                                        foreach ($registrarallowedfunctions as $v) {
-                                                            $allowedclientregistrarfunctions[] = $v;
-                                                        }
-                                                    }
-                                                }
-
-                                                if ($domains->hasFunction("ClientAreaCustomButtonArray")) {
-                                                    $success = $domains->moduleCall("ClientAreaCustomButtonArray");
-                                                    $registrarcustombuttons = $domains->getModuleReturn();
-
-                                                    if (is_array($registrarcustombuttons)) {
-                                                        foreach ($registrarcustombuttons as $k => $v) {
-                                                            $allowedclientregistrarfunctions[] = $v;
-                                                        }
-                                                    }
-
-                                                    $ca->assign("registrarcustombuttons", $registrarcustombuttons);
-                                                }
-
-                                                if ($modop == "custom" && in_array($a, $allowedclientregistrarfunctions)) {
-                                                    checkContactPermission("managedomains");
-                                                    $success = $domains->moduleCall($a);
-                                                    $data = $domains->getModuleReturn();
-
-                                                    if (is_array($data)) {
-                                                        if (isset($data['templatefile'])) {
-                                                            $ca->setTemplate("/modules/registrars/" . $registrar . "/" . $data['templatefile'] . ".tpl");
-                                                        }
-
-                                                        if (isset($data['breadcrumb'])) {
-                                                            if (is_array($data['breadcrumb'])) {
-                                                                foreach ($data['breadcrumb'] as $k => $v) {
-                                                                    $ca->addToBreadCrumb($k, $v);
-                                                                }
-                                                            }
-                                                        }
-
-                                                        if (is_array($data['vars'])) {
-                                                            foreach ($data['vars'] as $k => $v) {
-                                                                $smartyvalues[$k] = $v;
-                                                            }
-                                                        }
-                                                    } else {
-                                                        if (!$data || $data == "success") {
-                                                            $ca->assign("registrarcustombuttonresult", "success");
-                                                        } else {
-                                                            $ca->assign("registrarcustombuttonresult", $data);
-                                                        }
-                                                    }
-                                                }
-
-                                                if (checkContactPermission("managedomains", true)) {
-                                                    $moduletemplatefile = "";
-                                                    $result = RegClientAreaOutput($params);
-
-                                                    if (is_array($result)) {
-                                                        if (isset($result['templatefile'])) {
-                                                            $moduletemplatefile = "/modules/registrars/" . $registrar . "/" . $result['templatefile'] . ".tpl";
-                                                        }
-                                                    } else {
-                                                        $registrarclientarea = $result;
-                                                    }
-
-                                                    if (!$moduletemplatefile && file_exists(ROOTDIR . ("/modules/registrars/" . $registrar . "/clientarea.tpl"))) {
-                                                        $moduletemplatefile = "/modules/registrars/" . $registrar . "/clientarea.tpl";
-                                                    }
-
-                                                    if ($moduletemplatefile) {
-                                                        if (is_array($result['vars'])) {
-                                                            foreach ($result['vars'] as $k => $v) {
-                                                                $params[$k] = $v;
-                                                            }
-                                                        }
-
-                                                        $registrarclientarea = $ca->getSingleTPLOutput($moduletemplatefile, $moduleparams);
-                                                    }
-                                                }
-
-                                                $smartyvalues['registrarclientarea'] = $registrarclientarea;
                                             }
                                         } else {
                                             if ($action == "domaincontacts") {

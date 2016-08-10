@@ -400,37 +400,6 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 		}
 
 
-		if ($type == "DomainAddonIDP") {
-			$enabledcheck = get_query_val("tbldomains", "idprotection", array("id" => $relid));
-
-			if (!$enabledcheck) {
-				$currency = getCurrency($userid);
-				$idpcost = get_query_val("tblpricing", "ssetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
-				update_query("tbldomains", array("idprotection" => "on", "recurringamount" => "+=" . $idpcost), array("id" => $relid));
-				$data = get_query_vals("tbldomains", "type,domain,registrar,registrationperiod", array("id" => $relid));
-				$domainparts = explode(".", $data['domain'], 2);
-				$params = array();
-				$params['domainid'] = $relid;
-				$params['sld'] = $domainparts[0];
-				$params['tld'] = $domainparts[1];
-				$params['regperiod'] = $data['registrationperiod'];
-				$params['registrar'] = $data['registrar'];
-				$params['regtype'] = $data['type'];
-
-				if (!function_exists("RegIDProtectToggle")) {
-					require ROOTDIR . "/includes/registrarfunctions.php";
-				}
-
-				$values = RegIDProtectToggle($params);
-
-				if ($values['error']) {
-					logActivity("ID Protection Enabling Failed - Error: " . $values['error'] . " - Domain ID: " . $relid, $userid);
-				}
-
-				logActivity("ID Protection Enabled Successfully - Domain ID: " . $relid, $userid);
-			}
-		}
-
 
 		if ($type == "Addon") {
 			makeAddonPayment($relid);
@@ -663,11 +632,6 @@ function makeDomainPayment($func_domainid, $type = "") {
 	$params['domainid'] = $func_domainid;
 	$params['sld'] = $sld;
 	$params['tld'] = $tld;
-
-	if (!function_exists("getRegistrarConfigOptions")) {
-		require ROOTDIR . "/includes/registrarfunctions.php";
-	}
-
 
 	if ($domaintype == "Register" || $domaintype == "Transfer") {
 		$result = select_query_i("tbldomainpricing", "autoreg", array("extension" => "." . $tld));
