@@ -13,7 +13,15 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Summary", false);
-$aInt->requiredFiles(array("clientfunctions", "processinvoices", "invoicefunctions", "gatewayfunctions", "affiliatefunctions", "modulefunctions"));
+$aInt->requiredFiles(
+    array(
+        "clientfunctions", 
+        "processinvoices", 
+        "invoicefunctions", 
+        "gatewayfunctions", 
+        "affiliatefunctions", 
+        "modulefunctions")
+    );
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 
@@ -115,7 +123,7 @@ if ($action == "massaction") {
 					$paymentmethod = $data['paymentmethod'];
 				}
 
-				$domain = get_query_val("tblcustomerservices", "domain", array("id" => $serviceid));
+				$domain = get_query_val("tblcustomerservices", "description", array("id" => $serviceid));
 
 				if ($recurringamount) {
 					$price = $recurringamount;
@@ -602,7 +610,6 @@ if ($affactivated) {
 
 echo $infobox;
 $clientstats = getClientsStats($userid);
-var_dump($clientstats);
 $clientsdetails['status'] = $aInt->lang("status", strtolower($clientsdetails['status']));
 $clientsdetails['autocc'] = ($clientsdetails['disableautocc'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
 $clientsdetails['taxstatus'] = ($clientsdetails['taxexempt'] ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
@@ -700,105 +707,13 @@ while ($data = mysqli_fetch_array($result)) {
 
 $templatevars->messages .= "</select>";
 $recordsfound = "";
-$productsummary = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $userid), "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
-
-while ($data = mysqli_fetch_array($result)) {
-	$id = $data['id'];
-	$regdate = $data['regdate'];
-	$domain = $data['domain'];
-	$dpackage = $data['name'];
-	$dpaymentmethod = $data['paymentmethod'];
-	$amount = formatCurrency($data['amount']);
-	$billingcycle = $data['billingcycle'];
-	$nextduedate = $data['nextduedate'];
-	$status = $data['servicestatus'];
-	$regdate = fromMySQLDate($regdate);
-	$nextduedate = fromMySQLDate($nextduedate);
-
-	if ($billingcycle == "One Time" || $billingcycle == "Free Account") {
-		$nextduedate = "-";
-		$amount = formatCurrency($data['firstpaymentamount']);
-	}
 
 
-	if ($domain == "") {
-		$domain = "(" . $aInt->lang("addons", "nodomain") . ")";
-	}
 
-	$billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($billingcycle)));
-	$status = $aInt->lang("status", strtolower($status));
-	$productsummary[] = array("id" => $id, "idshort" => ltrim($id, "0"), "regdate" => $regdate, "domain" => $domain, "dpackage" => $dpackage, "dpaymentmethod" => $dpaymentmethod, "amount" => $amount, "dbillingcycle" => $billingcycle, "nextduedate" => $nextduedate, "servicestatus" => $status);
-}
+$templatevars['servicessummary'] = getClientsServicesSummary($userid,$aInt);
 
-$templatevars['productsummary'] = $productsummary;
-$predefinedaddons = array();
-$result = select_query_i("tbladdons", "", "");
 
-while ($data = mysqli_fetch_array($result)) {
-	$addon_id = $data['id'];
-	$addon_name = $data['name'];
-	$predefinedaddons[$addon_id] = $addon_name;
-}
 
-$result = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS aid,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $userid), "tblcustomerservices`.`id", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
-$addonsummary = array();
-
-while ($data = mysqli_fetch_array($result)) {
-	$id = $data['aid'];
-	$hostingid = $data['hostingid'];
-	$addonid = $data['addonid'];
-	$regdate = $data['regdate'];
-	$domain = $data['domain'];
-	$addonname = $data['addonname'];
-	$dpackage = $data['name'];
-	$dpaymentmethod = $data['paymentmethod'];
-	$amount = formatCurrency($data['recurring']);
-	$billingcycle = $data['billingcycle'];
-	$nextduedate = $data['nextduedate'];
-
-	if (!$addonname) {
-		$addonname = $predefinedaddons[$addonid];
-	}
-
-	$regdate = fromMySQLDate($regdate);
-	$nextduedate = fromMySQLDate($nextduedate);
-
-	if ($dbillingcycle == "One Time" || $dbillingcycle == "Free Account") {
-		$nextduedate = "-";
-	}
-
-	$status = $data['status'];
-
-	if (!$domain) {
-		$domain = "(" . $aInt->lang("addons", "nodomain") . ")";
-	}
-
-	$billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($billingcycle)));
-	$status = $aInt->lang("status", strtolower($status));
-	$addonsummary[] = array("id" => $id, "idshort" => ltrim($id, "0"), "hostingid" => $hostingid, "serviceid" => $hostingid, "regdate" => $regdate, "domain" => $domain, "addonname" => $addonname, "dpackage" => $dpackage, "dpaymentmethod" => $dpaymentmethod, "amount" => $amount, "dbillingcycle" => $billingcycle, "nextduedate" => $nextduedate, "status" => $status);
-}
-
-$templatevars['addonsummary'] = $addonsummary;
-$domainsummary = array();
-$result = select_query_i("tbldomains", "", array("userid" => $userid), "id", "DESC");
-
-while ($data = mysqli_fetch_array($result)) {
-	$id = $data['id'];
-	$domain = $data['domain'];
-	$registrar = ucfirst($data['registrar']);
-	$registrationdate = $data['registrationdate'];
-	$nextduedate = $data['nextduedate'];
-	$expirydate = $data['expirydate'];
-	$status = $data['status'];
-	$registrationdate = fromMySQLDate($registrationdate);
-	$nextduedate = fromMySQLDate($nextduedate);
-	$expirydate = fromMySQLDate($expirydate);
-	$status = $aInt->lang("status", strtolower(str_replace(" ", "", $status)));
-	$domainsummary[] = array("id" => $id, "idshort" => ltrim($id, "0"), "domain" => $domain, "registrar" => $registrar, "registrationdate" => $registrationdate, "nextduedate" => $nextduedate, "expirydate" => $expirydate, "status" => $status);
-}
-
-$templatevars['domainsummary'] = $domainsummary;
 $where['validuntil'] = array("sqltype" => ">", "value" => date("Ymd"));
 $where['userid'] = $userid;
 $result = select_query_i("tblquotes", "", $where);
@@ -856,8 +771,20 @@ $templatevars['tokenvar'] = generate_token("link");
 $templatevars['csrfToken'] = generate_token("plain");
 $aInt->templatevars = $templatevars;
 echo $aInt->getTemplate("clientssummary");
-echo $aInt->jqueryDialog("geninvoices", $aInt->lang("invoices", "geninvoices"), $aInt->lang("invoices", "geninvoicessendemails"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&generateinvoices=true" . generate_token("link") . "'", $aInt->lang("global", "no") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&generateinvoices=true&noemails=true" . generate_token("link") . "'"));
-echo $aInt->jqueryDialog("addfunds", $aInt->lang("clientsummary", "createaddfunds"), $aInt->lang("clientsummary", "createaddfundsdesc") . "<br /><div align=\"center\">" . $aInt->lang("fields", "amount") . ": <input type=\"text\" id=\"addfundsamt\" value=\"" . $CONFIG['AddFundsMinimum'] . "\" size=\"10\" /></div>", array($aInt->lang("global", "submit") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&action=addfunds" . generate_token("link") . ("&addfundsamt='+$('#addfundsamt').val()"), $aInt->lang("global", "cancel") => ""));
+echo $aInt->jqueryDialog("geninvoices", 
+        $aInt->lang("invoices", "geninvoices"), 
+        $aInt->lang("invoices", "geninvoicessendemails"), 
+        array(
+            $aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&generateinvoices=true" . generate_token("link") . "'", 
+            $aInt->lang("global", "no") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&generateinvoices=true&noemails=true" . generate_token("link") . "'"
+        )
+);
+echo $aInt->jqueryDialog("addfunds", 
+    $aInt->lang("clientsummary", "createaddfunds"), 
+    $aInt->lang("clientsummary", "createaddfundsdesc") . "<br /><div align=\"center\">" . $aInt->lang("fields", "amount") . ": <input type=\"text\" id=\"addfundsamt\" value=\"" . $CONFIG['AddFundsMinimum'] . "\" size=\"10\" /></div>", 
+    array(
+        $aInt->lang("global", "submit") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&action=addfunds" . generate_token("link") . ("&addfundsamt='+$('#addfundsamt').val()"), 
+        $aInt->lang("global", "cancel") => ""));
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;

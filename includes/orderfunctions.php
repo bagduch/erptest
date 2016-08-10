@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 function getOrderStatusColour($status) {
     $statuscolors = array("Active" => "779500", "Pending" => "CC0000", "Fraud" => "000000", "Cancelled" => "888");
     return "<span style=\"color:#" . $statuscolors[$status] . "\">" . $status . "</span>";
@@ -794,8 +784,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         }
                     }
 
-
                     $productdetails = getInvoiceProductDetails($serviceid, $pid, date("Y-m-d"), $hostingquerydates, $databasecycle, $description);
+                    error_log(print_r($productdetails,1));
                     $invoice_description = $productdetails['description'];
                     $invoice_tax = $productdetails['tax'];
 

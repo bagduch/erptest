@@ -17,6 +17,10 @@ form {
 table.datatable td a {
     color: #000000;
 }
+
+table#clientsservices, table#clientsproducts {
+    width: 100%;
+}
     
 
 a:hover {
@@ -848,7 +852,7 @@ table.form {
 }
 table.form td {
 	font-size: 12px;
-	padding: 5px;
+	padding: 1px;
 }
 table.form td.fieldlabel {
 	background-color: #fff;

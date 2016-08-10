@@ -118,7 +118,6 @@ function ModuleBuildParams($id) {
 
 	$clientsdetails = getClientsDetails($userid);
 	$clientsdetails['fullstate'] = $clientsdetails['state'];
-	$clientsdetails['state'] = convertStateToCode($clientsdetails['state'], $clientsdetails['country']);
 	$clientsdetails = foreignChrReplace($clientsdetails);
 	$params['clientsdetails'] = $clientsdetails;
 
