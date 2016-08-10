@@ -1,5 +1,5 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] != "POST") {
+if (($_SERVER["REQUEST_METHOD"] != "POST") && ($adminid > 1)) {
     echo "<pre>Current working directory is " . dirname(__FILE__) . "</pre>";
 }
 
