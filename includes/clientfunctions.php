@@ -74,6 +74,7 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['emailoptout'] = $data['emailoptout'];
     $details['overrideautoclose'] = $data['overrideautoclose'];
     $details['language'] = $data['language'];
+    $details['dateofbirth'] = $date['dateofbirth'];
     $lastlogin = $data['lastlogin'];
     $ipaddr = $data['ip'];
     $host = $data['host'];
