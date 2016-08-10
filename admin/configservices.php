@@ -749,7 +749,7 @@ if ($action == "") {
     while ($groups = mysqli_fetch_assoc($result2)) {
         $servicegroups[$groups['id']] = $groups['name'];
     }
-
+ 
     if ($action == "edit") {
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);

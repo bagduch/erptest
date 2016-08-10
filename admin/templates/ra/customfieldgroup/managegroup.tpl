@@ -50,7 +50,7 @@
                             <tbody>
                                 <tr>
                                     <td><input type="text" name="fieldname[{$num}]" size="30" value="{$data.fieldname}"></td>
-                                    <td align="right">Display Order <input type="text" name="sortorder[]" size="5" value="{$data.showorder}"></td>
+                                    <td align="right">Display Order <input type="text" name="sortorder[{$num}]" size="5" value="{$data.showorder}"></td>
                                 </tr>
                             </tbody>
                         </table>
