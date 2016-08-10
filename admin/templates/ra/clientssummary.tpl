@@ -299,35 +299,34 @@ $(document).ready(function(){
     });
 });
 </script>{/literal}
-  <table width="100%" class="form">
-    <tr>
-      <td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.services.title}</strong></td>
-    </tr>
-    <tr>
-      <td align="center"><div class="tablebg">
-          <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-            <tr>
-              <th width="20"><input type="checkbox" id="prodsall" /></th>
-              <th>{$_ADMINLANG.fields.id}</th>
-              <th>{$_ADMINLANG.fields.product}</th>
-              <th>{$_ADMINLANG.fields.amount}</th>
-              <th>{$_ADMINLANG.fields.billingcycle}</th>
-              <th>{$_ADMINLANG.fields.signupdate}</th>
-              <th>{$_ADMINLANG.fields.nextduedate}</th>
-              <th>{$_ADMINLANG.fields.status}</th>
-              <th width="20"></th>
+  <div class="panel panel-primary">
+      <div class="panel-heading"><h3 class="panel-title">{$_ADMINLANG.services.title}</h3></div>
+      <div class="sui-grid sui-grid-core">
+          <table class="sui-table sui-hover sui-selectable">
+            <thead>
+            <tr class="sui-columnheader">
+              <th class="sui-headercell"><input type="checkbox" id="prodsall" />Select</th>
+              <th class="sui-headercell" data-field="10">{$_ADMINLANG.fields.id}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.product}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.amount}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.billingcycle}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.signupdate}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.nextduedate}</th>
+              <th class="sui-headercell">{$_ADMINLANG.fields.status}</th>
+              <th class="sui-headercell">Edit</th>
+            </thead>
             </tr>
             {foreach key=num from=$servicessummary item=product}
-            <tr>
-              <td><input type="checkbox" name="selproducts[]" value="{$product.id}" class="checkprods" /></td>
-              <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}">{$product.idshort}</a></td>
-              <td style="padding-left:5px;padding-right:5px">{$product.dpackage} - <a href="http://{$product.domain}" target="_blank">{$product.domain}</a></td>
-              <td>{$product.amount}</td>
-              <td>{$product.dbillingcycle}</td>
-              <td>{$product.regdate}</td>
-              <td>{$product.nextduedate}</td>
-              <td>{$product.domainstatus}</td>
-              <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+            <tr class="sui-row">
+              <td class="sui-cell"><input type="checkbox" name="selproducts[]" value="{$product.id}" class="checkprods" /></td>
+              <td class="sui-cell"><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}">{$product.idshort}</a></td>
+              <td class="sui-cell">{$product.dpackage} - <a href="http://{$product.domain}" target="_blank">{$product.domain}</a></td>
+              <td class="sui-cell">{$product.amount}</td>
+              <td class="sui-cell">{$product.dbillingcycle}</td>
+              <td class="sui-cell">{$product.regdate}</td>
+              <td class="sui-cell">{$product.nextduedate}</td>
+              <td class="sui-cell">{$product.domainstatus}</td>
+              <td class="sui-cell"><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$product.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
             </tr>
             {foreachelse}
             <tr>
@@ -335,9 +334,8 @@ $(document).ready(function(){
             </tr>
             {/foreach}
           </table>
-        </div></td>
-    </tr>
-  </table>
+        </div>
+  </div>
   <img src="images/spacer.gif" width="1" height="4" /><br />
   <table width="100%" class="form">
     <tr>

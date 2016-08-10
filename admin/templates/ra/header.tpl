@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="templates/{$template}/bootstrap/css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="templates/{$template}/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="templates/{$template}/css/main.css" />
+<link rel="stylesheet" type="text/css" href="templates/{$template}/css/oldwhmcs.css" />
 <script type="text/javascript" src="templates/{$template}/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="templates/{$template}/js/all-min.js"></script>
 <script type="text/javascript" src="templates/{$template}/bootstrap/js/bootstrap.min.js"></script>
