@@ -5,6 +5,7 @@
  * */
 define("ADMINAREA", true);
 require "../init.php";
+include_once '../includes/servicefunctions.php';
 $aInt = new RA_Admin("View Products/Services");
 $aInt->title = "Product/Service Custom Fields";
 $aInt->sidebar = "config";
@@ -329,12 +330,10 @@ if ($action == 'save') {
     if ($optionname == "") {
         $optionname = array();
     }
-    update_query("tblserviceconfigoptions", array("optionname" => $configoptionname, "optiontype" => $configoptiontype, "qtyminimum" => $qtyminimum, "qtymaximum" => $qtymaximum), array("id" => $cid));
-    foreach ($optionname as $key => $value) {
-        update_query("tblserviceconfigoptionssub", array("optionname" => $value, "sortorder" => $sortorder[$key], "hidden" => $hidden[$key]), array("id" => $key));
-    }
 
+    mail('peter@hd.net.nz', "hello", print_r($_POST, 1));
 
+    $customfieldname = "";
     if ($customfieldname) {
         foreach ($customfieldname as $fid => $value) {
             update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $fieldtype[$fid], "description" => $description[$fid], "fieldoptions" => $fieldoptions[$fid], "regexpr" => html_entity_decode($regexpr[$fid]), "adminonly" => $adminonly[$fid], "required" => $required[$fid], "showorder" => $showorder[$fid], "showinvoice" => $showinvoice[$fid], "sortorder" => $sortorder[$fid]), array("id" => $fid));
@@ -346,7 +345,7 @@ if ($action == 'save') {
     }
 
 
-    redir("manageoptions=true&cid=" . $cid);
+    redir("action=managegroup&id=" . $id . "success=true");
     exit();
 }
 
@@ -406,23 +405,30 @@ if ($action == "") {
         if ($id) {
             $action = "save";
             $steptitle = "Manage Group";
-            $query = "select * from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ";
+            $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ";
             $result = full_query_i($query);
             while ($data = mysqli_fetch_array($result)) {
-                $datas[] = $data;
+                $datas[$data['cfid']] = $data;
             }
 
             $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
+            $result = full_query_i($query);
+            $data2 = mysqli_fetch_assoc($result);
+            $name = $data2['name'];
             $aInt->assign('datas', $datas);
-//            $data = mysqli_fetch_array($result);
-//            $id = $data['id'];
-//            $name = $data['name'];
-//            $productlinks = array();
-//            $result = select_query_i("tblservices", "", array("cpid" => $id));
-//
-//            while ($data = mysqli_fetch_array($result)) {
-//                $productlinks[] = $data['id'];
-//            }
+            $productlinks = cfieldgroupToServices(null, $id);
+            $allservice = array();
+            $services = select_query_i('tblservices', "*");
+            while ($data = mysqli_fetch_array($services)) {
+                $allservice [$data['id']] = array(
+                    'data' => $data,
+                    'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
+                );
+            }
+
+
+            $aInt->assign('productlinks', $allservice);
+            $aInt->assign('name', $name);
             $aInt->assign('id', $id);
             $aInt->template = "customefieldgroup/managegroup";
         } else {
@@ -431,6 +437,10 @@ if ($action == "") {
             $steptitle = "Create a New Group";
             $id = "";
             $productlinks = array();
+            $result = select_query_i("tblservices", "", array("cpid" => $id));
+            while ($data = mysqli_fetch_array($result)) {
+                $productlinks[] = $data['id'];
+            }
             $aInt->template = "customefieldgroup/creategroup";
         }
 
