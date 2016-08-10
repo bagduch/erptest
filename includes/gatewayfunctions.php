@@ -173,11 +173,6 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
 	if ($invoiceid) {
 		$clientsdetails['fullstate'] = $clientsdetails['state'];
 
-		if (!function_exists("convertStateToCode")) {
-			require ROOTDIR . "/includes/clientfunctions.php";
-		}
-
-		$clientsdetails['state'] = convertStateToCode($clientsdetails['state'], $clientsdetails['country']);
 		$result = select_query_i("tblclients", "tblinvoices.invoicenum,tblclients.currency,tblcurrencies.code", array("tblinvoices.id" => $invoiceid), "", "", "", "tblinvoices ON tblinvoices.userid=tblclients.id INNER JOIN tblcurrencies ON tblcurrencies.id=tblclients.currency");
 		$data = mysqli_fetch_array($result);
 		$invoicenum = $data['invoicenum'];

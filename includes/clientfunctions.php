@@ -867,28 +867,18 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 
     if ($billingcycle == "Monthly") {
         $amount = $data['monthly'];
+    } elseif ($billingcycle == "Quarterly") {
+        $amount = $data['quarterly'];
+    } elseif ($billingcycle == "Semi-Annually") {
+        $amount = $data['semiannually'];
+    } elseif ($billingcycle == "Annually") {
+        $amount = $data['annually'];
+    } elseif ($billingcycle == "Biennially") {
+        $amount = $data['biennially'];
+    } elseif ($billingcycle == "Triennially") {
+        $amount = $data['triennially'];
     } else {
-        if ($billingcycle == "Quarterly") {
-            $amount = $data['quarterly'];
-        } else {
-            if ($billingcycle == "Semi-Annually") {
-                $amount = $data['semiannually'];
-            } else {
-                if ($billingcycle == "Annually") {
-                    $amount = $data['annually'];
-                } else {
-                    if ($billingcycle == "Biennially") {
-                        $amount = $data['biennially'];
-                    } else {
-                        if ($billingcycle == "Triennially") {
-                            $amount = $data['triennially'];
-                        } else {
-                            $amount = 0;
-                        }
-                    }
-                }
-            }
-        }
+        $amount = 0;
     }
 
 
@@ -924,6 +914,47 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
     return $amount;
 }
 
+function getClientsServicesSummary($userid, $aInt) {
+    $result = select_query_i(
+            "tblcustomerservices", // table
+            "tblcustomerservices.*,tblservices.name",  // select fields
+            array("userid" => $userid),  // where
+            "tblcustomerservices`.`id","DESC",
+            "",
+            "tblservices ON tblservices.id=tblcustomerservices.packageid"
+    );
+    while ($data = mysqli_fetch_array($result)) {
+
+            if ($data['billingcycle'] == "One Time" || $data['billingcycle'] == "Free Account") {
+                $nextduedate = null;
+                $amount = formatCurrency($data['firstpaymentamount']);
+            } else {
+                $nextduedate = fromMySQLDate($data['nextduedate']);
+                $amount = formatCurrency($data['amount']);
+            }
+
+            if (strlen($data['description'] < 2)) {
+                $description= "(" . $aInt->lang("addons", "nodomain") . ")";
+            }
+
+            $billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($data['billingcycle'])));
+            $servicessummary[] = array(
+                "id" => (int)$data['id'],
+                "regdate" => fromMySQLDate($data['regdate']),
+                "description" => $description,
+                "dpackage" => $data['name'],
+                "dpaymentmethod" => $data['paymentmethod'],
+                "amount" => $amount,
+                "dbillingcycle" => $billingcycle,
+                "nextduedate" => $nextduedate,
+                "servicestatus" => $aInt->lang("status", strtolower($data['servicestatus']))
+            );
+    }
+    return $servicessummary;
+}
+
+
+
 function closeClient($userid) {
     update_query("tblclients", array("status" => "Closed"), array("id" => $userid));
     update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("userid" => $userid, "servicestatus" => "Pending"));
@@ -945,275 +976,6 @@ function closeClient($userid) {
     update_query("tblbillableitems", array("invoiceaction" => "0"), array("userid" => $userid));
     logActivity("Client Status changed to Closed - User ID: " . $userid, $userid);
     run_hook("ClientClose", array("userid" => $userid));
-}
-
-function convertStateToCode($ostate, $country) {
-    $sc = "";
-    $state = strtolower($ostate);
-    $country = strtoupper($country);
-
-    if ($country == "US") {
-        if ($state == "alabama") {
-            $sc = "AL";
-        } else {
-            if ($state == "alaska") {
-                $sc = "AK";
-            } else {
-                if ($state == "arizona") {
-                    $sc = "AZ";
-                } else {
-                    if ($state == "arkansas") {
-                        $sc = "AR";
-                    } else {
-                        if ($state == "california") {
-                            $sc = "CA";
-                        } else {
-                            if ($state == "colorado") {
-                                $sc = "CO";
-                            } else {
-                                if ($state == "connecticut") {
-                                    $sc = "CT";
-                                } else {
-                                    if ($state == "delaware") {
-                                        $sc = "DE";
-                                    } else {
-                                        if ($state == "florida") {
-                                            $sc = "FL";
-                                        } else {
-                                            if ($state == "georgia") {
-                                                $sc = "GA";
-                                            } else {
-                                                if ($state == "hawaii") {
-                                                    $sc = "HI";
-                                                } else {
-                                                    if ($state == "idaho") {
-                                                        $sc = "ID";
-                                                    } else {
-                                                        if ($state == "illinois") {
-                                                            $sc = "IL";
-                                                        } else {
-                                                            if ($state == "indiana") {
-                                                                $sc = "IN";
-                                                            } else {
-                                                                if ($state == "iowa") {
-                                                                    $sc = "IA";
-                                                                } else {
-                                                                    if ($state == "kansas") {
-                                                                        $sc = "KS";
-                                                                    } else {
-                                                                        if ($state == "kentucky") {
-                                                                            $sc = "KY";
-                                                                        } else {
-                                                                            if ($state == "louisiana") {
-                                                                                $sc = "LA";
-                                                                            } else {
-                                                                                if ($state == "maine") {
-                                                                                    $sc = "ME";
-                                                                                } else {
-                                                                                    if ($state == "maryland") {
-                                                                                        $sc = "MD";
-                                                                                    } else {
-                                                                                        if ($state == "massachusetts") {
-                                                                                            $sc = "MA";
-                                                                                        } else {
-                                                                                            if ($state == "michigan") {
-                                                                                                $sc = "MI";
-                                                                                            } else {
-                                                                                                if ($state == "minnesota") {
-                                                                                                    $sc = "MN";
-                                                                                                } else {
-                                                                                                    if ($state == "mississippi") {
-                                                                                                        $sc = "MS";
-                                                                                                    } else {
-                                                                                                        if ($state == "missouri") {
-                                                                                                            $sc = "MO";
-                                                                                                        } else {
-                                                                                                            if ($state == "montana") {
-                                                                                                                $sc = "MT";
-                                                                                                            } else {
-                                                                                                                if ($state == "nebraska") {
-                                                                                                                    $sc = "NE";
-                                                                                                                } else {
-                                                                                                                    if ($state == "nevada") {
-                                                                                                                        $sc = "NV";
-                                                                                                                    } else {
-                                                                                                                        if ($state == "new hampshire") {
-                                                                                                                            $sc = "NH";
-                                                                                                                        } else {
-                                                                                                                            if ($state == "new jersey") {
-                                                                                                                                $sc = "NJ";
-                                                                                                                            } else {
-                                                                                                                                if ($state == "new mexico") {
-                                                                                                                                    $sc = "NM";
-                                                                                                                                } else {
-                                                                                                                                    if ($state == "new york") {
-                                                                                                                                        $sc = "NY";
-                                                                                                                                    } else {
-                                                                                                                                        if ($state == "north carolina") {
-                                                                                                                                            $sc = "NC";
-                                                                                                                                        } else {
-                                                                                                                                            if ($state == "north dakota") {
-                                                                                                                                                $sc = "ND";
-                                                                                                                                            } else {
-                                                                                                                                                if ($state == "ohio") {
-                                                                                                                                                    $sc = "OH";
-                                                                                                                                                } else {
-                                                                                                                                                    if ($state == "oklahoma") {
-                                                                                                                                                        $sc = "OK";
-                                                                                                                                                    } else {
-                                                                                                                                                        if ($state == "oregon") {
-                                                                                                                                                            $sc = "OR";
-                                                                                                                                                        } else {
-                                                                                                                                                            if ($state == "pennsylvania") {
-                                                                                                                                                                $sc = "PA";
-                                                                                                                                                            } else {
-                                                                                                                                                                if ($state == "rhode island") {
-                                                                                                                                                                    $sc = "RI";
-                                                                                                                                                                } else {
-                                                                                                                                                                    if ($state == "south carolina") {
-                                                                                                                                                                        $sc = "SC";
-                                                                                                                                                                    } else {
-                                                                                                                                                                        if ($state == "south dakota") {
-                                                                                                                                                                            $sc = "SD";
-                                                                                                                                                                        } else {
-                                                                                                                                                                            if ($state == "tennessee") {
-                                                                                                                                                                                $sc = "TN";
-                                                                                                                                                                            } else {
-                                                                                                                                                                                if ($state == "texas") {
-                                                                                                                                                                                    $sc = "TX";
-                                                                                                                                                                                } else {
-                                                                                                                                                                                    if ($state == "utah") {
-                                                                                                                                                                                        $sc = "UT";
-                                                                                                                                                                                    } else {
-                                                                                                                                                                                        if ($state == "vermont") {
-                                                                                                                                                                                            $sc = "VT";
-                                                                                                                                                                                        } else {
-                                                                                                                                                                                            if ($state == "virginia") {
-                                                                                                                                                                                                $sc = "VA";
-                                                                                                                                                                                            } else {
-                                                                                                                                                                                                if ($state == "washington") {
-                                                                                                                                                                                                    $sc = "WA";
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    if ($state == "west virginia") {
-                                                                                                                                                                                                        $sc = "WV";
-                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                        if ($state == "wisconsin") {
-                                                                                                                                                                                                            $sc = "WI";
-                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                            if ($state == "wyoming") {
-                                                                                                                                                                                                                $sc = "WY";
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                }
-                                                                                                                                                                                            }
-                                                                                                                                                                                        }
-                                                                                                                                                                                    }
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                        }
-                                                                                                                                                                    }
-                                                                                                                                                                }
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                    }
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        if ($country == "CA") {
-            if ($state == "alberta") {
-                $sc = "AB";
-            } else {
-                if ($state == "british columbia") {
-                    $sc = "BC";
-                } else {
-                    if ($state == "manitoba") {
-                        $sc = "MB";
-                    } else {
-                        if ($state == "new brunswick") {
-                            $sc = "NB";
-                        } else {
-                            if ($state == "newfoundland") {
-                                $sc = "NL";
-                            } else {
-                                if ($state == "northwest territories") {
-                                    $sc = "NT";
-                                } else {
-                                    if ($state == "nova scotia") {
-                                        $sc = "NS";
-                                    } else {
-                                        if ($state == "nunavut") {
-                                            $sc = "NU";
-                                        } else {
-                                            if ($state == "ontario") {
-                                                $sc = "ON";
-                                            } else {
-                                                if ($state == "prince edward island") {
-                                                    $sc = "PE";
-                                                } else {
-                                                    if ($state == "quebec") {
-                                                        $sc = "QC";
-                                                    } else {
-                                                        if ($state == "saskatchewan") {
-                                                            $sc = "SK";
-                                                        } else {
-                                                            if ($state == "yukon territory") {
-                                                                $sc = "YT";
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    if (!$sc) {
-        $sc = $ostate;
-    }
-
-    return $sc;
 }
 
 function getClientsPaymentMethod($userid) {

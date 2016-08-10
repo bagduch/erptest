@@ -556,7 +556,6 @@ class RA_Service
 
 		$clientsdetails = getClientsDetails($this->getData("userid"));
 		$clientsdetails['fullstate'] = $clientsdetails['state'];
-		$clientsdetails['state'] = convertStateToCode($clientsdetails['state'], $clientsdetails['country']);
 		$clientsdetails = foreignChrReplace($clientsdetails);
 		$params['clientsdetails'] = $clientsdetails;
 		$data = $this->getServerInfo();

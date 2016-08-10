@@ -35,10 +35,6 @@ if (!function_exists("getGatewaysArray")) {
 }
 
 
-if (!function_exists("getRegistrarConfigOptions")) {
-	require ROOTDIR . "/includes/registrarfunctions.php";
-}
-
 
 if (!function_exists("ModuleBuildParams")) {
 	require ROOTDIR . "/includes/modulefunctions.php";
