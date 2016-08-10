@@ -1,107 +1,156 @@
-<div class="clientsummaryactions"> {$_ADMINLANG.clientsummary.settingtaxexempt}: <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer"><strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">{$clientsdetails.taxstatus}</strong></span> &nbsp;&nbsp;
-  {$_ADMINLANG.clientsummary.settingautocc}: <span id="autocc" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer"><strong class="{if $clientsdetails.autocc == "Yes"}textgreen{else}textred{/if}">{$clientsdetails.autocc}</strong></span> &nbsp;&nbsp;
-  {$_ADMINLANG.clientsummary.settingreminders}: <span id="overduenotices" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer"><strong class="{if $clientsdetails.overduenotices == "Yes"}textgreen{else}textred{/if}">{$clientsdetails.overduenotices}</strong></span> &nbsp;&nbsp;
-  {$_ADMINLANG.clientsummary.settinglatefees}: <span id="latefees" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer"><strong class="{if $clientsdetails.latefees == "Yes"}textgreen{else}textred{/if}">{$clientsdetails.latefees}</strong></span> </div>
-<div style="font-size:18px;">#{$clientsdetails.userid} - {$clientsdetails.firstname} {$clientsdetails.lastname}</div>
+{strip}
+<div class="row">
+  <h2>#{$clientsdetails.userid} - {$clientsdetails.firstname} {$clientsdetails.lastname}</h2>
+</div>
+<div class="row">
+    {$_ADMINLANG.clientsummary.settingtaxexempt}: 
+    <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+        <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
+            {$clientsdetails.taxstatus}
+        </strong>
+    </span> 
+    &nbsp;&nbsp;
+    {$_ADMINLANG.clientsummary.settingautocc}: 
+    <span id="autocc" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+        <strong class="{if $clientsdetails.autocc == "Yes"}textgreen{else}textred{/if}">
+            {$clientsdetails.autocc}
+        </strong>
+    </span> 
+    &nbsp;&nbsp;
+    {$_ADMINLANG.clientsummary.settingreminders}: 
+    <span id="overduenotices" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+        <strong class="{if $clientsdetails.overduenotices == "Yes"}textgreen{else}textred{/if}">
+            {$clientsdetails.overduenotices}
+        </strong>
+    </span> 
+    &nbsp;&nbsp;
+    {$_ADMINLANG.clientsummary.settinglatefees}: 
+    <span id="latefees" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+        <strong class="{if $clientsdetails.latefees == "Yes"}textgreen{else}textred{/if}">
+            {$clientsdetails.latefees}
+        </strong>
+    </span> 
+</div>
+
+
+
 {if $notes}
-<div id="clientsimportantnotes"> {foreach from=$notes item=note}
-  <div class="ticketstaffnotes">
-    <table class="ticketstaffnotestable">
-      <tr>
-        <td>{$note.adminuser}</td>
-        <td align="right">{$note.modified}</td>
-      </tr>
-    </table>
-    <div> {$note.note}
-      <div style="float:right;"><a href="clientsnotes.php?userid={$clientsdetails.userid}&action=edit&id={$note.id}"><img src="images/edit.gif" width="16" height="16" align="absmiddle" /></a></div>
+    <div id="clientsimportantnotes" class="col-lg-12">
+        {foreach from=$notes item=note}
+            <div class="panel panel-warning">
+                <div class="panel-heading panel-title">
+                    <tr>
+                        <td>{$note.adminuser}</td>
+                        <td align="right">{$note.modified}</td>
+                    </tr>
+                </div>
+                <div class="panel-body"> {$note.note}
+                    <div style="float:right;">
+                        <a href="clientsnotes.php?userid={$clientsdetails.userid}&action=edit&id={$note.id}">
+                            <img src="images/edit.gif" width="16" height="16" align="absmiddle" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {/foreach} 
     </div>
-  </div>
-  {/foreach} </div>
 {/if}
 
 {foreach from=$addons_html item=addon_html}
-<div style="margin-top:10px;">{$addon_html}</div>
+    <div style="margin-top:10px;">
+        {$addon_html}
+    </div>
 {/foreach}
-<table width="100%">
-  <tr>
-    <td width="25%" valign="top"><div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.infoheading}</div>
-        <table class="clientssummarystats" cellspacing="0" cellpadding="2">
-          <tr>
-            <td width="110">{$_ADMINLANG.fields.firstname}</td>
-            <td>{$clientsdetails.firstname}</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.fields.lastname}</td>
-            <td>{$clientsdetails.lastname}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.companyname}</td>
-            <td>{$clientsdetails.companyname}</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.fields.email}</td>
-            <td>{$clientsdetails.email}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.address1}</td>
-            <td>{$clientsdetails.address1}</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.fields.address2}</td>
-            <td>{$clientsdetails.address2}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.city}</td>
-            <td>{$clientsdetails.city}</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.fields.state}</td>
-            <td>{$clientsdetails.state}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.postcode}</td>
-            <td>{$clientsdetails.postcode}</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.fields.country}</td>
-            <td>{$clientsdetails.country} - {$clientsdetails.countrylong}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.phonenumber}</td>
-            <td>{$clientsdetails.phonenumber}</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.fields.mobilenumber}</td>
-            <td>{$clientsdetails.mobilenumber}</td>
-          </tr>
-        </table>
+
+<div width="100%">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">
+          {$_ADMINLANG.clientsummary.infoheading}
+        </div>
+        <div class="panel-body">
+          <table class="clientssummarystats" cellspacing="0" cellpadding="2">
+            <tr>
+              <td width="110">{$_ADMINLANG.fields.firstname}</td>
+              <td>{$clientsdetails.firstname}</td>
+            </tr>
+            <tr class="altrow">
+              <td>{$_ADMINLANG.fields.lastname}</td>
+              <td>{$clientsdetails.lastname}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.companyname}</td>
+              <td>{$clientsdetails.companyname}</td>
+            </tr>
+            <tr class="altrow">
+              <td>{$_ADMINLANG.fields.email}</td>
+              <td>{$clientsdetails.email}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.address1}</td>
+              <td>{$clientsdetails.address1}</td>
+            </tr>
+            <tr class="altrow">
+              <td>{$_ADMINLANG.fields.address2}</td>
+              <td>{$clientsdetails.address2}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.city}</td>
+              <td>{$clientsdetails.city}</td>
+            </tr>
+            <tr class="altrow">
+              <td>{$_ADMINLANG.fields.state}</td>
+              <td>{$clientsdetails.state}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.postcode}</td>
+              <td>{$clientsdetails.postcode}</td>
+            </tr>
+            <tr class="altrow">
+              <td>{$_ADMINLANG.fields.country}</td>
+              <td>{$clientsdetails.country} - {$clientsdetails.countrylong}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.phonenumber}</td>
+              <td>{$clientsdetails.phonenumber}</td>
+            </tr>
+            <tr>
+              <td>{$_ADMINLANG.fields.mobilenumber}</td>
+              <td>{$clientsdetails.mobilenumber}</td>
+            </tr>
+          </table>
         <ul>
-          <li><a href="clientssummary.php?userid={$clientsdetails.userid}&resetpw=true&token={$csrfToken}"><img src="images/icons/resetpw.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.resetsendpassword}</a>
-          <li><a href="../dologin.php?username={$clientsdetails.email|urlencode}&token={$csrfToken}"><img src="images/icons/clientlogin.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.loginasclient}</a>
-          <li><a href="orders.php?clientid={$clientsdetails.userid}"><img src="images/icons/orders.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.vieworders}</a>
-          <li><a href="ordersadd.php?userid={$clientsdetails.userid}"><img src="images/icons/ordersadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.orders.addnew}</a>
+            <li><a href="clientssummary.php?userid={$clientsdetails.userid}&resetpw=true&token={$csrfToken}"><img src="images/icons/resetpw.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.resetsendpassword}</a>
+            <li><a href="../dologin.php?username={$clientsdetails.email|urlencode}&token={$csrfToken}"><img src="images/icons/clientlogin.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.loginasclient}</a>
+            <li><a href="orders.php?clientid={$clientsdetails.userid}"><img src="images/icons/orders.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.vieworders}</a>
+            <li><a href="ordersadd.php?userid={$clientsdetails.userid}"><img src="images/icons/ordersadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.orders.addnew}</a>
         </ul>
+        <div class="clientssummarybox">
+          <div class="title">
+            {$_ADMINLANG.clientsummary.contactsheading}
+          </div>
+          <div class="clientssummarystats" cellspacing="0" cellpadding="2">
+            {foreach key=num from=$contacts item=contact}
+            <tr class="{cycle values=",altrow"}">
+              <td align="center"><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid={$contact.id}">{$contact.firstname} {$contact.lastname}</a> - {$contact.email}</td>
+            </tr>
+            {foreachelse}
+            <tr>
+              <td align="center">{$_ADMINLANG.clientsummary.nocontacts}</td>
+            </tr>
+            {/foreach}
+          </div>
+          <ul>
+            <li><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid=addnew"><img src="images/icons/clientsadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.addcontact}</a>
+          </ul>
+        </div>
+        </div>
       </div>
-      <div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.contactsheading}</div>
-        <table class="clientssummarystats" cellspacing="0" cellpadding="2">
-          {foreach key=num from=$contacts item=contact}
-          <tr class="{cycle values=",altrow"}">
-            <td align="center"><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid={$contact.id}">{$contact.firstname} {$contact.lastname}</a> - {$contact.email}</td>
-          </tr>
-          {foreachelse}
-          <tr>
-            <td align="center">{$_ADMINLANG.clientsummary.nocontacts}</td>
-          </tr>
-          {/foreach}
-        </table>
-        <ul>
-          <li><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid=addnew"><img src="images/icons/clientsadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.addcontact}</a>
-        </ul>
-      </div></td>
-    <td width="25%" valign="top"><div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.billingheading}</div>
+    </div>
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.billingheading}</div>
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           <tr>
             <td width="110">{$_ADMINLANG.status.paid}</td>
@@ -140,8 +189,8 @@
           <li><a href="#" onClick="openCCDetails();return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
         </ul>
       </div>
-      <div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.otherinfoheading}</div>
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.otherinfoheading}</div>
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           <tr>
             <td width="110">{$_ADMINLANG.fields.status}</td>
@@ -164,76 +213,88 @@
             <td>{$lastlogin}</td>
           </tr>
         </table>
-      </div></td>
-    <td width="25%" valign="top"><div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.services.title}</div>
-        <table class="clientssummarystats" cellspacing="0" cellpadding="2">
-          <tr>
-            <td width="140">{$_ADMINLANG.orders.sharedhosting}</td>
-            <td>{$stats.productsnumactivehosting} ({$stats.productsnumhosting} Total)</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.orders.resellerhosting}</td>
-            <td>{$stats.productsnumactivereseller} ({$stats.productsnumreseller} Total)</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.orders.server}</td>
-            <td>{$stats.productsnumactiveservers} ({$stats.productsnumservers} Total)</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.orders.other}</td>
-            <td>{$stats.productsnumactiveother} ({$stats.productsnumother} Total)</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.domains.title}</td>
-            <td>{$stats.numactivedomains} ({$stats.numdomains} Total)</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.stats.acceptedquotes}</td>
-            <td>{$stats.numacceptedquotes} ({$stats.numquotes} Total)</td>
-          </tr>
-          <tr>
-            <td>{$_ADMINLANG.support.supporttickets}</td>
-            <td>{$stats.numactivetickets} ({$stats.numtickets} Total)</td>
-          </tr>
-          <tr class="altrow">
-            <td>{$_ADMINLANG.stats.affiliatesignups}</td>
-            <td>{$stats.numaffiliatesignups}</td>
-          </tr>
-        </table>
-        <ul>
-        </ul>
       </div>
-      <div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.filesheading}</div>
-        <table class="clientssummarystats" cellspacing="0" cellpadding="2">
-          {foreach key=num from=$files item=file}
-          <tr class="{cycle values=",altrow"}">
-            <td align="center"><a href="../dl.php?type=f&id={$file.id}"><img src="../images/file.png" align="absmiddle" vspace="1" border="0" /> {$file.title}</a> {if $file.adminonly}({$_ADMINLANG.clientsummary.fileadminonly}){/if} <img src="images/icons/delete.png" align="absmiddle" border="0" onClick="deleteFile('{$file.id}')" /></td>
-          </tr>
-          {foreachelse}
-          <tr>
-            <td align="center">{$_ADMINLANG.clientsummary.nofiles}</td>
-          </tr>
-          {/foreach}
-        </table>
-        <ul>
-          <li><a href="#" id="addfile"><img src="images/icons/add.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.fileadd}</a>
-        </ul>
-        <div id="addfileform" style="display:none;"> <img src="images/spacer.gif" width="1" height="4" /><br />
-          <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile" enctype="multipart/form-data">
-            <table class="clientssummarystats" cellspacing="0" cellpadding="2">
+    </div>
+
+
+
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.services.title}</div>
+          <div class="panel-body">
+                <table class="clientssummarystats" cellspacing="0" cellpadding="2">
+                  <tr>
+                    <td>{$_ADMINLANG.orders.sharedhosting}</td>
+                    <td>{$stats.productsnumactivehosting} ({$stats.productsnumhosting} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.orders.resellerhosting}</td>
+                    <td>{$stats.productsnumactivereseller} ({$stats.productsnumreseller} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.orders.server}</td>
+                    <td>{$stats.productsnumactiveservers} ({$stats.productsnumservers} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.orders.other}</td>
+                    <td>{$stats.productsnumactiveother} ({$stats.productsnumother} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.domains.title}</td>
+                    <td>{$stats.numactivedomains} ({$stats.numdomains} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.stats.acceptedquotes}</td>
+                    <td>{$stats.numacceptedquotes} ({$stats.numquotes} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.support.supporttickets}</td>
+                    <td>{$stats.numactivetickets} ({$stats.numtickets} Total)</td>
+                  </tr>
+                  <tr>
+                    <td>{$_ADMINLANG.stats.affiliatesignups}</td>
+                    <td>{$stats.numaffiliatesignups}</td>
+                  </tr>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.filesheading}</div>
+        <div class="panel-body">
+          <table>
+              {foreach key=num from=$files item=file}
               <tr>
-                <td width="40">{$_ADMINLANG.clientsummary.filetitle}</td>
-                <td class="fieldarea"><input type="text" name="title" style="width:90%" /></td>
+                <td align="center"><a href="../dl.php?type=f&id={$file.id}"><img src="../images/file.png" align="absmiddle" vspace="1" border="0" /> {$file.title}</a> {if $file.adminonly}({$_ADMINLANG.clientsummary.fileadminonly}){/if} <img src="images/icons/delete.png" align="absmiddle" border="0" onClick="deleteFile('{$file.id}')" /></td>
+              </tr>
+              {foreachelse}
+              <tr>
+                <td align="center">{$_ADMINLANG.clientsummary.nofiles}</td>
+              </tr>
+              {/foreach}
+          </table>
+          <ul>
+            <li><a href="#" id="addfile"><img src="images/icons/add.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.fileadd}</a>
+          </ul>
+        <div>
+          <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile">
+            <table>
+              <tr>
+                <td>{$_ADMINLANG.clientsummary.filetitle}</td>
+                <td><input type="text" name="title" style="width:90%" /></td>
               </tr>
               <tr>
                 <td>{$_ADMINLANG.clientsummary.filename}</td>
-                <td class="fieldarea"><input type="file" name="uploadfile" style="width:90%" /></td>
+                <td><input type="file" name="uploadfile" style="width:90%" /></td>
               </tr>
               <tr>
                 <td></td>
-                <td class="fieldarea"><input type="checkbox" name="adminonly" value="1" />
+                <td><input type="checkbox" name="adminonly" value="1" />
                   {$_ADMINLANG.clientsummary.fileadminonly} &nbsp;&nbsp;&nbsp;&nbsp;
                   <input type="submit" value="{$_ADMINLANG.global.submit}" /></td>
               </tr>
@@ -241,8 +302,12 @@
           </form>
         </div>
       </div>
-      <div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.emailsheading}</div>
+    </div>
+
+
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.emailsheading}</div>
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           {foreach key=num from=$lastfivemail item=email}
           <tr class="{cycle values=",altrow"}">
@@ -254,9 +319,13 @@
           </tr>
           {/foreach}
         </table>
-      </div></td>
-    <td width="25%" valign="top"><div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.actionsheading}</div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.actionsheading}</div>
         <ul>
           {foreach from=$customactionlinks item=customactionlink}
           <li>{$customactionlink}</li>
@@ -279,12 +348,14 @@
             <input type="submit" value="{$_ADMINLANG.global.go}" class="button">
           </div>
         </form>
-      </div></td>
-  </tr>
-    <tr>
-    <td colspan="4">
-  
-    <form method="post" action="{$smarty.server.PHP_SELF}?userid={$clientsdetails.userid}&action=massaction">
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="row">
+
+      <form method="post" action="{$smarty.server.PHP_SELF}?userid={$clientsdetails.userid}&action=massaction">
   
   {literal}<script language="javascript">
 $(document).ready(function(){
@@ -299,8 +370,9 @@ $(document).ready(function(){
     });
 });
 </script>{/literal}
+
   <div class="panel panel-primary">
-      <div class="panel-heading"><h3 class="panel-title">{$_ADMINLANG.services.title}</h3></div>
+      <div class="panel-heading"><div class="panel-title">{$_ADMINLANG.services.title}</div></div>
       <div class="sui-grid sui-grid-core">
           <table class="sui-table sui-hover sui-selectable">
             <thead>
@@ -335,14 +407,12 @@ $(document).ready(function(){
             {/foreach}
           </table>
         </div>
+    </div>
   </div>
-  <img src="images/spacer.gif" width="1" height="4" /><br />
-  <table width="100%" class="form">
-    <tr>
-      <td colspan="2" class="fieldarea" style="text-align:center;"><strong>{$_ADMINLANG.products.title}</strong></td>
-    </tr>
-    <tr>
-      <td align="center"><table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
+  <div class="row">
+      <div>{$_ADMINLANG.products.title}</div>
+      <div>
+        <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
           <tr>
             <th width="20"><input type="checkbox" id="addonsall" /></th>
             <th>ID</th>
@@ -373,15 +443,15 @@ $(document).ready(function(){
           </tr>
           {/foreach}
         </table>
-        </div></td>
-    </tr>
-  </table>
+        </div>
+    </div>
+  </div>
   <img src="images/spacer.gif" width="1" height="4" /><br />
     </div>
   
-    </td>
-    </tr>
-</table>
+    </div>
+    </div>
+</div>
 <p align="center">
   <input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" />
 <div id="massupdatebox" style="width:75%;background-color:#f7f7f7;border:1px dashed #cccccc;padding:10px;margin-left:auto;margin-right:auto;display:none;">
