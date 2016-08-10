@@ -3830,10 +3830,13 @@ a.sui-tagcloud-link, a.sui-tagcloud-link:link, a.sui-tagcloud-link:visited, a.su
 .lastfooter {
 	display: block;
 	width: 100%;
-	height: 50px;
+	position: fixed; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+	padding: 10px 10px 10px 230px;
 	background-color: #E7E7E7;
-	position: relative;
-	z-index: 9999;
 }
 
 
@@ -3871,7 +3874,7 @@ a.sui-tagcloud-link, a.sui-tagcloud-link:link, a.sui-tagcloud-link:visited, a.su
 	min-width: 943px;
 	min-height: 600px;
 	background-color: #fff;
-	border: 4px solid #E2E7E9;
+	border: 4px solid #F5F5F5;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-o-border-radius: 10px;
@@ -3903,7 +3906,7 @@ a.sui-tagcloud-link, a.sui-tagcloud-link:link, a.sui-tagcloud-link:visited, a.su
 #mynotesbox {
 	width: 560px;
 	height: 300px;
-	border: 10px solid #E2E7E9;
+	border: 10px solid #F5F5F5;
 	padding: 10px;
 	margin: 15px 0 15px 0;
 	-moz-border-radius: 10px;
@@ -3915,7 +3918,7 @@ a.sui-tagcloud-link, a.sui-tagcloud-link:link, a.sui-tagcloud-link:visited, a.su
 	margin: 0 0 15px 0;
 	padding: 5px;
 	background-color: #fff;
-	border: 2px solid #E2E7E9;
+	border: 2px solid #F5F5F5;
 }
 .contextbar {
 	margin: 0;
@@ -4331,9 +4334,9 @@ div.searchresult a strong {
 }
 #tabs ul, #clienttabs ul {
 	display: block;
-	background-color: #fff;
-	height: 23px;
-	line-height: 22px;
+	background-color: #fffff;
+	height: 35px;
+	line-height: 34px;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -4347,7 +4350,7 @@ div.searchresult a strong {
 }
 #tabs ul li a, #tabs ul li a:visited, #clienttabs ul li a, #clienttabs ul li a:visited {
 	display: block;
-	background-color: #DDDDDD;
+	background-color: #EFEFEF;
 	border-top: 1px solid #ccc;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
@@ -4388,7 +4391,7 @@ div.searchresult a strong {
 table.form {
 	background-color: #fff;
 	padding: 1px;
-	border: 1px solid #E2E7E9;
+	border: 1px solid #F5F5F5;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-o-border-radius: 4px;
@@ -4415,18 +4418,17 @@ table.datatable {
 	margin: 0;
 }
 table.datatable th {
-	background-color: #0C0B62;
+	background-color: #337AB7;
 	font-weight: bold;
-	text-align: center;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius: 3px;
-	border-radius: 3px;
+	text-align: left;
+	padding: 5px 0px 5px 0px;
+	font-size: 14px;
 }
 table.datatable td {
 	background-color: #FFF;
-	border-bottom: 1px solid #EBEBEB;
+	border-bottom: 1px solid #E8E9FF;
 	font-size: 12px;
+	padding: 5px 0px 5px 0px;
 }
 table.datatable tr.rowhighlight td {
 	background-color: #E0E8F3;
@@ -4688,7 +4690,7 @@ span.draft {
 -------------------------------------------------------------- */
 
 .clientssummarybox {
-	background-color: #E2E7E9;
+	background-color: #F5F5F5;
 	padding: 10px;
 	margin: 10px 2px 5px 3px;
 	-moz-border-radius: 5px;
@@ -4706,7 +4708,7 @@ span.draft {
 	font-family: Arial;
 	font-size: 16px;
 	font-weight: bold;
-	color: #000000;
+	color: #337AB7;
 }
 .clientssummarybox ul {
 	list-style-type: none;
