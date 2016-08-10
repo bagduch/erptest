@@ -35,6 +35,8 @@
                 </tr>
             </tbody>
         </table>
-
+        <div class="btn-container">
+            <input type="submit" value="Continue »" class="btn btn-primary" id="btnContinue">
+        </div>
     </form>
 </div>
