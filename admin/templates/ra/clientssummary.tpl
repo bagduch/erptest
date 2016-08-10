@@ -1,8 +1,42 @@
 {strip}
-<div class="row">
+
+
+<div class="row col-lg-12">
   <h2>#{$clientsdetails.userid} - {$clientsdetails.firstname} {$clientsdetails.lastname}</h2>
 </div>
+
+
+
+{if $notes}
 <div class="row">
+    <div id="clientsnotes" class="col-lg-12">
+        {foreach from=$notes item=note}
+            <div class="panel panel-warning">
+                <div class="panel-heading panel-title">
+                    <tr>
+                        <td>{$note.adminuser}</td>
+                        <td align="right">{$note.modified}</td>
+                    </tr>
+                </div>
+                <div class="panel-body"> {$note.note}
+                    <div style="float:right;">
+                        <a href="clientsnotes.php?userid={$clientsdetails.userid}&action=edit&id={$note.id}">
+                            <img src="images/edit.gif" width="16" height="16" align="absmiddle" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {/foreach} 
+    </div>
+</div>
+{/if}
+
+
+
+
+
+<div class="row">
+ <div id="exemptccetc" class="col-lg-12">
     {$_ADMINLANG.clientsummary.settingtaxexempt}: 
     <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
         <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
@@ -31,30 +65,10 @@
         </strong>
     </span> 
 </div>
+</div>
 
 
 
-{if $notes}
-    <div id="clientsimportantnotes" class="col-lg-12">
-        {foreach from=$notes item=note}
-            <div class="panel panel-warning">
-                <div class="panel-heading panel-title">
-                    <tr>
-                        <td>{$note.adminuser}</td>
-                        <td align="right">{$note.modified}</td>
-                    </tr>
-                </div>
-                <div class="panel-body"> {$note.note}
-                    <div style="float:right;">
-                        <a href="clientsnotes.php?userid={$clientsdetails.userid}&action=edit&id={$note.id}">
-                            <img src="images/edit.gif" width="16" height="16" align="absmiddle" />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        {/foreach} 
-    </div>
-{/if}
 
 {foreach from=$addons_html item=addon_html}
     <div style="margin-top:10px;">
@@ -62,9 +76,8 @@
     </div>
 {/foreach}
 
-<div width="100%">
   <div class="row">
-    <div class="col-lg-3">
+    <div id="clientsinformation" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">
           {$_ADMINLANG.clientsummary.infoheading}
@@ -126,11 +139,17 @@
             <li><a href="orders.php?clientid={$clientsdetails.userid}"><img src="images/icons/orders.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.vieworders}</a>
             <li><a href="ordersadd.php?userid={$clientsdetails.userid}"><img src="images/icons/ordersadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.orders.addnew}</a>
         </ul>
-        <div class="clientssummarybox">
-          <div class="title">
+        </div>
+        </div>
+        </div>
+
+
+        <div id="contactssubaccounts" class="col-lg-4">
+<div class="panel panel-primary">
+          <div class="panel-heading panel-title">
             {$_ADMINLANG.clientsummary.contactsheading}
           </div>
-          <div class="clientssummarystats" cellspacing="0" cellpadding="2">
+          <div class="panel-body">
             {foreach key=num from=$contacts item=contact}
             <tr class="{cycle values=",altrow"}">
               <td align="center"><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid={$contact.id}">{$contact.firstname} {$contact.lastname}</a> - {$contact.email}</td>
@@ -145,12 +164,10 @@
             <li><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid=addnew"><img src="images/icons/clientsadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.addcontact}</a>
           </ul>
         </div>
-        </div>
-        </div>
-        </div>
+    </div>
 
 
-    <div class="col-lg-3">
+    <div id="invoicesbilling" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.billingheading}</div>
         <div class="panel-body">
@@ -198,7 +215,7 @@
 
 
 
-      <div class="col-lg-3">
+      <div id="otherinformation" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.otherinfoheading}</div>
         <div class="panel-body">
@@ -230,7 +247,7 @@
 
 
 
-    <div class="col-lg-3">
+    <div id="productsservices" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.services.title}</div>
           <div class="panel-body">
@@ -274,7 +291,7 @@
 
 
 
-    <div class="col-lg-3">
+    <div id="clientsfiles" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.filesheading}</div>
         <div class="panel-body">
@@ -315,7 +332,7 @@
       </div>
 
 
-    <div class="col-lg-3">
+    <div id="clientsemails" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.emailsheading}</div>
         <div class="table-body">
@@ -335,9 +352,10 @@
     </div>
 
 
-    <div class="col-lg-3">
+    <div id="otheractions" class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.actionsheading}</div>
+        <div class="panel-body">
         <ul>
           {foreach from=$customactionlinks item=customactionlink}
           <li>{$customactionlink}</li>
@@ -352,8 +370,14 @@
           <li><a href="#" onClick="deleteClient();return false" style="color:#CC0000;"><img src="images/icons/delete.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.deleteclient}</a>
         </ul>
       </div>
-      <div class="clientssummarybox">
-        <div class="title">{$_ADMINLANG.clientsummary.sendemailheading}</div>
+      </div>
+
+
+
+
+      <div id="sendclientemail" class="panel panel-primary">
+        <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.sendemailheading}</div>
+        <div class="panel-body">
         <form action="clientsemails.php?userid={$clientsdetails.userid}&action=send&type=general" method="post">
           <input type="hidden" name="id" value="{$clientsdetails.userid}">
           <div align="center">{$messages}
@@ -361,10 +385,10 @@
           </div>
         </form>
       </div>
+      </div>
     </div>
 
   </div>
-</div>
 <div class="row">
 
       <form method="post" action="{$smarty.server.PHP_SELF}?userid={$clientsdetails.userid}&action=massaction">
