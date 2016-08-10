@@ -19,12 +19,6 @@ if (!function_exists("acceptOrder")) {
 	require ROOTDIR . "/includes/orderfunctions.php";
 }
 
-
-if (!function_exists("getRegistrarConfigOptions")) {
-	require ROOTDIR . "/includes/registrarfunctions.php";
-}
-
-
 if (!function_exists("ModuleBuildParams")) {
 	require ROOTDIR . "/includes/modulefunctions.php";
 }

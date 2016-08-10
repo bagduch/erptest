@@ -14,12 +14,6 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-
-if (!function_exists("getRegistrarConfigOptions")) {
-	require ROOTDIR . "/includes/registrarfunctions.php";
-}
-
-
 if (!function_exists("ModuleBuildParams")) {
 	require ROOTDIR . "/includes/modulefunctions.php";
 }
