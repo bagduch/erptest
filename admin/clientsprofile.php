@@ -160,6 +160,8 @@ $password = $aInt->lang("fields", "entertochange");
 $questions = getSecurityQuestions("");
 ?>
 
+<form method="post" action="<? echo $PHP_SELF."?save=true&userid=".$userid; ?>">
+
 <table class="sui-table sui-hover sui-selectable">
   <tbody>
     <tr class="sui-columnheader">
@@ -233,16 +235,8 @@ $questions = getSecurityQuestions("");
     </tr>
   </tbody>
 </table>
-<?php
-echo "
-<form method=\"post\" action=\"";
-echo $PHP_SELF;
-echo "?save=true&userid=";
-echo $userid;
-?>
-<? 
-echo "<a href=\"clientsprofile.php?userid=";
-echo $userid;
+
+<?
 echo "&resetpw=true";
 echo generate_token("link");
 echo "\"><img src=\"images/icons/resetpw.png\" border=\"0\" align=\"absmiddle\" /> ";
