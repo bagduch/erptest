@@ -1022,7 +1022,9 @@ if ($action == "") {
     $aInt->assign('infobox', $infobox);
     $aInt->assign('tabledata', $tabledata);
     //  echo print_r($servicegroups);
-    $aInt->template = $templatefile;
+    if (isset($templatefile) && $templatefile != "") {
+        $aInt->template = $templatefile;
+    }
 }
 
 $content = ob_get_contents();

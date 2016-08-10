@@ -121,6 +121,32 @@ function addServiceCustomFieldVlues($csid, $valarray) {
     }
 }
 
+// from customefield to services 
+function cfieldgroupToServices($cfid = null, $cfgid = null) {
+
+    $data = array();
+    if (isset($cfid) || isset($cfgid)) {
+        if (is_int($cfgid)) {
+            $query = "select ts.* from tblservices as ts
+           INNER JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid";
+        }
+        if (is_int($cfid)) {
+            $query = "select ts.* from tblservices as ts
+            LEFT JOIN tblcustomfieldslinks as tcfl on tcfl.serviceid = ts.id
+            LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid 
+            LEFT JOIN tblcustomfieldsgroupmembers as tcgm on tcgm.cfgid=tcfgl.cfgid
+            INNER JOIN tblcustomfields as tcf on (tcfl.cfid=tcf.cfid or tcgm.cfid=tcf.cfid) where tcf.cfid=" . $cfid;
+        }
+        $result = full_query_i($query);
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[$row['id']] = $row;
+        }
+    } else {
+        return false;
+    }
+    return $data;
+}
+
 // takes csid per above, and an array of fieldname->values
 function updateServiceCustomFieldValues($relid, $valarray = array()) {
     global $query_count;

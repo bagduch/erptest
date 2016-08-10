@@ -1072,6 +1072,7 @@ $_ADMINLANG['setup']['bundles'] = "Product Bundles";
 $_ADMINLANG['setup']['products'] = "Products";
 $_ADMINLANG['setup']['servicestitle'] = "Services";
 $_ADMINLANG['setup']['services'] = "View Services";
+$_ADMINLANG['setup']['customefield'] = "View Customise Field";
 $_ADMINLANG['setup']['cservicesg'] = "Create Service Group";
 $_ADMINLANG['setup']['configoptions'] = "Configurable Options";
 $_ADMINLANG['setup']['saddons'] = "Service Addons";
