@@ -146,11 +146,14 @@
           </ul>
         </div>
         </div>
-      </div>
-    </div>
+        </div>
+        </div>
+
+
     <div class="col-lg-3">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.billingheading}</div>
+        <div class="panel-body">
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           <tr>
             <td width="110">{$_ADMINLANG.status.paid}</td>
@@ -189,8 +192,16 @@
           <li><a href="#" onClick="openCCDetails();return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
         </ul>
       </div>
+      </div>
+      </div>
+
+
+
+
+      <div class="col-lg-3">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.otherinfoheading}</div>
+        <div class="panel-body">
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           <tr>
             <td width="110">{$_ADMINLANG.fields.status}</td>
@@ -214,6 +225,7 @@
           </tr>
         </table>
       </div>
+    </div>
     </div>
 
 
@@ -258,8 +270,7 @@
                 </table>
           </div>
         </div>
-      </div>
-    </div>
+        </div>
 
 
 
@@ -281,7 +292,6 @@
           <ul>
             <li><a href="#" id="addfile"><img src="images/icons/add.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.fileadd}</a>
           </ul>
-        <div>
           <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile">
             <table>
               <tr>
@@ -302,12 +312,13 @@
           </form>
         </div>
       </div>
-    </div>
+      </div>
 
 
     <div class="col-lg-3">
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.emailsheading}</div>
+        <div class="table-body">
         <table class="clientssummarystats" cellspacing="0" cellpadding="2">
           {foreach key=num from=$lastfivemail item=email}
           <tr class="{cycle values=",altrow"}">
@@ -320,6 +331,7 @@
           {/foreach}
         </table>
       </div>
+    </div>
     </div>
 
 
