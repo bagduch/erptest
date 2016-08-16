@@ -40,6 +40,7 @@ if ($ra->get_req_var("save")) {
 			"currency" => $_POST['currency'], 
 			"notes" => $notes, 
 			"status" => $status, 
+			"dateofbirth" => $dateofbirth,
 			"taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
 
 		if (!$twofaenabled) {
@@ -151,130 +152,102 @@ $securityqid = $clientsdetails['securityqid'];
 $securityqans = $clientsdetails['securityqans'];
 $groupid = $clientsdetails['groupid'];
 $twofaenabled = $clientsdetails['twofaenabled'];
+$dateofbirth = $clientsdetails['dateofbirth'];
+
 
 $password = $aInt->lang("fields", "entertochange");
 
 $questions = getSecurityQuestions("");
-echo "
-<form method=\"post\" action=\"";
-echo $PHP_SELF;
-echo "?save=true&userid=";
-echo $userid;
-echo "\">
+?>
 
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-echo $aInt->lang("fields", "firstname");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"firstname\" value=\"";
-echo $firstname;
-echo "\" tabindex=\"1\"></td><td class=\"fieldlabel\" width=\"15%\">";
-echo $aInt->lang("fields", "address1");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"address1\" value=\"";
-echo $address1;
-echo "\" tabindex=\"8\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "lastname");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"lastname\" value=\"";
-echo $lastname;
-echo "\" tabindex=\"2\"></td><td class=\"fieldlabel\">";
-// echo $aInt->lang("fields", "address2");
-echo "</td><td class=\"fieldarea\">"; // <input type=\"text\" size=\"30\" name=\"address2\" value=\"";
-//echo $address2;
-//echo "\" tabindex=\"9\"> <font color=#cccccc>";
-//echo "<s";
-//echo "mall>(";
-//echo $aInt->lang("global", "optional");
-//echo ")</small></font></td></tr>
-echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "companyname");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"30\" name=\"companyname\" value=\"";
-echo $companyname;
-echo "\" tabindex=\"3\"> <font color=#cccccc>";
-echo "<s";
-echo "mall>(";
-echo $aInt->lang("global", "optional");
-echo ")</small></font></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "city");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"25\" name=\"city\" value=\"";
-echo $city;
-echo "\" tabindex=\"10\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "email");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"35\" name=\"email\" value=\"";
-echo $email;
-echo "\" tabindex=\"4\">";
-echo "</td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "state");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"25\" name=\"state\" value=\"";
-echo $state;
-echo "\" tabindex=\"11\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "password");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"password\" value=\"";
-echo $password;
-echo "\" onfocus=\"if(this.value=='";
-echo $aInt->lang("fields", "entertochange");
-echo "')this.value=''\" tabindex=\"5\" /> <a href=\"clientsprofile.php?userid=";
-echo $userid;
+<form method="post" action="<? echo $PHP_SELF."?save=true&userid=".$userid; ?>">
+
+<table class="sui-table sui-hover sui-selectable">
+  <tbody>
+    <tr class="sui-columnheader">
+      <td colspan="6">&nbsp;</td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td width="13%">First Name</td>
+      <td width="36%"><input type="text" name="firstname" id="firstname" value="<?= $firstname ?>"></td>
+      <td width="51%">Company Name</td>
+      <td width="51%"><input type="text" name="companyname" id="companyname" value="<?= $companyname ?>"></td>
+      <td width="51%">Address</td>
+      <td width="51%"><input type="text" name="address1" id="address1" value="<?= $address1 ?>"></td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td>Last Name</td>
+      <td><input type="text" name="lastname" id="lastname" value="<?= $lastname ?>"></td>
+      <td>Email Address</td>
+      <td><input type="text" name="email" id="email" value="<?= $email ?>"></td>
+      <td>Region</td>
+      <td><input type="text" name="state" id="state" value="<?= $state ?>"></td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td>Date of Birth</td>
+      <td><input type="text" name="dateofbirth" id="dateofbirth" value="<?= $dateofbirth ?>"></td>
+      <td>Password</td>
+      <td><input type="text" name="password" id="password" value="<?= $password ?>"></td>
+      <td>City</td>
+      <td><input type="text" name="city" id="city" value="<?= $city ?>"></td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td>Phone Number</td>
+      <td><input type="text" name="phonenumber" id="phonenumber" value="<?= $phonenumber ?>"></td>
+      <td>Payment Method</td>
+      <td>&nbsp;</td>
+      <td>Postcode</td>
+      <td><input type="text" name="postcode" id="postcode" value="<?= $postcode ?>"></td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td>Mobile Number</td>
+      <td><input type="text" name="mobilenumber" id="mobilenumber" value="<?= $mobilenumber ?>"></td>
+      <td>Billing Contact</td>
+      <td>&nbsp;</td>
+      <td>Country</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td>Client Group</td>
+      <td>&nbsp;</td>
+      <td>Currency</td>
+      <td>&nbsp;</td>
+      <td>Status</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr class="sui-columnheader">
+      <td colspan="5"><input type="checkbox" name="checkbox" id="checkbox">
+        <label for="checkbox">Dont Apply Late Fees |
+          <input type="checkbox" name="checkbox2" id="checkbox2">
+          Don't Send Overdue Emails</label>
+        |
+        <label for="checkbox2">
+          <input type="checkbox" name="checkbox3" id="checkbox3">
+          Separate Invoices for Services</label>
+        |
+        <label for="checkbox3">
+          <input type="checkbox" name="checkbox4" id="checkbox4">
+          Disable Automatic CC Processing</label></td>
+      <td>Credit Risk
+        <div class="progress">
+          <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
+        </div></td>
+    </tr>
+  </tbody>
+</table>
+
+<?
 echo "&resetpw=true";
 echo generate_token("link");
 echo "\"><img src=\"images/icons/resetpw.png\" border=\"0\" align=\"absmiddle\" /> ";
 echo $aInt->lang("clients", "resetsendpassword");
 echo "</a></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "postcode");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"14\" name=\"postcode\" value=\"";
-echo $postcode;
-echo "\" tabindex=\"12\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "securityquestion");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"securityqid\" style=\"width:225px;\" tabindex=\"6\"><option value=\"\" selected>";
-echo $aInt->lang("global", "none");
-echo "</option>";
-foreach ($questions as $quest => $ions) {
-	echo "<option value=" . $ions['id'] . "";
-
-	if ($ions['id'] == $securityqid) {
-		echo " selected";
-	}
-
-	echo ">" . $ions['question'] . "</option>";
-}
-
-echo "</select></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "country");
-echo "</td><td class=\"fieldarea\">";
-include "../includes/countries.php";
-echo getCountriesDropDown($country, "", 13);
-echo "</td></tr>";
-
-echo "<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "securityanswer");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"securityqans\" size=\"40\" value=\"";
-echo $securityqans;
-echo "\" tabindex=\"7\"></td><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "phonenumber");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" size=\"20\" name=\"phonenumber\" value=\"";
-echo $phonenumber;
-echo "\" tabindex=\"14\"></td></tr>";
-
-echo "<tr>";
-echo "<td class=\"fieldlabel\"></td><td class=\"fieldarea\"></td>";
-echo "<td class=\"fieldlabel\">".$aInt->lang("fields", "mobilenumber")."</td>";
-echo "<td class=\"fieldarea\">";
-echo "<input type=\"text\" size=\"20\" name=\"mobilenumber\" value=\"".$mobilenumber."\"</input>";
-echo "</td><tr><td class=\"fieldlabel\">";
-
 echo $aInt->lang("clients", "latefees");
 echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"latefeeoveride\"";
 
 if ($latefeeoveride == "on") {
 	echo " checked";
 }
-
-echo " tabindex=\"15\"> ";
 echo $aInt->lang("clients", "latefeesdesc");
 echo "</td><td class=\"fieldlabel\">";
 echo $aInt->lang("fields", "paymentmethod");
@@ -477,10 +450,10 @@ echo "\"> <input type=\"reset\" value=\"";
 echo $aInt->lang("global", "cancelchanges");
 echo "\" class=\"button\" tabindex=\"";
 echo $taxindex++;
-echo "\"></div>
+?>
+</div>
 </form>
-
-";
+<?php
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;

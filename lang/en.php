@@ -167,6 +167,7 @@ $_LANG['clientareaerrors'] = "The following errors occurred:";
 $_LANG['clientareaerrorstate'] = "You did not enter your state";
 $_LANG['clientareaexpired'] = "Expired";
 $_LANG['clientareafirstname'] = "First Name";
+$_LANG['clientareafirstname'] = "Date of Birth";
 $_LANG['clientareafraud'] = "Fraud";
 $_LANG['clientareafullname'] = "Client Name";
 $_LANG['clientareaheader'] = "Welcome to our client area where you can manage your account with us. This page provides a brief overview of your account including any open support requests and unpaid invoices.  Please ensure you keep your contact details up to date.";

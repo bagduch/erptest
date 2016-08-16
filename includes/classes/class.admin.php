@@ -1043,19 +1043,23 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             echo " <input type=\"submit\" value=\"Go\">";
         }
 
-        echo "</p>\r\n</form>\r\n<div id=\"clienttabs\">\r\n<ul>";
+        echo "</p></form>";
+        echo "<ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
-                $class = "tabselected";
-            } else {
-                $class = "tab";
+                $class = " class=\"active\"";
             }
-//          echo " Link: " . $link ." Class: ". $class;
 
-            echo "<li class=\"" . $class . "\"><a href=\"" . $link . ".php?userid=" . $_GET['userid'] . "\">" . $name . "</a></li>";
+            printf("<li %s><a href=\"%s.php?userid=%d\">%s</a></li>",
+                $class,
+                $link,
+                (int)$_GET['userid'],
+                $name
+            );
         }
 
-        echo "</ul>\r\n</div>\r\n<div id=\"tab0box\" class=\"tabbox\">\r\n  <div id=\"tab_content\" style=\"text-align:left;\">";
+        echo "</ul>";
+        echo "<div id=\"tab0box\" class=\"tabbox\">\r\n  <div id=\"tab_content\" style=\"text-align:left;\">";
     }
 
     public function gracefulExit($msg) {
