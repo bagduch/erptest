@@ -4,56 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
-function printProductDownlads($downloads) {
-    if (!is_array($downloads)) {
-        $downloads = array();
-    }
-
-    echo "<ul class=\"jqueryFileTree\">";
-    foreach ($downloads as $downloadid) {
-        $result = select_query_i("tbldownloads", "", array("id" => $downloadid));
-        $data = mysqli_fetch_array($result);
-        $downid = $data['id'];
-        $downtitle = $data['title'];
-        $downfilename = $data['location'];
-        $ext = end(explode(".", $downfilename));
-        echo "<li class=\"file ext_" . $ext . "\"><a href=\"#\" class=\"removedownload\" rel=\"" . $downid . "\">" . $downtitle . "</a></li>";
-    }
-
-    echo "</ul>";
-}
-
-function buildCategoriesList($level, $parentlevel) {
-    global $categorieslist;
-    global $categories;
-
-    $result = select_query_i("tbldownloadcats", "", array("parentid" => $level), "name", "ASC");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $id = $data['id'];
-        $parentid = $data['parentid'];
-        $category = $data['name'];
-        $categorieslist .= "<option value=\"" . $id . "\">";
-        $i = 1;
-
-        while ($i <= $parentlevel) {
-            $categorieslist .= "- ";
-            ++$i;
-        }
-
-        $categorieslist .= "" . $category . "</option>";
-        buildCategoriesList($id, $parentlevel + 1);
-    }
-}
-
 define("ADMINAREA", true);
 require "../init.php";
+include_once '../includes/servicefunctions.php';
 $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
@@ -91,135 +45,6 @@ if ($action == "getdownloads") {
     exit();
 }
 
-
-if ($action == "managedownloads") {
-    check_token("RA.admin.default");
-
-    if (!checkPermission("Edit Products/Services", true)) {
-        exit("Access Denied");
-    }
-
-    $result = select_query_i("tblservices", "downloads", array("id" => $id));
-    $data = mysqli_fetch_array($result);
-    $downloads = $data['downloads'];
-    $downloads = unserialize($downloads);
-
-    if (!is_array($downloads)) {
-        $downloads = array();
-    }
-
-
-    if ($adddl) {
-        if (!in_array($adddl, $downloads)) {
-            $downloads[] = $adddl;
-        }
-    }
-
-
-    if ($remdl) {
-        foreach ($downloads as $key => $downloadid) {
-
-            if ($downloadid == $remdl) {
-                unset($downloads[$key]);
-                continue;
-            }
-        }
-    }
-
-    update_query("tblservices", array("downloads" => serialize($downloads)), array("id" => $id));
-    printProductDownlads($downloads);
-    exit();
-}
-
-
-if ($action == "quickupload") {
-    check_token("RA.admin.default");
-
-    if (!checkPermission("Edit Products/Services", true)) {
-        exit("Access Denied");
-    }
-
-    $categorieslist = "";
-    buildCategoriesList(0, 0);
-    echo "<form method=\"post\" action=\"configservices.php?action=uploadfile&id=" . $id . "\" id=\"quickuploadfrm\" enctype=\"multipart/form-data\">
-" . generate_token("form") . "
-<table width=\"100%\">
-<tr><td width=\"80\">Category:</td><td><select name=\"catid\" style=\"width:95%;\">" . $categorieslist . "</select></td></tr>
-<tr><td>Title:</td><td><input type=\"text\" name=\"title\" style=\"width:95%;\" /></td></tr>
-<tr><td>Description:</td><td><input type=\"text\" name=\"description\" style=\"width:95%;\" /></td></tr>
-<tr><td>Choose File:</td><td><input type=\"file\" name=\"uploadfile\" style=\"width:95%;\" /></td></tr>
-</table>
-</form>";
-    exit();
-}
-
-
-if ($action == "uploadfile") {
-    check_token("RA.admin.default");
-
-    if (!checkPermission("Edit Products/Services", true)) {
-        exit("Access Denied");
-    }
-
-
-    if (!isFileNameSafe($_FILES['uploadfile']['name'])) {
-        $aInt->gracefulExit("Invalid upload filename.  Valid filenames contain only alpha-numeric, dot, hyphen and underscore characters.");
-        exit();
-    }
-
-    $filename = $_FILES['uploadfile']['name'];
-
-    if (!$filename) {
-        redir("action=edit&id=" . $id . "&tab=7");
-    }
-
-    move_uploaded_file($_FILES['uploadfile']['tmp_name'], $downloads_dir . $filename);
-    $adddl = insert_query("tbldownloads", array("category" => $catid, "type" => "zip", "title" => $title, "description" => html_entity_decode($description), "location" => $filename, "clientsonly" => "on", "productdownload" => "on"));
-    logActivity("Added New Product Download - " . $title);
-    $result = select_query_i("tblservices", "downloads", array("id" => $id));
-    $data = mysqli_fetch_array($result);
-    $downloads = $data['downloads'];
-    $downloads = unserialize($downloads);
-
-    if (!is_array($downloads)) {
-        $downloads = array();
-    }
-
-    $downloads[] = $adddl;
-    update_query("tblservices", array("downloads" => serialize($downloads)), array("id" => $id));
-    redir("action=edit&id=" . $id . "&tab=7");
-}
-
-
-if ($action == "adddownloadcat") {
-    check_token("RA.admin.default");
-
-    if (!checkPermission("Edit Products/Services", true)) {
-        exit("Access Denied");
-    }
-
-    $categorieslist = "";
-    buildCategoriesList(0, 0);
-    echo "<form method=\"post\" action=\"configservices.php?action=createdownloadcat&id=" . $id . "\" id=\"adddownloadcatfrm\" enctype=\"multipart/form-data\">
-" . generate_token("form") . "
-<table width=\"100%\">
-<tr><td width=\"80\">Category:</td><td><select name=\"catid\" style=\"width:95%;\">" . $categorieslist . "</select></td></tr>
-<tr><td>Name:</td><td><input type=\"text\" name=\"title\" style=\"width:95%;\" /></td></tr>
-<tr><td>Description:</td><td><input type=\"text\" name=\"description\" style=\"width:95%;\" /></td></tr>
-</table>
-</form>";
-    exit();
-}
-
-
-if ($action == "createdownloadcat") {
-    check_token("RA.admin.default");
-    checkPermission("Edit Products/Services");
-    insert_query("tbldownloadcats", array("parentid" => $catid, "name" => $title, "description" => html_entity_decode($description), "hidden" => ""));
-    logActivity("Added New Download Category - " . $title);
-    redir("action=edit&id=" . $id . "&tab=7");
-    redir("action=edit&id=" . $id . "&tab=7");
-}
 
 
 if ($action == "add") {
@@ -261,42 +86,39 @@ if ($action == "save") {
         "autoterminatedays" => $_POST['autoterminatedays'],
         "autoterminateemail" => $_POST['autoterminateemail'],
         "tax" => $tax,
+        "revenuecode" => $_POST['rcode'],
         'affiliateonetime' => $_POST['affiliateonetime'],
         "affiliatepaytype" => $_POST['affiliatepaytype'],
         "affiliatepayamount" => $_POST['affiliatepayamount'],
     );
 
-
-//    $counter = 1;
-//
-//
-//    while ($counter <= 24) {
-//        $array["configoption" . $counter] = trim($packageconfigoption[$counter]);
-//        $counter += 1;
-//    }
-
-
-
     update_query("tblservices", $array, array("id" => $id));
-
-
     foreach ($_POST['currency'] as $currency_id => $pricing) {
         update_query("tblpricing", $pricing, array("type" => "product", "currency" => $currency_id, "relid" => $id));
     }
-
-
     if ($customfieldname) {
         foreach ($customfieldname as $fid => $value) {
-            update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $customfieldtype[$fid], "description" => $customfielddesc[$fid], "fieldoptions" => $customfieldoptions[$fid], "regexpr" => html_entity_decode($customfieldregexpr[$fid]), "adminonly" => $customadminonly[$fid], "required" => $customrequired[$fid], "showorder" => $customshoworder[$fid], "showinvoice" => $customshowinvoice[$fid], "sortorder" => $customsortorder[$fid]), array("id" => $fid));
+            update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $customfieldtype[$fid], "description" => $customfielddesc[$fid], "fieldoptions" => $customfieldoptions[$fid], "regexpr" => html_entity_decode($customfieldregexpr[$fid]), "adminonly" => $customadminonly[$fid], "required" => $customrequired[$fid], "showorder" => $customshoworder[$fid], "showinvoice" => $customshowinvoice[$fid], "sortorder" => $customsortorder[$fid]), array("cfid" => $fid));
+        }
+    }
+
+
+
+    if ($_POST['configoptionlinks']) {
+        delete_query("tblcustomfieldsgrouplinks", array("serviceid" => $id));
+        foreach ($_POST['configoptionlinks'] as $row) {
+            insert_query("tblcustomfieldsgrouplinks", array("cfgid" => $row, "serviceid" => $id));
         }
     }
 
 //here
     if ($addfieldname) {
-        insert_query("tblcustomfields", array("type" => "product", "relid" => $id, "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $addcustomfielddesc, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "showinvoice" => $addshowinvoice, "sortorder" => $addsortorder));
+        insert_query("tblcustomfields", array("type" => "product", "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $addcustomfielddesc, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "showinvoice" => $addshowinvoice, "sortorder" => $addsortorder));
     }
 
     delete_query("tblserviceconfiglinks", array("pid" => $id));
+
+    // delete_query("tblcustomfieldsgrouplinks", $where);
 
     if ($configoptionlinks) {
         foreach ($configoptionlinks as $gid) {
@@ -493,208 +315,80 @@ if ($action == "") {
     $result = select_query_i("tblservices", "COUNT(*)", "");
     $data = mysqli_fetch_array($result);
     $num_rows2 = $data[0];
-    $aInt->deleteJSConfirm("doDelete", "services", "deleteserviceconfirm", "?sub=delete&id=");
-    $aInt->deleteJSConfirm("doGroupDelete", "services", "deletegroupconfirm", "?sub=deletegroup&id=");
-    echo "<p><b>";
-    echo $aInt->lang("addons", "options");
-    echo ":</b><a href=\"";
-    echo $PHP_SELF;
-    echo "?action=creategroup\">";
-    echo $aInt->lang("services", "createnewgroup");
-    echo "</a> | ";
+    $js = $aInt->deleteJSConfirm("doDelete", "services", "deleteserviceconfirm", "?sub=delete&id=");
+    //  $js .=$aInt->deleteJSConfirm("doGroupDelete", "services", "deletegroupconfirm", "?sub=deletegroup&id=");
 
-    if ($num_rows == "0") {
-        echo "<font color=#cccccc>" . $aInt->lang("services", "createnewservice") . "</font>";
-    } else {
-        echo "<a href=\"";
-        echo $PHP_SELF;
-        echo "?action=create\">";
-        echo $aInt->lang("services", "createnewservice");
-        echo "</a>";
-    }
+    $lang = array(
+        "options" => $aInt->lang("addons", "options"),
+        "createnewgroup" => $aInt->lang("services", "createnewgroup"),
+        "createnewservice" => $aInt->lang("services", "createnewservice"),
+        "duplicateservice" => $aInt->lang("services", "duplicateservice"),
+        "type" => $aInt->lang("fields", "type"),
+        "servicename" => $aInt->lang("services", "servicename"),
+        "sortorder" => $aInt->lang("services", "sortorder"),
+        "paytype" => $aInt->lang("services", "paytype"),
+        "price" => $aInt->lang("services", "price"),
+        "autosetup" => $aInt->lang("services", "autosetup"),
+        "deletegrouperror" => $aInt->lang("services", "deletegrouperror", 1),
+        "groupname" => $aInt->lang("fields", "groupname"),
+        "navmoveup" => $aInt->lang("services", "navmoveup"),
+        "navmovedown" => $aInt->lang("services", "navmovedown"),
+        "edit" => $aInt->lang("global", "edit"),
+        "delete" => $aInt->lang("global", "delete"),
+        "deleteserviceerror" => $aInt->lang("services", "deleteserviceerror", 1),
+        "asetupafteracceptpendingorder" => $aInt->lang("services", "asetupafteracceptpendingorder"),
+        "asetupinstantlyafterorder" => $aInt->lang("services", "asetupinstantlyafterorder"),
+        "asetupafterpay" => $aInt->lang("services", "asetupafterpay"),
+        "off" => $aInt->lang("services", "off"),
+        "free" => $aInt->lang("billingcycles", "free"),
+        "onetime" => $aInt->lang("billingcycles", "onetime"),
+        "recurring" => $aInt->lang("status", "recurring"),
+        "proratabilling" => $aInt->lang("services", "proratabilling"),
+        "hostingaccount" => $aInt->lang("services", "hostingaccount"),
+        "reselleraccount" => $aInt->lang("services", "reselleraccount"),
+        "dedicatedvpsserver" => $aInt->lang("services", "dedicatedvpsserver"),
+        "otherproductservice" => $aInt->lang("services", "otherproductservice"),
+        "noproductsingroupsetup" => $aInt->lang("services", "noproductsingroupsetup"),
+        "updatesort" => $aInt->lang("services", "updatesort"),
+        "nogroupssetup" => $aInt->lang("services", "nogroupssetup")
+    );
 
-    echo " | ";
-
-    if ($num_rows2 == "0") {
-        echo "<font color=#cccccc>" . $aInt->lang("services", "duplicateservice") . "</font>";
-    } else {
-        echo "<a href=\"";
-        echo $PHP_SELF;
-        echo "?action=duplicate\">";
-        echo $aInt->lang("services", "duplicateservice");
-        echo "</a>";
-    }
-
-    echo "</p>
-<form method=\"post\" action=\"configpservices.php?action=updatesort\">
-<div class=\"tablebg\">
-<table class=\"datatable\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
-<tr><th>";
-    echo $aInt->lang("services", "servicename");
-    echo "</th><th>";
-    echo $aInt->lang("fields", "type");
-    echo "</th><th>";
-    echo $aInt->lang("services", "sortorder");
-    echo "</th><th>";
-    echo $aInt->lang("services", "paytype");
-    echo "</th><th>";
-    echo $aInt->lang("services", "price");
-    echo "</th><th>";
-    echo $aInt->lang("services", "autosetup");
-    echo "</th><th width=\"20\"></th><th width=\"20\"></th></tr>";
     $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
-    $data = mysqli_fetch_array($result);
-    $lastorder = $data['order'];
-    $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
-    $k = 0;
+    $servicegroup = array();
+    $service = array();
+    while ($groups = mysqli_fetch_array($result)) {
+        $servicegroup[$groups['id']] = $groups;
 
-    while ($data = mysqli_fetch_array($result2)) {
-        ++$k;
-        $groupid = $data['id'];
-        update_query("tblservicegroups", array("order" => $k), array("id" => $groupid));
-        $name = $data['name'];
-        $hidden = $data['hidden'];
-        $order = $data['order'];
-        $result = select_query_i("tblservices", "COUNT(*)", array("gid" => $groupid));
+        $result = select_query_i("tblservices", "COUNT(*)", array("gid" => $groups['id']));
         $data = mysqli_fetch_array($result);
         $num_rows = $data[0];
-
         if (0 < $num_rows) {
-            $deletelink = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
+            $servicegroup[$groups['id']]['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
         } else {
-            $deletelink = "doGroupDelete('" . $groupid . "')";
+            $servicegroup[$groups['id']]['deletelink'] = "doGroupDelete('" . $groups['id'] . "')";
         }
 
-        echo "<tr><td colspan=\"6\" style=\"background-color:#ffffdd;\"><div align=\"left\"><b>" . $aInt->lang("fields", "groupname") . (":</b> " . $name . " ");
-
-        if ($hidden == "on") {
-            echo "(Hidden) ";
-        }
-
-
-        if ($order != "1") {
-            echo "<a href=\"" . $PHP_SELF . "?sub=moveup&order=" . $order . generate_token("link") . "\"><img src=\"images/moveup.gif\" border=\"0\" align=\"absmiddle\" alt=\"" . $aInt->lang("services", "navmoveup") . "\"></a>";
-        }
-
-
-        if ($order != $lastorder) {
-            echo "<a href=\"" . $PHP_SELF . "?sub=movedown&order=" . $order . generate_token("link") . "\"><img src=\"images/movedown.gif\" border=\"0\" align=\"absmiddle\" alt=\"" . $aInt->lang("services", "navmovedown") . "\"></a>";
-        }
-
-        echo "</div></td><td style=\"background-color:#ffffdd;\" align=center><a href=\"" . $PHP_SELF . "?action=editgroup&ids=" . $groupid . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\"></td><td  style=\"background-color:#ffffdd;\" align=center><a href=\"#\" onClick=\"" . $deletelink . ";return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\"></a></td></tr>";
-        $result = select_query_i("tblservices", "id,type,name,paytype,autosetup,proratabilling,servertype,hidden,`order`,(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.packageid=tblservices.id) AS usagecount", array("gid" => $groupid), "order` ASC,`name", "ASC");
-
-        $i = 0;
-
-        while ($data = mysqli_fetch_array($result)) {
-
-            $id = $data['id'];
-            $type = $data['type'];
-            $name = $data['name'];
-            $paytype = $data['paytype'];
-            $autosetup = $data['autosetup'];
-            $proratabilling = $data['proratabilling'];
-            $servertype = ucfirst($data['servertype']);
-            $hidden = $data['hidden'];
-            $sortorder = $data['order'];
-            $num_rows = $data['usagecount'];
-
-            if (0 < $num_rows) {
-                $deletelink = "alert('" . $aInt->lang("services", "deleteserviceerror", 1) . "')";
+        $query2 = select_query_i("tblservices", "", "", "order", "DESC");
+        while ($services = mysqli_fetch_array($query2)) {
+            $service[$services['id']] = $services;
+            $result = select_query_i("tblcustomerservices", "COUNT(*)", array("packageid" => $services['id']));
+            $data2 = mysqli_fetch_array($result);
+            $num_rows2 = $data2[0];
+            if (0 < $num_rows2) {
+                $service[$services['id']]['deletelink'] = $servicegroup[$groups['id']]['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
             } else {
-                $deletelink = "doDelete('" . $id . "')";
+                $service[$services['id']]['deletelink'] = "doDelete('" . $services['id'] . "')";
             }
-
-
-            if ($autosetup == "on") {
-                $autosetup = $aInt->lang("services", "asetupafteracceptpendingorder");
-            } else {
-                if ($autosetup == "order") {
-                    $autosetup = $aInt->lang("services", "asetupinstantlyafterorder");
-                } else {
-                    if ($autosetup == "payment") {
-                        $autosetup = $aInt->lang("services", "asetupafterpay");
-                    } else {
-                        if ($autosetup == "") {
-                            $autosetup = $aInt->lang("services", "off");
-                        }
-                    }
-                }
-            }
-
-
-            if ($paytype == "free") {
-                $paymenttype = $aInt->lang("billingcycles", "free");
-            } else {
-                if ($paytype == "onetime") {
-                    $paymenttype = $aInt->lang("billingcycles", "onetime");
-                } else {
-                    $paymenttype = $aInt->lang("status", "recurring");
-                }
-            }
-
-
-            if ($proratabilling) {
-                $paymenttype .= " (" . $aInt->lang("services", "proratabilling") . ")";
-            }
-
-
-            if ($type == "hostingaccount") {
-                $producttype = $aInt->lang("services", "hostingaccount");
-            } else {
-                if ($type == "reselleraccount") {
-                    $producttype = $aInt->lang("services", "reselleraccount");
-                } else {
-                    if ($type == "server") {
-                        $producttype = $aInt->lang("services", "dedicatedvpsserver");
-                    } else {
-                        $producttype = $aInt->lang("services", "otherproductservice");
-                    }
-                }
-            }
-
-
-            if ($servertype) {
-                $producttype .= " (" . $servertype . ")";
-            }
-
-
-            if ($stockcontrol) {
-                $qtystock = $qty;
-            } else {
-                $qtystock = "-";
-            }
-
-
-            if ($hidden) {
-                $name .= " (Hidden)";
-                $hidden = " style=\"background-color:#efefef;\"";
-            }
-
-            echo "<tr style=\"text-align:center;\"><td" . $hidden . (">" . $name . "</td><td") . $hidden . ((">" . $producttype . "</td><td><input type=\"text\" name=\"so[" . $id . "]") . "\" value=\"" . $sortorder . "\" size=\"5\" style=\"font-size:10px;\" /></td><td") . $hidden . (">" . $paymenttype . "</td><td") . $hidden . (">" . $qtystock . "</td><td") . $hidden . (">" . $autosetup . "</td><td") . $hidden . ("><a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"") . $aInt->lang("global", "edit") . "\"></a></td><td" . $hidden . ("><a href=\"#\" onClick=\"" . $deletelink . ";return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\"></a></td></tr>";
-            ++$i;
         }
-
-
-        if ($i == "0") {
-            echo "<tr><td colspan=10 align=center>" . $aInt->lang("services", "noproductsingroupsetup") . "</td></tr>";
-        } else {
-            echo "<tr><td></td><td></td><td><div align=\"center\"><input type=\"submit\" value=\"" . $aInt->lang("services", "updatesort") . "\" style=\"font-size:10px;\" /></div></td><td></td><td></td><td></td><td></td><td></td></tr>";
-        }
-
-        $i = 0;
     }
+    $lastorder = $data['order'];
+    $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
 
 
-    if ($k == "0") {
-        echo "<tr><td colspan=10 align=center>" . $aInt->lang("services", "nogroupssetup") . "</td></tr>";
-    }
-
-    echo "</table>
-</div>
-</form>
-
-";
+    $aInt->assign('token', generate_token());
+    $aInt->assign('service', $service);
+    $aInt->assign('servicegroup', $servicegroup);
+    $templatefile = 'services/view';
 } else {
 
 
@@ -749,8 +443,9 @@ if ($action == "") {
     while ($groups = mysqli_fetch_assoc($result2)) {
         $servicegroups[$groups['id']] = $groups['name'];
     }
- 
+
     if ($action == "edit") {
+        // get all service data
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
@@ -775,6 +470,9 @@ if ($action == "") {
         $servertype = $data['servertype'];
 
 
+        $configserice = getCustomeFieldGroup($id);
+
+        $aInt->assign('configservice', $configserice);
         $aInt->assign('data', $data);
 
         $counter = 1;
@@ -1022,9 +720,10 @@ if ($action == "") {
     $aInt->assign('infobox', $infobox);
     $aInt->assign('tabledata', $tabledata);
     //  echo print_r($servicegroups);
-    if (isset($templatefile) && $templatefile != "") {
-        $aInt->template = $templatefile;
-    }
+}
+$aInt->assign('langs', $lang);
+if (isset($templatefile) && $templatefile != "") {
+    $aInt->template = $templatefile;
 }
 
 $content = ob_get_contents();

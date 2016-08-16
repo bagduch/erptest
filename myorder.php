@@ -21,6 +21,7 @@ require 'includes/servicefunctions.php';
 initialiseClientArea($_LANG['carttitle'], "", "<a href=\"cart.php\">" . $_LANG['carttitle'] . "</a>");
 checkContactPermission("orders");
 check_token();
+
 $orderfrm = new RA_OrderForm();
 $cart = new RA_Carts($orderfrm, $ra);
 $a = $ra->get_req_var("a");
@@ -34,15 +35,25 @@ $description = $ra->get_req_var("description");
 $step = $ra->get_req_var("step");
 $signup = $ra->get_req_var("signup");
 $login = $ra->get_req_var("login");
-
+$agreecontract = $ra->get_req_var("agreecontract");
 $checkout = $ra->get_req_var("checkout");
 $validatepromo = $ra->get_req_var("validatepromo");
 $orderfrmtpl = $ra->get_config("OrderFormTemplate");
-$signup = $ra->get_req_var('signup');
 $username = trim($ra->get_req_var("username"));
 $password = trim($ra->get_req_var("password"));
 $hash = $ra->get_req_var("hash");
 $goto = $ra->get_req_var("goto");
+$address = $ra->get_req_var("address");
+$fpid = $ra->get_req_var("fpid");
+
+
+
+if (isset($address) && $address != "") {
+    $_SESSION['address'] = $address;
+}
+if (isset($fpid) && $fpid != "") {
+    $_SESSION['fpid'] = $fpid;
+}
 
 if (!isValidforPath($orderfrmtpl)) {
     exit("Invalid Order Form Template Name");
@@ -54,190 +65,212 @@ $orderfrmconfig = ROOTDIR . "/templates/orderforms/" . $orderfrmtpl . "/config.p
 $orderform = true;
 $nowrapper = false;
 
-
-if (!empty($login)) {
-    $loginsuccess = $istwofa = false;
-    $twofa = new RA_2FA();
-    if ($twofa->isActiveClients() && isset($_SESSION['2faverifyc'])) {
-        $twofa->setClientID($_SESSION['2faclientid']);
-
-        if ($ra->get_req_var("backupcode")) {
-            $success = $twofa->verifyBackupCode($ra->get_req_var("code"));
-        } else {
-            $success = $twofa->moduleCall("verify");
-        }
+if ($_SESSION['address']) {
 
 
-        if ($success) {
-            validateClientLogin(get_query_val("tblclients", "email", array("id" => $_SESSION['2faclientid'])), "", true);
-
-            if ($_SESSION['2farememberme']) {
-                wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
-            } else {
-                wDelCookie("User");
-            }
-
-            RA_Session::delete("2faclientid");
-            RA_Session::delete("2farememberme");
-            RA_Session::delete("2faverifyc");
+    if (!empty($login)) {
+        $loginsuccess = $istwofa = false;
+        $twofa = new RA_2FA();
+        if ($twofa->isActiveClients() && isset($_SESSION['2faverifyc'])) {
+            $twofa->setClientID($_SESSION['2faclientid']);
 
             if ($ra->get_req_var("backupcode")) {
-                RA_Session::set("2fabackupcodenew", true);
-                $gotourl = "clientarea.php?newbackupcode=true";
+                $success = $twofa->verifyBackupCode($ra->get_req_var("code"));
+            } else {
+                $success = $twofa->moduleCall("verify");
+            }
+
+
+            if ($success) {
+                validateClientLogin(get_query_val("tblclients", "email", array("id" => $_SESSION['2faclientid'])), "", true);
+
+                if ($_SESSION['2farememberme']) {
+                    wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
+                } else {
+                    wDelCookie("User");
+                }
+
+                RA_Session::delete("2faclientid");
+                RA_Session::delete("2farememberme");
+                RA_Session::delete("2faverifyc");
+
+                if ($ra->get_req_var("backupcode")) {
+                    RA_Session::set("2fabackupcodenew", true);
+                    $gotourl = "clientarea.php?newbackupcode=true";
+                    header("Location: " . $gotourl);
+                    exit();
+                }
+
+                $loginsuccess = true;
+            } else {
+                if (strpos($gotourl, "?")) {
+                    $gotourl .= "&";
+                } else {
+                    $gotourl .= "?";
+                }
+
+                $gotourl .= "incorrect=true";
                 header("Location: " . $gotourl);
                 exit();
             }
-
-            $loginsuccess = true;
-        } else {
-            if (strpos($gotourl, "?")) {
-                $gotourl .= "&";
-            } else {
-                $gotourl .= "?";
-            }
-
-            $gotourl .= "incorrect=true";
-            header("Location: " . $gotourl);
-            exit();
         }
-    }
 
 
-    if (!$loginsuccess) {
-        if (validateClientLogin($username, $password)) {
-            $loginsuccess = true;
+        if (!$loginsuccess) {
+            if (validateClientLogin($username, $password)) {
+                $loginsuccess = true;
 
-            if ($rememberme) {
-                wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
+                if ($rememberme) {
+                    wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
+                } else {
+                    wDelCookie("User");
+                }
             } else {
-                wDelCookie("User");
-            }
-        } else {
-            if (isset($_SESSION['2faverifyc'])) {
-                $istwofa = true;
-            } else {
-                if ($hash) {
-                    $autoauthkey = "";
-                    require "configuration.php";
+                if (isset($_SESSION['2faverifyc'])) {
+                    $istwofa = true;
+                } else {
+                    if ($hash) {
+                        $autoauthkey = "";
+                        require "configuration.php";
 
-                    if ($autoauthkey) {
-                        $login_uid = $login_cid = "";
+                        if ($autoauthkey) {
+                            $login_uid = $login_cid = "";
 
-                        if ($timestamp < time() - 15 * 60 || time() < $timestamp) {
-                            exit("Link expired");
-                        }
-
-                        $hashverify = sha1($email . $timestamp . $autoauthkey);
-
-                        if ($hashverify == $hash) {
-                            $result = select_query_i("tblclients", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-                            $data = mysqli_fetch_array($result);
-                            $login_uid = $data['id'];
-                            $login_pwd = $data['password'];
-                            $language = $data['language'];
-
-                            if (!$login_uid) {
-                                $result = select_query_i("tblcontacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
-                                $data = mysqli_fetch_array($result);
-                                $login_cid = $data['id'];
-                                $login_uid = $data['userid'];
-                                $login_pwd = $data['password'];
-                                $result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
-                                $data = mysqli_fetch_array($result);
-                                $login_uid = $data['id'];
-                                $language = $data['language'];
+                            if ($timestamp < time() - 15 * 60 || time() < $timestamp) {
+                                exit("Link expired");
                             }
 
-                            if ($login_uid) {
-                                $fullhost = gethostbyaddr($remote_ip);
-                                update_query("tblclients", array("lastlogin" => "now()", "ip" => $remote_ip, "host" => $fullhost), array("id" => $login_uid));
-                                $_SESSION['uid'] = $login_uid;
+                            $hashverify = sha1($email . $timestamp . $autoauthkey);
 
-                                if ($login_cid) {
-                                    $_SESSION['cid'] = $login_cid;
+                            if ($hashverify == $hash) {
+                                $result = select_query_i("tblclients", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+                                $data = mysqli_fetch_array($result);
+                                $login_uid = $data['id'];
+                                $login_pwd = $data['password'];
+                                $language = $data['language'];
+
+                                if (!$login_uid) {
+                                    $result = select_query_i("tblcontacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
+                                    $data = mysqli_fetch_array($result);
+                                    $login_cid = $data['id'];
+                                    $login_uid = $data['userid'];
+                                    $login_pwd = $data['password'];
+                                    $result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+                                    $data = mysqli_fetch_array($result);
+                                    $login_uid = $data['id'];
+                                    $language = $data['language'];
                                 }
 
-                                $haship = ($CONFIG['DisableSessionIPCheck'] ? "" : $ra->get_user_ip());
-                                $_SESSION['upw'] = sha1($login_uid . $login_cid . $login_pwd . $haship . substr(sha1($ra->get_hash()), 0, 20));
-                                $_SESSION['tkval'] = genRandomVal();
+                                if ($login_uid) {
+                                    $fullhost = gethostbyaddr($remote_ip);
+                                    update_query("tblclients", array("lastlogin" => "now()", "ip" => $remote_ip, "host" => $fullhost), array("id" => $login_uid));
+                                    $_SESSION['uid'] = $login_uid;
 
-                                if ($language) {
-                                    $_SESSION['Language'] = $language;
+                                    if ($login_cid) {
+                                        $_SESSION['cid'] = $login_cid;
+                                    }
+
+                                    $haship = ($CONFIG['DisableSessionIPCheck'] ? "" : $ra->get_user_ip());
+                                    $_SESSION['upw'] = sha1($login_uid . $login_cid . $login_pwd . $haship . substr(sha1($ra->get_hash()), 0, 20));
+                                    $_SESSION['tkval'] = genRandomVal();
+
+                                    if ($language) {
+                                        $_SESSION['Language'] = $language;
+                                    }
+
+                                    run_hook("ClientLogin", array("userid" => $login_uid));
+                                    $loginsuccess = true;
                                 }
-
-                                run_hook("ClientLogin", array("userid" => $login_uid));
-                                $loginsuccess = true;
                             }
                         }
                     }
                 }
             }
         }
-    }
 
-    if (!$istwofa && !$loginsuccess) {
-        $infobox = '<p class="text-danger bg-danger text-alert " id="login-error"><strong><span aria-hidden="true" class="icon icon-ban"></span> </strong><br>Login Details Incorrect. Please try again.</p>';
-    } else {
-        
-    }
-}
-
-if ($step == "2") {
-    $pid = 3;
-    $errormessage = "";
-    $result = full_query_i("SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id where tblservices.id =" . $pid);
-    $data = mysqli_fetch_assoc($result);
-    // $producttype = $data['type'];
-
-
-    if (!empty($data)) {
-        $currecy = getCurrency();
-        $addons = getAddons($data['id'], array(), $currecy);
-
-        $pricing = getPricingInfo(3, $inclconfigops = false, $upgrade = false, $currecy);
-        // $currecy = getCurrency();
-    }
-    $total = 0;
-    foreach ($pricing['rawpricing'] as $key => $item) {
-        if ($item == -1) {
-            unset($pricing['rawpricing'][$key]);
+        if (!$istwofa && !$loginsuccess) {
+            $infobox = '<p class="text-danger bg-danger text-alert " id="login-error"><strong><span aria-hidden="true" class="icon icon-ban"></span> </strong><br>Login Details Incorrect. Please try again.</p>';
         } else {
-            $total +=$item;
+            redir('myorder.php?step=2');
+        }
+    } else {
+        if ($signup) {
+            check_token();
+            $errormessage = checkDetailsareValid("", true);
+
+            if (!$errormessage) {
+                $userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans);
+                run_hook("ClientAreaRegister", array("userid" => $userid));
+                redir("", "myorder.php?step=2");
+            }
         }
     }
 
+    if ($step == "2") {
+        $fpid = $_SESSION['fpid'];
+        $errormessage = "";
+        $contractnotsign = true;
+        $result = full_query_i("SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id where tblservices.id =" . $fpid);
+        $data = mysqli_fetch_assoc($result);
+        if (!empty($data)) {
+            $currecy = getCurrency();
+            $addons = getAddons($data['id'], array(), $currecy);
+            $customefield = getServiceCustomFields($data['id']);
+            $pricing = getPricingInfo(3, $inclconfigops = false, $upgrade = false, $currecy);
+            // $currecy = getCurrency();
+        }
+        $total = 0;
+        foreach ($pricing['rawpricing'] as $key => $item) {
+            if ($item == -1) {
+                unset($pricing['rawpricing'][$key]);
+            } else {
+                $total +=$item;
+            }
+        }
 
-    // echo "<pre>", print_r($addons, 1), "</pre>";
-//    echo "<pre>", print_r($currecy, 1), "</pre>";
+        if (isset($agreecontract)) {
+            if ($agreecontract == "on") {
+                $contractnotsign = false;
+            }
+        }
+        if ($data['contract'] && $contractnotsign) {
+            $smartyvalues['product'] = $data;
+        } else {
+            $smartyvalues['address'] = $_SESSION['address'];
+            $smartyvalues['total'] = $total;
+            $smartyvalues['currecy'] = $currecy;
+            $smartyvalues['addons'] = $addons;
+            $smartyvalues['pricing'] = $pricing;
+            $smartyvalues['product'] = $data;
+            $smartyvalues['customefield'] = $customefield;
+        }
+        $smartyvalues['contractnotsign'] = $contractnotsign;
+    }
+    if ($step == "3") {
+        $gateways = new RA_Gateways();
+        $availablegateways = getAvailableOrderPaymentGateways();
+        $securityquestions = getSecurityQuestions();
 
+        echo "<pre>", print_r($gateways->getCCDateMonths(), 1), "</pre>";
 
-    $smartyvalues['total'] = $total;
-    $smartyvalues['currecy'] = $currecy;
-    $smartyvalues['product'] = $data;
-    $smartyvalues['addons'] = $addons;
-    $smartyvalues['pricing'] = $pricing;
+        $smartyvalues['availablegateways'] = $availablegateways;
+        $smartyvalues['months'] = $gateways->getCCDateMonths();
+        $smartyvalues['startyears'] = $gateways->getCCStartDateYears();
+        $smartyvalues['expiryyears'] = $smartyvalues['years'] = $gateways->getCCExpiryDateYears();
+    }
+
+    $templatefile = "myorder";
+    if (!$templatefile) {
+        redir();
+        exit();
+    }
+
+    $smartyvalues['address'] = $_SESSION['address'];
+    $smartyvalues['step'] = $step;
+    $smartyvalues['error'] = $infobox;
+    $smartyvalues['carttpl'] = $orderfrm->getTemplate();
+    outputClientArea($templatefile, true);
+} else {
+    echo print_r($_SESSION, 1);
 }
-if ($step == "3") {
-    $gateways = new RA_Gateways();
-    $availablegateways = getAvailableOrderPaymentGateways();
-    $securityquestions = getSecurityQuestions();
-
-    echo "<pre>", print_r($gateways->getCCDateMonths(), 1), "</pre>";
-
-    $smartyvalues['availablegateways'] = $availablegateways;
-    $smartyvalues['months'] = $gateways->getCCDateMonths();
-    $smartyvalues['startyears'] = $gateways->getCCStartDateYears();
-    $smartyvalues['expiryyears'] = $smartyvalues['years'] = $gateways->getCCExpiryDateYears();
-}
-
-$templatefile = "myorder";
-if (!$templatefile) {
-    redir();
-    exit();
-}
-
-$smartyvalues['step'] = $step;
-$smartyvalues['error'] = $infobox;
-$smartyvalues['carttpl'] = $orderfrm->getTemplate();
-outputClientArea($templatefile, true);
 ?>

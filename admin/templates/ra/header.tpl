@@ -15,7 +15,7 @@
 <!-- DEMO END -->
 </head>
 <body>
-<!-- {debug} -->
+
 <div id="wrapper">
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="navbar-header">

@@ -84,9 +84,10 @@ function getServiceCustomFields($sid, $csid = null) {
     $query_where = " WHERE tblservices.id=" . (int) $sid;
     $query = $query_selectvals . $query_tables . $query_where;
 
+    //mail("peter@hd.net.nz", "query", $query);
     $result = full_query_i($query);
     $returnvals = array();
-    $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+  //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $returnvals[$row['cfid']] = $row;
@@ -96,13 +97,27 @@ function getServiceCustomFields($sid, $csid = null) {
             $returnvals[$row['cfid']]['fieldoptions'][] = $data;
         }
     }
-
-
+    
     return $returnvals;
 }
 
-function getCustomfieldValue() {
-    
+function getCustomeFieldGroup($sid) {
+
+    $data = array();
+    if (isset($sid)) {
+        $query = "select tcfgn.*,tcfgl.serviceid from tblcustomfieldsgroupnames as tcfgn
+                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid
+                ";
+        $result = full_query_i($query);
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[$row['cfgid']] = $row;
+            $data[$row['cfgid']]['current'] = $row['serviceid'] == $sid ? "selected" : "";
+        }
+        return $data;
+    } else {
+
+        return $false;
+    }
 }
 
 function addServiceCustomFieldVlues($csid, $valarray) {

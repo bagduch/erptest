@@ -98,3 +98,28 @@ body > .container {
     -o-border-radius: 5px;
     border-radius: 5px;
 }
+.address-bar
+{
+    padding: 10px;
+    font-size: 15px;
+
+}
+.address-container
+{
+
+}
+.left-bar{
+    float: left;
+    width: 19%;
+}
+.right-bar{
+    float: right;
+    width: 80%;
+}
+
+.editaddress
+{
+    float: right;
+    cursor: pointer;
+
+}

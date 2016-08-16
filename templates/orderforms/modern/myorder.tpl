@@ -13,10 +13,22 @@
         <div class="container row">
             <h1>UI Order Process</h1>
             <div class="form-container">
-                <form class="form form-horizontal" role="form" method="post">
-                    <h2 class="text-center">Registration</h2>
-
-                    {if $step==""}
+                <h2 class="text-center">Registration</h2>
+                <div class="address-container">
+                    <div class="left-bar">
+                        <div class="bg-success address-bar">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i> Your Address
+                        </div>
+                    </div>
+                    <div class="right-bar">
+                        <div class="bg-primary address-bar">
+                            {$address}
+                            <span class="editaddress">Change <i class="fa fa-pencil" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                </div>
+                {if $step==""}
+                    <form action="myorder.php" method="post">
                         <div class="row step-one">
                             {$error}
                             <div class="col-md-6">
@@ -26,7 +38,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="#fname">Last Name</label>
-                                    <input type="text" id="fname" class="form-control" name="rfname">
+                                    <input type="text" id="fname" class="form-control" name="rlname">
                                 </div>
                                 <div class="form-group">
                                     <label for="#fname">Email</label>
@@ -62,26 +74,46 @@
                                 </div>
                             </div>
                         </div>
-                    {elseif $step==2}
-                        <div class="row step-two">
-                            <div class="form-group">
-                                <div class="bg-info">
-                                    <label class="checkbox-inline rememberme">
-                                        <input type="checkbox" name=""> is Contract
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="text" id="password" class="form-control" name="password">
-                                    <label for="#password">ETF</label>
-                                </div>
-                                <div class="">
-                                    <input type="text" id="password" class="form-control" name="password">
-                                    <label for="#password">Terms</label>
-                                </div>
-                            </div>
+                    </form>
+                {elseif $step==2}
+                    {if $product.contract && $contractnotsign}
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form id="contractform" action="myorder.php?step=2" method="post">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title">Your Plan is a Contract</h4>    
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <input type="text" id="etf" class="form-control" name="etf" disabled value="{$product.etf}">
+                                                <label for="#etf">ETF</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" id="terms" class="form-control" name="terms" disabled value="{$product.term}">
+                                                <label for="#terms">Terms</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="checkbox-inline agreecontract">
+                                                    <input type="checkbox" name="agreecontract"> Your Service is A contract please tick the box to agree the terms
+                                                </label>
 
+                                            </div>
+                                            <p style="display:none" id="termwarning" class="bg-danger">please accept terms before continue</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" id="subterm" class="btn btn-primary">Are you agreed the terms?</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {else}
+                        <div class="row step-two">
                             <div class="addons">
                                 <table width="100%" cellspacing="0" cellpadding="0" class="configtable">
                                     <tbody>
@@ -97,6 +129,27 @@
                                         {/foreach}
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="customfields">
+                                {foreach from=$customefield item=fields}
+                                    {if !$fields.adminonly}
+                                        {if $fields.fieldtype eq "text"}
+                                            {if $fields.fieldname eq "address"}
+                                                <input name="customfield[{$fields.cfid}]" type="hidden" class="form-control input-lg" id="{$fields.fieldname}{$fields.cfid}"  value="{$address}"/>
+                                            {else}
+
+                                                <div class="form-group">
+                                                    <label for="#{$fields.fieldname}{$fields.cfid}" class="control-label">{$fields.fieldname}{if $fields.required}<span>*</span>{/if}</label>
+                                                    <input name="customfield[{$fields.cfid}]" type="text" class="form-control input-lg" id="{$fields.fieldname}{$fields.cfid}" placeholder="{$fields.description }"/>
+                                                </div>
+                                            {/if}
+                                        {elseif $fields.fieldtype eq "password"}
+                                        {elseif $fields.fieldtype eq "dropdown"}
+                                        {elseif $fields.fieldtype eq "tickbox"}
+                                        {else}
+                                        {/if}
+                                    {/if}
+                                {/foreach}
                             </div>
                             <div class="sum">
                                 <div class="">
@@ -126,70 +179,78 @@
                                 </div>
                             </div>
                         </div>
-                    {elseif $step==3}
-                        <div class="">
-                            <div class="checkoutcol1">
-
-                                <div class="signupfields padded">
-                                    <h2>Promotional Code</h2>
-                                    <input type="text" name="promocode" size="20" value=""> <input type="submit" name="validatepromo" value="Validate Code >>">            </div>
-
-
-                            </div>
-                            <div class="checkoutcol2">
-                                <div class="signupfields padded">
-                                    <h2>Payment Method</h2>
-                                    {foreach from=$availablegateways item=row}
-                                        <label>
-                                            <input type="radio" name="paymentmethod" value="{$row.sysname}" id="pgbtn{$row.sysname}" onclick="hideCCForm()"> {$row.name}
-                                        </label>
-                                    {/foreach}
-                                    <br><br>
-                                    <div id="ccinputform" class="signupfields hidden" style="">
-                                        <table width="100%" cellspacing="0" cellpadding="0" class="configtable textleft">
-                                            <input type="hidden" name="ccinfo" value="new">                          
-                                            <tbody><tr class="newccinfo">
-                                                    <td class="fieldlabel">Card Type</td><td class="fieldarea">
-                                                        <select name="cctype">
-                                                            <option selected=""></option>
-                                                        </select></td></tr>
-                                                <tr class="newccinfo"><td class="fieldlabel">Card Number</td><td class="fieldarea"><input type="text" name="ccnumber" size="30" value="" autocomplete="off"></td></tr>
-                                                <tr class="newccinfo"><td class="fieldlabel">Expiry Date</td><td class="fieldarea">
-                                                        <select name="ccexpirymonth" id="ccexpirymonth" class="newccinfo">
-                                                            {foreach from=$months key=value item=row}
-                                                                <option>{$row}</option>
-                                                            {/foreach}
-                                                        </select> / <select name="ccexpiryyear" class="newccinfo">
-                                                            <option>2016</option>
-                                                            <option>2017</option>
-                                                            <option>2018</option>
-                                                            <option>2019</option>
-                                                            <option>2020</option>
-                                                            <option>2021</option>
-                                                            <option>2022</option>
-                                                            <option>2023</option>
-                                                            <option>2024</option>
-                                                            <option>2025</option>
-                                                            <option>2026</option>
-                                                            <option>2027</option>
-                                                            <option>2028</option>
-                                                        </select></td></tr>
-                                                <tr><td class="fieldlabel">CVV/CVC2 Number</td><td class="fieldarea"><input type="text" name="cccvv" value="" size="5" autocomplete="off"> <a href="#" onclick="window.open('images/ccv.gif', '', 'width=280,height=200,scrollbars=no,top=100,left=100');
-                                                        return false">Where do I find this?</a></td></tr>
-                                            </tbody></table>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                    {elseif $step==4}
                     {/if}
-                </form>
+                {elseif $step==3}
+                    <div class="">
+                        <div class="checkoutcol1">
+                            <div class="signupfields padded">
+                                <h2>Promotional Code</h2>
+                                <input type="text" name="promocode" size="20" value=""> <input type="submit" name="validatepromo" value="Validate Code >>">            </div>
+                        </div>
+                        <div class="checkoutcol2">
+                            <div class="signupfields padded">
+                                <h2>Payment Method</h2>
+                                {foreach from=$availablegateways item=row}
+                                    <label>
+                                        <input type="radio" name="paymentmethod" value="{$row.sysname}" id="pgbtn{$row.sysname}" onclick="hideCCForm()"> {$row.name}
+                                    </label>
+                                {/foreach}
+                                <br><br>
+                                <div id="ccinputform" class="signupfields hidden" style="">
+                                    <table width="100%" cellspacing="0" cellpadding="0" class="configtable textleft">
+                                        <input type="hidden" name="ccinfo" value="new">                          
+                                        <tbody>
+                                            <tr class="newccinfo">
+                                                <td class="fieldlabel">Card Type</td>
+                                                <td class="fieldarea">
+                                                    <select name="cctype">
+                                                        <option selected=""></option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="newccinfo">
+                                                <td class="fieldlabel">Card Number</td>
+                                                <td class="fieldarea"><input type="text" name="ccnumber" size="30" value="" autocomplete="off"></td>
+                                            </tr>
+                                            <tr class="newccinfo">
+                                                <td class="fieldlabel">Expiry Date</td>
+                                                <td class="fieldarea">
+                                                    <select name="ccexpirymonth" id="ccexpirymonth" class="newccinfo">
+                                                        {foreach from=$months key=value item=row}
+                                                            <option>{$row}</option>
+                                                        {/foreach}
+                                                    </select> / <select name="ccexpiryyear" class="newccinfo">
+                                                        <option>2016</option>
+                                                        <option>2017</option>
+                                                        <option>2018</option>
+                                                        <option>2019</option>
+                                                        <option>2020</option>
+                                                        <option>2021</option>
+                                                        <option>2022</option>
+                                                        <option>2023</option>
+                                                        <option>2024</option>
+                                                        <option>2025</option>
+                                                        <option>2026</option>
+                                                        <option>2027</option>
+                                                        <option>2028</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">CVV/CVC2 Number</td>
+                                                <td class="fieldarea">
+                                                    <input type="text" name="cccvv" value="" size="5" autocomplete="off"> 
+                                                    <a href="#" onclick="window.open('images/ccv.gif', '', 'width=280,height=200,scrollbars=no,top=100,left=100');
+                                                            return false">Where do I find this?</a>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {elseif $step==4}
+                {/if}
             </div>
         </div>
         {literal}
@@ -197,9 +258,22 @@
                 $(document).ready(function () {
                     $("input[name^='addons']").click(function () {
 
+                    });
+                    $("#myModal").modal('show');
+                    $("#subterm").click(function (e) {
+                        e.preventDefault();
+                        if ($("input[name='agreecontract']").is(":checked"))
+                        {
+                            $("#contractform").submit();
 
+                        } else {
+                            $("#termwarning").fadeIn();
+                        }
                     });
 
+                    $('#myModal').on('hidden.bs.modal', function () {
+                        window.location.href = "https://peter.dev.roboticaccounting.com/myorder.php";
+                    });
                 });
             </script>
         {/literal}

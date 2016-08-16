@@ -252,8 +252,6 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-
-// mail('peter@hd.net.nz', "query", $query);
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging
@@ -270,8 +268,7 @@ function insert_query($table, $array) {
     return $id;
 }
 
-function delete_query(
-$table, $where) {
+function delete_query($table, $where) {
     global $CONFIG;
     global $query_count;
     global $mysqli_errors;

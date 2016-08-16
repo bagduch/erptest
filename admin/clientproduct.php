@@ -246,7 +246,7 @@ if ($frm->issubmitted()) {
 
 
         if ($newval != $oldval) {
-            $changelog[] = $displayname . " changed from " . $oldval . " to " . $newval . "</code>;
+            $changelog[] = $displayname . " changed from " . $oldval . " to " . $newval . "</code>";
             continue;
         }
     }

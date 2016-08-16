@@ -19,7 +19,7 @@
                             <table width="98%" cellspacing="0" cellpadding="0">
                                 <tbody>
                                     <tr>
-                                        <td><input type="text" name="fieldname[{$num}]" size="30"></td>
+                                        <td><input class="form-control" type="text" name="fieldname[{$num}]" size="30"></td>
                                         <td align="right">Display Order <input type="text" name="sortorder[{$num}]" size="5" value="0"></td>
                                     </tr>
                                 </tbody>

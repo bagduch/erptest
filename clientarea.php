@@ -85,7 +85,7 @@ if ($action == "") {
     }
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
-    $result = select_query_i("tbltickets", "", "userid=" . (int)($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
+    $result = select_query_i("tbltickets", "", "userid=" . (int) ($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -1016,98 +1016,95 @@ if ($action == "") {
                                             $domainidprotectionprice = $data['ssetupfee'];
                                             $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($domaindnsmanagementprice), "emailforwarding" => formatCurrency($domainemailforwardingprice), "idprotection" => formatCurrency($domainidprotectionprice)));
 
-                                                if ($sub == "savereglock") {
-                                                    check_token();
-                                                    checkContactPermission("managedomains");
-                                                    $newlockstatus = ($ra->get_req_var("reglock") ? "locked" : "unlocked");
-                                                    $success = $domains->moduleCall("SaveRegistrarLock", array("lockenabled" => $newlockstatus));
-
-                                                    if ($success) {
-                                                        $smartyvalues['updatesuccess'] = true;
-                                                    } else {
-                                                        $smartyvalues['error'] = $domains->getLastError();
-                                                    }
-                                                }
-
-                                                $success = $domains->moduleCall("GetNameservers");
+                                            if ($sub == "savereglock") {
+                                                check_token();
+                                                checkContactPermission("managedomains");
+                                                $newlockstatus = ($ra->get_req_var("reglock") ? "locked" : "unlocked");
+                                                $success = $domains->moduleCall("SaveRegistrarLock", array("lockenabled" => $newlockstatus));
 
                                                 if ($success) {
-                                                    $i = 1;
-
-                                                    while ($i <= 5) {
-                                                        $ca->assign("ns" . $i, $domains->getModuleReturn("ns" . $i));
-                                                        ++$i;
-                                                    }
-
-                                                    $smartyvalues['managens'] = true;
-                                                    $defaultns = array();
-                                                    $i = 1;
-
-                                                    while ($i <= 5) {
-                                                        if (trim($CONFIG["DefaultNameserver" . $i])) {
-                                                            $defaultns[trim($CONFIG["DefaultNameserver" . $i])] = true;
-                                                        }
-
-                                                        ++$i;
-                                                    }
-
-                                                    foreach ($values as $ns) {
-                                                        unset($defaultns[$ns]);
-                                                    }
-
-                                                    if (!count($defaultns)) {
-                                                        $smartyvalues['defaultns'] = true;
-                                                    }
+                                                    $smartyvalues['updatesuccess'] = true;
                                                 } else {
                                                     $smartyvalues['error'] = $domains->getLastError();
                                                 }
+                                            }
 
-                                                if (!preg_match('/uk$/i', $tld) && $domains->hasFunction("GetRegistrarLock")) {
-                                                    $success = $domains->moduleCall("GetRegistrarLock");
+                                            $success = $domains->moduleCall("GetNameservers");
 
-                                                    if ($success) {
-                                                        $ca->assign("lockstatus", $domains->getModuleReturn());
-                                                    }
+                                            if ($success) {
+                                                $i = 1;
+
+                                                while ($i <= 5) {
+                                                    $ca->assign("ns" . $i, $domains->getModuleReturn("ns" . $i));
+                                                    ++$i;
                                                 }
 
-                                                $smartyvalues['managecontacts'] = ($domains->hasFunction("GetContactDetails") ? true : false);
-                                                $smartyvalues['registerns'] = ($domains->hasFunction("RegisterNameserver") ? true : false);
-                                                $smartyvalues['dnsmanagement'] = (($dnsmanagement && $domains->hasFunction("GetDNS")) ? true : false);
-                                                $smartyvalues['emailforwarding'] = (($emailforwarding && $domains->hasFunction("GetEmailForwarding")) ? true : false);
-                                                $smartyvalues['getepp'] = (($tlddata['eppcode'] && $domains->hasFunction("GetEPPCode")) ? true : false);
+                                                $smartyvalues['managens'] = true;
+                                                $defaultns = array();
+                                                $i = 1;
 
-                                                if (preg_match('/uk$/i', $tld) && $domains->hasFunction("ReleaseDomain")) {
-                                                    $allowrelease = false;
+                                                while ($i <= 5) {
+                                                    if (trim($CONFIG["DefaultNameserver" . $i])) {
+                                                        $defaultns[trim($CONFIG["DefaultNameserver" . $i])] = true;
+                                                    }
 
-                                                    if (isset($params['AllowClientTAGChange'])) {
-                                                        if ($params['AllowClientTAGChange']) {
-                                                            $allowrelease = true;
-                                                        }
-                                                    } else {
+                                                    ++$i;
+                                                }
+
+                                                foreach ($values as $ns) {
+                                                    unset($defaultns[$ns]);
+                                                }
+
+                                                if (!count($defaultns)) {
+                                                    $smartyvalues['defaultns'] = true;
+                                                }
+                                            } else {
+                                                $smartyvalues['error'] = $domains->getLastError();
+                                            }
+
+                                            if (!preg_match('/uk$/i', $tld) && $domains->hasFunction("GetRegistrarLock")) {
+                                                $success = $domains->moduleCall("GetRegistrarLock");
+
+                                                if ($success) {
+                                                    $ca->assign("lockstatus", $domains->getModuleReturn());
+                                                }
+                                            }
+
+                                            $smartyvalues['managecontacts'] = ($domains->hasFunction("GetContactDetails") ? true : false);
+                                            $smartyvalues['registerns'] = ($domains->hasFunction("RegisterNameserver") ? true : false);
+                                            $smartyvalues['dnsmanagement'] = (($dnsmanagement && $domains->hasFunction("GetDNS")) ? true : false);
+                                            $smartyvalues['emailforwarding'] = (($emailforwarding && $domains->hasFunction("GetEmailForwarding")) ? true : false);
+                                            $smartyvalues['getepp'] = (($tlddata['eppcode'] && $domains->hasFunction("GetEPPCode")) ? true : false);
+
+                                            if (preg_match('/uk$/i', $tld) && $domains->hasFunction("ReleaseDomain")) {
+                                                $allowrelease = false;
+
+                                                if (isset($params['AllowClientTAGChange'])) {
+                                                    if ($params['AllowClientTAGChange']) {
                                                         $allowrelease = true;
                                                     }
-
-                                                    if ($allowrelease) {
-                                                        $smartyvalues['releasedomain'] = true;
-
-                                                        if ($sub == "releasedomain") {
-                                                            check_token();
-                                                            checkContactPermission("managedomains");
-                                                            $success = $domains->moduleCall("ReleaseDomain", array("transfertag" => $transtag));
-
-                                                            if ($success) {
-                                                                $ca->assign("status", $ra->get_lang("clientareacancelled"));
-                                                                logActivity("Client Requested Domain Release to Tag " . $transtag);
-                                                            } else {
-                                                                $smartyvalues['error'] = $domains->getLastError();
-                                                            }
-                                                        }
-                                                    } else {
-                                                        $smartyvalues['releasedomain'] = false;
-                                                    }
+                                                } else {
+                                                    $allowrelease = true;
                                                 }
 
+                                                if ($allowrelease) {
+                                                    $smartyvalues['releasedomain'] = true;
 
+                                                    if ($sub == "releasedomain") {
+                                                        check_token();
+                                                        checkContactPermission("managedomains");
+                                                        $success = $domains->moduleCall("ReleaseDomain", array("transfertag" => $transtag));
+
+                                                        if ($success) {
+                                                            $ca->assign("status", $ra->get_lang("clientareacancelled"));
+                                                            logActivity("Client Requested Domain Release to Tag " . $transtag);
+                                                        } else {
+                                                            $smartyvalues['error'] = $domains->getLastError();
+                                                        }
+                                                    }
+                                                } else {
+                                                    $smartyvalues['releasedomain'] = false;
+                                                }
                                             }
                                         } else {
                                             if ($action == "domaincontacts") {

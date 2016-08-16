@@ -256,7 +256,7 @@
       </div>
     </div>
   </div>
-  <div> <img src="images/icons/search.png" alt="" width="16" height="16" class="absmiddle" /> {$_ADMINLANG.global.advancedsearch}</span>
+  <div> {*<img src="images/icons/search.png" alt="" width="16" height="16" class="absmiddle" />*} {$_ADMINLANG.global.advancedsearch}</span>
     <div class="smallfont">
       <form method="get" action="search.php">
         <select name="type" id="searchtype" onchange="populate(this)">

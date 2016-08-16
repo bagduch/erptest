@@ -217,8 +217,8 @@ if ($action == "savegroup") {
         }
     }
 
-    //mail('peter@hd.net.nz','hello',print_r($fieldname));
-    //echo print_r($value);
+//mail('peter@hd.net.nz','hello',print_r($fieldname));
+//echo print_r($value);
 
 
     if ($fieldname) {
@@ -331,41 +331,53 @@ if ($action == 'save') {
         $optionname = array();
     }
 
-    // mail('peter@hd.net.nz', "hello", print_r($_POST, 1));
+// mail('peter@hd.net.nz', "hello", print_r($_POST, 1));
 
 
 
+    if (isset($_POST['deletefield'])) {
+        delete_query("tblcustomfieldsgroupmembers", array("cfid" => $_POST['deletefield'], "cfgid" => $id));
+        delete_query("tblcustomfields", array("cfid" => $_POST['deletefield']));
+    } else {
 
-    if (isset($_POST['fieldname'])) {
-        foreach ($_POST['fieldname'] as $fid => $value) {
-            $customfieldname = array(
-                "fieldname" => $value,
-                "fieldtype" => $_POST['fieldtype'][$fid],
-                "description" => $_POST['description'][$fid],
-                "fieldoptions" => $_POST['fieldoptions'][$fid],
-                "regexpr" => html_entity_decode($_POST['regexpr'][$fid]),
-                "adminonly" => $_POST['adminonly'][$fid],
-                "required" => $_POST['required'][$fid],
-                "showorder" => $_POST['showorder'][$fid],
-                "showinvoice" => $_POST['showinvoice'][$fid],
-                "sortorder" => $_POST['sortorder'][$fid]
-            );
-            update_query("tblcustomfields", $customfieldname, array("cfid" => $fid));
+        if (isset($_POST['fieldname'])) {
+            foreach ($_POST['fieldname'] as $fid => $value) {
+                $customfieldname = array(
+                    "fieldname" => $value,
+                    "fieldtype" => $_POST['fieldtype'][$fid],
+                    "description" => $_POST['description'][$fid],
+                    "fieldoptions" => $_POST['fieldoptions'][$fid],
+                    "regexpr" => html_entity_decode($_POST['regexpr'][$fid]),
+                    "adminonly" => $_POST['adminonly'][$fid == "on" ? 1 : 0],
+                    "required" => $_POST['required'][$fid] == "on" ? 1 : 0,
+                    "showorder" => $_POST['showorder'][$fid == "on" ? 1 : 0],
+                    "showinvoice" => $_POST['showinvoice'][$fid] == "on" ? 1 : 0,
+                    "sortorder" => $_POST['sortorder'][$fid]
+                );
+                update_query("tblcustomfields", $customfieldname, array("cfid" => $fid));
+            }
         }
-    }
-    if (isset($_POST['addfieldname']) && $_POST['addfieldname'] != "") {
-        $addcustomfieldname = array(
-            "fieldname" => $_POST['addfieldname'],
-            "fieldtype" => $_POST['addfieldtype'],
-            "description" => $_POST['adddescription'],
-            "fieldoptions" => $_POST['fieldoptions'],
-            "regexpr" => html_entity_decode($_POST['addregexpr']),
-            "adminonly" => $_POST['adminonly'],
-            "required" => $_POST['required'],
-            "showorder" => $_POST['showorder'],
-            "showinvoice" => $_POST['showinvoice'],
-            "sortorder" => $_POST['addsortorder']
-        );
+        if (isset($_POST['addfieldname']) && $_POST['addfieldname'] != "") {
+            $addcustomfieldname = array(
+                "fieldname" => $_POST['addfieldname'],
+                "fieldtype" => $_POST['addfieldtype'],
+                "description" => $_POST['adddescription'],
+                "fieldoptions" => $_POST['addfieldoptions'],
+                "regexpr" => html_entity_decode($_POST['addregexpr']),
+                "adminonly" => $_POST['addadminonly'] == "on" ? 1 : 0,
+                "required" => $_POST['addrequired'] == "on" ? 1 : 0,
+                "showorder" => $_POST['addshoworder'] == "on" ? 1 : 0,
+                "showinvoice" => $_POST['addshowinvoice'] == "on" ? 1 : 0,
+                "sortorder" => $_POST['addsortorder']
+            );
+            $nfid = insert_query("tblcustomfields", $addcustomfieldname);
+        }
+
+
+        if (isset($nfid)) {
+
+            insert_query("tblcustomfieldsgroupmembers", array("cfgid" => $id, "cfid" => $nfid));
+        }
     }
     redir("action=managegroup&id=" . $id . "&success=true");
     exit();
@@ -410,7 +422,7 @@ if ($action == "") {
     if ($duplicated) {
         infoBox("Success", "The option group has been duplicated successfully!");
     }
- 
+
     echo $infobox;
     $aInt->sortableTableInit("nopagination");
     $result = select_query_i("tblcustomfieldsgroupnames", "", "", "name", "ASC");
@@ -456,6 +468,7 @@ if ($action == "") {
             $aInt->assign('productlinks', $allservice);
             $aInt->assign('name', $name);
             $aInt->assign('id', $id);
+            $aInt->assign('infobox', $infobox);
             $aInt->template = "customfieldgroup/managegroup";
         } else {
             $action = "savegroup";
@@ -463,7 +476,7 @@ if ($action == "") {
             $steptitle = "Create a New Group";
             $id = "";
             $productlinks = array();
-            $result = select_query_i("tblservices", "", array("cpid" => $id));
+            $result = select_query_i("tblservices", "");
             while ($data = mysqli_fetch_array($result)) {
                 $productlinks[] = $data['id'];
             }
