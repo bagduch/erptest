@@ -37,7 +37,7 @@
         </tbody>
     </table>
 
-  
+
 
     {if $infobox}
         {$infobox}
@@ -104,7 +104,7 @@
 
         {/foreach}
     {/if}
-      <b>Add New Custom Field</b><br><br>
+    <b>Add New Custom Field</b><br><br>
     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
         <tbody><tr><td width="100" class="fieldlabel">Field Name</td><td class="fieldarea"><table width="98%" cellspacing="0" cellpadding="0"><tbody><tr><td><input type="text" name="addfieldname" size="30"></td><td align="right">Display Order <input type="text" name="addsortorder" size="5" value="0"></td></tr></tbody></table></td></tr>
             <tr><td class="fieldlabel">Field Type</td><td class="fieldarea"><select name="addfieldtype">
@@ -112,6 +112,7 @@
                         <option value="link">Link/URL</option>
                         <option value="password">Password</option>
                         <option value="dropdown">Drop Down</option>
+                        <option value="date">Date</option>
                         <option value="tickbox">Tick Box</option>
                         <option value="textarea">Text Area</option>
                     </select></td></tr>

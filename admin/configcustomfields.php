@@ -46,7 +46,7 @@ if ($ra->get_req_var("success")) {
 
 //echo $infobox;
 
-$result = select_query_i("tblcustomfields", "", array("type" => "client"), "sortorder` ASC,`id", "ASC");
+$result = select_query_i("tblcustomfields", "", array("type" => "client"), "sortorder");
 
 while ($data = mysqli_fetch_array($result)) {
     $fid = $data['id'];
@@ -60,7 +60,6 @@ while ($data = mysqli_fetch_array($result)) {
     $showorder = $data['showorder'];
     $showinvoice = $data['showinvoice'];
     $sortorder = $data['sortorder'];
-
     $cfid[] = $data;
 }
 

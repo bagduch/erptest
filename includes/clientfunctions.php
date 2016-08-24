@@ -74,7 +74,6 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['emailoptout'] = $data['emailoptout'];
     $details['overrideautoclose'] = $data['overrideautoclose'];
     $details['language'] = $data['language'];
-    $details['dateofbirth'] = $data['dateofbirth'];
     $lastlogin = $data['lastlogin'];
     $ipaddr = $data['ip'];
     $host = $data['host'];
@@ -436,6 +435,7 @@ function addClient($firstname, $lastname, $companyname, $email, $address1, $addr
     $password_hash = generateClientPW($password);
     $table = "tblclients";
     $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => $_SESSION['Language'], "currency" => $currency['id']);
+   
     $uid = insert_query($table, $array);
     logActivity("Created Client " . $firstname . " " . $lastname . " - User ID: " . $uid);
 

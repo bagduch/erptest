@@ -83,11 +83,12 @@ function getServiceCustomFields($sid, $csid = null) {
     }
     $query_where = " WHERE tblservices.id=" . (int) $sid;
     $query = $query_selectvals . $query_tables . $query_where;
+    $query .=" order by tblcustomfields.sortorder";
 
     //mail("peter@hd.net.nz", "query", $query);
     $result = full_query_i($query);
     $returnvals = array();
-  //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $returnvals[$row['cfid']] = $row;
@@ -97,7 +98,15 @@ function getServiceCustomFields($sid, $csid = null) {
             $returnvals[$row['cfid']]['fieldoptions'][] = $data;
         }
     }
-    
+
+    foreach ($returnvals as $cfid => $row) {
+        if (isset($returnvals[$row["parent_id"]])) {
+            $returnvals[$row["parent_id"]]['children'][] = $row;
+            unset($returnvals[$cfid]);
+        }
+    }
+   // mail("peter@hd.net.nz", "hello", print_r($returnvals, 1));
+
     return $returnvals;
 }
 

@@ -356,6 +356,23 @@ if ($action == 'save') {
                 );
                 update_query("tblcustomfields", $customfieldname, array("cfid" => $fid));
             }
+            if (isset($_POST['updatelinkfieldname'])) {
+                foreach ($_POST['updatelinkfieldname'] as $upfid => $uvalue) {
+                    $updatelinkfield = array(
+                        "fieldname" => $_POST['updatelinkfieldname'][$upfid],
+                        "fieldtype" => $_POST['updatelinkfieldtype'][$upfid],
+                        "description" =>"",
+                        "fieldoptions" =>"",
+                        "regexpr" => "",
+                        "adminonly" => 0,
+                        "required" => $_POST['updatelinkrequired'][$upfid] == "on" ? 1 : 0,
+                        "showorder" => 0,
+                        "showinvoice" => 0,
+                        "sortorder" => 0
+                    );
+                    update_query("tblcustomfields", $updatelinkfield, array("cfid" => $upfid));
+                }
+            }
         }
         if (isset($_POST['addfieldname']) && $_POST['addfieldname'] != "") {
             $addcustomfieldname = array(
@@ -371,6 +388,28 @@ if ($action == 'save') {
                 "sortorder" => $_POST['addsortorder']
             );
             $nfid = insert_query("tblcustomfields", $addcustomfieldname);
+
+            if (isset($_POST['addlinkfieldname'])) {
+                if (is_array($_POST['addlinkfieldname'])) {
+                    foreach ($_POST['addlinkfieldname'] as $key => $row) {
+                        $linkfields = array(
+                            "fieldname" => $_POST['addlinkfieldname'][$key],
+                            "fieldtype" => $_POST['addlinkfieldtype'][$key],
+                            "description" => "",
+                            "fieldoptions" => "",
+                            "regexpr" => "",
+                            "adminonly" => 0,
+                            "required" => $_POST['addlinkrequired'][$key] == "on" ? 1 : 0,
+                            "showorder" => 0,
+                            "showinvoice" => 0,
+                            "sortorder" => 0,
+                            "parent_id" => $nfid
+                        );
+                        $newid = insert_query("tblcustomfields", $linkfields);
+                        insert_query("tblcustomfieldsgroupmembers", array("cfgid" => $id, "cfid" => $newid));
+                    }
+                }
+            }
         }
 
 
@@ -443,12 +482,18 @@ if ($action == "") {
             }
             $action = "save";
             $steptitle = "Manage Group";
-            $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ";
+            $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ORDER BY tblcustomfields.sortorder";
             $result = full_query_i($query);
-            while ($data = mysqli_fetch_array($result)) {
+            $datas = array();
+            while ($data = mysqli_fetch_assoc($result)) {
                 $datas[$data['cfid']] = $data;
             }
-
+            foreach ($datas as $cfid => $row) {
+                if (isset($datas[$row["parent_id"]])) {
+                    $datas[$row["parent_id"]]['children'][] = $row;
+                    unset($datas[$cfid]);
+                }
+            }
             $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
             $result = full_query_i($query);
             $data2 = mysqli_fetch_assoc($result);
