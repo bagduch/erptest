@@ -2,14 +2,31 @@
 <html lang="en">
     <head>
         <script src="templates/orderforms/{$carttpl}/uff/js/jquery.js"></script>
-        <script src="templates/orderforms/{$carttpl}/uff/js/jquery-ultimate-fancy-form.min.js"></script>
         <script src="templates/orderforms/{$carttpl}/uff/js/bootstrap.min.js"></script>
+        {*        <script src="templates/orderforms/{$carttpl}/selectstyle/js/classie.js"></script>*}
+        {*        <script src="templates/orderforms/{$carttpl}/selectstyle/js/selectFx.js"></script>*}
+        <script src="templates/orderforms/{$carttpl}/calander/js/bootstrap-datepicker.js"></script>
+
         <link href="templates/fontsawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="templates/orderforms/{$carttpl}/uff/css/animate.css" rel="stylesheet" type="text/css">
         <link href="templates/orderforms/{$carttpl}/uff/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="templates/orderforms/{$carttpl}/uff/css/custom.css" rel="stylesheet" type="text/css">
+        <link href="templates/orderforms/{$carttpl}/calander/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
+        <link href="templates/orderforms/{$carttpl}/checkbox/css/build.css" rel="stylesheet" type="text/css">
+
+        {*        <link href="templates/orderforms/{$carttpl}/selectstyle/css/cs-select.css" rel="stylesheet" type="text/css">*}
+        {*        <link href="templates/orderforms/{$carttpl}/selectstyle/css/cs-skin-elastic.css" rel="stylesheet" type="text/css">*}
+
+        {literal}
+            <style>
+                .panel-title>a{
+                    text-decoration: none;
+                }
+            </style>
+        {/literal}
     </head>
     <body>
+        {debug}
         <div class="container row">
             <h1>UI Order Process</h1>
             <div class="form-container">
@@ -113,79 +130,198 @@
                             </div>
                         </div>
                     {else}
-                        <div class="row step-two">
-                            <div class="addons">
-                                <table width="100%" cellspacing="0" cellpadding="0" class="configtable">
-                                    <tbody>
-                                        {foreach from=$addons item=addon}
-                                            <tr>
-                                                <td class="radiofield">{$addon.checkbox}</td>
-                                                <td class="fieldarea">
-                                                    <label for="a{$addon.id}"><strong>{$addon.name}</strong> - {$addon.pricing}
-                                                        <br>{$addon.description}
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        {/foreach}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="customfields">
-                                {foreach from=$customefield item=fields}
-                                    {if !$fields.adminonly}
-                                        {if $fields.fieldtype eq "text"}
-                                            {if $fields.fieldname eq "address"}
-                                                <input name="customfield[{$fields.cfid}]" type="hidden" class="form-control input-lg" id="{$fields.fieldname}{$fields.cfid}"  value="{$address}"/>
-                                            {else}
+                        <form method="post" action="myorder.php">
+                            <div class="row step-two">
+                                <div class="col-xs-12 col-sm-6 col-md-8">
 
-                                                <div class="form-group">
-                                                    <label for="#{$fields.fieldname}{$fields.cfid}" class="control-label">{$fields.fieldname}{if $fields.required}<span>*</span>{/if}</label>
-                                                    <input name="customfield[{$fields.cfid}]" type="text" class="form-control input-lg" id="{$fields.fieldname}{$fields.cfid}" placeholder="{$fields.description }"/>
-                                                </div>
+
+                                    <div class="intalldate">
+
+                                        {foreach from=$customefield item=fields}
+                                            {if !$fields.adminonly}
+                                                {if $fields.fieldtype eq "text"}
+                                                    {if $fields.fieldname eq "address"}
+                                                        <input name="customfield[{$fields.cfid}]" type="hidden" class="form-control input-lg" id="{$fields.fieldname}{$fields.cfid}"  value="{$address}"/>
+                                                    {else}
+                                                        <div class="clearfix"></div>
+
+                                                        <div class="col-md-6">
+                                                            <label for="#{$fields.fieldname}{$fields.cfid}">{$fields.fieldname}{if $fields.required}<span>*</span>{/if}</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input name="customfield[{$fields.cfid}]" type="text" class="form-control" id="{$fields.fieldname}{$fields.cfid}" placeholder="{$fields.description }"/>
+                                                        </div>
+
+                                                    {/if}
+                                                {elseif $fields.fieldtype eq "password"}
+                                                {elseif $fields.fieldtype eq "date"}
+                                                    <div class="clearfix"></div>
+                                                    <div class="col-md-6">
+                                                        <label class="datalabel">{$fields.fieldname}:</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div id="sandbox-container">
+                                                            <input type="text" name="customfield[{$fields.cfid}]" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                {elseif $fields.fieldtype eq "dropdown"}
+                                                {elseif $fields.fieldtype eq "tickbox"}
+                                                {elseif $fields.fieldtype eq "more"}
+
+                                                    <div class="clearfix"></div>
+                                                    <button class="btn btn-default btn-circle hidden-button" id="a1" onclick=""> <i class=""></i></button>
+                                                    <label>{$fields.fieldname}:</label>
+                                                    {if $fields.children}
+                                                        <div class="hidden-option">
+                                                            {foreach from=$fields.children item=childrendata}
+
+                                                                {if $childrendata.fieldtype eq "text"}
+                                                                    <div class="clearfix"></div>
+                                                                    <div class="col-md-6">
+                                                                        <label>{$childrendata.fieldname}:</label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input name="customfield[{$childrendata.cfid}]" type="text"  class="form-control">
+                                                                    </div>
+                                                                {elseif $childrendata.fieldtype eq "text"}
+                                                                {/if}
+
+
+
+
+
+                                                            {/foreach}
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    {/if}
+
+                                                {else}
+                                                {/if}
                                             {/if}
-                                        {elseif $fields.fieldtype eq "password"}
-                                        {elseif $fields.fieldtype eq "dropdown"}
-                                        {elseif $fields.fieldtype eq "tickbox"}
-                                        {else}
-                                        {/if}
-                                    {/if}
-                                {/foreach}
-                            </div>
-                            <div class="sum">
-                                <div class="">
-                                    <table>
-                                        <tr>
-                                            <td colspan="3">{$product.groupname} - {$product.name}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{$product.name}</td>
-                                            <td></td>
-                                            <td>{$pricing.minprice.price}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Setup Fees:</td>
-                                            <td></td>
-                                            <td>{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Billing Cycle:</td>
-                                            <td></td>
-                                            <td>{$pricing.cycles.monthly}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3">{$currecy.prefix}{$total|number_format:2} {$currecy.code}</td>
-                                        </tr>
-                                    </table>
+                                        {/foreach}
+                                    </div>
+                                    <div class="addons">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading"> <h3 class="panel-title">Availble Addons</h3> </div>
+                                            <div class="panel-body">
+
+                                                <div class="panel panel-default">
+                                                    {foreach from=$addons item=addon key=cid}
+                                                        <div class="panel-heading" role="tab" id="headingOne">
+                                                            <table style="width:100%">
+                                                                <tr>
+                                                                    <td>  
+                                                                        <h4 class="panel-title">
+                                                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$cid}" aria-expanded="true" aria-controls="collapse{$cid}">
+                                                                                <strong>{$addon.name}</strong> <br/>{$addon.pricing}
+
+                                                                            </a>
+                                                                        </h4>
+                                                                    </td>
+                                                                    <td> 
+                                                                        <div class="button-right">
+                                                                            {$addon.checkbox}
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </table>
+
+                                                        </div>
+                                                        <div id="collapse{$cid}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                            <div class="panel-body">
+                                                                {$addon.description}
+                                                            </div>
+                                                        </div>
+                                                    {/foreach}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="custome-notes">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading"> <h3 class="panel-title">Notes</h3> </div>
+                                            <div class="panel-body">
+                                                <textarea class="form-control" rows="5" name="notes" placeholder="What want to say to us:"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="plan">
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-md-4">
+                                    <div class="right-sum">
+                                        <div class="bg-success address-bar">
+                                            <h2 style="text-transform: uppercase;margin-left: 5px;">Summary</h2>
+                                        </div>
+                                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                            <div id="summary-list" class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingOne">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                            <i class="fa fa-caret-right" aria-hidden="true"></i>
+                                                            {$product.groupname} {$pricing.cycles.monthly}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                    <div class="panel-body">
+                                                        {$product.name} {$pricing.cycles.monthly}<br/>{$product.description} 
+                                                        <input type="hidden" class="monthlyprice" value="{$pricing.rawpricing.monthly}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="panel-heading" role="tab" id="headingTwo">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                            <i class="fa fa-caret-right" aria-hidden="true"></i>
+                                                            Setup Fees:{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}
+                                                            <input type="hidden" class="setupprice" value="{$pricing.rawpricing.msetupfee}">
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                    <div class="panel-body">
+                                                        One Off Free
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h3 class="cart-sumary-title">TOTAL</h3>
+
+
+                                                    <div class="monthly">Monthly payments: <span class="right">{$pricing.cycles.monthly}</span></div>
+                                                    <div class="oneoff">Total one-off payment:<span class="right">{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2}</span></div>
+                                                    <div class="firstpayment">First payment: <span class="right">{$currecy.prefix}{$total|number_format:2} {$currecy.code}</span></div>
+
+                                                </div>
+                                            </div>
+                                            <div style="background-color:#428bca" class="bg-danger address-bar">
+                                                <div class="button">
+                                                    <input name="checkout" type="submit" value="Check Out" class="btn cart-default">
+                                                </div>
+                                                <div class="button">
+                                                    <button type="button" class="btn cart-default cancel">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     {/if}
                 {elseif $step==3}
                     <div class="">
                         <div class="checkoutcol1">
                             <div class="signupfields padded">
                                 <h2>Promotional Code</h2>
-                                <input type="text" name="promocode" size="20" value=""> <input type="submit" name="validatepromo" value="Validate Code >>">            </div>
+                                <input type="text" name="promocode" size="20" value=""> <input type="submit" name="validatepromo" value="Validate Code >>">       
+                            </div>
                         </div>
                         <div class="checkoutcol2">
                             <div class="signupfields padded">
@@ -253,9 +389,101 @@
                 {/if}
             </div>
         </div>
+
         {literal}
             <script type="text/javascript">
+
+                function recaculate()
+                {
+                    monthly = parseFloat($(".monthlyprice").val());
+                    setup = parseFloat($(".setupprice").val());
+                    $(".addonsprice").each(function () {
+                        if ($(this).attr("data-type") == "One Time")
+                        {
+                            setup += parseFloat($(this).val());
+                        } else {
+                            monthly += parseFloat($(this).val());
+                        }
+                    });
+                    oneoff = setup;
+                    total = monthly + setup;
+                    $(".monthly").find("span").html("$" + monthly.toFixed(2));
+                    $(".oneoff").find("span").html("$" + oneoff.toFixed(2));
+                    $(".firstpayment").find("span").html("$" + total.toFixed(2));
+                }
+                function addonaddtocart(id)
+                {
+                    $.ajax({
+                        method: "POST",
+                        url: "myorder.php",
+                        data: {ajax: "1", addonid: id},
+                        success: function (msg) {
+                            $("#accordion").find("#summary-list").append(msg);
+                            recaculate();
+                        }
+                    });
+                }
+                function removefromcart(id)
+                {
+                    $("#addon" + id + "").remove();
+                    $("#addoncollapse" + id + "").remove();
+                    recaculate();
+
+                }
                 $(document).ready(function () {
+
+                    $("#accordion").on("show.bs.collapse", function (e)
+                    {
+                        clicked = $(document).find("[href='#" + $(e.target).attr('id') + "']");
+                        clicked.find('i').attr('class', "fa fa-caret-down");
+                    });
+
+                    $("#accordion").on("hide.bs.collapse", function (e)
+                    {
+                        clicked = $(document).find("[href='#" + $(e.target).attr('id') + "']");
+                        clicked.find('i').attr('class', "fa fa-caret-right");
+                    });
+                    $('#sandbox-container input').datepicker({
+                        daysOfWeekDisabled: "0,6",
+                        startDate: "+7d"
+                    });
+                    $(".btn-circle").click(function (e) {
+                        e.preventDefault();
+                        id = $(this).attr("data-addon");
+
+                        if ($(this).hasClass(('btn-info')))
+                        {
+                            if (typeof id != "undefined")
+                            {
+                                removefromcart(id);
+                            }
+                            $(this).find("input").val("off");
+                            $(this).removeClass('btn-info');
+                            $(this).find("i").removeClass();
+                        } else {
+                            if (typeof id != "undefined")
+                            {
+                                addonaddtocart(id);
+                            }
+
+                            $(this).find("input").val("on");
+                            $(this).addClass('btn-info');
+                            $(this).find("i").attr('class', 'fa fa-check');
+                        }
+
+
+
+                    });
+                    $(".hidden-button").click(function (e) {
+                        e.preventDefault();
+                        if ($(".hidden-option").is(":visible"))
+                        {
+                            $(".hidden-option").fadeOut();
+                        } else {
+                            $(".hidden-option").fadeIn();
+                        }
+
+                    });
                     $("input[name^='addons']").click(function () {
 
                     });
@@ -265,14 +493,13 @@
                         if ($("input[name='agreecontract']").is(":checked"))
                         {
                             $("#contractform").submit();
-
                         } else {
                             $("#termwarning").fadeIn();
                         }
                     });
 
                     $('#myModal').on('hidden.bs.modal', function () {
-                        window.location.href = "https://peter.dev.roboticaccounting.com/myorder.php";
+                        location.reload();
                     });
                 });
             </script>

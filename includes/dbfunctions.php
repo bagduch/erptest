@@ -212,7 +212,7 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-    //mail('peter@hd.net.nz', "hello", print_r($query, 1));
+  //mail('peter@hd.net.nz', "hello", print_r($query, 1));
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -241,10 +241,11 @@ function insert_query($table, $array) {
             continue;
         }
 
-        if (($value === "NULL") || ($value === "") || is_null($value)) {
-            $fieldvaluelist .= "NULL,";
+        if (($value === "NULL") ||$value == ""|| is_null($value)) {
+            $fieldvaluelist .= "'',";
             continue;
         }
+      
 
         $fieldvaluelist .= "'" . db_escape_string($value) . "',";
     }
@@ -252,6 +253,7 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
+    mail("peter@hd.net.nz", "peter", $query);
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging

@@ -31,6 +31,7 @@
             <option value="password">Password</option>
             <option value="dropdown">Drop Down</option>
             <option value="tickbox">Tick Box</option>
+            <option value="date">Date</option> 
             <option value="textarea">Text Area</option>
           </select></td>
       </tr>

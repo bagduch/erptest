@@ -785,7 +785,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     }
 
                     $productdetails = getInvoiceProductDetails($serviceid, $pid, date("Y-m-d"), $hostingquerydates, $databasecycle, $description);
-                    error_log(print_r($productdetails,1));
+                    error_log(print_r($productdetails, 1));
                     $invoice_description = $productdetails['description'];
                     $invoice_tax = $productdetails['tax'];
 
@@ -2500,6 +2500,37 @@ function deleteOrder($orderid) {
     logActivity("Deleted Order - Order ID: " . $orderid, $userid);
 }
 
+function getAddonDetail($addonid, $currencs = array()) {
+    global $currency;
+    global $_LANG;
+    if (empty($currency)) {
+        $currency = $currencs;
+    }
+
+    $addonsarray = array();
+    $query = "SELECT *,addon.id as addonid FROM tbladdons AS addon INNER JOIN tblpricing as price ON (price.type='addon' AND price.currency = " . $currency['id'] . " AND price.relid=addon.id) where addon.id=" . $addonid;
+    $result = full_query_i($query);
+    $data = mysqli_fetch_array($result);
+
+    $addonsarray['id'] = $data['addonid'];
+    $addonsarray['name'] = $data['name'];
+    $addonsarray['billingcycle'] = $data['billingcycle'];
+    if ($data['billingcycle'] == "Free Account") {
+        $addonsarray['oneoff'] = 0;
+        $addonsarray['cycle'] = 0;
+    } else if ($data['billingcycle'] == "One Time") {
+        $addonsarray['oneoff'] = $data['msetupfee'] + $data['monthly'];
+        $addonsarray['cycle'] = 0;
+    } else if ($data['billingcycle'] == "Monthly") {
+        $addonsarray['oneoff'] = $data['msetupfee'];
+        $addonsarray['cycle'] = $data['monthly'];
+    }
+    $addonsarray['total'] = $addonsarray['oneoff'] + $addonsarray['cycle'];
+
+
+    return $addonsarray;
+}
+
 function getAddons($pid, $addons, $currencs = array()) {
     global $currency;
     global $_LANG;
@@ -2531,13 +2562,14 @@ function getAddons($pid, $addons, $currencs = array()) {
 
         if (in_array($pid, $addon_packages)) {
             $addon_status = (in_array($addon_id, $addons) ? true : false);
-            $addon_checkbox = ("<input type=\"checkbox\" name=\"addons[" . $addon_id . "]") . "\" id=\"a" . $addon_id . "\"";
 
             if (in_array($addon_id, $addons)) {
-                $addon_checkbox .= " checked";
+                $addon_checkbox = "<button class=\"btn btn-info btn-circle\" id=\"a" . $addon_id . "\" > <i class=\"fa fa-check\"></i></button>";
+            } else {
+                $addon_checkbox = "<button class=\"btn btn-default btn-circle\" id=\"a" . $addon_id . "\" data-addon=\"" . $addon_id . "\"> <i class=\"\"></i></button>";
             }
 
-            $addon_checkbox .= " />";
+
 
             if ($addon_billingcycle == "Free") {
                 $addon_pricingdetails = $_LANG['orderfree'];

@@ -9,7 +9,7 @@
         {$infobox}
     {/if}
     {if $cfids}
- 
+
         {foreach key=num item=cfid from=$cfids}
             <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                 <tbody>
@@ -76,6 +76,7 @@
                         <option value="link">Link/URL</option>
                         <option value="password">Password</option>
                         <option value="dropdown">Drop Down</option>
+                        <option value="date">Date</option>
                         <option value="tickbox">Tick Box</option>
                         <option value="textarea">Text Area</option>
                     </select></td></tr>
