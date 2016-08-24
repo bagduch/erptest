@@ -259,17 +259,36 @@
                 </div>
             </div>
 
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                    <tbody><tr><td class="fieldlabel">Direct Shopping Cart Link</td><td class="fieldarea"><input type="text" size="100" value="cart.php?a=add&amp;pid={$data.id}" readonly=""></td></tr>
-                        <tr><td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td><td class="fieldarea"><input type="text" size="100" value="cart.php?a=add&amp;pid={$data.id}&amp;carttpl=cart" readonly=""></td></tr>
-                        <tr><td class="fieldlabel">Direct Shopping Cart Link Including Domain</td><td class="fieldarea"><input type="text" size="100" value="cart.php?a=add&amp;pid={$data.id}&amp;sld=ra&amp;tld=.com" readonly=""></td></tr>
-                        <tr><td class="fieldlabel">Service Group Cart Link</td><td class="fieldarea"><input type="text" size="100" value="cart.php?gid={$data.gid}" readonly=""></td></tr>
-                    </tbody></table>
-
+            <div role="tabpanel" class="tab-pane" id="links">
+                <div class="panel-body">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel">Direct Shopping Cart Link</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}" readonly=""></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}&amp;carttpl=cart" readonly=""></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Direct Shopping Cart Link Including Domain</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Service Group Cart Link</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?gid={$data.gid}" readonly=""></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <p align="center"><input type="submit" value="Save Changes" class="button"> <input type="button" value="Back to Service List" onclick="window.location = 'configservices.php'" class="button"></p>
+        <p align="center">
+            <input type="submit" value="Save Changes" class="button"> 
+            <input type="button" value="Back to Service List" onclick="window.location = 'configservices.php'" class="button">
+        </p>
 
         <input type="hidden" name="tab" id="tab" value="">
 

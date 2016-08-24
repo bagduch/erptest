@@ -40,6 +40,7 @@ if ($userid && !$id) {
     }
     // and supply first available service
     $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
+
 }
 
 // if we can't determine a suitable product ID to show, reject
@@ -50,7 +51,7 @@ if (!$id) {
 
 
 $service_data = getServiceData($id);
-//echo "hello".print_r($service_data,1);
+
 
 
 $id = $service_data['id'];
@@ -899,6 +900,7 @@ if ($aid) {
     $aInt->sortableTableInit("nopagination");
     $service = new RA_Service($id);
     $addons = $service->getAddons();
+    
     foreach ($addons as $vals) {
         $tabledata[] = array($vals['regdate'], $vals['name'], $vals['pricing'], $vals['status'], $vals['nextduedate'], "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&aid=" . $vals['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", "<a href=\"#\" onClick=\"doDeleteAddon('" . $vals['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
     }

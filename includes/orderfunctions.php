@@ -2511,7 +2511,7 @@ function getAddonDetail($addonid, $currencs = array()) {
     $query = "SELECT *,addon.id as addonid FROM tbladdons AS addon INNER JOIN tblpricing as price ON (price.type='addon' AND price.currency = " . $currency['id'] . " AND price.relid=addon.id) where addon.id=" . $addonid;
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
-    $_SESSION['addon'][$addonid]=$data;
+    $_SESSION['addon'][$addonid] = $data;
     $addonsarray['id'] = $data['addonid'];
     $addonsarray['name'] = $data['name'];
     $addonsarray['billingcycle'] = $data['billingcycle'];
@@ -2588,6 +2588,59 @@ function getAddons($pid, $addons, $currencs = array()) {
     }
 
     return $addonsarray;
+}
+
+function draftOrder($pricing = array(),$remote_ip,$order_number) {
+
+    $firstpayment = 0;
+    $recurring = 0;
+
+
+
+    $query = "select * from tblcustomerservices where description like '" . $_SESSION['address'] . "'";
+    $result = full_query_i($query);
+
+    if ($result->num_rows == 0) {
+        $orderid = insert_query("tblorders", array(
+            "ordernum" => $order_number,
+            "userid" => $_SESSION['uid'],
+            "date" => "now()",
+            "status" => "Draft",
+            "paymentmethod" => "",
+            "ipaddress" => $remote_ip,
+            "notes" => mysqli_real_escape_string($notes))
+        );
+
+        if (!empty($pricing['minprice'])) {
+            if (isset($pricing['rawpricing'][$pricing['minprice']['cycle']])) {
+                $firstpayment +=$pricing['rawpricing']["msetupfee"] + $pricing['rawpricing'][$pricing['minprice']['cycle']];
+                $recurring += $pricing['rawpricing'][$pricing['minprice']['cycle']];
+            }
+        }
+
+        $hostingquerydates = date("Y-m-d");
+        $serviceid = insert_query("tblcustomerservices", array(
+            "userid" => $_SESSION['uid'],
+            "orderid" => $orderid,
+            "packageid" => $_SESSION['fpid'],
+            "regdate" => "now()",
+            "description" => $_SESSION['address'],
+            "paymentmethod" => "banktransfer",
+            "firstpaymentamount" => $firstpayment,
+            "amount" => $recurring,
+            "billingcycle" => $pricing['minprice']['cycle'],
+            "nextduedate" => $hostingquerydates,
+            "nextinvoicedate" => $hostingquerydates,
+            "servicestatus" => "Draft",
+            "lastupdate" => "now",
+            "notes" => $notes,
+                )
+        );
+        $_SESSION['serviceid'] = $serviceid;
+        $_SESSION['orderid'] = $orderid;
+    } else {
+        return false;
+    }
 }
 
 function getAvailableOrderPaymentGateways() {

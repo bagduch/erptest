@@ -253,7 +253,7 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-    mail("peter@hd.net.nz", "peter", $query);
+    //mail("waikatozhang@gmail.com", "peter", $query);
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging

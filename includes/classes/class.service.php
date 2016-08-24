@@ -217,12 +217,12 @@ class RA_Service
 
 	public function getAddons() {
 		global $ra;
-
 		$predefinedaddons = $this->getPredefinedAddonsOnce();
 		$addons = array();
-		$result = select_query_i("tblserviceaddons", "", array("hostingid" => $this->getID()), "id", "DESC");
+		$result = select_query_i("tblserviceaddons", "", array("serviceid" => $this->id), "id", "DESC");
 
 		while ($data = mysqli_fetch_array($result)) {
+                     
 			$addon_id = $data['id'];
 			$addon_addonid = $data['addonid'];
 			$addon_regdate = $data['regdate'];
@@ -239,18 +239,14 @@ class RA_Service
 				if (!$addon_name) {
 					$addon_name = $predefinedaddons[$addon_addonid];
 				}
-
 				$addon_downloads = $this->addon_downloads[$addon_addonid];
-
 				if (count($addon_downloads)) {
 					$this->addAssociatedDownloadID($addon_downloads);
 				}
 			}
-
 			$addon_regdate = fromMySQLDate($addon_regdate, 0, 1);
 			$addon_nextduedate = fromMySQLDate($addon_nextduedate, 0, 1);
 			$addon_pricing = "";
-
 			if (substr($addon_billingcycle, 0, 4) == "Free") {
 				$addon_pricing = $ra->get_lang("orderfree");
 				$addon_nextduedate = "-";
@@ -259,8 +255,6 @@ class RA_Service
 				if ($addon_billingcycle == "One Time") {
 					$addon_nextduedate = "-";
 				}
-
-
 				if (0 < $addon_setupfee) {
 					$addon_pricing .= formatCurrency($addon_setupfee) . " " . $ra->get_lang("ordersetupfee") . " + ";
 				}

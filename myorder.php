@@ -98,58 +98,29 @@ if ($_SESSION['address']) {
     // login for client 
     if (isset($_SESSION['uid'])) {
         if ($checkout) {
-            $order_number = generateUniqueID();
-            $remote_ip = $ra->get_user_ip();
-
-
-
-            $orderid = insert_query("tblorders", array(
-                "ordernum" => $order_number,
-                "userid" => $_SESSION['uid'],
-                "date" => "now()",
-                "status" => "Draft",
-                "paymentmethod" => "",
-                "ipaddress" => $remote_ip,
-                "notes" => mysqli_real_escape_string($notes))
-            );
-
-
-
-            $serviceid = insert_query("tblcustomerservices", array(
-                "userid" => $_SESSION['uid'],
-                "orderid" => $orderid,
-                "packageid" => $_SESSION['fpid'],
-                "server" => "",
-                "regdate" => "now()",
-                "description" => $_SESSION['address'],
-                "paymentmethod" => "",
-                "firstpaymentamount" => $product_total_today_db,
-                "amount" => $product_recurring_db,
-                "billingcycle" => $databasecycle,
-                "nextduedate" => $hostingquerydates,
-                "nextinvoicedate" => $hostingquerydates,
-                "servicestatus" => "Pending",
-                    )
-            );
 
             if (!empty($_POST['customfield'])) {
                 foreach ($_POST['customfield'] as $key => $value) {
-                    insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $serviceid, "value" => $value));
+                    insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $_SESSION['serviceid'], "value" => $value));
                 }
             }
+
+            update_query("tblcustomerservices", array('servicestatus' => 'pending'), array("id" => $_SESSION['serviceid']));
+            update_query("tblorders", array('status' => 'pending'), array("id" => $_SESSION['orderid']));
+
 
             if (!empty($_SESSION['addon'])) {
                 foreach ($_SESSION['addon'] as $row) {
                     insert_query("tblserviceaddons", array(
-                        "orderid" => $orderid,
-                        "serviceid" => $serviceid,
+                        "orderid" => $_SESSION['orderid'],
+                        "serviceid" => $_SESSION['serviceid'],
                         "addonid" => $row['addonid'],
                         "name" => $row['name'],
                         "setupfee" => $row['billingcycle'] == "One Time" ? $row['msetupfee'] + $row['monthly'] : $row['msetupfee'],
                         "recurring" => $row['billingcycle'] == "Monthly" ? $row['msetupfee'] : 0,
                         "billingcycle" => $row['billingcycle'],
                         "tax" => $row['tax'],
-                        "status" => "Draft",
+                        "status" => "Pending",
                         "regdate" => "now()",
                         "nextduedate" => "now()",
                         "nextinvoicedate" => "now()",
@@ -159,6 +130,8 @@ if ($_SESSION['address']) {
             }
             //   $hostid = insert_query($table, $array);
 
+            unset($_SESSION['addon']);
+            unset($_SESSION['customfield']);
             $step = 3;
         } else {
             $step = 2;
@@ -306,6 +279,14 @@ if ($_SESSION['address']) {
     if ($step == "2") {
         $fpid = $_SESSION['fpid'];
         $errormessage = "";
+
+
+
+//
+
+
+
+
         if (isset($_SESSION['contractnotsign'])) {
             $contractnotsign = $_SESSION['contractnotsign'];
         } else {
@@ -317,17 +298,19 @@ if ($_SESSION['address']) {
             $currecy = getCurrency();
             $addons = getAddons($data['id'], array(), $currecy);
             $customefield = getServiceCustomFields($data['id']);
-            $pricing = getPricingInfo(3, $inclconfigops = false, $upgrade = false, $currecy);
+            $pricing = getPricingInfo($fpid, $inclconfigops = false, $upgrade = false, $currecy);
             // $currecy = getCurrency();
         }
         $total = 0;
         foreach ($pricing['rawpricing'] as $key => $item) {
-            if ($item == -1) {
+            if ($item == -1 || $item == 0) {
                 unset($pricing['rawpricing'][$key]);
             } else {
                 $total +=$item;
             }
         }
+
+
 
         if (isset($agreecontract)) {
             if ($agreecontract == "on") {
@@ -335,6 +318,11 @@ if ($_SESSION['address']) {
                 $contractnotsign = false;
             }
         }
+        // draft order
+        $order_number = generateUniqueID();
+        $remote_ip = $ra->get_user_ip();
+        draftOrder($pricing, $remote_ip, $order_number);
+
         if ($data['contract'] && $contractnotsign) {
             $smartyvalues['product'] = $data;
         } else {

@@ -10,7 +10,6 @@ function getServiceData($id = NULL) {
         tblcustomerservices.userid,
         tblcustomerservices.orderid,
         tblcustomerservices.packageid,
-        tblcustomerservices.server,
         tblcustomerservices.regdate,
         tblcustomerservices.description,
         tblcustomerservices.paymentmethod,
@@ -20,7 +19,6 @@ function getServiceData($id = NULL) {
         tblcustomerservices.nextduedate,
         tblcustomerservices.nextinvoicedate,
         tblcustomerservices.servicestatus,
-        tblcustomerservices.username,
         tblcustomerservices.suspendreason,
         tblcustomerservices.overideautosuspend,
         tblcustomerservices.overidesuspenduntil,
@@ -36,9 +34,10 @@ function getServiceData($id = NULL) {
     WHERE tblcustomerservices.id=" . (int) $id
             . " AND tblservicegroups.type='service'";
 
+    
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    //echo "<pre>".print_r($service_data, 1)."</pre>";
+   // echo "<pre>".print_r($service_data, 1)."</pre>";
     return $service_data;
 }
 
