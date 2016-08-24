@@ -133,9 +133,8 @@ if ($_SESSION['address']) {
             );
 
             if (!empty($_POST['customfield'])) {
-
                 foreach ($_POST['customfield'] as $key => $value) {
-                    
+                    insert_query("tblcustomfieldsvalues", array("cfid" => "", "relid" => "", "value" => $value));
                 }
             }
 
