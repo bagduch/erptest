@@ -2511,7 +2511,7 @@ function getAddonDetail($addonid, $currencs = array()) {
     $query = "SELECT *,addon.id as addonid FROM tbladdons AS addon INNER JOIN tblpricing as price ON (price.type='addon' AND price.currency = " . $currency['id'] . " AND price.relid=addon.id) where addon.id=" . $addonid;
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
-
+    $_SESSION['addon'][$addonid]=$data;
     $addonsarray['id'] = $data['addonid'];
     $addonsarray['name'] = $data['name'];
     $addonsarray['billingcycle'] = $data['billingcycle'];

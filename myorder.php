@@ -106,30 +106,58 @@ if ($_SESSION['address']) {
             $orderid = insert_query("tblorders", array(
                 "ordernum" => $order_number,
                 "userid" => $_SESSION['uid'],
-//          "contactid" => $_SESSION['cart']['contact'], 
                 "date" => "now()",
                 "status" => "Draft",
                 "paymentmethod" => "",
                 "ipaddress" => $remote_ip,
                 "notes" => mysqli_real_escape_string($notes))
             );
+
+
+
             $serviceid = insert_query("tblcustomerservices", array(
                 "userid" => $_SESSION['uid'],
                 "orderid" => $orderid,
-                "packageid" =>  $_SESSION['fpid'],
+                "packageid" => $_SESSION['fpid'],
                 "server" => "",
                 "regdate" => "now()",
                 "description" => $_SESSION['address'],
-                "paymentmethod" => $paymentmethod,
+                "paymentmethod" => "",
                 "firstpaymentamount" => $product_total_today_db,
                 "amount" => $product_recurring_db,
                 "billingcycle" => $databasecycle,
                 "nextduedate" => $hostingquerydates,
                 "nextinvoicedate" => $hostingquerydates,
                 "servicestatus" => "Pending",
-                "password" => $serverrootpw
                     )
             );
+
+            if (!empty($_POST['customfield'])) {
+
+                foreach ($_POST['customfield'] as $key => $value) {
+                    
+                }
+            }
+
+            if (!empty($_SESSION['addon'])) {
+                foreach ($_SESSION['addon'] as $row) {
+                    insert_query("tblserviceaddons", array(
+                        "orderid" => $orderid,
+                        "serviceid" => $serviceid,
+                        "addonid" => $row['addonid'],
+                        "name" => $row['name'],
+                        "setupfee" => $row['billingcycle'] == "One Time" ? $row['msetupfee'] + $row['monthly'] : $row['msetupfee'],
+                        "recurring" => $row['billingcycle'] == "Monthly" ? $row['msetupfee'] : 0,
+                        "billingcycle" => $row['billingcycle'],
+                        "tax" => $row['tax'],
+                        "status" => "Draft",
+                        "regdate" => "now()",
+                        "nextduedate" => "now()",
+                        "nextinvoicedate" => "now()",
+                        "paymentmethod" => ""
+                    ));
+                }
+            }
             //   $hostid = insert_query($table, $array);
 
             $step = 3;
@@ -265,7 +293,7 @@ if ($_SESSION['address']) {
                 redir('step=2');
             }
         } else {
-            if ($signup) {
+            if ($signup && $firstname && $lastname && $email && $password) {
                 $userid = addClient($firstname, $lastname, $companyname = "", $email, $_SESSION['address1'], $address2, $_SESSION['city'], $_SESSION['state'], $_SESSION['postcode'], $_SESSION['country'], $phonenumber, $password);
                 $step = 2;
                 redir('step=2');

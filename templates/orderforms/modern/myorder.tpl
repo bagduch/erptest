@@ -299,6 +299,7 @@
                                                     <div class="oneoff">Total one-off payment:<span class="right">{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2}</span></div>
                                                     <div class="firstpayment">First payment: <span class="right">{$currecy.prefix}{$total|number_format:2} {$currecy.code}</span></div>
 
+                                                    <input type="hidden" name="firstpaymentamount" value="{$total|number_format:2}">
                                                 </div>
                                             </div>
                                             <div style="background-color:#428bca" class="bg-danger address-bar">
