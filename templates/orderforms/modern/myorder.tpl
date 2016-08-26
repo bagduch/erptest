@@ -26,7 +26,6 @@
         {/literal}
     </head>
     <body>
-        {debug}
         <div class="container row">
             <h1>UI Order Process</h1>
             <div class="form-container">
@@ -399,7 +398,7 @@
                     monthly = parseFloat($(".monthlyprice").val());
                     setup = parseFloat($(".setupprice").val());
                     $(".addonsprice").each(function () {
-                        if ($(this).attr("data-type") == "One Time")
+                        if ($(this).attr("data-type") == "onetime")
                         {
                             setup += parseFloat($(this).val());
                         } else {
@@ -417,7 +416,7 @@
                     $.ajax({
                         method: "POST",
                         url: "myorder.php",
-                        data: {ajax: "1", addonid: id},
+                        data: {ajax: "1", addonid: id, actions: "add"},
                         success: function (msg) {
                             $("#accordion").find("#summary-list").append(msg);
                             recaculate();
@@ -426,10 +425,16 @@
                 }
                 function removefromcart(id)
                 {
-                    $("#addon" + id + "").remove();
-                    $("#addoncollapse" + id + "").remove();
-                    recaculate();
-
+                    $.ajax({
+                        method: "POST",
+                        url: "myorder.php",
+                        data: {ajax: "1", addonid: id, actions: "remove"},
+                        success: function (msg) {
+                            $("#addon" + id + "").remove();
+                            $("#addoncollapse" + id + "").remove();
+                            recaculate();
+                        }
+                    });
                 }
                 $(document).ready(function () {
 

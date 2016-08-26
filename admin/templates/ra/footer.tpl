@@ -10,14 +10,21 @@
 <div id="searchresults">
     <div id="searchresultsscroller"></div>
     <div class="close"><a href="#" onclick="searchclose();
-          return false">{$_ADMINLANG.clientsummary.close} <img src="images/delete.gif" width="16" height="16" border="0" align="top" /></a></div>
+            return false">{$_ADMINLANG.clientsummary.close} <img src="images/delete.gif" width="16" height="16" border="0" align="top" /></a></div>
 </div>
 <div id="greyout"></div>
 
 
 {$footeroutput}
+
 {literal} 
     <script type="text/javascript">
+    {/literal}
+    {$jscode}
+    {literal} 
+    {/literal} 
+    {$jquerycode}
+    {literal}
         jQuery(function ($) {
             var performance = [12, 43, 34, 22, 12, 33, 4, 17, 22, 34, 54, 67],
                     visits = [123, 323, 443, 32],
@@ -107,7 +114,7 @@
         });
     </script> 
 {/literal}
-        </div>
+</div>
 <div class="lastfooter">
     <div class="right"><a href="#">Top</a></div>
     <div class="left">Copyright &copy; <a href="#" target="_blank">Robotic Accounting</a>.  All Rights Reserved.</div>

@@ -494,7 +494,7 @@ function deleteClient($userid) {
     run_hook("PreDeleteClient", array("userid" => $userid));
     delete_query("tblclients", array("id" => $userid));
     delete_query("tblcontacts", array("userid" => $userid));
-    delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
+    delete_query("tblserviceconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE userid=" . $userid . ")");
     $result = select_query_i("tblcustomerservices", "id", array("userid" => $userid));
 
     while ($data = mysqli_fetch_array($result)) {

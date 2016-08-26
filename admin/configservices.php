@@ -468,15 +468,10 @@ if ($action == "") {
         $proratadate = $data['proratadate'];
         $proratachargenextmonth = $data['proratachargenextmonth'];
         $servertype = $data['servertype'];
-
-
         $configserice = getCustomeFieldGroup($id);
-
         $aInt->assign('configservice', $configserice);
         $aInt->assign('data', $data);
-
         $counter = 1;
-
         while ($counter <= 24) {
             $packageconfigoption[$counter] = $data["configoption" . $counter];
             $counter += 1;

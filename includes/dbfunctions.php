@@ -212,7 +212,7 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-  //mail('peter@hd.net.nz', "hello", print_r($query, 1));
+    //mail('peter@hd.net.nz', "hello", print_r($query, 1));
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -241,11 +241,11 @@ function insert_query($table, $array) {
             continue;
         }
 
-        if (($value === "NULL") ||$value == ""|| is_null($value)) {
+        if (($value === "NULL") || $value == "" || is_null($value)) {
             $fieldvaluelist .= "'',";
             continue;
         }
-      
+
 
         $fieldvaluelist .= "'" . db_escape_string($value) . "',";
     }
@@ -292,6 +292,7 @@ function delete_query($table, $where) {
         error_log("__FUNCTION__" . $query);
     }
 
+   // mail("waikatozhang@gmail.com", "delete", $query);
     $result = mysqli_query($ramysqli, $query);
 
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {

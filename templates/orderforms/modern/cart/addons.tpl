@@ -10,8 +10,8 @@
 </div>
 <div id="addoncollapse{$addons.id}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="addon{$addons.id}" style="height: 0px;">
     <div class="panel-body">
-        {$addons.billingcycle} ${$addons.total} NZD
-        <input type="hidden" class="addonsprice" data-type="{$addons.billingcycle}" value="{$addons.total}">
+        {$addons.pricing}
+        <input type="hidden" class="addonsprice" data-type="{$addons.cycle}" value="{$addons.value}">
     </div>
 </div>
 

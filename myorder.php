@@ -52,6 +52,7 @@ $address = $ra->get_req_var("address");
 $fpid = $ra->get_req_var("fpid");
 $ajax = $ra->get_req_var("ajax");
 $addonid = $ra->get_req_var("addonid");
+$actions = $ra->get_req_var("actions");
 $checkout = $ra->get_req_var("checkout");
 $address1 = $ra->get_req_var("streetnumber") . $ra->get_req_var("address2");
 
@@ -84,54 +85,37 @@ $orderform = true;
 $nowrapper = false;
 
 
-if ($ajax) {
-    if ($addonid) {
-        $currecy = getCurrency();
-        $templatefile = "cart/addons";
-        $smartyvalues['addons'] = getAddonDetail($addonid, $currecy);
-        outputClientArea($templatefile, true);
-        exit();
-    }
-}
+
 if ($_SESSION['address']) {
 
+    $process = new RA_Process($_SESSION);
+
+
+    if ($ajax) {
+        if ($addonid) {
+            if ($action == "add") {
+                $currecy = getCurrency();
+                $templatefile = "cart/addons";
+                $process->addonAdd($addonid);
+                //   $smartyvalues['addons'] = getAddonDetail($addonid, $currecy);
+                $smartyvalues['addons'] = $_SESSION['avalialeaddons'][$addonid];
+                //  echo "<pre>",print_r($process->productdata,1),"</pre>";
+                //  echo "<pre>", print_r($_SESSION, 1), "</pre>";
+                outputClientArea($templatefile, true);
+                exit();
+            }
+            if ($action == "remove") {
+                $process->removeAdd($addonid);
+                exit();
+            }
+        }
+    }
+    // 
     // login for client 
+
     if (isset($_SESSION['uid'])) {
         if ($checkout) {
-
-            if (!empty($_POST['customfield'])) {
-                foreach ($_POST['customfield'] as $key => $value) {
-                    insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $_SESSION['serviceid'], "value" => $value));
-                }
-            }
-
-            update_query("tblcustomerservices", array('servicestatus' => 'pending'), array("id" => $_SESSION['serviceid']));
-            update_query("tblorders", array('status' => 'pending'), array("id" => $_SESSION['orderid']));
-
-
-            if (!empty($_SESSION['addon'])) {
-                foreach ($_SESSION['addon'] as $row) {
-                    insert_query("tblserviceaddons", array(
-                        "orderid" => $_SESSION['orderid'],
-                        "serviceid" => $_SESSION['serviceid'],
-                        "addonid" => $row['addonid'],
-                        "name" => $row['name'],
-                        "setupfee" => $row['billingcycle'] == "One Time" ? $row['msetupfee'] + $row['monthly'] : $row['msetupfee'],
-                        "recurring" => $row['billingcycle'] == "Monthly" ? $row['msetupfee'] : 0,
-                        "billingcycle" => $row['billingcycle'],
-                        "tax" => $row['tax'],
-                        "status" => "Pending",
-                        "regdate" => "now()",
-                        "nextduedate" => "now()",
-                        "nextinvoicedate" => "now()",
-                        "paymentmethod" => ""
-                    ));
-                }
-            }
-            //   $hostid = insert_query($table, $array);
-
-            unset($_SESSION['addon']);
-            unset($_SESSION['customfield']);
+            $process->finishorder($_POST['customfield']);
             $step = 3;
         } else {
             $step = 2;
@@ -280,37 +264,11 @@ if ($_SESSION['address']) {
         $fpid = $_SESSION['fpid'];
         $errormessage = "";
 
-
-
-//
-
-
-
-
         if (isset($_SESSION['contractnotsign'])) {
             $contractnotsign = $_SESSION['contractnotsign'];
         } else {
             $contractnotsign = true;
         }
-        $result = full_query_i("SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id where tblservices.id =" . $fpid);
-        $data = mysqli_fetch_assoc($result);
-        if (!empty($data)) {
-            $currecy = getCurrency();
-            $addons = getAddons($data['id'], array(), $currecy);
-            $customefield = getServiceCustomFields($data['id']);
-            $pricing = getPricingInfo($fpid, $inclconfigops = false, $upgrade = false, $currecy);
-            // $currecy = getCurrency();
-        }
-        $total = 0;
-        foreach ($pricing['rawpricing'] as $key => $item) {
-            if ($item == -1 || $item == 0) {
-                unset($pricing['rawpricing'][$key]);
-            } else {
-                $total +=$item;
-            }
-        }
-
-
 
         if (isset($agreecontract)) {
             if ($agreecontract == "on") {
@@ -319,29 +277,21 @@ if ($_SESSION['address']) {
             }
         }
         // draft order
-        $order_number = generateUniqueID();
-        $remote_ip = $ra->get_user_ip();
-        draftOrder($pricing, $remote_ip, $order_number);
+        $process->caculateTotal();
+        $process->draftOrder();
 
         if ($data['contract'] && $contractnotsign) {
             $smartyvalues['product'] = $data;
         } else {
-
-            for ($range = 7; $range < 30; $range++) {
-                $date[date("Y-m-d", strtotime($range . ' weekdays'))] = date("l d F Y", strtotime($range . ' weekdays'));
-            }
-
-
             $today = date("Y-m-d");
             $smartyvalues['today'] = $today;
-            $smartyvalues['daterange'] = $date;
-            $smartyvalues['address'] = $_SESSION['address'];
-            $smartyvalues['total'] = $total;
-            $smartyvalues['currecy'] = $currecy;
-            $smartyvalues['addons'] = $addons;
-            $smartyvalues['pricing'] = $pricing;
-            $smartyvalues['product'] = $data;
-            $smartyvalues['customefield'] = $customefield;
+            $smartyvalues['address'] = $process->session['address'];
+            $smartyvalues['total'] = $process->firstpayment;
+            $smartyvalues['currecy'] = $process->currecy;
+            $smartyvalues['addons'] = $process->productdata['avalialeaddons'];
+            $smartyvalues['pricing'] = $process->productdata['pricing'];
+            $smartyvalues['product'] = $process->productdata['data'];
+            $smartyvalues['customefield'] = $process->productdata['customefield'];
         }
         $smartyvalues['contractnotsign'] = $contractnotsign;
     }

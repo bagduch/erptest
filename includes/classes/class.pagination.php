@@ -12,6 +12,7 @@
 
 class RA_Pagination extends RA_TableQuery 
 {
+    
 	protected $page = 1;
 	protected $defaultsort = "ASC";
 	protected $defaultorderby = "id";

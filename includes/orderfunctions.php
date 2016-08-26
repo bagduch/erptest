@@ -2489,11 +2489,16 @@ function deleteOrder($orderid) {
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoiceid = $data['invoiceid'];
-    delete_query("tblcustomerservicesconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
+    // delete_query("tblcustomerservicesconfigoptions", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
+//     delete_query("tblcustomerservices", array("orderid" => $orderid));
+    $result2 = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
+    $data2 = mysqli_fetch_array($result2);
+    delete_query("tblcustomfieldsvalues", array("relid" => $data2['id']));
+    delete_query("tblcustomerservices", array("orderid" => $orderid));
     delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
     delete_query("tblcustomerservices", array("orderid" => $orderid));
     delete_query("tblserviceaddons", array("orderid" => $orderid));
-    delete_query("tbldescriptions", array("orderid" => $orderid));
+    // delete_query("tbldescriptions", array("orderid" => $orderid));
     delete_query("tblorders", array("id" => $orderid));
     delete_query("tblinvoices", array("id" => $invoiceid));
     delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
@@ -2550,7 +2555,7 @@ function getAddons($pid, $addons, $currencs = array()) {
         $addon_packages = $data['packages'];
         $addon_name = $data['name'];
         $addon_description = $data['description'];
-        $addon_recurring = $data['recurring'];
+        //  $addon_recurring = $data['recurring'];
         $addon_setupfee = $data['setupfee'];
         $addon_billingcycle = $data['billingcycle'];
         $addon_free = $data['free'];
@@ -2583,14 +2588,14 @@ function getAddons($pid, $addons, $currencs = array()) {
                 }
             }
 
-            $addonsarray[] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "value" => $addon_setupfee + $addon_recurring, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => $addon_status);
+            $addonsarray[$addon_id] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "cycle" => $addon_billingcycle, "value" => $addon_setupfee + $addon_recurring, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => $addon_status);
         }
     }
 
     return $addonsarray;
 }
 
-function draftOrder($pricing = array(),$remote_ip,$order_number) {
+function draftOrder($pricing = array(), $remote_ip, $order_number) {
 
     $firstpayment = 0;
     $recurring = 0;
