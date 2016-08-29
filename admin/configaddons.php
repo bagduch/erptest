@@ -141,6 +141,7 @@ if (!$action) {
                 }
             }
             $paymentdropdown = $aInt->cyclesDropDown($addondetail['billingcycle']);
+            $aInt->assign("paymentoption", $paymentoption);
             $aInt->assign("addon", $addondetail);
             $aInt->assign("service", $service);
         } else {
