@@ -89,7 +89,7 @@ CREATE TABLE `tblactivitylog` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `tblactivitylog_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4911 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5240 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,6 +135,19 @@ CREATE TABLE `tbladdons` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbladdontoservice`
+--
+
+DROP TABLE IF EXISTS `tbladdontoservice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbladdontoservice` (
+  `addonid` int(11) NOT NULL,
+  `serviceid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbladminlog`
 --
 
@@ -154,7 +167,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=684 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=763 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -428,15 +441,15 @@ CREATE TABLE `tblclients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `firstname` text NOT NULL,
   `lastname` text NOT NULL,
-  `companyname` text NOT NULL,
+  `companyname` text,
   `email` text NOT NULL,
   `address1` text NOT NULL,
-  `address2` text NOT NULL,
+  `address2` text,
   `city` text NOT NULL,
-  `state` text NOT NULL,
+  `state` text,
   `postcode` text NOT NULL,
   `country` text NOT NULL,
-  `phonenumber` text NOT NULL,
+  `phonenumber` text,
   `mobilenumber` varchar(16) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `authmodule` text NOT NULL,
@@ -452,7 +465,7 @@ CREATE TABLE `tblclients` (
   `datecreated` date NOT NULL,
   `notes` text NOT NULL,
   `billingcid` int(10) NOT NULL,
-  `securityqid` int(10) NOT NULL,
+  `securityqid` int(10) DEFAULT NULL,
   `securityqans` text NOT NULL,
   `groupid` int(10) unsigned DEFAULT '0',
   `lastlogin` datetime DEFAULT NULL,
@@ -464,6 +477,7 @@ CREATE TABLE `tblclients` (
   `pwresetexpiry` int(10) NOT NULL,
   `emailoptout` int(1) NOT NULL,
   `overrideautoclose` int(1) NOT NULL,
+  `dateofbirth` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `firstname_lastname` (`firstname`(32),`lastname`(32)),
   KEY `email` (`email`(64)),
@@ -473,7 +487,7 @@ CREATE TABLE `tblclients` (
   CONSTRAINT `tblclients_ibfk_1` FOREIGN KEY (`groupid`) REFERENCES `tblclientgroups` (`id`),
   CONSTRAINT `tblclients_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`),
   CONSTRAINT `tblclients_ibfk_3` FOREIGN KEY (`defaultgateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12444 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -633,7 +647,6 @@ CREATE TABLE `tblcustomerservices` (
   `userid` int(10) NOT NULL COMMENT 'tblclients ID',
   `orderid` int(10) NOT NULL COMMENT 'tblorders ID',
   `packageid` int(10) NOT NULL,
-  `server` int(10) DEFAULT NULL,
   `regdate` datetime NOT NULL,
   `description` varchar(128) DEFAULT NULL COMMENT 'freeform description as will appear on invoice',
   `paymentmethod` varchar(64) DEFAULT NULL,
@@ -642,9 +655,7 @@ CREATE TABLE `tblcustomerservices` (
   `billingcycle` text NOT NULL,
   `nextduedate` date DEFAULT NULL,
   `nextinvoicedate` date NOT NULL,
-  `servicestatus` enum('Pending','Active','Suspended','Terminated','Cancelled','Fraud') NOT NULL,
-  `username` text,
-  `password` text,
+  `servicestatus` enum('Pending','Active','Suspended','Terminated','Cancelled','Fraud','Draft') NOT NULL,
   `suspendreason` text,
   `overideautosuspend` text,
   `overidesuspenduntil` date DEFAULT NULL,
@@ -655,16 +666,14 @@ CREATE TABLE `tblcustomerservices` (
   KEY `userid` (`userid`),
   KEY `orderid` (`orderid`),
   KEY `productid` (`packageid`),
-  KEY `serverid` (`server`),
   KEY `domain` (`description`(64)),
   KEY `domainstatus` (`servicestatus`),
   KEY `paymentmethod` (`paymentmethod`),
   CONSTRAINT `tblcustomerservices_fk_userid_tblclients` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`),
   CONSTRAINT `tblcustomerservices_ibfk_3` FOREIGN KEY (`orderid`) REFERENCES `tblorders` (`id`),
-  CONSTRAINT `tblcustomerservices_ibfk_4` FOREIGN KEY (`server`) REFERENCES `tblservers` (`id`),
   CONSTRAINT `tblcustomerservices_ibfk_5` FOREIGN KEY (`paymentmethod`) REFERENCES `tblpaymentgatewaynames` (`gateway`),
   CONSTRAINT `tblcustomerservices_ibfk_6` FOREIGN KEY (`packageid`) REFERENCES `tblservices` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -677,17 +686,18 @@ DROP TABLE IF EXISTS `tblcustomfields`;
 CREATE TABLE `tblcustomfields` (
   `cfid` int(10) NOT NULL AUTO_INCREMENT,
   `fieldname` text NOT NULL COMMENT 'Name to show on forms',
-  `fieldtype` enum('dropdown','textarea','text','tickbox','link','password') DEFAULT NULL COMMENT 'Custom field type',
-  `description` text NOT NULL,
-  `fieldoptions` text NOT NULL,
+  `fieldtype` enum('dropdown','textarea','text','tickbox','link','password','date','option','more') DEFAULT NULL COMMENT 'Custom field type',
+  `description` text,
+  `fieldoptions` text,
   `regexpr` text COMMENT 'Regex which must be matched for value to be valid',
   `adminonly` tinyint(1) DEFAULT '0' COMMENT 'Whether only visible to admin / system',
   `required` tinyint(1) DEFAULT '0' COMMENT 'Whether customfield is required',
   `showinvoice` tinyint(1) DEFAULT '0' COMMENT 'Whether to show on client-facing invoices',
   `sortorder` int(10) NOT NULL DEFAULT '0',
   `showorder` int(10) DEFAULT NULL COMMENT 'Order to display in on order form, client area and admin area',
+  `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`cfid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='Custom fields applied to products and services';
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='Custom fields applied to products and services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -709,7 +719,7 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -848,7 +858,7 @@ CREATE TABLE `tblemails` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `tblemails_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -954,7 +964,7 @@ CREATE TABLE `tblinvoices` (
   KEY `userid` (`userid`),
   KEY `status` (`status`),
   CONSTRAINT `tblinvoices_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=321 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=152000 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1122,7 +1132,7 @@ CREATE TABLE `tblorders` (
   CONSTRAINT `tblorders_ibfk_2` FOREIGN KEY (`status`) REFERENCES `tblorderstatuses` (`title`),
   CONSTRAINT `tblorders_ibfk_3` FOREIGN KEY (`contactid`) REFERENCES `tblcontacts` (`id`),
   CONSTRAINT `tblorders_ibfk_4` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1142,7 +1152,7 @@ CREATE TABLE `tblorderstatuses` (
   `sortorder` int(2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `title` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1207,7 +1217,7 @@ CREATE TABLE `tblpricing` (
   `biennially` decimal(10,2) NOT NULL,
   `triennially` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1319,14 +1329,14 @@ DROP TABLE IF EXISTS `tblserviceaddons`;
 CREATE TABLE `tblserviceaddons` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `orderid` int(10) NOT NULL,
-  `hostingid` int(10) NOT NULL,
+  `serviceid` int(10) NOT NULL,
   `addonid` int(10) NOT NULL,
   `name` text NOT NULL,
   `setupfee` decimal(10,2) NOT NULL DEFAULT '0.00',
   `recurring` decimal(10,2) NOT NULL DEFAULT '0.00',
   `billingcycle` text NOT NULL,
   `tax` text NOT NULL,
-  `status` enum('Pending','Active','Suspended','Terminated','Cancelled','Fraud') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Active','Suspended','Terminated','Cancelled','Fraud','Draft') NOT NULL DEFAULT 'Pending',
   `regdate` date NOT NULL DEFAULT '0000-00-00',
   `nextduedate` date DEFAULT NULL,
   `nextinvoicedate` date NOT NULL,
@@ -1334,14 +1344,14 @@ CREATE TABLE `tblserviceaddons` (
   `notes` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `orderid` (`orderid`),
-  KEY `serviceid` (`hostingid`),
+  KEY `serviceid` (`serviceid`),
   KEY `name` (`name`(32)),
   KEY `status` (`status`),
   KEY `addonid` (`addonid`),
+  CONSTRAINT `tblserviceaddons_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblcustomerservices` (`id`),
   CONSTRAINT `tblserviceaddons_ibfk_1` FOREIGN KEY (`orderid`) REFERENCES `tblorders` (`id`),
-  CONSTRAINT `tblserviceaddons_ibfk_2` FOREIGN KEY (`hostingid`) REFERENCES `tblcustomerservices` (`id`),
   CONSTRAINT `tblserviceaddons_ibfk_3` FOREIGN KEY (`addonid`) REFERENCES `tbladdons` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1453,6 +1463,7 @@ CREATE TABLE `tblservices` (
   `term` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
+  `revenuecode` varchar(10) DEFAULT NULL,
   `hidden` text NOT NULL,
   `welcomeemail` int(10) DEFAULT NULL,
   `proratabilling` text NOT NULL,
@@ -1479,7 +1490,7 @@ CREATE TABLE `tblservices` (
   KEY `welcomeemail` (`welcomeemail`),
   CONSTRAINT `tblservices_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`),
   CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
