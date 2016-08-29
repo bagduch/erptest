@@ -8,6 +8,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 include_once '../includes/servicefunctions.php';
+include_once '../includes/orderfunctions.php';
 $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
@@ -104,6 +105,8 @@ if ($action == "save") {
 
 
 
+
+
     if ($_POST['configoptionlinks']) {
         delete_query("tblcustomfieldsgrouplinks", array("serviceid" => $id));
         foreach ($_POST['configoptionlinks'] as $row) {
@@ -117,6 +120,15 @@ if ($action == "save") {
     }
 
     delete_query("tblserviceconfiglinks", array("pid" => $id));
+
+
+    if (!empty($_POST['addons'])) {
+        delete_query("tbladdontoservice", array("serviceid" => $id));
+
+        foreach ($_POST['addons'] as $row) {
+            insert_query("tbladdontoservice", array("serviceid" => $id, "addonid" => $row));
+        }
+    }
 
     // delete_query("tblcustomfieldsgrouplinks", $where);
 
@@ -446,6 +458,7 @@ if ($action == "") {
 
     if ($action == "edit") {
         // get all service data
+        $currecy = getCurrency();
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
@@ -607,22 +620,21 @@ if ($action == "") {
             }
 
             $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
-
-            $result = select_query_i("tblserviceconfiggroups", "", "", "name", "ASC");
-
-            while ($data = mysqli_fetch_array($result)) {
-                $confgroupid = $data['id'];
-                $name = $data['name'];
-                $description = $data['description'];
-                echo "<option value=\"" . $confgroupid . "\"";
-
-                if (in_array($confgroupid, $configoptionlinks)) {
-                    echo " selected";
-                }
-
-                echo ">" . $name . " - " . $description . "</option>";
+        }
+        $addons = array();
+        $query = "SELECT * FROM tbladdons LEFT JOIN tbladdontoservice on tbladdons.id=tbladdontoservice.addonid";
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+            $addons[$data['id']] = $data;
+            if ($data['serviceid']==$id) {
+                $addons[$data['id']]["check"] = "selected";
+            } else {
+                $addons[$data['id']]["check"] = "";
             }
         }
+
+        $aInt->assign('addons', $addons);
+
         $templatefile = 'services/edit';
     } else {
         if ($action == "create") {

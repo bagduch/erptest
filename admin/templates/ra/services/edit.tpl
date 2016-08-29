@@ -6,7 +6,7 @@
 
     <h2>Edit Product</h2>
 
-    <form method="post" action="/admin/configservices.php?action=save&amp;id=3" name="packagefrm">
+    <form method="post" action="/admin/configservices.php?action=save&amp;id={$data.id}" name="packagefrm">
         <div id="myTabs">
             {$infobox}
             <ul class="nav nav-tabs" role="tablist">
@@ -229,7 +229,13 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="addons">
                 <div class="panel-body">
-
+                    {if $addons}
+                        <select class="form-control" name="addons[]" multiple="">
+                            {foreach from=$addons item=addon}
+                                <option {$addon.check} value="{$addon.id}">{$addon.name}</option>
+                            {/foreach}
+                        </select>
+                    {/if}
                 </div>
             </div>
 

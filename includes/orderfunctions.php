@@ -2548,11 +2548,12 @@ function getAddons($pid, $addons, $currencs = array()) {
     }
 
     $addonsarray = array();
-    $result = select_query_i("tbladdons", "", array("showorder" => "on"), "weight` ASC,`name", "ASC");
 
+    $query = "SELECT * FROM tbladdons INNER JOIN tbladdontoservice on tbladdons.id=tbladdontoservice.addonid where tbladdontoservice.serviceid =" . $pid;
+    $result = full_query_i($query);
     while ($data = mysqli_fetch_array($result)) {
         $addon_id = $data['id'];
-        $addon_packages = $data['packages'];
+
         $addon_name = $data['name'];
         $addon_description = $data['description'];
         //  $addon_recurring = $data['recurring'];
@@ -2563,33 +2564,21 @@ function getAddons($pid, $addons, $currencs = array()) {
         $data = mysqli_fetch_array($result2);
         $addon_setupfee = $data['msetupfee'];
         $addon_recurring = $data['monthly'];
-        $addon_packages = explode(",", $addon_packages);
 
-        if (in_array($pid, $addon_packages)) {
-            $addon_status = (in_array($addon_id, $addons) ? true : false);
+        $addon_checkbox = "<button class=\"btn btn-default btn-circle\" id=\"a" . $addon_id . "\" data-addon=\"" . $addon_id . "\"> <i class=\"\"></i></button>";
+        if ($addon_billingcycle == "Free") {
+            $addon_pricingdetails = $_LANG['orderfree'];
+        } else {
+            $addon_pricingdetails = formatCurrency($addon_recurring) . " ";
+            $addon_billingcycle = str_replace(array(" ", "-"), "", strtolower($addon_billingcycle));
+            $addon_pricingdetails .= $_LANG["orderpaymentterm" . $addon_billingcycle];
 
-            if (in_array($addon_id, $addons)) {
-                $addon_checkbox = "<button class=\"btn btn-info btn-circle\" id=\"a" . $addon_id . "\" > <i class=\"fa fa-check\"></i></button>";
-            } else {
-                $addon_checkbox = "<button class=\"btn btn-default btn-circle\" id=\"a" . $addon_id . "\" data-addon=\"" . $addon_id . "\"> <i class=\"\"></i></button>";
+            if (0 < $addon_setupfee) {
+                $addon_pricingdetails .= " + " . formatCurrency($addon_setupfee) . " " . $_LANG['ordersetupfee'];
             }
-
-
-
-            if ($addon_billingcycle == "Free") {
-                $addon_pricingdetails = $_LANG['orderfree'];
-            } else {
-                $addon_pricingdetails = formatCurrency($addon_recurring) . " ";
-                $addon_billingcycle = str_replace(array(" ", "-"), "", strtolower($addon_billingcycle));
-                $addon_pricingdetails .= $_LANG["orderpaymentterm" . $addon_billingcycle];
-
-                if (0 < $addon_setupfee) {
-                    $addon_pricingdetails .= " + " . formatCurrency($addon_setupfee) . " " . $_LANG['ordersetupfee'];
-                }
-            }
-
-            $addonsarray[$addon_id] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "cycle" => $addon_billingcycle, "value" => $addon_setupfee + $addon_recurring, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => $addon_status);
         }
+
+        $addonsarray[$addon_id] = array("id" => $addon_id, "checkbox" => $addon_checkbox, "cycle" => $addon_billingcycle, "value" => $addon_setupfee + $addon_recurring, "name" => $addon_name, "description" => $addon_description, "pricing" => $addon_pricingdetails, "status" => true);
     }
 
     return $addonsarray;

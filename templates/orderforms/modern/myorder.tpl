@@ -199,46 +199,48 @@
                                             {/if}
                                         {/foreach}
                                     </div>
-                                    <div class="addons">
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading"> <h3 class="panel-title">Availble Addons</h3> </div>
-                                            <div class="panel-body">
+                                    {if $addons}
+                                        <div class="addons">
 
-                                                <div class="panel panel-default">
-                                                    {foreach from=$addons item=addon key=cid}
-                                                        <div class="panel-heading" role="tab" id="headingOne">
-                                                            <table style="width:100%">
-                                                                <tr>
-                                                                    <td>  
-                                                                        <h4 class="panel-title">
-                                                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$cid}" aria-expanded="true" aria-controls="collapse{$cid}">
-                                                                                <strong>{$addon.name}</strong> <br/>{$addon.pricing}
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading"> <h3 class="panel-title">Availble Addons</h3> </div>
+                                                <div class="panel-body">
 
-                                                                            </a>
-                                                                        </h4>
-                                                                    </td>
-                                                                    <td> 
-                                                                        <div class="button-right">
-                                                                            {$addon.checkbox}
+                                                    <div class="panel panel-default">
+                                                        {foreach from=$addons item=addon key=cid}
+                                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                                <table style="width:100%">
+                                                                    <tr>
+                                                                        <td>  
+                                                                            <h4 class="panel-title">
+                                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$cid}" aria-expanded="true" aria-controls="collapse{$cid}">
+                                                                                    <strong>{$addon.name}</strong> <br/>{$addon.pricing}
 
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </td>
+                                                                        <td> 
+                                                                            <div class="button-right">
+                                                                                {$addon.checkbox}
 
-                                                            </table>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
 
-                                                        </div>
-                                                        <div id="collapse{$cid}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                                            <div class="panel-body">
-                                                                {$addon.description}
+                                                                </table>
+
                                                             </div>
-                                                        </div>
-                                                    {/foreach}
+                                                            <div id="collapse{$cid}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                                <div class="panel-body">
+                                                                    {$addon.description}
+                                                                </div>
+                                                            </div>
+                                                        {/foreach}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
+                                    {/if}
                                     <div class="custome-notes">
                                         <div class="panel panel-primary">
                                             <div class="panel-heading"> <h3 class="panel-title">Notes</h3> </div>

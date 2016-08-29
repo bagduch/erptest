@@ -87,10 +87,7 @@ $nowrapper = false;
 
 
 if ($_SESSION['address']) {
-
     $process = new RA_Process($_SESSION);
-
-
     if ($ajax) {
         if ($addonid) {
             if ($action == "add") {
