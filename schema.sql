@@ -122,7 +122,6 @@ CREATE TABLE `tbladdons` (
   `billingcycle` text NOT NULL,
   `tax` text NOT NULL,
   `showorder` text NOT NULL,
-  `downloads` text NOT NULL,
   `autoactivate` text NOT NULL,
   `suspendproduct` text NOT NULL,
   `welcomeemail` int(10) DEFAULT NULL,
@@ -647,6 +646,7 @@ CREATE TABLE `tblcustomerservices` (
   `userid` int(10) NOT NULL COMMENT 'tblclients ID',
   `orderid` int(10) NOT NULL COMMENT 'tblorders ID',
   `packageid` int(10) NOT NULL,
+  `parent` int(11) DEFAULT NULL,
   `regdate` datetime NOT NULL,
   `description` varchar(128) DEFAULT NULL COMMENT 'freeform description as will appear on invoice',
   `paymentmethod` varchar(64) DEFAULT NULL,
@@ -905,6 +905,19 @@ CREATE TABLE `tblgatewaylog` (
   KEY `gateway` (`gateway`),
   CONSTRAINT `tblgatewaylog_ibfk_1` FOREIGN KEY (`gateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblgrouptogroup`
+--
+
+DROP TABLE IF EXISTS `tblgrouptogroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblgrouptogroup` (
+  `parent_group_id` int(11) DEFAULT NULL,
+  `children_group_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1458,6 +1471,7 @@ CREATE TABLE `tblservices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` text NOT NULL,
   `gid` int(10) NOT NULL,
+  `individual` int(11) NOT NULL,
   `contract` int(11) NOT NULL,
   `etf` double NOT NULL,
   `term` int(11) NOT NULL,
@@ -1491,6 +1505,19 @@ CREATE TABLE `tblservices` (
   CONSTRAINT `tblservices_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`),
   CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblservicetoservice`
+--
+
+DROP TABLE IF EXISTS `tblservicetoservice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblservicetoservice` (
+  `parent_id` int(11) DEFAULT NULL,
+  `children_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
