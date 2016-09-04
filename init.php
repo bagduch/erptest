@@ -1,6 +1,9 @@
 <?php
-if (($_SERVER["REQUEST_METHOD"] != "POST") && ($adminid > 1)) {
-    echo "<pre>Current working directory is " . dirname(__FILE__) . "</pre>";
+
+if (($_SERVER["REQUEST_METHOD"] != "POST") && (isset($adminid))) {
+    if ($adminid > 1) {
+        echo "<pre>Current working directory is " . dirname(__FILE__) . "</pre>";
+    }
 }
 
 ini_set("log_errors", 1);

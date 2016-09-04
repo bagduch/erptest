@@ -29,9 +29,10 @@
                                 <td class="fieldlabel">{$langs.fields}</td>
                                 <td class="fieldarea">
                                     <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                        <option value="hostingaccount" {if $data.type eq 'hostingaccount'}selected{/if}>{$langs.hostingaccount}</option>
-                                        <option value="reselleraccount" {if $data.type eq 'reselleraccount'}selected{/if}>{$langs.reselleraccount}</option>
-                                        <option value="server" {if $data.type eq 'server'}selected{/if}>{$langs.server}</option>
+                                        <option value="services" {if $data.type eq 'services'}selected{/if}>Services</option>
+                                        <option value="wholesell" {if $data.type eq 'wholesell'}selected{/if}>Whole Sell</option>
+                                        <option value="product" {if $data.type eq 'server'}selected{/if}>Product</option>
+                                        <option value="addon" {if $data.type eq 'addon'}selected{/if}>Addon</option>
                                         <option value="other" {if $data.type eq 'other'}selected{/if}>{$langs.other}</option>
                                     </select>
                                 </td>
@@ -52,6 +53,25 @@
                                     <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="fieldlabel">Supply Codes</td>
+                                <td class="fieldarea">
+                                    <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Supply Revenue</td>
+                                <td class="fieldarea">
+                                    <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Individual Sale</td>
+                                <td class="fieldarea">
+                                    <input type="checkbox" name="isale" {if $data.individual}checked{/if}/> (Can be sale as an individual product)
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td class="fieldlabel">{$langs.servicename}</td>
                                 <td class="fieldarea">
@@ -125,7 +145,7 @@
                                 <td class="fieldarea">
                                     <label><input type="radio" name="paytype" {if $data.paytype eq 'free'}checked{/if} value="free"> Free</label>
                                     <label><input type="radio" name="paytype" {if $data.paytype eq 'onetime'}checked{/if} value="onetime"> One Time</label>
-                                    <label><input type="radio" name="paytype" {if $data.paytype eq 'recurring'}checked{/if} value="recurring" checked=""> Recurring</label>
+                                    <label><input type="radio" name="paytype" {if $data.paytype eq 'recurring'}checked{/if} value="recurring"> Recurring</label>
                                 </td>
                             </tr>
                             <tr class="tableprice">
@@ -167,7 +187,8 @@
                                     </table>
                                     <br>
                                     (Set Price to -1.00 to disable any of the payment term options - leave Setup Fee at zero)<br><br>
-                                </td></tr>
+                                </td>
+                            </tr>
                             <tr><td class="fieldlabel">Allow Multiple Quantities</td><td class="fieldarea"><input type="checkbox" name="allowqty" {if $data.allowqty}checked{/if}> Tick this box to allow customers to specify if they want more than 1 of this item when ordering (must not require separate config)</td></tr>
                             <tr><td class="fieldlabel">Recurring Cycles Limit</td>
                                 <td class="fieldarea">
@@ -178,7 +199,7 @@
                                 </td></tr>
                             <tr><td class="fieldlabel">Auto Terminate/Fixed Term</td><td class="fieldarea">
                                     <div class="form-inline">
-                                        <input style="width:50px"  class="form-control" type="text" name="autoterminatedays" value="{$data.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
+                                        <input style="width:50px" class="form-control" type="text" name="autoterminatedays" value="{$data.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
                             <tr><td class="fieldlabel">Termination Email</td><td class="fieldarea">
                                     <div class="form-inline">
                                         <select class="form-control" name="autoterminateemail">
@@ -229,12 +250,27 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="addons">
                 <div class="panel-body">
-                    {if $addons}
-                        <select class="form-control" name="addons[]" multiple="">
-                            {foreach from=$addons item=addon}
-                                <option {$addon.check} value="{$addon.id}">{$addon.name}</option>
+                    {if $asscoproduct}
+                        <div clas="row">
+                            {foreach from=$asscoproduct key=groupname item=addons}
+                                <div class="col-xs-6 col-md-4">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading"> <label><input type="checkbox" class="groupcheck">{$groupname}</label></div>
+                                        <div class="panel-body">
+                                            <ul class="list-group">
+                                                {foreach from=$addons item=service}
+                                                    <li class="list-group-item"> 
+                                                        <label>
+                                                            <input class="childrenserivce" {$service.check} type="checkbox" name="linkasscoiateservice[{$service.id}]"/> {$service.name}
+                                                        </label>
+                                                    </li>
+                                                {/foreach}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             {/foreach}
-                        </select>
+                        </div>
                     {/if}
                 </div>
             </div>
@@ -312,9 +348,34 @@
                 });
             });
 
+            function checkgroup()
+            {
+                all_checkbox = $(".list-group").find("input[type='checkbox']");
+                if (all_checkbox.filter(":checked").length === all_checkbox.length)
+                {
+                    all_checkbox.closest(".panel").find(".groupcheck").prop("checked", true);
+                } else {
+                    all_checkbox.closest(".panel").find(".groupcheck").prop("checked", false);
+                }
+            }
 
-            $("input[name='paytype']").change(function () {
-                value = $(this).val();
+            checkgroup();
+            $(".childrenserivce").change(checkgroup);
+            $(".groupcheck").change(function () {
+                childrenchecks = $(this).closest(".panel-body").find(".childrenserivce");
+                if ($(this).is(":checked"))
+                {
+                    childrenchecks.prop('checked', true);
+                } else {
+                    childrenchecks.attr('checked', false);
+                }
+
+            });
+
+
+            function pricetag()
+            {
+                value = $("input[name='paytype']:checked").val();
                 if (value == 'onetime')
                 {
                     $(".tableprice").find("table tr td").hide();
@@ -329,7 +390,10 @@
                     $(".tableprice").find("table tr td").show();
                     $(".tableprice").show();
                 }
-
+            }
+            pricetag();
+            $("input[name='paytype']").change(function () {
+                pricetag();
             });
 
             if ($("input[name='contract']").is(':checked'))

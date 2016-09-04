@@ -39,8 +39,10 @@ if ($userid && !$id) {
         $aInt->gracefulExit("Invalid User ID");
     }
     // and supply first available service
-    $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
+    $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid, "parent" => Null), "description", "ASC", "0,1");
 
+    $query = "select * from tblcustomerservices where parent=Null AND userid=" . $userid . " limit 1";
+    $result = full_query_i($query);
 }
 
 // if we can't determine a suitable product ID to show, reject
@@ -296,7 +298,7 @@ if ($frm->issubmitted()) {
     run_hook("AdminClientServicesTabFieldsSave", $_REQUEST);
     run_hook("AdminServiceEdit", array("userid" => $userid, "serviceid" => $id));
     run_hook("ServiceEdit", array("userid" => $userid, "serviceid" => $id));
-redir("userid=" . $userid . "&id=" . $id . "&success=true");
+    redir("userid=" . $userid . "&id=" . $id . "&success=true");
 }
 
 
@@ -306,7 +308,7 @@ if ($action == "delete") {
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
     delete_query("tblcustomerservices", array("id" => $id));
     delete_query("tblserviceaddons", array("hostingid" => $id));
-  //  delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
+    //  delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "'");
     logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
@@ -900,7 +902,7 @@ if ($aid) {
     $aInt->sortableTableInit("nopagination");
     $service = new RA_Service($id);
     $addons = $service->getAddons();
-    
+
     foreach ($addons as $vals) {
         $tabledata[] = array($vals['regdate'], $vals['name'], $vals['pricing'], $vals['status'], $vals['nextduedate'], "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&aid=" . $vals['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", "<a href=\"#\" onClick=\"doDeleteAddon('" . $vals['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
     }

@@ -1,4 +1,3 @@
-{debug}
 <p><strong>Options:</strong> <a href="/admin/configservices.php?action=creategroup">Create Group</a> | <a href="/admin/configservices.php?action=create">Create Service</a></p>
 <form method="post" action="configpservices.php?action=updatesort">
     <div class="tablebg">
@@ -17,18 +16,18 @@
                 {foreach from=$servicegroup item=servicesg}
                     <tr>
                         <td colspan="6" style="background-color:#ffffdd;">
-                            <div align="left"><b>{$langs.groupname}:</b> {$servicesg.name} </div>
+                            <div align="left"><b>{$langs.groupname}:</b> {$servicesg.group.name} </div>
                         </td>
                         <td style="background-color:#ffffdd;" align="center">
-                            <a href="/admin/configservices.php?action=editgroup&amp;ids={$servicesg.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
+                            <a href="/admin/configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
                         </td>
                         <td style="background-color:#ffffdd;" align="center">
-                            <a href="#" onclick="{$servicesg.deletelink}">
+                            <a href="#" onclick="{$servicesg.group.deletelink}">
                                 <img src="images/delete.gif" width="16" height="16" border="0" alt="Delete">
                             </a>
                         </td 
                     </tr>
-                    {foreach from=$service item=servicedata key=sid}
+                    {foreach from=$servicesg.service item=servicedata key=sid}
                         <tr style="text-align:center;">
                             <td>{$servicedata.name}</td>
                             <td>{$servicedata.type}</td>

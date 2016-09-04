@@ -17,17 +17,30 @@ $aInt->title = $aInt->lang("addons", "productaddons");
 $aInt->sidebar = "config";
 $aInt->icon = "productaddons";
 $aInt->helplink = "Product Addons";
+$name = $ra->get_req_var("name");
+$description = $ra->get_req_var("description");
+$tax = $ra->get_req_var("tax");
+$showorder = $ra->get_req_var("showorder");
+$billingcycle = $ra->get_req_var("paytype");
+$autoactivate = $ra->get_req_var("autoactivate");
+$suspendproduct = $ra->get_req_var("suspendproduct");
+$welcomeemail = $ra->get_req_var("welcomeemail");
+$weight = $ra->get_req_var("weight");
+$action = $ra->get_req_var("action");
+$id = $ra->get_req_var("id");
 
 if ($action == "save") {
     check_token("RA.admin.default");
     $apppackages = (is_array($packages) ? implode(",", $packages) : "");
 
     if ($id) {
+        $data = array("name" => $name, "description" => html_entity_decode($description), "billingcycle" => $billingcycle, "packages" => $apppackages, "tax" => $tax, "showorder" => $showorder, "autoactivate" => $autoactivate, "suspendproduct" => $suspendproduct, "welcomeemail" => $welcomeemail == 0 ? "NULL" : $welcomeemail, "weight" => $weight);
+
 
         delete_query("tbladdontoservice", array("addonid" => $id));
-        update_query("tbladdons", array("name" => $name, "description" => html_entity_decode($description), "billingcycle" => $billingcycle, "packages" => $apppackages, "tax" => $tax, "showorder" => $showorder, "autoactivate" => $autoactivate, "suspendproduct" => $suspendproduct, "downloads" => implode(",", $downloads), "welcomeemail" => $welcomeemail, "weight" => $weight), array("id" => $id));
+        update_query("tbladdons", $data, array("id" => $id));
     } else {
-        $id = insert_query("tbladdons", array("name" => $name, "description" => html_entity_decode($description), "billingcycle" => $billingcycle, "packages" => $apppackages, "tax" => $tax, "showorder" => $showorder, "autoactivate" => $autoactivate, "suspendproduct" => $suspendproduct, "downloads" => implode(",", $downloads), "welcomeemail" => $welcomeemail, "weight" => $weight));
+        $id = insert_query("tbladdons", array("name" => $name, "description" => html_entity_decode($description), "billingcycle" => $billingcycle, "packages" => $apppackages, "tax" => $tax, "showorder" => $showorder, "autoactivate" => $autoactivate, "suspendproduct" => $suspendproduct, "welcomeemail" => $welcomeemail, "weight" => $weight));
         $creatednew = true;
     }
     if (is_array($packages)) {
@@ -123,6 +136,7 @@ if (!$action) {
 } else {
     if ($action == "manage") {
         if ($id) {
+            $currecy = getCurrency();
             $managetitle = $aInt->lang("addons", "editaddon");
             $result = select_query_i("tbladdons", "*", array("id" => $id));
             $addondetail = mysqli_fetch_assoc($result);
@@ -140,7 +154,14 @@ if (!$action) {
                     $service[$data["id"]]['check'] = "";
                 }
             }
-            $paymentdropdown = $aInt->cyclesDropDown($addondetail['billingcycle']);
+
+            $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currecy['id'], "relid" => $id));
+            $price = array();
+            while ($data = mysqli_fetch_assoc($result2)) {
+                $price[$data['currency']] = $data;
+            }
+       
+            $aInt->assign("price", $price);
             $aInt->assign("paymentoption", $paymentoption);
             $aInt->assign("addon", $addondetail);
             $aInt->assign("service", $service);

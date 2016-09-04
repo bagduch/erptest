@@ -366,8 +366,9 @@ function getPricingInfo($pid, $inclconfigops = false, $upgrade = false, $currenc
         $pricing['cycles']['triennially'] = $pricing['triennially'];
     }
 
+    $value = $msetupfee + $monthly;
     $pricing['rawpricing'] = array("msetupfee" => format_as_currency($msetupfee), "qsetupfee" => format_as_currency($qsetupfee), "ssetupfee" => format_as_currency($ssetupfee), "asetupfee" => format_as_currency($asetupfee), "bsetupfee" => format_as_currency($bsetupfee), "tsetupfee" => format_as_currency($tsetupfee), "monthly" => format_as_currency($monthly), "quarterly" => format_as_currency($quarterly), "semiannually" => format_as_currency($semiannually), "annually" => format_as_currency($annually), "biennially" => format_as_currency($biennially), "triennially" => format_as_currency($triennially));
-    $pricing['minprice'] = array("price" => formatCurrency($minprice), "cycle" => $mincycle);
+    $pricing['minprice'] = array("price" => formatCurrency($minprice), "cycle" => $mincycle, "value" => $value);
     return $pricing;
 }
 
