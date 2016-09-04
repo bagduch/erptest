@@ -1,4 +1,34 @@
 <div class="nav navbar-nav side-nav">
+  <div><span> {$_ADMINLANG.global.advancedsearch}</span>
+    <div class="smallfont">
+      <form method="get" action="search.php">
+        <select name="type" id="searchtype" onchange="populate(this)">
+          <option value="clients">Clients </option>
+          <option value="orders">Orders </option>
+          <option value="services">Services </option>
+          <option value="domains">Domains </option>
+          <option value="invoices">Invoices </option>
+          <option value="tickets">Tickets </option>
+        </select>
+        <select name="field" id="searchfield">
+          <option>Client ID</option>
+          <option selected="selected">Client Name</option>
+          <option>Company Name</option>
+          <option>Email Address</option>
+          <option>Address 1</option>
+          <option>Address 2</option>
+          <option>City</option>
+          <option>State</option>
+          <option>Postcode</option>
+          <option>Country</option>
+          <option>Phone Number</option>
+          <option>CC Last Four</option>
+        </select>
+        <input type="text" name="q" autocomplete="off" style="width:85%;" />
+        <input type="submit" value="{$_ADMINLANG.global.search}" class="button" />
+      </form>
+    </div>
+  </div>
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -256,36 +286,6 @@
       </div>
     </div>
   </div>
-  <div> {*<img src="images/icons/search.png" alt="" width="16" height="16" class="absmiddle" />*} {$_ADMINLANG.global.advancedsearch}</span>
-    <div class="smallfont">
-      <form method="get" action="search.php">
-        <select name="type" id="searchtype" onchange="populate(this)">
-          <option value="clients">Clients </option>
-          <option value="orders">Orders </option>
-          <option value="services">Services </option>
-          <option value="domains">Domains </option>
-          <option value="invoices">Invoices </option>
-          <option value="tickets">Tickets </option>
-        </select>
-        <select name="field" id="searchfield">
-          <option>Client ID</option>
-          <option selected="selected">Client Name</option>
-          <option>Company Name</option>
-          <option>Email Address</option>
-          <option>Address 1</option>
-          <option>Address 2</option>
-          <option>City</option>
-          <option>State</option>
-          <option>Postcode</option>
-          <option>Country</option>
-          <option>Phone Number</option>
-          <option>CC Last Four</option>
-        </select>
-        <input type="text" name="q" style="width:85%;" />
-        <input type="submit" value="{$_ADMINLANG.global.search}" class="button" />
-      </form>
-    </div>
     <span><img src="images/icons/admins.png" alt="" width="16" height="16" /> {$_ADMINLANG.global.staffonline}</span>
     <div>{$adminsonline}</div>
-  </div>
 </div>
