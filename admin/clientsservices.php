@@ -43,6 +43,9 @@ if ($userid && !$id) {
 
     $query = "select * from tblcustomerservices where parent=Null AND userid=" . $userid . " limit 1";
     $result = full_query_i($query);
+    $data = mysqli_fetch_array($result);
+    $id = $data['id'];
+    error_log($id, 3, "/tmp/php_errors.log");
 }
 
 // if we can't determine a suitable product ID to show, reject
