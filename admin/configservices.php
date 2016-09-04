@@ -76,6 +76,7 @@ if ($action == "save") {
         "gid" => $_POST['gid'],
         "name" => $_POST['name'],
         'contract' => $_POST['contract'] == "on" ? 1 : 0,
+        'individual' => $_POST['isale'] == "on" ? 1 : 0,
         'etf' => $_POST['etf'],
         'term' => $_POST['term'],
         "description" => html_entity_decode($_POST['description']),
@@ -95,7 +96,7 @@ if ($action == "save") {
 
     update_query("tblservices", $array, array("id" => $id));
     foreach ($_POST['currency'] as $currency_id => $pricing) {
-        update_query("tblpricing", $pricing, array("type" => "product", "currency" => $currency_id, "relid" => $id));
+        update_query("tblpricing", $pricing, array("type" => $_POST['type'], "currency" => $currency_id, "relid" => $id));
     }
     if ($customfieldname) {
         foreach ($customfieldname as $fid => $value) {
@@ -103,12 +104,17 @@ if ($action == "save") {
         }
     }
 
-
-
-
-
+    if (isset($_POST['linkasscoiateservice'])) {
+        delete_query("tblservicetoservice", array("children_id" => $id));
+        foreach ($_POST['linkasscoiateservice'] as $key => $value) {
+            if ($value == "on") {
+                insert_query("tblservicetoservice", array("parent_id" => $key, "children_id" => $id));
+            }
+        }
+    }
+    // error_log($query, 3, "/tmp/php_errors.log");
+    delete_query("tblcustomfieldsgrouplinks", array("serviceid" => $id));
     if ($_POST['configoptionlinks']) {
-        delete_query("tblcustomfieldsgrouplinks", array("serviceid" => $id));
         foreach ($_POST['configoptionlinks'] as $row) {
             insert_query("tblcustomfieldsgrouplinks", array("cfgid" => $row, "serviceid" => $id));
         }
@@ -121,10 +127,8 @@ if ($action == "save") {
 
     delete_query("tblserviceconfiglinks", array("pid" => $id));
 
-
+    delete_query("tbladdontoservice", array("serviceid" => $id));
     if (!empty($_POST['addons'])) {
-        delete_query("tbladdontoservice", array("serviceid" => $id));
-
         foreach ($_POST['addons'] as $row) {
             insert_query("tbladdontoservice", array("serviceid" => $id, "addonid" => $row));
         }
@@ -364,41 +368,38 @@ if ($action == "") {
         "updatesort" => $aInt->lang("services", "updatesort"),
         "nogroupssetup" => $aInt->lang("services", "nogroupssetup")
     );
-
-    $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
     $servicegroup = array();
-    $service = array();
+    $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
     while ($groups = mysqli_fetch_array($result)) {
-        $servicegroup[$groups['id']] = $groups;
+        error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
+        $servicegroup[$groups['id']]['group'] = $groups;
 
-        $result = select_query_i("tblservices", "COUNT(*)", array("gid" => $groups['id']));
-        $data = mysqli_fetch_array($result);
+        $result2 = select_query_i("tblservices", "COUNT(*)", array("gid" => $groups['id']));
+        $data = mysqli_fetch_array($result2);
         $num_rows = $data[0];
         if (0 < $num_rows) {
-            $servicegroup[$groups['id']]['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
+            $servicegroup[$groups['id']]['group']['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
         } else {
-            $servicegroup[$groups['id']]['deletelink'] = "doGroupDelete('" . $groups['id'] . "')";
+            $servicegroup[$groups['id']]['group']['deletelink'] = "doGroupDelete('" . $groups['id'] . "')";
         }
 
-        $query2 = select_query_i("tblservices", "", "", "order", "DESC");
+        $query2 = select_query_i("tblservices", "", array("gid" => $groups['id']), "order", "DESC");
         while ($services = mysqli_fetch_array($query2)) {
-            $service[$services['id']] = $services;
-            $result = select_query_i("tblcustomerservices", "COUNT(*)", array("packageid" => $services['id']));
-            $data2 = mysqli_fetch_array($result);
+            $servicegroup[$groups['id']]['service'][$services['id']] = $services;
+            $result2 = select_query_i("tblcustomerservices", "COUNT(*)", array("packageid" => $services['id']));
+            $data2 = mysqli_fetch_array($result2);
             $num_rows2 = $data2[0];
             if (0 < $num_rows2) {
-                $service[$services['id']]['deletelink'] = $servicegroup[$groups['id']]['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
+                $servicegroup[$groups['id']]['service'][$services['id']]['deletelink'] = "alert('" . $aInt->lang("services", "deletegrouperror", 1) . "')";
             } else {
-                $service[$services['id']]['deletelink'] = "doDelete('" . $services['id'] . "')";
+                $servicegroup[$groups['id']]['service'][$services['id']]['deletelink'] = "doDelete('" . $services['id'] . "')";
             }
         }
     }
     $lastorder = $data['order'];
-    $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
-
-
+    // $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
+    // error_log(print_r($servicegroup, 1), 3, "/tmp/php_errors.log");
     $aInt->assign('token', generate_token());
-    $aInt->assign('service', $service);
     $aInt->assign('servicegroup', $servicegroup);
     $templatefile = 'services/view';
 } else {
@@ -475,6 +476,7 @@ if ($action == "") {
         $stockcontrol = $data['stockcontrol'];
         $contract = $data['contract'];
         $etf = $data['etf'];
+        $individual = $data['individual'];
         $term = $data['term'];
         $qty = $data['qty'];
         $proratabilling = $data['proratabilling'];
@@ -621,19 +623,35 @@ if ($action == "") {
 
             $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
         }
-        $addons = array();
-        $query = "SELECT * FROM tbladdons LEFT JOIN tbladdontoservice on tbladdons.id=tbladdontoservice.addonid";
+        $query = "select * from tblservicetoservice
+                  where children_id = " . $id;
+        $result = full_query_i($query);
+        $asscoiateid = array();
+        while ($data = mysqli_fetch_assoc($result)) {
+            $asscoiateid[] = $data['parent_id'];
+        }
+        $query2 = "select * from tblgrouptogroup";
+
+
+
+        $asscoproduct = array();
+        $query = "SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices 
+            LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id 
+            where tblservices.id!=" . $id;
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
-            $addons[$data['id']] = $data;
-            if ($data['serviceid']==$id) {
-                $addons[$data['id']]["check"] = "selected";
+            $asscoproduct[$data['groupname']][$data['id']] = $data;
+
+            if (in_array($data['id'], $asscoiateid)) {
+                $asscoproduct[$data['groupname']][$data['id']]['check'] = "checked";
             } else {
-                $addons[$data['id']]["check"] = "";
+                $asscoproduct[$data['groupname']][$data['id']]['check'] = "";
             }
         }
 
-        $aInt->assign('addons', $addons);
+        error_log(print_r($asscoproduct, 1), 3, "/tmp/php_errors.log");
+
+        $aInt->assign('asscoproduct', $asscoproduct);
 
         $templatefile = 'services/edit';
     } else {

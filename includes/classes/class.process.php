@@ -39,22 +39,33 @@ class RA_Process {
         if (!isset($this->productdata['pricing'])) {
             $this->getProductDetail();
         } else {
-            if (isset($this->productdata['pricing']['rawpricing'][$this->productdata['pricing']['minprice']['cycle']])) {
-                $this->recurring += $this->productdata['pricing']['rawpricing'][$this->productdata['pricing']['minprice']['cycle']];
-            }
-            foreach ($this->productdata['pricing']['rawpricing'] as $title => $data) {
-                if (strpos($title, 'setup') !== false) {
-                    $this->oneoff +=$data;
+            if ($this->productdata['pricing']['type'] == "onetime") {
+                $this->oneoff +=$this->productdata['pricing']['rawpricing']['monthly'] + $this->productdata['pricing']['rawpricing']['msetupfee'];
+            } else {
+                if (isset($this->productdata['pricing']['rawpricing'][$this->productdata['pricing']['minprice']['cycle']])) {
+                    $this->recurring += $this->productdata['pricing']['rawpricing'][$this->productdata['pricing']['minprice']['cycle']];
+                }
+                foreach ($this->productdata['pricing']['rawpricing'] as $title => $data) {
+                    if (strpos($title, 'setup') !== false) {
+                        $this->oneoff +=$data;
+                    }
                 }
             }
             if (!empty($this->productdata['avalialeaddons'])) {
                 foreach ($this->productdata['avalialeaddons'] as $data) {
                     if (isset($data['select'])) {
 
-                        if ($data['cycle'] == "onetime") {
-                            $this->oneoff += $data['value'];
+                        if ($data['price']['type'] == "onetime") {
+                            $this->oneoff +=$data['price']['rawpricing']['msetupfee'] + $data['price']['rawpricing']['monthly'];
                         } else {
-                            $this->recurring +=$data['value'];
+                            if (isset($data['price']['rawpricing'][$data['price']['type']])) {
+                                $this->recurring +=$data['price']['rawpricing'][$data['price']['type']];
+                            }
+                            foreach ($data['price']['rawpricing'] as $title => $datas) {
+                                if (strpos($title, 'setup') !== false) {
+                                    $this->oneoff +=$data;
+                                }
+                            }
                         }
                     }
                 }
@@ -87,11 +98,13 @@ class RA_Process {
             $data = mysqli_fetch_assoc($result);
             if (!empty($data)) {
 
+
                 $this->productdata["data"] = $data;
-                $this->productdata["avalialeaddons"] = isset($this->session['avalialeaddons']) ? $this->session['avalialeaddons'] : getAddons($data['id'], array(), $this->currecy);
+                $this->productdata["avalialeaddons"] = isset($this->session['avalialeaddons']) ? $this->session['avalialeaddons'] : $this->getAsscoiateService($data['id']);
                 $this->productdata["customefield"] = getServiceCustomFields($data['id']);
                 $this->productdata["pricing"] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
 
+                //  echo "<pre>", print_r($this->productdata["avalialeaddons"], 1), "</pre>";
                 // $_SESSION['avalialeaddons'] = $this->productdata["avalialeaddons"];
                 // $currecy = getCurrency();
             }
@@ -99,6 +112,23 @@ class RA_Process {
             $this->infobox['icon'] = "warning";
             $this->infobox['info'] = "Please Enable Your Browser Session";
         }
+    }
+
+    public function getAsscoiateService($pid) {
+
+        $addons = array();
+
+        $query = "select tblservices.* from tblservicetoservice LEFT JOIN tblservices on tblservicetoservice.children_id=tblservices.id where tblservicetoservice.parent_id=" . $pid;
+        // echo $query;
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+            $addons[$data['id']] = $data;
+            $addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
+            $addons[$data['id']]['customefield'] = getServiceCustomFields($data['id']);
+            $addons[$data['id']]['checkbox'] = "<button class=\"btn btn-default btn-circle\" id=\"a" . $data['id'] . "\" data-addon=\"" . $data['id'] . "\"> <i class=\"\"></i></button>";
+            $addons[$data['id']]['select'] = 0;
+        }
+        return $addons;
     }
 
     public function draftOrder() {
@@ -168,23 +198,27 @@ class RA_Process {
         if (!empty($this->productdata)) {
             foreach ($this->productdata['avalialeaddons'] as $data) {
                 if ($data['select']) {
+
+                    $hostingquerydates = date("Y-m-d");
                     $insertdata = array(
-                        "orderid" => $this->session['orderid'],
-                        "serviceid" => $this->session['serviceid'],
-                        "addonid" => $data['id'],
-                        "name" => $data['name'],
-                        "setupfee" => $data['cycle'] == "onetime" ? $data['value'] : 0,
-                        "recurring" => $data['cycle'] == "monthly" ? $data['value'] : 0,
-                        "billingcycle" => $data['cycle'],
-                        "tax" => 0,
-                        "status" => "Pending",
+                        "userid" => $this->session['uid'],
+                        "orderid" => $_SESSION['orderid'],
+                        "packageid" => $data['id'],
                         "regdate" => "now()",
-                        "nextduedate" => "now()",
-                        "nextinvoicedate" => "now()",
-                        "paymentmethod" => ""
+                        "description" => "",
+                        "paymentmethod" => "banktransfer",
+                        "firstpaymentamount" => $data['price']["rawpricing"]["msetupfee"] + $data['price']["rawpricing"]["monthly"],
+                        "amount" => $data['price']['type'] == "recurring" ? $data['price']["rawpricing"]["monthly"] : 0,
+                        "billingcycle" => $data['price']['type'],
+                        "nextduedate" => $hostingquerydates,
+                        "nextinvoicedate" => $hostingquerydates,
+                        "servicestatus" => "Pending",
+                        "lastupdate" => "now",
+                        "notes" => "",
+                        "parent" => $_SESSION['serviceid']
                     );
 
-                    $success_id = insert_query("tblserviceaddons", $insertdata);
+                    $success_id = insert_query("tblcustomerservices", $insertdata);
                 }
             }
         }
@@ -194,7 +228,7 @@ class RA_Process {
     public function finishorder($data) {
         $this->pendingOrder();
         if ($this->insertAddon() && $this->insertCustomefields($data)) {
-            echo "<pre>", print_r($_SESSION, 1), "</pre>";
+            // echo "<pre>", print_r($_SESSION, 1), "</pre>";
             unset($_SESSION['avalialeaddons']);
             $this->step = 3;
         }

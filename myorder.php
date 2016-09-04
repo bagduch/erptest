@@ -88,20 +88,19 @@ $nowrapper = false;
 
 if ($_SESSION['address']) {
     $process = new RA_Process($_SESSION);
+    // echo "<pre>",  print_r($process,1),"</pre>";
+
+  //  error_log(print_r($process, 1), 3, "/tmp/php_errors.log");
     if ($ajax) {
         if ($addonid) {
-            if ($action == "add") {
-                $currecy = getCurrency();
+            if ($actions == "add") {
                 $templatefile = "cart/addons";
                 $process->addonAdd($addonid);
-                //   $smartyvalues['addons'] = getAddonDetail($addonid, $currecy);
                 $smartyvalues['addons'] = $_SESSION['avalialeaddons'][$addonid];
-                //  echo "<pre>",print_r($process->productdata,1),"</pre>";
-                //  echo "<pre>", print_r($_SESSION, 1), "</pre>";
                 outputClientArea($templatefile, true);
                 exit();
             }
-            if ($action == "remove") {
+            if ($actions == "remove") {
                 $process->removeAdd($addonid);
                 exit();
             }
