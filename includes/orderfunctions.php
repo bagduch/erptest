@@ -757,7 +757,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         "userid" => $userid,
                         "orderid" => $orderid,
                         "packageid" => $pid,
-                        "server" => $serverid,
+//                        "server" => $serverid,
                         "regdate" => "now()",
                         "description" => $description,
                         "paymentmethod" => $paymentmethod,
@@ -766,8 +766,8 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         "billingcycle" => $databasecycle,
                         "nextduedate" => $hostingquerydates,
                         "nextinvoicedate" => $hostingquerydates,
-                        "servicestatus" => "Pending",
-                        "password" => $serverrootpw
+                        "servicestatus" => "Pending"
+//                        "password" => $serverrootpw
                             )
                     );
                     $multiqtyids[$qtycount] = $serviceid;
@@ -1550,24 +1550,6 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         }
 
 
-        if ($_SESSION['cart']['ns1'] && $_SESSION['cart']['ns1']) {
-            $ordernameservers = $_SESSION['cart']['ns1'] . "," . $_SESSION['cart']['ns2'];
-
-            if ($_SESSION['cart']['ns3']) {
-                $ordernameservers .= "," . $_SESSION['cart']['ns3'];
-            }
-
-
-            if ($_SESSION['cart']['ns4']) {
-                $ordernameservers .= "," . $_SESSION['cart']['ns4'];
-            }
-
-
-            if ($_SESSION['cart']['ns5']) {
-                $ordernameservers .= "," . $_SESSION['cart']['ns5'];
-            }
-        }
-
         $descriptioneppcodes = (count($descriptioneppcodes) ? serialize($descriptioneppcodes) : "");
         $orderdata = array();
 
@@ -1577,10 +1559,14 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             }
         }
 
-        update_query("tblorders", array("amount" => $cart_total, "nameservers" => $ordernameservers, "transfersecret" => $descriptioneppcodes, "renewals" => substr($orderrenewals, 0, 0 - 1), "orderdata" => serialize($orderdata)), array("id" => $orderid));
+        update_query(
+            "tblorders", 
+            array(
+                "amount" => $cart_total
+            ), 
+            array("id" => $orderid));
         $invoiceid = 0;
 
-        mail("peter@hd.net.nz", 'invoice', print_r($_SESSION['cart'], 1));
         if (!$_SESSION['cart']['geninvoicedisabled']) {
             if (!$userid) {
                 exit("An Error Occurred");

@@ -241,7 +241,7 @@ function insert_query($table, $array) {
         }
 
         if (($value === "NULL") || $value == "" || is_null($value)) {
-            $fieldvaluelist .= "'',";
+            $fieldvaluelist .= "NULL,";
             continue;
         }
 

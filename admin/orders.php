@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
 define("ADMINAREA", true);
 require "../init.php";
