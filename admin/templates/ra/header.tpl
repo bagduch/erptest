@@ -4,18 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{$pagetitle}</title>
-<link rel="stylesheet" type="text/css" href="templates/{$template}/bootstrap/css/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="templates/{$template}/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="templates/{$template}/css/main.css" />
-<!-- disabled for testing -->
-<link rel="stylesheet" type="text/css" href="templates/{$template}/css/oldwhmcs.css" /> 
+
+<!-- http://getbootstrap.com/getting-started/ -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="templates/{$template}/css/main.css" /> 
 
 <script type="text/javascript" src="templates/{$template}/js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="templates/{$template}/js/all-min.js"></script>
-<script type="text/javascript" src="templates/{$template}/bootstrap/js/bootstrap.min.js"></script>
-<!-- DEMO GRAPH DATA -->
-<script type="text/javascript" src="templates/{$template}/js/testdata.js"></script>
-<!-- DEMO END -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
 
