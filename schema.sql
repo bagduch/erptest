@@ -1099,7 +1099,7 @@ CREATE TABLE `tblnotes` (
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `note` text NOT NULL,
-  `sticky` int(1) NOT NULL,
+  `sticky` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   KEY `adminid` (`adminid`),
