@@ -371,7 +371,7 @@ if ($action == "") {
     $servicegroup = array();
     $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
     while ($groups = mysqli_fetch_array($result)) {
-        error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
+       // error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
         $servicegroup[$groups['id']]['group'] = $groups;
 
         $result2 = select_query_i("tblservices", "COUNT(*)", array("gid" => $groups['id']));

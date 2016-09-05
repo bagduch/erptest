@@ -1,6 +1,6 @@
 
 <div style="float:left;width:100%;">
-
+    {debug}
     <div id="servicecontent">
         {$content}
         <table>
@@ -38,7 +38,59 @@
         <br>
         <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
             <input type="hidden" name="__fpfrm1" value="1">
-            {$ordertable}
+            <div class="row">
+                <div class="col-xs-6">
+                    <table>
+                        <tr>
+                            <td><label for="orderid">Order #</label></td>
+                            <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
+                        </tr>
+                        <tr>
+                            <td><label for="orderid">Service</label></td>
+                            <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
+                        </tr>
+                        <tr></tr>
+                    </table>
+                </div>
+                <div class="col-xs-6">
+                    <table>
+                        <tr>
+                            <td><label for="#regdate">Registration Date</label></td>
+                            <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#firstpaymentamount">First Payment Amount</label></td>
+                            <td><input id="firstpaymentamount" type="text" class="form-control" value="{$services.firstpaymentamount}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#firstpaymentamount">Recurring Amount</label></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#nextduedate">Next Due Date</label></td>
+                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control" value="{$services.nextduedate}"></td>
+
+                        </tr>
+                        <tr>
+                            <td><label for="#amount">Billing Cycle</label></td>
+                            <td><input id="amount" name="amount" type="text" class="form-control" value="{$services.amount}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#paymentmethod">Payment Method</label></td>
+                            <td><input id="paymentmethod" name="paymentmethod" type="text" class="form-control" value="{$services.paymentmethod}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#firstpaymentamount">Promotion Code</label></td>
+                            <td><input class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="#firstpaymentamount">Subscription ID</label></td>
+                            <td><input class="form-control"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
             <br>
             <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"><br>
                 <a href="#" onclick="showDialog('delete');" style="color:#cc0000"><strong>Delete</strong></a></div></form>
