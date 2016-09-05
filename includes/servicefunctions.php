@@ -34,7 +34,7 @@ function getServiceData($id = NULL) {
     WHERE tblcustomerservices.id=" . (int) $id
             . " AND tblservicegroups.type='service'";
 
-   
+    
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
    // echo "<pre>".print_r($service_data, 1)."</pre>";
