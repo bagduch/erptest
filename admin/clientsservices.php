@@ -25,11 +25,15 @@ $modop = $ra->get_req_var("modop");
 if ($modop) {
     checkPermission("Perform Server Operations");
 }
+$clientdata = new RA_ClientService($userid,$id);
+
+
 
 // if neither userid nor id are defined after that, I guess we just take the very first service?
 if (!$userid && !$id) {
     $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
 }
+
 
 // if only userid is supplied, then validate
 if ($userid && !$id) {
@@ -37,26 +41,12 @@ if ($userid && !$id) {
     if (!$userid) {
         $aInt->gracefulExit("Invalid User ID");
     }
-    // and supply first available service
-    $query = "select * from tblcustomerservices where parent is null AND userid=" . $userid . " limit 1";
-    $result = full_query_i($query);
-    echo print_r($result->num_rows);
-    $data = mysqli_fetch_array($result);
-    $id = $data['id'];
+    
 }
 
-// if we can't determine a suitable product ID to show, reject
-if (!$id) {
-    //$aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
-    $aInt->gracefulExit("<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>", $aInt->lang("services", "noproductsinfo"), $userid, $aInt->lang("global", "clickhere"), $aInt->lang("orders", "toplacenew"));
-}
-$service_data = getServiceData($id);
-$id = $service_data['id'];
-if (!$id) {
-    $aInt->gracefulExit("Service ID Not Found");
-}
-$userid = $service_data['userid'];
-$aInt->valUserID($userid);
+
+
+//echo "<pre>", print_r($clientdata->servicedata, 1), "</pre>";
 $frm = new RA_Form();
 
 if ($frm->issubmitted()) {
@@ -266,6 +256,7 @@ if ($ra->get_req_var("ajaxupdate")) {
 }
 
 
+//$aInt->gracefulExit($clientdata->inforbox);
 $aInt->assign('test', $updatearr);
 $aInt->assign('lang', $lang);
 $aInt->assign('emaildropdown', $emailarr);
@@ -273,6 +264,7 @@ $aInt->assign('userid', $userid);
 $aInt->assign('contentbox', $contentbox);
 $aInt->assign('ordertable', $ordertable);
 $aInt->assign('content', $content);
+$aInt->assign("services", $clientdata->servicedata);
 
 $aInt->template = "clientsservices/view";
 $aInt->display();
