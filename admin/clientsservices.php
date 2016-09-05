@@ -225,8 +225,6 @@ while ($data = mysqli_fetch_assoc($result)) {
 
 
 
-
-
 $aInt->assign('id', $id);
 $aInt->assign('servicesarr', $servicesarr);
 
@@ -235,53 +233,6 @@ if ($cancelid) {
     if (!$infobox) {
         infoBox($aInt->lang("services", "cancrequest"), $aInt->lang("services", "cancrequestinfo") . "<br />" . $_ADMINLANG['fields']['reason'] . ": " . $autoterminatereason);
     }
-}
-
-
-if ($lastupdate && $lastupdate != "0000-00-00 00:00:00") {
-
-    $lang = array(
-        'diskusage' => $aInt->lang("services", "diskusage"),
-        'mb' => $aInt->lang("fields", "mb"),
-        'disklimit' => $aInt->lang("services", "disklimit"),
-        'bwusage' => $aInt->lang("services", "bwusage"),
-        'used' => $aInt->lang("services", "used"),
-        'unlimited' => $aInt->lang("global", "unlimited"),
-        'lastupdated' => $aInt->lang("services", "lastupdated"),
-    );
-
-    $contentbox = array(
-        'diskusage' => $diskusage,
-        'diskusage_p' => round($diskusage / $disklimit * 100, 0),
-        'disklimit' => $disklimit,
-        'bwusage' => $bwusage,
-        'bwusage_p' => round($bwusage / $bwlimit * 100, 0),
-        'bwlimit' => $bwlimit,
-        'lastupdate' => fromMySQLDate($lastupdate, "time")
-    );
-
-
-//    echo "<div class=\"contentbox\">
-//<strong>" . $aInt->lang("services", "diskusage") . ":</strong> " . $diskusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "disklimit") . ":</strong> " . $disklimit . " " . $aInt->lang("fields", "mb") . ", ";
-
-    if ($diskusage == $aInt->lang("global", "unlimited") || $disklimit == $aInt->lang("global", "unlimited")) {
-        
-    } else {
-//        echo "<strong>" . round($diskusage / $disklimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong> :: ";
-    }
-
-//    echo "<strong>" . $aInt->lang("services", "bwusage") . ":</strong> " . $bwusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "bwlimit") . ":</strong> " . $bwlimit . " " . $aInt->lang("fields", "mb") . ", ";
-
-    if ($bwusage == $aInt->lang("global", "unlimited") || $bwlimit == $aInt->lang("global", "unlimited")) {
-        
-    } else {
-//        echo "<strong>" . round($bwusage / $bwlimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong><br>";
-    }
-
-//    echo "<small>(" . $aInt->lang("services", "lastupdated") . ": " . fromMySQLDate($lastupdate, "time") . ")</small>
-//</div>
-//<br />
-//";
 }
 
 

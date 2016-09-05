@@ -406,7 +406,7 @@ $(document).ready(function(){
     });
 });
 </script>{/literal}
-
+<div class="clientsservices col-lg-12">
   <div class="panel panel-primary">
       <div class="panel-heading"><div class="panel-title">{$_ADMINLANG.services.title}</div></div>
       <div class="sui-grid sui-grid-core">
@@ -444,12 +444,17 @@ $(document).ready(function(){
           </table>
         </div>
     </div>
+    </div>
   </div>
   <div class="row">
-      <div>{$_ADMINLANG.products.title}</div>
-      <div>
-        <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
-          <tr>
+<div class="clientsproducts col-lg-12">
+<div class="panel panel-primary">
+      <div class="panel-heading"><div class="panel-title">{$_ADMINLANG.products.title}</div></div>
+      <div class="panel-body">
+      <div class="sui-grid sui-grid-core">
+        <table class="sui-table sui-hover sui-selectable">
+        <thead>
+          <tr class="sui-columnheader">
             <th width="20"><input type="checkbox" id="addonsall" /></th>
             <th>ID</th>
             <th>{$_ADMINLANG.addons.name}</th>
@@ -460,6 +465,7 @@ $(document).ready(function(){
             <th>{$_ADMINLANG.fields.status}</th>
             <th width="20"></th>
           </tr>
+        </thrad>
           {foreach key=num from=$productssummary item=addon}
           <tr>
             <td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
@@ -482,11 +488,13 @@ $(document).ready(function(){
         </div>
     </div>
   </div>
+</div>
   <img src="images/spacer.gif" width="1" height="4" /><br />
     </div>
   
     </div>
     </div>
+</div>
 </div>
 <p align="center">
   <input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" />

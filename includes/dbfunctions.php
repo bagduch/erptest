@@ -230,13 +230,20 @@ function insert_query($table, $array) {
     global $mysqli_errors;
     global $ramysqli;
 
+    error_log(print_r($array,1));
+
     $fieldnamelist = $fieldvaluelist = "";
     $query = "INSERT INTO " . db_make_safe_field($table) . " ";
     foreach ($array as $key => $value) {
         $fieldnamelist .= db_build_quoted_field($key) . ",";
 
         if ($value === "now()") {
-            $fieldvaluelist .= "'" . date("YmdHis") . "',";
+            $fieldvaluelist .= "NOW(),";
+            continue;
+        }
+
+        if (is_int($value)) { 
+            $fieldvaluelist .= intval($value).",";
             continue;
         }
 
@@ -247,13 +254,13 @@ function insert_query($table, $array) {
 
 
         $fieldvaluelist .= "'" . db_escape_string($value) . "',";
-    }
+        }
+
 
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-    //mail("waikatozhang@gmail.com", "peter", $query);
-    // error_log($query, 3, "/tmp/php_errors.log");
+    error_log($query.'\n', 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging
