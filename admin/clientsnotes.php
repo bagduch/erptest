@@ -24,11 +24,26 @@ $aInt = new RA_Admin($reqperm);
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 $id = (int)$id;
+if (intval($sticky) > 0) {
+    $sticky = 1;
+} else {
+    $sticky = 0;
+}
 
 if ($sub == "add") {
 	check_token("RA.admin.default");
 	checkPermission("Add/Edit Client Notes");
-	insert_query("tblnotes", array("userid" => $userid, "adminid" => $_SESSION['adminid'], "created" => "now()", "modified" => "now()", "note" => $note, "sticky" => $sticky));
+    insert_query(
+        "tblnotes", 
+        array(
+            "userid" => $userid, 
+            "adminid" => $_SESSION['adminid'], 
+            "created" => "now()", 
+            "modified" => "now()", 
+            "note" => "TEST ".$note, 
+            "sticky" => $sticky
+        )
+    );
 	logActivity("Added Note - User ID: " . $userid);
 	redir("userid=" . $userid);
 	exit();
@@ -37,7 +52,17 @@ else {
 	if ($sub == "save") {
 		check_token("RA.admin.default");
 		checkPermission("Add/Edit Client Notes");
-		update_query("tblnotes", array("note" => $note, "sticky" => $sticky, "modified" => "now()"), array("id" => $id));
+        update_query(
+            "tblnotes", 
+            array(
+                "note" => $note, 
+                "sticky" => $sticky, 
+                "modified" => "now()"
+            ), 
+            array(
+                "id" => $id
+            )
+        );
 		logActivity("Updated Note - User ID: " . $userid . " - ID: " . $id);
 		redir("userid=" . $userid);
 		exit();
@@ -90,36 +115,27 @@ echo "
 if ($action == "edit") {
 	$notesdata = get_query_vals("tblnotes", "note, sticky", array("userid" => $userid, "id" => $id));
 	$note = $notesdata['note'];
-	$importantnote = ($notesdata['sticky'] ? " checked" : "");
-	echo "<form method=\"post\" action=\"";
-	echo $PHP_SELF;
-	echo "?userid=";
-	echo $userid;
-	echo "&sub=save&id=";
-	echo $id;
-	echo "\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\" style=\"width:99%;\">";
-	echo $note;
-	echo "</textarea></td><td align=\"center\" width=\"60\"><input type=\"submit\" value=\"";
-	echo $aInt->lang("global", "savechanges");
-	echo "\" class=\"button\"><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
+    $importantnote = ($notesdata['sticky'] ? " checked" : "");
+    sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=save&id=%s\">",
+        $PHP_SELF,
+        $userid,
+        $id
+    );
+    echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+    echo "<tr><td class=\"fieldarea\">";
+    sprintf("<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\">%s</textarea>",$note);
+    echo "</td><td align=\"center\" width=\"60\">";
+    sprintf("<input type=\"submit\" value=\"%s\" class=\"button\">",$aInt->lang("global", "savechanges"));
+	echo "<br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
 	echo $importantnote;
 	echo " /> ";
 	echo $aInt->lang("clientsummary", "stickynotescheck");
-	echo "</label></td></tr>
-</table>
-</form>
-";
+	echo "</label></td></tr></table></form>";
 }
 else {
-	echo "<form method=\"post\" action=\"";
-	echo $PHP_SELF;
-	echo "?userid=";
-	echo $userid;
-	echo "&sub=add\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\" style=\"width:99%;\"></textarea></td><td align=\"center\" width=\"60\"><input type=\"submit\" value=\"";
+    sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=add\">",$PHP_SELF,$userid);
+echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
+<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\"></textarea></td><td align=\"center\" width=\"60\"><input type=\"submit\" value=\"";
 	echo $aInt->lang("global", "addnew");
 	echo "\" class=\"button\" /><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\" /> ";
 	echo $aInt->lang("clientsummary", "stickynotescheck");
