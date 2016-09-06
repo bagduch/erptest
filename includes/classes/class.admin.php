@@ -239,7 +239,7 @@ class RA_Admin {
 
     public function productStatusDropDown($status, $anyop = false, $name = "status", $id = "") {
         $statuses = array("Pending", "Active", "Suspended", "Terminated", "Cancelled", "Fraud");
-        $code = "<select name=\"" . $name . "\"" . ($id ? " id=\"" . $id . "\"" : "") . ">";
+        $code = "<select class=\"form-control\" name=\"" . $name . "\"" . ($id ? " id=\"" . $id . "\"" : "") . ">";
 
         if ($anyop) {
             $code .= "<option value=\"\">" . $this->lang("global", "any") . "</option>";
@@ -1078,7 +1078,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             $onchange = "onchange=\"" . $onchange . "\"";
         }
 
-        $code = "<select name=\"" . $name . "\"" . $onchange . ">";
+        $code = "<select class=\"form-control\" name=\"" . $name . "\"" . $onchange . ">";
 
         if ($any) {
             $code .= "<option value=\"\">" . $this->lang("global", "any") . "</option>";

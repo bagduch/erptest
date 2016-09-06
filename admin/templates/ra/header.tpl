@@ -7,9 +7,13 @@
 
 <!-- http://getbootstrap.com/getting-started/ -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="templates/{$template}/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="templates/{$template}/css/main.css" /> 
+<link rel="stylesheet" type="text/css" href="templates/{$template}/css/style.css" /> 
+<link rel="stylesheet" type="text/css" href="templates/{$template}/calander/css/bootstrap-datepicker.css" />
 
 <script type="text/javascript" src="templates/{$template}/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="templates/{$template}/calander/js/bootstrap-datepicker.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>

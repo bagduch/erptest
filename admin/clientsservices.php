@@ -25,7 +25,7 @@ $modop = $ra->get_req_var("modop");
 if ($modop) {
     checkPermission("Perform Server Operations");
 }
-$clientdata = new RA_ClientService($userid,$id);
+$clientdata = new RA_ClientService($userid, $id);
 
 
 
@@ -41,7 +41,6 @@ if ($userid && !$id) {
     if (!$userid) {
         $aInt->gracefulExit("Invalid User ID");
     }
-    
 }
 
 
@@ -265,7 +264,12 @@ $aInt->assign('contentbox', $contentbox);
 $aInt->assign('ordertable', $ordertable);
 $aInt->assign('content', $content);
 $aInt->assign("services", $clientdata->servicedata);
-
+$aInt->assign("status", $aInt->productStatusDropDown($clientdata->servicedata['servicestatus']));
+$aInt->assign("promo", $clientdata->getPromocode());
+$aInt->assign("servicefield", getServiceCustomFields($clientdata->servicedata['packageid'],$clientdata->servicedata['id']));
+$aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
+$aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
+$aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));
 $aInt->template = "clientsservices/view";
 $aInt->display();
 ?>

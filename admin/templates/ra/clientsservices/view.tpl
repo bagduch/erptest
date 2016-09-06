@@ -1,6 +1,6 @@
 
+{debug}
 <div style="float:left;width:100%;">
-    {debug}
     <div id="servicecontent">
         {$content}
         <table>
@@ -33,61 +33,159 @@
         <div id="modcmdresult" style="display:none;"></div>
         <img src="images/spacer.gif" height="10" width="1"><br>
         <div class="contentbox">
-            <strong>{$lang.diskusage}: {$contentbox.diskusage}</strong>  {$lang.mb}, <strong>{$lang.disklimit}:</strong> {$contentbox.disklimit} {$lang.mb}, <strong>{$contentbox.diskusage}{$diskusage_p}% {$lang.used}</strong><strong>{$lang.bwusage}:</strong>{$contentbox.bwusage} {$lang.mb}, <strong>{$contentbox.bwlimit}:</strong> {$contentbox.bwlimit} {$lang.mb}, <strong>{$contentbox.bwusage_p}% {$lang.used}</strong><br><small>({$lang.lastupdated}: {$contentbox.lastupdate})</small>
+            {*            <strong>{$lang.diskusage}: {$contentbox.diskusage}</strong>  {$lang.mb}, <strong>{$lang.disklimit}:</strong> {$contentbox.disklimit} {$lang.mb}, <strong>{$contentbox.diskusage}{$diskusage_p}% {$lang.used}</strong><strong>{$lang.bwusage}:</strong>{$contentbox.bwusage} {$lang.mb}, <strong>{$contentbox.bwlimit}:</strong> {$contentbox.bwlimit} {$lang.mb}, <strong>{$contentbox.bwusage_p}% {$lang.used}</strong><br><small>({$lang.lastupdated}: {$contentbox.lastupdate})</small>*}
         </div>
         <br>
         <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
             <input type="hidden" name="__fpfrm1" value="1">
-            <div class="row">
-                <div class="col-xs-6">
-                    <table>
-                        <tr>
-                            <td><label for="orderid">Order #</label></td>
-                            <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
-                        </tr>
-                        <tr>
-                            <td><label for="orderid">Service</label></td>
-                            <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
-                        </tr>
-                        <tr></tr>
-                    </table>
-                </div>
-                <div class="col-xs-6">
-                    <table>
-                        <tr>
-                            <td><label for="#regdate">Registration Date</label></td>
-                            <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#firstpaymentamount">First Payment Amount</label></td>
-                            <td><input id="firstpaymentamount" type="text" class="form-control" value="{$services.firstpaymentamount}"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#firstpaymentamount">Recurring Amount</label></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#nextduedate">Next Due Date</label></td>
-                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control" value="{$services.nextduedate}"></td>
+            <div class="row" style="padding:15px">
+                <div class="panel panel-info">
+                    <div class="panel-heading"><h4 class="panel-title">Order Details</h4></div>
+                    <div class="panel-body">
 
-                        </tr>
-                        <tr>
-                            <td><label for="#amount">Billing Cycle</label></td>
-                            <td><input id="amount" name="amount" type="text" class="form-control" value="{$services.amount}"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#paymentmethod">Payment Method</label></td>
-                            <td><input id="paymentmethod" name="paymentmethod" type="text" class="form-control" value="{$services.paymentmethod}"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#firstpaymentamount">Promotion Code</label></td>
-                            <td><input class="form-control"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="#firstpaymentamount">Subscription ID</label></td>
-                            <td><input class="form-control"></td>
-                        </tr>
-                    </table>
+                        <div class="col-xs-6">
+                            <table>
+                                <tr>
+                                    <td><label for="orderid">Order #</label></td>
+                                    <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="orderid">Service</label></td>
+                                    <td>
+                                        <select class="form-control">
+                                            {$servicedrop}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#description">Description (Address)</label></td>
+                                    <td><input id="description" name="description" type="text" class="form-control" value="{$services.description}"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#status">Order Status</label></td>
+                                    <td>{$status}</td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#promocode">Promotion Code</label></td>
+                                    <td>
+                                        <select class="form-control" id="promocode" name="promocode">
+
+                                            <option value="">None</option>
+                                            {if $promo}
+                                                {foreach from=$promo key=promoid item=row}
+                                                    <option value="{$promoid}">{$row}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#firstpaymentamount">Subscription ID</label></td>
+                                    <td><input class="form-control"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-6">
+                            <table>
+                                <tr>
+                                    <td><label for="#regdate">Registration Date</label></td>
+                                    <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#firstpaymentamount">First Payment Amount</label></td>
+                                    <td><input id="firstpaymentamount" type="text" class="form-control" value="{$services.firstpaymentamount}"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#firstpaymentamount">Recurring Amount</label></td>
+                                    <td><input id="amount" name="amount" type="text" class="form-control" value="{$services.amount}"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#nextduedate">Next Due Date</label></td>
+                                    <td><input id="nextduedate" name="nextduedate" type="text" class="form-control" value="{$services.nextduedate}"></td>
+
+                                </tr>
+                                <tr>
+                                    <td><label for="#amount">Billing Cycle</label></td>
+                                    <td>{$billingcycle}</td>
+                                </tr>
+                                <tr>
+                                    <td><label for="#paymentmethod">Payment Method</label></td>
+                                    <td>{$paymentmethod}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row" style="padding:15px">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><h4 class="panel-title">Customer Fields</h4></div>
+                    <div class="panel-body">
+
+                        <div class="customefield">
+                            {if $servicefield}
+                                <table>
+                                    {foreach from=$servicefield key=fieldid item=fields}
+                                        {if $fields.fieldtype eq "text"}
+                                            <tr>
+                                                <td><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
+                                            </tr>                  
+                                        {elseif $fields.fieldtype eq "date"}
+                                            <tr>
+                                                <td><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                <td><input class="form-control datecontroller" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
+                                            </tr>
+                                        {elseif $fields.fieldtype eq "more"}
+                                            {foreach from=$fields.children item=childrenfield}
+                                                <tr>
+                                                    <td><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
+                                                    <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
+                                                </tr>
+                                            {/foreach}
+                                        {else}
+                                        {/if}
+                                    {/foreach}
+                                </table>   
+                            {/if}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row" style="padding:15px">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Addon Services/Product</h4>
+                    </div>
+                    <div class="panel-body">
+                        {if isset($services.addon)}
+                            <table class="datatable" style="width:100%">
+                                <tr>
+                                    <th>Reg Date</th>
+                                    <th>Name</th>
+                                    <th>First Payment</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Billing Cycle</th>
+                                </tr>
+                                {foreach from=$services.addon item=addons}
+                                    <tr>
+                                        <td>{$addons.regdate}</td>
+                                        <td>{$addons.name}</td>
+                                        <td>{$addons.firstpaymentamount}</td>
+                                        <td>{$addons.amount}</td>
+                                        <td>{$addons.servicestatus}</td>
+                                        <td>{$addons.billingcycle}</td>
+                                    </tr>
+                                {/foreach}
+                            </table>
+                        {/if}
+                    </div>
                 </div>
             </div>
 
@@ -143,6 +241,13 @@
 
 {literal}
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.datecontroller').datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: '+1d'
+            });
+        });
         function doDeleteAddon(id) {
             if (confirm("Are you sure you want to delete this addon?")) {
                 window.location = '/admin/clientsservices.php?userid=1&id=35&action=deladdon&aid=' + id + '&token=0951db7664024f53758d62b7cb94336b96566473';
