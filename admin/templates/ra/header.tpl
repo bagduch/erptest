@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="templates/{$template}/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="templates/{$template}/css/main.css" /> 
-<link rel="stylesheet" type="text/css" href="templates/{$template}/css/style.css" /> 
 <link rel="stylesheet" type="text/css" href="templates/{$template}/calendar/css/bootstrap-datepicker.css" />
 
 <script type="text/javascript" src="templates/{$template}/js/jquery-1.10.2.min.js"></script>
@@ -22,7 +21,12 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-    <a class="navbar-brand" href="index.php"></a><img src="templates/{$template}/images/ui-logodpi.png" width="350" height="92" alt="{$pagetitle}"/></div>
+{*
+temporarily commented out due to interfering with layout - guy@hd.net.nz 2016-09-06
+    <a class="navbar-brand" href="index.php"></a><img src="templates/{$template}/images/ui-logodpi.png" width="350" height="92" alt="{$pagetitle}"/>
+*}
+</div>
+
   <div class="collapse navbar-collapse navbar-ex1-collapse">
  <!-- SIDEBAR -->
   {include file="$template/sidebar.tpl"}
@@ -52,7 +56,6 @@
     </ul>
   </div>
 </nav>
-
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">

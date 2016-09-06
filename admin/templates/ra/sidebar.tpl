@@ -97,9 +97,9 @@ $this->assign('accordion', $accordion);
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{$sectionname}">
-          <span class="glyphicon glyphicon-{$section.glyphicon}">
-              {$section.name}
-          </span>
+          <span class="glyphicon glyphicon-{$section.glyphicon}"></span>
+          {$section.name}
+        </span>
         </a>
       </h4>
     </div>
@@ -120,11 +120,10 @@ $this->assign('accordion', $accordion);
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <span class="glyphicon glyphicon-{$section.glyphicon}">
-            <a href="{$section.url}">
-              {$section.name}
-            </a>
-          </span>
+          <span class="glyphicon glyphicon-{$section.glyphicon}"></span>
+          <a href="{$section.url}">
+            {$section.name}
+          </a>
         </h4>
       </div>
     </div>
