@@ -84,7 +84,16 @@ $ra->loadLanguage();
 
 if (defined("CLIENTAREA") && $CONFIG['SystemSSLURL']) {
     $files = array("aff.php", "clientarea.php", "supporttickets.php", "contact.php", "passwordreminder.php", "login.php", "logout.php", "affiliates.php", "submitticket.php", "viewemail.php", "viewinvoice.php", "viewticket.php", "creditcard.php", "register.php", "upgrade.php", "cart.php", "configuressl.php", "domainchecker.php", "networkissues.php", "serverstatus.php", "pwreset.php");
-    $nonsslfiles = array("announcements.php", "banned.php", "contact.php", "downloads.php", "index.php", "tutorials.php", "whois.php", "knowledgebase.php");
+    $nonsslfiles = array(
+        "announcements.php", 
+        "banned.php", 
+        "contact.php", 
+        "downloads.php", 
+        "index.php", 
+        "tutorials.php", 
+        "whois.php", 
+        "knowledgebase.php"
+    );
 
     if (!defined("RAWWW1")) {
         $nonsslfiles[] = "dl.php";
