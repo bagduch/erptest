@@ -208,9 +208,9 @@ class RA_Init {
         $cleandata = array();
 
         if (is_array($arr)) {
-            if (isset($arr['sqltype'])) {
-                continue;
-            }
+//            if (isset($arr['sqltype'])) {
+                //                continue;
+//            }
 
             foreach ($arr as $key => $val) {
 
