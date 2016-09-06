@@ -415,7 +415,6 @@ class RA_Admin {
             if (!$disable_admin_ticket_page_counts) {
                 $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
                 $data = mysqli_fetch_array($result);
-                echo "<pre class=test>" . print_r($data, 1) . "</pre>";
                 $flaggedtickets = $data[0];
                 $flaggedticketschecked = true;
             }

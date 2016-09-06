@@ -4,31 +4,29 @@ define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
 
-if ($action == "viewticket") {
+
+
+if ($action == "viewticket") { // view specific ticket
     $reqperm = "View Support Ticket";
-} else {
-    if ($action == "openticket" || $action == "open") {
-        $reqperm = "Open New Ticket";
-    } else {
-        $reqperm = "List Support Tickets";
-    }
-}
-
-
-if (!$action) {
-    $aInt = new RA_Admin($reqperm, false);
-} else {
     $aInt = new RA_Admin($reqperm);
+} elseif ($action == "openticket" || $action == "open") { // open new ticket
+    $reqperm = "Open New Ticket";
+    $icon = "ticketsopen";
+    $aInt = new RA_Admin($reqperm);
+} elseif ((!$action) && (!$sub)) { // just show a list of tickets
+    $action = "list";
+    $reqperm = "List Support Tickets";
+    $aInt = new RA_Admin($reqperm, false);
+}  else {
+    $reqperm = "List Support Tickets";
+    $aInt = new RA_Admin($reqperm, false);
 }
 
-
-if ($action == "open" || $action == "openticket") {
-    $icon = "ticketsopen";
-    $title = $aInt->lang("support", "opennewticket");
-} else {
+if ($action != "open" && $action != "openticket") {
     $icon = "tickets";
     $title = $aInt->lang("support", "supporttickets");
 }
+    $title = $aInt->lang("support", "opennewticket");
 
 $aInt->title = $title;
 $aInt->sidebar = "support";
@@ -36,12 +34,15 @@ $aInt->icon = $icon;
 $aInt->helplink = "Support Tickets";
 $aInt->requiredFiles(array("ticketfunctions", "modulefunctions", "customfieldfunctions"));
 $filt = new RA_Filter("tickets");
+
+ob_start();
+
+
 $smartyvalues = array();
 
 if ($ra->get_req_var("ticketid")) {
     $action = "search";
 }
-
 
 if ($action == "gettags") {
     check_token("RA.admin.default");
@@ -54,10 +55,7 @@ if ($action == "gettags") {
 
     echo json_encode($array);
     exit();
-}
-
-
-if ($action == "savetags") {
+} elseif ($action == "savetags") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -104,10 +102,7 @@ if ($action == "savetags") {
     }
 
     exit();
-}
-
-
-if ($action == "checkstatus") {
+} elseif ($action == "checkstatus") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -126,10 +121,7 @@ if ($action == "checkstatus") {
     }
 
     exit();
-}
-
-
-if ($action == "split") {
+} elseif ($action == "split") {
     if (empty($rids)) {
         redir("action=viewticket&id=" . $id . "");
         exit();
@@ -171,10 +163,7 @@ if ($action == "split") {
     update_query("tblticketreplies", array("tid" => $ticketid), "`id` IN (" . $rids . ")");
     redir("action=viewticket&id=" . $ticketid);
     exit();
-}
-
-
-if ($action == "getmsg") {
+} elseif ($action == "getmsg") {
     check_token("RA.admin.default");
     $msg = "";
     $id = substr($ref, 1);
@@ -202,10 +191,7 @@ if ($action == "getmsg") {
 
     echo html_entity_decode($msg, ENT_QUOTES);
     exit();
-}
-
-
-if ($action == "getticketlog") {
+} elseif ($action == "getticketlog") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -245,10 +231,7 @@ if ($action == "getticketlog") {
 
     echo "Next &raquo;</a></td></tr></table>";
     exit();
-}
-
-
-if ($action == "getclientlog") {
+} elseif ($action == "getclientlog") {
     check_token("RA.admin.default");
     checkPermission("View Activity Log");
     $totaltickets = get_query_val("tblactivitylog", "COUNT(id)", array("userid" => $userid));
@@ -302,10 +285,7 @@ if ($action == "getclientlog") {
 
     echo "Next &raquo;</a></td></tr></table>";
     exit();
-}
-
-
-if ($action == "gettickets") {
+} elseif ($action == "gettickets") {
     check_token("RA.admin.default");
     $departmentsarray = getDepartments();
 
@@ -413,10 +393,7 @@ if ($action == "gettickets") {
 
     echo "Next &raquo;</a></td></tr></table>";
     exit();
-}
-
-
-if ($action == "getallservices") {
+} elseif ($action == "getallservices") {
     check_token("RA.admin.default");
     $pauserid = (int) $userid;
     $currency = getCurrency($pauserid);
@@ -524,10 +501,7 @@ if ($action == "getallservices") {
 
     echo implode($output);
     exit();
-}
-
-
-if ($action == "updatereply") {
+} elseif ($action == "updatereply") {
     check_token("RA.admin.default");
 
     if (substr($ref, 0, 1) == "t") {
@@ -546,10 +520,7 @@ if ($action == "updatereply") {
     $text = ticketAutoHyperlinks($text);
     echo $text;
     exit();
-}
-
-
-if ($action == "makingreply") {
+} elseif ($action == "makingreply") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -576,10 +547,7 @@ if ($action == "makingreply") {
     }
 
     exit();
-}
-
-
-if ($action == "endreply") {
+} elseif ($action == "endreply") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -589,10 +557,7 @@ if ($action == "endreply") {
 
     update_query("tbltickets", array("replyingadmin" => ""), array("id" => $id));
     exit();
-}
-
-
-if ($action == "changestatus") {
+} elseif ($action == "changestatus") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -610,10 +575,7 @@ if ($action == "changestatus") {
     }
 
     exit();
-}
-
-
-if ($action == "changeflag") {
+} elseif ($action == "changeflag") {
     check_token("RA.admin.default");
     $access = validateAdminTicketAccess($id);
 
@@ -629,27 +591,18 @@ if ($action == "changeflag") {
     }
 
     exit();
-}
-
-
-if ($action == "loadpredefinedreplies") {
+} elseif ($action == "loadpredefinedreplies") {
     check_token("RA.admin.default");
     echo genPredefinedRepliesList($cat, $predefq);
     exit();
-}
-
-
-if ($action == "getpredefinedreply") {
+} elseif ($action == "getpredefinedreply") {
     check_token("RA.admin.default");
     $result = select_query_i("tblticketpredefinedreplies", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $reply = html_entity_decode($data['reply'], ENT_QUOTES);
     echo $reply;
     exit();
-}
-
-
-if ($action == "getquotedtext") {
+} elseif ($action == "getquotedtext") {
     check_token("RA.admin.default");
     $replytext = "";
 
@@ -686,17 +639,11 @@ if ($action == "getquotedtext") {
     }
 
     exit();
-}
-
-
-if ($action == "getcontacts") {
+} elseif ($action == "getcontacts") {
     check_token("RA.admin.default");
     echo getTicketContacts($userid);
     exit();
-}
-
-
-if (!$action) {
+} elseif ((!$action) || ($action == "list")) {
     if ($sub == "deleteticket") {
         check_token("RA.admin.default");
         checkPermission("Delete Ticket");
@@ -1202,10 +1149,9 @@ if ($action == "viewticket") {
 }
 
 $supportdepts = getAdminDepartmentAssignments();
-ob_start();
 $smartyvalues['ticketfilterdata'] = array("view" => $filt->getFromSession("view"), "deptid" => $filt->getFromSession("deptid"), "subject" => $filt->getFromSession("subject"), "email" => $filt->getFromSession("email"));
 
-if (!$action) {
+if ($action == "list") {
     $smartyvalues['inticketlist'] = true;
 
     if (!count($supportdepts)) {
@@ -1222,23 +1168,32 @@ if (!$action) {
         }
     }
     echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
-    $filterops = array("view", "deptid", "client", "subject", "email", "tag");
-    $filt->setAllowedVars($filterops);
+    $filt->setAllowedVars(array("view", "deptid", "client", "subject", "email", "tag"));
     $view = $filt->get("view");
     $deptid = $filt->get("deptid");
     $client = $filt->get("client");
     $subject = $filt->get("subject");
     $email = $filt->get("email");
     $tag = $filt->get("tag");
-    $filt->store();
-    $smartyvalues['ticketfilterdata'] = array("view" => $view, "deptid" => $deptid, "subject" => $subject, "email" => $email);
-    echo "<div id=\"tab0box\" class=\"tabbox\">";
+    $aInt->assign(
+        "ticketfilterdata",
+        array(
+            "view" => $view,
+            "deptid" => $deptid,
+            "client" => $client,
+            "subject" => $subject,
+            "email" => $email,
+            "tag" => $tag
+        )
+    );
+//    $filt->store();
+/*    echo "<div id=\"tab0box\" class=\"tabbox\">";
     echo "<div id=\"tab_content\">";
 
     printf("<form action=\"%s\" method=\"post\">", $PHP_SELF);
     echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
     echo "<tr>";
-    printf("<td width=\"15%\" class=\"fieldlabel\">%s</td>", $aInt->lang("fields", "status"));
+    printf("<td width=\"15%\" class=\"fieldlabel\">%s</td>", $aInt->lang("fields", "status")); 
     echo "<td class=\"fieldarea\"><select name=\"view\">";
     echo "<option value=\"any\"";
 
@@ -1246,7 +1201,7 @@ if (!$action) {
     echo $aInt->lang("global", "any") . "</option>";
 
     echo ($view == "") ? "<option value=\"\" selected>" : "<option value=\"\">";
-    echo $aInt->lang("support", "awaitingreply") . "</option>";
+    echo $aInt->lang("support", "awaitingreply") . "</option>"; 
 
     echo "<option value=\"flagged\"";
 
@@ -1256,8 +1211,8 @@ if (!$action) {
 
     echo ">";
     echo $aInt->lang("support", "flagged");
-    echo "</option>
-<option value=\"active\"";
+    echo "</option> */
+/*<option value=\"active\"";
 
     if ($view == "active") {
         echo " selected";
@@ -1266,10 +1221,12 @@ if (!$action) {
     echo ">";
     echo $aInt->lang("support", "allactive");
     echo "</option>
-";
-    $result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+"; */
+/*    $result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
+        $additionalticketstatuses[] = $data;
+
         echo "<option";
 
         if ($view == $data['title']) {
@@ -1278,8 +1235,8 @@ if (!$action) {
 
         echo ">" . $data['title'] . "</option>";
     }
+    $aInt->assign("additionalticketstatuses",$additionalticketstatuses); */
 
-    echo "</select></td><td width=\"15%\" class=\"fieldlabel\">";
     echo $aInt->lang("fields", "client");
     echo "</td><td class=\"fieldarea\">";
 
@@ -1754,10 +1711,8 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
                     include "../modules/servers/" . $service_servertype . "/" . $service_servertype . ".php";
 
                     if (function_exists($service_servertype . "_LoginLink")) {
-                        ob_start();
-                        ServerLoginLink($service_id);
-                        $service_loginlink = ob_get_contents();
-                        ob_end_clean();
+                        $service_loginlink = ServerLoginLink($service_id);
+                        echo $service_loginlink;
                     }
                 }
 
@@ -2273,7 +2228,11 @@ function searchselectclient(userid,name,email) {
 
 $content = ob_get_contents();
 ob_end_clean();
-$aInt->content = $content;
-$aInt->templatevars = $smartyvalues;
+if ($action == "list") {
+    $aInt->template = "tickets/list";
+}
+$aInt->content = "test";
+$aInt->assign("content",$content);
+// $aInt->templatevars = $smartyvalues;
 $aInt->display();
 ?>
