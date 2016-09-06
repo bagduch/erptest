@@ -256,7 +256,7 @@ CREATE TABLE `tbladmins` (
   `supportdepts` text NOT NULL,
   `ticketnotifications` text NOT NULL,
   `homewidgets` text NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
+  `passwordhash` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`(32)),
   KEY `roleid` (`roleid`),
