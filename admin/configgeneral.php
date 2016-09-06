@@ -169,7 +169,6 @@ if ($action == "save") {
 		update_query("tblconfiguration", array("value" => $sequentialinvoicenumbervalue), array("setting" => "SequentialInvoiceNumberValue"));
 		update_query("tblconfiguration", array("value" => $supportmodule), array("setting" => "SupportModule"));
 		update_query("tblconfiguration", array("value" => $orderdaysgrace), array("setting" => "OrderDaysGrace"));
-		update_query("tblconfiguration", array("value" => $disableclientdropdown), array("setting" => "DisableClientDropdown"));
 		update_query("tblconfiguration", array("value" => $autorenewdomainsonpayment), array("setting" => "AutoRenewDomainsonPayment"));
 		update_query("tblconfiguration", array("value" => $domainautorenewdefault), array("setting" => "DomainAutoRenewDefault"));
 		update_query("tblconfiguration", array("value" => $supportticketkbsuggestions), array("setting" => "SupportTicketKBSuggestions"));
@@ -2155,14 +2154,6 @@ echo "] - [";
 echo $aInt->lang("fields", "companyname");
 echo "]</label></td></tr>
 <tr><td class=\"fieldlabel\">";
-echo $aInt->lang("general", "disabledropdown");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"disableclientdropdown\"";
-
-if ($CONFIG['DisableClientDropdown'] == "on") {
-	echo " CHECKED";
-}
-
-echo "> ";
 echo $aInt->lang("general", "disabledropdowninfo");
 echo "</label></td></tr>
 <tr><td class=\"fieldlabel\">";

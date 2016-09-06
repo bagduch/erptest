@@ -1240,11 +1240,7 @@ if ($action == "list") {
     echo $aInt->lang("fields", "client");
     echo "</td><td class=\"fieldarea\">";
 
-    if ($CONFIG['DisableClientDropdown']) {
-        printf("<input type=\"text\" name=\"client\" value=\"%s\" size=\"10\" />", $client);
-    } else {
-        echo $aInt->clientsDropDown($client, "", "client", true);
-    }
+    printf("<input type=\"text\" name=\"client\" value=\"%s\" size=\"10\" />", $client);
 
     echo "</td></tr>";
     printf("<tr><td class=\"fieldlabel\">%s</td>", $aInt->lang("support", "department"));
