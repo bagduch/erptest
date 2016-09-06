@@ -75,7 +75,7 @@ $accordion = array(
         "name" => "Utilities",
         "glyphicon" => "file",
         "members" => array(
-            "supportannouncements.php" > "Announcements",
+            "supportannouncements.php" => "Announcements",
             "supportkb.php" => "Knowledgebase",
             "networkissues.php" => "Network Notices",
             "systemactivitylog.php" => "Activity Log",
@@ -122,7 +122,7 @@ $this->assign('accordion', $accordion);
         <h4 class="panel-title">
           <span class="glyphicon glyphicon-{$section.glyphicon}">
             <a href="{$section.url}">
-              {$sectionname}
+              {$section.name}
             </a>
           </span>
         </h4>
