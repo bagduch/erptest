@@ -2145,14 +2145,11 @@ function searchselectclient(userid,name,email) {
             $contactsdata = getTicketContacts($client);
         }
 
-        echo "
-<form method=\"post\" action=\"";
-        echo $PHP_SELF;
-        echo "?action=openticket\" enctype=\"multipart/form-data\">
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-        echo $aInt->lang("emails", "to");
-        echo "</td><td class=\"fieldarea\"><table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td width=\"500\"><input type=\"hidden\" name=\"client\" id=\"clientinput\" value=\"";
+        printf("<form method=\"post\" action=\"%s?action=openticket\" enctype=\"multipart/form-data\">",$PHP_SELF);
+        
+        echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+        printf("<tr><td width=\"15%\" class=\"fieldlabel\">%s</td>",$aInt->lang("emails", "to"));
+        echo "<td class=\"fieldarea\"><table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td width=\"500\"><input type=\"hidden\" name=\"client\" id=\"clientinput\" value=\"";
         echo $client;
         echo "\" /><input type=\"text\" name=\"name\" id=\"name\" size=\"40\" value=\"";
         echo $name;
@@ -2187,8 +2184,7 @@ function searchselectclient(userid,name,email) {
 <tr><td class=\"fieldlabel\">";
         echo $aInt->lang("support", "department");
         echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"deptid\">";
+        echo "<select name=\"deptid\">";
         $result = select_query_i("tbladmins", "", array("id" => $_SESSION['adminid']));
         $data = mysqli_fetch_array($result);
         $supportdepts = $data['supportdepts'];

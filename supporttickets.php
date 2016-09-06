@@ -39,7 +39,10 @@ if (isset($_SESSION['uid'])) {
 		}
 	}
 
-	$result = select_query_i("tbltickets", "COUNT(id)", "userid='" . mysqli_real_escape_string($_SESSION['uid']) . "' AND status!='Closed'");
+    $result = select_query_i("tbltickets", 
+        "COUNT(id)", 
+        "userid='" . mysqli_real_escape_string($_SESSION['uid']) . "' AND status!='Closed'"
+    );
 	$data = mysqli_fetch_array($result);
 	$smartyvalues['numopentickets'] = $data[0];
 
@@ -168,7 +171,17 @@ if (isset($_SESSION['uid'])) {
 		}
 
 		$tickets = array();
-		$result = select_query_i("tbltickets", "tbltickets.*,tblticketdepartments.name AS deptname", array("userid" => $_SESSION['uid']), $orderby, $sort, $limit, " tblticketdepartments ON tblticketdepartments.id=tbltickets.did");
+        $result = select_query_i("tbltickets", 
+                "tbltickets.*,
+                tblticketdepartments.name AS deptname", 
+                array(
+                     "userid" => $_SESSION['uid']
+                 ), 
+                 $orderby, 
+                 $sort, 
+                 $limit, 
+                 " tblticketdepartments ON tblticketdepartments.id=tbltickets.did"
+             );
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
