@@ -1237,8 +1237,8 @@ if ($action == "list") {
     }
     $aInt->assign("additionalticketstatuses",$additionalticketstatuses); */
 
-    echo $aInt->lang("fields", "client");
-    echo "</td><td class=\"fieldarea\">";
+//    echo $aInt->lang("fields", "client");
+/*    echo "</td><td class=\"fieldarea\">";
 
     printf("<input type=\"text\" name=\"client\" value=\"%s\" size=\"10\" />", $client);
 
@@ -1248,24 +1248,9 @@ if ($action == "list") {
     echo "</td><td class=\"fieldarea\">";
     echo "<select name=\"deptid\"><option value=\"\">";
     echo $aInt->lang("global", "any");
-    echo "</option>";
-    $result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+    echo "</option>"; */
 
-    while ($data = mysqli_fetch_array($result)) {
-        $id = $data['id'];
-        $name = $data['name'];
-
-        if (in_array($id, $supportdepts)) {
-            echo "<option value=\"" . $id . "\"";
-
-            if ($id == $deptid) {
-                echo " selected";
-            }
-
-            echo ">" . $name . "</option>";
-        }
-    }
-
+/*
     echo "</select></td><td class=\"fieldlabel\">";
     echo $aInt->lang("support", "ticketid");
     echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"ticketid\" size=\"15\" /></td></tr>
@@ -1277,8 +1262,8 @@ if ($action == "list") {
     echo $aInt->lang("fields", "email");
     echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"email\" size=\"40\" value=\"";
     echo $email;
-    echo "\" /></td></tr>
-</table>
+    echo "\" /></td></tr> */
+/*echo "</table>
 
 <img src=\"images/spacer.gif\" height=\"10\" width=\"1\"><br>
 <DIV ALIGN=\"center\"><input type=\"submit\" value=\"";
@@ -1303,13 +1288,12 @@ if ($action == "list") {
 
 <br />
 
-";
-    $departmentsarray = getDepartments();
-    $tag = $ra->get_req_var("tag");
-
+"; */
+/*    $tag = $ra->get_req_var("tag");
+echo "=================".$tag."===========";
     if ($tag) {
         echo "<h2>Filtering Tickets for Tag <strong>\"" . $tag . "\"</strong></h2>";
-    }
+    } */
 
     $tagjoin = ($tag ? " INNER JOIN tbltickettags ON tbltickettags.ticketid=tbltickets.id" : "");
     $query = " FROM tbltickets LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";

@@ -21,7 +21,7 @@ TEMPLATE START
                 {$_ADMINLANG.support.allactive}
               </option>
             {foreach from=$ticketstatuses item=ticketstatus}
-              <option value="{$ticketstatus.title}"{if $ticketfilterdata.view eq {$ticketstatus.title} selected{/if}>
+              <option value="{$ticketstatus.title}"{if $ticketfilterdata.view eq $ticketstatus.title } selected{/if}>
                 {$ticketstatus.title}
               </option>
             {/foreach}
@@ -29,6 +29,74 @@ TEMPLATE START
           </td>
           <td width="15%" class="fieldlabel">
             {$_ADMINLANG.fields.client}
+          </td>
+          <td class="fieldarea">
+                <input type="text" name="client" value="{$ticketfilterdata.client}" size="10" />
+          </td>
+        </tr>
+
+        <tr>
+        <td class="fieldlabel">
+          {$_ADMINLANG.support.department}
+        </td>
+        <td>
+          <select name="deptid">
+            <option value="">
+              {$_ADMINLANG.global.any}
+            </option> 
+          {foreach from=$ticketdepts item=ticketdepartment}
+
+            <option value="{$ticketdepartment.did}"{if $ticketdepartment.id eq $ticketfilterdata.deptid} selected{/if}> 
+              {$ticketdepartment.name}
+        {/foreach}
+            </option>
+          </select>
+        </td>
+
+        <td class="fieldlabel">
+          {$_ADMINLANG.support.ticketid}
+        </td>
+        <td class="fieldarea">
+          <input type="text" name="ticketid" size="15">
+        </td>
+        <td class="fieldlabel">
+          {$_ADMINLANG.support.subjectmessages}
+        </td>
+        <td class="fieldarea">
+          <input type="text" name="subject" size="40" value="{$ticketfilterdata.subject}" />
+        </td>
+        <td class="fieldlabel">
+          {$_ADMINLANG.fields.email}
+        </td>
+        <td>
+          <input type="text" name="email" size="40" value="{$ticketfilterdata.email}" />
+        </td>
+      </tr>
+    </table>
+   
+    <img src="images/spacer.gif" height="10" width="1"><br>
+    <div align="center">
+      <input type="submit" value={$_ADMINLANG.global.searchfilter}" class="button">
+    </div>
+
+  </form>
+
+</div>
+</div>
+<div id="tab1box" class="tabbox">
+  <div id="tab_content">
+  </div>
+</div>
+<div id="tab2box" class="tabbox">
+  <div id="tab_content">
+</div>
+</div>
+<br />
+{if $ticketfilterdata.tag|strlen > 0}<h2>Filtering Tickets for Tag {$ticketfilterdata.tag}</h2>{/if}
+
+            
+ 
+            
         
 CONTENT START
 {$content}
