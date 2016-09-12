@@ -4400,6 +4400,7 @@ table.tablesorter thead tr th:hover {
     table.datatable th, table.datatable th a, table.datatable th a:visited {
         color: #FFF;
         text-decoration: none;
+        background:#0074cc;
     }
     table.datatable th a:hover {
         color: #FFF;

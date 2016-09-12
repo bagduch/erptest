@@ -41,7 +41,7 @@ function getPricingInfo($pid, $inclconfigops = false, $upgrade = false, $currenc
     $paytype = $data['paytype'];
     $freedescription = $data['freedescription'];
     $freedescriptionpaymentterms = $data['freedescriptionpaymentterms'];
-    $result = select_query_i("tblpricing", "*", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $result = select_query_i("tblpricing", "*", array("currency" => $currency['id'], "relid" => $pid));
     $data = mysqli_fetch_array($result);
     //mail("peter@hd.net.nz", "hello", print_r($data, 1));
     $msetupfee = $data['msetupfee'];
