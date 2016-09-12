@@ -9,6 +9,7 @@ $aInt->requiredFiles(
             "gatewayfunctions",
             "modulefunctions",
             "servicefunctions",
+            "orderfunctions",
             "customfieldfunctions",
             "configoptionsfunctions",
             "invoicefunctions",
@@ -27,7 +28,9 @@ if ($modop) {
 }
 $clientdata = new RA_ClientService($userid, $id);
 
-
+if ($clientdata->errorbox != "") {
+    $aInt->gracefulExit($clientdata->errorbox);
+}
 
 // if neither userid nor id are defined after that, I guess we just take the very first service?
 if (!$userid && !$id) {
@@ -44,12 +47,16 @@ if ($userid && !$id) {
 }
 
 
-
 //echo "<pre>", print_r($clientdata->servicedata, 1), "</pre>";
 $frm = new RA_Form();
 
 if ($frm->issubmitted()) {
-    
+    check_token("RA.admin.default");
+    if ($_POST['addonid']) {
+        $id = $clientdata->addaddon($_POST['addonid']);
+        logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $id, $userid);
+        redir("userid=" . $userid);
+    }
 }
 
 
@@ -70,7 +77,7 @@ if ($action == "deladdon") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
-    delete_query("tblserviceaddons", array("id" => $aid));
+    delete_query("tblcustomerservices", array("id" => $aid));
     logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
     redir("userid=" . $userid . "&id=" . $id);
 }
@@ -255,8 +262,11 @@ if ($ra->get_req_var("ajaxupdate")) {
 }
 
 
-//$aInt->gracefulExit($clientdata->inforbox);
-$aInt->assign('test', $updatearr);
+
+
+$aInt->assign("userid", $userid);
+$aInt->assign("token", get_token());
+$aInt->assign('addons', $clientdata->addons);
 $aInt->assign('lang', $lang);
 $aInt->assign('emaildropdown', $emailarr);
 $aInt->assign('userid', $userid);
@@ -266,7 +276,7 @@ $aInt->assign('content', $content);
 $aInt->assign("services", $clientdata->servicedata);
 $aInt->assign("status", $aInt->productStatusDropDown($clientdata->servicedata['servicestatus']));
 $aInt->assign("promo", $clientdata->getPromocode());
-$aInt->assign("servicefield", getServiceCustomFields($clientdata->servicedata['packageid'],$clientdata->servicedata['id']));
+$aInt->assign("servicefield", getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']));
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));

@@ -162,7 +162,79 @@ class RA_Admin {
     }
 
     public function clientsDropDown($selectedval, $autosubmit = "", $fieldname = "userid", $anyoption = "") {
-        return "<input type=\"text\" name=\"" . $fieldname . "\" value=\"" . $selectedval . "\" size=\"10\" />";
+        global $CONFIG;
+
+        if ($CONFIG['DisableClientDropdown']) {
+            return "<input type=\"text\" name=\"" . $fieldname . "\" value=\"" . $selectedval . "\" size=\"10\" />";
+        }
+
+        $clientgroups = getClientGroups();
+        $code = "<select name=\"" . $fieldname . "\"";
+
+        if ($autosubmit) {
+            $code .= " onChange=\"submit();\"";
+        }
+
+        $code .= ">";
+
+        if ($anyoption) {
+            $code .= "<option value=\"\">" . $this->lang("global", "any") . "</option>";
+        }
+
+        $orderby = "firstname` ASC,`lastname";
+
+        if ($CONFIG['ClientDropdownFormat'] == 2) {
+            $orderby = "companyname";
+        }
+
+        $result = select_query_i("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int) $selectedval, $orderby, "ASC");
+
+        while ($data = mysqli_fetch_array($result)) {
+            $selectid = $data['id'];
+            $selectfirstname = $data['firstname'];
+            $selectlastname = $data['lastname'];
+            $selectcompanyname = $data['companyname'];
+            $selectgroup = $data['groupid'];
+            $selectfield = "";
+
+            if ($CONFIG['ClientDropdownFormat'] == 1) {
+                $selectfield .= "" . $selectfirstname . " " . $selectlastname;
+
+                if ($selectcompanyname) {
+                    $selectfield .= " (" . $selectcompanyname . ")";
+                }
+            } else {
+                if ($CONFIG['ClientDropdownFormat'] == 2) {
+                    if ($selectcompanyname) {
+                        $selectfield .= "" . $selectcompanyname . " - ";
+                    }
+
+                    $selectfield .= "" . $selectfirstname . " " . $selectlastname;
+                } else {
+                    $selectfield .= "#" . $selectid . " - " . $selectfirstname . " " . $selectlastname;
+
+                    if ($selectcompanyname) {
+                        $selectfield .= " - " . $selectcompanyname;
+                    }
+                }
+            }
+
+            $code .= "<option value=\"" . $selectid . "\"";
+
+            if (isset($clientgroups[$selectgroup]['colour'])) {
+                $code .= " style=\"background-color:" . $clientgroups[$selectgroup]['colour'] . "\"";
+            }
+
+
+            if ($selectid == $selectedval) {
+                $code .= " selected";
+            }
+
+            $code .= ">" . $selectfield . "</option>" . "\r\n";
+        }
+
+        $code .= "</select>";
+        return $code;
     }
 
     public function productStatusDropDown($status, $anyop = false, $name = "status", $id = "") {
@@ -343,6 +415,7 @@ class RA_Admin {
             if (!$disable_admin_ticket_page_counts) {
                 $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
                 $data = mysqli_fetch_array($result);
+                echo "<pre class=test>" . print_r($data, 1) . "</pre>";
                 $flaggedtickets = $data[0];
                 $flaggedticketschecked = true;
             }
@@ -954,15 +1027,20 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $tabarray['clientslog'] = $this->lang("clientsummary", "log");
         echo "<form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"get\">\r\n<p>" . $this->lang("clientsummary", "activeclient") . ": ";
 
-        $result = select_query_i("tblclients", "", array("id" => $uid));
-        $data = mysqli_fetch_array($result);
-        $selectfirstname = $data['firstname'];
-        $selectlastname = $data['lastname'];
-        $selectcompanyname = $data['companyname'];
-        echo $selectfirstname . " " . $selectlastname;
+        if ($CONFIG['DisableClientDropdown']) {
+            $result = select_query_i("tblclients", "", array("id" => $uid));
+            $data = mysqli_fetch_array($result);
+            $selectfirstname = $data['firstname'];
+            $selectlastname = $data['lastname'];
+            $selectcompanyname = $data['companyname'];
+            echo $selectfirstname . " " . $selectlastname;
 
-        if ($selectcompanyname) {
-            echo " (" . $selectcompanyname . ")";
+            if ($selectcompanyname) {
+                echo " (" . $selectcompanyname . ")";
+            }
+        } else {
+            echo $this->clientsDropDown($uid, true);
+            echo " <input type=\"submit\" value=\"Go\">";
         }
 
         echo "</p></form>";
@@ -970,13 +1048,11 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
                 $class = " class=\"active\"";
+            } else {
+                $class = " class=\"\"";
             }
 
-            printf("<li %s><a href=\"%s.php?userid=%d\">%s</a></li>",
-                $class,
-                $link,
-                (int)$_GET['userid'],
-                $name
+            printf("<li %s><a href=\"%s.php?userid=%d\">%s</a></li>", $class, $link, (int) $_GET['userid'], $name
             );
         }
 

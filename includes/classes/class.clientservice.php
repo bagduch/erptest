@@ -13,17 +13,22 @@
 class RA_ClientService {
 
     public $servicedata;
-    public $inforbox;
+    public $errorbox = "";
     public $userid;
     public $servicefirstid;
+    public $addons;
+    public $currecy;
 
     public function __construct($userid, $id) {
-
+        $this->currecy = getCurrency();
         $this->userid = $userid;
         if (!$id) {
             $this->getFirstServiceId();
-            $this->getServiceDatas();
-            $this->getAddonProduct();
+            if ($this->errorbox == "") {
+                $this->getServiceDatas();
+                $this->getAddonProduct();
+                $this->getAlladdons();
+            }
         }
     }
 
@@ -34,7 +39,7 @@ class RA_ClientService {
             $data = mysqli_fetch_array($result);
             $this->servicefirstid = $data['id'];
         } else {
-            $this->inforbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
+            $this->errorbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
         }
     }
 
@@ -93,11 +98,82 @@ class RA_ClientService {
                 $data = mysqli_fetch_assoc($result);
                 $this->servicedata['addon'][$data['id']] = $data;
             } else {
-                $this->inforbox = "No Addons";
+                $this->errorbox = "No Addons";
             }
         } else {
-            $this->inforbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
+            $this->errorbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
         }
+    }
+
+    public function getAlladdons() {
+        if (!empty($this->servicedata)) {
+
+            $query = "select * from tblservicetoservice as tsts LEFT JOIN tblservices as ts on tsts.children_id=ts.id where tsts.parent_id=" . $this->servicedata['packageid'];
+            $result = full_query_i($query);
+            if ($result->num_rows > 0) {
+                while ($data = mysqli_fetch_assoc($result)) {
+                    $this->addons[$data['id']] = $data;
+                    $this->addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
+                    if (!empty(getServiceCustomFields($data['id']))) {
+                        $this->addons[$data['id']]['customfield'][] = getServiceCustomFields($data['id']);
+                    } else {
+                        $this->addons[$data['id']]['customfield'] = 0;
+                    }
+                }
+            }
+        } else {
+            $this->errorbox = "No Addons Avalible";
+        }
+    }
+
+    public function addaddon($id) {
+
+        $addon = array();
+        $query = "select * from tblservices where id=" . $id;
+        $result = full_query_i($query);
+
+        if ($result->num_rows > 0) {
+            $data = mysqli_fetch_assoc($result);
+            $addon['addon'] = $data;
+            $addon['price'] = getPricingInfo($data['id']);
+        } else {
+            $this->errorbox = "No Addons Avalible";
+        }
+
+
+        if ($addon['price']['type'] == "onetime") {
+            $firstpaymet = $addon['price']['rawpricing']['msetupfee'] + $addon['price']['rawpricing']['monthly'];
+            $recurr = 0;
+        } else {
+            $firstpaymet = $addon['price']['rawpricing']['msetupfee'];
+            $recurr = $addon['price']['rawpricing']['monthly'];
+        }
+
+
+        $array = array(
+            "userid" => $this->servicedata['userid'],
+            "orderid" => $this->servicedata['orderid'],
+            "packageid" => $id,
+            "parent" => $this->servicedata['id'],
+            "regdate" => "Now()",
+            "description" => $this->servicedata['description'],
+            "paymentmethod" => "",
+            "firstpaymentamount" => $firstpaymet,
+            "amount" => $recurr,
+            "billingcycle" => $addon['price']['type'],
+            "nextduedate" => "now()",
+            "nextinvoicedate" => "now()",
+            "servicestatus" => "Pending",
+            "suspendreason" => "",
+            "overideautosuspend" => "",
+            "overidesuspenduntil" => "",
+            "lastupdate" => "",
+            "notes" => "",
+        );
+
+        //   return $addon;
+        $id = insert_query("tblcustomerservices", $array);
+        return $id;
     }
 
     public function updateService($data) {
@@ -107,7 +183,7 @@ class RA_ClientService {
         }
     }
 
-    public function getCustomefield($sid,$id) {
+    public function getCustomefield($sid, $id) {
         $customdata[] = getServiceCustomFields($sid, $id);
         return $customdata;
     }

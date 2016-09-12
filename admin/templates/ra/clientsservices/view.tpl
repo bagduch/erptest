@@ -158,9 +158,13 @@
             </div>
             <div class="clearfix"></div>
             <div class="row" style="padding:15px">
-                <div class="panel panel-danger">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Addon Services/Product</h4>
+                        <h4 class="panel-title">Addon Services/Product  
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                Add 
+                            </button>
+                        </h4>
                     </div>
                     <div class="panel-body">
                         {if isset($services.addon)}
@@ -172,6 +176,7 @@
                                     <th>Amount</th>
                                     <th>Status</th>
                                     <th>Billing Cycle</th>
+                                    <th>Action</th>
                                 </tr>
                                 {foreach from=$services.addon item=addons}
                                     <tr>
@@ -181,12 +186,56 @@
                                         <td>{$addons.amount}</td>
                                         <td>{$addons.servicestatus}</td>
                                         <td>{$addons.billingcycle}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-primary">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="#" onclick="doDeleteAddon({$addons.id})" class="btn btn-danger">
+                                                <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 {/foreach}
                             </table>
+                        {else}
+                            <div class="alert alert-danger" role="alert">
+                                This addon doen't have any addon
+
+                            </div>
                         {/if}
                     </div>
                 </div>
+
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Addons</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="#addonname">Addon Name</label>
+                                    <select class='form-control' id='addonname' name='addonid'>
+                                        <option value="0">Please Choose Addons</option>
+                                        {foreach from=$addons item=addon}
+                                            <option value="{$addon.id}">{$addon.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment">Payment Method</label>
+                                    {$paymentmethod}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary addonaddbutton">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <br>
@@ -247,10 +296,16 @@
                 format: 'yyyy-mm-dd',
                 startDate: '+1d'
             });
+
+            $(".addonaddbutton").click(function () {
+                $("#frm1").submit();
+            });
+
+
         });
         function doDeleteAddon(id) {
             if (confirm("Are you sure you want to delete this addon?")) {
-                window.location = '/admin/clientsservices.php?userid=1&id=35&action=deladdon&aid=' + id + '&token=0951db7664024f53758d62b7cb94336b96566473';
+                window.location = '/admin/clientsservices.php?userid={/literal}{$userid}{literal}&action=deladdon&aid=' + id + '&token={/literal}{$token}{literal}';
             }
         }
         function runModuleCommand(cmd, custom) {
