@@ -98,9 +98,5 @@ TEMPLATE START
  
             
         
-CONTENT START
 {$content}
 <hr />
-
-
-NEW STUFF HERE<br />

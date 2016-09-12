@@ -4159,13 +4159,13 @@ table.tablesorter thead tr th:hover {
        INTELLIGENT SEARCH
     -------------------------------------------------------------- */
 
-    .intellisearch {
+/*    .intellisearch {
         position: absolute;
         top: 0;
         right: 0;
         margin: 48px 20px;
         text-align: right;
-    }
+    } */
     .intellisearch #intellisearchval {
         margin: 0;
         padding: 4px 10px 4px 25px;

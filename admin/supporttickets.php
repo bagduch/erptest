@@ -5,6 +5,7 @@ require "../init.php";
 $action = $ra->get_req_var("action");
 
 
+$icon ="tickets";
 
 if ($action == "viewticket") { // view specific ticket
     $reqperm = "View Support Ticket";
@@ -21,12 +22,9 @@ if ($action == "viewticket") { // view specific ticket
     $reqperm = "List Support Tickets";
     $aInt = new RA_Admin($reqperm, false);
 }
+$title=$reqperm;
+ob_start();
 
-if ($action != "open" && $action != "openticket") {
-    $icon = "tickets";
-    $title = $aInt->lang("support", "supporttickets");
-}
-    $title = $aInt->lang("support", "opennewticket");
 
 $aInt->title = $title;
 $aInt->sidebar = "support";
@@ -34,8 +32,6 @@ $aInt->icon = $icon;
 $aInt->helplink = "Support Tickets";
 $aInt->requiredFiles(array("ticketfunctions", "modulefunctions", "customfieldfunctions"));
 $filt = new RA_Filter("tickets");
-
-ob_start();
 
 
 $smartyvalues = array();
@@ -1186,114 +1182,6 @@ if ($action == "list") {
             "tag" => $tag
         )
     );
-//    $filt->store();
-/*    echo "<div id=\"tab0box\" class=\"tabbox\">";
-    echo "<div id=\"tab_content\">";
-
-    printf("<form action=\"%s\" method=\"post\">", $PHP_SELF);
-    echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-    echo "<tr>";
-    printf("<td width=\"15%\" class=\"fieldlabel\">%s</td>", $aInt->lang("fields", "status")); 
-    echo "<td class=\"fieldarea\"><select name=\"view\">";
-    echo "<option value=\"any\"";
-
-    echo ($view == "any") ? "<option value=\"any\" selected>" : "<option value=\"any\">";
-    echo $aInt->lang("global", "any") . "</option>";
-
-    echo ($view == "") ? "<option value=\"\" selected>" : "<option value=\"\">";
-    echo $aInt->lang("support", "awaitingreply") . "</option>"; 
-
-    echo "<option value=\"flagged\"";
-
-    if ($view == "flagged") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("support", "flagged");
-    echo "</option> */
-/*<option value=\"active\"";
-
-    if ($view == "active") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("support", "allactive");
-    echo "</option>
-"; */
-/*    $result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $additionalticketstatuses[] = $data;
-
-        echo "<option";
-
-        if ($view == $data['title']) {
-            echo " selected";
-        }
-
-        echo ">" . $data['title'] . "</option>";
-    }
-    $aInt->assign("additionalticketstatuses",$additionalticketstatuses); */
-
-//    echo $aInt->lang("fields", "client");
-/*    echo "</td><td class=\"fieldarea\">";
-
-    printf("<input type=\"text\" name=\"client\" value=\"%s\" size=\"10\" />", $client);
-
-    echo "</td></tr>";
-    printf("<tr><td class=\"fieldlabel\">%s</td>", $aInt->lang("support", "department"));
-    printf("<td class=\"fieldarea\"><select name=\"deptid\"><option value=\"\">%s", $aInt->lang("support", "department"));
-    echo "</td><td class=\"fieldarea\">";
-    echo "<select name=\"deptid\"><option value=\"\">";
-    echo $aInt->lang("global", "any");
-    echo "</option>"; */
-
-/*
-    echo "</select></td><td class=\"fieldlabel\">";
-    echo $aInt->lang("support", "ticketid");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"ticketid\" size=\"15\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("support", "subjectmessage");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"subject\" size=\"40\" value=\"";
-    echo $subject;
-    echo "\" /></td><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "email");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"email\" size=\"40\" value=\"";
-    echo $email;
-    echo "\" /></td></tr> */
-/*echo "</table>
-
-<img src=\"images/spacer.gif\" height=\"10\" width=\"1\"><br>
-<DIV ALIGN=\"center\"><input type=\"submit\" value=\"";
-    echo $aInt->lang("global", "searchfilter");
-    echo "\" class=\"button\"></DIV>
-
-</form>
-
-  </div>
-</div>
-<div id=\"tab1box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-
-  </div>
-</div>
-<div id=\"tab2box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-  </div>
-</div>
-
-<br />
-
-"; */
-/*    $tag = $ra->get_req_var("tag");
-echo "=================".$tag."===========";
-    if ($tag) {
-        echo "<h2>Filtering Tickets for Tag <strong>\"" . $tag . "\"</strong></h2>";
-    } */
 
     $tagjoin = ($tag ? " INNER JOIN tbltickettags ON tbltickettags.ticketid=tbltickets.id" : "");
     $query = " FROM tbltickets LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";

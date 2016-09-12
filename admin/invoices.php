@@ -228,7 +228,6 @@ if ($ra->get_req_var("delete")) {
 	$filters->redir();
 }
 
-echo "OBSTART STARTS HERE";
 ob_start();
 
 if ($action == "") {

@@ -56,7 +56,7 @@ $accordion = array(
         "glyphicon" => "file",
         "members" => array(
             "supportcenter.php" => "Support Overview",
-            "supporttickets.php" => "View Tickets",
+            "supporttickets.php?action=list" => "View Tickets",
             "supporttickets.php?action=open" => "Open Ticket",
             "supportticketpredefinedreplies.php" => "Predefined Replies"
         )
@@ -132,6 +132,10 @@ $this->assign('accordion', $accordion);
 {/foreach}
 </div>
 
+{* See https://msp.hd.net.nz/projects/robotic-accounting/repository/revisions/681d7d8722b8684b29d7fafaacbe6c42744f5f89/entry/admin/templates/ra/footer.tpl
+ for old intellisearch code *}
+ 
+
   <div><span> {$_ADMINLANG.global.advancedsearch}</span>
     <div class="smallfont">
       <form method="get" action="search.php">
@@ -162,6 +166,11 @@ $this->assign('accordion', $accordion);
       </form>
     </div>
   </div>
-    <span><img src="images/icons/admins.png" alt="" width="16" height="16" /> {$_ADMINLANG.global.staffonline}</span>
-    <div>{$adminsonline}</div>
+    <span>
+      <img src="images/icons/admins.png" alt="" width="16" height="16" /> {$_ADMINLANG.global.staffonline}
+    </span>
+    <div>
+      {$adminsonline}
+    </div>
 </div>
+
