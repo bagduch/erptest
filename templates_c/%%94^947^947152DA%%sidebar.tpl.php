@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 12:07:33
+<?php /* Smarty version 2.6.28, created on 2016-10-07 12:31:58
          compiled from ra/sidebar.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('modifier', 'is_array', 'ra/sidebar.tpl', 115, false),)), $this); ?>
