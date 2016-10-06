@@ -87,10 +87,14 @@ $nowrapper = false;
 
 
 if ($_SESSION['address']) {
-    $process = new RA_Process($_SESSION);
-    // echo "<pre>",  print_r($process,1),"</pre>";
+    $process = new RA_Process($_SESSION,$CONFIG);
 
-  //  error_log(print_r($process, 1), 3, "/tmp/php_errors.log");
+
+
+
+  // echo "<pre>", print_r($process->config, 1), "</pre>";
+   // echo "<pre>", print_r($process->clientsdetails, 1), "</pre>";
+    //  error_log(print_r($process, 1), 3, "/tmp/php_errors.log");
     if ($ajax) {
         if ($addonid) {
             if ($actions == "add") {
@@ -276,6 +280,7 @@ if ($_SESSION['address']) {
         $process->caculateTotal();
         $process->draftOrder();
 
+     //   echo "<pre>",  print_r($process->productdata,1),"</pre>";
         if ($data['contract'] && $contractnotsign) {
             $smartyvalues['product'] = $data;
         } else {

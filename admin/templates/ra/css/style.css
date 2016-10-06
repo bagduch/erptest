@@ -9,6 +9,14 @@ and open the template in the editor.
 */
 
 .customefield{
-    
     padding:15px;
+}
+
+.textgreen{
+    color: green;
+}
+
+.textred
+{
+    color:red;
 }

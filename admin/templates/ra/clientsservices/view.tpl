@@ -1,5 +1,4 @@
 
-{debug}
 <div style="float:left;width:100%;">
     <div id="servicecontent">
         {$content}

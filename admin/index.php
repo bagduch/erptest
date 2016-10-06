@@ -74,6 +74,8 @@ $aInt->title = $aInt->lang("global", "hometitle");
 $aInt->sidebar = "home";
 $aInt->icon = "home";
 $aInt->requiredFiles(array("clientfunctions", "invoicefunctions", "gatewayfunctions", "ccfunctions", "processinvoices", "reportfunctions"));
+
+
 $aInt->template = "homepage";
 $chart = new RAChart();
 
@@ -286,17 +288,20 @@ if (checkPermission("View Income Totals", true)) {
 }
 
 $invoicedialog = $aInt->jqueryDialog(
-        "geninvoices", $aInt->lang("invoices", "geninvoices"),
-        $aInt->lang("invoices", "geninvoicessendemails"), 
-        array($aInt->lang("global", "yes") => "window.location='index.php?generateinvoices=true" . generate_token("link") . "'",
+        "geninvoices", $aInt->lang("invoices", "geninvoices"), $aInt->lang("invoices", "geninvoicessendemails"), array($aInt->lang("global", "yes") => "window.location='index.php?generateinvoices=true" . generate_token("link") . "'",
     $aInt->lang("global", "no") => "window.location='index.php?generateinvoices=true&noemails=true" . generate_token("link") . "'")
 );
 $cccapturedialog = $aInt->jqueryDialog("cccapture", $aInt->lang("invoices", "attemptcccaptures"), $aInt->lang("invoices", "attemptcccapturessure"), array($aInt->lang("global", "yes") => "window.location='index.php?attemptccpayments=true" . generate_token("link") . "'", $aInt->lang("global", "no") => ""));
 $addons_html = run_hook("AdminHomepage", array());
 $templatevars['addons_html'] = $addons_html;
 
-
-
+$query = "select * from tbltickets where status !='Closed'";
+$result = full_query_i($query);
+$tickets = array();
+while ($data = mysqli_fetch_array($result)) {
+    $tickets[$data['id']] = $data;
+}
+$templatevars['tickets']=$tickets;
 
 $aInt->jscode = $jscode;
 $aInt->jquerycode = $jquerycode;

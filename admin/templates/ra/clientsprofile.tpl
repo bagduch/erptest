@@ -1,5 +1,5 @@
 {strip}
-    {debug}
+ 
     <form method="post" action="/admin/clientsprofile.php?save=true&amp;userid={$clientsdetails.userid}">
         <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody><tr><td width="15%" class="fieldlabel">First Name</td>

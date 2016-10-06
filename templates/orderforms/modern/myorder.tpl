@@ -240,9 +240,9 @@
                                                     <h3 class="cart-sumary-title">TOTAL</h3>
 
 
-                                                    <div class="monthly">Monthly payments: <span class="right">{$pricing.cycles.monthly}</span></div>
+                                                    <div class="monthly">Monthly payments: <span class="right">{$currecy.prefix}{$pricing.rawpricing.monthly|number_format:2}</span></div>
                                                     <div class="oneoff">Total one-off payment:<span class="right">{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2}</span></div>
-                                                    <div class="firstpayment">First payment: <span class="right">{$currecy.prefix}{$total|number_format:2} {$currecy.code}</span></div>
+                                                    <div class="firstpayment">First payment: <span class="right">{$currecy.prefix}{$total|number_format:2}</span></div>
 
                                                     <input type="hidden" name="firstpaymentamount" value="{$total|number_format:2}">
                                                 </div>

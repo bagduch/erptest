@@ -13,12 +13,19 @@ class RA_Process {
     public $oneoff = 0;
     public $recurring = 0;
     public $step = 0;
+    public $config;
+    public $gateway;
+    public $taxrate;
+    public $clientsdetails;
 
-    public function __construct($session) {
+    public function __construct($session, $CONFIG) {
 
         if (isset($session['address']) && isset($session['fpid'])) {
             $this->session = $session;
+            $this->config = $CONFIG;
             $this->currecy = getCurrency();
+            $this->clientsdetails = getClientsDetails($this->session['uid']);
+            $this->gateway = getClientsPaymentMethod($this->session['uid']);
             $this->getProductDetail();
         } else {
             if (!isset($session['address'])) {
@@ -53,7 +60,7 @@ class RA_Process {
             }
             if (!empty($this->productdata['avalialeaddons'])) {
                 foreach ($this->productdata['avalialeaddons'] as $data) {
-                    if (isset($data['select'])) {
+                    if ($data['select']) {
 
                         if ($data['price']['type'] == "onetime") {
                             $this->oneoff +=$data['price']['rawpricing']['msetupfee'] + $data['price']['rawpricing']['monthly'];
@@ -150,35 +157,81 @@ class RA_Process {
         }
     }
 
+    public function createtInvoice() {
+        if ($this->config['TaxEnabled'] == "on") {
+            if (!$this->clientsdetails['taxexempt']) {
+                $state = $this->clientsdetails['state'];
+                $country = $this->clientsdetails['country'];
+                $taxdata = getTaxRate(1, $state, $country);
+                $taxdata2 = getTaxRate(2, $state, $country);
+                $taxrate = $taxdata['rate'];
+                $taxrate2 = $taxdata2['rate'];
+                error_log("tax" . $taxrate, 3, "/tmp/php_errors.log");
+            }
+        } else {
+            $taxrate = 0;
+            $taxrate2 = 0;
+        }
+        $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $this->config['CreateInvoiceDaysBefore'], date("Y")));
+        $invoice = array(
+            "date" => "now()",
+            "duedate" => $duedate,
+            "userid" => $this->session['uid'],
+            "status" => "Draft",
+            "paymentmethod" => $this->gateway,
+            "taxrate" => $taxrate,
+            "taxrate2" => $taxrate2
+        );
+
+        $invoiceid = insert_query("tblinvoices", $invoice);
+        return $invoiceid;
+    }
+
     public function draftSerivceAccoutn() {
 
         $hostingquerydates = date("Y-m-d");
+        $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $this->config['CreateInvoiceDaysBefore'], date("Y")));
         $serviceid = insert_query("tblcustomerservices", array(
             "userid" => $this->session['uid'],
             "orderid" => $_SESSION['orderid'],
             "packageid" => $this->session['fpid'],
+            "parent" => "",
             "regdate" => "now()",
             "description" => $this->session['address'],
-            "paymentmethod" => "banktransfer",
+            "paymentmethod" => $this->gateway,
             "firstpaymentamount" => $this->firstpayment,
             "amount" => $this->recurring,
-            "billingcycle" => $this->productdata['pricing']['pricing']['cycle'],
+            "billingcycle" => $this->productdata['pricing']['minprice']['cycle'],
             "nextduedate" => $hostingquerydates,
             "nextinvoicedate" => $hostingquerydates,
             "servicestatus" => "Draft",
-            "lastupdate" => "now",
+            "lastupdate" => "now()",
             "notes" => "",
                 )
         );
-
         $_SESSION['serviceid'] = $serviceid;
+        $_SESSION['invoiceid'] = $this->createtInvoice();
+        insert_query("tblinvoiceitems", array(
+            "invoiceid" => $_SESSION['invoiceid'],
+            "userid" => $this->session['uid'],
+            "type" => $this->productdata['data']['type'],
+            "relid" => $serviceid,
+            "description" => $this->productdata['data']['name'],
+            "amount" => $this->productdata['pricing']['minprice']['value'],
+            "taxed" => $this->productdata['data']['tax'],
+            "duedate" => $duedate,
+            "paymentmethod" => $this->gateway
+                )
+        );
     }
 
     public function pendingOrder() {
 
         if ($this->session['uid']) {
             update_query("tblcustomerservices", array('servicestatus' => 'Pending'), array("id" => $this->session['serviceid']));
-            update_query("tblorders", array('status' => 'Pending'), array("id" => $this->session['orderid']));
+            update_query("tblorders", array('status' => 'Pending', 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));
+            updateInvoiceTotal($this->session['invoiceid']);
+            update_query("tblinvoices", array('status' => 'Unpaid'), array("id" => $this->session['invoiceid']));
         }
     }
 
@@ -195,10 +248,10 @@ class RA_Process {
     public function insertAddon() {
 
         $success_id = false;
+        $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $this->config['CreateInvoiceDaysBefore'], date("Y")));
         if (!empty($this->productdata)) {
             foreach ($this->productdata['avalialeaddons'] as $data) {
                 if ($data['select']) {
-
                     $hostingquerydates = date("Y-m-d");
                     $insertdata = array(
                         "userid" => $this->session['uid'],
@@ -206,19 +259,32 @@ class RA_Process {
                         "packageid" => $data['id'],
                         "regdate" => "now()",
                         "description" => "",
-                        "paymentmethod" => "banktransfer",
+                        "paymentmethod" => $this->gateway,
                         "firstpaymentamount" => $data['price']["rawpricing"]["msetupfee"] + $data['price']["rawpricing"]["monthly"],
                         "amount" => $data['price']['type'] == "recurring" ? $data['price']["rawpricing"]["monthly"] : 0,
                         "billingcycle" => $data['price']['type'],
                         "nextduedate" => $hostingquerydates,
                         "nextinvoicedate" => $hostingquerydates,
                         "servicestatus" => "Pending",
-                        "lastupdate" => "now",
+                        "lastupdate" => "now()",
                         "notes" => "",
                         "parent" => $_SESSION['serviceid']
                     );
 
+
                     $success_id = insert_query("tblcustomerservices", $insertdata);
+                    insert_query("tblinvoiceitems", array(
+                        "invoiceid" => $_SESSION['invoiceid'],
+                        "userid" => $this->session['uid'],
+                        "type" => $data['type'],
+                        "relid" => $success_id,
+                        "description" => $data['name'],
+                        "amount" => $data['price']['minprice']['value'],
+                        "taxed" => $data['tax'],
+                        "duedate" => $duedate,
+                        "paymentmethod" => $this->gateway
+                            )
+                    );
                 }
             }
         }
@@ -229,6 +295,7 @@ class RA_Process {
         $this->pendingOrder();
         if ($this->insertAddon() && $this->insertCustomefields($data)) {
             // echo "<pre>", print_r($_SESSION, 1), "</pre>";
+            $this->createtInvoice();
             unset($_SESSION['avalialeaddons']);
             $this->step = 3;
         }

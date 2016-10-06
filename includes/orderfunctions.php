@@ -1560,11 +1560,9 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         }
 
         update_query(
-            "tblorders", 
-            array(
-                "amount" => $cart_total
-            ), 
-            array("id" => $orderid));
+                "tblorders", array(
+            "amount" => $cart_total
+                ), array("id" => $orderid));
         $invoiceid = 0;
 
         if (!$_SESSION['cart']['geninvoicedisabled']) {
@@ -2480,6 +2478,8 @@ function deleteOrder($orderid) {
 //     delete_query("tblcustomerservices", array("orderid" => $orderid));
     $result2 = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
     $data2 = mysqli_fetch_array($result2);
+    delete_query("tblinvoices", array("id" => $invoiceid));
+    delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
     delete_query("tblcustomfieldsvalues", array("relid" => $data2['id']));
     delete_query("tblcustomerservices", array("orderid" => $orderid));
     delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
@@ -2487,8 +2487,7 @@ function deleteOrder($orderid) {
     delete_query("tblserviceaddons", array("orderid" => $orderid));
     // delete_query("tbldescriptions", array("orderid" => $orderid));
     delete_query("tblorders", array("id" => $orderid));
-    delete_query("tblinvoices", array("id" => $invoiceid));
-    delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
+
     logActivity("Deleted Order - Order ID: " . $orderid, $userid);
 }
 

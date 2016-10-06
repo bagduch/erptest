@@ -18,26 +18,31 @@ class RA_ClientService {
     public $servicefirstid;
     public $addons;
     public $currecy;
+    public $id;
 
     public function __construct($userid, $id) {
+      
         $this->currecy = getCurrency();
         $this->userid = $userid;
-        if (!$id) {
+        if (!$id || $id == 0) {
             $this->getFirstServiceId();
-            if ($this->errorbox == "") {
-                $this->getServiceDatas();
-                $this->getAddonProduct();
-                $this->getAlladdons();
-            }
+        } else {
+            $this->id = $id;
+        }
+        if ($this->errorbox == "") {
+            $this->getServiceDatas();
+            $this->getAddonProduct();
+            $this->getAlladdons();
         }
     }
 
     public function getFirstServiceId() {
-        $query = "select * from tblcustomerservices where parent is null AND userid=" . $this->userid . " limit 1";
+        $query = "select * from tblcustomerservices where parent is null or parent=0 AND userid=" . $this->userid . " limit 1";
         $result = full_query_i($query);
         if ($result->num_rows > 0) {
             $data = mysqli_fetch_array($result);
             $this->servicefirstid = $data['id'];
+            $this->id = $this->servicefirstid;
         } else {
             $this->errorbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
         }
@@ -85,6 +90,8 @@ class RA_ClientService {
 
         if (isset($this->servicefirstid)) {
             $this->servicedata = getServiceData($this->servicefirstid);
+        } else if (isset($this->id)) {
+            $this->servicedata = getServiceData($this->id);
         } else {
             $this->servicedata = getServiceData();
         }
@@ -126,7 +133,7 @@ class RA_ClientService {
         }
     }
 
-    public function addaddon($id) {
+    public function addaddon($id,$payment) {
 
         $addon = array();
         $query = "select * from tblservices where id=" . $id;
@@ -155,9 +162,9 @@ class RA_ClientService {
             "orderid" => $this->servicedata['orderid'],
             "packageid" => $id,
             "parent" => $this->servicedata['id'],
-            "regdate" => "Now()",
+            "regdate" => "now()",
             "description" => $this->servicedata['description'],
-            "paymentmethod" => "",
+            "paymentmethod" => $payment,
             "firstpaymentamount" => $firstpaymet,
             "amount" => $recurr,
             "billingcycle" => $addon['price']['type'],
@@ -167,7 +174,7 @@ class RA_ClientService {
             "suspendreason" => "",
             "overideautosuspend" => "",
             "overidesuspenduntil" => "",
-            "lastupdate" => "",
+            "lastupdate" => "now()",
             "notes" => "",
         );
 

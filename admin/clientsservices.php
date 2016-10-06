@@ -27,8 +27,9 @@ if ($modop) {
     checkPermission("Perform Server Operations");
 }
 $clientdata = new RA_ClientService($userid, $id);
-
-if ($clientdata->errorbox != "") {
+$id = $clientdata->id;
+//echo "<pre>",  print_r($clientdata->servicedata,1),"</pre>";
+if ($clientdata->errorbox != "" && $clientdata->errorbox!="No Addons") {
     $aInt->gracefulExit($clientdata->errorbox);
 }
 
@@ -46,17 +47,15 @@ if ($userid && !$id) {
     }
 }
 
-
-//echo "<pre>", print_r($clientdata->servicedata, 1), "</pre>";
 $frm = new RA_Form();
 
 if ($frm->issubmitted()) {
     check_token("RA.admin.default");
     if ($_POST['addonid']) {
-        $id = $clientdata->addaddon($_POST['addonid']);
-        logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $id, $userid);
+        $addonid = $clientdata->addaddon($_POST['addonid'],$_POST['paymentmethod']);
+        logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid);
         redir("userid=" . $userid);
-    }
+    } 
 }
 
 

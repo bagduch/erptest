@@ -1,4 +1,4 @@
-<div class="nav navbar-nav side-nav">
+
 
 {php}
 $accordion = array(
@@ -90,87 +90,91 @@ $accordion = array(
 );
 $this->assign('accordion', $accordion);
 {/php}
-<div class="panel-group" id="accordion">
-{foreach from=$accordion item=section key=sectionname}
-  <div class="panel panel-default">
-    {if $section.members|is_array}
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{$sectionname}">
-          <span class="glyphicon glyphicon-{$section.glyphicon}"></span>
-          {$section.name}
+<div class="user-panel">
+    <div class="pull-left image">
+        <img src="templates/{$template}/dist/img/avatar.png" class="img-circle" alt="User Image">
+    </div>
+    <div class="pull-left info">
+        <p>{$adminsonline}</p>
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+    </div>
+
+</div>
+<form action="#" method="get" class="sidebar-form">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search...">
+        <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
         </span>
-        </a>
-      </h4>
     </div>
-    {if $sidebar eq $sectionname}
-    <div id="collapse{$sectionname}" class="panel-collapse collapse in" aria-expanded="true">
-    {else}
-    <div id="collapse{$sectionname}" class="panel-collapse collapse">
-    {/if}
-      <div class="panel-body">
-        <table class="table">
-        {foreach from=$section.members item=member key=url}
-          <tr><td><a href="{$url}">{$member}</a></td></tr>
-        {/foreach}
-        </table>
-      </div>
-    </div>
-    {else}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <span class="glyphicon glyphicon-{$section.glyphicon}"></span>
-          <a href="{$section.url}">
-            {$section.name}
-          </a>
-        </h4>
-      </div>
-    </div>
-    {/if}
-  </div>
-{/foreach}
-</div>
+</form>
+<ul class="sidebar-menu">
+    <li class="header">MAIN NAVIGATION</li>
+        {foreach from=$accordion item=section key=sectionname}
+            {if $section.members|is_array}
+            <li class="treeview">
+                <a href="#">
+                    <i class="glyphicon glyphicon-{$section.glyphicon}"></i> <span>{$section.name}</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    {foreach from=$section.members item=member key=url}
+                        <li class="active"><a href="{$url}"><i class="fa fa-circle-o"></i>{$member}</a></li>
+                            {/foreach}
+                </ul>
+            </li>
+        {else}
+            <li><a href="{$section.url}"><i class="glyphicon glyphicon-{$section.glyphicon}"></i> <span>{$section.name}</span></a></li>
+            {/if}
 
-{* See https://msp.hd.net.nz/projects/robotic-accounting/repository/revisions/681d7d8722b8684b29d7fafaacbe6c42744f5f89/entry/admin/templates/ra/footer.tpl
- for old intellisearch code *}
- 
+    {/foreach}
 
-  <div><span> {$_ADMINLANG.global.advancedsearch}</span>
-    <div class="smallfont">
-      <form method="get" action="search.php">
-        <select name="type" id="searchtype" onchange="populate(this)">
-          <option value="clients">Clients </option>
-          <option value="orders">Orders </option>
-          <option value="services">Services </option>
-          <option value="domains">Domains </option>
-          <option value="invoices">Invoices </option>
-          <option value="tickets">Tickets </option>
-        </select>
-        <select name="field" id="searchfield">
-          <option>Client ID</option>
-          <option selected="selected">Client Name</option>
-          <option>Company Name</option>
-          <option>Email Address</option>
-          <option>Address 1</option>
-          <option>Address 2</option>
-          <option>City</option>
-          <option>State</option>
-          <option>Postcode</option>
-          <option>Country</option>
-          <option>Phone Number</option>
-          <option>CC Last Four</option>
-        </select>
-        <input type="text" name="q" autocomplete="off" style="width:85%;" />
-        <input type="submit" value="{$_ADMINLANG.global.search}" class="button" />
-      </form>
-    </div>
-  </div>
-    <span>
-      <img src="images/icons/admins.png" alt="" width="16" height="16" /> {$_ADMINLANG.global.staffonline}
-    </span>
-    <div>
-      {$adminsonline}
-    </div>
-</div>
+</ul>
+<form method="get" action="search.php" class="sidebar-form">
+
+    <table class="table">
+        <tr>
+            <td>
+                <select class="form-control" name="type" id="searchtype" onchange="populate(this)">
+                    <option value="clients">Clients </option>
+                    <option value="orders">Orders </option>
+                    <option value="services">Services </option>
+                    <option value="domains">Domains </option>
+                    <option value="invoices">Invoices </option>
+                    <option value="tickets">Tickets </option>
+                </select>
+
+            </td>
+            <td>
+                <select class="form-control" name="field" id="searchfield">
+                    <option>Client ID</option>
+                    <option selected="selected">Client Name</option>
+                    <option>Company Name</option>
+                    <option>Email Address</option>
+                    <option>Address 1</option>
+                    <option>Address 2</option>
+                    <option>City</option>
+                    <option>State</option>
+                    <option>Postcode</option>
+                    <option>Country</option>
+                    <option>Phone Number</option>
+                    <option>CC Last Four</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> <input  class="form-control" type="text" name="q" autocomplete="off" style="width:85%;" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">   
+                <input type="submit" value="{$_ADMINLANG.global.search}" class="button" />
+            </td>
+        </tr>
+    </table>
+
+</form>
+
 

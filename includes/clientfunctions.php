@@ -298,7 +298,7 @@ function getCountriesDropDown($selected = "", $fieldname = "", $tabindex = "") {
         $tabindex = (" tabindex=\"" . $tabindex . "\"");
     }
 
-    $dropdowncode = ("<select name=\"" . $fieldname . "\" id=\"" . $fieldname . "\"") . $tabindex . ">";
+    $dropdowncode = ("<select class=\"form-control\" name=\"" . $fieldname . "\" id=\"" . $fieldname . "\"") . $tabindex . ">";
     foreach ($countries as $countriesvalue1 => $countriesvalue2) {
         $dropdowncode .= "<option value=\"" . $countriesvalue1 . "\"";
 
@@ -934,15 +934,11 @@ function getClientsServicesSummary($userid, $aInt) {
                 $amount = formatCurrency($data['amount']);
             }
 
-            if (strlen($data['description'] < 2)) {
-                $description= "(" . $aInt->lang("addons", "nodomain") . ")";
-            }
-
             $billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($data['billingcycle'])));
             $servicessummary[] = array(
                 "id" => (int)$data['id'],
                 "regdate" => fromMySQLDate($data['regdate']),
-                "description" => $description,
+                "description" => $data['description'],
                 "dpackage" => $data['name'],
                 "dpaymentmethod" => $data['paymentmethod'],
                 "amount" => $amount,

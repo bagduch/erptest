@@ -31,11 +31,10 @@ if ($action == "createpromo") {
         exit("Promotion Code already exists. Please try another.");
     }
 
-    $promoid = insert_query("tblpromotions", 
-        array("code" => $code, 
-            "type" => $type, 
-            "recurring" => 
-            $recurring, "value" => $pvalue, "maxuses" => "1", "recurfor" => $recurfor, "expirationdate" => "0000-00-00", "notes" => "Order Process One Off Custom Promo"));
+    $promoid = insert_query("tblpromotions", array("code" => $code,
+        "type" => $type,
+        "recurring" =>
+        $recurring, "value" => $pvalue, "maxuses" => "1", "recurfor" => $recurfor, "expirationdate" => "0000-00-00", "notes" => "Order Process One Off Custom Promo"));
     $promo_type = $type;
     $promo_value = $pvalue;
     $promo_recurring = $recurring;
@@ -43,8 +42,7 @@ if ($action == "createpromo") {
 
     if ($promo_type == "Percentage") {
         $promo_value .= "%";
-    }
-    else {
+    } else {
         $promo_value = formatCurrency($promo_value);
     }
 
@@ -64,7 +62,7 @@ if ($action == "getconfigoptions") {
 
     $options = "";
     $configoptions = getCartConfigOptions($pid, "", $cycle);
-    error_log(print_r($configoptions,1));
+    error_log(print_r($configoptions, 1));
 
     if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
@@ -85,8 +83,7 @@ if ($action == "getconfigoptions") {
                 }
 
                 $options .= "</select>";
-            }
-            else {
+            } else {
                 if ($configoption['optiontype'] == "2") {
                     foreach ($configoption['options'] as $optiondata) {
                         $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
@@ -97,8 +94,7 @@ if ($action == "getconfigoptions") {
 
                         $options .= "> " . $optiondata['name'] . "<br />";
                     }
-                }
-                else {
+                } else {
                     if ($configoption['optiontype'] == "3") {
                         $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
 
@@ -107,8 +103,7 @@ if ($action == "getconfigoptions") {
                         }
 
                         $options .= "> " . $configoption['options'][0]['name'];
-                    }
-                    else {
+                    } else {
                         if ($configoption['optiontype'] == "4") {
                             $options .= "<input type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
                         }
@@ -161,8 +156,7 @@ if ($ra->get_req_var("submitorder")) {
 
     if (!$userid && !$calconly) {
         infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");
-    }
-    else {
+    } else {
         $_SESSION['uid'] = $userid;
         getUsersLang($userid);
         $_SESSION['cart'] = array();
@@ -227,8 +221,7 @@ if ($ra->get_req_var("submitorder")) {
 
                     if ($cartprod['priceoverride']) {
                         echo formatCurrency($cartprod['priceoverride']) . "*";
-                    }
-                    else {
+                    } else {
                         echo $cartprod['pricingtext'];
                     }
 
@@ -357,20 +350,15 @@ if ($ra->get_req_var("submitorder")) {
         unset($_SESSION['uid']);
 
         if ($orderstatus == "Active") {
-            update_query("tblorders", 
-                array("status" => "Active"), 
-                array("id" => $_SESSION['orderdetails']['OrderID'])
-                );
+            update_query("tblorders", array("status" => "Active"), array("id" => $_SESSION['orderdetails']['OrderID'])
+            );
 
             if (is_array($_SESSION['orderdetails']['Products'])) {
                 foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-                    update_query("tblcustomerservices", 
-                        array("servicestatus" => "Active"), 
-                        array("id" => $productid)
+                    update_query("tblcustomerservices", array("servicestatus" => "Active"), array("id" => $productid)
                     );
                 }
             }
-
         }
 
         getUsersLang(0);
@@ -493,7 +481,7 @@ if ($ra->get_req_var("noselections")) {
 }
 
 echo $infobox;
-echo "
+echo "<div class=\"content-wrapper\"><section class=\"content\">
 <form method=\"post\" action=\"";
 echo $_SERVER['PHP_SELF'];
 echo "\" id=\"orderfrm\">
@@ -530,8 +518,7 @@ while ($data = mysqli_fetch_array($result)) {
 
     if ($promo_type == "Percentage") {
         $promo_value .= "%";
-    }
-    else {
+    } else {
         $promo_value = formatCurrency($promo_value);
     }
 
@@ -566,8 +553,7 @@ while ($data = mysqli_fetch_array($result)) {
 
     if ($promo_type == "Percentage") {
         $promo_value .= "%";
-    }
-    else {
+    } else {
         $promo_value = formatCurrency($promo_value);
     }
 
@@ -709,10 +695,11 @@ $jscode .= "function savePromo() {
             alert(data);
         }
     });
-}";
+}</section></div>";
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
+$aInt->template = "order/add";
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
 $aInt->display();

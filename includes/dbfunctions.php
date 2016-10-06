@@ -114,7 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
- //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+    //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
 
     $result = mysqli_query($ramysqli, $query);
 
@@ -230,7 +230,7 @@ function insert_query($table, $array) {
     global $mysqli_errors;
     global $ramysqli;
 
-    error_log(print_r($array,1));
+    error_log(print_r($array, 1));
 
     $fieldnamelist = $fieldvaluelist = "";
     $query = "INSERT INTO " . db_make_safe_field($table) . " ";
@@ -238,29 +238,29 @@ function insert_query($table, $array) {
         $fieldnamelist .= db_build_quoted_field($key) . ",";
 
         if ($value === "now()") {
-            $fieldvaluelist .= "NOW(),";
+            $fieldvaluelist .= "CURRENT_TIMESTAMP,";
             continue;
         }
 
-        if (is_int($value)) { 
-            $fieldvaluelist .= intval($value).",";
+        if (is_int($value)) {
+            $fieldvaluelist .= intval($value) . ",";
             continue;
         }
 
-        if (($value === "NULL") || $value == "" || is_null($value)) {
+        if (($value === "NULL") || is_null($value)) {
             $fieldvaluelist .= "NULL,";
             continue;
         }
 
 
         $fieldvaluelist .= "'" . db_escape_string($value) . "',";
-        }
+    }
 
 
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-    error_log($query.'\n', 3, "/tmp/php_errors.log");
+ error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging
@@ -299,7 +299,8 @@ function delete_query($table, $where) {
         error_log("__FUNCTION__" . $query);
     }
 
-   // mail("waikatozhang@gmail.com", "delete", $query);
+    // mail("waikatozhang@gmail.com", "delete", $query);
+    //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {

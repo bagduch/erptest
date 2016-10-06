@@ -169,7 +169,7 @@ class RA_Admin {
         }
 
         $clientgroups = getClientGroups();
-        $code = "<select name=\"" . $fieldname . "\"";
+        $code = "<select class=\"form-control\" name=\"" . $fieldname . "\"";
 
         if ($autosubmit) {
             $code .= " onChange=\"submit();\"";
@@ -834,7 +834,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
         $content .= "
 <div class=\"tablebg\">
-<table id=\"sortabletbl" . $this->sortableTableCount . "\" class=\"datatable\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
+<table id=\"sortabletbl" . $this->sortableTableCount . "\" class=\"datatable table\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
 <tr>";
         foreach ($columns as $column) {
 
@@ -890,7 +890,11 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 $content .= "</a>";
 
                 if ($orderby == $columnid) {
-                    $content .= " <img src=\"images/" . strtolower($order) . ".gif\" class=\"absmiddle\" />";
+                    if ($sortDirection == "ASC") {
+                        $content .= " <i class=\"glyphicon glyphicon-sort-by-attributes\"></i>";
+                    } else {
+                        $content .= " <i class=\"glyphicon glyphicon-sort-by-attributes-alt\"></i>";
+                    }
                 }
             }
 
@@ -948,7 +952,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
             if (0 < $page) {
                 $prevoffset = $page - 1;
-                $content .= "<a href=\"" . $_SERVER['PHP_SELF'] . "?";
+                $content .= "<a class=\"btn btn-default\" href=\"" . $_SERVER['PHP_SELF'] . "?";
                 foreach ($_REQUEST as $key => $value) {
 
                     if ((($key != "orderby" && $key != "page") && $key != "PHPSESSID") && $value) {
@@ -1025,7 +1029,24 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $tabarray['clientsemails'] = $this->lang("clientsummary", "emails");
         $tabarray['clientsnotes'] = $this->lang("clientsummary", "notes") . " (" . get_query_val("tblnotes", "COUNT(id)", array("userid" => $uid)) . ")";
         $tabarray['clientslog'] = $this->lang("clientsummary", "log");
-        echo "<form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"get\">\r\n<p>" . $this->lang("clientsummary", "activeclient") . ": ";
+
+
+
+
+
+        $result = select_query_i("tblclients", "", array("id" => $uid));
+        $data = mysqli_fetch_array($result);
+        $selectfirstname = $data['firstname'];
+        $selectlastname = $data['lastname'];
+        $selectcompanyname = $data['companyname'];
+
+
+
+        echo "<form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"get\">\r\n<p>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . ":
+            <small>" . $data['status'];
+        echo $this->clientsDropDown($uid, true);
+        echo " <input type=\"submit\" value=\"Go\"></small>";
+
 
         if ($CONFIG['DisableClientDropdown']) {
             $result = select_query_i("tblclients", "", array("id" => $uid));
@@ -1039,11 +1060,10 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 echo " (" . $selectcompanyname . ")";
             }
         } else {
-            echo $this->clientsDropDown($uid, true);
-            echo " <input type=\"submit\" value=\"Go\">";
+            
         }
 
-        echo "</p></form>";
+        echo "</p></form><section class=\"content\">";
         echo "<ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
