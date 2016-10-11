@@ -1,7 +1,5 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-06 14:56:22
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:24:11
          compiled from ra/client/invoices.tpl */ ?>
-
-
 
 <form action="/admin/clientsinvoices.php?userid=12437" method="post">
     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">

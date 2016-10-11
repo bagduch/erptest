@@ -146,6 +146,8 @@ if ($action == "") {
         $announcements[] = array("id" => $id, "date" => $date, "title" => $title, "urlfriendlytitle" => getModRewriteFriendlyString($title), "text" => $announcement);
     }
 
+
+
     $smartyvalues['announcements'] = $announcements;
 
     $captcha = clientAreaInitCaptcha();
@@ -178,7 +180,12 @@ if ($action == "") {
             $exdetails = $client->getDetails();
         }
 
+
+
+
         include "includes/countries.php";
+        $key = array_search($ra->get_req_var_if($e, "country", $exdetails), $countries);
+     
         $ca->assign("clientfirstname", $ra->get_req_var_if($e, "firstname", $exdetails));
         $ca->assign("clientlastname", $ra->get_req_var_if($e, "lastname", $exdetails));
         $ca->assign("clientcompanyname", $ra->get_req_var_if($e, "companyname", $exdetails));
@@ -189,7 +196,7 @@ if ($action == "") {
         $ca->assign("clientstate", $ra->get_req_var_if($e, "state", $exdetails));
         $ca->assign("clientpostcode", $ra->get_req_var_if($e, "postcode", $exdetails));
         $ca->assign("clientcountry", $countries[$ra->get_req_var_if($e, "country", $exdetails)]);
-        $ca->assign("clientcountriesdropdown", getCountriesDropDown($ra->get_req_var_if($e, "country", $exdetails)));
+        $ca->assign("clientcountriesdropdown", getCountriesDropDown($key));
         $ca->assign("clientphonenumber", $ra->get_req_var_if($e, "phonenumber", $exdetails));
         $ca->assign("customfields", getCustomFields("client", "", $client->getID(), "", "", $_POST['customfield']));
         $ca->assign("contacts", $client->getContacts());
@@ -243,7 +250,7 @@ if ($action == "") {
 
                 if (!$errormessage) {
                     $oldcontactdata = get_query_vals("tblcontacts", "", array("userid" => $client->getID(), "id" => $id));
-                    $array = db_build_update_array(array("firstname", "lastname", "companyname", "email", "address1", "address2", "city", "state", "postcode", "country", "phonenumber", "subaccount", "permissions", "generalemails", "productemails", "domainemails", "invoiceemails", "supportemails"), "implode");
+                    $array = db_build_update_array(array("firstname", "lastname", "companyname", "email", "address1", "address2", "city", "state", "postcode", "country", "phonenumber", "subaccount", "permissions", "generalemails", "productemails", "descriptionemails", "invoiceemails", "supportemails"), "implode");
                     $array['subaccount'] = ($subaccount ? "1" : "0");
 
                     if ($password) {
@@ -315,7 +322,7 @@ if ($action == "") {
                     $smartyvalues['errormessage'] = $errormessage;
 
                     if (!$errormessage) {
-                        $contactid = addContact($client->getID(), $firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $permissions, $generalemails, $productemails, $domainemails, $invoiceemails, $supportemails);
+                        $contactid = addContact($client->getID(), $firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $permissions, $generalemails, $productemails, $descriptionemails, $invoiceemails, $supportemails);
                         redir("action=contacts&id=" . $contactid . "&success=1");
                         exit();
                     }
@@ -519,16 +526,22 @@ if ($action == "") {
 
                             $smartyvalues['errormessage'] = $errormessage;
                         } else {
-                            if ($action == "hosting" || $action == "products") {
+                            if ($action == "hosting" || $action == "product" || $action == "services") {
                                 checkContactPermission("products");
+                                if ($action == "product") {
+                                    $title = "My Products";
+                                } else {
+                                    $title = "My Services";
+                                }
+                                $ca->setPageTitle($title);
                                 $ca->setTemplate("clientareaproducts");
                                 $table = "tblcustomerservices";
                                 $fields = "COUNT(*)";
-                                $where = "userid='" . db_escape_string($client->getID()) . "'";
+                                $where = "userid='" . db_escape_string($client->getID()) . "' AND tblservices.type='" . $action . "' ";
 
                                 if ($q) {
                                     $q = preg_replace("/[^a-z0-9-.]/", "", strtolower($q));
-                                    $where .= " AND domain LIKE '%" . db_escape_string($q) . "%'";
+                                    $where .= "  AND description LIKE '%" . db_escape_string($q) . "%'";
                                     $smartyvalues['q'] = $q;
                                 }
 
@@ -559,13 +572,13 @@ if ($action == "") {
                                 }
 
                                 $accounts = array();
-                                $fields = "tblcustomerservices.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.tax,tblservices.upgradepackages,tblservices.downloads,tblservices.servertype";
+                                $fields = "tblcustomerservices.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.type,tblservices.tax,tblservices.servertype";
                                 $result = select_query_i($table, $fields, $where, $orderby, $sort, $limit, $innerjoin);
 
                                 while ($data = mysqli_fetch_array($result)) {
                                     $id = $data['id'];
                                     $regdate = $data['regdate'];
-                                    $domain = $data['domain'];
+                                    $description = $data['description'];
                                     $firstpaymentamount = $data['firstpaymentamount'];
                                     $recurringamount = $data['amount'];
                                     $nextduedate = $data['nextduedate'];
@@ -627,7 +640,7 @@ if ($action == "") {
                                         }
                                     }
 
-                                    $accounts[] = array("id" => $id, "regdate" => $regdate, "group" => $productgroup, "product" => $productname, "module" => $module, "server" => $serverarray, "domain" => $domain, "firstpaymentamount" => formatCurrency($firstpaymentamount), "recurringamount" => formatCurrency($recurringamount), "amount" => ($billingcycle == "One Time" ? formatCurrency($firstpaymentamount) : formatCurrency($recurringamount)), "nextduedate" => $nextduedate, "billingcycle" => $_LANG["orderpaymentterm" . $langbillingcycle], "username" => $username, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "class" => strtolower($xstatus), "addons" => (get_query_val("tblserviceaddons", "id", array("hostingid" => $id), "id", "DESC") ? "1" : ""), "packagesupgrade" => ($upgradepackages ? "1" : ""), "downloads" => ($downloads ? "1" : ""), "showcancelbutton" => $CONFIG['ShowCancellationButton']);
+                                    $accounts[] = array("id" => $id, "regdate" => $regdate, "group" => $productgroup, "product" => $productname, "module" => $module, "server" => $serverarray, "description" => $description, "firstpaymentamount" => formatCurrency($firstpaymentamount), "recurringamount" => formatCurrency($recurringamount), "amount" => ($billingcycle == "One Time" ? formatCurrency($firstpaymentamount) : formatCurrency($recurringamount)), "nextduedate" => $nextduedate, "billingcycle" => $_LANG["orderpaymentterm" . $langbillingcycle], "username" => $username, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "class" => strtolower($xstatus), "addons" => (get_query_val("tblserviceaddons", "id", array("hostingid" => $id), "id", "DESC") ? "1" : ""), "packagesupgrade" => ($upgradepackages ? "1" : ""), "downloads" => ($downloads ? "1" : ""), "showcancelbutton" => $CONFIG['ShowCancellationButton']);
                                 }
 
                                 $ca->assign("services", $accounts);
@@ -652,7 +665,7 @@ if ($action == "") {
                                     $ca->assign("modulename", $service->getModule());
                                     $ca->assign("module", $service->getModule());
                                     $ca->assign("serverdata", $service->getServerInfo());
-                                    $ca->assign("domain", $service->getData("domain"));
+                                    $ca->assign("description", $service->getData("description"));
                                     $ca->assign("groupname", $service->getData("groupname"));
                                     $ca->assign("product", $service->getData("productname"));
                                     $ca->assign("paymentmethod", $service->getPaymentMethod());
@@ -855,21 +868,21 @@ if ($action == "") {
                                         $ca->assign("password", $servicepw);
                                     }
                                 } else {
-                                    if ($action == "domains") {
-                                        checkContactPermission("domains");
-                                        $ca->setTemplate("clientareadomains");
+                                    if ($action == "descriptions") {
+                                        checkContactPermission("descriptions");
+                                        $ca->setTemplate("clientareadescriptions");
                                         $where = "userid='" . db_escape_string($client->getID()) . "'";
 
                                         if ($q) {
                                             $q = preg_replace("/[^a-z0-9-.]/", "", strtolower($q));
-                                            $where .= " AND domain LIKE '%" . db_escape_string($q) . "%'";
+                                            $where .= " AND description LIKE '%" . db_escape_string($q) . "%'";
                                             $smartyvalues['q'] = $q;
                                         }
 
-                                        $result = select_query_i("tbldomains", "COUNT(*)", $where);
+                                        $result = select_query_i("tbldescriptions", "COUNT(*)", $where);
                                         $data = mysqli_fetch_array($result);
                                         $numitems = $data[0];
-                                        list($orderby, $sort, $limit) = clientAreaTableInit("dom", "domain", "ASC", $numitems);
+                                        list($orderby, $sort, $limit) = clientAreaTableInit("dom", "description", "ASC", $numitems);
                                         $smartyvalues['orderby'] = $orderby;
                                         $smartyvalues['sort'] = strtolower($sort);
 
@@ -888,20 +901,20 @@ if ($action == "") {
                                                         if ($orderby == "autorenew") {
                                                             $orderby = "donotrenew";
                                                         } else {
-                                                            $orderby = "domain";
+                                                            $orderby = "description";
                                                         }
                                                     }
                                                 }
                                             }
                                         }
 
-                                        $domains = array();
-                                        $result = select_query_i("tbldomains", "", $where, $orderby, $sort, ($page - 1) * $pagelimit . ("," . $pagelimit));
+                                        $descriptions = array();
+                                        $result = select_query_i("tbldescriptions", "", $where, $orderby, $sort, ($page - 1) * $pagelimit . ("," . $pagelimit));
 
                                         while ($data = mysqli_fetch_array($result)) {
                                             $id = $data['id'];
                                             $registrationdate = $data['registrationdate'];
-                                            $domain = $data['domain'];
+                                            $description = $data['description'];
                                             $amount = $data['recurringamount'];
                                             $nextduedate = $data['nextduedate'];
                                             $expirydate = $data['expirydate'];
@@ -912,26 +925,26 @@ if ($action == "") {
                                             $registrationdate = fromMySQLDate($registrationdate, 0, 1, "-");
                                             $nextduedate = fromMySQLDate($nextduedate, 0, 1, "-");
                                             $expirydate = fromMySQLDate($expirydate, 0, 1, "-");
-                                            $domains[] = array("id" => $id, "domain" => $domain, "amount" => formatCurrency($amount), "registrationdate" => $registrationdate, "nextduedate" => $nextduedate, "expirydate" => $expirydate, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "autorenew" => $autorenew);
+                                            $descriptions[] = array("id" => $id, "description" => $description, "amount" => formatCurrency($amount), "registrationdate" => $registrationdate, "nextduedate" => $nextduedate, "expirydate" => $expirydate, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "autorenew" => $autorenew);
                                         }
 
-                                        $ca->assign("domains", $domains);
+                                        $ca->assign("descriptions", $descriptions);
                                         $smartyvalues = array_merge($smartyvalues, clientAreaTablePageNav($numitems));
                                     } else {
-                                        if ($action == "domaindetails") {
-                                            checkContactPermission("domains");
-                                            $ca->setTemplate("clientareadomaindetails");
-                                            $domains = new RA_Domains();
-                                            $domain_data = $domains->getDomainsDatabyID($id);
+                                        if ($action == "descriptiondetails") {
+                                            checkContactPermission("descriptions");
+                                            $ca->setTemplate("clientareadescriptiondetails");
+                                            $descriptions = new RA_Domains();
+                                            $description_data = $descriptions->getDomainsDatabyID($id);
 
-                                            if (!$domain_data) {
-                                                redir("action=domains", "clientarea.php");
+                                            if (!$description_data) {
+                                                redir("action=descriptions", "clientarea.php");
                                             }
 
                                             if ($autorenew == "enable") {
-                                                update_query("tbldomains", array("donotrenew" => ""), array("id" => $id, "userid" => $client->getID()));
-                                                $domainname = get_query_val("tbldomains", "domain", array("userid" => $client->getID(), "id" => $id));
-                                                logActivity("Client Enabled Domain Auto Renew - Domain ID: " . $id . " - Domain: " . $domainname);
+                                                update_query("tbldescriptions", array("donotrenew" => ""), array("id" => $id, "userid" => $client->getID()));
+                                                $descriptionname = get_query_val("tbldescriptions", "description", array("userid" => $client->getID(), "id" => $id));
+                                                logActivity("Client Enabled Domain Auto Renew - Domain ID: " . $id . " - Domain: " . $descriptionname);
                                                 $ca->assign("updatesuccess", true);
                                             } else {
                                                 if ($autorenew == "disable") {
@@ -940,23 +953,23 @@ if ($action == "") {
                                                 }
                                             }
 
-                                            $domain_data = $domains->getDomainsDatabyID($id);
-                                            $domain = $domains->getData("domain");
-                                            $firstpaymentamount = $domains->getData("firstpaymentamount");
-                                            $recurringamount = $domains->getData("recurringamount");
-                                            $nextduedate = $domains->getData("nextduedate");
-                                            $expirydate = $domains->getData("expirydate");
-                                            $paymentmethod = $domains->getData("paymentmethod");
-                                            $servicestatus = $domains->getData("status");
-                                            $registrationperiod = $domains->getData("registrationperiod");
-                                            $registrationdate = $domains->getData("registrationdate");
-                                            $donotrenew = $domains->getData("donotrenew");
-                                            $dnsmanagement = $domains->getData("dnsmanagement");
-                                            $emailforwarding = $domains->getData("emailforwarding");
-                                            $idprotection = $domains->getData("idprotection");
+                                            $description_data = $descriptions->getDomainsDatabyID($id);
+                                            $description = $descriptions->getData("description");
+                                            $firstpaymentamount = $descriptions->getData("firstpaymentamount");
+                                            $recurringamount = $descriptions->getData("recurringamount");
+                                            $nextduedate = $descriptions->getData("nextduedate");
+                                            $expirydate = $descriptions->getData("expirydate");
+                                            $paymentmethod = $descriptions->getData("paymentmethod");
+                                            $servicestatus = $descriptions->getData("status");
+                                            $registrationperiod = $descriptions->getData("registrationperiod");
+                                            $registrationdate = $descriptions->getData("registrationdate");
+                                            $donotrenew = $descriptions->getData("donotrenew");
+                                            $dnsmanagement = $descriptions->getData("dnsmanagement");
+                                            $emailforwarding = $descriptions->getData("emailforwarding");
+                                            $idprotection = $descriptions->getData("idprotection");
                                             $gatewaysarray = getGatewaysArray();
                                             $paymentmethod = $gatewaysarray[$paymentmethod];
-                                            $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain);
+                                            $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description);
                                             $registrationdate = fromMySQLDate($registrationdate, 0, 1, "-");
                                             $nextduedate = fromMySQLDate($nextduedate, 0, 1, "-");
                                             $expirydate = fromMySQLDate($expirydate, 0, 1, "-");
@@ -968,10 +981,10 @@ if ($action == "") {
                                             }
 
                                             $autorenew = ($donotrenew ? false : true);
-                                            $sld = $domains->getSLD();
-                                            $tld = $domains->getTLD();
-                                            $ca->assign("domainid", $domains->getData("id"));
-                                            $ca->assign("domain", $domain);
+                                            $sld = $descriptions->getSLD();
+                                            $tld = $descriptions->getTLD();
+                                            $ca->assign("descriptionid", $descriptions->getData("id"));
+                                            $ca->assign("description", $description);
                                             $ca->assign("sld", $sld);
                                             $ca->assign("tld", $tld);
                                             $ca->assign("firstpaymentamount", formatCurrency($firstpaymentamount));
@@ -992,7 +1005,7 @@ if ($action == "") {
                                                 $ca->assign("renew", $allowrenew);
                                             }
 
-                                            $tlddata = get_query_vals("tbldomainpricing", "", array("extension" => "." . $tld));
+                                            $tlddata = get_query_vals("tbldescriptionpricing", "", array("extension" => "." . $tld));
                                             $ca->assign("addons", array("dnsmanagement" => $tlddata['dnsmanagement'], "emailforwarding" => $tlddata['emailforwarding'], "idprotection" => $tlddata['idprotection']));
                                             $addonscount = 0;
 
@@ -1009,33 +1022,33 @@ if ($action == "") {
                                             }
 
                                             $ca->assign("addonscount", $addonscount);
-                                            $result = select_query_i("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                                            $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
                                             $data = mysqli_fetch_array($result);
-                                            $domaindnsmanagementprice = $data['msetupfee'];
-                                            $domainemailforwardingprice = $data['qsetupfee'];
-                                            $domainidprotectionprice = $data['ssetupfee'];
-                                            $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($domaindnsmanagementprice), "emailforwarding" => formatCurrency($domainemailforwardingprice), "idprotection" => formatCurrency($domainidprotectionprice)));
+                                            $descriptiondnsmanagementprice = $data['msetupfee'];
+                                            $descriptionemailforwardingprice = $data['qsetupfee'];
+                                            $descriptionidprotectionprice = $data['ssetupfee'];
+                                            $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($descriptiondnsmanagementprice), "emailforwarding" => formatCurrency($descriptionemailforwardingprice), "idprotection" => formatCurrency($descriptionidprotectionprice)));
 
                                             if ($sub == "savereglock") {
                                                 check_token();
-                                                checkContactPermission("managedomains");
+                                                checkContactPermission("managedescriptions");
                                                 $newlockstatus = ($ra->get_req_var("reglock") ? "locked" : "unlocked");
-                                                $success = $domains->moduleCall("SaveRegistrarLock", array("lockenabled" => $newlockstatus));
+                                                $success = $descriptions->moduleCall("SaveRegistrarLock", array("lockenabled" => $newlockstatus));
 
                                                 if ($success) {
                                                     $smartyvalues['updatesuccess'] = true;
                                                 } else {
-                                                    $smartyvalues['error'] = $domains->getLastError();
+                                                    $smartyvalues['error'] = $descriptions->getLastError();
                                                 }
                                             }
 
-                                            $success = $domains->moduleCall("GetNameservers");
+                                            $success = $descriptions->moduleCall("GetNameservers");
 
                                             if ($success) {
                                                 $i = 1;
 
                                                 while ($i <= 5) {
-                                                    $ca->assign("ns" . $i, $domains->getModuleReturn("ns" . $i));
+                                                    $ca->assign("ns" . $i, $descriptions->getModuleReturn("ns" . $i));
                                                     ++$i;
                                                 }
 
@@ -1059,24 +1072,24 @@ if ($action == "") {
                                                     $smartyvalues['defaultns'] = true;
                                                 }
                                             } else {
-                                                $smartyvalues['error'] = $domains->getLastError();
+                                                $smartyvalues['error'] = $descriptions->getLastError();
                                             }
 
-                                            if (!preg_match('/uk$/i', $tld) && $domains->hasFunction("GetRegistrarLock")) {
-                                                $success = $domains->moduleCall("GetRegistrarLock");
+                                            if (!preg_match('/uk$/i', $tld) && $descriptions->hasFunction("GetRegistrarLock")) {
+                                                $success = $descriptions->moduleCall("GetRegistrarLock");
 
                                                 if ($success) {
-                                                    $ca->assign("lockstatus", $domains->getModuleReturn());
+                                                    $ca->assign("lockstatus", $descriptions->getModuleReturn());
                                                 }
                                             }
 
-                                            $smartyvalues['managecontacts'] = ($domains->hasFunction("GetContactDetails") ? true : false);
-                                            $smartyvalues['registerns'] = ($domains->hasFunction("RegisterNameserver") ? true : false);
-                                            $smartyvalues['dnsmanagement'] = (($dnsmanagement && $domains->hasFunction("GetDNS")) ? true : false);
-                                            $smartyvalues['emailforwarding'] = (($emailforwarding && $domains->hasFunction("GetEmailForwarding")) ? true : false);
-                                            $smartyvalues['getepp'] = (($tlddata['eppcode'] && $domains->hasFunction("GetEPPCode")) ? true : false);
+                                            $smartyvalues['managecontacts'] = ($descriptions->hasFunction("GetContactDetails") ? true : false);
+                                            $smartyvalues['registerns'] = ($descriptions->hasFunction("RegisterNameserver") ? true : false);
+                                            $smartyvalues['dnsmanagement'] = (($dnsmanagement && $descriptions->hasFunction("GetDNS")) ? true : false);
+                                            $smartyvalues['emailforwarding'] = (($emailforwarding && $descriptions->hasFunction("GetEmailForwarding")) ? true : false);
+                                            $smartyvalues['getepp'] = (($tlddata['eppcode'] && $descriptions->hasFunction("GetEPPCode")) ? true : false);
 
-                                            if (preg_match('/uk$/i', $tld) && $domains->hasFunction("ReleaseDomain")) {
+                                            if (preg_match('/uk$/i', $tld) && $descriptions->hasFunction("ReleaseDomain")) {
                                                 $allowrelease = false;
 
                                                 if (isset($params['AllowClientTAGChange'])) {
@@ -1088,39 +1101,39 @@ if ($action == "") {
                                                 }
 
                                                 if ($allowrelease) {
-                                                    $smartyvalues['releasedomain'] = true;
+                                                    $smartyvalues['releasedescription'] = true;
 
-                                                    if ($sub == "releasedomain") {
+                                                    if ($sub == "releasedescription") {
                                                         check_token();
-                                                        checkContactPermission("managedomains");
-                                                        $success = $domains->moduleCall("ReleaseDomain", array("transfertag" => $transtag));
+                                                        checkContactPermission("managedescriptions");
+                                                        $success = $descriptions->moduleCall("ReleaseDomain", array("transfertag" => $transtag));
 
                                                         if ($success) {
                                                             $ca->assign("status", $ra->get_lang("clientareacancelled"));
                                                             logActivity("Client Requested Domain Release to Tag " . $transtag);
                                                         } else {
-                                                            $smartyvalues['error'] = $domains->getLastError();
+                                                            $smartyvalues['error'] = $descriptions->getLastError();
                                                         }
                                                     }
                                                 } else {
-                                                    $smartyvalues['releasedomain'] = false;
+                                                    $smartyvalues['releasedescription'] = false;
                                                 }
                                             }
                                         } else {
-                                            if ($action == "domaincontacts") {
-                                                checkContactPermission("managedomains");
-                                                $ca->setTemplate("clientareadomaincontactinfo");
+                                            if ($action == "descriptioncontacts") {
+                                                checkContactPermission("managedescriptions");
+                                                $ca->setTemplate("clientareadescriptioncontactinfo");
                                                 $contactsarray = $client->getContactsWithAddresses();
                                                 $smartyvalues['contacts'] = $contactsarray;
-                                                $domains = new RA_Domains();
-                                                $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                $descriptions = new RA_Domains();
+                                                $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                if ((!$domain_data || !$domains->isActive()) || !$domains->hasFunction("GetContactDetails")) {
-                                                    redir("action=domains", "clientarea.php");
+                                                if ((!$description_data || !$descriptions->isActive()) || !$descriptions->hasFunction("GetContactDetails")) {
+                                                    redir("action=descriptions", "clientarea.php");
                                                 }
 
-                                                $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain_data['domain']);
-                                                $ca->addToBreadCrumb("#", $ra->get_lang("domaincontactinfo"));
+                                                $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description_data['description']);
+                                                $ca->addToBreadCrumb("#", $ra->get_lang("descriptioncontactinfo"));
 
                                                 if ($sub == "save") {
                                                     check_token();
@@ -1141,44 +1154,44 @@ if ($action == "") {
                                                                 }
                                                             }
 
-                                                            $contactdetails[$wc_key] = $domains->buildWHOISSaveArray($tmpcontactdetails);
+                                                            $contactdetails[$wc_key] = $descriptions->buildWHOISSaveArray($tmpcontactdetails);
                                                             continue;
                                                         }
                                                     }
 
-                                                    $success = $domains->moduleCall("SaveContactDetails", array("contactdetails" => $contactdetails));
+                                                    $success = $descriptions->moduleCall("SaveContactDetails", array("contactdetails" => $contactdetails));
 
                                                     if ($success) {
                                                         $smartyvalues['successful'] = true;
                                                     } else {
-                                                        $smartyvalues['error'] = $domains->getLastError();
+                                                        $smartyvalues['error'] = $descriptions->getLastError();
                                                     }
                                                 }
 
-                                                $success = $domains->moduleCall("GetContactDetails");
+                                                $success = $descriptions->moduleCall("GetContactDetails");
 
                                                 if ($success) {
-                                                    $smartyvalues['contactdetails'] = $domains->getModuleReturn();
+                                                    $smartyvalues['contactdetails'] = $descriptions->getModuleReturn();
                                                 } else {
-                                                    $smartyvalues['error'] = $domains->getLastError();
+                                                    $smartyvalues['error'] = $descriptions->getLastError();
                                                 }
 
-                                                $smartyvalues['domainid'] = $domains->getData("id");
-                                                $smartyvalues['domain'] = $domains->getData("domain");
+                                                $smartyvalues['descriptionid'] = $descriptions->getData("id");
+                                                $smartyvalues['description'] = $descriptions->getData("description");
                                                 $smartyvalues['contacts'] = $client->getContactsWithAddresses();
                                             } else {
-                                                if ($action == "domainemailforwarding") {
-                                                    checkContactPermission("managedomains");
-                                                    $ca->setTemplate("clientareadomainemailforwarding");
-                                                    $domains = new RA_Domains();
-                                                    $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                if ($action == "descriptionemailforwarding") {
+                                                    checkContactPermission("managedescriptions");
+                                                    $ca->setTemplate("clientareadescriptionemailforwarding");
+                                                    $descriptions = new RA_Domains();
+                                                    $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                    if ((!$domain_data || !$domains->isActive()) || !$domains->hasFunction("GetEmailForwarding")) {
-                                                        redir("action=domains", "clientarea.php");
+                                                    if ((!$description_data || !$descriptions->isActive()) || !$descriptions->hasFunction("GetEmailForwarding")) {
+                                                        redir("action=descriptions", "clientarea.php");
                                                     }
 
-                                                    $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain_data['domain']);
-                                                    $ca->addToBreadCrumb("#", $ra->get_lang("domainemailforwarding"));
+                                                    $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description_data['description']);
+                                                    $ca->addToBreadCrumb("#", $ra->get_lang("descriptionemailforwarding"));
 
                                                     if ($sub == "save") {
                                                         check_token();
@@ -1198,41 +1211,41 @@ if ($action == "") {
                                                             $vars['forwardto'][$key] = $ra->get_req_var("emailforwarderforwardtonew");
                                                         }
 
-                                                        $success = $domains->moduleCall("SaveEmailForwarding", $vars);
+                                                        $success = $descriptions->moduleCall("SaveEmailForwarding", $vars);
 
                                                         if (!$success) {
-                                                            $smartyvalues['error'] = $domains->getLastError();
+                                                            $smartyvalues['error'] = $descriptions->getLastError();
                                                         }
                                                     }
 
-                                                    $success = $domains->moduleCall("GetEmailForwarding");
+                                                    $success = $descriptions->moduleCall("GetEmailForwarding");
 
                                                     if (!$success) {
-                                                        $smartyvalues['error'] = $domains->getLastError();
+                                                        $smartyvalues['error'] = $descriptions->getLastError();
                                                     }
 
-                                                    $smartyvalues['domainid'] = $domain_data['id'];
-                                                    $smartyvalues['domain'] = $domain_data['domain'];
+                                                    $smartyvalues['descriptionid'] = $description_data['id'];
+                                                    $smartyvalues['description'] = $description_data['description'];
 
-                                                    if ($domains->getModuleReturn("external")) {
+                                                    if ($descriptions->getModuleReturn("external")) {
                                                         $ca->assign("external", true);
-                                                        $ca->assign("code", $domains->getModuleReturn("code"));
+                                                        $ca->assign("code", $descriptions->getModuleReturn("code"));
                                                     } else {
-                                                        $ca->assign("emailforwarders", $domains->getModuleReturn());
+                                                        $ca->assign("emailforwarders", $descriptions->getModuleReturn());
                                                     }
                                                 } else {
-                                                    if ($action == "domaindns") {
-                                                        checkContactPermission("managedomains");
-                                                        $ca->setTemplate("clientareadomaindns");
-                                                        $domains = new RA_Domains();
-                                                        $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                    if ($action == "descriptiondns") {
+                                                        checkContactPermission("managedescriptions");
+                                                        $ca->setTemplate("clientareadescriptiondns");
+                                                        $descriptions = new RA_Domains();
+                                                        $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                        if ((!$domain_data || !$domains->isActive()) || !$domains->hasFunction("GetDNS")) {
-                                                            redir("action=domains", "clientarea.php");
+                                                        if ((!$description_data || !$descriptions->isActive()) || !$descriptions->hasFunction("GetDNS")) {
+                                                            redir("action=descriptions", "clientarea.php");
                                                         }
 
-                                                        $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain_data['domain']);
-                                                        $ca->addToBreadCrumb("#", $ra->get_lang("domaindnsmanagement"));
+                                                        $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description_data['description']);
+                                                        $ca->addToBreadCrumb("#", $ra->get_lang("descriptiondnsmanagement"));
 
                                                         if ($sub == "save") {
                                                             check_token();
@@ -1241,65 +1254,65 @@ if ($action == "") {
                                                                 $vars[] = array("hostname" => $dnshost, "type" => $_POST['dnsrecordtype'][$num], "address" => $_POST['dnsrecordaddress'][$num], "priority" => $_POST['dnsrecordpriority'][$num], "recid" => $_POST['dnsrecid'][$num]);
                                                             }
 
-                                                            $success = $domains->moduleCall("SaveDNS", array("dnsrecords" => $vars));
+                                                            $success = $descriptions->moduleCall("SaveDNS", array("dnsrecords" => $vars));
 
                                                             if (!$success) {
-                                                                $smartyvalues['error'] = $domains->getLastError();
+                                                                $smartyvalues['error'] = $descriptions->getLastError();
                                                             }
                                                         }
 
-                                                        $success = $domains->moduleCall("GetDNS");
+                                                        $success = $descriptions->moduleCall("GetDNS");
 
                                                         if (!$success) {
-                                                            $smartyvalues['error'] = $domains->getLastError();
+                                                            $smartyvalues['error'] = $descriptions->getLastError();
                                                         }
 
-                                                        $smartyvalues['domainid'] = $domain_data['id'];
-                                                        $smartyvalues['domain'] = $domain_data['domain'];
+                                                        $smartyvalues['descriptionid'] = $description_data['id'];
+                                                        $smartyvalues['description'] = $description_data['description'];
 
-                                                        if ($domains->getModuleReturn("external")) {
+                                                        if ($descriptions->getModuleReturn("external")) {
                                                             $ca->assign("external", true);
-                                                            $ca->assign("code", $domains->getModuleReturn("code"));
+                                                            $ca->assign("code", $descriptions->getModuleReturn("code"));
                                                         } else {
-                                                            $ca->assign("dnsrecords", $domains->getModuleReturn());
+                                                            $ca->assign("dnsrecords", $descriptions->getModuleReturn());
                                                         }
                                                     } else {
-                                                        if ($action == "domaingetepp") {
-                                                            checkContactPermission("managedomains");
-                                                            $ca->setTemplate("clientareadomaingetepp");
-                                                            $domains = new RA_Domains();
-                                                            $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                        if ($action == "descriptiongetepp") {
+                                                            checkContactPermission("managedescriptions");
+                                                            $ca->setTemplate("clientareadescriptiongetepp");
+                                                            $descriptions = new RA_Domains();
+                                                            $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                            if ((!$domain_data || !$domains->isActive()) || !$domains->hasFunction("GetEPPCode")) {
-                                                                redir("action=domains", "clientarea.php");
+                                                            if ((!$description_data || !$descriptions->isActive()) || !$descriptions->hasFunction("GetEPPCode")) {
+                                                                redir("action=descriptions", "clientarea.php");
                                                             }
 
-                                                            $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain_data['domain']);
-                                                            $ca->addToBreadCrumb("#", $ra->get_lang("domaingeteppcode"));
-                                                            $smartyvalues['domainid'] = $domain_data['id'];
-                                                            $smartyvalues['domain'] = $domain_data['domain'];
-                                                            $success = $domains->moduleCall("GetEPPCode");
+                                                            $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description_data['description']);
+                                                            $ca->addToBreadCrumb("#", $ra->get_lang("descriptiongeteppcode"));
+                                                            $smartyvalues['descriptionid'] = $description_data['id'];
+                                                            $smartyvalues['description'] = $description_data['description'];
+                                                            $success = $descriptions->moduleCall("GetEPPCode");
 
                                                             if (!$success) {
-                                                                $smartyvalues['error'] = $domains->getLastError();
+                                                                $smartyvalues['error'] = $descriptions->getLastError();
                                                             } else {
-                                                                $smartyvalues['eppcode'] = $domains->getModuleReturn("eppcode");
+                                                                $smartyvalues['eppcode'] = $descriptions->getModuleReturn("eppcode");
                                                             }
                                                         } else {
-                                                            if ($action == "domainregisterns") {
-                                                                checkContactPermission("managedomains");
-                                                                $ca->setTemplate("clientareadomainregisterns");
-                                                                $domains = new RA_Domains();
-                                                                $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                            if ($action == "descriptionregisterns") {
+                                                                checkContactPermission("managedescriptions");
+                                                                $ca->setTemplate("clientareadescriptionregisterns");
+                                                                $descriptions = new RA_Domains();
+                                                                $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                                if ((!$domain_data || !$domains->isActive()) || !$domains->hasFunction("RegisterNameserver")) {
-                                                                    redir("action=domains", "clientarea.php");
+                                                                if ((!$description_data || !$descriptions->isActive()) || !$descriptions->hasFunction("RegisterNameserver")) {
+                                                                    redir("action=descriptions", "clientarea.php");
                                                                 }
 
-                                                                $ca->addToBreadCrumb("clientarea.php?action=domaindetails&id=" . $domain_data['id'], $domain_data['domain']);
-                                                                $ca->addToBreadCrumb("#", $ra->get_lang("domainregisterns"));
-                                                                $smartyvalues['domainid'] = $domain_data['id'];
-                                                                $smartyvalues['domain'] = $domain_data['domain'];
+                                                                $ca->addToBreadCrumb("clientarea.php?action=descriptiondetails&id=" . $description_data['id'], $description_data['description']);
+                                                                $ca->addToBreadCrumb("#", $ra->get_lang("descriptionregisterns"));
+                                                                $smartyvalues['descriptionid'] = $description_data['id'];
+                                                                $smartyvalues['description'] = $description_data['description'];
                                                                 $result = "";
                                                                 $vars = array();
                                                                 $ns = $ra->get_req_var("ns");
@@ -1307,36 +1320,36 @@ if ($action == "") {
                                                                 if ($sub == "register") {
                                                                     check_token();
                                                                     $ipaddress = $ra->get_req_var("ipaddress");
-                                                                    $nameserver = $ns . "." . $domain_data['domain'];
+                                                                    $nameserver = $ns . "." . $description_data['description'];
                                                                     $vars['nameserver'] = $nameserver;
                                                                     $vars['ipaddress'] = $ipaddress;
-                                                                    $success = $domains->moduleCall("RegisterNameserver", $vars);
-                                                                    $result = ($success ? $_LANG['domainregisternsregsuccess'] : $domains->getLastError());
+                                                                    $success = $descriptions->moduleCall("RegisterNameserver", $vars);
+                                                                    $result = ($success ? $_LANG['descriptionregisternsregsuccess'] : $descriptions->getLastError());
                                                                 } else {
                                                                     if ($sub == "modify") {
                                                                         check_token();
-                                                                        $nameserver = $ns . "." . $domain_data['domain'];
+                                                                        $nameserver = $ns . "." . $description_data['description'];
                                                                         $currentipaddress = $ra->get_req_var("currentipaddress");
                                                                         $newipaddress = $ra->get_req_var("newipaddress");
                                                                         $vars['nameserver'] = $nameserver;
                                                                         $vars['currentipaddress'] = $currentipaddress;
                                                                         $vars['newipaddress'] = $newipaddress;
-                                                                        $success = $domains->moduleCall("ModifyNameserver", $vars);
-                                                                        $result = ($success ? $_LANG['domainregisternsmodsuccess'] : $domains->getLastError());
+                                                                        $success = $descriptions->moduleCall("ModifyNameserver", $vars);
+                                                                        $result = ($success ? $_LANG['descriptionregisternsmodsuccess'] : $descriptions->getLastError());
                                                                     } else {
                                                                         if ($sub == "delete") {
                                                                             check_token();
-                                                                            $nameserver = $ns . "." . $domain_data['domain'];
+                                                                            $nameserver = $ns . "." . $description_data['description'];
                                                                             $vars['nameserver'] = $nameserver;
-                                                                            $success = $domains->moduleCall("DeleteNameserver", $vars);
-                                                                            $result = ($success ? $_LANG['domainregisternsdelsuccess'] : $domains->getLastError());
+                                                                            $success = $descriptions->moduleCall("DeleteNameserver", $vars);
+                                                                            $result = ($success ? $_LANG['descriptionregisternsdelsuccess'] : $descriptions->getLastError());
                                                                         }
                                                                     }
                                                                 }
 
                                                                 $smartyvalues['result'] = $result;
                                                             } else {
-                                                                if ($action == "domainrenew") {
+                                                                if ($action == "descriptionrenew") {
                                                                     checkContactPermission("orders");
                                                                     redir("gid=renewals", "cart.php");
                                                                 } else {
@@ -1433,7 +1446,7 @@ if ($action == "") {
                                                                                 $smartyvalues['id'] = $service->getData("id");
                                                                                 $smartyvalues['groupname'] = $service->getData("groupname");
                                                                                 $smartyvalues['productname'] = $service->getData("productname");
-                                                                                $smartyvalues['domain'] = $service->getData("domain");
+                                                                                $smartyvalues['description'] = $service->getData("description");
                                                                                 $cancelrequests = get_query_val("tblcancelrequests", "COUNT(*)", array("relid" => $id));
 
                                                                                 if ($cancelrequests) {
@@ -1453,11 +1466,11 @@ if ($action == "") {
 
                                                                                             createCancellationRequest($client->getID(), $id, $cancellationreason, $type);
 
-                                                                                            if ($canceldomain) {
-                                                                                                $domainid = get_query_val("tbldomains", "id", array("userid" => $client->getID(), "domain" => $service->getData("domain")));
+                                                                                            if ($canceldescription) {
+                                                                                                $descriptionid = get_query_val("tbldescriptions", "id", array("userid" => $client->getID(), "description" => $service->getData("description")));
 
-                                                                                                if ($domainid) {
-                                                                                                    disableAutoRenew($domainid);
+                                                                                                if ($descriptionid) {
+                                                                                                    disableAutoRenew($descriptionid);
                                                                                                 }
                                                                                             }
 
@@ -1467,12 +1480,12 @@ if ($action == "") {
                                                                                         }
                                                                                     }
 
-                                                                                    if ($service->getData("domain")) {
-                                                                                        $data = get_query_vals("tbldomains", "id,recurringamount,registrationperiod,nextduedate", array("userid" => $client->getID(), "domain" => $service->getData("domain"), "status" => "Active", "donotrenew" => ""));
-                                                                                        $smartyvalues['domainid'] = $data['id'];
-                                                                                        $smartyvalues['domainprice'] = formatCurrency($data['recurringamount']);
-                                                                                        $smartyvalues['domainregperiod'] = $data['registrationperiod'];
-                                                                                        $smartyvalues['domainnextduedate'] = fromMySQLDate($data['nextduedate'], 0, 1);
+                                                                                    if ($service->getData("description")) {
+                                                                                        $data = get_query_vals("tbldescriptions", "id,recurringamount,registrationperiod,nextduedate", array("userid" => $client->getID(), "description" => $service->getData("description"), "status" => "Active", "donotrenew" => ""));
+                                                                                        $smartyvalues['descriptionid'] = $data['id'];
+                                                                                        $smartyvalues['descriptionprice'] = formatCurrency($data['recurringamount']);
+                                                                                        $smartyvalues['descriptionregperiod'] = $data['registrationperiod'];
+                                                                                        $smartyvalues['descriptionnextduedate'] = fromMySQLDate($data['nextduedate'], 0, 1);
                                                                                     }
                                                                                 }
                                                                             } else {
@@ -1788,26 +1801,26 @@ if ($action == "") {
                                                                                             $smartyvalues['quotes'] = $quotes;
                                                                                             $smartyvalues = array_merge($smartyvalues, clientAreaTablePageNav($numitems));
                                                                                         } else {
-                                                                                            if ($action == "bulkdomain") {
-                                                                                                checkContactPermission("managedomains");
-                                                                                                $ca->setTemplate("bulkdomainmanagement");
-                                                                                                $domainids = "";
+                                                                                            if ($action == "bulkdescription") {
+                                                                                                checkContactPermission("managedescriptions");
+                                                                                                $ca->setTemplate("bulkdescriptionmanagement");
+                                                                                                $descriptionids = "";
                                                                                                 foreach ($domids as $domid) {
-                                                                                                    $domainids .= (int) $domid . ",";
+                                                                                                    $descriptionids .= (int) $domid . ",";
                                                                                                 }
 
-                                                                                                $domainids = substr($domainids, 0, 0 - 1);
-                                                                                                $queryfilter = "userid=" . (int) $client->getID() . (" AND id IN (" . $domainids . ")");
-                                                                                                $domains = $domainids = $errors = array();
-                                                                                                $result = select_query_i("tbldomains", "id,domain", $queryfilter, "domain", "ASC");
+                                                                                                $descriptionids = substr($descriptionids, 0, 0 - 1);
+                                                                                                $queryfilter = "userid=" . (int) $client->getID() . (" AND id IN (" . $descriptionids . ")");
+                                                                                                $descriptions = $descriptionids = $errors = array();
+                                                                                                $result = select_query_i("tbldescriptions", "id,description", $queryfilter, "description", "ASC");
 
                                                                                                 while ($data = mysqli_fetch_assoc($result)) {
-                                                                                                    $domainids[] = $data['id'];
-                                                                                                    $domains[] = $data['domain'];
+                                                                                                    $descriptionids[] = $data['id'];
+                                                                                                    $descriptions[] = $data['description'];
                                                                                                 }
 
-                                                                                                if (!count($domainids)) {
-                                                                                                    redir("action=domains");
+                                                                                                if (!count($descriptionids)) {
+                                                                                                    redir("action=descriptions");
                                                                                                 }
 
                                                                                                 if (!$update) {
@@ -1832,32 +1845,32 @@ if ($action == "") {
                                                                                                     }
                                                                                                 }
 
-                                                                                                $smartyvalues['domainids'] = $domainids;
-                                                                                                $smartyvalues['domains'] = $domains;
+                                                                                                $smartyvalues['descriptionids'] = $descriptionids;
+                                                                                                $smartyvalues['descriptions'] = $descriptions;
                                                                                                 $smartyvalues['update'] = $update;
                                                                                                 $smartyvalues['save'] = $save;
-                                                                                                $currpage = $_SERVER['PHP_SELF'] . "?action=bulkdomain";
-                                                                                                $ca->addToBreadCrumb("clientarea.php?action=domains", $ra->get_lang("clientareanavdomains"));
+                                                                                                $currpage = $_SERVER['PHP_SELF'] . "?action=bulkdescription";
+                                                                                                $ca->addToBreadCrumb("clientarea.php?action=descriptions", $ra->get_lang("clientareanavdescriptions"));
 
                                                                                                 if ($update == "nameservers") {
-                                                                                                    $ca->addToBreadCrumb($currpage, $ra->get_lang("domainmanagens"));
+                                                                                                    $ca->addToBreadCrumb($currpage, $ra->get_lang("descriptionmanagens"));
 
                                                                                                     if ($save) {
                                                                                                         check_token();
-                                                                                                        foreach ($domainids as $domainid) {
-                                                                                                            $data = get_query_vals("tbldomains", "domain,registrar", array("id" => $domainid, "userid" => $client->getID()));
-                                                                                                            $domain = $data['domain'];
+                                                                                                        foreach ($descriptionids as $descriptionid) {
+                                                                                                            $data = get_query_vals("tbldescriptions", "description,registrar", array("id" => $descriptionid, "userid" => $client->getID()));
+                                                                                                            $description = $data['description'];
                                                                                                             $registrar = $data['registrar'];
-                                                                                                            $domainparts = explode(".", $domain, 2);
+                                                                                                            $descriptionparts = explode(".", $description, 2);
                                                                                                             $params = array();
-                                                                                                            $params['domainid'] = $domainid;
-                                                                                                            $params['sld'] = $domainparts[0];
-                                                                                                            $params['tld'] = $domainparts[1];
+                                                                                                            $params['descriptionid'] = $descriptionid;
+                                                                                                            $params['sld'] = $descriptionparts[0];
+                                                                                                            $params['tld'] = $descriptionparts[1];
                                                                                                             $params['registrar'] = $registrar;
                                                                                                             $params = RegBuildParams($params);
 
                                                                                                             if ($nschoice == "default") {
-                                                                                                                $params = RegGetDefaultNameservers($params, $domain);
+                                                                                                                $params = RegGetDefaultNameservers($params, $description);
                                                                                                             } else {
                                                                                                                 $params['ns1'] = $ns1;
                                                                                                                 $params['ns2'] = $ns2;
@@ -1869,46 +1882,46 @@ if ($action == "") {
                                                                                                             $values = RegSaveNameservers($params);
 
                                                                                                             if (!function_exists($registrar . "_SaveNameservers")) {
-                                                                                                                $errors[] = $domain . " " . $_LANG['domaincannotbemanaged'];
+                                                                                                                $errors[] = $description . " " . $_LANG['descriptioncannotbemanaged'];
                                                                                                             }
 
                                                                                                             if ($values['error']) {
-                                                                                                                $errors[] = $domain . " - " . $values['error'];
+                                                                                                                $errors[] = $description . " - " . $values['error'];
                                                                                                                 continue;
                                                                                                             }
                                                                                                         }
                                                                                                     }
                                                                                                 } else {
                                                                                                     if ($update == "autorenew") {
-                                                                                                        $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("domainautorenewstatus"));
+                                                                                                        $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("descriptionautorenewstatus"));
 
                                                                                                         if ($save) {
                                                                                                             check_token();
-                                                                                                            foreach ($domainids as $domainid) {
+                                                                                                            foreach ($descriptionids as $descriptionid) {
 
                                                                                                                 if ($ra->get_req_var("enable")) {
-                                                                                                                    update_query("tbldomains", array("donotrenew" => ""), array("id" => $domainid, "userid" => $client->getID()));
+                                                                                                                    update_query("tbldescriptions", array("donotrenew" => ""), array("id" => $descriptionid, "userid" => $client->getID()));
                                                                                                                     continue;
                                                                                                                 }
 
-                                                                                                                disableAutoRenew($domainid);
+                                                                                                                disableAutoRenew($descriptionid);
                                                                                                             }
                                                                                                         }
                                                                                                     } else {
                                                                                                         if ($update == "reglock") {
-                                                                                                            $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("domainreglockstatus"));
+                                                                                                            $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("descriptionreglockstatus"));
 
                                                                                                             if ($save) {
                                                                                                                 check_token();
-                                                                                                                foreach ($domainids as $domainid) {
-                                                                                                                    $data = get_query_vals("tbldomains", "domain,registrar", array("id" => $domainid, "userid" => $client->getID()));
-                                                                                                                    $domain = $data['domain'];
+                                                                                                                foreach ($descriptionids as $descriptionid) {
+                                                                                                                    $data = get_query_vals("tbldescriptions", "description,registrar", array("id" => $descriptionid, "userid" => $client->getID()));
+                                                                                                                    $description = $data['description'];
                                                                                                                     $registrar = $data['registrar'];
-                                                                                                                    $domainparts = explode(".", $domain, 2);
+                                                                                                                    $descriptionparts = explode(".", $description, 2);
                                                                                                                     $params = array();
-                                                                                                                    $params['domainid'] = $domainid;
-                                                                                                                    $params['sld'] = $domainparts[0];
-                                                                                                                    $params['tld'] = $domainparts[1];
+                                                                                                                    $params['descriptionid'] = $descriptionid;
+                                                                                                                    $params['sld'] = $descriptionparts[0];
+                                                                                                                    $params['tld'] = $descriptionparts[1];
                                                                                                                     $params['registrar'] = $registrar;
                                                                                                                     $params = RegBuildParams($params);
                                                                                                                     $newlockstatus = ($_POST['enable'] ? "locked" : "unlocked");
@@ -1916,22 +1929,22 @@ if ($action == "") {
                                                                                                                     $values = RegSaveRegistrarLock($params);
 
                                                                                                                     if (!function_exists($registrar . "_SaveRegistrarLock")) {
-                                                                                                                        $errors[] = $domain . " " . $_LANG['domaincannotbemanaged'];
+                                                                                                                        $errors[] = $description . " " . $_LANG['descriptioncannotbemanaged'];
                                                                                                                     }
 
                                                                                                                     if ($values['error']) {
-                                                                                                                        $errors[] = $domain . " - " . $values['error'];
+                                                                                                                        $errors[] = $description . " - " . $values['error'];
                                                                                                                         continue;
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
                                                                                                         } else {
                                                                                                             if ($update == "contactinfo") {
-                                                                                                                if (!is_array($domainids) || count($domainids) <= 0) {
+                                                                                                                if (!is_array($descriptionids) || count($descriptionids) <= 0) {
                                                                                                                     exit("Invalid Access Attempt");
                                                                                                                 }
 
-                                                                                                                $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("domaincontactinfoedit"));
+                                                                                                                $ca->addToBreadCrumb($currpage . "#", $ra->get_lang("descriptioncontactinfoedit"));
 
                                                                                                                 if ($save) {
                                                                                                                     check_token();
@@ -1952,51 +1965,51 @@ if ($action == "") {
                                                                                                                                 }
                                                                                                                             }
 
-                                                                                                                            $contactdetails[$wc_key] = $domains->buildWHOISSaveArray($tmpcontactdetails);
+                                                                                                                            $contactdetails[$wc_key] = $descriptions->buildWHOISSaveArray($tmpcontactdetails);
                                                                                                                             continue;
                                                                                                                         }
                                                                                                                     }
 
-                                                                                                                    foreach ($domainids as $domainid) {
-                                                                                                                        $domains = new RA_Domains();
-                                                                                                                        $domain_data = $domains->getDomainsDatabyID($domainid);
+                                                                                                                    foreach ($descriptionids as $descriptionid) {
+                                                                                                                        $descriptions = new RA_Domains();
+                                                                                                                        $description_data = $descriptions->getDomainsDatabyID($descriptionid);
 
-                                                                                                                        if (!$domain_data) {
-                                                                                                                            redir("action=domains", "clientarea.php");
+                                                                                                                        if (!$description_data) {
+                                                                                                                            redir("action=descriptions", "clientarea.php");
                                                                                                                         }
 
-                                                                                                                        $success = $domains->moduleCall("SaveContactDetails", array("contactdetails" => $contactdetails));
+                                                                                                                        $success = $descriptions->moduleCall("SaveContactDetails", array("contactdetails" => $contactdetails));
 
                                                                                                                         if (!$success) {
-                                                                                                                            if ($domains->getLastError() == "Function not found") {
-                                                                                                                                $errors[] = $domain . " " . $_LANG['domaincannotbemanaged'];
+                                                                                                                            if ($descriptions->getLastError() == "Function not found") {
+                                                                                                                                $errors[] = $description . " " . $_LANG['descriptioncannotbemanaged'];
                                                                                                                                 continue;
                                                                                                                             }
 
-                                                                                                                            $errors[] = $domains->getLastError();
+                                                                                                                            $errors[] = $descriptions->getLastError();
                                                                                                                             continue;
                                                                                                                         }
                                                                                                                     }
                                                                                                                 }
 
                                                                                                                 $smartyvalues['contacts'] = $client->getContactsWithAddresses();
-                                                                                                                $domains = new RA_Domains();
-                                                                                                                $domain_data = $domains->getDomainsDatabyID($domainids[0]);
+                                                                                                                $descriptions = new RA_Domains();
+                                                                                                                $description_data = $descriptions->getDomainsDatabyID($descriptionids[0]);
 
-                                                                                                                if (!$domain_data) {
-                                                                                                                    redir("action=domains", "clientarea.php");
+                                                                                                                if (!$description_data) {
+                                                                                                                    redir("action=descriptions", "clientarea.php");
                                                                                                                 }
 
-                                                                                                                $success = $domains->moduleCall("GetContactDetails");
+                                                                                                                $success = $descriptions->moduleCall("GetContactDetails");
 
                                                                                                                 if ($success) {
-                                                                                                                    $smartyvalues['contactdetails'] = $domains->getModuleReturn();
+                                                                                                                    $smartyvalues['contactdetails'] = $descriptions->getModuleReturn();
                                                                                                                 }
                                                                                                             } else {
                                                                                                                 if ($update == "renew") {
                                                                                                                     redir("gid=renewals", "cart.php");
                                                                                                                 } else {
-                                                                                                                    redir("action=domains");
+                                                                                                                    redir("action=descriptions");
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -2005,27 +2018,27 @@ if ($action == "") {
 
                                                                                                 $smartyvalues['errors'] = $errors;
                                                                                             } else {
-                                                                                                if ($action == "domainaddons") {
+                                                                                                if ($action == "descriptionaddons") {
                                                                                                     check_token();
-                                                                                                    $ca->setTemplate("clientareadomainaddons");
+                                                                                                    $ca->setTemplate("clientareadescriptionaddons");
                                                                                                     $where = array("id" => $id, "userid" => $client->getID());
-                                                                                                    $data = get_query_vals("tbldomains", "id,type,domain,registrationperiod,registrar,dnsmanagement,emailforwarding,idprotection", $where);
-                                                                                                    $domainid = $data['id'];
-                                                                                                    $domain = $data['domain'];
+                                                                                                    $data = get_query_vals("tbldescriptions", "id,type,description,registrationperiod,registrar,dnsmanagement,emailforwarding,idprotection", $where);
+                                                                                                    $descriptionid = $data['id'];
+                                                                                                    $description = $data['description'];
 
-                                                                                                    if (!$domainid) {
+                                                                                                    if (!$descriptionid) {
                                                                                                         redir();
                                                                                                     }
 
-                                                                                                    $smartyvalues['domainid'] = $domainid;
-                                                                                                    $smartyvalues['domain'] = $data['domain'];
-                                                                                                    $domainparts = explode(".", $data['domain'], 2);
-                                                                                                    $result = select_query_i("tblpricing", "", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                                                                                                    $smartyvalues['descriptionid'] = $descriptionid;
+                                                                                                    $smartyvalues['description'] = $data['description'];
+                                                                                                    $descriptionparts = explode(".", $data['description'], 2);
+                                                                                                    $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
                                                                                                     $pricingdata = mysqli_fetch_array($result);
-                                                                                                    $domaindnsmanagementprice = $pricingdata['msetupfee'];
-                                                                                                    $domainemailforwardingprice = $pricingdata['qsetupfee'];
-                                                                                                    $domainidprotectionprice = $pricingdata['ssetupfee'];
-                                                                                                    $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($domaindnsmanagementprice), "emailforwarding" => formatCurrency($domainemailforwardingprice), "idprotection" => formatCurrency($domainidprotectionprice)));
+                                                                                                    $descriptiondnsmanagementprice = $pricingdata['msetupfee'];
+                                                                                                    $descriptionemailforwardingprice = $pricingdata['qsetupfee'];
+                                                                                                    $descriptionidprotectionprice = $pricingdata['ssetupfee'];
+                                                                                                    $ca->assign("addonspricing", array("dnsmanagement" => formatCurrency($descriptiondnsmanagementprice), "emailforwarding" => formatCurrency($descriptionemailforwardingprice), "idprotection" => formatCurrency($descriptionidprotectionprice)));
 
                                                                                                     if ($disable) {
                                                                                                         $smartyvalues['action'] = "disable";
@@ -2038,7 +2051,7 @@ if ($action == "") {
 
                                                                                                             if ($confirm) {
                                                                                                                 check_token();
-                                                                                                                update_query("tbldomains", array("dnsmanagement" => "", "recurringamount" => "-=" . $domaindnsmanagementprice), $where);
+                                                                                                                update_query("tbldescriptions", array("dnsmanagement" => "", "recurringamount" => "-=" . $descriptiondnsmanagementprice), $where);
                                                                                                                 $smartyvalues['success'] = true;
                                                                                                             }
                                                                                                         } else {
@@ -2049,7 +2062,7 @@ if ($action == "") {
 
                                                                                                                 if ($confirm) {
                                                                                                                     check_token();
-                                                                                                                    update_query("tbldomains", array("emailforwarding" => "", "recurringamount" => "-=" . $domainemailforwardingprice), $where);
+                                                                                                                    update_query("tbldescriptions", array("emailforwarding" => "", "recurringamount" => "-=" . $descriptionemailforwardingprice), $where);
                                                                                                                     $smartyvalues['success'] = true;
                                                                                                                 }
                                                                                                             } else {
@@ -2060,12 +2073,12 @@ if ($action == "") {
 
                                                                                                                     if ($confirm) {
                                                                                                                         check_token();
-                                                                                                                        update_query("tbldomains", array("idprotection" => "", "recurringamount" => "-=" . $domainidprotectionprice), $where);
-                                                                                                                        $domainparts = explode(".", $domain, 2);
+                                                                                                                        update_query("tbldescriptions", array("idprotection" => "", "recurringamount" => "-=" . $descriptionidprotectionprice), $where);
+                                                                                                                        $descriptionparts = explode(".", $description, 2);
                                                                                                                         $params = array();
-                                                                                                                        $params['domainid'] = $data['id'];
-                                                                                                                        $params['sld'] = $domainparts[0];
-                                                                                                                        $params['tld'] = $domainparts[1];
+                                                                                                                        $params['descriptionid'] = $data['id'];
+                                                                                                                        $params['sld'] = $descriptionparts[0];
+                                                                                                                        $params['tld'] = $descriptionparts[1];
                                                                                                                         $params['regperiod'] = $data['registrationperiod'];
                                                                                                                         $params['registrar'] = $data['registrar'];
                                                                                                                         $params['regtype'] = $data['type'];
@@ -2079,7 +2092,7 @@ if ($action == "") {
                                                                                                                     }
                                                                                                                 } else {
                                                                                                                     if ($id) {
-                                                                                                                        redir("action=domaindetails&id=" . $id);
+                                                                                                                        redir("action=descriptiondetails&id=" . $id);
                                                                                                                     } else {
                                                                                                                         redir();
                                                                                                                     }
@@ -2092,32 +2105,32 @@ if ($action == "") {
                                                                                                         $smartyvalues['action'] = "buy";
                                                                                                         $smartyvalues['addon'] = $buy;
                                                                                                         $paymentmethod = getClientsPaymentMethod($client->getID());
-                                                                                                        $domaintax = ($ra->get_config("TaxDomains") ? 1 : 0);
+                                                                                                        $descriptiontax = ($ra->get_config("TaxDomains") ? 1 : 0);
                                                                                                         $invdesc = "";
 
                                                                                                         if ($buy == "dnsmanagement") {
                                                                                                             if ($confirm) {
-                                                                                                                $invdesc = $_LANG['domainaddons'] . " (" . $_LANG['domainaddonsdnsmanagement'] . ") - " . $domain . " - 1 " . $_LANG['orderyears'];
-                                                                                                                $invamt = $domaindnsmanagementprice;
+                                                                                                                $invdesc = $_LANG['descriptionaddons'] . " (" . $_LANG['descriptionaddonsdnsmanagement'] . ") - " . $description . " - 1 " . $_LANG['orderyears'];
+                                                                                                                $invamt = $descriptiondnsmanagementprice;
                                                                                                                 $addontype = "DNS";
                                                                                                             }
                                                                                                         } else {
                                                                                                             if ($buy == "emailfwd") {
                                                                                                                 if ($confirm) {
-                                                                                                                    $invdesc = $_LANG['domainaddons'] . " (" . $_LANG['domainemailforwarding'] . ") - " . $domain . " - 1 " . $_LANG['orderyears'];
-                                                                                                                    $invamt = $domainemailforwardingprice;
+                                                                                                                    $invdesc = $_LANG['descriptionaddons'] . " (" . $_LANG['descriptionemailforwarding'] . ") - " . $description . " - 1 " . $_LANG['orderyears'];
+                                                                                                                    $invamt = $descriptionemailforwardingprice;
                                                                                                                     $addontype = "EMF";
                                                                                                                 }
                                                                                                             } else {
                                                                                                                 if ($buy == "idprotect") {
                                                                                                                     if ($confirm) {
-                                                                                                                        $invdesc = $_LANG['domainaddons'] . " (" . $_LANG['domainidprotection'] . ") - " . $domain . " - 1 " . $_LANG['orderyears'];
-                                                                                                                        $invamt = $domainidprotectionprice;
+                                                                                                                        $invdesc = $_LANG['descriptionaddons'] . " (" . $_LANG['descriptionidprotection'] . ") - " . $description . " - 1 " . $_LANG['orderyears'];
+                                                                                                                        $invamt = $descriptionidprotectionprice;
                                                                                                                         $addontype = "IDP";
                                                                                                                     }
                                                                                                                 } else {
                                                                                                                     if ($id) {
-                                                                                                                        redir("action=domaindetails&id=" . $id);
+                                                                                                                        redir("action=descriptiondetails&id=" . $id);
                                                                                                                     } else {
                                                                                                                         redir();
                                                                                                                     }
@@ -2127,7 +2140,7 @@ if ($action == "") {
 
                                                                                                         if ($invdesc) {
                                                                                                             check_token();
-                                                                                                            insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "DomainAddon" . $addontype, "relid" => $domainid, "description" => $invdesc, "amount" => $invamt, "taxed" => $domaintax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+                                                                                                            insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "DomainAddon" . $addontype, "relid" => $descriptionid, "description" => $invdesc, "amount" => $invamt, "taxed" => $descriptiontax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
 
                                                                                                             if (!function_exists("createInvoices")) {
                                                                                                                 require ROOTDIR . "/includes/processinvoices.php";

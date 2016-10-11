@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 12:31:58
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:25:21
          compiled from ra/footer.tpl */ ?>
 
 
@@ -31,10 +31,14 @@
                 checkboxClass: \'icheckbox_minimal-blue\',
                 radioClass: \'iradio_minimal-blue\'
             });
+            $(\'input[type="checkbox"].flat-red, input[type="radio"].flat-red\').iCheck({
+                checkboxClass: \'icheckbox_flat-green\',
+                radioClass: \'iradio_flat-green\'
+            });
 
             $(\'.datepick\').datepicker({
                 autoclose: true,
-                format: \'yyyy-mm-dd\',
+                format: \'dd/mm/yyyy\',
             });
             $("[data-mask]").inputmask();
 

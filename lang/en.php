@@ -597,13 +597,17 @@ $_LANG['orderpaymentterm24month'] = "24 Month Price";
 $_LANG['orderpaymentterm3month'] = "3 Month Price";
 $_LANG['orderpaymentterm6month'] = "6 Month Price";
 $_LANG['orderpaymenttermannually'] = "Annually";
+$_LANG['orderpaymenttermannuallytext'] = "Annually";
 $_LANG['orderpaymenttermbiennially'] = "Biennially";
 $_LANG['orderpaymenttermfreeaccount'] = "Free Account";
 $_LANG['orderpaymenttermmonthly'] = "/M";
 $_LANG['orderpaymenttermmonthlytext'] = "Monthly";
 $_LANG['orderpaymenttermonetime'] = "One Time";
+$_LANG['orderpaymenttermonetimetext'] = "One Time";
 $_LANG['orderpaymenttermquarterly'] = "Quarterly";
+$_LANG['orderpaymenttermquarterlytext'] = "Quarterly";
 $_LANG['orderpaymenttermsemiannually'] = "Semi-Annually";
+$_LANG['orderpaymenttermsemiannuallytext'] = "Semi-Annually";
 $_LANG['orderprice'] = "Price";
 $_LANG['orderproduct'] = "Product";
 $_LANG['orderprogress'] = "Progress";
@@ -900,7 +904,7 @@ $_LANG['masspaymakepayment'] = "Make Payment";
 
 # Version 4.3
 
-$_LANG['searchenterdomain'] = "Enter Domain to Find";
+$_LANG['searchenterdomain'] = "Enter Address to Find";
 $_LANG['searchfilter'] = "Filter";
 
 $_LANG['suspendreason'] = "Suspension Reason";

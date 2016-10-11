@@ -520,6 +520,114 @@ class RA_Admin {
         $this->output();
     }
 
+    public function sidebar($data) {
+        $accordion = array(
+            "home" => array(
+                "name" => "Home",
+                "url" => "index.php",
+                "glyphicon" => "home"
+            ),
+            "clients" => array(
+                "name" => "Customers",
+                "glyphicon" => "user",
+                "anum" => $data['clients']['active'],
+                "cnum" => $data['clients']['closed']+$data['clients']['inactive'],
+                "members" => array(
+                    "clients.php" => "View Customers",
+                    "clientsadd.php" => "Add New Client",
+                    "cancelrequests.php" => "Cancellation Requests",
+                    "affiliates.php" => "Manage Affiliates"
+                )
+            ),
+            "orders" => array(
+                "name" => "Orders",
+                "glyphicon" => "shopping-cart",
+                "members" => array(
+                    "orders.php" => "List Orders",
+                    "orders.php?status=Pending" => "Pending Orders",
+                    "orders.php?status=Active" => "Active Orders",
+                    "orders.php?status=Cancelled" => "Cancelled Orders",
+                    "ordersadd.php" => "Add New Order"
+                )
+            ),
+            "services" => array(
+                "name" => "Services",
+                "glyphicon" => "user",
+                "members" => array(
+                    "configservices.php" => "Services",
+                    "configservices.php?action=creategroup" => "Create Service Group",
+                    "configcustomfieldsgroup.php?action=managegroup" => "Custom Field Group",
+                    "configcustomfieldsgroup.php" => "Custom Fields",
+                    "configaddons.php" => "Service Products"
+                )
+            ),
+            "billing" => array(
+                "name" => "Billing",
+                "glyphicon" => "usd",
+                "members" => array(
+                    "transactions.php" => "Transactions",
+                    "gatewaylog.php" => "Gateway Logs",
+                    "invoices.php" => "All Invoices",
+                    "invoices.php?status=Overdue" => "Overdue",
+                    "invoices.php?status=Refunded" => "Refunded",
+                    "invoices.php?status=Collections" => "Collections"
+                )
+            ),
+            "support" => array(
+                "name" => "Support",
+                "glyphicon" => "file",
+                "members" => array(
+                    "supportcenter.php" => "Support Overview",
+                    "supporttickets.php?action=list" => "View Tickets",
+                    "supporttickets.php?action=open" => "Open Ticket",
+                    "supportticketpredefinedreplies.php" => "Predefined Replies"
+                )
+            ),
+            "reports" => array(
+                "name" => "Reports",
+                "glyphicon" => "file",
+                "members" => array(
+                    "reports.php" => "All Reports",
+                    "reports.php?report=sales_tax_liability" => "GST Calculator",
+                    "reports.php?report=annual_income_report" => "Annual Income Report",
+                    "reports.php?report=new_customers" => "Signup Report"
+                )
+            ),
+            "utilities" => array(
+                "name" => "Utilities",
+                "glyphicon" => "file",
+                "members" => array(
+                    "supportannouncements.php" => "Announcements",
+                    "supportkb.php" => "Knowledgebase",
+                    "networkissues.php" => "Network Notices",
+                    "systemactivitylog.php" => "Activity Log",
+                    "systemadminlog.php" => "Admin Log",
+                    "systemmodulelog.php" => "Module/API Log",
+                    "systememaillog.php" => "Email Message Log",
+                    "systemmailimportlog.php" => "Ticket Mail Import Log"
+                )
+            ),
+            "system" => array(
+                "name" => "System",
+                "glyphicon" => "cog",
+                "members" => array(
+                    "configgeneral.php" => "General Settings",
+                    "configauto.php" => "Automation Settings",
+                    "#" => array(
+                        "name" => "Staff Management",
+                        "members" => array(
+                            "configadmins.php" => "Administrator Users",
+                            "configadminroles.php" => "Administrator Roles",
+                            "configtwofa.php" => "Two-Factor Authentication"
+                        )
+                    ),
+                )
+            )
+        );
+
+        return $accordion;
+    }
+
     public function assignToSmarty() {
         foreach ($this->templatevars as $key => $value) {
             $this->smarty->assign($key, $value);

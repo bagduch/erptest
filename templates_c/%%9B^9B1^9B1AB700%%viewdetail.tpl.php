@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 09:49:14
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:25:21
          compiled from ra/order/viewdetail.tpl */ ?>
 
 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">

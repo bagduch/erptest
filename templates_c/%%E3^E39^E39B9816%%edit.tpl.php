@@ -1,12 +1,9 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-06 14:56:18
+<?php /* Smarty version 2.6.28, created on 2016-10-11 11:59:43
          compiled from ra/invoices/edit.tpl */ ?>
-<?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra/invoices/edit.tpl', 1, false),)), $this); ?>
-<?php echo smarty_function_debug(array(), $this);?>
 
 
 
-<div>
+<div class="col-lg-12">
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
         <li role="presentation" class=""><a href="#tab1box" aria-controls="tab1box" role="tab" data-toggle="tab">Add Payment</a></li>
@@ -19,8 +16,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
         <div role="tabpanel" id="tab0box" class="tab-pane active">
             <table width="100%">
                 <tbody><tr><td width="50%">
-
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                                 <tbody><tr><td width="35%" class="fieldlabel">Client Name</td>
                                         <td class="fieldarea"><a href="clientssummary.php?userid=<?php echo $this->_tpl_vars['invoice']['userid']; ?>
 "><?php echo $this->_tpl_vars['invoice']['firstname']; ?>
@@ -89,13 +85,13 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
                 </tbody>
             </table>
         </div>
-        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+        <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="<?php echo $this->_tpl_vars['invoice']['id']; ?>
 ">
                 <input type="hidden" name="sub" value="markpaid">
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>
                         <tr>
                             <td width="20%" class="fieldlabel">Date</td>
@@ -129,15 +125,13 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
 
         </div>
         <div  role="tabpanel" id="tab2box" class="tabbox tab-pane">
-
-
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="saveoptions" value="true">
                 <input type="hidden" name="id" value="<?php echo $this->_tpl_vars['invoice']['id']; ?>
 ">
 
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>
                         <tr>
                             <td width="20%" class="fieldlabel">Invoice Date</td>
@@ -191,7 +185,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
         <div role="tabpanel" id="tab3box" class="tabbox tab-pane">
 
 
-            <table width="75%" align="center">
+            <table class="table" width="75%" align="center">
                 <tbody>
                     <tr>
                         <td width="50%" align="center"><b>Add Credit to Invoice</b></td>
@@ -225,7 +219,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
 
 
         </div>
-        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+        <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
 
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="token" value="<?php echo $this->_tpl_vars['token']; ?>
@@ -235,7 +229,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'debug', 'ra
 ">
                 <input type="hidden" name="sub" value="refund">
 
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
                         <tr><td class="fieldlabel">Amount</td><td class="fieldarea"><input class="form-control" type="text" name="amount" size="15"> Leave blank for full refund</td></tr>
                         <tr><td class="fieldlabel">Refund Type</td><td class="fieldarea"><select class="form-control" name="refundtype" id="refundtype" onchange="showrefundtransid();

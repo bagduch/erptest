@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 10:27:34
+<?php /* Smarty version 2.6.28, created on 2016-10-10 09:28:30
          compiled from ra/client/clientsadd.tpl */ ?>
 
 <div class="box box-success">

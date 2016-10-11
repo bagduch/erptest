@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-06 16:13:45
+<?php /* Smarty version 2.6.28, created on 2016-10-10 15:49:11
          compiled from ra/clientsservices/view.tpl */ ?>
 
 <div style="float:left;width:100%;">
@@ -410,9 +410,7 @@
                     });
 
         }
-        function showDialog(name) {
-            $("#" + name).dialog(\'open\');
-        }
+    
     </script>
 
 '; ?>

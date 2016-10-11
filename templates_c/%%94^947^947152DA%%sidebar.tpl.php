@@ -1,12 +1,12 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 12:31:58
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:25:21
          compiled from ra/sidebar.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('modifier', 'is_array', 'ra/sidebar.tpl', 115, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('modifier', 'is_array', 'ra/sidebar.tpl', 129, false),)), $this); ?>
 
 
 <?php 
 $accordion = array(
-    "home" => array (
+    "home" => array(
         "name" => "Home",
         "url" => "index.php",
         "glyphicon" => "home"
@@ -14,7 +14,7 @@ $accordion = array(
     "clients" => array(
         "name" => "Customers",
         "glyphicon" => "user",
-        "members" => array(
+"members" => array(
             "clients.php" => "View Customers",
             "clientsadd.php" => "Add New Client",
             "cancelrequests.php" => "Cancellation Requests",
@@ -88,9 +88,23 @@ $accordion = array(
             "systememaillog.php" => "Email Message Log",
             "systemmailimportlog.php" => "Ticket Mail Import Log"
         )
+    ),
+    "system" => array(
+        "name" => "System",
+        "glyphicon" => "cog",
+        "members" => array(
+            "configgeneral.php" => "General Settings",
+            "configauto.php" => "Automation Settings",
+            "#" => array(
+                "name" => "Staff Management",
+                "members" => array(
+                    "configadmins.php" => "Administrator Users",
+                    "configadminroles.php" => "Administrator Roles",
+                    "configtwofa.php" => "Two-Factor Authentication"
+                )
+            ),
+        )
     )
-
-            
 );
 $this->assign('accordion', $accordion);
  ?>
@@ -124,19 +138,42 @@ $this->assign('accordion', $accordion);
             <li class="treeview">
                 <a href="#">
                     <i class="glyphicon glyphicon-<?php echo $this->_tpl_vars['section']['glyphicon']; ?>
-"></i> <span><?php echo $this->_tpl_vars['section']['name']; ?>
+"></i><span><?php echo $this->_tpl_vars['section']['name']; ?>
 </span>
                     <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <span class="label label-primary pull-right"><?php echo $this->_tpl_vars['section']['num']; ?>
+</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <?php $_from = $this->_tpl_vars['section']['members']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }if (count($_from)):
     foreach ($_from as $this->_tpl_vars['url'] => $this->_tpl_vars['member']):
 ?>
-                        <li class="active"><a href="<?php echo $this->_tpl_vars['url']; ?>
+                        <?php if (((is_array($_tmp=$this->_tpl_vars['member']['members'])) ? $this->_run_mod_handler('is_array', true, $_tmp) : is_array($_tmp))): ?>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i>
+                                    <span><?php echo $this->_tpl_vars['member']['name']; ?>
+</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <?php $_from = $this->_tpl_vars['member']['members']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }if (count($_from)):
+    foreach ($_from as $this->_tpl_vars['suburl'] => $this->_tpl_vars['submember']):
+?>
+                                        <li><a href="<?php echo $this->_tpl_vars['suburl']; ?>
+"><i class="fa fa-circle-o"></i><?php echo $this->_tpl_vars['submember']; ?>
+</a></li>
+                                            <?php endforeach; endif; unset($_from); ?>
+                                </ul>
+                            </li>
+                        <?php else: ?>
+                            <li><a href="<?php echo $this->_tpl_vars['url']; ?>
 "><i class="fa fa-circle-o"></i><?php echo $this->_tpl_vars['member']; ?>
 </a></li>
+                                <?php endif; ?>
                             <?php endforeach; endif; unset($_from); ?>
                 </ul>
             </li>

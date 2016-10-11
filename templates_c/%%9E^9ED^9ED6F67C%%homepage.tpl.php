@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 12:31:55
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:24:20
          compiled from ra/homepage.tpl */ ?>
 <!-- BEGIN WHMCS -->
 <?php if ($this->_tpl_vars['maintenancemode']): ?>

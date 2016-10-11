@@ -11,7 +11,7 @@ $aInt = new RA_Admin("Add New Client", false);
 $aInt->title = $aInt->lang("clients", "addnew");
 $aInt->sidebar = "clients";
 $aInt->icon = "clientsadd";
-$aInt->requiredFiles(array("clientfunctions", "customfieldfunctions", "gatewayfunctions"));
+$aInt->requiredFiles(array("clientfunctions","servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 
 if ($action == "add") {
     check_token("RA.admin.default");

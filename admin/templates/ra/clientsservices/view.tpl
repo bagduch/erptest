@@ -338,9 +338,7 @@
                     });
 
         }
-        function showDialog(name) {
-            $("#" + name).dialog('open');
-        }
+    
     </script>
 
 {/literal}

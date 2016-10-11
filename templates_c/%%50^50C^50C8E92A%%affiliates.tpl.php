@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 11:32:55
+<?php /* Smarty version 2.6.28, created on 2016-10-10 09:28:23
          compiled from ra/client/affiliates.tpl */ ?>
 <div class="row">
     <div class="col-xs-12">

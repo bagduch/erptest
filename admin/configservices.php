@@ -255,10 +255,19 @@ if ($sub == "savegroup") {
 
     if ($ids) {
         update_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
+        delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
+
+
+        if ($customefield) {
+            foreach ($customefield as $row) {
+
+                insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
+            }
+        }
     } else {
         $id = insert_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
         foreach ($customefield as $row) {
-            insert_query("tblcustomerfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => '', 'servicegid' => $id));
+            insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }
     }
 
@@ -322,7 +331,7 @@ if ($action == "updatesort") {
     redir();
 }
 
-ob_start();
+
 
 if ($action == "") {
     $result = select_query_i("tblservicegroups", "COUNT(*)", "");
@@ -371,7 +380,7 @@ if ($action == "") {
     $servicegroup = array();
     $result = select_query_i("tblservicegroups", "", "", "order", "DESC");
     while ($groups = mysqli_fetch_array($result)) {
-       // error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
+        // error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
         $servicegroup[$groups['id']]['group'] = $groups;
 
         $result2 = select_query_i("tblservices", "COUNT(*)", array("gid" => $groups['id']));
@@ -397,6 +406,7 @@ if ($action == "") {
         }
     }
     $lastorder = $data['order'];
+    $aInt->title = "Services";
     // $result2 = select_query_i("tblservicegroups", "", "", "order", "ASC");
     // error_log(print_r($servicegroup, 1), 3, "/tmp/php_errors.log");
     $aInt->assign('token', generate_token());
@@ -649,7 +659,6 @@ if ($action == "") {
             }
         }
 
-        error_log(print_r($asscoproduct, 1), 3, "/tmp/php_errors.log");
 
         $aInt->assign('asscoproduct', $asscoproduct);
 
@@ -684,19 +693,25 @@ if ($action == "") {
                 if ($action == "creategroup" || $action == "editgroup") {
                     checkPermission("Manage Product Groups");
                     $result = select_query_i("tblservicegroups", "", array("id" => $ids));
-                    $data = mysqli_fetch_array($result);
-                    $ids = $data['id'];
-                    $name = $data['name'];
-                    $orderfrmtpl = $data['orderfrmtpl'];
-                    $disabledgateways = $data['disabledgateways'];
-                    $hidden = $data['hidden'];
+                    $groupdata = mysqli_fetch_array($result);
+
+                    $ids = $groupdata['id'];
+                    $name = $groupdata['name'];
+                    $orderfrmtpl = $groupdata['orderfrmtpl'];
+                    $disabledgateways = $groupdata['disabledgateways'];
+                    $hidden = $groupdata['hidden'];
                     $disabledgateways = explode(",", $disabledgateways);
-                    $queryone = "SELECT * FROM tblcustomfieldsgroupnames";
+                    $queryone = "SELECT * FROM tblcustomfieldsgroupnames as tcgn LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on (tcgn.cfgid=tcfgl.cfgid AND tcfgl.servicegid=" . $ids . ")";
                     $result = full_query_i($queryone);
                     $option = mysqli_fetch_array($query);
                     $cdata = array();
                     while ($data = mysqli_fetch_assoc($result)) {
-                        $cdata[] = $data;
+                        $cdata[$data['cfgid']] = $data;
+                        if (isset($data['id'])) {
+                            $cdata[$data['cfgid']]['check'] = true;
+                        } else {
+                            $cdata[$data['cfgid']]['check'] = false;
+                        }
                     }
                     $ordertemplates = array();
                     $ordertplfolder = ROOTDIR . "/templates/orderforms/";
@@ -731,6 +746,12 @@ if ($action == "") {
                         );
                     }
                     $aInt->assign('cdata', $cdata);
+                    if (empty($groupdata)) {
+                        $aInt->title = "Create Group";
+                    } else {
+                        $aInt->title = "Edit Group";
+                    }
+                    $aInt->assign("groupdata", $groupdata);
                     $aInt->assign('ordertemplates', $ordertemplates);
                     $aInt->assign('avaiablegateway', $avaiablegateway);
                     $templatefile = 'services/creategroup';
@@ -751,10 +772,6 @@ if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-$content = ob_get_contents();
-ob_end_clean();
-
-$aInt->content = $content;
 
 
 $aInt->display();

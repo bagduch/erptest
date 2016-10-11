@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 12:31:58
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:25:21
          compiled from ra/header.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('modifier', 'date_format', 'ra/header.tpl', 86, false),)), $this); ?>
@@ -203,7 +203,8 @@ unset($_smarty_tpl_vars);
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="active">Dashboard</li>
+                        <li class="active"> <?php echo $this->_tpl_vars['pagetitle']; ?>
+ </li>
                     </ol>
                 </section>
                 <section class="content">

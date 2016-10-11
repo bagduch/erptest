@@ -186,6 +186,30 @@ function getClientsStats($userid) {
         }
     }
 
+
+    $stats['servicenumactive'] = (isset($productstats['services']['Active']) ? $productstats['services']['Active'] : 0);
+    $stats['servicenumpending'] = (isset($productstats['services']['Pending']) ? $productstats['services']['Pending'] : 0);
+    $stats['servicenumcancel'] = (isset($productstats['services']['Cancelled']) ? $productstats['services']['Cancelled'] : 0);
+
+    $stats['servicenumtotal'] = $stats['servicenumactive'] + $stats['servicenumpending'] + $stats['servicenumcancel'];
+    if (array_key_exists("services", $productstats) && is_array($productstats['services'])) {
+        foreach ($productstats['services'] as $status => $count) {
+            $stats['services'] += $count;
+        }
+    }
+
+    $stats['productnumactive'] = (isset($productstats['product']['Active']) ? $productstats['product']['Active'] : 0);
+    $stats['productnumpending'] = (isset($productstats['product']['Pending']) ? $productstats['product']['Pending'] : 0);
+    $stats['productnumcancel'] = (isset($productstats['product']['Cancelled']) ? $productstats['product']['Cancelled'] : 0);
+
+    $stats['producttotal'] = $stats['productnumactive'] + $stats['productnumpending'] + $stats['productnumcancel'];
+    if (array_key_exists("product", $productstats) && is_array($productstats['product'])) {
+        foreach ($productstats['product'] as $status => $count) {
+            $stats['product'] += $count;
+        }
+    }
+
+
     $stats['productsnumactivereseller'] = (isset($productstats['reselleraccount']['Active']) ? $productstats['reselleraccount']['Active'] : 0);
     $stats['productsnumpendingreseller'] = (isset($productstats['reselleraccount']['Pending']) ? $productstats['reselleraccount']['Pending'] : 0);
     $stats['productsnumcancelledreseller'] = (isset($productstats['reselleraccount']['Cancelled']) ? $productstats['reselleraccount']['Cancelled'] : 0);
@@ -434,8 +458,8 @@ function addClient($firstname, $lastname, $companyname, $email, $address1, $addr
     $currency = (is_array($_SESSION['currency']) ? $_SESSION['currency'] : getCurrency("", $_SESSION['currency']));
     $password_hash = generateClientPW($password);
     $table = "tblclients";
-    $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => $_SESSION['Language'], "currency" => $currency['id']);
-   
+    $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "", "currency" => $currency['id']);
+
     $uid = insert_query($table, $array);
     logActivity("Created Client " . $firstname . " " . $lastname . " - User ID: " . $uid);
 
@@ -555,7 +579,7 @@ function getSecurityQuestions($questionid = "") {
 }
 
 function generateClientPW($plain, $salt = "", $ignoreconfig = false) {
-    return password_hash(html_entity_decode($plain),PASSWORD_DEFAULT);
+    return password_hash(html_entity_decode($plain), PASSWORD_DEFAULT);
 }
 
 function checkContactPermission($reqperm, $noredirect = "") {
@@ -700,7 +724,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
         }
 
 
-        if (((password_verify($password,$check_pwd) || (isset($_SESSION['adminid']) && $adminallowedclientlogin)) || $loginsharematch) ) {
+        if (((password_verify($password, $check_pwd) || (isset($_SESSION['adminid']) && $adminallowedclientlogin)) || $loginsharematch)) {
 
 
             if (!isset($_SESSION['adminid'])) {
@@ -918,39 +942,35 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 function getClientsServicesSummary($userid, $aInt) {
     $result = select_query_i(
             "tblcustomerservices", // table
-            "tblcustomerservices.*,tblservices.name",  // select fields
-            array("userid" => $userid),  // where
-            "tblcustomerservices`.`id","DESC",
-            "",
-            "tblservices ON tblservices.id=tblcustomerservices.packageid"
+            "tblcustomerservices.*,tblservices.name", // select fields
+            array("userid" => $userid), // where
+            "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid"
     );
     while ($data = mysqli_fetch_array($result)) {
 
-            if ($data['billingcycle'] == "One Time" || $data['billingcycle'] == "Free Account") {
-                $nextduedate = null;
-                $amount = formatCurrency($data['firstpaymentamount']);
-            } else {
-                $nextduedate = fromMySQLDate($data['nextduedate']);
-                $amount = formatCurrency($data['amount']);
-            }
+        if ($data['billingcycle'] == "One Time" || $data['billingcycle'] == "Free Account") {
+            $nextduedate = null;
+            $amount = formatCurrency($data['firstpaymentamount']);
+        } else {
+            $nextduedate = fromMySQLDate($data['nextduedate']);
+            $amount = formatCurrency($data['amount']);
+        }
 
-            $billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($data['billingcycle'])));
-            $servicessummary[] = array(
-                "id" => (int)$data['id'],
-                "regdate" => fromMySQLDate($data['regdate']),
-                "description" => $data['description'],
-                "dpackage" => $data['name'],
-                "dpaymentmethod" => $data['paymentmethod'],
-                "amount" => $amount,
-                "dbillingcycle" => $billingcycle,
-                "nextduedate" => $nextduedate,
-                "servicestatus" => $aInt->lang("status", strtolower($data['servicestatus']))
-            );
+        $billingcycle = $aInt->lang("billingcycles", str_replace(array("-", "account", " "), "", strtolower($data['billingcycle'])));
+        $servicessummary[] = array(
+            "id" => (int) $data['id'],
+            "regdate" => fromMySQLDate($data['regdate']),
+            "description" => $data['description'],
+            "dpackage" => $data['name'],
+            "dpaymentmethod" => $data['paymentmethod'],
+            "amount" => $amount,
+            "dbillingcycle" => $billingcycle,
+            "nextduedate" => $nextduedate,
+            "servicestatus" => $aInt->lang("status", strtolower($data['servicestatus']))
+        );
     }
     return $servicessummary;
 }
-
-
 
 function closeClient($userid) {
     update_query("tblclients", array("status" => "Closed"), array("id" => $userid));

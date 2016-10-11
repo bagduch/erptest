@@ -433,9 +433,7 @@
 
         });
 
-        function showDialog(name) {
-            $("#" + name).dialog('open');
-        }
+      
 
         function deletecustomfield(id) {
             if (confirm("Are you sure you want to delete this field and ALL DATA associated with it?")) {
@@ -447,9 +445,7 @@
                 window.location = '/admin/configservices.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
-        function showDialog(name) {
-            $("#" + name).dialog('open');
-        }
+      
     </script>
 
 

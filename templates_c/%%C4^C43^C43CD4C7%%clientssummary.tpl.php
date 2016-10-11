@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-06 16:14:00
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:24:14
          compiled from ra/clientssummary.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('modifier', 'urlencode', 'ra/clientssummary.tpl', 109, false),array('function', 'cycle', 'ra/clientssummary.tpl', 122, false),)), $this); ?>

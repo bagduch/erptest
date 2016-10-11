@@ -9,7 +9,7 @@ $aInt->requiredFiles(
             "gatewayfunctions",
             "modulefunctions",
             "servicefunctions",
-            "orderfunctions",
+            "orderfunctions", 
             "customfieldfunctions",
             "configoptionsfunctions",
             "invoicefunctions",

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-07 10:03:03
+<?php /* Smarty version 2.6.28, created on 2016-10-11 15:25:19
          compiled from ra/order/view.tpl */ ?>
 
         <div class="box box-warning collapsed-box">

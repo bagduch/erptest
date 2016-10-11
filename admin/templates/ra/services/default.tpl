@@ -1,6 +1,6 @@
 
-test
-<div style="float:left;width:100%;">
+
+<div class="row">
     <h1>Services</h1>
     <p><b>Options:</b>
         <a href="/admin/configservices.php?action=creategroup">Create a New Group</a> | <a href="/admin/configservices.php?action=create">Create a New Service</a> | <a href="/admin/configservices.php?action=duplicate">Duplicate Service</a>

@@ -2,7 +2,7 @@
 
 {php}
 $accordion = array(
-    "home" => array (
+    "home" => array(
         "name" => "Home",
         "url" => "index.php",
         "glyphicon" => "home"
@@ -10,7 +10,7 @@ $accordion = array(
     "clients" => array(
         "name" => "Customers",
         "glyphicon" => "user",
-        "members" => array(
+"members" => array(
             "clients.php" => "View Customers",
             "clientsadd.php" => "Add New Client",
             "cancelrequests.php" => "Cancellation Requests",
@@ -84,9 +84,23 @@ $accordion = array(
             "systememaillog.php" => "Email Message Log",
             "systemmailimportlog.php" => "Ticket Mail Import Log"
         )
+    ),
+    "system" => array(
+        "name" => "System",
+        "glyphicon" => "cog",
+        "members" => array(
+            "configgeneral.php" => "General Settings",
+            "configauto.php" => "Automation Settings",
+            "#" => array(
+                "name" => "Staff Management",
+                "members" => array(
+                    "configadmins.php" => "Administrator Users",
+                    "configadminroles.php" => "Administrator Roles",
+                    "configtwofa.php" => "Two-Factor Authentication"
+                )
+            ),
+        )
     )
-
-            
 );
 $this->assign('accordion', $accordion);
 {/php}
@@ -115,14 +129,31 @@ $this->assign('accordion', $accordion);
             {if $section.members|is_array}
             <li class="treeview">
                 <a href="#">
-                    <i class="glyphicon glyphicon-{$section.glyphicon}"></i> <span>{$section.name}</span>
+                    <i class="glyphicon glyphicon-{$section.glyphicon}"></i><span>{$section.name}</span>
                     <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <span class="label label-primary pull-right">{$section.num}</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     {foreach from=$section.members item=member key=url}
-                        <li class="active"><a href="{$url}"><i class="fa fa-circle-o"></i>{$member}</a></li>
+                        {if $member.members|is_array}
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i>
+                                    <span>{$member.name}</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {foreach from=$member.members item=submember key=suburl}
+                                        <li><a href="{$suburl}"><i class="fa fa-circle-o"></i>{$submember}</a></li>
+                                            {/foreach}
+                                </ul>
+                            </li>
+                        {else}
+                            <li><a href="{$url}"><i class="fa fa-circle-o"></i>{$member}</a></li>
+                                {/if}
                             {/foreach}
                 </ul>
             </li>
