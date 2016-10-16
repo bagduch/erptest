@@ -56,7 +56,7 @@ if ($action == "edit") {
     foreach ($data as $name => $value) {
         $name = $value;
     }
-    echo "here";
+
     $aInt->template = "client/clientgroupedit";
 }
 
@@ -100,15 +100,12 @@ if ($ation == "") {
     $discountpercent;
     $susptermexempt;
     $separateinvoices;
-
-
-   
-
-    $aInt->jquerycode = $jquerycode;
-    $aInt->jscode = $jscode;
-    $aInt->assign("table", $table);
-    $aInt->assign("url", $url);
-    $aInt->template = "client/clientgroup";
+    $template = "client/clientgroup";
 }
+$aInt->jquerycode = $jquerycode;
+$aInt->jscode = $jscode;
+$aInt->assign("table", $table);
+$aInt->assign("url", $url);
+$aInt->template = $template;
 $aInt->display();
 ?>
