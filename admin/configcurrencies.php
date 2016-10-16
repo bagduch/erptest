@@ -128,13 +128,13 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 				$deletelink .= "doDelete('" . $id . "')";
 			}
 
-			$deletelink .= "\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>";
+			$deletelink .= "\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>";
 		}
 		else {
 			$deletelink = "";
 		}
 
-		$tabledata[] = array($code, $prefix, $suffix, $formatex, $rate, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", $deletelink);
+		$tabledata[] = array($code, $prefix, $suffix, $formatex, $rate, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", $deletelink);
 		++$totalcurrencies;
 	}
 

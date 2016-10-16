@@ -261,7 +261,7 @@ if ($action == "") {
 			$movedown = "";
 		}
 
-		$tabledata[] = array($name, $description, $email, $hidden, $moveup, $movedown, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+		$tabledata[] = array($name, $description, $email, $hidden, $moveup, $movedown, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 	}
 
 	echo $aInt->sortableTable(array($aInt->lang("supportticketdepts", "deptname"), $aInt->lang("fields", "description"), $aInt->lang("supportticketdepts", "deptemail"), $aInt->lang("global", "hidden"), "", "", "", ""), $tabledata);

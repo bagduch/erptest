@@ -83,7 +83,7 @@ while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
 	$domain = $data['domain'];
 	$count = $data['count'];
-	$tabledata[] = array($domain, $count, "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+	$tabledata[] = array($domain, $count, "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
 echo $aInt->sortableTable(array($aInt->lang("bans", "emaildomain"), $aInt->lang("bans", "usagecount"), ""), $tabledata);

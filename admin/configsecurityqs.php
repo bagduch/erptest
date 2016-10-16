@@ -84,7 +84,7 @@ while ($data = mysqli_fetch_assoc($result)) {
 	$count = select_query_i("tblclients", "count(securityqid) as cnt", array("securityqid" => $data['id']));
 	$count_data = mysqli_fetch_assoc($count);
 	$cnt = (is_null($count_data['cnt']) ? "0" : $count_data['cnt']);
-	$tabledata[] = array(decrypt($data['question']), $cnt, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+	$tabledata[] = array(decrypt($data['question']), $cnt, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $data['id'] . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
 echo $aInt->sortableTable(array($aInt->lang("securityquestionconfig", "question"), $aInt->lang("securityquestionconfig", "uses"), "", ""), $tabledata);

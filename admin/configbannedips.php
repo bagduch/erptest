@@ -152,7 +152,7 @@ while ($data = mysqli_fetch_array($result)) {
 	$reason = $data['reason'];
 	$expires = $data['expires'];
 	$expires = fromMySQLDate($expires, "time");
-	$tabledata[] = array("<a href=\"http://www.geoiptool.com/en/?IP=" . $ip . "\" target=\"_blank\">" . $ip . "</a>", $reason, $expires, "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+	$tabledata[] = array("<a href=\"http://www.geoiptool.com/en/?IP=" . $ip . "\" target=\"_blank\">" . $ip . "</a>", $reason, $expires, "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
 echo $aInt->sortableTable(array($aInt->lang("fields", "ipaddress"), $aInt->lang("bans", "banreason"), $aInt->lang("bans", "banexpires"), ""), $tabledata);

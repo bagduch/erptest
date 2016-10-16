@@ -99,7 +99,7 @@ while ($data = mysqli_fetch_array($result)) {
     }
 
     $type = ($type == "Immediate" ? $aInt->lang("clients", "cancelrequestimmediate") : $aInt->lang("clients", "cancelrequestendofperiod") . ("<br>(" . $nextduedate . ")"));
-    $tabledata[] = array($date, $xname, "<textarea rows=3 cols=64 readonly>" . $reason . "</textarea>", $type, "<a href=\"#\" onClick=\"doDelete('" . $id2 . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+    $tabledata[] = array($date, $xname, "<textarea rows=3 cols=64 readonly>" . $reason . "</textarea>", $type, "<a href=\"#\" onClick=\"doDelete('" . $id2 . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
 $table = $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("fields", "product"), $aInt->lang("fields", "reason"), $aInt->lang("fields", "type"), ""), $tabledata);

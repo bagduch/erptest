@@ -129,7 +129,7 @@ if (!$action) {
         $showorder = $data['showorder'];
         $weight = $data['weight'];
         $showorder = ($showorder ? "<img src=\"images/icons/tick.png\" alt=\"Yes\" border=\"0\" />" : "&nbsp;");
-        $tabledata[] = array($name, $description, $billingcycle, $showorder, $weight, "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $addonid . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $addonid . "')\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+        $tabledata[] = array($name, $description, $billingcycle, $showorder, $weight, "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $addonid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $addonid . "')\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
     }
 
     echo $aInt->sortableTable(array($aInt->lang("addons", "name"), $aInt->lang("fields", "description"), $aInt->lang("fields", "billingcycle"), $aInt->lang("addons", "showonorder"), $aInt->lang("addons", "weighting"), "", ""), $tabledata);

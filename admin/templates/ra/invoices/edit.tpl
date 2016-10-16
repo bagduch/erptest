@@ -1,14 +1,14 @@
 <<<<<<< HEAD
-{debug}
-
-
-<div>
-=======
 
 
 
 <div class="col-lg-12">
->>>>>>> staging/master
+=======
+{debug}
+
+
+<div>
+>>>>>>> ben
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
         <li role="presentation" class=""><a href="#tab1box" aria-controls="tab1box" role="tab" data-toggle="tab">Add Payment</a></li>
@@ -22,11 +22,11 @@
             <table width="100%">
                 <tbody><tr><td width="50%">
 <<<<<<< HEAD
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
 
                             <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
-                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
->>>>>>> staging/master
+>>>>>>> ben
                                 <tbody><tr><td width="35%" class="fieldlabel">Client Name</td>
                                         <td class="fieldarea"><a href="clientssummary.php?userid={$invoice.userid}">{$invoice.firstname} {$invoice.lastname}</a> 
                                             (<a href="clientsinvoices.php?userid={$invoice.userid}">View Invoices</a>)
@@ -85,19 +85,19 @@
             </table>
         </div>
 <<<<<<< HEAD
-        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
-=======
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
->>>>>>> staging/master
+=======
+        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+>>>>>>> ben
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="{$invoice.id}">
                 <input type="hidden" name="sub" value="markpaid">
 <<<<<<< HEAD
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
->>>>>>> staging/master
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
                     <tbody>
                         <tr>
                             <td width="20%" class="fieldlabel">Date</td>
@@ -128,20 +128,20 @@
         </div>
         <div  role="tabpanel" id="tab2box" class="tabbox tab-pane">
 <<<<<<< HEAD
-
-
 =======
->>>>>>> staging/master
+
+
+>>>>>>> ben
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="saveoptions" value="true">
                 <input type="hidden" name="id" value="{$invoice.id}">
 
 <<<<<<< HEAD
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
->>>>>>> staging/master
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
                     <tbody>
                         <tr>
                             <td width="20%" class="fieldlabel">Invoice Date</td>
@@ -193,10 +193,10 @@
 
 
 <<<<<<< HEAD
-            <table width="75%" align="center">
-=======
             <table class="table" width="75%" align="center">
->>>>>>> staging/master
+=======
+            <table width="75%" align="center">
+>>>>>>> ben
                 <tbody>
                     <tr>
                         <td width="50%" align="center"><b>Add Credit to Invoice</b></td>
@@ -229,10 +229,10 @@
 
         </div>
 <<<<<<< HEAD
-        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
-=======
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
->>>>>>> staging/master
+=======
+        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+>>>>>>> ben
 
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="token" value="{$token}">
@@ -241,10 +241,10 @@
                 <input type="hidden" name="sub" value="refund">
 
 <<<<<<< HEAD
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
->>>>>>> staging/master
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
                         <tr><td class="fieldlabel">Amount</td><td class="fieldarea"><input class="form-control" type="text" name="amount" size="15"> Leave blank for full refund</td></tr>
                         <tr><td class="fieldlabel">Refund Type</td><td class="fieldarea"><select class="form-control" name="refundtype" id="refundtype" onchange="showrefundtransid();
