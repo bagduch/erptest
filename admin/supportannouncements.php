@@ -104,7 +104,7 @@ if ($action == "") {
 			$published = "No";
 		}
 
-		$tabledata[] = array($date, $title, $published, "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>");
+		$tabledata[] = array($date, $title, $published, "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>");
 	}
 
 	echo $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("fields", "title"), $aInt->lang("support", "announcepublished"), "", ""), $tabledata, $tableformurl, $tableformbuttons);

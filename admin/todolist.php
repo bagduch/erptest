@@ -334,7 +334,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 			$admin = "";
 		}
 
-		$tabledata[] = array("<input type=\"checkbox\" name=\"selids[]\" value=\"" . $id . "\" class=\"checkall\">", $date, $title, $description, $admin, $status, $duedate, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+		$tabledata[] = array("<input type=\"checkbox\" name=\"selids[]\" value=\"" . $id . "\" class=\"checkall\">", $date, $title, $description, $admin, $status, $duedate, "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 	}
 
 	$tableformurl = $_SERVER['PHP_SELF'];

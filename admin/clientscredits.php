@@ -131,7 +131,7 @@ window.location='";
 		$description = $data['description'];
 		$amount = $data['amount'];
 		$description = preg_replace($patterns, $replacements, $description . " ");
-		$tabledata[] = array($date, nl2br(trim($description)), formatCurrency($amount), "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+		$tabledata[] = array($date, nl2br(trim($description)), formatCurrency($amount), "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 	}
 
 	echo $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("fields", "description"), $aInt->lang("fields", "amount"), "", ""), $tabledata);
