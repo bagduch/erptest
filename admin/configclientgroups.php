@@ -56,8 +56,6 @@ if ($action == "edit") {
     foreach ($data as $name => $value) {
         $name = $value;
     }
-
-    $aInt->template = "client/clientgroupedit";
 }
 
 
