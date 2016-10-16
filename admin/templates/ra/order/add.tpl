@@ -7,17 +7,17 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-=======
 >>>>>>> ben
 =======
->>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 <<<<<<< HEAD
 =======
 =======
->>>>>>> staging/master
+>>>>>>> ben
 >>>>>>> staging/master
 =======
 >>>>>>> ben
@@ -26,9 +26,9 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+>>>>>>> ben
 =======
 >>>>>>> ben
->>>>>>> staging/master
 <<<<<<< HEAD
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
@@ -141,14 +141,14 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
->>>>>>> staging/master
-=======
->>>>>>> staging/master
-=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
+=======
 >>>>>>> staging/master
+=======
+>>>>>>> staging/master
+>>>>>>> ben
 =======
 =======
 >>>>>>> ben
@@ -156,12 +156,12 @@
 <<<<<<< HEAD
 =======
 =======
->>>>>>> staging/master
-=======
-=======
-=======
 >>>>>>> ben
+=======
+=======
+=======
 >>>>>>> staging/master
+>>>>>>> ben
 >>>>>>> staging/master
 =======
 =======
@@ -172,14 +172,14 @@
 >>>>>>> staging/master
 <<<<<<< HEAD
 <<<<<<< HEAD
+>>>>>>> ben
+=======
+>>>>>>> ben
+=======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
-=======
 >>>>>>> ben
-=======
->>>>>>> ben
->>>>>>> staging/master
 <form method="post" action="{$PHP_SELF}" id="orderfrm">
     <input type="hidden" name="submitorder" value="true">
     <div class="box">
@@ -466,19 +466,19 @@
 {/literal}
 <<<<<<< HEAD
 <<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> staging/master
-<<<<<<< HEAD
-<<<<<<< HEAD
 <<<<<<< HEAD
 =======
-=======
+>>>>>>> ben
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
->>>>>>> staging/master
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -486,9 +486,9 @@
 <<<<<<< HEAD
 =======
 =======
->>>>>>> staging/master
 =======
 >>>>>>> staging/master
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> staging/master
 =======
@@ -500,14 +500,14 @@
 >>>>>>> staging/master
 <<<<<<< HEAD
 <<<<<<< HEAD
+>>>>>>> ben
+=======
+>>>>>>> ben
+=======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
-=======
 >>>>>>> ben
-=======
->>>>>>> ben
->>>>>>> staging/master
 =======
 <<<<<<< HEAD
 =======
@@ -518,22 +518,22 @@
 <<<<<<< HEAD
 =======
 =======
->>>>>>> staging/master
+>>>>>>> ben
 >>>>>>> ben
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 <<<<<<< HEAD
 =======
->>>>>>> ben
->>>>>>> staging/master
-=======
-=======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
+>>>>>>> ben
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
             <input type="hidden" name="submitorder" value="true">
@@ -649,52 +649,52 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
->>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
-=======
-=======
 =======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
->>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
->>>>>>> ben
-<<<<<<< HEAD
->>>>>>> staging/master
 =======
 >>>>>>> staging/master
 =======
 =======
 >>>>>>> staging/master
+=======
 >>>>>>> ben
 =======
->>>>>>> ben
->>>>>>> staging/master
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 =======
 >>>>>>> staging/master
->>>>>>> ben
->>>>>>> staging/master
-=======
 >>>>>>> ben
 <<<<<<< HEAD
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 >>>>>>> staging/master
 =======
+>>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
+>>>>>>> ben
