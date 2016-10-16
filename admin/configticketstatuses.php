@@ -95,13 +95,13 @@ while ($data = mysqli_fetch_assoc($result)) {
 	$autoclose = ($autoclose ? "<img src=\"images/icons/tick.png\">" : "<img src=\"images/icons/disabled.png\">");
 
 	if (4 < $statusid) {
-		$delete = "<a href=\"#\" onClick=\"doDelete('" . $statusid . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>";
+		$delete = "<a href=\"#\" onClick=\"doDelete('" . $statusid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>";
 	}
 	else {
 		$delete = "";
 	}
 
-	$tabledata[] = array("<span style=\"font-weight:bold;color:" . $color . "\">" . $title . "</span>", $showactive, $showawaiting, $autoclose, $sortorder, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $statusid . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", $delete);
+	$tabledata[] = array("<span style=\"font-weight:bold;color:" . $color . "\">" . $title . "</span>", $showactive, $showawaiting, $autoclose, $sortorder, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $statusid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", $delete);
 }
 
 echo $aInt->sortableTable(array($aInt->lang("fields", "title"), $aInt->lang("ticketstatusconfig", "includeinactivetickets"), $aInt->lang("ticketstatusconfig", "includeinawaitingreply"), $aInt->lang("ticketstatusconfig", "autoclose"), $aInt->lang("products", "sortorder"), "", ""), $tabledata);

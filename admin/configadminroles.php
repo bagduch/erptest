@@ -123,7 +123,7 @@ if (!$action) {
 			$assigned[] = $aInt->lang("global", "none");
 		}
 
-		$tabledata[] = array($data['name'], implode(", ", $assigned), "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"" . $deletejs . "\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+		$tabledata[] = array($data['name'], implode(", ", $assigned), "<a href=\"" . $PHP_SELF . "?action=edit&id=" . $data['id'] . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"" . $deletejs . "\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 	}
 
 	echo $aInt->sortableTable(array($aInt->lang("fields", "groupname"), $aInt->lang("supportticketdepts", "assignedadmins"), "", ""), $tabledata);

@@ -103,7 +103,7 @@ foreach ($nums as $num) {
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
 		$content = $data['content'];
-		$tabledata[] = array($content, "<a href=\"#\" onClick=\"doDelete('" . $id . "','" . $num . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+		$tabledata[] = array($content, "<a href=\"#\" onClick=\"doDelete('" . $id . "','" . $num . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 	}
 
 	echo $aInt->sortableTable(array($aInt->lang("fields", "content"), ""), $tabledata);

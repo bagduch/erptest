@@ -54,8 +54,10 @@ if ($action == "edit") {
     $result = select_query_i("tblclientgroups", "", array("id" => $id));
     $data = mysqli_fetch_assoc($result);
     foreach ($data as $name => $value) {
-        $$name = $value;
+        $name = $value;
     }
+    echo "here";
+    $aInt->template = "client/clientgroupedit";
 }
 
 
@@ -79,31 +81,34 @@ if ($deleteerror) {
     infoBox($aInt->lang("global", "erroroccurred"), $aInt->lang("clientgroups", "delerrorinfo"));
 }
 
-$aInt->sortableTableInit("nopagination");
-$result = select_query_i("tblclientgroups", "", "");
+if ($ation == "") {
+    $aInt->sortableTableInit("nopagination");
+    $result = select_query_i("tblclientgroups", "", "");
 
-while ($data = mysqli_fetch_assoc($result)) {
-    $suspterm = ($data['susptermexempt'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
-    $separateinv = ($data['separateinvoices'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
-    $groupcol = ($data['groupcolour'] ? "<div style=\"width:75px;background-color:" . $data['groupcolour'] . "\">" . $aInt->lang("clientgroups", "sample") . "</div>" : "");
-    $tabledata[] = array($data['groupname'], $groupcol, $data['discountpercent'], $suspterm, $separateinv, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\"></a>");
+    while ($data = mysqli_fetch_assoc($result)) {
+        $suspterm = ($data['susptermexempt'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
+        $separateinv = ($data['separateinvoices'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
+        $groupcol = ($data['groupcolour'] ? "<div style=\"width:75px;background-color:" . $data['groupcolour'] . "\">" . $aInt->lang("clientgroups", "sample") . "</div>" : "");
+        $tabledata[] = array($data['groupname'], $groupcol, $data['discountpercent'], $suspterm, $separateinv, "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=edit&id=" . $data['id'] . "\" class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "');return false\" class=\"btn btn-danger\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
+    }
+
+    $table = $aInt->sortableTable(array($aInt->lang("clientgroups", "groupname"), $aInt->lang("clientgroups", "groupcolour"), $aInt->lang("clientgroups", "perdiscount"), $aInt->lang("clientgroups", "susptermexempt"), $aInt->lang("clients", "separateinvoices"), "", ""), $tabledata);
+    $setaction = ($action == "edit" ? "updategroup" : "savegroup");
+    $url = $PHP_SELF . "?action=" . $setaction;
+    $groupname;
+    $groupcolour;
+    $discountpercent;
+    $susptermexempt;
+    $separateinvoices;
+
+
+   
+
+    $aInt->jquerycode = $jquerycode;
+    $aInt->jscode = $jscode;
+    $aInt->assign("table", $table);
+    $aInt->assign("url", $url);
+    $aInt->template = "client/clientgroup";
 }
-
-$table = $aInt->sortableTable(array($aInt->lang("clientgroups", "groupname"), $aInt->lang("clientgroups", "groupcolour"), $aInt->lang("clientgroups", "perdiscount"), $aInt->lang("clientgroups", "susptermexempt"), $aInt->lang("clients", "separateinvoices"), "", ""), $tabledata);
-$setaction = ($action == "edit" ? "updategroup" : "savegroup");
-$url = $PHP_SELF . "?action=" . $setaction;
-$groupname;
-$groupcolour;
-$discountpercent;
-$susptermexempt;
-$separateinvoices;
-
-
-
-$aInt->jquerycode = $jquerycode;
-$aInt->jscode = $jscode;
-$aInt->assign("table", $table);
-$aInt->assign("url", $url);
-$aInt->template = "client/clientgroup";
 $aInt->display();
 ?>
