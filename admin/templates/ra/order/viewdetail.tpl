@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {debug}
+=======
+
+>>>>>>> ben
 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
     <tbody>
         <tr>
@@ -70,7 +74,11 @@
 
 <form method="post" action="/admin/orders.php?action=view&amp;id=154&amp;activate=true">
     <div class="tablebg">
+<<<<<<< HEAD
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
+=======
+        <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
+>>>>>>> ben
             <tbody>
                 <tr>
                     <th>Item</th>
@@ -80,6 +88,7 @@
                     <th>Status</th>
                     <th>Payment Status</th>
                 </tr>
+<<<<<<< HEAD
                 {foreach from=$tblcustomerservices item=data}
                     <tr>
                         <td align="center">
@@ -101,6 +110,18 @@
                     <th>$0.00 NZD</th>
                     <th colspan="2"></th>
                 </tr>
+=======
+                <tr>
+                    <td align="center">
+                        <a href="clientsservices.php?userid=12437&amp;id=135"><b></b></a>
+                    </td>
+                    <td>Broadband - ADSL2<br></td>
+                    <td>Monthly</td>
+                    <td>$118.00 NZD</td>
+                    <td>Pending</td>
+                    <td><b>
+                            {$paymentstatus}</b></td></tr><tr><td style="background-color:#EFF2F9;text-align:center;" colspan="6"><label><input type="checkbox" name="vars[products][135][sendwelcome]" checked=""> Send Welcome Email</label></td></tr><tr><th colspan="3" style="text-align:right;">Total Due:&nbsp;</th><th>$0.00 NZD</th><th colspan="2"></th></tr>
+>>>>>>> ben
             </tbody></table>
     </div>
 
