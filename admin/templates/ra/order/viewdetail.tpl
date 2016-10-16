@@ -1,9 +1,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 {debug}
 =======
 
 =======
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
 {debug}
 =======
@@ -14,6 +17,14 @@
 =======
 {debug}
 >>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> staging/master
+=======
+=======
+{debug}
+=======
+
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -89,10 +100,13 @@
     <div class="tablebg">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 =======
         <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
 =======
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 =======
@@ -103,6 +117,14 @@
 =======
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 >>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> staging/master
+=======
+=======
+        <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
+=======
+        <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
             <tbody>
@@ -116,7 +138,10 @@
                 </tr>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
 =======
                 <tr>
@@ -129,6 +154,11 @@
                     <td>Pending</td>
                     <td><b>
                             {$paymentstatus}</b></td></tr><tr><td style="background-color:#EFF2F9;text-align:center;" colspan="6"><label><input type="checkbox" name="vars[products][135][sendwelcome]" checked=""> Send Welcome Email</label></td></tr><tr><th colspan="3" style="text-align:right;">Total Due:&nbsp;</th><th>$0.00 NZD</th><th colspan="2"></th></tr>
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
@@ -154,8 +184,14 @@
                     <th colspan="2"></th>
                 </tr>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+>>>>>>> staging/master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 =======
                 <tr>
@@ -170,9 +206,17 @@
                             {$paymentstatus}</b></td></tr><tr><td style="background-color:#EFF2F9;text-align:center;" colspan="6"><label><input type="checkbox" name="vars[products][135][sendwelcome]" checked=""> Send Welcome Email</label></td></tr><tr><th colspan="3" style="text-align:right;">Total Due:&nbsp;</th><th>$0.00 NZD</th><th colspan="2"></th></tr>
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
 >>>>>>> ben
 >>>>>>> staging/master
             </tbody></table>

@@ -1,7 +1,10 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
@@ -108,6 +111,11 @@
         {$js}
     {/foreach}
 </script>
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> ben
 >>>>>>> staging/master
@@ -396,8 +404,14 @@
     </script>
 {/literal}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+>>>>>>> staging/master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
@@ -506,8 +520,16 @@
 </script>
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
 >>>>>>> ben
 >>>>>>> staging/master
