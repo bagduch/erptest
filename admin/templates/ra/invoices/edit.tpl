@@ -5,8 +5,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 
@@ -15,17 +22,29 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
-=======
->>>>>>> staging/master
 >>>>>>> ben
-=======
 =======
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 >>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
 <<<<<<< HEAD
 =======
@@ -40,6 +59,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -48,6 +72,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -57,19 +87,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 <div class="col-lg-12">
 =======
@@ -84,15 +126,28 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 =======
 
@@ -103,6 +158,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -110,8 +171,14 @@
 =======
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> staging/master
 =======
@@ -122,8 +189,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
@@ -142,17 +215,29 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+=======
+<<<<<<< HEAD
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
 >>>>>>> ben
 =======
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
-                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
-=======
-=======
 >>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
 =======
 =======
@@ -161,8 +246,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -173,6 +264,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -183,6 +280,10 @@
 <<<<<<< HEAD
 =======
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> staging/master
 =======
@@ -194,8 +295,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 =======
 
@@ -268,11 +375,20 @@
 <<<<<<< HEAD
 =======
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 =======
 =======
 =======
+>>>>>>> ben
 >>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
 =======
@@ -280,17 +396,29 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
-=======
->>>>>>> staging/master
 >>>>>>> ben
-=======
 =======
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 >>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
 <<<<<<< HEAD
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
@@ -305,6 +433,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -313,6 +446,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -322,19 +461,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
             <form method="post" action="/admin/invoices.php">
@@ -348,8 +499,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -358,9 +516,18 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -368,8 +535,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -384,6 +557,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -392,6 +570,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -401,19 +585,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
                     <tbody>
@@ -452,15 +648,28 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 <<<<<<< HEAD
 =======
@@ -470,6 +679,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -479,6 +694,10 @@
 <<<<<<< HEAD
 =======
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> staging/master
 =======
@@ -489,8 +708,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 =======
 
@@ -510,8 +735,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -520,17 +752,29 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
-=======
->>>>>>> staging/master
 >>>>>>> ben
-=======
 =======
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 >>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
 <<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -545,6 +789,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -553,6 +802,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -562,19 +817,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
                     <tbody>
@@ -634,8 +901,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
             <table class="table" width="75%" align="center">
@@ -644,9 +918,18 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -654,8 +937,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
             <table class="table" width="75%" align="center">
@@ -670,6 +959,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -678,6 +972,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -687,19 +987,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
                 <tbody>
@@ -740,8 +1052,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
@@ -750,9 +1069,18 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
@@ -760,8 +1088,14 @@
 >>>>>>> ben
 >>>>>>> staging/master
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
@@ -776,6 +1110,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -784,6 +1123,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -793,19 +1138,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
 
@@ -822,8 +1179,15 @@
 =======
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> staging/master
+>>>>>>> ben
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -832,17 +1196,29 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
-=======
->>>>>>> staging/master
 >>>>>>> ben
-=======
 =======
 >>>>>>> staging/master
 =======
 >>>>>>> ben
 >>>>>>> staging/master
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
 >>>>>>> ben
 <<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -857,6 +1233,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+=======
+>>>>>>> ben
 =======
 >>>>>>> staging/master
 =======
@@ -865,6 +1246,12 @@
 >>>>>>> staging/master
 =======
 =======
+>>>>>>> staging/master
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 >>>>>>> ben
 =======
@@ -874,19 +1261,31 @@
 >>>>>>> ben
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
+=======
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
 >>>>>>> staging/master
 >>>>>>> ben
-=======
 >>>>>>> staging/master
-=======
-=======
->>>>>>> staging/master
+<<<<<<< HEAD
 >>>>>>> ben
->>>>>>> staging/master
+=======
 >>>>>>> ben
 >>>>>>> ben
                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
