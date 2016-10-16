@@ -31,12 +31,11 @@ function getServiceData($id = NULL) {
         ON tblservices.id=tblcustomerservices.packageid 
     LEFT JOIN tblservicegroups 
         ON (tblservices.gid=tblservicegroups.id ) 
-    WHERE tblcustomerservices.id=" . (int) $id
-            . " AND tblservicegroups.type='service'";
+    WHERE tblcustomerservices.id=" . (int) $id;
 
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
-   // echo "<pre>".print_r($service_data, 1)."</pre>";
+    // echo "<pre>".print_r($service_data, 1)."</pre>";
     return $service_data;
 }
 
@@ -103,7 +102,6 @@ function getServiceCustomFields($sid, $csid = null) {
             unset($returnvals[$cfid]);
         }
     }
-   // mail("peter@hd.net.nz", "hello", print_r($returnvals, 1));
 
     return $returnvals;
 }
@@ -113,7 +111,7 @@ function getCustomeFieldGroup($sid) {
     $data = array();
     if (isset($sid)) {
         $query = "select tcfgn.*,tcfgl.serviceid from tblcustomfieldsgroupnames as tcfgn
-                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid
+                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid where tcfgl.servicegid is null
                 ";
         $result = full_query_i($query);
         while ($row = mysqli_fetch_assoc($result)) {
@@ -123,7 +121,7 @@ function getCustomeFieldGroup($sid) {
         return $data;
     } else {
 
-        return $false;
+        return false;
     }
 }
 
@@ -168,7 +166,7 @@ function cfieldgroupToServices($cfid = null, $cfgid = null) {
     }
     return $data;
 }
-
+ 
 // takes csid per above, and an array of fieldname->values
 function updateServiceCustomFieldValues($relid, $valarray = array()) {
     global $query_count;

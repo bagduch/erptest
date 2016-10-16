@@ -6,52 +6,18 @@
  *
  *
  * */
-
-
-
 function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $ordervalues = "", $hidepw = "") {
-    $customfields = $where = array();
-    $where['type'] = $type;
 
 
-    if ($relid) {
 
-        $where['relid'] = $relid;
+
+    if (!function_exists("getServiceCustomFields")) {
+        require dirname(__FILE__) . "/servicefunctions.php";
     }
-
-    if (!$admin) {
-        $where['adminonly'] = "";
-    }
-
-    if ($order) {
-        $where['showorder'] = "on";
-    }
-    if ($type == 'product') {
-//        $query = "SELECT tc.* FROM tblcustomfields as tc
-//              LEFT OUTER JOIN 
-//              (SELECT tgm.cfid,tcgl.serviceid from tblcustomfieldsgroupmembers as tgm  
-//              INNER JOIN tblcustomfieldsgroupnames as tcfg ON tcfg.cfgid = tgm.cfgid  
-//              INNER JOIN tblcustomfieldsgrouplinks as tcgl ON tcgl.cfgid = tcfg.cfgid)
-//              as optionone ON optionone.cfid = tc.cfid 
-//              LEFT OUTER JOIN tblcustomfieldslinks as tcfl ON tcfl.cfid = tc.cfid
-//                INNER JOIN tblservices as ts ON (ts.id = optionone.serviceid or ts.id=tcfl.serviceid)
-//                WHERE ts.id = " . $relid;
-//        echo $querys;       
-//        $query = "select tblcustomfields.* from tblcustomfields 
-//INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id 
-//LEFT OUTER Join tblcustomfieldsgrouplinks on tblcustomfieldsgrouplinks.gid=tblcustomfieldsgroup.id 
-//LEFT OUTER JOIN tblservices on tblservices.id = tblcustomfieldsgrouplinks.relid where tblservices.id=" . $relid;
-//        $result = full_query_i($query);
-    } else if ($type == 'service') {
-        $query = 'select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroup ON tblcustomfields.gid=tblcustomfieldsgroup.id Inner Join tblservices on tblservices.cpid = tblcustomfieldsgroup.id where tblservices.id=' . $relid;
-
-        $result = full_query_i($query);
-    } else {
-        $result = select_query_i("tblcustomfields", "", $where, "sortorder` ASC,`id", "ASC");
-    }
-
-
-    while ($data = mysqli_fetch_array($result)) {
+    $datas = getServiceCustomFields($relid);
+    $customfields = array();
+   // error_log(print_r($datas, 1), 3, "/tmp/php_errors.log");
+    foreach ($datas as $data) {
         //   echo "<pre>", print_r($data, 1), "</pre>";
         $id = $data['id'];
         $fieldname = $data['fieldname'];
@@ -92,6 +58,11 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
                 $input = ("<input type=\"text\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"40\" /> " . ($customfieldval ? "<a href=\"" . $webaddr . "\" target=\"_blank\">www</a>" : "");
                 $customfieldval = "<a href=\"" . $webaddr . "\" target=\"_blank\">" . $customfieldval . "</a>";
             } else {
+
+                if ($fieldtype == "date") {
+                    $input = ("<input type=\"password\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+                }
+
                 if ($fieldtype == "password") {
                     $input = ("<input type=\"password\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
 

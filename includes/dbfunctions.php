@@ -114,7 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
-    //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+//error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
 
     $result = mysqli_query($ramysqli, $query);
 
@@ -230,7 +230,6 @@ function insert_query($table, $array) {
     global $mysqli_errors;
     global $ramysqli;
 
-    error_log(print_r($array, 1));
 
     $fieldnamelist = $fieldvaluelist = "";
     $query = "INSERT INTO " . db_make_safe_field($table) . " ";
@@ -247,8 +246,12 @@ function insert_query($table, $array) {
             continue;
         }
 
-        if (($value === "NULL") || is_null($value)) {
+        if (($value === "NULL")) {
             $fieldvaluelist .= "NULL,";
+            continue;
+        }
+        if (is_null($value)) {
+            $fieldvaluelist .= "'',";
             continue;
         }
 
@@ -260,7 +263,7 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
- error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+    error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging

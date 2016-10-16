@@ -43,7 +43,7 @@ class RA_Service
 			$where["tblcustomerservices.userid"] = $this->userid;
 		}
 
-		$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.downloads,tblservices.tax,tblservices.upgradepackages,tblservices.configoptionsupgrade,tblservices.billingcycleupgrade,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
 		$data = mysqli_fetch_array($result);
 
 		if ($data['id']) {
@@ -106,7 +106,7 @@ class RA_Service
 		$lang = strtolower($this->getData("billingcycle"));
 		$lang = str_replace(" ", "", $lang);
 		$lang = str_replace("-", "", $lang);
-		return $ra->get_lang("orderpaymentterm" . $lang);
+		return $ra->get_lang("orderpaymentterm" . $lang."text");
 	}
 
 	public function getStatusDisplay() {

@@ -47,6 +47,7 @@ $notes = $ra->get_req_var("notes");
 
 $password = trim($ra->get_req_var("rpassword"));
 $hash = $ra->get_req_var("hash");
+$dob = trim($ra->get_req_var("rdob"));
 $goto = $ra->get_req_var("goto");
 $address = $ra->get_req_var("address");
 $fpid = $ra->get_req_var("fpid");
@@ -87,13 +88,13 @@ $nowrapper = false;
 
 
 if ($_SESSION['address']) {
-    $process = new RA_Process($_SESSION,$CONFIG);
+    $process = new RA_Process($_SESSION, $CONFIG);
 
 
 
 
-  // echo "<pre>", print_r($process->config, 1), "</pre>";
-   // echo "<pre>", print_r($process->clientsdetails, 1), "</pre>";
+    // echo "<pre>", print_r($process->config, 1), "</pre>";
+    // echo "<pre>", print_r($process->clientsdetails, 1), "</pre>";
     //  error_log(print_r($process, 1), 3, "/tmp/php_errors.log");
     if ($ajax) {
         if ($addonid) {
@@ -250,7 +251,7 @@ if ($_SESSION['address']) {
             }
         } else {
             if ($signup && $firstname && $lastname && $email && $password) {
-                $userid = addClient($firstname, $lastname, $companyname = "", $email, $_SESSION['address1'], $address2, $_SESSION['city'], $_SESSION['state'], $_SESSION['postcode'], $_SESSION['country'], $phonenumber, $password);
+                $userid = addClient($firstname, $lastname, $companyname = "", $email, $_SESSION['address1'], $address2, $_SESSION['city'], $_SESSION['state'], $_SESSION['postcode'], $_SESSION['country'], $phonenumber, $password, $dob);
                 $step = 2;
                 redir('step=2');
             }
@@ -280,7 +281,7 @@ if ($_SESSION['address']) {
         $process->caculateTotal();
         $process->draftOrder();
 
-     //   echo "<pre>",  print_r($process->productdata,1),"</pre>";
+        //   echo "<pre>",  print_r($process->productdata,1),"</pre>";
         if ($data['contract'] && $contractnotsign) {
             $smartyvalues['product'] = $data;
         } else {

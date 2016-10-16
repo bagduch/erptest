@@ -20,6 +20,7 @@ $aInt->requiredFiles(
             "invoicefunctions",
             "gatewayfunctions",
             "affiliatefunctions",
+            "servicefunctions",
             "modulefunctions")
 );
 $aInt->inClientsProfile = true;

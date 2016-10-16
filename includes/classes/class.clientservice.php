@@ -21,7 +21,7 @@ class RA_ClientService {
     public $id;
 
     public function __construct($userid, $id) {
-      
+
         $this->currecy = getCurrency();
         $this->userid = $userid;
         if (!$id || $id == 0) {
@@ -32,7 +32,7 @@ class RA_ClientService {
         if ($this->errorbox == "") {
             $this->getServiceDatas();
             $this->getAddonProduct();
-            $this->getAlladdons();
+            //  $this->getAlladdons();
         }
     }
 
@@ -89,12 +89,30 @@ class RA_ClientService {
     public function getServiceDatas() {
 
         if (isset($this->servicefirstid)) {
+
+
             $this->servicedata = getServiceData($this->servicefirstid);
         } else if (isset($this->id)) {
             $this->servicedata = getServiceData($this->id);
         } else {
             $this->servicedata = getServiceData();
         }
+    }
+
+    public function getAllclientproducts($clientid) {
+        $datas = false;
+        if (isset($clientid)) {
+            $query = "select tblcustomerservices.*,tblservices.name,tblservices.type from tblcustomerservices LEFT JOIN tblservices on tblservices.id=tblcustomerservices.packageid where tblcustomerservices.userid=" . $clientid;
+            $result = full_query_i($query);
+            if ($result->num_rows > 0) {
+                while ($data = mysqli_fetch_assoc($result)) {
+                    $datas[$data['id']] = $data;
+                }
+            } else {
+                $this->errorbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
+            }
+        }
+        return $datas;
     }
 
     public function getAddonProduct() {
@@ -133,7 +151,7 @@ class RA_ClientService {
         }
     }
 
-    public function addaddon($id,$payment) {
+    public function addaddon($id, $payment) {
 
         $addon = array();
         $query = "select * from tblservices where id=" . $id;

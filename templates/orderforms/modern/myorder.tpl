@@ -29,7 +29,9 @@
         <div class="container row">
             <h1>UI Order Process</h1>
             <div class="form-container">
-                <h2 class="text-center">Registration</h2>
+                <div class="bg-warning address-bar">
+                    <h2>LET US KNOW WHO YOU ARE</h2>
+                </div>
                 <div class="address-container">
                     <div class="left-bar">
                         <div class="bg-success address-bar">
@@ -47,46 +49,124 @@
                     <form action="myorder.php" method="post">
                         <div class="row step-one">
                             {$error}
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="#fname">First Name</label>
-                                    <input type="text" id="fname" class="form-control" name="rfname" >
+                            <div class="chose">
+                                <div class="col-md-6">
+                                    <div class="box">
+                                        <div class="box-body">
+                                            <span class="hide-sm">
+                                                <i class="fa fa-user fa-4" aria-hidden="true"></i>
+                                            </span>
+                                            <span class="box-text">I am already with Unlimited Internet</span>
+                                        </div>
+                                        <div class="box-footer">
+                                            <button class="btn btn-transparent" onclick="showlogin();
+                                                    return false">Login</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="#fname">Last Name</label>
-                                    <input type="text" id="fname" class="form-control" name="rlname">
-                                </div>
-                                <div class="form-group">
-                                    <label for="#fname">Email</label>
-                                    <input type="text" id="fname" class="form-control" name="remail">
-                                </div>
-                                <div class="form-group">
-                                    <label for="#password">Password</label>
-                                    <input type="password" id="password" class="form-control" name="rpassword">
-                                </div>
-                                <div class="form-group">
-                                    <label for="#password2">Confirm Password</label>
-                                    <input type="password" id="password2" class="form-control" name="rpassword2">
-                                </div>
-                                <div class="form-group">
-                                    <input class="btn btn-default" name="signup" type="submit" value="Sign Up">
+                                <div class="col-md-6">
+                                    <div class="box">
+                                        <div class="box-body">
+                                            <span class="hide-sm">
+                                                <i class="fa fa-user-plus fa-4" aria-hidden="true"></i>
+                                            </span>
+                                            <span class="box-text">I am new to Unlimited Internet</span>
+                                        </div>
+                                        <div class="box-footer">
+                                            <button class="btn btn-transparent" onclick="showsignup();
+                                                    return false">Sign Up</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label  for="#username">Username</label>
-                                    <input type="text" id="username" class="form-control" name="username">
+
+
+                            <div class="col-lg-12">
+
+                                <div class="sign-up">
+                                    <div class="box-body">
+                                        <div class="col-md-4">
+                                            <span class="hide-sm">
+                                                <i class="fa fa-user-plus fa-4" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="#fname">First Name</label>
+                                                <input type="text" id="fname" class="form-control" name="rfname" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#fname">Last Name</label>
+                                                <input type="text" id="fname" class="form-control" name="rlname">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#dob">Date Of Birth</label>
+                                                <input type="text" id="dob" class="form-control" name="rdob">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#fname">Email</label>
+                                                <input type="text" id="fname" class="form-control" name="remail">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#password">Password</label>
+                                                <input type="password" id="password" class="form-control" name="rpassword">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#password2">Confirm Password</label>
+                                                <input type="password" id="password2" class="form-control" name="rpassword2">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="box-footer">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <button class="btn btn-transparent" onclick="backtoselect();
+                                                        return false">Back</button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="btn btn-transparent" name="signup" type="submit" value="Sign Up">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="#password">Password</label>
-                                    <input type="text" id="password" class="form-control" name="password">
-                                </div>
-                                <div class="remember">
-                                    <label class="checkbox-inline rememberme"><input type="checkbox" name="rememberme" id="rememberme">Remember Me</label>
-                                    <a href="pwreset.php" class="forgot" style="float:right;">Request a Password Reset</a>
-                                </div>
-                                <div class="form-group">
-                                    <input class="btn btn-default" name="login" type="submit" value="Login">
+                                <div class="login">
+                                    <div class="box-body">
+                                        <div class="col-md-4">
+                                            <span class="hide-sm">
+                                                <i class="fa fa-user fa-4" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label  for="#username">Username</label>
+                                                <input type="text" id="username" class="form-control" name="username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="#password">Password</label>
+                                                <input type="password" id="password" class="form-control" name="password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="checkbox-inline rememberme"><input type="checkbox" name="rememberme" id="rememberme">Remember Me</label>
+                                                <a href="pwreset.php" class="forgot" style="float:right;">Request a Password Reset</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="box-footer">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button class="btn btn-transparent" onclick="backtoselect();
+                                                            return false">Back</button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="btn btn-transparent" name="login" type="submit" value="Login">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -339,6 +419,27 @@
         {literal}
             <script type="text/javascript">
 
+
+                function showlogin()
+                {
+                    $(".chose").hide();
+                    $(".login").show();
+
+                }
+                function showsignup()
+                {
+                    $(".chose").hide();
+                    $(".sign-up").show();
+
+                }
+
+                function backtoselect()
+                {
+                    $(".chose").show();
+                    $(".sign-up").hide();
+                    $(".login").hide();
+
+                }
                 function recaculate()
                 {
                     monthly = parseFloat($(".monthlyprice").val());
