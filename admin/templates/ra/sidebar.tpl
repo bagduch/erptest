@@ -13,6 +13,7 @@ $accordion = array(
 "members" => array(
             "clients.php" => "View Customers",
             "clientsadd.php" => "Add New Client",
+            "configclientgroups.php"=>"Client Groups",
             "cancelrequests.php" => "Cancellation Requests",
             "affiliates.php" => "Manage Affiliates"
         )
@@ -91,13 +92,20 @@ $accordion = array(
         "members" => array(
             "configgeneral.php" => "General Settings",
             "configauto.php" => "Automation Settings",
+   "configemailtemplates.php"=>"Email Templates",
+            "configaddonmods.php"=>"Addon Modules",
+            "configcurrencies.php"=>"Currencies",
+            "configgateways.php"=>"Payment Gateways",
+            "configtax.php"=>"Tax Rules",
+            "configpromotions.php"=>"Promotions",
             "#" => array(
                 "name" => "Staff Management",
                 "members" => array(
                     "configadmins.php" => "Administrator Users",
                     "configadminroles.php" => "Administrator Roles",
                     "configtwofa.php" => "Two-Factor Authentication"
-                )
+                ),
+          
             ),
         )
     )
@@ -114,15 +122,7 @@ $this->assign('accordion', $accordion);
     </div>
 
 </div>
-<form action="#" method="get" class="sidebar-form">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-        </span>
-    </div>
-</form>
+
 <ul class="sidebar-menu">
     <li class="header">MAIN NAVIGATION</li>
         {foreach from=$accordion item=section key=sectionname}

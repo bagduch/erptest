@@ -31,8 +31,7 @@ function getServiceData($id = NULL) {
         ON tblservices.id=tblcustomerservices.packageid 
     LEFT JOIN tblservicegroups 
         ON (tblservices.gid=tblservicegroups.id ) 
-    WHERE tblcustomerservices.id=" . (int) $id
-            . " AND tblservicegroups.type='service'";
+    WHERE tblcustomerservices.id=" . (int) $id;
 
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);

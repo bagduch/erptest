@@ -81,9 +81,27 @@
                     <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
                     </a>
+                    <div class='breadcrumb-wrap'>
+                        <ol class="breadcrumb">
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                            <li class="active"> {$pagetitle} </li>
+                        </ol>
+                    </div>
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li class="smalldate">{$smarty.now|date_format:"%A, %d %B %Y, %H:%M"}</li>
+                            <li class="search-bar">         <div class="pull-right">
+                                    <div class="input-group">
+                                        <input type="text" name="value" autocomplete="off" class="form-control" id="intellisearchval" placeholder="Search...">
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div id="searchresults">
+                                    <div id="searchresultsscroller"></div>
+                                    <div class="pull-right">
+                                        <a class="btn btn-danger" href="#" onclick="searchclose()">{$_ADMINLANG.clientsummary.close} </a>
+                                    </div>
+                                </div></li>
                             <li class="dropdown messages-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-envelope-o"></i>
@@ -132,9 +150,7 @@
                                     <li><a href="logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                            </li>
+                          
                         </ul>
 
                 </nav>
@@ -147,16 +163,6 @@
 
 
             <div class="content-wrapper">
-                <section class="content-header">
-                    <h1>
-                        {$pagetitle} 
-                        <small>Control panel</small>
-                    </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="active"> {$pagetitle} </li>
-                    </ol>
-                </section>
                 <section class="content">
                     {*<div class="col-lg-12">
                     <h1><small>new extra note for page<!-- NEEDS CODING INTO $pagetitle_note --></small></h1>

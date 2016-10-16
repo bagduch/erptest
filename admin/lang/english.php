@@ -224,6 +224,7 @@ $_ADMINLANG['clients']['clientscredits'] = "Credit Log";
 $_ADMINLANG['clientsummary']['title'] = "Client Profile";
 $_ADMINLANG['clientsummary']['activeclient'] = "Active Client";
 $_ADMINLANG['clientsummary']['summary'] = "Summary";
+$_ADMINLANG['clientsummary']['pdf'] = "Download PDF";
 $_ADMINLANG['clientsummary']['profile'] = "Profile";
 $_ADMINLANG['clientsummary']['contacts'] = "Contacts";
 $_ADMINLANG['clientsummary']['products'] = "Products";
@@ -1103,6 +1104,7 @@ $_ADMINLANG['help']['contextlink'] = "Help";
 
 # Fields
 $_ADMINLANG['fields']['id'] = "ID";
+$_ADMINLANG['fields']['dob'] = "Date Of Birth";
 $_ADMINLANG['fields']['date'] = "Date";
 $_ADMINLANG['fields']['paymentmethod'] = "Payment Method";
 $_ADMINLANG['fields']['result'] = "Result";

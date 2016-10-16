@@ -168,7 +168,6 @@ if ($ra->get_req_var("sendmessage")) {
     redir("type=general&multiple=true&" . substr($clientslist, 0, 0 - 1), "sendmessage.php");
 }
 
-ob_start();
 
 if (!$action) {
     releaseSession();
@@ -453,10 +452,11 @@ if (!$action) {
         while ($data = mysqli_fetch_assoc($result)) {
             $tblcustomerservices[$data['id']] = $data;
             $hostingid = $data['id'];
-            $domain = $data['domain'];
+            $description = $data['description'];
             $billingcycle = $data['billingcycle'];
             $hostingstatus = $data['servicestatus'];
             $firstpaymentamount = formatCurrency($data['firstpaymentamount']);
+            $tblcustomerservices[$data['id']]['firstpaymentamount'] = formatCurrency($data['firstpaymentamount']);
             $recurringamount = $data['amount'];
             $packageid = $data['packageid'];
             $server = $data['server'];
@@ -467,7 +467,7 @@ if (!$action) {
 
 
             if (!$serverusername) {
-                $serverusername = createServerUsername($domain);
+                $serverusername = createServerUsername($description);
             }
 
 
@@ -476,7 +476,7 @@ if (!$action) {
             }
 
             $result2 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-            $tblservicesdata = mysqli_fetch_array($result2);
+            $tblservicesdata = mysqli_fetch_assoc($result2);
 
             $tblcustomerservices[$data['id']]['services'] = $tblservicesdata;
             $groupname = $tblservicesdata['groupname'];
@@ -531,48 +531,49 @@ if (!$action) {
 
 
 
+
         if ($renewals) {
             $renewals = explode(",", $renewals);
             foreach ($renewals as $renewal) {
                 $renewal = explode("=", $renewal);
-                $domainid = $renewal[0];
+                $descriptionid = $renewal[0];
                 $registrationperiod = $renewal[1];
-                $result = select_query_i("tbldomains", "", array("id" => $domainid));
+                $result = select_query_i("tbldescriptions", "", array("id" => $descriptionid));
                 $data = mysqli_fetch_array($result);
-                $domainid = $data['id'];
+                $descriptionid = $data['id'];
                 $type = $data['type'];
-                $domain = $data['domain'];
+                $description = $data['description'];
                 $registrar = $data['registrar'];
                 $status = $data['status'];
                 $regdate = $data['registrationdate'];
                 $nextduedate = $data['nextduedate'];
-                $domainamount = formatCurrency($data['recurringamount']);
-                $domainregistrar = $data['registrar'];
+                $descriptionamount = formatCurrency($data['recurringamount']);
+                $descriptionregistrar = $data['registrar'];
                 $dnsmanagement = $data['dnsmanagement'];
                 $emailforwarding = $data['emailforwarding'];
                 $idprotection = $data['idprotection'];
-                echo "<tr><td><a href=\"clientsdomains.php?userid=" . $userid . "&domainid=" . $domainid . "\"><b>" . $aInt->lang("fields", "domain") . "</b></a></td><td>" . $aInt->lang("domains", "renewal") . (" - " . $domain . "<br>");
+                echo "<tr><td><a href=\"clientsdescriptions.php?userid=" . $userid . "&descriptionid=" . $descriptionid . "\"><b>" . $aInt->lang("fields", "description") . "</b></a></td><td>" . $aInt->lang("descriptions", "renewal") . (" - " . $description . "<br>");
 
                 if ($dnsmanagement) {
-                    echo " + " . $aInt->lang("domains", "dnsmanagement") . "<br>";
+                    echo " + " . $aInt->lang("descriptions", "dnsmanagement") . "<br>";
                 }
 
 
                 if ($emailforwarding) {
-                    echo " + " . $aInt->lang("domains", "emailforwarding") . "<br>";
+                    echo " + " . $aInt->lang("descriptions", "emailforwarding") . "<br>";
                 }
 
 
                 if ($idprotection) {
-                    echo " + " . $aInt->lang("domains", "idprotection") . "<br>";
+                    echo " + " . $aInt->lang("descriptions", "idprotection") . "<br>";
                 }
 
                 $regperiods = (1 < $registrationperiod ? "s" : "");
-                echo "</td><td>" . $registrationperiod . " " . $aInt->lang("domains", "year" . $regperiods) . ("</td><td>" . $domainamount . "</td><td>") . $aInt->lang("status", strtolower($status)) . ("</td><td><b>" . $paymentstatus . "</td></tr>");
+                echo "</td><td>" . $registrationperiod . " " . $aInt->lang("descriptions", "year" . $regperiods) . ("</td><td>" . $descriptionamount . "</td><td>") . $aInt->lang("status", strtolower($status)) . ("</td><td><b>" . $paymentstatus . "</td></tr>");
 
                 if ($showpending) {
                     $checkstatus = (($registrar && !$CONFIG['AutoRenewDomainsonPayment']) ? " checked" : " disabled");
-                    echo ("<tr><td style=\"background-color:#EFF2F9\" colspan=\"6\"><label><input type=\"checkbox\" name=\"vars[renewals][" . $domainid . "]") . "[sendregistrar]\"" . $checkstatus . ((" /> Send to Registrar</label> <label><input type=\"checkbox\" name=\"vars[renewals][" . $domainid . "]") . "[sendemail]\"") . $checkstatus . " /> Send Confirmation Email</label></td></tr>";
+                    echo ("<tr><td style=\"background-color:#EFF2F9\" colspan=\"6\"><label><input type=\"checkbox\" name=\"vars[renewals][" . $descriptionid . "]") . "[sendregistrar]\"" . $checkstatus . ((" /> Send to Registrar</label> <label><input type=\"checkbox\" name=\"vars[renewals][" . $descriptionid . "]") . "[sendemail]\"") . $checkstatus . " /> Send Confirmation Email</label></td></tr>";
                     continue;
                 }
             }
@@ -580,43 +581,43 @@ if (!$action) {
 
 
         if (substr($promovalue, 0, 2) == "DR") {
-            $domainid = substr($promovalue, 2);
-            $result = select_query_i("tbldomains", "", array("id" => $domainid));
+            $descriptionid = substr($promovalue, 2);
+            $result = select_query_i("tbldescriptions", "", array("id" => $descriptionid));
             $data = mysqli_fetch_array($result);
-            $domainid = $data['id'];
+            $descriptionid = $data['id'];
             $type = $data['type'];
-            $domain = $data['domain'];
+            $description = $data['description'];
             $registrar = $data['registrar'];
             $registrationperiod = $data['registrationperiod'];
             $status = $data['status'];
             $regdate = $data['registrationdate'];
             $nextduedate = $data['nextduedate'];
-            $domainamount = formatCurrency($data['firstpaymentamount']);
-            $domainregistrar = $data['registrar'];
+            $descriptionamount = formatCurrency($data['firstpaymentamount']);
+            $descriptionregistrar = $data['registrar'];
             $dnsmanagement = $data['dnsmanagement'];
             $emailforwarding = $data['emailforwarding'];
             $idprotection = $data['idprotection'];
-            echo "<tr><td><a href=\"clientsdomains.php?userid=" . $userid . "&domainid=" . $domainid . "\"><b>" . $aInt->lang("fields", "domain") . "</b></a></td><td>" . $aInt->lang("domains", "renewal") . (" - " . $domain . "<br>");
+            echo "<tr><td><a href=\"clientsdescriptions.php?userid=" . $userid . "&descriptionid=" . $descriptionid . "\"><b>" . $aInt->lang("fields", "description") . "</b></a></td><td>" . $aInt->lang("descriptions", "renewal") . (" - " . $description . "<br>");
 
             if ($dnsmanagement) {
-                echo " + " . $aInt->lang("domains", "dnsmanagement") . "<br>";
+                echo " + " . $aInt->lang("descriptions", "dnsmanagement") . "<br>";
             }
 
 
             if ($emailforwarding) {
-                echo " + " . $aInt->lang("domains", "emailforwarding") . "<br>";
+                echo " + " . $aInt->lang("descriptions", "emailforwarding") . "<br>";
             }
 
 
             if ($idprotection) {
-                echo " + " . $aInt->lang("domains", "idprotection") . "<br>";
+                echo " + " . $aInt->lang("descriptions", "idprotection") . "<br>";
             }
 
             $regperiods = (1 < $registrationperiod ? "s" : "");
-            echo "</td><td>" . $registrationperiod . " " . $aInt->lang("domains", "year" . $regperiods) . ("</td><td>" . $domainamount . "</td><td>") . $aInt->lang("status", strtolower($status)) . ("</td><td><b>" . $paymentstatus . "</td></tr>");
+            echo "</td><td>" . $registrationperiod . " " . $aInt->lang("descriptions", "year" . $regperiods) . ("</td><td>" . $descriptionamount . "</td><td>") . $aInt->lang("status", strtolower($status)) . ("</td><td><b>" . $paymentstatus . "</td></tr>");
 
             if ($showpending) {
-                echo ("<tr><td style=\"background-color:#EFF2F9\" colspan=\"6\"><label><input type=\"checkbox\" name=\"vars[domains][" . $domainid . "]") . "[sendregistrar]\"";
+                echo ("<tr><td style=\"background-color:#EFF2F9\" colspan=\"6\"><label><input type=\"checkbox\" name=\"vars[descriptions][" . $descriptionid . "]") . "[sendregistrar]\"";
 
                 if ($registrar && !$CONFIG['AutoRenewDomainsonPayment']) {
                     echo " checked";
@@ -624,7 +625,7 @@ if (!$action) {
                     echo " disabled";
                 }
 
-                echo ("> Send to Registrar</label> <label><input type=\"checkbox\" name=\"vars[domains][" . $domainid . "]") . "[sendemail]\"";
+                echo ("> Send to Registrar</label> <label><input type=\"checkbox\" name=\"vars[descriptions][" . $descriptionid . "]") . "[sendemail]\"";
 
                 if ($registrar) {
                     echo " checked";
@@ -636,77 +637,14 @@ if (!$action) {
             }
         }
 
-        echo "<tr><th colspan=\"3\" style=\"text-align:right;\">";
-        echo $aInt->lang("fields", "totaldue");
-        echo ":&nbsp;</th><th>";
-        echo $amount;
-        echo "</th><th colspan=\"2\"></th></tr>
-</table>
-</div>
 
-<br />
-
-<table align=\"center\"><tr>
-<td><input type=\"submit\" value=\"";
-        echo $aInt->lang("orders", "accept");
-        echo "\" class=\"btn";
-
-        if (!$showpending) {
-            echo " disabled\" disabled";
-        } else {
-            echo " btn-success\"";
-        }
-
-        echo " /></td>
-<td><input type=\"button\" value=\"";
-        echo $aInt->lang("orders", "cancel");
-        echo "\" onClick=\"cancelOrder()\" class=\"btn";
-
-        if ($orderstatus == "Cancelled") {
-            echo " disabled\" disabled";
-        } else {
-            echo "\"";
-        }
-
-        echo " /></td>
-<td><input type=\"button\" value=\"";
-        echo $aInt->lang("orders", "cancelrefund");
-        echo "\" onClick=\"cancelRefundOrder()\" class=\"btn";
-
-        if (!$invoiceid || $invoicestatus == "Refunded") {
-            echo " disabled\" disabled";
-        } else {
-            echo "\"";
-        }
-
-        echo " /></td>
-<td><input type=\"button\" value=\"";
-        echo $aInt->lang("orders", "fraud");
-        echo "\" onClick=\"fraudOrder()\" class=\"btn";
-
-        if ($orderstatus == "Fraud") {
-            echo " disabled\" disabled";
-        } else {
-            echo "\"";
-        }
-
-        echo " /></td>
-<td><input type=\"button\" value=\"";
-        echo $aInt->lang("orders", "pending");
-        echo "\" onClick=\"pendingOrder()\" class=\"btn\" /></td>
-<td><input type=\"button\" value=\"";
-        echo $aInt->lang("orders", "delete");
-        echo "\" onClick=\"deleteOrder()\" class=\"btn\" style=\"color:#cc0000;\" /></td>
-</tr></table>
-
-";
 
         if (trim($nameservers[0])) {
             echo "<p><b>" . $aInt->lang("orders", "nameservers") . "</b></p><p>";
             foreach ($nameservers as $key => $ns) {
 
                 if (trim($ns)) {
-                    echo $aInt->lang("domains", "nameserver") . " " . ($key + 1) . ": " . $ns . "<br />";
+                    echo $aInt->lang("descriptions", "nameserver") . " " . ($key + 1) . ": " . $ns . "<br />";
                     continue;
                 }
             }
@@ -781,13 +719,12 @@ if (!$action) {
     $aInt->assign("promocodetext", $promocodetext);
     $aInt->assign("statusoptions", $statusoptions);
     $aInt->assign("paymentstatus", $paymentstatus);
+
     $aInt->assign("tblcustomerservices", $tblcustomerservices);
     $aInt->template = "order/viewdetail";
 }
 
-$content = ob_get_contents();
-ob_end_clean();
-$aInt->content = $content;
+//echo "<pre>", print_r($tblcustomerservices, 1), "</pre>";
 $aInt->assign("PHP_SELF", $PHP_SELF);
 $aInt->assign("token", get_token());
 $aInt->assign("filterdata", RA_Cookie::get("FD", true));

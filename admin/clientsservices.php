@@ -9,7 +9,7 @@ $aInt->requiredFiles(
             "gatewayfunctions",
             "modulefunctions",
             "servicefunctions",
-            "orderfunctions", 
+            "orderfunctions",
             "customfieldfunctions",
             "configoptionsfunctions",
             "invoicefunctions",
@@ -20,7 +20,6 @@ $id = (int) $ra->get_req_var("id") ? : (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
-
 // Check if modifications are being made
 $modop = $ra->get_req_var("modop");
 if ($modop) {
@@ -29,16 +28,13 @@ if ($modop) {
 $clientdata = new RA_ClientService($userid, $id);
 $id = $clientdata->id;
 //echo "<pre>",  print_r($clientdata->servicedata,1),"</pre>";
-if ($clientdata->errorbox != "" && $clientdata->errorbox!="No Addons") {
+if ($clientdata->errorbox != "" && $clientdata->errorbox != "No Addons") {
     $aInt->gracefulExit($clientdata->errorbox);
 }
-
 // if neither userid nor id are defined after that, I guess we just take the very first service?
 if (!$userid && !$id) {
     $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
 }
-
-
 // if only userid is supplied, then validate
 if ($userid && !$id) {
     $aInt->valUserID($userid);
@@ -46,19 +42,15 @@ if ($userid && !$id) {
         $aInt->gracefulExit("Invalid User ID");
     }
 }
-
 $frm = new RA_Form();
-
 if ($frm->issubmitted()) {
     check_token("RA.admin.default");
     if ($_POST['addonid']) {
-        $addonid = $clientdata->addaddon($_POST['addonid'],$_POST['paymentmethod']);
+        $addonid = $clientdata->addaddon($_POST['addonid'], $_POST['paymentmethod']);
         logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid);
         redir("userid=" . $userid);
-    } 
+    }
 }
-
-
 if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
@@ -70,8 +62,6 @@ if ($action == "delete") {
     logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
     redir("userid=" . $userid);
 }
-
-
 if ($action == "deladdon") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
@@ -80,10 +70,7 @@ if ($action == "deladdon") {
     logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
     redir("userid=" . $userid . "&id=" . $id);
 }
-
-
 $adminbuttonarray = "";
-
 if ($module) {
     if (!isValidforPath($module)) {
         exit("Invalid Server Module Name");
@@ -100,16 +87,12 @@ if ($module) {
         $adminbuttonarray = call_user_func($module . "_AdminCustomButtonArray");
     }
 }
-
-
 if ($modop == "create") {
     check_token("RA.admin.default");
     $result = ServerCreateAccount($id);
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=create&ajaxupdate=1");
 }
-
-
 if ($modop == "suspend") {
     check_token("RA.admin.default");
     $result = ServerSuspendAccount($id, $suspreason);
@@ -121,40 +104,30 @@ if ($modop == "suspend") {
 
     redir("userid=" . $userid . "&id=" . $id . "&act=suspend&ajaxupdate=1");
 }
-
-
 if ($modop == "unsuspend") {
     check_token("RA.admin.default");
     $result = ServerUnsuspendAccount($id);
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=unsuspend&ajaxupdate=1");
 }
-
-
 if ($modop == "terminate") {
     check_token("RA.admin.default");
     $result = ServerTerminateAccount($id);
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=terminate&ajaxupdate=1");
 }
-
-
 if ($modop == "changepackage") {
     check_token("RA.admin.default");
     $result = ServerChangePackage($id);
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=updown&ajaxupdate=1");
 }
-
-
 if ($modop == "changepw") {
     check_token("RA.admin.default");
     $result = ServerChangePassword($id);
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=pwchange&ajaxupdate=1");
 }
-
-
 if ($modop == "custom") {
     check_token("RA.admin.default");
     $result = ServerCustomFunction($id, $ac);
@@ -166,8 +139,6 @@ if ($modop == "custom") {
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=custom&ajaxupdate=1");
 }
-
-
 if (in_array($ra->get_req_var("act"), array("create", "suspend", "unsuspend", "terminate", "updown", "pwchange", "custom"))) {
 
     if ($result = wGetCookie("ModCmdResult")) {
@@ -178,73 +149,50 @@ if (in_array($ra->get_req_var("act"), array("create", "suspend", "unsuspend", "t
         }
     }
 }
-
-
 if ($ra->get_req_var("success")) {
     infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
 }
-
 $regdate = fromMySQLDate($regdate);
 $nextduedate = fromMySQLDate($nextduedate);
 $overidesuspenduntil = fromMySQLDate($overidesuspenduntil);
-
 if ($disklimit == "0") {
     $disklimit = $aInt->lang("global", "unlimited");
 }
-
-
 if ($bwlimit == "0") {
     $bwlimit = $aInt->lang("global", "unlimited");
 }
-
 $currency = getCurrency($userid);
 $data = get_query_vals("tblcancelrequests", "id,type,reason", array("relid" => $id), "id", "DESC");
 $cancelid = $data['id'];
 $canceltype = $data['type'];
 $autoterminatereason = $data['reason'];
 $autoterminateendcycle = false;
-
 if ($canceltype == "End of Billing Period") {
     $autoterminateendcycle = ($cancelid ? true : false);
 }
-
 $clientnotes = array();
 $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
-
 while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
     $data['note'] = autoHyperLink(nl2br($data['note']));
     $clientnotes[] = $data;
 }
-
-
-
 $aInt->assign('id', $id);
 $aInt->assign('servicesarr', $servicesarr);
-
-
 if ($cancelid) {
     if (!$infobox) {
         infoBox($aInt->lang("services", "cancrequest"), $aInt->lang("services", "cancrequestinfo") . "<br />" . $_ADMINLANG['fields']['reason'] . ": " . $autoterminatereason);
     }
 }
-
-
 $emailarr = array();
 $emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
 $result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
-
 while ($data = mysqli_fetch_array($result)) {
     $messagename = $data['name'];
     $custom = $data['custom'];
     $emailarr[$messagename] = ($custom ? array("#efefef", $messagename) : $messagename);
 }
-
-
-
-
-
 if ($ra->get_req_var("ajaxupdate")) {
     $content = preg_replace('/(<form\W[^>]*\bmethod=(\'|"|)POST(\'|"|)\b[^>]*>)/i', '$1' . "\n" . generate_token(), $content);
 
@@ -259,10 +207,10 @@ if ($ra->get_req_var("ajaxupdate")) {
     $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
-
-
-
-
+$servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
+$len = count($servicefield);
+$firsthalf = array_slice($servicefield, 0, $len / 2);
+$secondhalf = array_slice($servicefield, $len / 2);
 $aInt->assign("userid", $userid);
 $aInt->assign("token", get_token());
 $aInt->assign('addons', $clientdata->addons);
@@ -275,7 +223,8 @@ $aInt->assign('content', $content);
 $aInt->assign("services", $clientdata->servicedata);
 $aInt->assign("status", $aInt->productStatusDropDown($clientdata->servicedata['servicestatus']));
 $aInt->assign("promo", $clientdata->getPromocode());
-$aInt->assign("servicefield", getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']));
+$aInt->assign("servicefield", $firsthalf);
+$aInt->assign("servicefieldnd", $secondhalf);
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));

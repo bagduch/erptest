@@ -531,7 +531,7 @@ class RA_Admin {
                 "name" => "Customers",
                 "glyphicon" => "user",
                 "anum" => $data['clients']['active'],
-                "cnum" => $data['clients']['closed']+$data['clients']['inactive'],
+                "cnum" => $data['clients']['closed'] + $data['clients']['inactive'],
                 "members" => array(
                     "clients.php" => "View Customers",
                     "clientsadd.php" => "Add New Client",
@@ -1149,29 +1149,8 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $selectcompanyname = $data['companyname'];
 
 
-
-        echo "<form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"get\">\r\n<p>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . ":
-            <small>" . $data['status'];
-        echo $this->clientsDropDown($uid, true);
-        echo " <input type=\"submit\" value=\"Go\"></small>";
-
-
-        if ($CONFIG['DisableClientDropdown']) {
-            $result = select_query_i("tblclients", "", array("id" => $uid));
-            $data = mysqli_fetch_array($result);
-            $selectfirstname = $data['firstname'];
-            $selectlastname = $data['lastname'];
-            $selectcompanyname = $data['companyname'];
-            echo $selectfirstname . " " . $selectlastname;
-
-            if ($selectcompanyname) {
-                echo " (" . $selectcompanyname . ")";
-            }
-        } else {
-            
-        }
-
-        echo "</p></form><section class=\"content\">";
+#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] 
+        echo "<h1>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname']."</h1>";
         echo "<ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {

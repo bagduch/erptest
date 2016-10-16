@@ -216,12 +216,39 @@
 <!-- /.control-sidebar -->
 <!-- Add the sidebar's background. This div must be placed
      immediately after the control sidebar -->
+
+
 <div class="control-sidebar-bg"></div>
 {literal} 
 
     <script type="text/javascript">
     {/literal}{$jscode}{literal}
+
+        function searchclose() {
+            $("#searchresults").slideUp();
+        }
         $(document).ready(function () {
+
+
+            $("#intellisearchval").keyup(function () {
+                var value = $(this).val();
+                if (value.length > 2)
+                {
+                    $.ajax({
+                        url: "search.php",
+                        method: "POST",
+                        data: {"value": value, "intellisearch": 1, "token": "{/literal}{$csrfToken}{literal}"},
+                        success: function (data)
+                        {
+                            $("#searchresultsscroller").html(data);
+                            $("#searchresults").slideDown("slow", function () {
+
+                            });
+                        }
+                    });
+                }
+            });
+
             //iCheck for checkbox and radio inputs
             $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
                 checkboxClass: 'icheckbox_minimal-blue',

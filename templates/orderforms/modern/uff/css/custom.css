@@ -175,6 +175,58 @@ body > .container {
 }
 .cancel{
     color: #bcc2e7;
-     border-color: #bcc2e7;
-    
+    border-color: #bcc2e7;
+
+}
+.hide-sm{
+
+    font-size: 8em;
+    color:#428bca;
+    display: block;
+    text-align: center;
+}
+.box-text
+{
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    padding: 15px;
+}
+.box-footer{
+    background: #428bca;
+    padding: 10px
+}
+.box-body{
+    background: #e3e3e3
+
+}
+.box
+{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-transparent
+{
+    color: white!important;
+    background-color: transparent;
+    border-color: white;
+    display: block;
+    margin: auto;
+    font-size: 2em;
+    font-weight: bold;
+    width: 100%;
+}
+.login, .sign-up
+{
+    background: #e3e3e3;
+    display: none;
+    margin-top: 15px;
+
+}
+.login .box-body,.sign-up .box-body
+{
+    padding: 20px;
+
 }

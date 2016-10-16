@@ -446,7 +446,7 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
     return $errormessage;
 }
 
-function addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid = "", $securityqans = "", $sendemail = "on", $additionaldata = "") {
+function addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $securityqid = "", $securityqans = "", $sendemail = "on", $additionaldata = "") {
     global $ra;
     global $remote_ip;
 
@@ -458,7 +458,7 @@ function addClient($firstname, $lastname, $companyname, $email, $address1, $addr
     $currency = (is_array($_SESSION['currency']) ? $_SESSION['currency'] : getCurrency("", $_SESSION['currency']));
     $password_hash = generateClientPW($password);
     $table = "tblclients";
-    $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "", "currency" => $currency['id']);
+    $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "dateofbirth" => $dob, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "", "currency" => $currency['id']);
 
     $uid = insert_query($table, $array);
     logActivity("Created Client " . $firstname . " " . $lastname . " - User ID: " . $uid);
@@ -482,7 +482,7 @@ function addClient($firstname, $lastname, $companyname, $email, $address1, $addr
     $haship = ($ra->get_config("DisableSessionIPCheck") ? "" : $ra->get_user_ip());
     $_SESSION['upw'] = sha1($uid . $password_hash . $haship . substr(sha1($ra->get_hash()), 0, 20));
     $_SESSION['tkval'] = genRandomVal();
-    run_hook("ClientAdd", array("userid" => $uid, "firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password));
+    run_hook("ClientAdd", array("userid" => $uid, "firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password, "dateofbirth" => $dob));
     run_hook("ClientLogin", array("userid" => $uid));
     return $uid;
 }

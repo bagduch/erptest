@@ -114,7 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
-error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+//error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
 
     $result = mysqli_query($ramysqli, $query);
 

@@ -1,51 +1,41 @@
 
-<div style="float:left;width:100%;">
-    <div id="servicecontent">
-        {$content}
-        <table>
-            <tr>
-                <td>
-                    <form method="get" action="/admin/clientsservices.php" name="frm2" id="frm2">
-                        <input type="hidden" name="userid" value="2">&nbsp;&nbsp;&nbsp; Products: 
 
-                        {if $servicesarr}
-                            <select name="id" size="1" onchange="submit()">
-                                {foreach from=$servicesarr item=row key=serviceid }
-                                    <option value="{$serviceid}" {if $id eq $serviceid}Selected{/if} style="background-color:{$row[0]}">{$row[1]}</option>
-                                {/foreach}
-                            </select> 
-                        {/if}
-                        <input type="submit" value="Go" class="btn btn-success">
-                    </form>
-                </td>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <form method="get" action="/admin/clientsservices.php" name="frm2" id="frm2">
+                                <input type="hidden" name="userid" value="2">&nbsp;&nbsp;&nbsp; Products: 
+                                {if $servicesarr}
+                                    <select name="id" size="1" onchange="submit()">
+                                        {foreach from=$servicesarr item=row key=serviceid }
+                                            <option value="{$serviceid}" {if $id eq $serviceid}Selected{/if} style="background-color:{$row[0]}">{$row[1]}</option>
+                                        {/foreach}
+                                    </select> 
+                                {/if}
+                                <input type="submit" value="Go" class="btn btn-success">
+                            </form>
+                        </td>
+                        <td align="right">
+                            <input type="button" value="Upgrade/Downgrade" class="btn" onclick="window.open('clientsupgrade.php?id=29', '', 'width=750,height=350,scrollbars=yes')">
+                            <input type="button" value="Move Product/Service" class="btn" onclick="window.open('clientsmove.php?type=hosting&amp;id=29', 'movewindow', 'width=500,height=300,top=100,left=100,scrollbars=yes')"> &nbsp;&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box-body">
 
-                <td align="right">
-
-                    <input type="button" value="Upgrade/Downgrade" class="btn" onclick="window.open('clientsupgrade.php?id=29', '', 'width=750,height=350,scrollbars=yes')">
-                    <input type="button" value="Move Product/Service" class="btn" onclick="window.open('clientsmove.php?type=hosting&amp;id=29', 'movewindow', 'width=500,height=300,top=100,left=100,scrollbars=yes')"> &nbsp;&nbsp;&nbsp;
-
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div id="modcmdresult" style="display:none;"></div>
-        <img src="images/spacer.gif" height="10" width="1"><br>
-        <div class="contentbox">
-            {*            <strong>{$lang.diskusage}: {$contentbox.diskusage}</strong>  {$lang.mb}, <strong>{$lang.disklimit}:</strong> {$contentbox.disklimit} {$lang.mb}, <strong>{$contentbox.diskusage}{$diskusage_p}% {$lang.used}</strong><strong>{$lang.bwusage}:</strong>{$contentbox.bwusage} {$lang.mb}, <strong>{$contentbox.bwlimit}:</strong> {$contentbox.bwlimit} {$lang.mb}, <strong>{$contentbox.bwusage_p}% {$lang.used}</strong><br><small>({$lang.lastupdated}: {$contentbox.lastupdate})</small>*}
-        </div>
-        <br>
-        <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
-            <input type="hidden" name="__fpfrm1" value="1">
-            <div class="row" style="padding:15px">
-                <div class="panel panel-info">
-                    <div class="panel-heading"><h4 class="panel-title">Order Details</h4></div>
-                    <div class="panel-body">
-
+                <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
+                    <input type="hidden" name="__fpfrm1" value="1">
+                    <div class="row" style="padding:15px">
                         <div class="col-xs-6">
-                            <table>
+                            <table class="table">
                                 <tr>
-                                    <td><label for="orderid">Order #</label></td>
+                                    <td width="50%"><label for="orderid">Order #</label></td>
                                     <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
                                 </tr>
                                 <tr>
@@ -85,9 +75,9 @@
                             </table>
                         </div>
                         <div class="col-xs-6">
-                            <table>
+                            <table class="table">
                                 <tr>
-                                    <td><label for="#regdate">Registration Date</label></td>
+                                    <td width="50%"><label for="#regdate">Registration Date</label></td>
                                     <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
                                 </tr>
                                 <tr>
@@ -115,174 +105,192 @@
                             </table>
                         </div>
 
-                    </div>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <div class="row" style="padding:15px">
-                <div class="panel panel-success">
-                    <div class="panel-heading"><h4 class="panel-title">Customer Fields</h4></div>
-                    <div class="panel-body">
-
-                        <div class="customefield">
-                            {if $servicefield}
-                                <table>
-                                    {foreach from=$servicefield key=fieldid item=fields}
-                                        {if $fields.fieldtype eq "text"}
+                        <div class="clearfix"></div>
+                        {if $servicefield}
+                            <div class="col-xs-6">
+                                <table class="table">
+                                    {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
+                                        {if $fieldsnd.fieldtype eq "text"}
                                             <tr>
-                                                <td><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
-                                            </tr>                  
-                                        {elseif $fields.fieldtype eq "date"}
-                                            <tr>
-                                                <td><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                <td><input class="form-control datecontroller" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
+                                                <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
+                                                <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fieldidnd}]" value="{$fieldsnd.value}"></td>
                                             </tr>
-                                        {elseif $fields.fieldtype eq "more"}
-                                            {foreach from=$fields.children item=childrenfield}
+                                        {elseif $fieldsnd.fieldtype eq "date"}
+                                            <tr>
+                                                <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
+                                                <td><input class="form-control datecontroller" id="custome{$fieldidnd}" name="customefield[{$fieldidnd}]" value="{$fieldsnd.value}"></td>
+                                            </tr>
+                                        {elseif $fieldsnd.fieldtype eq "more"}
+                                            {foreach from=$fieldsnd.children item=childrenfield}
                                                 <tr>
-                                                    <td><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
+                                                    <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
                                                     <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
                                                 </tr>
                                             {/foreach}
                                         {else}
                                         {/if}
                                     {/foreach}
-                                </table>   
-                            {/if}
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <div class="row" style="padding:15px">
-                <div class="panel panel-warning">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Addon Services/Product  
-                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                                Add 
-                            </button>
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        {if isset($services.addon)}
-                            <table class="datatable" style="width:100%">
-                                <tr>
-                                    <th>Reg Date</th>
-                                    <th>Name</th>
-                                    <th>First Payment</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Billing Cycle</th>
-                                    <th>Action</th>
-                                </tr>
-                                {foreach from=$services.addon item=addons}
-                                    <tr>
-                                        <td>{$addons.regdate}</td>
-                                        <td>{$addons.name}</td>
-                                        <td>{$addons.firstpaymentamount}</td>
-                                        <td>{$addons.amount}</td>
-                                        <td>{$addons.servicestatus}</td>
-                                        <td>{$addons.billingcycle}</td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a href="#" onclick="doDeleteAddon({$addons.id})" class="btn btn-danger">
-                                                <i class="fa fa-minus-circle" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {/foreach}
-                            </table>
-                        {else}
-                            <div class="alert alert-danger" role="alert">
-                                This addon doen't have any addon
-
+                                </table>  
+                            </div>
+                            <div class="col-xs-6">
+                                <table class="table">
+                                    {foreach from=$servicefield key=fieldid item=fields}
+                                        {if $fields.fieldtype eq "text"}
+                                            <tr>
+                                                <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
+                                            </tr>
+                                        {elseif $fields.fieldtype eq "date"}
+                                            <tr>
+                                                <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                <td><input class="form-control datecontroller" id="custome{$fieldid}" name="customefield[{$fieldid}]" value="{$fields.value}"></td>
+                                            </tr>
+                                        {elseif $fields.fieldtype eq "more"}
+                                            {foreach from=$fields.children item=childrenfield}
+                                                <tr>
+                                                    <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
+                                                    <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
+                                                </tr>
+                                            {/foreach}
+                                        {else}
+                                        {/if}
+                                    {/foreach}
+                                </table>  
                             </div>
                         {/if}
-                    </div>
-                </div>
 
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Addons</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="#addonname">Addon Name</label>
-                                    <select class='form-control' id='addonname' name='addonid'>
-                                        <option value="0">Please Choose Addons</option>
-                                        {foreach from=$addons item=addon}
-                                            <option value="{$addon.id}">{$addon.name}</option>
-                                        {/foreach}
-                                    </select>
+
+                        <div class="clearfix"></div>
+
+                        <div class="box">
+                            <div class="panel-heading">
+                                Addon Services/Product
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                                        <i class="fa fa-fw fa-plus-circle"></i>
+                                    </button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="payment">Payment Method</label>
-                                    {$paymentmethod}
-                                </div>
+
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary addonaddbutton">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <br>
-            <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"><br>
-                <a href="#" onclick="showDialog('delete');" style="color:#cc0000"><strong>Delete</strong></a></div></form>
-
-        <br>
-
-        <div class="contentbox">
-            <table align="center"><tbody><tr><td>
-                            <strong>Send Message</strong>
-                        </td><td>
-                            <form method="post" action="clientsemails.php?userid={$userid}" name="frm3" id="frm3">
-                                <input type="hidden" name="__fpfrm3" value="1">
-                                <input type="hidden" name="action" value="send">
-                                <input type="hidden" name="type" value="product">
-                                <input type="hidden" name="id" value="{$id}">
-                                {if $emaildropdown}
-                                    <select name="messagename">
-                                        {foreach item=row from=$emaildropdown}
-                                            <option value="{$row}">{$row}</option>
+                            <div class="box-body">
+                                {if isset($services.addon)}
+                                    <table class="datatable table" style="width:100%">
+                                        <tr>
+                                            <th>Reg Date</th>
+                                            <th>Name</th>
+                                            <th>First Payment</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Billing Cycle</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {foreach from=$services.addon item=addons}
+                                            <tr>
+                                                <td>{$addons.regdate}</td>
+                                                <td>{$addons.name}</td>
+                                                <td>{$addons.firstpaymentamount}</td>
+                                                <td>{$addons.amount}</td>
+                                                <td>{$addons.servicestatus}</td>
+                                                <td>{$addons.billingcycle}</td>
+                                                <td>
+                                                    <a href="#" class="btn btn-primary">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                    <a href="#" onclick="doDeleteAddon({$addons.id})" class="btn btn-danger">
+                                                        <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
                                         {/foreach}
-                                    </select>
+                                    </table>
+                                {else}
+                                    <div class="alert alert-danger" role="alert">
+                                        This addon doen't have any addon
+
+                                    </div>
                                 {/if}
-                                <input type="submit" value="Send Message" class="btn">
-                            </form>
-                        </td>
-                        <td>
-                            <form method="post" action="clientsemails.php?userid=2" name="frm4" id="frm4">
-                                <input type="hidden" name="__fpfrm4" value="1">
-                                <input type="hidden" name="action" value="send">
-                                <input type="hidden" name="type" value="product">
-                                <input type="hidden" name="id" value="{$id}">
-                                <input type="hidden" name="messagename" value="defaultnewacc">
-                                <input type="submit" value="Resend Product Welcome Email" class="btn">
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </div>
 
-        {foreach from=$test item=row}
-            {$row}
-        {/foreach}
-        <form method="post" action="whois.php" target="_blank" id="frmWhois">
-            <input type="hidden" name="domain" value="">
-        </form>
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Addons</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="#addonname">Addon Name</label>
+                                                <select class='form-control' id='addonname' name='addonid'>
+                                                    <option value="0">Please Choose Addons</option>
+                                                    {foreach from=$addons item=addon}
+                                                        <option value="{$addon.id}">{$addon.name}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="payment">Payment Method</label>
+                                                {$paymentmethod}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary addonaddbutton">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"><br>
+                            <a href="#" onclick="showDialog('delete');" style="color:#cc0000"><strong>Delete</strong></a></div></form>
+
+                <br>
+
+                <div class="contentbox">
+                    <table align="center"><tbody><tr><td>
+                                    <strong>Send Message</strong>
+                                </td><td>
+                                    <form method="post" action="clientsemails.php?userid={$userid}" name="frm3" id="frm3">
+                                        <input type="hidden" name="__fpfrm3" value="1">
+                                        <input type="hidden" name="action" value="send">
+                                        <input type="hidden" name="type" value="product">
+                                        <input type="hidden" name="id" value="{$id}">
+                                        {if $emaildropdown}
+                                            <select name="messagename">
+                                                {foreach item=row from=$emaildropdown}
+                                                    <option value="{$row}">{$row}</option>
+                                                {/foreach}
+                                            </select>
+                                        {/if}
+                                        <input type="submit" value="Send Message" class="btn">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" action="clientsemails.php?userid=2" name="frm4" id="frm4">
+                                        <input type="hidden" name="__fpfrm4" value="1">
+                                        <input type="hidden" name="action" value="send">
+                                        <input type="hidden" name="type" value="product">
+                                        <input type="hidden" name="id" value="{$id}">
+                                        <input type="hidden" name="messagename" value="defaultnewacc">
+                                        <input type="submit" value="Resend Product Welcome Email" class="btn">
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {foreach from=$test item=row}
+                    {$row}
+                {/foreach}
+                <form method="post" action="whois.php" target="_blank" id="frmWhois">
+                    <input type="hidden" name="domain" value="">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <div class="clear"></div>
@@ -338,7 +346,7 @@
                     });
 
         }
-    
+
     </script>
 
 {/literal}

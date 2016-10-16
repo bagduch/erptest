@@ -20,3 +20,16 @@ and open the template in the editor.
 {
     color:red;
 }
+.breadcrumb-wrap{
+    float: left;
+    margin-top: 9px
+
+}
+.breadcrumb{
+
+    margin-bottom: 0px;
+}
+.search-bar{
+    padding-top: 8px;
+
+}
