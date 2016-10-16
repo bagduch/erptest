@@ -1,6 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+{debug}
+=======
+
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 {debug}
 =======
 
@@ -10,10 +17,14 @@
 =======
 {debug}
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
 {debug}
 =======
 
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -90,6 +101,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+        <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
+=======
+        <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 =======
         <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
@@ -99,10 +117,14 @@
 =======
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
 =======
         <table class="datatable" width="100%" border="0" cellspacing="1" cellpadding="3">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
             <tbody>
@@ -118,6 +140,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
                 <tr>
                     <td align="center">
                         <a href="clientsservices.php?userid=12437&amp;id=135"><b></b></a>
@@ -130,7 +156,11 @@
                             {$paymentstatus}</b></td></tr><tr><td style="background-color:#EFF2F9;text-align:center;" colspan="6"><label><input type="checkbox" name="vars[products][135][sendwelcome]" checked=""> Send Welcome Email</label></td></tr><tr><th colspan="3" style="text-align:right;">Total Due:&nbsp;</th><th>$0.00 NZD</th><th colspan="2"></th></tr>
 =======
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
                 {foreach from=$tblcustomerservices item=data}
                     <tr>
@@ -155,7 +185,13 @@
                 </tr>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 =======
                 <tr>
@@ -170,10 +206,18 @@
                             {$paymentstatus}</b></td></tr><tr><td style="background-color:#EFF2F9;text-align:center;" colspan="6"><label><input type="checkbox" name="vars[products][135][sendwelcome]" checked=""> Send Welcome Email</label></td></tr><tr><th colspan="3" style="text-align:right;">Total Due:&nbsp;</th><th>$0.00 NZD</th><th colspan="2"></th></tr>
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
             </tbody></table>
     </div>

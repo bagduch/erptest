@@ -2,6 +2,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+
+
+
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
 {debug}
 >>>>>>> ben
 
@@ -10,10 +17,14 @@
 =======
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 <div class="col-lg-12">
 =======
@@ -23,13 +34,21 @@
 <div>
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 
 
 <div class="col-lg-12">
 >>>>>>> staging/master
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
@@ -46,13 +65,22 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
 
                             <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
 >>>>>>> ben
+<<<<<<< HEAD
 =======
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 =======
 
@@ -121,6 +149,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+        <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
+=======
+        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
@@ -130,10 +165,14 @@
 =======
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
             <form method="post" action="/admin/invoices.php">
@@ -143,6 +182,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -152,10 +198,14 @@
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
                     <tbody>
@@ -191,10 +241,18 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
 
 
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 =======
 
@@ -210,6 +268,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -219,10 +284,14 @@
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
                     <tbody>
@@ -278,6 +347,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+            <table class="table" width="75%" align="center">
+=======
+            <table width="75%" align="center">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
             <table class="table" width="75%" align="center">
 =======
             <table width="75%" align="center">
@@ -287,10 +363,14 @@
 =======
             <table class="table" width="75%" align="center">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
             <table class="table" width="75%" align="center">
 =======
             <table width="75%" align="center">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
                 <tbody>
@@ -327,6 +407,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+        <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
+=======
+        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
@@ -336,10 +423,14 @@
 =======
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 
@@ -352,6 +443,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+>>>>>>> ben
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
@@ -361,10 +459,14 @@
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>

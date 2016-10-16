@@ -15,7 +15,13 @@ body {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     min-height: 100%;
 }
@@ -57,8 +63,14 @@ body {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   min-height: 100%;
 }
@@ -99,6 +111,10 @@ body {
   background: url('../img/boxed-bg.jpg') repeat fixed;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -140,7 +156,11 @@ body {
 .layout-boxed {
     background: url('../img/boxed-bg.jpg') repeat fixed;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -154,7 +174,13 @@ body {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
@@ -165,8 +191,14 @@ body {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
@@ -175,6 +207,10 @@ body {
   margin-left: 230px;
   z-index: 820;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -186,7 +222,11 @@ body {
     margin-left: 230px;
     z-index: 820;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -196,7 +236,13 @@ body {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     margin-left: 0;
 }
@@ -238,8 +284,14 @@ body {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin-left: 0;
 }
@@ -280,7 +332,13 @@ body {
   border-top: 1px solid #d2d6de;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -291,11 +349,19 @@ body {
 <<<<<<< HEAD
     position: fixed;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin-left: 0;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .fixed .main-header {
@@ -314,6 +380,13 @@ body {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.fixed.layout-boxed .wrapper {
+    max-width: 100%;
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 .fixed.layout-boxed .wrapper {
     max-width: 100%;
@@ -338,10 +411,14 @@ body {
 .fixed .left-side {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .fixed.layout-boxed .wrapper {
     max-width: 100%;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   position: fixed;
 }
@@ -363,6 +440,10 @@ body {
 .fixed.layout-boxed .wrapper {
   max-width: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -387,7 +468,11 @@ body {
 .fixed.layout-boxed .wrapper {
     max-width: 100%;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -401,7 +486,13 @@ body.hold-transition .main-header .logo {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     /* Fix for IE */
     -webkit-transition: none;
@@ -419,8 +510,14 @@ body.hold-transition .main-header .logo {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   /* Fix for IE */
   -webkit-transition: none;
@@ -436,6 +533,10 @@ body.hold-transition .main-header .logo {
   padding-left: 15px;
   padding-right: 15px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -454,7 +555,11 @@ body.hold-transition .main-header .logo {
     padding-left: 15px;
     padding-right: 15px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -474,6 +579,11 @@ h6,
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    font-family: 'Source Sans Pro', sans-serif;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     font-family: 'Source Sans Pro', sans-serif;
 }
 /* General Links */
@@ -481,8 +591,12 @@ a {
     color: #3c8dbc;
 =======
   font-family: 'Source Sans Pro', sans-serif;
+<<<<<<< HEAD
 =======
     font-family: 'Source Sans Pro', sans-serif;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* General Links */
@@ -510,7 +624,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     outline: none;
     text-decoration: none;
@@ -528,8 +648,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   outline: none;
   text-decoration: none;
@@ -545,6 +671,10 @@ a:focus {
   display: block;
   margin-top: 5px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -563,7 +693,11 @@ a:focus {
     display: block;
     margin-top: 5px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -575,7 +709,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     position: relative;
     max-height: 100px;
@@ -658,8 +798,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   position: relative;
   max-height: 100px;
@@ -741,6 +887,26 @@ a:focus {
   display: none;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> ben
+}
+.main-header .navbar .nav > li.user > a > .fa,
+.main-header .navbar .nav > li.user > a > .glyphicon,
+.main-header .navbar .nav > li.user > a > .ion {
+<<<<<<< HEAD
+    margin-right: 5px;
+}
+.main-header .navbar .nav > li > a > .label {
+    position: absolute;
+    top: 9px;
+    right: 7px;
+    text-align: center;
+    font-size: 9px;
+    padding: 2px 3px;
+    line-height: .9;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .main-header .navbar .nav > li.user > a > .fa,
@@ -767,6 +933,7 @@ a:focus {
 }
 .layout-top-nav .main-header .navbar {
     margin-left: 0;
+<<<<<<< HEAD
 =======
 >>>>>>> ben
 }
@@ -784,6 +951,9 @@ a:focus {
     font-size: 9px;
     padding: 2px 3px;
     line-height: .9;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .main-header .logo {
@@ -838,6 +1008,10 @@ a:focus {
     border-radius: 2px;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 .main-header .sidebar-toggle {
     float: left;
     background-color: transparent;
@@ -856,7 +1030,11 @@ a:focus {
     background: transparent;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 .content-header > .breadcrumb > li > a {
     color: #444;
@@ -864,6 +1042,10 @@ a:focus {
     display: inline-block;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 .main-header .sidebar-toggle .icon-bar {
     display: none;
@@ -874,7 +1056,11 @@ a:focus {
 .main-header .navbar .nav > li.user > a > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 5px;
 }
@@ -944,7 +1130,13 @@ a:focus {
   display: inline-block;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -953,10 +1145,18 @@ a:focus {
 .content-header > .breadcrumb > li > a > .ion {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     margin-right: 5px;
 }
@@ -980,6 +1180,11 @@ a:focus {
 .navbar-toggle {
     color: #fff;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    border: 0;
+=======
+>>>>>>> ben
 }
 <<<<<<< HEAD
 @media (max-width: 991px) {
@@ -1000,8 +1205,12 @@ a:focus {
 }
 .content-header > h1 {
     float:left;
+<<<<<<< HEAD
 =======
     border: 0;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     margin: 0;
     padding: 15px 15px;
@@ -1037,12 +1246,16 @@ a:focus {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .content-header > .breadcrumb > li > a > .fa,
 .content-header > .breadcrumb > li > a > .glyphicon,
 .content-header > .breadcrumb > li > a > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 @media (max-width: 991px) {
     .navbar-collapse.pull-left {
         float: none !important;
@@ -1054,6 +1267,16 @@ a:focus {
         right: 40px;
     }
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+.content-header > .breadcrumb > li > a > .fa,
+.content-header > .breadcrumb > li > a > .glyphicon,
+.content-header > .breadcrumb > li > a > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 5px;
 }
@@ -1122,7 +1345,13 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1145,6 +1374,10 @@ a:focus {
     -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin-right: 5px;
@@ -1152,7 +1385,11 @@ a:focus {
 .content-header > .breadcrumb > li + li:before {
     content: '>\00a0';
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 @media (max-width: 767px) {
@@ -1225,7 +1462,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 .user-panel > .info > a {
     text-decoration: none;
@@ -1234,6 +1477,10 @@ a:focus {
     font-size: 11px;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 /*
  * Component: Sidebar
@@ -1243,7 +1490,11 @@ a:focus {
 .left-side {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   position: absolute;
   top: 0;
@@ -1332,6 +1583,17 @@ a:focus {
   font-size: 11px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> ben
+}
+.user-panel > .info > a > .fa,
+.user-panel > .info > a > .ion,
+.user-panel > .info > a > .glyphicon {
+<<<<<<< HEAD
+    margin-right: 3px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .user-panel > .info > a > .fa,
@@ -1395,6 +1657,7 @@ a:focus {
 }
 .sidebar {
     padding-bottom: 10px;
+<<<<<<< HEAD
 =======
 >>>>>>> ben
 }
@@ -1403,6 +1666,9 @@ a:focus {
 .user-panel > .info > a > .glyphicon {
 <<<<<<< HEAD
     margin-right: 3px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .sidebar-menu {
@@ -1416,16 +1682,30 @@ a:focus {
     padding: 0;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .user-panel > .info > a > .fa,
 .user-panel > .info > a > .ion,
 .user-panel > .info > a > .glyphicon {
 <<<<<<< HEAD
 >>>>>>> ben
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .sidebar-menu > li > a {
     padding: 12px 5px 12px 15px;
     display: block;
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+.user-panel > .info > a > .fa,
+.user-panel > .info > a > .ion,
+.user-panel > .info > a > .glyphicon {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 3px;
 }
@@ -1444,7 +1724,13 @@ a:focus {
   display: block;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1481,11 +1767,19 @@ a:focus {
 .sidebar-menu li.active > .treeview-menu {
     display: block;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin-right: 3px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .sidebar-menu .treeview-menu {
@@ -1506,6 +1800,12 @@ a:focus {
     display: block;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    font-size: 14px;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     font-size: 14px;
 =======
 =======
@@ -1516,9 +1816,13 @@ a:focus {
 .sidebar-menu > li > a > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     font-size: 14px;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   width: 20px;
 }
@@ -1568,6 +1872,10 @@ a:focus {
   font-size: 14px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -1618,7 +1926,11 @@ a:focus {
     display: block;
     font-size: 14px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1627,6 +1939,13 @@ a:focus {
 .sidebar-menu .treeview-menu > li > a > .ion {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    width: 20px;
+=======
+  width: 20px;
+=======
+>>>>>>> ben
 <<<<<<< HEAD
     width: 20px;
 =======
@@ -1637,10 +1956,14 @@ a:focus {
 =======
     width: 20px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     width: 20px;
 =======
   width: 20px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1651,6 +1974,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    width: auto;
+=======
+  width: auto;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     width: auto;
 =======
   width: auto;
@@ -1660,10 +1990,14 @@ a:focus {
 =======
     width: auto;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     width: auto;
 =======
   width: auto;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1674,7 +2008,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     .sidebar-mini.sidebar-collapse .content-wrapper,
     .sidebar-mini.sidebar-collapse .right-side,
@@ -1761,8 +2101,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   .sidebar-mini.sidebar-collapse .content-wrapper,
   .sidebar-mini.sidebar-collapse .right-side,
@@ -1848,6 +2194,10 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .sidebar-menu,
@@ -1944,7 +2294,11 @@ a:focus {
         margin-left: 50px;
     }
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -1953,7 +2307,10 @@ a:focus {
 .sidebar-menu > li.header {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
     white-space: nowrap;
     overflow: hidden;
 }
@@ -1962,6 +2319,11 @@ a:focus {
 }
 .sidebar-form,
 .sidebar-menu > li.header {
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     overflow: hidden;
     text-overflow: clip;
@@ -1976,10 +2338,18 @@ a:focus {
     margin-top: -7px;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   white-space: nowrap;
   overflow: hidden;
@@ -2002,7 +2372,13 @@ a:focus {
   margin-top: -7px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2029,12 +2405,20 @@ a:focus {
     padding-top: 50px;
     z-index: 1010;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     white-space: nowrap;
     overflow: hidden;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 @media (max-width: 768px) {
@@ -2055,7 +2439,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 @media (min-width: 768px) {
     .control-sidebar-open .content-wrapper,
@@ -2065,6 +2455,10 @@ a:focus {
     }
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 /*
  * Component: Control sidebar. By default, this is the right sidebar.
@@ -2072,7 +2466,11 @@ a:focus {
 .control-sidebar-bg {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   position: fixed;
   z-index: 1000;
@@ -2116,6 +2514,17 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> ben
+}
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:hover,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
+<<<<<<< HEAD
+    border-left-width: 0;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a,
@@ -2160,6 +2569,7 @@ a:focus {
 .control-sidebar.control-sidebar-open,
 .control-sidebar.control-sidebar-open + .control-sidebar-bg {
     right: 0;
+<<<<<<< HEAD
 =======
 >>>>>>> ben
 }
@@ -2168,6 +2578,9 @@ a:focus {
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
 <<<<<<< HEAD
     border-left-width: 0;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-tabs.control-sidebar-tabs > li > a {
@@ -2181,6 +2594,7 @@ a:focus {
     border-bottom: 1px solid transparent;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a,
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a:hover,
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
@@ -2190,6 +2604,19 @@ a:focus {
 .nav-tabs.control-sidebar-tabs > li > a .icon {
     font-size: 16px;
 =======
+>>>>>>> ben
+=======
+<<<<<<< HEAD
+.nav-tabs.control-sidebar-tabs > li > a .icon {
+    font-size: 16px;
+=======
+=======
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:hover,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-left-width: 0;
 }
@@ -2206,6 +2633,10 @@ a:focus {
 .nav-tabs.control-sidebar-tabs > li > a .icon {
   font-size: 16px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -2225,7 +2656,11 @@ a:focus {
 .nav-tabs.control-sidebar-tabs > li > a .icon {
     font-size: 16px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2236,13 +2671,19 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-top: none;
     border-right: none;
     border-bottom: none;
+<<<<<<< HEAD
 =======
     border-top: none;
     border-right: none;
     border-bottom: none;
+=======
+>>>>>>> ben
 }
 @media (max-width: 768px) {
     .nav-tabs.control-sidebar-tabs {
@@ -2318,14 +2759,29 @@ a:focus {
 .control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a {
     background: #181f23;
     color: #b8c7ce;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+>>>>>>> staging/master
 >>>>>>> ben
 =======
   border-top: none;
   border-right: none;
   border-bottom: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 @media (max-width: 768px) {
@@ -2402,6 +2858,7 @@ a:focus {
 .control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     background: #181f23;
     color: #b8c7ce;
 =======
@@ -2416,6 +2873,9 @@ a:focus {
     border-right: none;
     border-bottom: none;
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
   background: #181f23;
   color: #b8c7ce;
 >>>>>>> ben
@@ -2429,6 +2889,25 @@ a:focus {
 =======
   border-left-color: #141a1d;
   border-bottom-color: #141a1d;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+    background: #181f23;
+    color: #b8c7ce;
+=======
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+=======
+  background: #181f23;
+  color: #b8c7ce;
+=======
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2463,6 +2942,12 @@ a:focus {
     background: #1e282c;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.control-sidebar-dark .control-sidebar-menu > li > a .menu-info > p {
+    color: #b8c7ce;
+=======
+>>>>>>> ben
 .control-sidebar-menu > li > a:after {
     clear: both;
 }
@@ -2581,9 +3066,13 @@ a:focus {
 }
 .control-sidebar-dark .control-sidebar-menu > li > a .menu-info > p {
   color: #b8c7ce;
+<<<<<<< HEAD
 =======
 .control-sidebar-dark .control-sidebar-menu > li > a .menu-info > p {
     color: #b8c7ce;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light {
@@ -2600,7 +3089,13 @@ a:focus {
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background: #e8ecf4;
     color: #444444;
@@ -2608,6 +3103,10 @@ a:focus {
   background: #222d32;
   color: #fff;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   background: #e8ecf4;
   color: #444444;
@@ -2615,7 +3114,11 @@ a:focus {
     background: #222d32;
     color: #fff;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-dark .control-sidebar-heading,
@@ -2642,6 +3145,12 @@ a:focus {
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  background: #e8ecf4;
+  color: #444444;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   background: #e8ecf4;
   color: #444444;
 >>>>>>> ben
@@ -2649,9 +3158,13 @@ a:focus {
     background: #e8ecf4;
     color: #444444;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   background: #e8ecf4;
   color: #444444;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2661,7 +3174,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-left-color: #d2d6de;
     border-bottom-color: #d2d6de;
@@ -2669,6 +3188,10 @@ a:focus {
   border-left-color: #d2d6de;
   border-bottom-color: #d2d6de;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
   border-left-color: #d2d6de;
@@ -2677,7 +3200,11 @@ a:focus {
     border-left-color: #d2d6de;
     border-bottom-color: #d2d6de;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2687,6 +3214,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    background: #eff1f7;
+=======
+  background: #eff1f7;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     background: #eff1f7;
 =======
   background: #eff1f7;
@@ -2696,10 +3230,14 @@ a:focus {
 =======
     background: #eff1f7;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     background: #eff1f7;
 =======
   background: #eff1f7;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2710,15 +3248,25 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    background: #f9fafc;
+    color: #111;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     background: #f9fafc;
     color: #111;
 =======
   background: #f9fafc;
   color: #111;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     background: #f9fafc;
     color: #111;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light .control-sidebar-heading,
@@ -2734,20 +3282,34 @@ a:focus {
 .control-sidebar-light .control-sidebar-menu > li > a .menu-info > p {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     color: #5e5e5e;
 =======
   background: #f9fafc;
   color: #111;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   color: #5e5e5e;
 =======
     background: #f9fafc;
     color: #111;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light .control-sidebar-heading,
@@ -2763,13 +3325,22 @@ a:focus {
 .control-sidebar-light .control-sidebar-menu > li > a .menu-info > p {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  color: #5e5e5e;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   color: #5e5e5e;
 >>>>>>> ben
 =======
     color: #5e5e5e;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   color: #5e5e5e;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2782,7 +3353,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     box-shadow: none;
     border-color: #eee;
@@ -2792,8 +3369,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   box-shadow: none;
   border-color: #eee;
@@ -2801,6 +3384,10 @@ a:focus {
 .dropdown-menu > li > a {
   color: #777;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -2811,7 +3398,11 @@ a:focus {
 .dropdown-menu > li > a {
     color: #777;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2821,7 +3412,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     margin-right: 10px;
 }
@@ -2834,8 +3431,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 10px;
 }
@@ -2847,6 +3450,10 @@ a:focus {
   background-color: #eee;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -2859,7 +3466,11 @@ a:focus {
 .dropdown-menu > .divider {
     background-color: #eee;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2869,7 +3480,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     width: 280px;
     padding: 0 0 0 0;
@@ -2878,14 +3495,24 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   width: 280px;
   padding: 0 0 0 0;
   margin: 0;
   top: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -2895,7 +3522,11 @@ a:focus {
     margin: 0;
     top: 100%;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2905,6 +3536,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    position: relative;
+=======
+  position: relative;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     position: relative;
 =======
   position: relative;
@@ -2914,10 +3552,14 @@ a:focus {
 =======
     position: relative;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     position: relative;
 =======
   position: relative;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2927,7 +3569,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -2941,8 +3589,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -2955,6 +3609,10 @@ a:focus {
   font-size: 14px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -2968,7 +3626,11 @@ a:focus {
     color: #444444;
     font-size: 14px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -2978,7 +3640,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -3001,8 +3669,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -3024,6 +3698,10 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -3046,7 +3724,11 @@ a:focus {
         color: #444 !important;
     }
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3056,7 +3738,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     text-decoration: none;
     font-weight: normal;
@@ -3064,6 +3752,10 @@ a:focus {
   text-decoration: none;
   font-weight: normal;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
   text-decoration: none;
@@ -3072,7 +3764,11 @@ a:focus {
     text-decoration: none;
     font-weight: normal;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3082,7 +3778,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     max-height: 200px;
     margin: 0;
@@ -3092,8 +3794,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   max-height: 200px;
   margin: 0;
@@ -3101,6 +3809,10 @@ a:focus {
   list-style: none;
   overflow-x: hidden;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -3111,7 +3823,11 @@ a:focus {
     list-style: none;
     overflow-x: hidden;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3121,7 +3837,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     display: block;
     white-space: nowrap;
@@ -3130,14 +3852,24 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   display: block;
   white-space: nowrap;
   /* Prevent text from breaking */
   border-bottom: 1px solid #f4f4f4;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -3147,7 +3879,11 @@ a:focus {
     /* Prevent text from breaking */
     border-bottom: 1px solid #f4f4f4;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3157,7 +3893,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background: #f4f4f4;
     text-decoration: none;
@@ -3170,8 +3912,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background: #f4f4f4;
   text-decoration: none;
@@ -3183,7 +3931,13 @@ a:focus {
   padding: 10px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3202,12 +3956,20 @@ a:focus {
     width: 40px;
     height: 40px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     background: #f4f4f4;
     text-decoration: none;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > h4 {
@@ -3219,9 +3981,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer:before,
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > h4 > small {
     color: #999999;
     font-size: 10px;
@@ -3236,6 +4002,14 @@ a:focus {
 }
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:before,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:after {
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:before,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
+>>>>>>> staging/master
 >>>>>>> ben
     content: " ";
     display: table;
@@ -3351,13 +4125,21 @@ a:focus {
     }
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .glyphicon,
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .fa,
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   width: 20px;
 }
@@ -3505,7 +4287,13 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3518,6 +4306,10 @@ a:focus {
     -o-animation: flipInX 0.7s both;
     animation: flipInX 0.7s both;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     width: 20px;
@@ -3526,7 +4318,11 @@ a:focus {
     margin: 0;
     padding: 10px 10px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 @keyframes flipInX {
@@ -3652,6 +4448,10 @@ a:focus {
   left: auto;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 .navbar-nav > .user-menu > .dropdown-menu {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -3811,7 +4611,11 @@ a:focus {
   right: 0;
   left: auto;
 }
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 @media (max-width: 991px) {
   .navbar-custom-menu > .navbar-nav {
@@ -3828,6 +4632,10 @@ a:focus {
     background: #fff;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -3903,7 +4711,11 @@ a:focus {
         background: #fff;
     }
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3915,7 +4727,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-radius: 0;
     box-shadow: none;
@@ -3927,8 +4745,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-radius: 0;
   box-shadow: none;
@@ -3938,6 +4762,10 @@ a:focus {
   border-color: #3c8dbc;
   box-shadow: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -3950,7 +4778,11 @@ a:focus {
     border-color: #3c8dbc;
     box-shadow: none;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -3960,15 +4792,25 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    color: #bbb;
+    opacity: 1;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     color: #bbb;
     opacity: 1;
 =======
   color: #bbb;
   opacity: 1;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     color: #bbb;
     opacity: 1;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .form-control:not(select) {
@@ -4010,7 +4852,13 @@ a:focus {
 .input-group .input-group-addon {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-radius: 0;
     border-color: #d2d6de;
@@ -4019,6 +4867,10 @@ a:focus {
   color: #bbb;
   opacity: 1;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   border-radius: 0;
   border-color: #d2d6de;
@@ -4027,7 +4879,11 @@ a:focus {
     color: #bbb;
     opacity: 1;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .form-control:not(select) {
@@ -4069,6 +4925,13 @@ a:focus {
 .input-group .input-group-addon {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  border-radius: 0;
+  border-color: #d2d6de;
+  background-color: #fff;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border-radius: 0;
   border-color: #d2d6de;
   background-color: #fff;
@@ -4078,10 +4941,14 @@ a:focus {
     border-color: #d2d6de;
     background-color: #fff;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   border-radius: 0;
   border-color: #d2d6de;
   background-color: #fff;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4091,12 +4958,21 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 0;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 0;
 =======
   border-radius: 0;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border-radius: 0;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .icheck > label {
@@ -4106,6 +4982,13 @@ a:focus {
 .form-control-feedback.fa {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    line-height: 34px;
+=======
+  border-radius: 0;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     line-height: 34px;
 =======
   border-radius: 0;
@@ -4114,10 +4997,14 @@ a:focus {
 =======
     border-radius: 0;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     line-height: 34px;
 =======
   border-radius: 0;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .icheck > label {
@@ -4127,13 +5014,22 @@ a:focus {
 .form-control-feedback.fa {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  line-height: 34px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   line-height: 34px;
 >>>>>>> ben
 =======
     line-height: 34px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   line-height: 34px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4143,6 +5039,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    line-height: 46px;
+=======
+  line-height: 46px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     line-height: 46px;
 =======
   line-height: 46px;
@@ -4152,10 +5055,14 @@ a:focus {
 =======
     line-height: 46px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     line-height: 46px;
 =======
   line-height: 46px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4165,6 +5072,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    line-height: 30px;
+=======
+  line-height: 30px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     line-height: 30px;
 =======
   line-height: 30px;
@@ -4174,10 +5088,14 @@ a:focus {
 =======
     line-height: 30px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     line-height: 30px;
 =======
   line-height: 30px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4190,7 +5108,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -4198,6 +5122,10 @@ a:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
   -webkit-box-shadow: none;
@@ -4206,7 +5134,11 @@ a:focus {
     -webkit-box-shadow: none;
     box-shadow: none;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4217,6 +5149,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 1px;
+=======
+  border-radius: 1px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 1px;
 =======
   border-radius: 1px;
@@ -4226,10 +5165,14 @@ a:focus {
 =======
     border-radius: 1px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     border-radius: 1px;
 =======
   border-radius: 1px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4239,6 +5182,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    height: 10px;
+=======
+  height: 10px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     height: 10px;
 =======
   height: 10px;
@@ -4248,10 +5198,14 @@ a:focus {
 =======
     height: 10px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     height: 10px;
 =======
   height: 10px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4262,6 +5216,11 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 1px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 1px;
 }
 .progress.xs,
@@ -4269,8 +5228,12 @@ a:focus {
     height: 7px;
 =======
   border-radius: 1px;
+<<<<<<< HEAD
 =======
     border-radius: 1px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress.xs,
@@ -4299,6 +5262,11 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 1px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 1px;
 }
 .progress.xxs,
@@ -4306,8 +5274,12 @@ a:focus {
     height: 3px;
 =======
   border-radius: 1px;
+<<<<<<< HEAD
 =======
     border-radius: 1px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress.xxs,
@@ -4336,12 +5308,21 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 1px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 1px;
 =======
   border-radius: 1px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border-radius: 1px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* Vertical bars */
@@ -4427,7 +5408,13 @@ a:focus {
 .progress-striped .progress-bar-danger {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -4435,6 +5422,10 @@ a:focus {
 =======
   border-radius: 1px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -4442,7 +5433,11 @@ a:focus {
 =======
     border-radius: 1px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* Vertical bars */
@@ -4528,6 +5523,13 @@ a:focus {
 .progress-striped .progress-bar-danger {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -4537,10 +5539,14 @@ a:focus {
     background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4552,7 +5558,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-radius: 2px;
     position: relative;
@@ -4629,8 +5641,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-radius: 2px;
   position: relative;
@@ -4706,6 +5724,10 @@ a:focus {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -4782,7 +5804,11 @@ a:focus {
         font-size: 12px;
     }
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -4794,7 +5820,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     position: relative;
     border-radius: 3px;
@@ -4804,6 +5836,10 @@ a:focus {
     width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   position: relative;
   border-radius: 3px;
@@ -4813,7 +5849,11 @@ a:focus {
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box.box-primary {
@@ -4950,7 +5990,13 @@ a:focus {
 .box .knob-label {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     text-align: center;
     color: #333;
@@ -4966,6 +6012,10 @@ a:focus {
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   text-align: center;
   color: #333;
@@ -4981,7 +6031,11 @@ a:focus {
     width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box.box-primary {
@@ -5118,7 +6172,13 @@ a:focus {
 .box .knob-label {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
   text-align: center;
   color: #333;
@@ -5126,6 +6186,10 @@ a:focus {
   font-size: 12px;
   margin-bottom: 0.3em;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
     text-align: center;
@@ -5134,7 +6198,11 @@ a:focus {
     font-size: 12px;
     margin-bottom: 0.3em;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5145,7 +6213,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     position: absolute;
     top: 0;
@@ -5175,8 +6249,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   position: absolute;
   top: 0;
@@ -5205,6 +6285,10 @@ a:focus {
   background: rgba(0, 0, 0, 0.5);
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -5234,7 +6318,11 @@ a:focus {
 .overlay-wrapper .overlay.dark {
     background: rgba(0, 0, 0, 0.5);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5247,7 +6335,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     content: " ";
     display: table;
@@ -5255,6 +6349,10 @@ a:focus {
   content: " ";
   display: table;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
   content: " ";
@@ -5263,7 +6361,11 @@ a:focus {
     content: " ";
     display: table;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5273,7 +6375,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     clear: both;
 }
@@ -5291,8 +6399,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   clear: both;
 }
@@ -5309,6 +6423,10 @@ a:focus {
   border-bottom: none;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -5326,7 +6444,11 @@ a:focus {
 .collapsed-box .box-header.with-border {
     border-bottom: none;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5337,7 +6459,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     display: inline-block;
     font-size: 18px;
@@ -5346,14 +6474,24 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   display: inline-block;
   font-size: 18px;
   margin: 0;
   line-height: 1;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -5363,7 +6501,11 @@ a:focus {
     margin: 0;
     line-height: 1;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5373,12 +6515,21 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    margin-right: 5px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     margin-right: 5px;
 =======
   margin-right: 5px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     margin-right: 5px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box-header > .box-tools {
@@ -5389,7 +6540,13 @@ a:focus {
 .box-header > .box-tools [data-toggle="tooltip"] {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     position: relative;
 }
@@ -5545,8 +6702,14 @@ a:focus {
 .box-header > .box-tools [data-toggle="tooltip"] {
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   position: relative;
 }
@@ -5693,7 +6856,13 @@ a:focus {
   color: #dd4b39;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5706,6 +6875,10 @@ a:focus {
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     margin-right: 5px;
     cursor: pointer;
@@ -5810,6 +6983,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.modal .panel-body {
+    color: #444;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .modal .panel-body {
     color: #444;
 =======
@@ -5819,10 +6999,14 @@ a:focus {
 .todo-list > li .tools > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .modal .panel-body {
     color: #444;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 5px;
   cursor: pointer;
@@ -5929,7 +7113,13 @@ a:focus {
   color: #444;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -5947,6 +7137,10 @@ a:focus {
     border-radius: 2px;
     margin-bottom: 15px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin-right: 5px;
@@ -5989,7 +7183,11 @@ a:focus {
 /* Chat widget (DEPRECATED - this will be removed in the next major release. Use Direct Chat instead)*/
 .chat {
     padding: 5px 20px 5px 10px;
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .info-box small {
@@ -6042,6 +7240,12 @@ a:focus {
     text-overflow: ellipsis;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.info-box-text {
+    text-transform: uppercase;
+=======
+>>>>>>> ben
 .chat .item > .attachment > p,
 .chat .item > .attachment > .filename {
     font-weight: 600;
@@ -6062,15 +7266,26 @@ a:focus {
 }
 .box-input {
     max-width: 200px;
+<<<<<<< HEAD
 =======
 .info-box-text {
     text-transform: uppercase;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .info-box-more {
     display: block;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.progress-description {
+    margin: 0;
+=======
+=======
+>>>>>>> ben
 /*
  * Component: Info Box
  * -------------------
@@ -6078,10 +7293,14 @@ a:focus {
 .info-box {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .progress-description {
     margin: 0;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   display: block;
   min-height: 90px;
@@ -6150,7 +7369,13 @@ a:focus {
   margin: 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6165,6 +7390,10 @@ a:focus {
     padding: 0;
     list-style: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     display: block;
@@ -6187,7 +7416,11 @@ a:focus {
 .info-box .progress,
 .info-box .progress .progress-bar {
     border-radius: 0;
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .timeline:before {
@@ -6216,6 +7449,7 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .timeline > li > .timeline-item > .timeline-body,
 .timeline > li > .timeline-item > .timeline-footer {
     padding: 10px;
@@ -6224,6 +7458,9 @@ a:focus {
 .info-box-text {
     text-transform: uppercase;
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .timeline > li > .timeline-item {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -6235,6 +7472,19 @@ a:focus {
     margin-right: 15px;
     padding: 0;
     position: relative;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+.timeline > li > .timeline-item > .timeline-body,
+.timeline > li > .timeline-item > .timeline-footer {
+    padding: 10px;
+=======
+=======
+.info-box-text {
+    text-transform: uppercase;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .timeline > li > .timeline-item > .time {
@@ -6255,6 +7505,14 @@ a:focus {
     font-weight: 600;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.timeline > li > .timeline-item > .timeline-body,
+.timeline > li > .timeline-item > .timeline-footer {
+    padding: 10px;
+=======
+=======
+>>>>>>> ben
 /*
  * Component: Timeline
  * -------------------
@@ -6262,11 +7520,15 @@ a:focus {
 .timeline {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .timeline > li > .timeline-item > .timeline-body,
 .timeline > li > .timeline-item > .timeline-footer {
     padding: 10px;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   position: relative;
   margin: 0 0 30px 0;
@@ -6331,7 +7593,13 @@ a:focus {
   padding: 10px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6344,6 +7612,10 @@ a:focus {
     font-size: 15px;
     line-height: 30px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     position: relative;
@@ -6354,7 +7626,11 @@ a:focus {
 .timeline:before {
     content: '';
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     position: absolute;
     color: #666;
@@ -6379,6 +7655,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.timeline-inverse > li > .timeline-item > .timeline-header {
+    border-bottom-color: #ddd;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .timeline-inverse > li > .timeline-item > .timeline-header {
     border-bottom-color: #ddd;
 =======
@@ -6388,10 +7671,14 @@ a:focus {
 .timeline > li > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .timeline-inverse > li > .timeline-item > .timeline-header {
     border-bottom-color: #ddd;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   width: 30px;
   height: 30px;
@@ -6421,6 +7708,10 @@ a:focus {
 .timeline-inverse > li > .timeline-item > .timeline-header {
   border-bottom-color: #ddd;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6453,7 +7744,11 @@ a:focus {
 .timeline-inverse > li > .timeline-item > .timeline-header {
     border-bottom-color: #ddd;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6465,20 +7760,34 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-radius: 3px;
     -webkit-box-shadow: none;
     box-shadow: none;
     border: 1px solid transparent;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   border-radius: 3px;
   -webkit-box-shadow: none;
   box-shadow: none;
   border: 1px solid transparent;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn.uppercase {
@@ -6502,7 +7811,13 @@ a:focus {
 .btn.btn-file {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     position: relative;
     overflow: hidden;
@@ -6553,8 +7868,14 @@ a:focus {
 .btn.btn-file {
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   position: relative;
   overflow: hidden;
@@ -6579,6 +7900,10 @@ a:focus {
   color: #444;
   border-color: #ddd;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6630,7 +7955,11 @@ a:focus {
     color: #444;
     border-color: #ddd;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6640,7 +7969,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #e7e7e7;
 }
@@ -6650,8 +7985,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #e7e7e7;
 }
@@ -6659,6 +8000,10 @@ a:focus {
   background-color: #3c8dbc;
   border-color: #367fa9;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6669,7 +8014,11 @@ a:focus {
     background-color: #3c8dbc;
     border-color: #367fa9;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6679,7 +8028,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #367fa9;
 }
@@ -6689,8 +8044,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #367fa9;
 }
@@ -6698,6 +8059,10 @@ a:focus {
   background-color: #00a65a;
   border-color: #008d4c;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6708,7 +8073,11 @@ a:focus {
     background-color: #00a65a;
     border-color: #008d4c;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6718,7 +8087,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #008d4c;
 }
@@ -6728,8 +8103,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #008d4c;
 }
@@ -6737,6 +8118,10 @@ a:focus {
   background-color: #00c0ef;
   border-color: #00acd6;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6747,7 +8132,11 @@ a:focus {
     background-color: #00c0ef;
     border-color: #00acd6;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6757,7 +8146,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #00acd6;
 }
@@ -6767,8 +8162,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #00acd6;
 }
@@ -6776,6 +8177,10 @@ a:focus {
   background-color: #dd4b39;
   border-color: #d73925;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6786,7 +8191,11 @@ a:focus {
     background-color: #dd4b39;
     border-color: #d73925;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6796,7 +8205,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #d73925;
 }
@@ -6806,8 +8221,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #d73925;
 }
@@ -6815,6 +8236,10 @@ a:focus {
   background-color: #f39c12;
   border-color: #e08e0b;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6825,7 +8250,11 @@ a:focus {
     background-color: #f39c12;
     border-color: #e08e0b;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6835,7 +8264,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-color: #e08e0b;
 }
@@ -6846,8 +8281,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #e08e0b;
 }
@@ -6856,6 +8297,10 @@ a:focus {
   background: transparent;
   color: #fff;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -6867,7 +8312,11 @@ a:focus {
     background: transparent;
     color: #fff;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6877,7 +8326,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     color: rgba(255, 255, 255, 0.7);
     border-color: rgba(255, 255, 255, 0.7);
@@ -6905,8 +8360,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   color: rgba(255, 255, 255, 0.7);
   border-color: rgba(255, 255, 255, 0.7);
@@ -6933,7 +8394,13 @@ a:focus {
   font-size: 12px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -6944,6 +8411,10 @@ a:focus {
     font-size: 20px;
     display: block;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     color: rgba(255, 255, 255, 0.7);
@@ -6953,7 +8424,11 @@ a:focus {
     -webkit-box-shadow: none;
     box-shadow: none;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-app:hover {
@@ -6969,7 +8444,13 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 .btn-app > .badge {
     position: absolute;
@@ -6979,13 +8460,21 @@ a:focus {
     font-weight: 400;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 .btn-app > .fa,
 .btn-app > .glyphicon,
 .btn-app > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   font-size: 20px;
   display: block;
@@ -7008,6 +8497,10 @@ a:focus {
   font-size: 10px;
   font-weight: 400;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -7033,7 +8526,11 @@ a:focus {
     font-size: 10px;
     font-weight: 400;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7045,20 +8542,34 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-radius: 3px;
     margin: 0 0 20px 0;
     padding: 15px 30px 15px 15px;
     border-left: 5px solid #eee;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   border-radius: 3px;
   margin: 0 0 20px 0;
   padding: 15px 30px 15px 15px;
   border-left: 5px solid #eee;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .callout a {
@@ -7091,7 +8602,13 @@ a:focus {
 .callout.callout-success {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-color: #00733e;
 =======
@@ -7100,6 +8617,10 @@ a:focus {
   padding: 15px 30px 15px 15px;
   border-left: 5px solid #eee;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   border-color: #00733e;
 =======
@@ -7108,7 +8629,11 @@ a:focus {
     padding: 15px 30px 15px 15px;
     border-left: 5px solid #eee;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .callout a {
@@ -7141,13 +8666,22 @@ a:focus {
 .callout.callout-success {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  border-color: #00733e;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border-color: #00733e;
 >>>>>>> ben
 =======
     border-color: #00733e;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   border-color: #00733e;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7159,12 +8693,21 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-radius: 3px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-radius: 3px;
 =======
   border-radius: 3px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border-radius: 3px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .alert h4 {
@@ -7199,6 +8742,13 @@ a:focus {
 .alert-info {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-color: #00acd6;
+=======
+  border-radius: 3px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-color: #00acd6;
 =======
   border-radius: 3px;
@@ -7207,10 +8757,14 @@ a:focus {
 =======
     border-radius: 3px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border-color: #00acd6;
 =======
   border-radius: 3px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .alert h4 {
@@ -7245,13 +8799,22 @@ a:focus {
 .alert-info {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  border-color: #00acd6;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border-color: #00acd6;
 >>>>>>> ben
 =======
     border-color: #00acd6;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   border-color: #00acd6;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7265,7 +8828,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     color: #444;
     background: #f7f7f7;
@@ -7278,8 +8847,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   color: #444;
   background: #f7f7f7;
@@ -7291,6 +8866,10 @@ a:focus {
   color: #444;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -7303,7 +8882,11 @@ a:focus {
     border-top: 3px solid transparent;
     color: #444;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7312,6 +8895,13 @@ a:focus {
 .nav-pills > li > a > .ion {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    margin-right: 5px;
+=======
+  margin-right: 5px;
+=======
+>>>>>>> ben
 <<<<<<< HEAD
     margin-right: 5px;
 =======
@@ -7322,10 +8912,14 @@ a:focus {
 =======
     margin-right: 5px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     margin-right: 5px;
 =======
   margin-right: 5px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7335,7 +8929,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     border-top-color: #3c8dbc;
 }
@@ -7398,8 +8998,14 @@ a:focus {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   border-top-color: #3c8dbc;
 }
@@ -7445,6 +9051,10 @@ a:focus {
   margin-bottom: -2px;
   margin-right: 5px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #444;
@@ -7514,7 +9124,11 @@ a:focus {
     border-top: 3px solid transparent;
     margin-bottom: -2px;
     margin-right: 5px;
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-tabs-custom > .nav-tabs > li > a {
@@ -7535,7 +9149,10 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
@@ -7577,6 +9194,12 @@ a:focus {
     border-left-color: #f4f4f4;
     border-right-color: transparent;
 }
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 .nav-tabs-custom > .nav-tabs > li.header {
     line-height: 35px;
@@ -7585,13 +9208,21 @@ a:focus {
     color: #444;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   border-color: transparent;
 }
@@ -7637,7 +9268,13 @@ a:focus {
   color: #444;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7647,6 +9284,10 @@ a:focus {
 <<<<<<< HEAD
     margin-right: 5px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     border-color: transparent;
@@ -7654,7 +9295,11 @@ a:focus {
 .nav-tabs-custom > .nav-tabs > li.active {
     border-top-color: #3c8dbc;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-tabs-custom > .tab-content {
@@ -7688,6 +9333,18 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+/* PAGINATION */
+.pagination > li > a {
+    background: #fafafa;
+    color: #666;
+}
+.pagination.pagination-flat > li > a {
+    border-radius: 0 !important;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .pagination.pagination-flat > li > a {
     border-radius: 0 !important;
 =======
@@ -7704,6 +9361,7 @@ a:focus {
 .nav-tabs-custom > .nav-tabs > li.header > .ion {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 /* PAGINATION */
 .pagination > li > a {
@@ -7713,6 +9371,9 @@ a:focus {
 .pagination.pagination-flat > li > a {
     border-radius: 0 !important;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   margin-right: 5px;
 }
@@ -7754,7 +9415,13 @@ a:focus {
   border-radius: 0 !important;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7768,11 +9435,19 @@ a:focus {
     margin: 0;
     padding: 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin-right: 5px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .products-list > .item {
@@ -7812,6 +9487,19 @@ a:focus {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.product-list-in-box > .item {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+.product-list-in-box > .item:last-of-type {
+    border-bottom-width: 0;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .product-list-in-box > .item:last-of-type {
     border-bottom-width: 0;
 =======
@@ -7827,6 +9515,7 @@ a:focus {
 .products-list {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .product-list-in-box > .item {
     -webkit-box-shadow: none;
@@ -7837,6 +9526,9 @@ a:focus {
 .product-list-in-box > .item:last-of-type {
     border-bottom-width: 0;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   list-style: none;
   margin: 0;
@@ -7887,6 +9579,10 @@ a:focus {
   border-bottom-width: 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -7938,7 +9634,11 @@ a:focus {
 .product-list-in-box > .item:last-of-type {
     border-bottom-width: 0;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -7955,12 +9655,21 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-top: 1px solid #f4f4f4;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border-top: 1px solid #f4f4f4;
 =======
   border-top: 1px solid #f4f4f4;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border-top: 1px solid #f4f4f4;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .table > thead > tr > th {
@@ -7972,6 +9681,13 @@ a:focus {
 .table-bordered {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border: 1px solid #f4f4f4;
+=======
+  border-top: 1px solid #f4f4f4;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border: 1px solid #f4f4f4;
 =======
   border-top: 1px solid #f4f4f4;
@@ -7980,10 +9696,14 @@ a:focus {
 =======
     border-top: 1px solid #f4f4f4;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     border: 1px solid #f4f4f4;
 =======
   border-top: 1px solid #f4f4f4;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .table > thead > tr > th {
@@ -7995,13 +9715,22 @@ a:focus {
 .table-bordered {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  border: 1px solid #f4f4f4;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border: 1px solid #f4f4f4;
 >>>>>>> ben
 =======
     border: 1px solid #f4f4f4;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   border: 1px solid #f4f4f4;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -8014,6 +9743,11 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border: 1px solid #f4f4f4;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border: 1px solid #f4f4f4;
 }
 .table-bordered > thead > tr > th,
@@ -8021,8 +9755,12 @@ a:focus {
     border-bottom-width: 2px;
 =======
   border: 1px solid #f4f4f4;
+<<<<<<< HEAD
 =======
     border: 1px solid #f4f4f4;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .table-bordered > thead > tr > th,
@@ -8050,6 +9788,13 @@ a:focus {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border: 0;
+=======
+  border: 0;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     border: 0;
 =======
   border: 0;
@@ -8059,10 +9804,14 @@ a:focus {
 =======
     border: 0;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     border: 0;
 =======
   border: 0;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -8073,7 +9822,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     text-align: center;
 }
@@ -8294,10 +10049,18 @@ table.text-center th {
 .direct-chat-primary .right > .direct-chat-text:before {
     border-left-color: #3c8dbc;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   text-align: center;
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+  text-align: center;
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .direct-chat-warning .right > .direct-chat-text {
@@ -8325,13 +10088,23 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 .direct-chat-success .right > .direct-chat-text:after,
 .direct-chat-success .right > .direct-chat-text:before {
     border-left-color: #00a65a;
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 /*
  * Component: Direct Chat
@@ -8340,7 +10113,11 @@ table.text-center th {
 .direct-chat .box-body {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -8552,13 +10329,22 @@ table.text-center th {
 .direct-chat-success .right > .direct-chat-text:before {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  border-left-color: #00a65a;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border-left-color: #00a65a;
 >>>>>>> ben
 =======
     border-left-color: #00a65a;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   border-left-color: #00a65a;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -8570,7 +10356,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     width: 25%;
     float: left;
@@ -8603,8 +10395,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   width: 25%;
   float: left;
@@ -8636,6 +10434,10 @@ table.text-center th {
   font-size: 12px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -8668,7 +10470,11 @@ table.text-center th {
     color: #999;
     font-size: 12px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -8681,7 +10487,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -8695,8 +10507,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -8708,6 +10526,10 @@ table.text-center th {
   display: inline-block;
   margin-top: -20px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -8722,7 +10544,11 @@ table.text-center th {
     display: inline-block;
     margin-top: -20px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -8733,6 +10559,11 @@ table.text-center th {
 .modal {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    background: rgba(0, 0, 0, 0.3);
+=======
+>>>>>>> ben
 <<<<<<< HEAD
     background: rgba(0, 0, 0, 0.3);
 =======
@@ -8784,8 +10615,12 @@ table.text-center th {
 =======
     background: rgba(0, 0, 0, 0.3);
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     background: rgba(0, 0, 0, 0.3);
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .modal-content {
@@ -8826,6 +10661,13 @@ table.text-center th {
 .modal-danger .modal-footer {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    border-color: #c23321;
+=======
+  background: rgba(0, 0, 0, 0.3);
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   border-color: #c23321;
 >>>>>>> ben
 =======
@@ -8859,10 +10701,14 @@ table.text-center th {
   font-size: 25px;
   font-weight: 300;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
     border-color: #c23321;
 =======
   background: rgba(0, 0, 0, 0.3);
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .modal-content {
@@ -8900,6 +10746,23 @@ table.text-center th {
   border-color: #00733e;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.modal-danger .modal-header,
+.modal-danger .modal-footer {
+  border-color: #c23321;
+>>>>>>> ben
+}
+/*
+ * Component: Social Widgets
+ * -------------------------
+ */
+.box-widget {
+<<<<<<< HEAD
+    border: none;
+    position: relative;
+=======
+>>>>>>> ben
 .widget-user-2 .widget-user-image > img {
 <<<<<<< HEAD
     width: 65px;
@@ -8916,6 +10779,7 @@ table.text-center th {
     border: none;
     position: relative;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .modal-danger .modal-header,
 .modal-danger .modal-footer {
@@ -8930,6 +10794,9 @@ table.text-center th {
 <<<<<<< HEAD
     border: none;
     position: relative;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .widget-user .widget-user-header {
@@ -8983,6 +10850,7 @@ table.text-center th {
 .widget-user-2 .widget-user-image > img {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   width: 65px;
   height: auto;
   float: left;
@@ -8993,6 +10861,9 @@ table.text-center th {
     float: left;
 >>>>>>> staging/master
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
     width: 65px;
     height: auto;
     float: left;
@@ -9052,6 +10923,21 @@ table.text-center th {
   width: 65px;
   height: auto;
   float: left;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+  width: 65px;
+  height: auto;
+  float: left;
+>>>>>>> ben
+=======
+    width: 65px;
+    height: auto;
+    float: left;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9063,7 +10949,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     margin: 0;
 }
@@ -9105,8 +10997,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin: 0;
 }
@@ -9147,7 +11045,13 @@ table.text-center th {
   color: #666;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9157,6 +11061,10 @@ table.text-center th {
 <<<<<<< HEAD
     display: block;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     margin: 0;
@@ -9167,7 +11075,11 @@ table.text-center th {
 }
 .mailbox-controls.with-border {
     border-bottom: 1px solid #f4f4f4;
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .mailbox-attachment-info {
@@ -9180,6 +11092,13 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.mailbox-attachment-icon {
+    text-align: center;
+    font-size: 65px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .mailbox-attachment-icon.has-img > img {
     max-width: 100%;
     height: auto;
@@ -9187,10 +11106,14 @@ table.text-center th {
 =======
 .mailbox-attachment-name {
     font-weight: bold;
+<<<<<<< HEAD
 =======
 .mailbox-attachment-icon {
     text-align: center;
     font-size: 65px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     color: #666;
     padding: 20px 10px;
@@ -9199,16 +11122,30 @@ table.text-center th {
     padding: 0;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .mailbox-attachment-icon,
 .mailbox-attachment-info,
 .mailbox-attachment-size {
 <<<<<<< HEAD
 >>>>>>> ben
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .mailbox-attachment-icon.has-img > img {
     max-width: 100%;
     height: auto;
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+.mailbox-attachment-icon,
+.mailbox-attachment-info,
+.mailbox-attachment-size {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   display: block;
 }
@@ -9234,7 +11171,13 @@ table.text-center th {
   height: auto;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9253,11 +11196,19 @@ table.text-center th {
     margin-bottom: 25px;
     font-weight: 300;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     display: block;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .lockscreen-logo a {
@@ -9311,6 +11262,13 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.lockscreen-footer {
+    margin-top: 10px;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .lockscreen-footer {
     margin-top: 10px;
 =======
@@ -9323,10 +11281,14 @@ table.text-center th {
 .lockscreen {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .lockscreen-footer {
     margin-top: 10px;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background: #d2d6de;
 }
@@ -9389,7 +11351,13 @@ table.text-center th {
   margin-top: 10px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9401,13 +11369,21 @@ table.text-center th {
 .register-logo {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     background: #d2d6de;
 }
 .lockscreen-logo {
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     font-size: 35px;
     text-align: center;
@@ -9453,6 +11429,13 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.social-auth-links {
+    margin: 10px 0;
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .social-auth-links {
     margin: 10px 0;
 =======
@@ -9465,10 +11448,14 @@ table.text-center th {
 .register-logo {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .social-auth-links {
     margin: 10px 0;
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   font-size: 35px;
   text-align: center;
@@ -9516,7 +11503,13 @@ table.text-center th {
   margin: 10px 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9529,6 +11522,10 @@ table.text-center th {
     width: 600px;
     margin: 20px auto 0 auto;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
 =======
     font-size: 35px;
@@ -9540,7 +11537,11 @@ table.text-center th {
 .register-logo a {
     color: #444;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 @media (max-width: 991px) {
@@ -9570,6 +11571,19 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.error-page > .error-content > h3 {
+    font-weight: 300;
+    font-size: 25px;
+}
+@media (max-width: 991px) {
+    .error-page > .error-content > h3 {
+        text-align: center;
+    }
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 @media (max-width: 991px) {
     .error-page > .error-content > h3 {
         text-align: center;
@@ -9587,6 +11601,7 @@ table.text-center th {
 .error-page {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .error-page > .error-content > h3 {
     font-weight: 300;
@@ -9597,6 +11612,9 @@ table.text-center th {
         text-align: center;
     }
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   width: 600px;
   margin: 20px auto 0 auto;
@@ -9636,7 +11654,13 @@ table.text-center th {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -9714,6 +11738,10 @@ table.text-center th {
   margin-bottom: 0;
   padding-bottom: 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 }
 .post .user-block {
   margin-bottom: 15px;
@@ -9863,7 +11891,11 @@ table.text-center th {
     border-bottom: 0;
     margin-bottom: 0;
     padding-bottom: 0;
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .post .user-block {
@@ -9872,13 +11904,21 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .btn-adn:hover {
     color: #ffffff;
     background-color: #ce563f;
     border-color: rgba(0, 0, 0, 0.2);
 =======
 =======
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 /*
  * Social Buttons for Bootstrap
@@ -9891,13 +11931,7 @@ table.text-center th {
 .btn-social {
 <<<<<<< HEAD
 <<<<<<< HEAD
->>>>>>> ben
-  position: relative;
-  padding-left: 44px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+<<<<<<< HEAD
 =======
     position: relative;
     padding-left: 44px;
@@ -9905,6 +11939,26 @@ table.text-center th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+=======
+>>>>>>> ben
+>>>>>>> ben
+  position: relative;
+  padding-left: 44px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+<<<<<<< HEAD
+=======
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-social > :first-child {
@@ -10152,6 +12206,13 @@ table.text-center th {
 .btn-adn:hover {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  color: #ffffff;
+  background-color: #ce563f;
+  border-color: rgba(0, 0, 0, 0.2);
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   color: #ffffff;
   background-color: #ce563f;
   border-color: rgba(0, 0, 0, 0.2);
@@ -10161,10 +12222,14 @@ table.text-center th {
     background-color: #ce563f;
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   color: #ffffff;
   background-color: #ce563f;
   border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10174,7 +12239,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     color: #ffffff;
     background-color: #ce563f;
@@ -10184,6 +12255,10 @@ table.text-center th {
   background-color: #ce563f;
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 >>>>>>> ben
 =======
   color: #ffffff;
@@ -10194,7 +12269,11 @@ table.text-center th {
     background-color: #ce563f;
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10204,7 +12283,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10230,8 +12315,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10256,7 +12347,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10278,10 +12375,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-bitbucket {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10308,6 +12413,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-bitbucket:active,
@@ -10315,8 +12425,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-bitbucket {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10341,7 +12455,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10368,6 +12488,10 @@ table.text-center th {
 >>>>>>> ben
 =======
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-image: none;
 }
 .btn-dropbox .badge {
@@ -10393,6 +12517,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-dropbox:active,
@@ -10400,8 +12529,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-dropbox {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10426,7 +12559,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10448,10 +12587,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-facebook {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10478,6 +12625,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-facebook:active,
@@ -10485,8 +12637,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-facebook {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10511,7 +12667,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10538,6 +12700,10 @@ table.text-center th {
 >>>>>>> ben
 =======
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-image: none;
 }
 .btn-flickr .badge {
@@ -10563,6 +12729,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-flickr:active,
@@ -10570,8 +12741,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-flickr {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10596,7 +12771,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10618,10 +12799,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-foursquare {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10642,6 +12831,16 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+}
+.btn-github:hover {
+    color: #ffffff;
+    background-color: #2b2b2b;
+    border-color: rgba(0, 0, 0, 0.2);
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
 =======
 >>>>>>> staging/master
 }
@@ -10650,6 +12849,7 @@ table.text-center th {
 .open > .dropdown-toggle.btn-foursquare {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 }
 .btn-github:hover {
@@ -10657,6 +12857,9 @@ table.text-center th {
     background-color: #2b2b2b;
     border-color: rgba(0, 0, 0, 0.2);
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10681,7 +12884,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10707,6 +12916,10 @@ table.text-center th {
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10733,6 +12946,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-github:active,
@@ -10740,8 +12958,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-github {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10766,7 +12988,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10788,10 +13016,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-google {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10818,6 +13054,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-google:active,
@@ -10825,8 +13066,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-google {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10851,7 +13096,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10878,6 +13129,10 @@ table.text-center th {
 >>>>>>> ben
 =======
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-image: none;
 }
 .btn-instagram .badge {
@@ -10903,6 +13158,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-instagram:active,
@@ -10910,8 +13170,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-instagram {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -10936,7 +13200,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -10958,10 +13228,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-linkedin {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -10988,6 +13266,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-linkedin:active,
@@ -10995,8 +13278,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-linkedin {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11018,7 +13305,13 @@ table.text-center th {
 .btn-microsoft:hover {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
   color: #ffffff;
   background-color: #125acd;
@@ -11043,13 +13336,21 @@ table.text-center th {
 .open > .dropdown-toggle.btn-microsoft {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   color: #ffffff;
   background-color: #125acd;
   border-color: rgba(0, 0, 0, 0.2);
 =======
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -11076,6 +13377,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-microsoft:active,
@@ -11083,8 +13389,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-microsoft {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11109,7 +13419,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11131,10 +13447,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-openid {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -11161,6 +13485,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-openid:active,
@@ -11168,8 +13497,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-openid {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11188,6 +13521,10 @@ table.text-center th {
   background-color: #9f191f;
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 }
 .btn-pinterest:hover {
   color: #ffffff;
@@ -11226,7 +13563,11 @@ table.text-center th {
     color: #ffffff;
     background-color: #9f191f;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-pinterest:hover {
@@ -11234,12 +13575,20 @@ table.text-center th {
   background-color: #9f191f;
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
     color: #ffffff;
     background-color: #9f191f;
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11248,7 +13597,10 @@ table.text-center th {
 .open > .dropdown-toggle.btn-pinterest {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
     color: #ffffff;
     background-color: #9f191f;
     border-color: rgba(0, 0, 0, 0.2);
@@ -11261,6 +13613,11 @@ table.text-center th {
 .btn-pinterest:active,
 .btn-pinterest.active,
 .open > .dropdown-toggle.btn-pinterest {
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
     background-image: none;
@@ -11287,8 +13644,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11313,6 +13676,10 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-reddit:active,
@@ -11364,7 +13731,11 @@ table.text-center th {
     background-color: #bcddff;
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11373,7 +13744,10 @@ table.text-center th {
 .open > .dropdown-toggle.btn-reddit {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
     color: #000000;
     background-color: #bcddff;
     border-color: rgba(0, 0, 0, 0.2);
@@ -11386,6 +13760,11 @@ table.text-center th {
 .btn-reddit:active,
 .btn-reddit.active,
 .open > .dropdown-toggle.btn-reddit {
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
     background-image: none;
@@ -11412,8 +13791,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11438,6 +13823,16 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> ben
+}
+.btn-soundcloud:active,
+.btn-soundcloud.active,
+.open > .dropdown-toggle.btn-soundcloud {
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-soundcloud:active,
@@ -11454,6 +13849,7 @@ table.text-center th {
 }
 .btn-soundcloud {
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 >>>>>>> ben
 }
@@ -11462,12 +13858,21 @@ table.text-center th {
 .open > .dropdown-toggle.btn-soundcloud {
 <<<<<<< HEAD
 >>>>>>> ben
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     color: #ffffff;
     background-color: #cc4400;
     border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 =======
   color: #ffffff;
@@ -11486,8 +13891,14 @@ table.text-center th {
     background-color: #ffffff;
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-tumblr {
@@ -11509,6 +13920,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-soundcloud:active,
@@ -11516,8 +13932,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-soundcloud {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11542,7 +13962,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11564,10 +13990,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-tumblr {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -11594,6 +14028,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-tumblr:active,
@@ -11601,8 +14040,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-tumblr {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11627,7 +14070,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11654,6 +14103,10 @@ table.text-center th {
 >>>>>>> ben
 =======
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-image: none;
 }
 .btn-twitter .badge {
@@ -11679,6 +14132,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-twitter:active,
@@ -11686,8 +14144,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-twitter {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11712,7 +14174,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11734,10 +14202,18 @@ table.text-center th {
 .open > .dropdown-toggle.btn-vimeo {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
     background-image: none;
 }
@@ -11764,6 +14240,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-vimeo:active,
@@ -11771,8 +14252,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-vimeo {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11797,7 +14282,13 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11824,6 +14315,10 @@ table.text-center th {
 >>>>>>> ben
 =======
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-image: none;
 }
 .btn-vk .badge {
@@ -11849,6 +14344,11 @@ table.text-center th {
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
 >>>>>>> staging/master
 }
 .btn-vk:active,
@@ -11856,8 +14356,12 @@ table.text-center th {
 .open > .dropdown-toggle.btn-vk {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-image: none;
 }
@@ -11882,6 +14386,10 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-yahoo:active,
@@ -11920,7 +14428,11 @@ table.text-center th {
     background-color: #500a6f;
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -11929,7 +14441,10 @@ table.text-center th {
 .open > .dropdown-toggle.btn-yahoo {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
     color: #ffffff;
     background-color: #500a6f;
     border-color: rgba(0, 0, 0, 0.2);
@@ -11942,6 +14457,11 @@ table.text-center th {
 .btn-yahoo:active,
 .btn-yahoo.active,
 .open > .dropdown-toggle.btn-yahoo {
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 <<<<<<< HEAD
     background-image: none;
@@ -12030,6 +14550,10 @@ table.text-center th {
     margin-right: 5px;
     line-height: 30px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 =======
   color: #ffffff;
   background-color: #500a6f;
@@ -12040,7 +14564,11 @@ table.text-center th {
     border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .fc-color-picker > li .fa {
@@ -12071,6 +14599,13 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.external-event:hover {
+    box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .external-event:hover {
     box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
 =======
@@ -12080,10 +14615,14 @@ table.text-center th {
 .fc-button.hover {
 <<<<<<< HEAD
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .external-event:hover {
     box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
   background-color: #e9e9e9;
 }
@@ -12164,6 +14703,10 @@ table.text-center th {
 .external-event:hover {
   box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -12247,7 +14790,11 @@ table.text-center th {
 .external-event:hover {
     box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -12264,12 +14811,21 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    outline: none;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     outline: none;
 =======
   outline: none;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     outline: none;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .select2-container--default .select2-selection--single,
@@ -12357,6 +14913,13 @@ table.text-center th {
 .select2-container .select2-selection--single .select2-selection__rendered {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    padding-right: 10px;
+=======
+  outline: none;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     padding-right: 10px;
 =======
   outline: none;
@@ -12365,10 +14928,14 @@ table.text-center th {
 =======
     outline: none;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     padding-right: 10px;
 =======
   outline: none;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .select2-container--default .select2-selection--single,
@@ -12456,13 +15023,22 @@ table.text-center th {
 .select2-container .select2-selection--single .select2-selection__rendered {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  padding-right: 10px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   padding-right: 10px;
 >>>>>>> ben
 =======
     padding-right: 10px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   padding-right: 10px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -12474,12 +15050,21 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    padding: 10px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     padding: 10px;
 =======
   padding: 10px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     padding: 10px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .margin {
@@ -12514,6 +15099,13 @@ table.text-center th {
 .description-block > .description-text {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    text-transform: uppercase;
+=======
+  padding: 10px;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     text-transform: uppercase;
 =======
   padding: 10px;
@@ -12522,10 +15114,14 @@ table.text-center th {
 =======
     padding: 10px;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     text-transform: uppercase;
 =======
   padding: 10px;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .margin {
@@ -12560,13 +15156,22 @@ table.text-center th {
 .description-block > .description-text {
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+  text-transform: uppercase;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
   text-transform: uppercase;
 >>>>>>> ben
 =======
     text-transform: uppercase;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
   text-transform: uppercase;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -12632,6 +15237,11 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    color: #fff !important;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     color: #fff !important;
 =======
   color: #fff !important;
@@ -12654,8 +15264,12 @@ table.text-center th {
 =======
     color: #fff !important;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     color: #fff !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-gray {
@@ -12667,6 +15281,13 @@ table.text-center th {
 }
 .bg-black {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    background-color: #111111 !important;
+=======
+  color: #fff !important;
+=======
+>>>>>>> ben
 <<<<<<< HEAD
   background-color: #111111 !important;
 >>>>>>> ben
@@ -12824,10 +15445,14 @@ table.text-center th {
 }
 .bg-maroon {
   background-color: #d81b60 !important;
+<<<<<<< HEAD
 =======
     background-color: #111111 !important;
 =======
   color: #fff !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-gray {
@@ -12835,15 +15460,27 @@ table.text-center th {
   background-color: #d2d6de !important;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .bg-black-active {
   background-color: #000000 !important;
 <<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .bg-gray-light {
   background-color: #f7f7f7;
 }
 .bg-black {
   background-color: #111111 !important;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+.bg-black-active {
+  background-color: #000000 !important;
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -12903,6 +15540,11 @@ table.text-center th {
 .modal-success .modal-body {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    background-color: #00a65a !important;
+=======
+>>>>>>> ben
     background-color: #008d4c !important;
 }
 .bg-navy-active {
@@ -12963,8 +15605,12 @@ table.text-center th {
 =======
     background-color: #00a65a !important;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
     background-color: #00a65a !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-navy {
@@ -12998,6 +15644,12 @@ table.text-center th {
 .bg-black-active {
     background-color: #000000 !important;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+  background-color: #00a65a !important;
+=======
+>>>>>>> ben
 >>>>>>> staging/master
 }
 .bg-red-active,
@@ -13108,9 +15760,13 @@ table.text-center th {
 }
 .text-navy {
   color: #001f3f !important;
+<<<<<<< HEAD
 =======
 =======
   background-color: #00a65a !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-navy {
@@ -13179,6 +15835,23 @@ table.text-center th {
 >>>>>>> ben
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.bg-light-blue-active,
+.modal-primary .modal-header,
+.modal-primary .modal-footer {
+<<<<<<< HEAD
+    background-color: #357ca5 !important;
+=======
+  background-color: #357ca5 !important;
+>>>>>>> ben
+}
+.bg-green-active,
+.modal-success .modal-header,
+.modal-success .modal-footer {
+<<<<<<< HEAD
+=======
+>>>>>>> ben
 .no-shadow {
   box-shadow: none !important;
 <<<<<<< HEAD
@@ -13195,6 +15868,7 @@ table.text-center th {
     padding: 0;
 =======
 =======
+<<<<<<< HEAD
 =======
 .bg-light-blue-active,
 .modal-primary .modal-header,
@@ -13210,19 +15884,34 @@ table.text-center th {
 .modal-success .modal-footer {
 <<<<<<< HEAD
 >>>>>>> ben
+=======
+>>>>>>> staging/master
+>>>>>>> ben
     background-color: #008d4c !important;
 }
 .bg-navy-active {
     background-color: #001a35 !important;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-teal-active {
     background-color: #30bbbb !important;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.bg-olive-active {
+    background-color: #368763 !important;
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 .flat {
     border-radius: 0 !important;
@@ -13234,15 +15923,23 @@ table.text-center th {
 .bg-olive-active {
     background-color: #368763 !important;
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 .bg-olive-active {
     background-color: #368763 !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-lime-active {
     background-color: #00e765 !important;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 .flat {
   border-radius: 0 !important;
@@ -13254,7 +15951,11 @@ table.text-center th {
 <<<<<<< HEAD
     font-weight: 700;
 =======
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 .bg-orange-active {
     background-color: #ff7701 !important;
@@ -13262,8 +15963,14 @@ table.text-center th {
 .bg-fuchsia-active {
     background-color: #db0ead !important;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-purple-active {
@@ -13372,6 +16079,12 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+.bg-fuchsia-active {
+  background-color: #db0ead !important;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .user-block img {
     width: 40px;
     height: 40px;
@@ -13384,9 +16097,13 @@ table.text-center th {
 <<<<<<< HEAD
 >>>>>>> ben
   font-weight: 700;
+<<<<<<< HEAD
 =======
 .bg-fuchsia-active {
   background-color: #db0ead !important;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-purple-active {
@@ -13478,12 +16195,16 @@ table.text-center th {
 >>>>>>> ben
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .user-block img {
   width: 40px;
   height: 40px;
   float: left;
 <<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
 .list-unstyled,
 .chart-legend,
 .contacts-list,
@@ -13517,6 +16238,16 @@ table.text-center th {
 }
 .flat {
   border-radius: 0 !important;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+.user-block img {
+  width: 40px;
+  height: 40px;
+  float: left;
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -13525,19 +16256,33 @@ table.text-center th {
 .text-bold.table th {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
     display: block;
     margin-left: 50px;
 =======
 =======
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
     font-weight: 700;
 }
 .text-sm {
     font-size: 12px;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .jqstooltip {
@@ -13783,12 +16528,20 @@ table.text-center th {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 .user-block .description {
     color: #999;
     font-size: 13px;
 =======
 =======
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 .no-pad-top {
   padding-top: 0;
@@ -13836,8 +16589,11 @@ table.text-center th {
 .user-block .comment {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+=======
+>>>>>>> ben
     display: block;
     margin-left: 50px;
 }
@@ -13849,6 +16605,12 @@ table.text-center th {
     color: #999;
     font-size: 13px;
 =======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   display: block;
   margin-left: 50px;
@@ -13862,6 +16624,10 @@ table.text-center th {
   font-size: 13px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -13876,7 +16642,11 @@ table.text-center th {
     color: #999;
     font-size: 13px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -13886,7 +16656,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     margin-left: 40px;
 }
@@ -13895,14 +16671,24 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   margin-left: 40px;
 }
 .user-block.user-block-sm .username {
   font-size: 14px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -13912,7 +16698,11 @@ table.text-center th {
 .user-block.user-block-sm .username {
     font-size: 14px;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -13924,6 +16714,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    float: left;
+=======
+  float: left;
+=======
+>>>>>>> ben
+<<<<<<< HEAD
     float: left;
 =======
   float: left;
@@ -13933,10 +16730,14 @@ table.text-center th {
 =======
     float: left;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
     float: left;
 =======
   float: left;
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -13946,7 +16747,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     width: 30px !important;
     height: 30px !important;
@@ -14034,8 +16841,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   width: 30px !important;
   height: 30px !important;
@@ -14122,6 +16935,10 @@ table.text-center th {
   width: 100% !important;
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
 >>>>>>> ben
 =======
 =======
@@ -14209,7 +17026,11 @@ table.text-center th {
 .chart canvas {
     width: 100% !important;
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }
@@ -14221,7 +17042,13 @@ table.text-center th {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
     .no-print,
     .main-sidebar,
@@ -14264,8 +17091,14 @@ table.text-center th {
 =======
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
   .no-print,
   .main-sidebar,
@@ -14306,6 +17139,10 @@ table.text-center th {
     white-space: normal !important;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
 <<<<<<< HEAD
 >>>>>>> ben
 =======
@@ -14349,7 +17186,11 @@ table.text-center th {
         white-space: normal !important;
     }
 >>>>>>> staging/master
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 >>>>>>> ben
 }

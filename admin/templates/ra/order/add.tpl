@@ -3,6 +3,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> ben
+<<<<<<< HEAD
+=======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
             <input type="hidden" name="submitorder" value="true">
             <div class="box">
@@ -109,7 +113,11 @@
 </script>
 =======
 >>>>>>> ben
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+>>>>>>> staging/master
 >>>>>>> ben
 <form method="post" action="{$PHP_SELF}" id="orderfrm">
     <input type="hidden" name="submitorder" value="true">
@@ -397,7 +405,13 @@
 {/literal}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> ben
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
@@ -506,8 +520,16 @@
 </script>
 >>>>>>> ben
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> staging/master
 >>>>>>> ben
 =======
+>>>>>>> ben
+=======
+=======
+=======
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
 >>>>>>> ben
