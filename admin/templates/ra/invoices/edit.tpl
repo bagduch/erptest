@@ -1,7 +1,20 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
+=======
+<<<<<<< HEAD
+=======
+{debug}
+>>>>>>> ben
+
+
+<div>
+=======
+
+<<<<<<< HEAD
+>>>>>>> staging/master
 <div class="col-lg-12">
 =======
 {debug}
@@ -9,6 +22,15 @@
 
 <div>
 >>>>>>> ben
+<<<<<<< HEAD
+=======
+=======
+
+
+<div class="col-lg-12">
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
         <li role="presentation" class=""><a href="#tab1box" aria-controls="tab1box" role="tab" data-toggle="tab">Add Payment</a></li>
@@ -22,10 +44,22 @@
             <table width="100%">
                 <tbody><tr><td width="50%">
 <<<<<<< HEAD
+<<<<<<< HEAD
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+<<<<<<< HEAD
                             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
 
                             <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                            <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> staging/master
 >>>>>>> ben
                                 <tbody><tr><td width="35%" class="fieldlabel">Client Name</td>
                                         <td class="fieldarea"><a href="clientssummary.php?userid={$invoice.userid}">{$invoice.firstname} {$invoice.lastname}</a> 
@@ -85,18 +119,44 @@
             </table>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+=======
+<<<<<<< HEAD
+        <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
+=======
+        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+>>>>>>> ben
+=======
+        <div  role="tabpanel" id="tab1box" class="tabbox tab-pane">
+=======
+        <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="{$invoice.id}">
                 <input type="hidden" name="sub" value="markpaid">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+<<<<<<< HEAD
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
                     <tbody>
                         <tr>
@@ -128,9 +188,19 @@
         </div>
         <div  role="tabpanel" id="tab2box" class="tabbox tab-pane">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 =======
 
 
+>>>>>>> ben
+>>>>>>> staging/master
+=======
+
+
+=======
+>>>>>>> staging/master
 >>>>>>> ben
             <form method="post" action="/admin/invoices.php">
                 <input type="hidden" name="action" value="edit">
@@ -138,9 +208,22 @@
                 <input type="hidden" name="id" value="{$invoice.id}">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+<<<<<<< HEAD
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
                     <tbody>
                         <tr>
@@ -193,9 +276,22 @@
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             <table class="table" width="75%" align="center">
 =======
             <table width="75%" align="center">
+=======
+<<<<<<< HEAD
+            <table class="table" width="75%" align="center">
+=======
+            <table width="75%" align="center">
+>>>>>>> ben
+=======
+            <table width="75%" align="center">
+=======
+            <table class="table" width="75%" align="center">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
                 <tbody>
                     <tr>
@@ -229,9 +325,22 @@
 
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
 =======
         <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+=======
+<<<<<<< HEAD
+        <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
+=======
+        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+>>>>>>> ben
+=======
+        <div  role="tabpanel" id="tab4box" class="tabbox tab-pane">
+=======
+        <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 
             <form method="post" action="/admin/invoices.php">
@@ -241,9 +350,22 @@
                 <input type="hidden" name="sub" value="refund">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
 =======
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+<<<<<<< HEAD
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> ben
+=======
+                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+=======
+                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
                         <tr><td class="fieldlabel">Amount</td><td class="fieldarea"><input class="form-control" type="text" name="amount" size="15"> Leave blank for full refund</td></tr>

@@ -13,6 +13,10 @@
 html,
 body {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     min-height: 100%;
 }
 .layout-boxed html,
@@ -51,6 +55,11 @@ body {
 .layout-boxed {
     background: url('../img/boxed-bg.jpg') repeat fixed;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   min-height: 100%;
 }
 .layout-boxed html,
@@ -88,6 +97,51 @@ body {
 }
 .layout-boxed {
   background: url('../img/boxed-bg.jpg') repeat fixed;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    min-height: 100%;
+}
+.layout-boxed html,
+.layout-boxed body {
+    height: 100%;
+}
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/* Layout */
+.wrapper {
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.wrapper:before,
+.wrapper:after {
+    content: " ";
+    display: table;
+}
+.wrapper:after {
+    clear: both;
+}
+.layout-boxed .wrapper {
+    max-width: 1250px;
+    margin: 0 auto;
+    min-height: 100%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+.layout-boxed {
+    background: url('../img/boxed-bg.jpg') repeat fixed;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -98,6 +152,10 @@ body {
 .right-side,
 .main-footer {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
@@ -105,18 +163,41 @@ body {
     margin-left: 230px;
     z-index: 820;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   margin-left: 230px;
   z-index: 820;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
+    -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
+    -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
+    margin-left: 230px;
+    z-index: 820;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .layout-top-nav .content-wrapper,
 .layout-top-nav .right-side,
 .layout-top-nav .main-footer {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     margin-left: 0;
 }
 @media (max-width: 767px) {
@@ -155,6 +236,11 @@ body {
     color: #444;
     border-top: 1px solid #d2d6de;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   margin-left: 0;
 }
 @media (max-width: 767px) {
@@ -192,6 +278,10 @@ body {
   padding: 15px;
   color: #444;
   border-top: 1px solid #d2d6de;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* Fixed layout */
@@ -200,6 +290,13 @@ body {
 .fixed .left-side {
 <<<<<<< HEAD
     position: fixed;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin-left: 0;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .fixed .main-header {
     top: 0;
@@ -216,9 +313,36 @@ body {
         padding-top: 100px;
     }
 }
+<<<<<<< HEAD
 .fixed.layout-boxed .wrapper {
     max-width: 100%;
 =======
+=======
+<<<<<<< HEAD
+.fixed.layout-boxed .wrapper {
+    max-width: 100%;
+=======
+=======
+.content-wrapper,
+.right-side {
+    min-height: 100%;
+    background-color: #ecf0f5;
+    z-index: 800;
+}
+.main-footer {
+    background: #fff;
+    padding: 15px;
+    color: #444;
+    border-top: 1px solid #d2d6de;
+>>>>>>> staging/master
+}
+/* Fixed layout */
+.fixed .main-header,
+.fixed .main-sidebar,
+.fixed .left-side {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   position: fixed;
 }
 .fixed .main-header {
@@ -238,6 +362,33 @@ body {
 }
 .fixed.layout-boxed .wrapper {
   max-width: 100%;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    position: fixed;
+}
+.fixed .main-header {
+    top: 0;
+    right: 0;
+    left: 0;
+}
+.fixed .content-wrapper,
+.fixed .right-side {
+    padding-top: 50px;
+}
+@media (max-width: 767px) {
+    .fixed .content-wrapper,
+    .fixed .right-side {
+        padding-top: 100px;
+    }
+}
+.fixed.layout-boxed .wrapper {
+    max-width: 100%;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 body.hold-transition .content-wrapper,
@@ -248,6 +399,10 @@ body.hold-transition .left-side,
 body.hold-transition .main-header .navbar,
 body.hold-transition .main-header .logo {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     /* Fix for IE */
     -webkit-transition: none;
     -o-transition: none;
@@ -262,6 +417,11 @@ body.hold-transition .main-header .logo {
     padding-left: 15px;
     padding-right: 15px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   /* Fix for IE */
   -webkit-transition: none;
   -o-transition: none;
@@ -275,6 +435,27 @@ body.hold-transition .main-header .logo {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    /* Fix for IE */
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+/* Content */
+.content {
+    min-height: 250px;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* H1 - H6 font */
@@ -291,6 +472,10 @@ h6,
 .h5,
 .h6 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+    font-family: 'Source Sans Pro', sans-serif;
+=======
+<<<<<<< HEAD
     font-family: 'Source Sans Pro', sans-serif;
 }
 /* General Links */
@@ -298,16 +483,35 @@ a {
     color: #3c8dbc;
 =======
   font-family: 'Source Sans Pro', sans-serif;
+>>>>>>> staging/master
 }
 /* General Links */
 a {
   color: #3c8dbc;
+>>>>>>> ben
+=======
+  font-family: 'Source Sans Pro', sans-serif;
+}
+/* General Links */
+a {
+  color: #3c8dbc;
+=======
+    font-family: 'Source Sans Pro', sans-serif;
+}
+/* General Links */
+a {
+    color: #3c8dbc;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 a:hover,
 a:active,
 a:focus {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     outline: none;
     text-decoration: none;
     color: #72afd2;
@@ -322,6 +526,11 @@ a:focus {
     display: block;
     margin-top: 5px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   outline: none;
   text-decoration: none;
   color: #72afd2;
@@ -335,6 +544,27 @@ a:focus {
   color: #666;
   display: block;
   margin-top: 5px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    outline: none;
+    text-decoration: none;
+    color: #72afd2;
+}
+/* Page Header */
+.page-header {
+    margin: 10px 0 20px 0;
+    font-size: 22px;
+}
+.page-header > small {
+    color: #666;
+    display: block;
+    margin-top: 5px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -343,6 +573,10 @@ a:focus {
  */
 .main-header {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     position: relative;
     max-height: 100px;
     z-index: 1030;
@@ -422,6 +656,11 @@ a:focus {
 .main-header .sidebar-toggle .icon-bar {
     display: none;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   position: relative;
   max-height: 100px;
   z-index: 1030;
@@ -500,6 +739,7 @@ a:focus {
 }
 .main-header .sidebar-toggle .icon-bar {
   display: none;
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .main-header .navbar .nav > li.user > a > .fa,
@@ -516,6 +756,35 @@ a:focus {
     font-size: 9px;
     padding: 2px 3px;
     line-height: .9;
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.main-header .navbar .nav > li.user > a > .fa,
+.main-header .navbar .nav > li.user > a > .glyphicon,
+.main-header .navbar .nav > li.user > a > .ion {
+<<<<<<< HEAD
+    margin-right: 5px;
+=======
+=======
+    position: relative;
+    max-height: 100px;
+    z-index: 1030;
+}
+.main-header .navbar {
+    -webkit-transition: margin-left 0.3s ease-in-out;
+    -o-transition: margin-left 0.3s ease-in-out;
+    transition: margin-left 0.3s ease-in-out;
+    margin-bottom: 0;
+    margin-left: 230px;
+    border: none;
+    min-height: 50px;
+    border-radius: 0;
+>>>>>>> ben
+}
+.layout-top-nav .main-header .navbar {
+    margin-left: 0;
+>>>>>>> staging/master
 }
 .main-header .logo {
     -webkit-transition: width 0.3s ease-in-out;
@@ -568,11 +837,45 @@ a:focus {
     left: 10px;
     border-radius: 2px;
 }
+<<<<<<< HEAD
+=======
+.main-header .sidebar-toggle {
+    float: left;
+    background-color: transparent;
+    background-image: none;
+    padding: 15px 15px;
+    font-family: fontAwesome;
+}
+.main-header .sidebar-toggle:before {
+    content: "\f0c9";
+}
+.main-header .sidebar-toggle:hover {
+    color: #fff;
+}
+.main-header .sidebar-toggle:focus,
+.main-header .sidebar-toggle:active {
+    background: transparent;
+}
+<<<<<<< HEAD
+>>>>>>> staging/master
 .content-header > .breadcrumb > li > a {
     color: #444;
     text-decoration: none;
     display: inline-block;
 =======
+<<<<<<< HEAD
+=======
+=======
+.main-header .sidebar-toggle .icon-bar {
+    display: none;
+>>>>>>> staging/master
+}
+.main-header .navbar .nav > li.user > a > .fa,
+.main-header .navbar .nav > li.user > a > .glyphicon,
+.main-header .navbar .nav > li.user > a > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 5px;
 }
 .main-header .navbar .nav > li > a > .label {
@@ -639,12 +942,22 @@ a:focus {
   color: #444;
   text-decoration: none;
   display: inline-block;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .content-header > .breadcrumb > li > a > .fa,
 .content-header > .breadcrumb > li > a > .glyphicon,
 .content-header > .breadcrumb > li > a > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     margin-right: 5px;
 }
 .content-header > .breadcrumb > li + li:before {
@@ -666,7 +979,30 @@ a:focus {
 }
 .navbar-toggle {
     color: #fff;
+<<<<<<< HEAD
     border: 0;
+=======
+}
+<<<<<<< HEAD
+@media (max-width: 991px) {
+    .navbar-collapse.pull-left {
+        float: none !important;
+    }
+    .navbar-collapse.pull-left + .navbar-custom-menu {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 40px;
+    }
+=======
+=======
+.content-header {
+    position: relative;
+    padding: 15px 15px 15px 15px;
+}
+.content-header > h1 {
+    float:left;
+>>>>>>> staging/master
     margin: 0;
     padding: 15px 15px;
 }
@@ -700,6 +1036,7 @@ a:focus {
         float: right;
     }
 }
+<<<<<<< HEAD
 @media (max-width: 991px) {
     .navbar-collapse.pull-left {
         float: none !important;
@@ -711,6 +1048,13 @@ a:focus {
         right: 40px;
     }
 =======
+=======
+.content-header > .breadcrumb > li > a > .fa,
+.content-header > .breadcrumb > li > a > .glyphicon,
+.content-header > .breadcrumb > li > a > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 5px;
 }
 .content-header > .breadcrumb > li + li:before {
@@ -776,6 +1120,10 @@ a:focus {
     top: 0;
     right: 40px;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -796,6 +1144,16 @@ a:focus {
     -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin-right: 5px;
+}
+.content-header > .breadcrumb > li + li:before {
+    content: '>\00a0';
+>>>>>>> ben
+>>>>>>> staging/master
 }
 @media (max-width: 767px) {
     .main-sidebar,
@@ -865,12 +1223,28 @@ a:focus {
     font-weight: 600;
     margin-bottom: 9px;
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 .user-panel > .info > a {
     text-decoration: none;
     padding-right: 5px;
     margin-top: 3px;
     font-size: 11px;
 =======
+<<<<<<< HEAD
+=======
+=======
+/*
+ * Component: Sidebar
+ * ------------------
+ */
+.main-sidebar,
+.left-side {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   position: absolute;
   top: 0;
   left: 0;
@@ -956,6 +1330,7 @@ a:focus {
   padding-right: 5px;
   margin-top: 3px;
   font-size: 11px;
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .user-panel > .info > a > .fa,
@@ -963,6 +1338,72 @@ a:focus {
 .user-panel > .info > a > .glyphicon {
 <<<<<<< HEAD
     margin-right: 3px;
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.user-panel > .info > a > .fa,
+.user-panel > .info > a > .ion,
+.user-panel > .info > a > .glyphicon {
+<<<<<<< HEAD
+    margin-right: 3px;
+=======
+=======
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 50px;
+    min-height: 100%;
+    width: 230px;
+    z-index: 810;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+>>>>>>> ben
+}
+@media (max-width: 767px) {
+    .main-sidebar,
+    .left-side {
+        padding-top: 100px;
+    }
+}
+@media (max-width: 767px) {
+    .main-sidebar,
+    .left-side {
+        -webkit-transform: translate(-230px, 0);
+        -ms-transform: translate(-230px, 0);
+        -o-transform: translate(-230px, 0);
+        transform: translate(-230px, 0);
+    }
+}
+<<<<<<< HEAD
+.sidebar-menu > li > a {
+    padding: 12px 5px 12px 15px;
+    display: block;
+=======
+=======
+@media (min-width: 768px) {
+    .sidebar-collapse .main-sidebar,
+    .sidebar-collapse .left-side {
+        -webkit-transform: translate(-230px, 0);
+        -ms-transform: translate(-230px, 0);
+        -o-transform: translate(-230px, 0);
+        transform: translate(-230px, 0);
+    }
+}
+@media (max-width: 767px) {
+    .sidebar-open .main-sidebar,
+    .sidebar-open .left-side {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+    }
+}
+.sidebar {
+    padding-bottom: 10px;
+>>>>>>> staging/master
 }
 .sidebar-menu {
     list-style: none;
@@ -974,10 +1415,18 @@ a:focus {
     margin: 0;
     padding: 0;
 }
+<<<<<<< HEAD
 .sidebar-menu > li > a {
     padding: 12px 5px 12px 15px;
     display: block;
 =======
+=======
+.user-panel > .info > a > .fa,
+.user-panel > .info > a > .ion,
+.user-panel > .info > a > .glyphicon {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 3px;
 }
 .sidebar-menu {
@@ -993,6 +1442,10 @@ a:focus {
 .sidebar-menu > li > a {
   padding: 12px 5px 12px 15px;
   display: block;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .sidebar-menu > li > a > .fa,
@@ -1027,6 +1480,13 @@ a:focus {
 }
 .sidebar-menu li.active > .treeview-menu {
     display: block;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin-right: 3px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .sidebar-menu .treeview-menu {
     display: none;
@@ -1044,8 +1504,22 @@ a:focus {
 .sidebar-menu .treeview-menu > li > a {
     padding: 5px 5px 5px 15px;
     display: block;
+<<<<<<< HEAD
     font-size: 14px;
 =======
+=======
+<<<<<<< HEAD
+    font-size: 14px;
+=======
+=======
+>>>>>>> staging/master
+}
+.sidebar-menu > li > a > .fa,
+.sidebar-menu > li > a > .glyphicon,
+.sidebar-menu > li > a > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   width: 20px;
 }
 .sidebar-menu > li .label,
@@ -1092,15 +1566,82 @@ a:focus {
   padding: 5px 5px 5px 15px;
   display: block;
   font-size: 14px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    width: 20px;
+}
+.sidebar-menu > li .label,
+.sidebar-menu > li .badge {
+    margin-right: 5px;
+}
+.sidebar-menu > li .badge {
+    margin-top: 3px;
+}
+.sidebar-menu li.header {
+    padding: 10px 25px 10px 15px;
+    font-size: 12px;
+}
+.sidebar-menu li > a > .fa-angle-left,
+.sidebar-menu li > a > .pull-right-container > .fa-angle-left {
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin-right: 10px;
+}
+.sidebar-menu li.active > a > .fa-angle-left > a > .pull-right-container > .fa-angle-left {
+    -webkit-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+.sidebar-menu li.active > .treeview-menu {
+    display: block;
+}
+.sidebar-menu .treeview-menu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-left: 5px;
+}
+.sidebar-menu .treeview-menu .treeview-menu {
+    padding-left: 20px;
+}
+.sidebar-menu .treeview-menu > li {
+    margin: 0;
+}
+.sidebar-menu .treeview-menu > li > a {
+    padding: 5px 5px 5px 15px;
+    display: block;
+    font-size: 14px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .sidebar-menu .treeview-menu > li > a > .fa,
 .sidebar-menu .treeview-menu > li > a > .glyphicon,
 .sidebar-menu .treeview-menu > li > a > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: 20px;
 =======
   width: 20px;
+=======
+<<<<<<< HEAD
+    width: 20px;
+=======
+  width: 20px;
+>>>>>>> ben
+=======
+  width: 20px;
+=======
+    width: 20px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .sidebar-menu .treeview-menu > li > a > .pull-right-container > .fa-angle-left,
@@ -1108,9 +1649,22 @@ a:focus {
 .sidebar-menu .treeview-menu > li > a > .fa-angle-left,
 .sidebar-menu .treeview-menu > li > a > .fa-angle-down {
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: auto;
 =======
   width: auto;
+=======
+<<<<<<< HEAD
+    width: auto;
+=======
+  width: auto;
+>>>>>>> ben
+=======
+  width: auto;
+=======
+    width: auto;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -1118,6 +1672,10 @@ a:focus {
  */
 @media (min-width: 768px) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     .sidebar-mini.sidebar-collapse .content-wrapper,
     .sidebar-mini.sidebar-collapse .right-side,
     .sidebar-mini.sidebar-collapse .main-footer {
@@ -1201,6 +1759,11 @@ a:focus {
         margin-left: 50px;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   .sidebar-mini.sidebar-collapse .content-wrapper,
   .sidebar-mini.sidebar-collapse .right-side,
   .sidebar-mini.sidebar-collapse .main-footer {
@@ -1283,6 +1846,9 @@ a:focus {
   .sidebar-mini.sidebar-collapse .main-header .navbar {
     margin-left: 50px;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .sidebar-menu,
@@ -1294,9 +1860,109 @@ a:focus {
 }
 .sidebar-menu:hover {
     overflow: visible;
+=======
+=======
+    .sidebar-mini.sidebar-collapse .content-wrapper,
+    .sidebar-mini.sidebar-collapse .right-side,
+    .sidebar-mini.sidebar-collapse .main-footer {
+        margin-left: 50px !important;
+        z-index: 840;
+    }
+    .sidebar-mini.sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+        width: 50px !important;
+        z-index: 850;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li {
+        position: relative;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > a {
+        margin-right: 0;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > span {
+        border-top-right-radius: 4px;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:not(.treeview) > a > span {
+        border-bottom-right-radius: 4px;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-bottom-right-radius: 4px;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+        display: block !important;
+        position: absolute;
+        width: 180px;
+        left: 50px;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span {
+        top: 0;
+        margin-left: -3px;
+        padding: 12px 5px 12px 20px;
+        background-color: inherit;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
+        float: right;
+        width: auto!important;
+        left: 200px!important;
+        top: 10px!important;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container > .label:not(:first-of-type) {
+        display: none;
+    }
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+        top: 44px;
+        margin-left: 0;
+    }
+    .sidebar-mini.sidebar-collapse .main-sidebar .user-panel > .info,
+    .sidebar-mini.sidebar-collapse .sidebar-form,
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > span,
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu,
+    .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > .pull-right,
+    .sidebar-mini.sidebar-collapse .sidebar-menu li.header {
+        display: none !important;
+        -webkit-transform: translateZ(0);
+        background: #fff;
+    }
+    .sidebar-mini.sidebar-collapse .main-header .logo {
+        width: 50px;
+    }
+    .sidebar-mini.sidebar-collapse .main-header .logo > .logo-mini {
+        display: block;
+        margin-left: -15px;
+        margin-right: -15px;
+        font-size: 18px;
+    }
+    .sidebar-mini.sidebar-collapse .main-header .logo > .logo-lg {
+        display: none;
+    }
+    .sidebar-mini.sidebar-collapse .main-header .navbar {
+        margin-left: 50px;
+    }
+>>>>>>> staging/master
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.sidebar-menu,
+.main-sidebar .user-panel,
+.sidebar-menu > li.header {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar-menu:hover {
+    overflow: visible;
 }
 .sidebar-form,
 .sidebar-menu > li.header {
+=======
+>>>>>>> staging/master
     overflow: hidden;
     text-overflow: clip;
 }
@@ -1309,6 +1975,12 @@ a:focus {
     top: 50%;
     margin-top: -7px;
 =======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   white-space: nowrap;
   overflow: hidden;
 }
@@ -1328,6 +2000,10 @@ a:focus {
   right: 10px;
   top: 50%;
   margin-top: -7px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -1352,6 +2028,14 @@ a:focus {
     position: absolute;
     padding-top: 50px;
     z-index: 1010;
+<<<<<<< HEAD
+=======
+=======
+=======
+    white-space: nowrap;
+    overflow: hidden;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 @media (max-width: 768px) {
     .control-sidebar {
@@ -1369,6 +2053,10 @@ a:focus {
 .control-sidebar-open .control-sidebar {
     right: 0;
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 @media (min-width: 768px) {
     .control-sidebar-open .content-wrapper,
     .control-sidebar-open .right-side,
@@ -1376,6 +2064,16 @@ a:focus {
         margin-right: 230px;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+/*
+ * Component: Control sidebar. By default, this is the right sidebar.
+ */
+.control-sidebar-bg {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   position: fixed;
   z-index: 1000;
   bottom: 0;
@@ -1416,6 +2114,7 @@ a:focus {
   .control-sidebar-open .main-footer {
     margin-right: 230px;
   }
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a,
@@ -1423,6 +2122,53 @@ a:focus {
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
 <<<<<<< HEAD
     border-left-width: 0;
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:hover,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
+<<<<<<< HEAD
+    border-left-width: 0;
+=======
+=======
+    position: fixed;
+    z-index: 1000;
+    bottom: 0;
+}
+.control-sidebar-bg,
+.control-sidebar {
+    top: 0;
+    right: -230px;
+    width: 230px;
+    -webkit-transition: right 0.3s ease-in-out;
+    -o-transition: right 0.3s ease-in-out;
+    transition: right 0.3s ease-in-out;
+>>>>>>> ben
+}
+.control-sidebar {
+    position: absolute;
+    padding-top: 50px;
+    z-index: 1010;
+}
+@media (max-width: 768px) {
+    .control-sidebar {
+        padding-top: 100px;
+    }
+}
+<<<<<<< HEAD
+.nav-tabs.control-sidebar-tabs > li > a .icon {
+    font-size: 16px;
+=======
+=======
+.control-sidebar > .tab-content {
+    padding: 10px 15px;
+}
+.control-sidebar.control-sidebar-open,
+.control-sidebar.control-sidebar-open + .control-sidebar-bg {
+    right: 0;
+>>>>>>> staging/master
 }
 .nav-tabs.control-sidebar-tabs > li > a {
     border-radius: 0;
@@ -1434,9 +2180,17 @@ a:focus {
     border-left: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
+<<<<<<< HEAD
 .nav-tabs.control-sidebar-tabs > li > a .icon {
     font-size: 16px;
 =======
+=======
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:hover,
+.nav-tabs.control-sidebar-tabs > li:first-of-type > a:focus {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   border-left-width: 0;
 }
 .nav-tabs.control-sidebar-tabs > li > a {
@@ -1451,12 +2205,35 @@ a:focus {
 }
 .nav-tabs.control-sidebar-tabs > li > a .icon {
   font-size: 16px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-left-width: 0;
+}
+.nav-tabs.control-sidebar-tabs > li > a {
+    border-radius: 0;
+}
+.nav-tabs.control-sidebar-tabs > li > a,
+.nav-tabs.control-sidebar-tabs > li > a:hover {
+    border-top: none;
+    border-right: none;
+    border-left: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+.nav-tabs.control-sidebar-tabs > li > a .icon {
+    font-size: 16px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-tabs.control-sidebar-tabs > li.active > a,
 .nav-tabs.control-sidebar-tabs > li.active > a:hover,
 .nav-tabs.control-sidebar-tabs > li.active > a:focus,
 .nav-tabs.control-sidebar-tabs > li.active > a:active {
+<<<<<<< HEAD
 <<<<<<< HEAD
     border-top: none;
     border-right: none;
@@ -1537,9 +2314,19 @@ a:focus {
     background: #181f23;
     color: #b8c7ce;
 =======
+<<<<<<< HEAD
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+>>>>>>> staging/master
+=======
   border-top: none;
   border-right: none;
   border-bottom: none;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 }
 @media (max-width: 768px) {
   .nav-tabs.control-sidebar-tabs {
@@ -1613,6 +2400,7 @@ a:focus {
   border-bottom: #1c2529;
 }
 .control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a {
+<<<<<<< HEAD
   background: #181f23;
   color: #b8c7ce;
 >>>>>>> ben
@@ -1626,6 +2414,22 @@ a:focus {
 =======
   border-left-color: #141a1d;
   border-bottom-color: #141a1d;
+=======
+<<<<<<< HEAD
+    background: #181f23;
+    color: #b8c7ce;
+=======
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+=======
+  background: #181f23;
+  color: #b8c7ce;
+=======
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover,
@@ -1658,8 +2462,129 @@ a:focus {
 .control-sidebar-dark .control-sidebar-menu > li > a:hover {
     background: #1e282c;
 }
+<<<<<<< HEAD
 .control-sidebar-dark .control-sidebar-menu > li > a .menu-info > p {
     color: #b8c7ce;
+=======
+.control-sidebar-menu > li > a:after {
+    clear: both;
+}
+.control-sidebar-menu > li > a > .control-sidebar-subheading {
+    margin-top: 0;
+}
+.control-sidebar-menu .menu-icon {
+    float: left;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 35px;
+}
+.control-sidebar-menu .menu-info {
+    margin-left: 45px;
+    margin-top: 3px;
+}
+.control-sidebar-menu .menu-info > .control-sidebar-subheading {
+    margin: 0;
+}
+.control-sidebar-menu .menu-info > p {
+    margin: 0;
+    font-size: 11px;
+}
+.control-sidebar-menu .progress {
+    margin: 0;
+}
+.control-sidebar-dark {
+    color: #b8c7ce;
+}
+.control-sidebar-dark,
+.control-sidebar-dark + .control-sidebar-bg {
+    background: #222d32;
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs {
+    border-bottom: #1c2529;
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a {
+<<<<<<< HEAD
+  background: #181f23;
+  color: #b8c7ce;
+>>>>>>> ben
+=======
+    background: #181f23;
+    color: #b8c7ce;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:focus {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    border-left-color: #141a1d;
+    border-bottom-color: #141a1d;
+=======
+  border-left-color: #141a1d;
+  border-bottom-color: #141a1d;
+>>>>>>> ben
+=======
+  border-left-color: #141a1d;
+  border-bottom-color: #141a1d;
+=======
+    border-left-color: #141a1d;
+    border-bottom-color: #141a1d;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:focus,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:active {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background: #1c2529;
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover {
+    color: #fff;
+=======
+=======
+>>>>>>> ben
+  background: #1c2529;
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover {
+  color: #fff;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background: #1c2529;
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li > a:hover {
+    color: #fff;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li.active > a,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li.active > a:hover,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li.active > a:focus,
+.control-sidebar-dark .nav-tabs.control-sidebar-tabs > li.active > a:active {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background: #222d32;
+    color: #fff;
+=======
+  background: #222d32;
+  color: #fff;
+>>>>>>> ben
+}
+.control-sidebar-dark .control-sidebar-heading,
+.control-sidebar-dark .control-sidebar-subheading {
+  color: #fff;
+}
+.control-sidebar-dark .control-sidebar-menu > li > a:hover {
+  background: #1e282c;
+}
+.control-sidebar-dark .control-sidebar-menu > li > a .menu-info > p {
+  color: #b8c7ce;
+>>>>>>> staging/master
 }
 .control-sidebar-light {
     color: #5e5e5e;
@@ -1673,11 +2598,25 @@ a:focus {
     border-bottom: #d2d6de;
 }
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background: #e8ecf4;
     color: #444444;
 =======
   background: #222d32;
   color: #fff;
+<<<<<<< HEAD
+=======
+=======
+  background: #e8ecf4;
+  color: #444444;
+=======
+    background: #222d32;
+    color: #fff;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .control-sidebar-dark .control-sidebar-heading,
 .control-sidebar-dark .control-sidebar-subheading {
@@ -1701,28 +2640,67 @@ a:focus {
   border-bottom: #d2d6de;
 }
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a {
+<<<<<<< HEAD
   background: #e8ecf4;
   color: #444444;
+=======
+<<<<<<< HEAD
+  background: #e8ecf4;
+  color: #444444;
+>>>>>>> ben
+=======
+    background: #e8ecf4;
+    color: #444444;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a,
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a:hover,
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a:focus {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-left-color: #d2d6de;
     border-bottom-color: #d2d6de;
 =======
   border-left-color: #d2d6de;
   border-bottom-color: #d2d6de;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+  border-left-color: #d2d6de;
+  border-bottom-color: #d2d6de;
+=======
+    border-left-color: #d2d6de;
+    border-bottom-color: #d2d6de;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a:hover,
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a:focus,
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li > a:active {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background: #eff1f7;
 =======
   background: #eff1f7;
+=======
+<<<<<<< HEAD
+    background: #eff1f7;
+=======
+  background: #eff1f7;
+>>>>>>> ben
+=======
+  background: #eff1f7;
+=======
+    background: #eff1f7;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li.active > a,
@@ -1730,8 +2708,18 @@ a:focus {
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li.active > a:focus,
 .control-sidebar-light .nav-tabs.control-sidebar-tabs > li.active > a:active {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background: #f9fafc;
     color: #111;
+=======
+<<<<<<< HEAD
+    background: #f9fafc;
+    color: #111;
+=======
+  background: #f9fafc;
+  color: #111;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .control-sidebar-light .control-sidebar-heading,
 .control-sidebar-light .control-sidebar-subheading {
@@ -1744,10 +2732,23 @@ a:focus {
     background: #f4f4f5;
 }
 .control-sidebar-light .control-sidebar-menu > li > a .menu-info > p {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     color: #5e5e5e;
 =======
   background: #f9fafc;
   color: #111;
+<<<<<<< HEAD
+=======
+=======
+  color: #5e5e5e;
+=======
+    background: #f9fafc;
+    color: #111;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .control-sidebar-light .control-sidebar-heading,
 .control-sidebar-light .control-sidebar-subheading {
@@ -1760,7 +2761,16 @@ a:focus {
   background: #f4f4f5;
 }
 .control-sidebar-light .control-sidebar-menu > li > a .menu-info > p {
+<<<<<<< HEAD
   color: #5e5e5e;
+=======
+<<<<<<< HEAD
+  color: #5e5e5e;
+>>>>>>> ben
+=======
+    color: #5e5e5e;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -1770,23 +2780,49 @@ a:focus {
 /*Dropdowns in general*/
 .dropdown-menu {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     box-shadow: none;
     border-color: #eee;
 }
 .dropdown-menu > li > a {
     color: #777;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   box-shadow: none;
   border-color: #eee;
 }
 .dropdown-menu > li > a {
   color: #777;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    box-shadow: none;
+    border-color: #eee;
+}
+.dropdown-menu > li > a {
+    color: #777;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .dropdown-menu > li > a > .glyphicon,
 .dropdown-menu > li > a > .fa,
 .dropdown-menu > li > a > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     margin-right: 10px;
 }
 .dropdown-menu > li > a:hover {
@@ -1796,6 +2832,11 @@ a:focus {
 .dropdown-menu > .divider {
     background-color: #eee;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 10px;
 }
 .dropdown-menu > li > a:hover {
@@ -1804,36 +2845,90 @@ a:focus {
 }
 .dropdown-menu > .divider {
   background-color: #eee;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    margin-right: 10px;
+}
+.dropdown-menu > li > a:hover {
+    background-color: #e1e3e9;
+    color: #333;
+}
+.dropdown-menu > .divider {
+    background-color: #eee;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu,
 .navbar-nav > .messages-menu > .dropdown-menu,
 .navbar-nav > .tasks-menu > .dropdown-menu {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     width: 280px;
     padding: 0 0 0 0;
     margin: 0;
     top: 100%;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   width: 280px;
   padding: 0 0 0 0;
   margin: 0;
   top: 100%;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    width: 280px;
+    padding: 0 0 0 0;
+    margin: 0;
+    top: 100%;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li,
 .navbar-nav > .messages-menu > .dropdown-menu > li,
 .navbar-nav > .tasks-menu > .dropdown-menu > li {
 <<<<<<< HEAD
+<<<<<<< HEAD
     position: relative;
 =======
   position: relative;
+=======
+<<<<<<< HEAD
+    position: relative;
+=======
+  position: relative;
+>>>>>>> ben
+=======
+  position: relative;
+=======
+    position: relative;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li.header,
 .navbar-nav > .messages-menu > .dropdown-menu > li.header,
 .navbar-nav > .tasks-menu > .dropdown-menu > li.header {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 0;
@@ -1844,6 +2939,11 @@ a:focus {
     color: #444444;
     font-size: 14px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 0;
@@ -1853,12 +2953,33 @@ a:focus {
   border-bottom: 1px solid #f4f4f4;
   color: #444444;
   font-size: 14px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #ffffff;
+    padding: 7px 10px;
+    border-bottom: 1px solid #f4f4f4;
+    color: #444444;
+    font-size: 14px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li.footer > a,
 .navbar-nav > .messages-menu > .dropdown-menu > li.footer > a,
 .navbar-nav > .tasks-menu > .dropdown-menu > li.footer > a {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 4px;
@@ -1878,6 +2999,11 @@ a:focus {
         color: #444 !important;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 4px;
@@ -1896,55 +3022,143 @@ a:focus {
     background: #fff !important;
     color: #444 !important;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 12px;
+    background-color: #fff;
+    padding: 7px 10px;
+    border-bottom: 1px solid #eeeeee;
+    color: #444 !important;
+    text-align: center;
+}
+@media (max-width: 991px) {
+    .navbar-nav > .notifications-menu > .dropdown-menu > li.footer > a,
+    .navbar-nav > .messages-menu > .dropdown-menu > li.footer > a,
+    .navbar-nav > .tasks-menu > .dropdown-menu > li.footer > a {
+        background: #fff !important;
+        color: #444 !important;
+    }
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li.footer > a:hover,
 .navbar-nav > .messages-menu > .dropdown-menu > li.footer > a:hover,
 .navbar-nav > .tasks-menu > .dropdown-menu > li.footer > a:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     text-decoration: none;
     font-weight: normal;
 =======
   text-decoration: none;
   font-weight: normal;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+  text-decoration: none;
+  font-weight: normal;
+=======
+    text-decoration: none;
+    font-weight: normal;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu,
 .navbar-nav > .tasks-menu > .dropdown-menu > li .menu {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     max-height: 200px;
     margin: 0;
     padding: 0;
     list-style: none;
     overflow-x: hidden;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   max-height: 200px;
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-x: hidden;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    max-height: 200px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: hidden;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a,
 .navbar-nav > .tasks-menu > .dropdown-menu > li .menu > li > a {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     display: block;
     white-space: nowrap;
     /* Prevent text from breaking */
     border-bottom: 1px solid #f4f4f4;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   display: block;
   white-space: nowrap;
   /* Prevent text from breaking */
   border-bottom: 1px solid #f4f4f4;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    display: block;
+    white-space: nowrap;
+    /* Prevent text from breaking */
+    border-bottom: 1px solid #f4f4f4;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a:hover,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:hover,
 .navbar-nav > .tasks-menu > .dropdown-menu > li .menu > li > a:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background: #f4f4f4;
     text-decoration: none;
 }
@@ -1954,6 +3168,11 @@ a:focus {
     text-overflow: ellipsis;
     padding: 10px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background: #f4f4f4;
   text-decoration: none;
 }
@@ -1962,6 +3181,10 @@ a:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 10px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .glyphicon,
@@ -1978,6 +3201,14 @@ a:focus {
     margin: auto 10px auto auto;
     width: 40px;
     height: 40px;
+<<<<<<< HEAD
+=======
+=======
+=======
+    background: #f4f4f4;
+    text-decoration: none;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > h4 {
     padding: 0;
@@ -1986,6 +3217,7 @@ a:focus {
     font-size: 15px;
     position: relative;
 }
+<<<<<<< HEAD
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > h4 > small {
     color: #999999;
     font-size: 10px;
@@ -2000,6 +3232,11 @@ a:focus {
 }
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:before,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:after {
+=======
+<<<<<<< HEAD
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:before,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
+>>>>>>> staging/master
     content: " ";
     display: table;
 }
@@ -2113,6 +3350,15 @@ a:focus {
         line-height: 10px;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+.navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .glyphicon,
+.navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .fa,
+.navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   width: 20px;
 }
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a {
@@ -2257,6 +3503,10 @@ a:focus {
     margin-top: -8px;
     line-height: 10px;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* Add fade animation to dropdown menus by appending
@@ -2267,6 +3517,17 @@ a:focus {
     -webkit-animation: flipInX 0.7s both;
     -o-animation: flipInX 0.7s both;
     animation: flipInX 0.7s both;
+<<<<<<< HEAD
+=======
+=======
+=======
+    width: 20px;
+}
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a {
+    margin: 0;
+    padding: 10px 10px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 @keyframes flipInX {
     0% {
@@ -2390,6 +3651,168 @@ a:focus {
   right: 0;
   left: auto;
 }
+<<<<<<< HEAD
+=======
+.navbar-nav > .user-menu > .dropdown-menu {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    padding: 1px 0 0 0;
+    border-top-width: 0;
+    width: 280px;
+}
+.navbar-nav > .user-menu > .dropdown-menu,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+    height: 175px;
+    padding: 10px;
+    text-align: center;
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+    z-index: 5;
+    height: 90px;
+    width: 90px;
+    border: 3px solid;
+    border-color: transparent;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > p {
+    z-index: 5;
+    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 17px;
+    margin-top: 10px;
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > p > small {
+    display: block;
+    font-size: 12px;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+    padding: 15px;
+    border-bottom: 1px solid #f4f4f4;
+    border-top: 1px solid #dddddd;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body:before,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body:after {
+    content: " ";
+    display: table;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body:after {
+    clear: both;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
+    color: #444 !important;
+}
+@media (max-width: 991px) {
+    .navbar-nav > .user-menu > .dropdown-menu > .user-body a {
+        background: #fff !important;
+        color: #444 !important;
+    }
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:before,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
+    content: " ";
+    display: table;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
+    clear: both;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer .btn-default {
+    color: #666666;
+}
+@media (max-width: 991px) {
+    .navbar-nav > .user-menu > .dropdown-menu > .user-footer .btn-default:hover {
+        background-color: #f9f9f9;
+    }
+}
+.navbar-nav > .user-menu .user-image {
+    float: left;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+@media (max-width: 767px) {
+    .navbar-nav > .user-menu .user-image {
+        float: none;
+        margin-right: 0;
+        margin-top: -8px;
+        line-height: 10px;
+    }
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+/* Add fade animation to dropdown menus by appending
+ the class .animated-dropdown-menu to the .dropdown-menu ul (or ol)*/
+.open:not(.dropup) > .animated-dropdown-menu {
+<<<<<<< HEAD
+>>>>>>> ben
+  backface-visibility: visible !important;
+  -webkit-animation: flipInX 0.7s both;
+  -o-animation: flipInX 0.7s both;
+  animation: flipInX 0.7s both;
+}
+@keyframes flipInX {
+  0% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    transition-timing-function: ease-in;
+    opacity: 0;
+  }
+  40% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transition-timing-function: ease-in;
+  }
+  60% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    opacity: 1;
+  }
+  80% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+  }
+  100% {
+    transform: perspective(400px);
+  }
+}
+@-webkit-keyframes flipInX {
+  0% {
+    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    -webkit-transition-timing-function: ease-in;
+    opacity: 0;
+  }
+  40% {
+    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    -webkit-transition-timing-function: ease-in;
+  }
+  60% {
+    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    opacity: 1;
+  }
+  80% {
+    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+  }
+  100% {
+    -webkit-transform: perspective(400px);
+  }
+}
+/* Fix dropdown menu in navbars */
+.navbar-custom-menu > .navbar-nav > li {
+  position: relative;
+}
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+}
+>>>>>>> staging/master
 @media (max-width: 991px) {
   .navbar-custom-menu > .navbar-nav {
     float: right;
@@ -2404,6 +3827,84 @@ a:focus {
     border: 1px solid #ddd;
     background: #fff;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    backface-visibility: visible !important;
+    -webkit-animation: flipInX 0.7s both;
+    -o-animation: flipInX 0.7s both;
+    animation: flipInX 0.7s both;
+}
+@keyframes flipInX {
+    0% {
+        transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+        transition-timing-function: ease-in;
+        opacity: 0;
+    }
+    40% {
+        transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+        transition-timing-function: ease-in;
+    }
+    60% {
+        transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+        opacity: 1;
+    }
+    80% {
+        transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+    }
+    100% {
+        transform: perspective(400px);
+    }
+}
+@-webkit-keyframes flipInX {
+    0% {
+        -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+        -webkit-transition-timing-function: ease-in;
+        opacity: 0;
+    }
+    40% {
+        -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+        -webkit-transition-timing-function: ease-in;
+    }
+    60% {
+        -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+        opacity: 1;
+    }
+    80% {
+        -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+    }
+    100% {
+        -webkit-transform: perspective(400px);
+    }
+}
+/* Fix dropdown menu in navbars */
+.navbar-custom-menu > .navbar-nav > li {
+    position: relative;
+}
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+    position: absolute;
+    right: 0;
+    left: auto;
+}
+@media (max-width: 991px) {
+    .navbar-custom-menu > .navbar-nav {
+        float: right;
+    }
+    .navbar-custom-menu > .navbar-nav > li {
+        position: static;
+    }
+    .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+        position: absolute;
+        right: 5%;
+        left: auto;
+        border: 1px solid #ddd;
+        background: #fff;
+    }
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -2412,6 +3913,10 @@ a:focus {
  */
 .form-control {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-radius: 0;
     box-shadow: none;
     border-color: #d2d6de;
@@ -2420,6 +3925,11 @@ a:focus {
     border-color: #3c8dbc;
     box-shadow: none;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   border-radius: 0;
   box-shadow: none;
   border-color: #d2d6de;
@@ -2427,14 +3937,39 @@ a:focus {
 .form-control:focus {
   border-color: #3c8dbc;
   box-shadow: none;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-radius: 0;
+    box-shadow: none;
+    border-color: #d2d6de;
+}
+.form-control:focus {
+    border-color: #3c8dbc;
+    box-shadow: none;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .form-control::-moz-placeholder,
 .form-control:-ms-input-placeholder,
 .form-control::-webkit-input-placeholder {
 <<<<<<< HEAD
+<<<<<<< HEAD
     color: #bbb;
     opacity: 1;
+=======
+<<<<<<< HEAD
+    color: #bbb;
+    opacity: 1;
+=======
+  color: #bbb;
+  opacity: 1;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .form-control:not(select) {
     -webkit-appearance: none;
@@ -2473,12 +4008,27 @@ a:focus {
 }
 /* Input group */
 .input-group .input-group-addon {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-radius: 0;
     border-color: #d2d6de;
     background-color: #fff;
 =======
   color: #bbb;
   opacity: 1;
+<<<<<<< HEAD
+=======
+=======
+  border-radius: 0;
+  border-color: #d2d6de;
+  background-color: #fff;
+=======
+    color: #bbb;
+    opacity: 1;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .form-control:not(select) {
   -webkit-appearance: none;
@@ -2517,50 +4067,118 @@ a:focus {
 }
 /* Input group */
 .input-group .input-group-addon {
+<<<<<<< HEAD
   border-radius: 0;
   border-color: #d2d6de;
   background-color: #fff;
+=======
+<<<<<<< HEAD
+  border-radius: 0;
+  border-color: #d2d6de;
+  background-color: #fff;
+>>>>>>> ben
+=======
+    border-radius: 0;
+    border-color: #d2d6de;
+    background-color: #fff;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* button groups */
 .btn-group-vertical .btn.btn-flat:first-of-type,
 .btn-group-vertical .btn.btn-flat:last-of-type {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border-radius: 0;
+=======
+<<<<<<< HEAD
+    border-radius: 0;
+=======
+  border-radius: 0;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .icheck > label {
     padding-left: 0;
 }
 /* support Font Awesome icons in form-control */
 .form-control-feedback.fa {
+<<<<<<< HEAD
     line-height: 34px;
 =======
   border-radius: 0;
+=======
+<<<<<<< HEAD
+    line-height: 34px;
+=======
+  border-radius: 0;
+=======
+  line-height: 34px;
+=======
+    border-radius: 0;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .icheck > label {
   padding-left: 0;
 }
 /* support Font Awesome icons in form-control */
 .form-control-feedback.fa {
+<<<<<<< HEAD
   line-height: 34px;
+=======
+<<<<<<< HEAD
+  line-height: 34px;
+>>>>>>> ben
+=======
+    line-height: 34px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .input-lg + .form-control-feedback.fa,
 .input-group-lg + .form-control-feedback.fa,
 .form-group-lg .form-control + .form-control-feedback.fa {
 <<<<<<< HEAD
+<<<<<<< HEAD
     line-height: 46px;
 =======
   line-height: 46px;
+=======
+<<<<<<< HEAD
+    line-height: 46px;
+=======
+  line-height: 46px;
+>>>>>>> ben
+=======
+  line-height: 46px;
+=======
+    line-height: 46px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .input-sm + .form-control-feedback.fa,
 .input-group-sm + .form-control-feedback.fa,
 .form-group-sm .form-control + .form-control-feedback.fa {
 <<<<<<< HEAD
+<<<<<<< HEAD
     line-height: 30px;
 =======
   line-height: 30px;
+=======
+<<<<<<< HEAD
+    line-height: 30px;
+=======
+  line-height: 30px;
+>>>>>>> ben
+=======
+  line-height: 30px;
+=======
+    line-height: 30px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -2570,11 +4188,26 @@ a:focus {
 .progress,
 .progress > .progress-bar {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     -webkit-box-shadow: none;
     box-shadow: none;
 =======
   -webkit-box-shadow: none;
   box-shadow: none;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+  -webkit-box-shadow: none;
+  box-shadow: none;
+=======
+    -webkit-box-shadow: none;
+    box-shadow: none;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress,
@@ -2582,24 +4215,54 @@ a:focus {
 .progress .progress-bar,
 .progress > .progress-bar .progress-bar {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border-radius: 1px;
 =======
   border-radius: 1px;
+=======
+<<<<<<< HEAD
+    border-radius: 1px;
+=======
+  border-radius: 1px;
+>>>>>>> ben
+=======
+  border-radius: 1px;
+=======
+    border-radius: 1px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* size variation */
 .progress.sm,
 .progress-sm {
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 10px;
 =======
   height: 10px;
+=======
+<<<<<<< HEAD
+    height: 10px;
+=======
+  height: 10px;
+>>>>>>> ben
+=======
+  height: 10px;
+=======
+    height: 10px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress.sm,
 .progress-sm,
 .progress.sm .progress-bar,
 .progress-sm .progress-bar {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    border-radius: 1px;
+=======
 <<<<<<< HEAD
     border-radius: 1px;
 }
@@ -2608,16 +4271,35 @@ a:focus {
     height: 7px;
 =======
   border-radius: 1px;
+>>>>>>> staging/master
 }
 .progress.xs,
 .progress-xs {
   height: 7px;
+>>>>>>> ben
+=======
+  border-radius: 1px;
+}
+.progress.xs,
+.progress-xs {
+  height: 7px;
+=======
+    border-radius: 1px;
+}
+.progress.xs,
+.progress-xs {
+    height: 7px;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress.xs,
 .progress-xs,
 .progress.xs .progress-bar,
 .progress-xs .progress-bar {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    border-radius: 1px;
+=======
 <<<<<<< HEAD
     border-radius: 1px;
 }
@@ -2626,10 +4308,25 @@ a:focus {
     height: 3px;
 =======
   border-radius: 1px;
+>>>>>>> staging/master
 }
 .progress.xxs,
 .progress-xxs {
   height: 3px;
+>>>>>>> ben
+=======
+  border-radius: 1px;
+}
+.progress.xxs,
+.progress-xxs {
+  height: 3px;
+=======
+    border-radius: 1px;
+}
+.progress.xxs,
+.progress-xxs {
+    height: 3px;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .progress.xxs,
@@ -2637,7 +4334,15 @@ a:focus {
 .progress.xxs .progress-bar,
 .progress-xxs .progress-bar {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border-radius: 1px;
+=======
+<<<<<<< HEAD
+    border-radius: 1px;
+=======
+  border-radius: 1px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 /* Vertical bars */
 .progress.vertical {
@@ -2720,11 +4425,25 @@ a:focus {
 }
 .progress-striped .progress-bar-red,
 .progress-striped .progress-bar-danger {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 =======
   border-radius: 1px;
+<<<<<<< HEAD
+=======
+=======
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+=======
+    border-radius: 1px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 /* Vertical bars */
 .progress.vertical {
@@ -2807,9 +4526,22 @@ a:focus {
 }
 .progress-striped .progress-bar-red,
 .progress-striped .progress-bar-danger {
+<<<<<<< HEAD
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+=======
+<<<<<<< HEAD
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+>>>>>>> ben
+=======
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -2818,6 +4550,10 @@ a:focus {
  */
 .small-box {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-radius: 2px;
     position: relative;
     display: block;
@@ -2891,6 +4627,11 @@ a:focus {
         font-size: 12px;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   border-radius: 2px;
   position: relative;
   display: block;
@@ -2963,6 +4704,86 @@ a:focus {
   .small-box p {
     font-size: 12px;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-radius: 2px;
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.small-box > .inner {
+    padding: 10px;
+}
+.small-box > .small-box-footer {
+    position: relative;
+    text-align: center;
+    padding: 3px 0;
+    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+.small-box > .small-box-footer:hover {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.15);
+}
+.small-box h3 {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    padding: 0;
+}
+.small-box p {
+    font-size: 15px;
+}
+.small-box p > small {
+    display: block;
+    color: #f9f9f9;
+    font-size: 13px;
+    margin-top: 5px;
+}
+.small-box h3,
+.small-box p {
+    z-index: 5;
+}
+.small-box .icon {
+    -webkit-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    z-index: 0;
+    font-size: 90px;
+    color: rgba(0, 0, 0, 0.15);
+}
+.small-box:hover {
+    text-decoration: none;
+    color: #f9f9f9;
+}
+.small-box:hover .icon {
+    font-size: 95px;
+}
+@media (max-width: 767px) {
+    .small-box {
+        text-align: center;
+    }
+    .small-box .icon {
+        display: none;
+    }
+    .small-box p {
+        font-size: 12px;
+    }
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -2971,6 +4792,10 @@ a:focus {
  */
 .box {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     position: relative;
     border-radius: 3px;
     background: #ffffff;
@@ -2978,6 +4803,18 @@ a:focus {
     margin-bottom: 20px;
     width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+<<<<<<< HEAD
+=======
+=======
+  position: relative;
+  border-radius: 3px;
+  background: #ffffff;
+  border-top: 3px solid #d2d6de;
+  margin-bottom: 20px;
+  width: 100%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .box.box-primary {
     border-top-color: #3c8dbc;
@@ -3111,6 +4948,10 @@ a:focus {
     margin-bottom: 5px;
 }
 .box .knob-label {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     text-align: center;
     color: #333;
     font-weight: 100;
@@ -3124,6 +4965,24 @@ a:focus {
   margin-bottom: 20px;
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+<<<<<<< HEAD
+=======
+=======
+  text-align: center;
+  color: #333;
+  font-weight: 100;
+  font-size: 12px;
+  margin-bottom: 0.3em;
+=======
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .box.box-primary {
   border-top-color: #3c8dbc;
@@ -3257,11 +5116,26 @@ a:focus {
   margin-bottom: 5px;
 }
 .box .knob-label {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
   text-align: center;
   color: #333;
   font-weight: 100;
   font-size: 12px;
   margin-bottom: 0.3em;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+    text-align: center;
+    color: #333;
+    font-weight: 100;
+    font-size: 12px;
+    margin-bottom: 0.3em;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box > .overlay,
@@ -3269,6 +5143,10 @@ a:focus {
 .box > .loading-img,
 .overlay-wrapper > .loading-img {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     position: absolute;
     top: 0;
     left: 0;
@@ -3295,6 +5173,11 @@ a:focus {
 .overlay-wrapper .overlay.dark {
     background: rgba(0, 0, 0, 0.5);
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   position: absolute;
   top: 0;
   left: 0;
@@ -3320,6 +5203,39 @@ a:focus {
 .box .overlay.dark,
 .overlay-wrapper .overlay.dark {
   background: rgba(0, 0, 0, 0.5);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.box .overlay,
+.overlay-wrapper .overlay {
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 3px;
+}
+.box .overlay > .fa,
+.overlay-wrapper .overlay > .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    color: #000;
+    font-size: 30px;
+}
+.box .overlay.dark,
+.overlay-wrapper .overlay.dark {
+    background: rgba(0, 0, 0, 0.5);
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box-header:before,
@@ -3329,17 +5245,36 @@ a:focus {
 .box-body:after,
 .box-footer:after {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     content: " ";
     display: table;
 =======
   content: " ";
   display: table;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+  content: " ";
+  display: table;
+=======
+    content: " ";
+    display: table;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box-header:after,
 .box-body:after,
 .box-footer:after {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     clear: both;
 }
 .box-header {
@@ -3354,6 +5289,11 @@ a:focus {
 .collapsed-box .box-header.with-border {
     border-bottom: none;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   clear: both;
 }
 .box-header {
@@ -3367,6 +5307,27 @@ a:focus {
 }
 .collapsed-box .box-header.with-border {
   border-bottom: none;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    clear: both;
+}
+.box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+}
+.box-header.with-border {
+    border-bottom: 1px solid #f4f4f4;
+}
+.collapsed-box .box-header.with-border {
+    border-bottom: none;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box-header > .fa,
@@ -3374,22 +5335,51 @@ a:focus {
 .box-header > .ion,
 .box-header .box-title {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     display: inline-block;
     font-size: 18px;
     margin: 0;
     line-height: 1;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   display: inline-block;
   font-size: 18px;
   margin: 0;
   line-height: 1;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    display: inline-block;
+    font-size: 18px;
+    margin: 0;
+    line-height: 1;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .box-header > .fa,
 .box-header > .glyphicon,
 .box-header > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
     margin-right: 5px;
+=======
+<<<<<<< HEAD
+    margin-right: 5px;
+=======
+  margin-right: 5px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .box-header > .box-tools {
     position: absolute;
@@ -3397,6 +5387,10 @@ a:focus {
     top: 5px;
 }
 .box-header > .box-tools [data-toggle="tooltip"] {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     position: relative;
 }
 .box-header > .box-tools.pull-right .dropdown-menu {
@@ -3549,6 +5543,11 @@ a:focus {
   top: 5px;
 }
 .box-header > .box-tools [data-toggle="tooltip"] {
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   position: relative;
 }
 .box-header > .box-tools.pull-right .dropdown-menu {
@@ -3692,12 +5691,22 @@ a:focus {
   display: none;
   float: right;
   color: #dd4b39;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .todo-list > li .tools > .fa,
 .todo-list > li .tools > .glyphicon,
 .todo-list > li .tools > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     margin-right: 5px;
     cursor: pointer;
 }
@@ -3799,9 +5808,22 @@ a:focus {
 .box-input {
     max-width: 200px;
 }
+<<<<<<< HEAD
 .modal .panel-body {
     color: #444;
 =======
+=======
+<<<<<<< HEAD
+.modal .panel-body {
+    color: #444;
+=======
+=======
+.todo-list > li .tools > .fa,
+.todo-list > li .tools > .glyphicon,
+.todo-list > li .tools > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 5px;
   cursor: pointer;
 }
@@ -3905,6 +5927,10 @@ a:focus {
 }
 .modal .panel-body {
   color: #444;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -3920,6 +5946,51 @@ a:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     margin-bottom: 15px;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin-right: 5px;
+    cursor: pointer;
+}
+.todo-list > li:hover .tools {
+    display: inline-block;
+>>>>>>> ben
+}
+.todo-list > li.done {
+    color: #999;
+}
+.todo-list > li.done .text {
+    text-decoration: line-through;
+    font-weight: 500;
+}
+.todo-list > li.done .label {
+    background: #d2d6de !important;
+}
+.todo-list .danger {
+    border-left-color: #dd4b39;
+}
+.todo-list .warning {
+    border-left-color: #f39c12;
+}
+.todo-list .info {
+    border-left-color: #00c0ef;
+}
+.todo-list .success {
+    border-left-color: #00a65a;
+}
+.todo-list .primary {
+    border-left-color: #3c8dbc;
+}
+.todo-list .handle {
+    display: inline-block;
+    cursor: move;
+    margin: 0 5px;
+}
+/* Chat widget (DEPRECATED - this will be removed in the next major release. Use Direct Chat instead)*/
+.chat {
+    padding: 5px 20px 5px 10px;
+>>>>>>> staging/master
 }
 .info-box small {
     font-size: 14px;
@@ -3970,15 +6041,48 @@ a:focus {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+<<<<<<< HEAD
 .info-box-text {
     text-transform: uppercase;
+=======
+.chat .item > .attachment > p,
+.chat .item > .attachment > .filename {
+    font-weight: 600;
+    font-size: 13px;
+    font-style: italic;
+    margin: 0;
+<<<<<<< HEAD
+=======
+=======
+}
+.chat .item > .attachment:before,
+.chat .item > .attachment:after {
+    content: " ";
+    display: table;
+}
+.chat .item > .attachment:after {
+    clear: both;
+}
+.box-input {
+    max-width: 200px;
+>>>>>>> staging/master
 }
 .info-box-more {
     display: block;
 }
+<<<<<<< HEAD
 .progress-description {
     margin: 0;
 =======
+=======
+/*
+ * Component: Info Box
+ * -------------------
+ */
+.info-box {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   display: block;
   min-height: 90px;
   background: #fff;
@@ -4044,6 +6148,10 @@ a:focus {
 }
 .progress-description {
   margin: 0;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -4056,6 +6164,31 @@ a:focus {
     margin: 0 0 30px 0;
     padding: 0;
     list-style: none;
+<<<<<<< HEAD
+=======
+=======
+=======
+    display: block;
+    min-height: 90px;
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    margin-bottom: 15px;
+}
+.info-box small {
+    font-size: 14px;
+>>>>>>> ben
+}
+.info-box .progress {
+    background: rgba(0, 0, 0, 0.2);
+    margin: 5px -10px 5px -10px;
+    height: 2px;
+}
+.info-box .progress,
+.info-box .progress .progress-bar {
+    border-radius: 0;
+>>>>>>> staging/master
 }
 .timeline:before {
     content: '';
@@ -4081,6 +6214,7 @@ a:focus {
 .timeline > li:after {
     clear: both;
 }
+<<<<<<< HEAD
 .timeline > li > .timeline-item {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -4092,6 +6226,16 @@ a:focus {
     margin-right: 15px;
     padding: 0;
     position: relative;
+=======
+<<<<<<< HEAD
+.timeline > li > .timeline-item > .timeline-body,
+.timeline > li > .timeline-item > .timeline-footer {
+    padding: 10px;
+=======
+=======
+.info-box-text {
+    text-transform: uppercase;
+>>>>>>> staging/master
 }
 .timeline > li > .timeline-item > .time {
     color: #999;
@@ -4110,10 +6254,20 @@ a:focus {
 .timeline > li > .timeline-item > .timeline-header > a {
     font-weight: 600;
 }
+<<<<<<< HEAD
 .timeline > li > .timeline-item > .timeline-body,
 .timeline > li > .timeline-item > .timeline-footer {
     padding: 10px;
 =======
+=======
+/*
+ * Component: Timeline
+ * -------------------
+ */
+.timeline {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   position: relative;
   margin: 0 0 30px 0;
   padding: 0;
@@ -4175,6 +6329,10 @@ a:focus {
 .timeline > li > .timeline-item > .timeline-body,
 .timeline > li > .timeline-item > .timeline-footer {
   padding: 10px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .timeline > li > .fa,
@@ -4185,6 +6343,19 @@ a:focus {
     height: 30px;
     font-size: 15px;
     line-height: 30px;
+<<<<<<< HEAD
+=======
+=======
+=======
+    position: relative;
+    margin: 0 0 30px 0;
+    padding: 0;
+    list-style: none;
+}
+.timeline:before {
+    content: '';
+>>>>>>> ben
+>>>>>>> staging/master
     position: absolute;
     color: #666;
     background: #d2d6de;
@@ -4206,9 +6377,22 @@ a:focus {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+<<<<<<< HEAD
 .timeline-inverse > li > .timeline-item > .timeline-header {
     border-bottom-color: #ddd;
 =======
+=======
+<<<<<<< HEAD
+.timeline-inverse > li > .timeline-item > .timeline-header {
+    border-bottom-color: #ddd;
+=======
+=======
+.timeline > li > .fa,
+.timeline > li > .glyphicon,
+.timeline > li > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   width: 30px;
   height: 30px;
   font-size: 15px;
@@ -4236,6 +6420,41 @@ a:focus {
 }
 .timeline-inverse > li > .timeline-item > .timeline-header {
   border-bottom-color: #ddd;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    position: absolute;
+    color: #666;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+    left: 18px;
+    top: 0;
+}
+.timeline > .time-label > span {
+    font-weight: 600;
+    padding: 5px;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 4px;
+}
+.timeline-inverse > li > .timeline-item {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.timeline-inverse > li > .timeline-item > .timeline-header {
+    border-bottom-color: #ddd;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -4244,10 +6463,23 @@ a:focus {
  */
 .btn {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-radius: 3px;
     -webkit-box-shadow: none;
     box-shadow: none;
     border: 1px solid transparent;
+<<<<<<< HEAD
+=======
+=======
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid transparent;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .btn.uppercase {
     text-transform: uppercase;
@@ -4268,6 +6500,10 @@ a:focus {
     outline: none;
 }
 .btn.btn-file {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     position: relative;
     overflow: hidden;
 }
@@ -4315,6 +6551,11 @@ a:focus {
   outline: none;
 }
 .btn.btn-file {
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   position: relative;
   overflow: hidden;
 }
@@ -4337,97 +6578,265 @@ a:focus {
   background-color: #f4f4f4;
   color: #444;
   border-color: #ddd;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid transparent;
+}
+.btn.uppercase {
+    text-transform: uppercase;
+}
+.btn.btn-flat {
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-width: 1px;
+}
+.btn:active {
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn:focus {
+    outline: none;
+}
+.btn.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn.btn-file > input[type='file'] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+.btn-default {
+    background-color: #f4f4f4;
+    color: #444;
+    border-color: #ddd;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-default:hover,
 .btn-default:active,
 .btn-default.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #e7e7e7;
 }
 .btn-primary {
     background-color: #3c8dbc;
     border-color: #367fa9;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #e7e7e7;
 }
 .btn-primary {
   background-color: #3c8dbc;
   border-color: #367fa9;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #e7e7e7;
+}
+.btn-primary {
+    background-color: #3c8dbc;
+    border-color: #367fa9;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #367fa9;
 }
 .btn-success {
     background-color: #00a65a;
     border-color: #008d4c;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #367fa9;
 }
 .btn-success {
   background-color: #00a65a;
   border-color: #008d4c;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #367fa9;
+}
+.btn-success {
+    background-color: #00a65a;
+    border-color: #008d4c;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-success:hover,
 .btn-success:active,
 .btn-success.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #008d4c;
 }
 .btn-info {
     background-color: #00c0ef;
     border-color: #00acd6;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #008d4c;
 }
 .btn-info {
   background-color: #00c0ef;
   border-color: #00acd6;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #008d4c;
+}
+.btn-info {
+    background-color: #00c0ef;
+    border-color: #00acd6;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-info:hover,
 .btn-info:active,
 .btn-info.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #00acd6;
 }
 .btn-danger {
     background-color: #dd4b39;
     border-color: #d73925;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #00acd6;
 }
 .btn-danger {
   background-color: #dd4b39;
   border-color: #d73925;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #00acd6;
+}
+.btn-danger {
+    background-color: #dd4b39;
+    border-color: #d73925;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-danger:hover,
 .btn-danger:active,
 .btn-danger.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #d73925;
 }
 .btn-warning {
     background-color: #f39c12;
     border-color: #e08e0b;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #d73925;
 }
 .btn-warning {
   background-color: #f39c12;
   border-color: #e08e0b;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #d73925;
+}
+.btn-warning {
+    background-color: #f39c12;
+    border-color: #e08e0b;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-warning:hover,
 .btn-warning:active,
 .btn-warning.hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-color: #e08e0b;
 }
 .btn-outline {
@@ -4435,18 +6844,41 @@ a:focus {
     background: transparent;
     color: #fff;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #e08e0b;
 }
 .btn-outline {
   border: 1px solid #fff;
   background: transparent;
   color: #fff;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #e08e0b;
+}
+.btn-outline {
+    border: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-outline:hover,
 .btn-outline:focus,
 .btn-outline:active {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     color: rgba(255, 255, 255, 0.7);
     border-color: rgba(255, 255, 255, 0.7);
 }
@@ -4471,6 +6903,11 @@ a:focus {
     background-color: #f4f4f4;
     font-size: 12px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   color: rgba(255, 255, 255, 0.7);
   border-color: rgba(255, 255, 255, 0.7);
 }
@@ -4494,6 +6931,10 @@ a:focus {
   border: 1px solid #ddd;
   background-color: #f4f4f4;
   font-size: 12px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-app > .fa,
@@ -4502,6 +6943,18 @@ a:focus {
 <<<<<<< HEAD
     font-size: 20px;
     display: block;
+<<<<<<< HEAD
+=======
+=======
+=======
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+.btn-link {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .btn-app:hover {
     background: #f4f4f4;
@@ -4514,6 +6967,10 @@ a:focus {
     -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 .btn-app > .badge {
     position: absolute;
     top: -3px;
@@ -4521,6 +6978,15 @@ a:focus {
     font-size: 10px;
     font-weight: 400;
 =======
+<<<<<<< HEAD
+=======
+=======
+.btn-app > .fa,
+.btn-app > .glyphicon,
+.btn-app > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   font-size: 20px;
   display: block;
 }
@@ -4541,6 +7007,34 @@ a:focus {
   right: -10px;
   font-size: 10px;
   font-weight: 400;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    font-size: 20px;
+    display: block;
+}
+.btn-app:hover {
+    background: #f4f4f4;
+    color: #444;
+    border-color: #aaa;
+}
+.btn-app:active,
+.btn-app:focus {
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-app > .badge {
+    position: absolute;
+    top: -3px;
+    right: -10px;
+    font-size: 10px;
+    font-weight: 400;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -4549,10 +7043,23 @@ a:focus {
  */
 .callout {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-radius: 3px;
     margin: 0 0 20px 0;
     padding: 15px 30px 15px 15px;
     border-left: 5px solid #eee;
+<<<<<<< HEAD
+=======
+=======
+  border-radius: 3px;
+  margin: 0 0 20px 0;
+  padding: 15px 30px 15px 15px;
+  border-left: 5px solid #eee;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .callout a {
     color: #fff;
@@ -4582,12 +7089,27 @@ a:focus {
     border-color: #0097bc;
 }
 .callout.callout-success {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-color: #00733e;
 =======
   border-radius: 3px;
   margin: 0 0 20px 0;
   padding: 15px 30px 15px 15px;
   border-left: 5px solid #eee;
+<<<<<<< HEAD
+=======
+=======
+  border-color: #00733e;
+=======
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    padding: 15px 30px 15px 15px;
+    border-left: 5px solid #eee;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .callout a {
   color: #fff;
@@ -4617,7 +7139,16 @@ a:focus {
   border-color: #0097bc;
 }
 .callout.callout-success {
+<<<<<<< HEAD
   border-color: #00733e;
+=======
+<<<<<<< HEAD
+  border-color: #00733e;
+>>>>>>> ben
+=======
+    border-color: #00733e;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -4626,7 +7157,15 @@ a:focus {
  */
 .alert {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border-radius: 3px;
+=======
+<<<<<<< HEAD
+    border-radius: 3px;
+=======
+  border-radius: 3px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .alert h4 {
     font-weight: 600;
@@ -4658,9 +7197,21 @@ a:focus {
     border-color: #e08e0b;
 }
 .alert-info {
+<<<<<<< HEAD
     border-color: #00acd6;
 =======
   border-radius: 3px;
+=======
+<<<<<<< HEAD
+    border-color: #00acd6;
+=======
+  border-radius: 3px;
+=======
+  border-color: #00acd6;
+=======
+    border-radius: 3px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .alert h4 {
   font-weight: 600;
@@ -4692,7 +7243,16 @@ a:focus {
   border-color: #e08e0b;
 }
 .alert-info {
+<<<<<<< HEAD
   border-color: #00acd6;
+=======
+<<<<<<< HEAD
+  border-color: #00acd6;
+>>>>>>> ben
+=======
+    border-color: #00acd6;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -4703,6 +7263,10 @@ a:focus {
 .nav > li > a:active,
 .nav > li > a:focus {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     color: #444;
     background: #f7f7f7;
 }
@@ -4712,6 +7276,11 @@ a:focus {
     border-top: 3px solid transparent;
     color: #444;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   color: #444;
   background: #f7f7f7;
 }
@@ -4720,21 +7289,54 @@ a:focus {
   border-radius: 0;
   border-top: 3px solid transparent;
   color: #444;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    color: #444;
+    background: #f7f7f7;
+}
+/* NAV PILLS */
+.nav-pills > li > a {
+    border-radius: 0;
+    border-top: 3px solid transparent;
+    color: #444;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-pills > li > a > .fa,
 .nav-pills > li > a > .glyphicon,
 .nav-pills > li > a > .ion {
 <<<<<<< HEAD
+<<<<<<< HEAD
     margin-right: 5px;
 =======
   margin-right: 5px;
+=======
+<<<<<<< HEAD
+    margin-right: 5px;
+=======
+  margin-right: 5px;
+>>>>>>> ben
+=======
+  margin-right: 5px;
+=======
+    margin-right: 5px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     border-top-color: #3c8dbc;
 }
 .nav-pills > li.active > a {
@@ -4794,6 +7396,11 @@ a:focus {
 .nav-tabs-custom > .nav-tabs > li > a:hover {
     color: #999;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   border-top-color: #3c8dbc;
 }
 .nav-pills > li.active > a {
@@ -4837,6 +7444,78 @@ a:focus {
   border-top: 3px solid transparent;
   margin-bottom: -2px;
   margin-right: 5px;
+<<<<<<< HEAD
+=======
+}
+.nav-tabs-custom > .nav-tabs > li > a {
+  color: #444;
+  border-radius: 0;
+}
+.nav-tabs-custom > .nav-tabs > li > a.text-muted {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  background: transparent;
+  margin: 0;
+}
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  color: #999;
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+<<<<<<< HEAD
+    border-color: transparent;
+=======
+=======
+    border-top-color: #3c8dbc;
+}
+.nav-pills > li.active > a {
+    font-weight: 600;
+>>>>>>> ben
+}
+/* NAV STACKED */
+.nav-stacked > li > a {
+    border-radius: 0;
+    border-top: 0;
+    border-left: 3px solid transparent;
+    color: #444;
+}
+.nav-stacked > li.active > a,
+.nav-stacked > li.active > a:hover {
+    background: transparent;
+    color: #444;
+    border-top: 0;
+    border-left-color: #3c8dbc;
+}
+.nav-stacked > li.header {
+    border-bottom: 1px solid #ddd;
+    color: #777;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+/* NAV TABS */
+.nav-tabs-custom {
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs {
+    margin: 0;
+    border-bottom-color: #f4f4f4;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs > li {
+    border-top: 3px solid transparent;
+    margin-bottom: -2px;
+    margin-right: 5px;
+>>>>>>> staging/master
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #444;
@@ -4854,6 +7533,7 @@ a:focus {
   color: #999;
 >>>>>>> ben
 }
+<<<<<<< HEAD
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
 .nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
@@ -4895,12 +7575,24 @@ a:focus {
     border-left-color: #f4f4f4;
     border-right-color: transparent;
 }
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 .nav-tabs-custom > .nav-tabs > li.header {
     line-height: 35px;
     padding: 0 10px;
     font-size: 20px;
     color: #444;
 =======
+<<<<<<< HEAD
+=======
+=======
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   border-color: transparent;
 }
 .nav-tabs-custom > .nav-tabs > li.active {
@@ -4943,6 +7635,10 @@ a:focus {
   padding: 0 10px;
   font-size: 20px;
   color: #444;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .nav-tabs-custom > .nav-tabs > li.header > .fa,
@@ -4950,6 +7646,16 @@ a:focus {
 .nav-tabs-custom > .nav-tabs > li.header > .ion {
 <<<<<<< HEAD
     margin-right: 5px;
+<<<<<<< HEAD
+=======
+=======
+=======
+    border-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.active {
+    border-top-color: #3c8dbc;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .nav-tabs-custom > .tab-content {
     background: #fff;
@@ -4980,6 +7686,7 @@ a:focus {
 .nav-tabs-custom.tab-default > .nav-tabs > li.active {
     border-top-color: #d2d6de;
 }
+<<<<<<< HEAD
 /* PAGINATION */
 .pagination > li > a {
     background: #fafafa;
@@ -4988,6 +7695,25 @@ a:focus {
 .pagination.pagination-flat > li > a {
     border-radius: 0 !important;
 =======
+=======
+<<<<<<< HEAD
+.pagination.pagination-flat > li > a {
+    border-radius: 0 !important;
+=======
+=======
+.nav-tabs-custom > .nav-tabs > li.header {
+    line-height: 35px;
+    padding: 0 10px;
+    font-size: 20px;
+    color: #444;
+>>>>>>> staging/master
+}
+.nav-tabs-custom > .nav-tabs > li.header > .fa,
+.nav-tabs-custom > .nav-tabs > li.header > .glyphicon,
+.nav-tabs-custom > .nav-tabs > li.header > .ion {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   margin-right: 5px;
 }
 .nav-tabs-custom > .tab-content {
@@ -5026,6 +7752,10 @@ a:focus {
 }
 .pagination.pagination-flat > li > a {
   border-radius: 0 !important;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5037,6 +7767,13 @@ a:focus {
     list-style: none;
     margin: 0;
     padding: 0;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin-right: 5px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .products-list > .item {
     border-radius: 3px;
@@ -5073,6 +7810,7 @@ a:focus {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+<<<<<<< HEAD
 .product-list-in-box > .item {
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -5082,6 +7820,24 @@ a:focus {
 .product-list-in-box > .item:last-of-type {
     border-bottom-width: 0;
 =======
+=======
+<<<<<<< HEAD
+.product-list-in-box > .item:last-of-type {
+    border-bottom-width: 0;
+=======
+=======
+.pagination.pagination-flat > li > a {
+    border-radius: 0 !important;
+>>>>>>> staging/master
+}
+/*
+ * Component: Products List
+ * ------------------------
+ */
+.products-list {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   list-style: none;
   margin: 0;
   padding: 0;
@@ -5129,6 +7885,61 @@ a:focus {
 }
 .product-list-in-box > .item:last-of-type {
   border-bottom-width: 0;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.products-list > .item {
+    border-radius: 3px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    background: #fff;
+}
+.products-list > .item:before,
+.products-list > .item:after {
+    content: " ";
+    display: table;
+}
+.products-list > .item:after {
+    clear: both;
+}
+.products-list .product-img {
+    float: left;
+}
+.products-list .product-img img {
+    width: 50px;
+    height: 50px;
+}
+.products-list .product-info {
+    margin-left: 60px;
+}
+.products-list .product-title {
+    font-weight: 600;
+}
+.products-list .product-description {
+    display: block;
+    color: #999;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.product-list-in-box > .item {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+.product-list-in-box > .item:last-of-type {
+    border-bottom-width: 0;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5142,7 +7953,15 @@ a:focus {
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border-top: 1px solid #f4f4f4;
+=======
+<<<<<<< HEAD
+    border-top: 1px solid #f4f4f4;
+=======
+  border-top: 1px solid #f4f4f4;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .table > thead > tr > th {
     border-bottom: 2px solid #f4f4f4;
@@ -5151,9 +7970,21 @@ a:focus {
     margin-top: 5px;
 }
 .table-bordered {
+<<<<<<< HEAD
     border: 1px solid #f4f4f4;
 =======
   border-top: 1px solid #f4f4f4;
+=======
+<<<<<<< HEAD
+    border: 1px solid #f4f4f4;
+=======
+  border-top: 1px solid #f4f4f4;
+=======
+  border: 1px solid #f4f4f4;
+=======
+    border-top: 1px solid #f4f4f4;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .table > thead > tr > th {
   border-bottom: 2px solid #f4f4f4;
@@ -5162,7 +7993,16 @@ a:focus {
   margin-top: 5px;
 }
 .table-bordered {
+<<<<<<< HEAD
   border: 1px solid #f4f4f4;
+=======
+<<<<<<< HEAD
+  border: 1px solid #f4f4f4;
+>>>>>>> ben
+=======
+    border: 1px solid #f4f4f4;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .table-bordered > thead > tr > th,
@@ -5172,6 +8012,10 @@ a:focus {
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > td {
 <<<<<<< HEAD
+<<<<<<< HEAD
+    border: 1px solid #f4f4f4;
+=======
+<<<<<<< HEAD
     border: 1px solid #f4f4f4;
 }
 .table-bordered > thead > tr > th,
@@ -5179,19 +8023,47 @@ a:focus {
     border-bottom-width: 2px;
 =======
   border: 1px solid #f4f4f4;
+>>>>>>> staging/master
 }
 .table-bordered > thead > tr > th,
 .table-bordered > thead > tr > td {
   border-bottom-width: 2px;
+>>>>>>> ben
+=======
+  border: 1px solid #f4f4f4;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+  border-bottom-width: 2px;
+=======
+    border: 1px solid #f4f4f4;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+    border-bottom-width: 2px;
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .table.no-border,
 .table.no-border td,
 .table.no-border th {
 <<<<<<< HEAD
+<<<<<<< HEAD
     border: 0;
 =======
   border: 0;
+=======
+<<<<<<< HEAD
+    border: 0;
+=======
+  border: 0;
+>>>>>>> ben
+=======
+  border: 0;
+=======
+    border: 0;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /* .text-center in tables */
@@ -5199,6 +8071,10 @@ table.text-center,
 table.text-center td,
 table.text-center th {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     text-align: center;
 }
 .table.align th {
@@ -5417,6 +8293,12 @@ table.text-center th {
 .direct-chat-primary .right > .direct-chat-text:after,
 .direct-chat-primary .right > .direct-chat-text:before {
     border-left-color: #3c8dbc;
+<<<<<<< HEAD
+=======
+=======
+  text-align: center;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .direct-chat-warning .right > .direct-chat-text {
     background: #f39c12;
@@ -5441,10 +8323,25 @@ table.text-center th {
     border-color: #00a65a;
     color: #ffffff;
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 .direct-chat-success .right > .direct-chat-text:after,
 .direct-chat-success .right > .direct-chat-text:before {
     border-left-color: #00a65a;
 =======
+<<<<<<< HEAD
+=======
+=======
+/*
+ * Component: Direct Chat
+ * ----------------------
+ */
+.direct-chat .box-body {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   position: relative;
@@ -5653,7 +8550,16 @@ table.text-center th {
 }
 .direct-chat-success .right > .direct-chat-text:after,
 .direct-chat-success .right > .direct-chat-text:before {
+<<<<<<< HEAD
   border-left-color: #00a65a;
+=======
+<<<<<<< HEAD
+  border-left-color: #00a65a;
+>>>>>>> ben
+=======
+    border-left-color: #00a65a;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5662,6 +8568,10 @@ table.text-center th {
  */
 .users-list > li {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     width: 25%;
     float: left;
     padding: 10px;
@@ -5691,6 +8601,11 @@ table.text-center th {
     color: #999;
     font-size: 12px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   width: 25%;
   float: left;
   padding: 10px;
@@ -5719,6 +8634,42 @@ table.text-center th {
 .users-list-date {
   color: #999;
   font-size: 12px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    width: 25%;
+    float: left;
+    padding: 10px;
+    text-align: center;
+}
+.users-list > li img {
+    border-radius: 50%;
+    max-width: 100%;
+    height: auto;
+}
+.users-list > li > a:hover,
+.users-list > li > a:hover .users-list-name {
+    color: #999;
+}
+.users-list-name,
+.users-list-date {
+    display: block;
+}
+.users-list-name {
+    font-weight: 600;
+    color: #444;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.users-list-date {
+    color: #999;
+    font-size: 12px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5728,6 +8679,10 @@ table.text-center th {
 .carousel-control.left,
 .carousel-control.right {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-image: none;
 }
 .carousel-control > .fa {
@@ -5738,6 +8693,11 @@ table.text-center th {
     display: inline-block;
     margin-top: -20px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .carousel-control > .fa {
@@ -5747,6 +8707,23 @@ table.text-center th {
   z-index: 5;
   display: inline-block;
   margin-top: -20px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-image: none;
+}
+.carousel-control > .fa {
+    font-size: 40px;
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    display: inline-block;
+    margin-top: -20px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5755,47 +8732,14 @@ table.text-center th {
  */
 .modal {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background: rgba(0, 0, 0, 0.3);
-}
-.modal-content {
-    border-radius: 0;
-    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
-    border: 0;
-}
-@media (min-width: 768px) {
-    .modal-content {
-        -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
-    }
-}
-.modal-header {
-    border-bottom-color: #f4f4f4;
-}
-.modal-footer {
-    border-top-color: #f4f4f4;
-}
-.modal-primary .modal-header,
-.modal-primary .modal-footer {
-    border-color: #307095;
-}
-.modal-warning .modal-header,
-.modal-warning .modal-footer {
-    border-color: #c87f0a;
-}
-.modal-info .modal-header,
-.modal-info .modal-footer {
-    border-color: #0097bc;
-}
-.modal-success .modal-header,
-.modal-success .modal-footer {
-    border-color: #00733e;
-}
-.modal-danger .modal-header,
-.modal-danger .modal-footer {
-    border-color: #c23321;
+=======
+<<<<<<< HEAD
+    background: rgba(0, 0, 0, 0.3);
 =======
   background: rgba(0, 0, 0, 0.3);
+>>>>>>> ben
 }
 .modal-content {
   border-radius: 0;
@@ -5833,6 +8777,131 @@ table.text-center th {
 }
 .modal-danger .modal-header,
 .modal-danger .modal-footer {
+<<<<<<< HEAD
+    border-color: #c23321;
+=======
+  background: rgba(0, 0, 0, 0.3);
+=======
+  border-color: #c23321;
+=======
+    background: rgba(0, 0, 0, 0.3);
+>>>>>>> ben
+>>>>>>> staging/master
+}
+.modal-content {
+    border-radius: 0;
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+    border: 0;
+}
+@media (min-width: 768px) {
+    .modal-content {
+        -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+    }
+}
+.modal-header {
+    border-bottom-color: #f4f4f4;
+}
+.modal-footer {
+    border-top-color: #f4f4f4;
+}
+.modal-primary .modal-header,
+.modal-primary .modal-footer {
+    border-color: #307095;
+}
+.modal-warning .modal-header,
+.modal-warning .modal-footer {
+    border-color: #c87f0a;
+}
+.modal-info .modal-header,
+.modal-info .modal-footer {
+    border-color: #0097bc;
+}
+.modal-success .modal-header,
+.modal-success .modal-footer {
+    border-color: #00733e;
+}
+.modal-danger .modal-header,
+.modal-danger .modal-footer {
+<<<<<<< HEAD
+    border-color: #c23321;
+=======
+  background: rgba(0, 0, 0, 0.3);
+=======
+<<<<<<< HEAD
+  border-color: #c23321;
+>>>>>>> ben
+=======
+    border-color: #c23321;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+/*
+ * Component: Social Widgets
+ * -------------------------
+ */
+.box-widget {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    border: none;
+    position: relative;
+=======
+  border: none;
+  position: relative;
+>>>>>>> ben
+}
+.widget-user .widget-user-header {
+  padding: 20px;
+  height: 120px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.widget-user .widget-user-username {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 25px;
+  font-weight: 300;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+}
+.modal-content {
+  border-radius: 0;
+  -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+  border: 0;
+}
+@media (min-width: 768px) {
+  .modal-content {
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+  }
+}
+.modal-header {
+  border-bottom-color: #f4f4f4;
+}
+.modal-footer {
+  border-top-color: #f4f4f4;
+}
+.modal-primary .modal-header,
+.modal-primary .modal-footer {
+  border-color: #307095;
+}
+.modal-warning .modal-header,
+.modal-warning .modal-footer {
+  border-color: #c87f0a;
+}
+.modal-info .modal-header,
+.modal-info .modal-footer {
+  border-color: #0097bc;
+}
+.modal-success .modal-header,
+.modal-success .modal-footer {
+  border-color: #00733e;
+}
+<<<<<<< HEAD
+.modal-danger .modal-header,
+.modal-danger .modal-footer {
   border-color: #c23321;
 >>>>>>> ben
 }
@@ -5844,6 +8913,24 @@ table.text-center th {
 <<<<<<< HEAD
     border: none;
     position: relative;
+=======
+.widget-user-2 .widget-user-image > img {
+<<<<<<< HEAD
+    width: 65px;
+    height: auto;
+    float: left;
+=======
+  border: none;
+  position: relative;
+=======
+  width: 65px;
+  height: auto;
+  float: left;
+=======
+    border: none;
+    position: relative;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .widget-user .widget-user-header {
     padding: 20px;
@@ -5894,6 +8981,7 @@ table.text-center th {
     margin-left: 75px;
 }
 .widget-user-2 .widget-user-image > img {
+<<<<<<< HEAD
     width: 65px;
     height: auto;
     float: left;
@@ -5953,6 +9041,18 @@ table.text-center th {
   width: 65px;
   height: auto;
   float: left;
+=======
+<<<<<<< HEAD
+  width: 65px;
+  height: auto;
+  float: left;
+>>>>>>> ben
+=======
+    width: 65px;
+    height: auto;
+    float: left;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -5961,6 +9061,10 @@ table.text-center th {
  */
 .mailbox-messages > .table {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     margin: 0;
 }
 .mailbox-controls {
@@ -5999,6 +9103,11 @@ table.text-center th {
     font-weight: bold;
     color: #666;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   margin: 0;
 }
 .mailbox-controls {
@@ -6036,6 +9145,10 @@ table.text-center th {
 .mailbox-attachment-name {
   font-weight: bold;
   color: #666;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .mailbox-attachment-icon,
@@ -6043,6 +9156,19 @@ table.text-center th {
 .mailbox-attachment-size {
 <<<<<<< HEAD
     display: block;
+<<<<<<< HEAD
+=======
+=======
+=======
+    margin: 0;
+}
+.mailbox-controls {
+    padding: 5px;
+>>>>>>> ben
+}
+.mailbox-controls.with-border {
+    border-bottom: 1px solid #f4f4f4;
+>>>>>>> staging/master
 }
 .mailbox-attachment-info {
     padding: 10px;
@@ -6052,19 +9178,38 @@ table.text-center th {
     color: #999;
     font-size: 12px;
 }
+<<<<<<< HEAD
 .mailbox-attachment-icon {
     text-align: center;
     font-size: 65px;
+=======
+<<<<<<< HEAD
+.mailbox-attachment-icon.has-img > img {
+    max-width: 100%;
+    height: auto;
+=======
+=======
+.mailbox-attachment-name {
+    font-weight: bold;
+>>>>>>> staging/master
     color: #666;
     padding: 20px 10px;
 }
 .mailbox-attachment-icon.has-img {
     padding: 0;
 }
+<<<<<<< HEAD
 .mailbox-attachment-icon.has-img > img {
     max-width: 100%;
     height: auto;
 =======
+=======
+.mailbox-attachment-icon,
+.mailbox-attachment-info,
+.mailbox-attachment-size {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   display: block;
 }
 .mailbox-attachment-info {
@@ -6087,6 +9232,10 @@ table.text-center th {
 .mailbox-attachment-icon.has-img > img {
   max-width: 100%;
   height: auto;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -6103,6 +9252,13 @@ table.text-center th {
     text-align: center;
     margin-bottom: 25px;
     font-weight: 300;
+<<<<<<< HEAD
+=======
+=======
+=======
+    display: block;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .lockscreen-logo a {
     color: #444;
@@ -6153,9 +9309,25 @@ table.text-center th {
     border: 0;
     padding: 0 10px;
 }
+<<<<<<< HEAD
 .lockscreen-footer {
     margin-top: 10px;
 =======
+=======
+<<<<<<< HEAD
+.lockscreen-footer {
+    margin-top: 10px;
+=======
+=======
+/*
+ * Page: Lock Screen
+ * -----------------
+ */
+/* ADD THIS CLASS TO THE <BODY> TAG */
+.lockscreen {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background: #d2d6de;
 }
 .lockscreen-logo {
@@ -6215,6 +9387,10 @@ table.text-center th {
 }
 .lockscreen-footer {
   margin-top: 10px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -6224,6 +9400,15 @@ table.text-center th {
 .login-logo,
 .register-logo {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+    background: #d2d6de;
+}
+.lockscreen-logo {
+>>>>>>> ben
+>>>>>>> staging/master
     font-size: 35px;
     text-align: center;
     margin-bottom: 25px;
@@ -6266,9 +9451,25 @@ table.text-center th {
     text-align: center;
     padding: 0 20px 20px 20px;
 }
+<<<<<<< HEAD
 .social-auth-links {
     margin: 10px 0;
 =======
+=======
+<<<<<<< HEAD
+.social-auth-links {
+    margin: 10px 0;
+=======
+=======
+/*
+ * Page: Login & Register
+ * ----------------------
+ */
+.login-logo,
+.register-logo {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   font-size: 35px;
   text-align: center;
   margin-bottom: 25px;
@@ -6313,6 +9514,10 @@ table.text-center th {
 }
 .social-auth-links {
   margin: 10px 0;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -6323,6 +9528,20 @@ table.text-center th {
 <<<<<<< HEAD
     width: 600px;
     margin: 20px auto 0 auto;
+<<<<<<< HEAD
+=======
+=======
+=======
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+.login-logo a,
+.register-logo a {
+    color: #444;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 @media (max-width: 991px) {
     .error-page {
@@ -6349,6 +9568,7 @@ table.text-center th {
         margin-left: 0;
     }
 }
+<<<<<<< HEAD
 .error-page > .error-content > h3 {
     font-weight: 300;
     font-size: 25px;
@@ -6358,6 +9578,26 @@ table.text-center th {
         text-align: center;
     }
 =======
+=======
+<<<<<<< HEAD
+@media (max-width: 991px) {
+    .error-page > .error-content > h3 {
+        text-align: center;
+    }
+=======
+=======
+.social-auth-links {
+    margin: 10px 0;
+>>>>>>> staging/master
+}
+/*
+ * Page: 400 and 500 error pages
+ * ------------------------------
+ */
+.error-page {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   width: 600px;
   margin: 20px auto 0 auto;
 }
@@ -6394,6 +9634,10 @@ table.text-center th {
   .error-page > .error-content > h3 {
     text-align: center;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -6469,6 +9713,8 @@ table.text-center th {
   border-bottom: 0;
   margin-bottom: 0;
   padding-bottom: 0;
+<<<<<<< HEAD
+=======
 }
 .post .user-block {
   margin-bottom: 15px;
@@ -6490,6 +9736,176 @@ table.text-center th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.btn-social > :first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    line-height: 34px;
+    font-size: 1.6em;
+    text-align: center;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+.btn-social.btn-lg {
+    padding-left: 61px;
+=======
+=======
+    width: 600px;
+    margin: 20px auto 0 auto;
+>>>>>>> ben
+}
+@media (max-width: 991px) {
+    .error-page {
+        width: 100%;
+    }
+}
+.error-page > .headline {
+    float: left;
+    font-size: 100px;
+    font-weight: 300;
+}
+@media (max-width: 991px) {
+    .error-page > .headline {
+        float: none;
+        text-align: center;
+    }
+}
+.error-page > .error-content {
+    margin-left: 190px;
+    display: block;
+}
+@media (max-width: 991px) {
+    .error-page > .error-content {
+        margin-left: 0;
+    }
+}
+.error-page > .error-content > h3 {
+    font-weight: 300;
+    font-size: 25px;
+}
+@media (max-width: 991px) {
+    .error-page > .error-content > h3 {
+        text-align: center;
+    }
+>>>>>>> staging/master
+}
+/*
+ * Page: Invoice
+ * -------------
+ */
+.invoice {
+<<<<<<< HEAD
+  position: relative;
+  background: #fff;
+  border: 1px solid #f4f4f4;
+  padding: 20px;
+  margin: 10px 25px;
+}
+.invoice-title {
+  margin-top: 0;
+=======
+    position: relative;
+    background: #fff;
+    border: 1px solid #f4f4f4;
+    padding: 20px;
+    margin: 10px 25px;
+}
+.invoice-title {
+    margin-top: 0;
+>>>>>>> staging/master
+}
+/*
+ * Page: Profile
+ * -------------
+ */
+.profile-user-img {
+<<<<<<< HEAD
+  margin: 0 auto;
+  width: 100px;
+  padding: 3px;
+  border: 3px solid #d2d6de;
+}
+.profile-username {
+  font-size: 21px;
+  margin-top: 5px;
+}
+.post {
+  border-bottom: 1px solid #d2d6de;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  color: #666;
+}
+.post:last-of-type {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.post .user-block {
+  margin-bottom: 15px;
+=======
+    margin: 0 auto;
+    width: 100px;
+    padding: 3px;
+    border: 3px solid #d2d6de;
+}
+.profile-username {
+    font-size: 21px;
+    margin-top: 5px;
+}
+.post {
+    border-bottom: 1px solid #d2d6de;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    color: #666;
+}
+.post:last-of-type {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+>>>>>>> staging/master
+}
+.post .user-block {
+  margin-bottom: 15px;
+>>>>>>> ben
+}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+.btn-adn:hover {
+    color: #ffffff;
+    background-color: #ce563f;
+    border-color: rgba(0, 0, 0, 0.2);
+=======
+=======
+>>>>>>> staging/master
+/*
+ * Social Buttons for Bootstrap
+ *
+ * Copyright 2013-2015 Panayiotis Lipiridis
+ * Licensed under the MIT License
+ *
+ * https://github.com/lipis/bootstrap-social
+ */
+.btn-social {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+=======
+>>>>>>> ben
+  position: relative;
+  padding-left: 44px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+>>>>>>> staging/master
 }
 .btn-social > :first-child {
     position: absolute;
@@ -6734,15 +10150,32 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 }
 .btn-adn:hover {
+<<<<<<< HEAD
   color: #ffffff;
   background-color: #ce563f;
   border-color: rgba(0, 0, 0, 0.2);
+=======
+<<<<<<< HEAD
+  color: #ffffff;
+  background-color: #ce563f;
+  border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> ben
+=======
+    color: #ffffff;
+    background-color: #ce563f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-adn:active,
 .btn-adn.active,
 .open > .dropdown-toggle.btn-adn {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     color: #ffffff;
     background-color: #ce563f;
     border-color: rgba(0, 0, 0, 0.2);
@@ -6750,12 +10183,29 @@ table.text-center th {
   color: #ffffff;
   background-color: #ce563f;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+=======
+  color: #ffffff;
+  background-color: #ce563f;
+  border-color: rgba(0, 0, 0, 0.2);
+=======
+    color: #ffffff;
+    background-color: #ce563f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-adn:active,
 .btn-adn.active,
 .open > .dropdown-toggle.btn-adn {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-adn .badge {
@@ -6778,6 +10228,11 @@ table.text-center th {
     background-color: #163758;
     border-color: rgba(0, 0, 0, 0.2);
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-adn .badge {
@@ -6799,6 +10254,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #163758;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-bitbucket:active,
@@ -6818,6 +10277,12 @@ table.text-center th {
 .btn-bitbucket.active,
 .open > .dropdown-toggle.btn-bitbucket {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-bitbucket .badge {
@@ -6839,7 +10304,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #0d6aad;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-bitbucket:active,
+.btn-bitbucket.active,
+.open > .dropdown-toggle.btn-bitbucket {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-bitbucket .badge {
@@ -6861,6 +10339,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #0d6aad;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-dropbox:active,
@@ -6880,6 +10362,12 @@ table.text-center th {
 .btn-dropbox.active,
 .open > .dropdown-toggle.btn-dropbox {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-dropbox .badge {
@@ -6901,7 +10389,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #2d4373;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-dropbox:active,
+.btn-dropbox.active,
+.open > .dropdown-toggle.btn-dropbox {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-dropbox .badge {
@@ -6923,6 +10424,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #2d4373;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-facebook:active,
@@ -6942,6 +10447,12 @@ table.text-center th {
 .btn-facebook.active,
 .open > .dropdown-toggle.btn-facebook {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-facebook .badge {
@@ -6963,7 +10474,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #cc006a;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-facebook:active,
+.btn-facebook.active,
+.open > .dropdown-toggle.btn-facebook {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-facebook .badge {
@@ -6985,6 +10509,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #cc006a;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-flickr:active,
@@ -7004,6 +10532,12 @@ table.text-center th {
 .btn-flickr.active,
 .open > .dropdown-toggle.btn-flickr {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-flickr .badge {
@@ -7025,7 +10559,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #f71752;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-flickr:active,
+.btn-flickr.active,
+.open > .dropdown-toggle.btn-flickr {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-flickr .badge {
@@ -7047,6 +10594,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #f71752;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-foursquare:active,
@@ -7066,6 +10617,12 @@ table.text-center th {
 .btn-foursquare.active,
 .open > .dropdown-toggle.btn-foursquare {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-foursquare .badge {
@@ -7082,12 +10639,25 @@ table.text-center th {
     color: #ffffff;
     background-color: #2b2b2b;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 }
 .btn-github:hover {
     color: #ffffff;
     background-color: #2b2b2b;
     border-color: rgba(0, 0, 0, 0.2);
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-foursquare:active,
+.btn-foursquare.active,
+.open > .dropdown-toggle.btn-foursquare {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-foursquare .badge {
@@ -7109,6 +10679,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #2b2b2b;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-github:active,
@@ -7128,6 +10702,12 @@ table.text-center th {
 .btn-github.active,
 .open > .dropdown-toggle.btn-github {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-github .badge {
@@ -7149,7 +10729,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #c23321;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-github:active,
+.btn-github.active,
+.open > .dropdown-toggle.btn-github {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-github .badge {
@@ -7171,6 +10764,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #c23321;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-google:active,
@@ -7190,6 +10787,12 @@ table.text-center th {
 .btn-google.active,
 .open > .dropdown-toggle.btn-google {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-google .badge {
@@ -7211,7 +10814,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #305777;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-google:active,
+.btn-google.active,
+.open > .dropdown-toggle.btn-google {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-google .badge {
@@ -7233,6 +10849,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #305777;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-instagram:active,
@@ -7252,6 +10872,12 @@ table.text-center th {
 .btn-instagram.active,
 .open > .dropdown-toggle.btn-instagram {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-instagram .badge {
@@ -7273,7 +10899,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #005983;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-instagram:active,
+.btn-instagram.active,
+.open > .dropdown-toggle.btn-instagram {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-instagram .badge {
@@ -7295,6 +10934,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #005983;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-linkedin:active,
@@ -7314,6 +10957,12 @@ table.text-center th {
 .btn-linkedin.active,
 .open > .dropdown-toggle.btn-linkedin {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-linkedin .badge {
@@ -7335,7 +10984,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #125acd;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-linkedin:active,
+.btn-linkedin.active,
+.open > .dropdown-toggle.btn-linkedin {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-linkedin .badge {
@@ -7354,6 +11016,10 @@ table.text-center th {
   border-color: rgba(0, 0, 0, 0.2);
 }
 .btn-microsoft:hover {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
   color: #ffffff;
   background-color: #125acd;
   border-color: rgba(0, 0, 0, 0.2);
@@ -7376,6 +11042,15 @@ table.text-center th {
 .btn-microsoft.active,
 .open > .dropdown-toggle.btn-microsoft {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+  color: #ffffff;
+  background-color: #125acd;
+  border-color: rgba(0, 0, 0, 0.2);
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-microsoft .badge {
@@ -7397,7 +11072,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #da7908;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-microsoft:active,
+.btn-microsoft.active,
+.open > .dropdown-toggle.btn-microsoft {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-microsoft .badge {
@@ -7419,6 +11107,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #da7908;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-openid:active,
@@ -7438,6 +11130,12 @@ table.text-center th {
 .btn-openid.active,
 .open > .dropdown-toggle.btn-openid {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-openid .badge {
@@ -7459,7 +11157,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #9f191f;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-openid:active,
+.btn-openid.active,
+.open > .dropdown-toggle.btn-openid {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-openid .badge {
@@ -7476,11 +11187,14 @@ table.text-center th {
   color: #ffffff;
   background-color: #9f191f;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
 }
 .btn-pinterest:hover {
   color: #ffffff;
   background-color: #9f191f;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-pinterest:active,
@@ -7495,10 +11209,59 @@ table.text-center th {
   background-color: #9f191f;
   border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> ben
+=======
+=======
+    background-image: none;
+}
+.btn-openid .badge {
+    color: #f7931e;
+    background-color: #ffffff;
+}
+.btn-pinterest {
+    color: #ffffff;
+    background-color: #cb2027;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-pinterest:focus,
+.btn-pinterest.focus {
+    color: #ffffff;
+    background-color: #9f191f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+}
+.btn-pinterest:hover {
+  color: #ffffff;
+  background-color: #9f191f;
+  border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+=======
+    color: #ffffff;
+    background-color: #9f191f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
+>>>>>>> ben
 }
 .btn-pinterest:active,
 .btn-pinterest.active,
 .open > .dropdown-toggle.btn-pinterest {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    color: #ffffff;
+    background-color: #9f191f;
+    border-color: rgba(0, 0, 0, 0.2);
+=======
+  color: #ffffff;
+  background-color: #9f191f;
+  border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> ben
+}
+.btn-pinterest:active,
+.btn-pinterest.active,
+.open > .dropdown-toggle.btn-pinterest {
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
     background-image: none;
 }
@@ -7522,6 +11285,11 @@ table.text-center th {
     background-color: #bcddff;
     border-color: rgba(0, 0, 0, 0.2);
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-pinterest .badge {
@@ -7543,6 +11311,9 @@ table.text-center th {
   color: #000000;
   background-color: #bcddff;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-reddit:active,
@@ -7557,10 +11328,65 @@ table.text-center th {
   background-color: #bcddff;
   border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> ben
+=======
+=======
+    background-image: none;
+}
+.btn-pinterest .badge {
+    color: #cb2027;
+    background-color: #ffffff;
+}
+.btn-reddit {
+    color: #000000;
+    background-color: #eff7ff;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-reddit:focus,
+.btn-reddit.focus {
+    color: #000000;
+    background-color: #bcddff;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-reddit:hover {
+    color: #000000;
+    background-color: #bcddff;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
 }
 .btn-reddit:active,
 .btn-reddit.active,
 .open > .dropdown-toggle.btn-reddit {
+<<<<<<< HEAD
+  color: #000000;
+  background-color: #bcddff;
+  border-color: rgba(0, 0, 0, 0.2);
+=======
+    color: #000000;
+    background-color: #bcddff;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.btn-reddit:active,
+.btn-reddit.active,
+.open > .dropdown-toggle.btn-reddit {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    color: #000000;
+    background-color: #bcddff;
+    border-color: rgba(0, 0, 0, 0.2);
+=======
+  color: #000000;
+  background-color: #bcddff;
+  border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> ben
+}
+.btn-reddit:active,
+.btn-reddit.active,
+.open > .dropdown-toggle.btn-reddit {
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
     background-image: none;
 }
@@ -7584,6 +11410,11 @@ table.text-center th {
     background-color: #cc4400;
     border-color: rgba(0, 0, 0, 0.2);
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-reddit .badge {
@@ -7605,15 +11436,39 @@ table.text-center th {
   color: #ffffff;
   background-color: #cc4400;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-soundcloud:active,
 .btn-soundcloud.active,
 .open > .dropdown-toggle.btn-soundcloud {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.btn-soundcloud:active,
+.btn-soundcloud.active,
+.open > .dropdown-toggle.btn-soundcloud {
+<<<<<<< HEAD
+=======
+=======
+    background-image: none;
+}
+.btn-reddit .badge {
+    color: #eff7ff;
+    background-color: #000000;
+}
+.btn-soundcloud {
+>>>>>>> ben
+>>>>>>> staging/master
     color: #ffffff;
     background-color: #cc4400;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 =======
   color: #ffffff;
   background-color: #cc4400;
@@ -7629,6 +11484,11 @@ table.text-center th {
 .btn-soundcloud .badge {
     color: #ff5500;
     background-color: #ffffff;
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .btn-tumblr {
     color: #ffffff;
@@ -7645,7 +11505,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #1c2d3f;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-soundcloud:active,
+.btn-soundcloud.active,
+.open > .dropdown-toggle.btn-soundcloud {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-soundcloud .badge {
@@ -7667,6 +11540,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #1c2d3f;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-tumblr:active,
@@ -7686,6 +11563,12 @@ table.text-center th {
 .btn-tumblr.active,
 .open > .dropdown-toggle.btn-tumblr {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-tumblr .badge {
@@ -7707,7 +11590,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #2795e9;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-tumblr:active,
+.btn-tumblr.active,
+.open > .dropdown-toggle.btn-tumblr {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-tumblr .badge {
@@ -7729,6 +11625,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #2795e9;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-twitter:active,
@@ -7748,6 +11648,12 @@ table.text-center th {
 .btn-twitter.active,
 .open > .dropdown-toggle.btn-twitter {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-twitter .badge {
@@ -7769,7 +11675,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #1295bf;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-twitter:active,
+.btn-twitter.active,
+.open > .dropdown-toggle.btn-twitter {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-twitter .badge {
@@ -7791,6 +11710,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #1295bf;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-vimeo:active,
@@ -7810,6 +11733,12 @@ table.text-center th {
 .btn-vimeo.active,
 .open > .dropdown-toggle.btn-vimeo {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-vimeo .badge {
@@ -7831,7 +11760,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #466482;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-vimeo:active,
+.btn-vimeo.active,
+.open > .dropdown-toggle.btn-vimeo {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-vimeo .badge {
@@ -7853,6 +11795,10 @@ table.text-center th {
   color: #ffffff;
   background-color: #466482;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .btn-vk:active,
@@ -7872,6 +11818,12 @@ table.text-center th {
 .btn-vk.active,
 .open > .dropdown-toggle.btn-vk {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
     background-image: none;
 }
 .btn-vk .badge {
@@ -7893,7 +11845,20 @@ table.text-center th {
     color: #ffffff;
     background-color: #500a6f;
     border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> staging/master
+}
+.btn-vk:active,
+.btn-vk.active,
+.open > .dropdown-toggle.btn-vk {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-image: none;
 }
 .btn-vk .badge {
@@ -7915,6 +11880,9 @@ table.text-center th {
   color: #ffffff;
   background-color: #500a6f;
   border-color: rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 >>>>>>> ben
 }
 .btn-yahoo:active,
@@ -7929,10 +11897,52 @@ table.text-center th {
   background-color: #500a6f;
   border-color: rgba(0, 0, 0, 0.2);
 >>>>>>> ben
+=======
+=======
+    background-image: none;
+}
+.btn-vk .badge {
+    color: #587ea3;
+    background-color: #ffffff;
+}
+.btn-yahoo {
+    color: #ffffff;
+    background-color: #720e9e;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-yahoo:focus,
+.btn-yahoo.focus {
+    color: #ffffff;
+    background-color: #500a6f;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-yahoo:hover {
+    color: #ffffff;
+    background-color: #500a6f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
+>>>>>>> ben
 }
 .btn-yahoo:active,
 .btn-yahoo.active,
 .open > .dropdown-toggle.btn-yahoo {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    color: #ffffff;
+    background-color: #500a6f;
+    border-color: rgba(0, 0, 0, 0.2);
+=======
+  color: #ffffff;
+  background-color: #500a6f;
+  border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> ben
+}
+.btn-yahoo:active,
+.btn-yahoo.active,
+.open > .dropdown-toggle.btn-yahoo {
+=======
+>>>>>>> staging/master
 <<<<<<< HEAD
     background-image: none;
 }
@@ -8019,6 +12029,19 @@ table.text-center th {
     font-size: 30px;
     margin-right: 5px;
     line-height: 30px;
+<<<<<<< HEAD
+=======
+=======
+  color: #ffffff;
+  background-color: #500a6f;
+  border-color: rgba(0, 0, 0, 0.2);
+=======
+    color: #ffffff;
+    background-color: #500a6f;
+    border-color: rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .fc-color-picker > li .fa {
     -webkit-transition: -webkit-transform linear 0.3s;
@@ -8046,9 +12069,22 @@ table.text-center th {
     border-radius: 3px;
     cursor: move;
 }
+<<<<<<< HEAD
 .external-event:hover {
     box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
 =======
+=======
+<<<<<<< HEAD
+.external-event:hover {
+    box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
+=======
+=======
+.fc-button:hover,
+.fc-button:active,
+.fc-button.hover {
+<<<<<<< HEAD
+>>>>>>> ben
+>>>>>>> staging/master
   background-color: #e9e9e9;
 }
 .fc-header-title h2 {
@@ -8127,6 +12163,92 @@ table.text-center th {
 }
 .external-event:hover {
   box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #e9e9e9;
+}
+.fc-header-title h2 {
+    font-size: 15px;
+    line-height: 1.6em;
+    color: #666;
+    margin-left: 10px;
+}
+.fc-header-right {
+    padding-right: 10px;
+}
+.fc-header-left {
+    padding-left: 10px;
+}
+.fc-widget-header {
+    background: #fafafa;
+}
+.fc-grid {
+    width: 100%;
+    border: 0;
+}
+.fc-widget-header:first-of-type,
+.fc-widget-content:first-of-type {
+    border-left: 0;
+    border-right: 0;
+}
+.fc-widget-header:last-of-type,
+.fc-widget-content:last-of-type {
+    border-right: 0;
+}
+.fc-toolbar {
+    padding: 10px;
+    margin: 0;
+}
+.fc-day-number {
+    font-size: 20px;
+    font-weight: 300;
+    padding-right: 10px;
+}
+.fc-color-picker {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.fc-color-picker > li {
+    float: left;
+    font-size: 30px;
+    margin-right: 5px;
+    line-height: 30px;
+}
+.fc-color-picker > li .fa {
+    -webkit-transition: -webkit-transform linear 0.3s;
+    -moz-transition: -moz-transform linear 0.3s;
+    -o-transition: -o-transform linear 0.3s;
+    transition: transform linear 0.3s;
+}
+.fc-color-picker > li .fa:hover {
+    -webkit-transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    -o-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+#add-new-event {
+    -webkit-transition: all linear 0.3s;
+    -o-transition: all linear 0.3s;
+    transition: all linear 0.3s;
+}
+.external-event {
+    padding: 5px 10px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    cursor: move;
+}
+.external-event:hover {
+    box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.2);
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -8140,7 +12262,15 @@ table.text-center th {
 .select2-container--default:active,
 .select2-selection:active {
 <<<<<<< HEAD
+<<<<<<< HEAD
     outline: none;
+=======
+<<<<<<< HEAD
+    outline: none;
+=======
+  outline: none;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .select2-container--default .select2-selection--single,
 .select2-selection .select2-selection--single {
@@ -8225,9 +12355,21 @@ table.text-center th {
     color: #fff;
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
+<<<<<<< HEAD
     padding-right: 10px;
 =======
   outline: none;
+=======
+<<<<<<< HEAD
+    padding-right: 10px;
+=======
+  outline: none;
+=======
+  padding-right: 10px;
+=======
+    outline: none;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .select2-container--default .select2-selection--single,
 .select2-selection .select2-selection--single {
@@ -8312,7 +12454,16 @@ table.text-center th {
   color: #fff;
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
+<<<<<<< HEAD
   padding-right: 10px;
+=======
+<<<<<<< HEAD
+  padding-right: 10px;
+>>>>>>> ben
+=======
+    padding-right: 10px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -8321,7 +12472,15 @@ table.text-center th {
  */
 .pad {
 <<<<<<< HEAD
+<<<<<<< HEAD
     padding: 10px;
+=======
+<<<<<<< HEAD
+    padding: 10px;
+=======
+  padding: 10px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .margin {
     margin: 10px;
@@ -8353,9 +12512,21 @@ table.text-center th {
     font-size: 16px;
 }
 .description-block > .description-text {
+<<<<<<< HEAD
     text-transform: uppercase;
 =======
   padding: 10px;
+=======
+<<<<<<< HEAD
+    text-transform: uppercase;
+=======
+  padding: 10px;
+=======
+  text-transform: uppercase;
+=======
+    padding: 10px;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .margin {
   margin: 10px;
@@ -8387,7 +12558,16 @@ table.text-center th {
   font-size: 16px;
 }
 .description-block > .description-text {
+<<<<<<< HEAD
   text-transform: uppercase;
+=======
+<<<<<<< HEAD
+  text-transform: uppercase;
+>>>>>>> ben
+=======
+    text-transform: uppercase;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-red,
@@ -8450,19 +12630,14 @@ table.text-center th {
 .modal-danger .modal-header,
 .modal-danger .modal-footer {
 <<<<<<< HEAD
+<<<<<<< HEAD
     color: #fff !important;
-}
-.bg-gray {
-    color: #000;
-    background-color: #d2d6de !important;
-}
-.bg-gray-light {
-    background-color: #f7f7f7;
-}
-.bg-black {
-    background-color: #111111 !important;
+=======
+<<<<<<< HEAD
+    color: #fff !important;
 =======
   color: #fff !important;
+>>>>>>> ben
 }
 .bg-gray {
   color: #000;
@@ -8472,7 +12647,204 @@ table.text-center th {
   background-color: #f7f7f7;
 }
 .bg-black {
+<<<<<<< HEAD
+    background-color: #111111 !important;
+=======
+  color: #fff !important;
+=======
   background-color: #111111 !important;
+=======
+    color: #fff !important;
+>>>>>>> ben
+>>>>>>> staging/master
+}
+.bg-gray {
+    color: #000;
+    background-color: #d2d6de !important;
+}
+.bg-gray-light {
+    background-color: #f7f7f7;
+}
+.bg-black {
+<<<<<<< HEAD
+    background-color: #111111 !important;
+=======
+  color: #fff !important;
+=======
+<<<<<<< HEAD
+  background-color: #111111 !important;
+>>>>>>> ben
+=======
+    background-color: #111111 !important;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.bg-red,
+.callout.callout-danger,
+.alert-danger,
+.alert-error,
+.label-danger,
+.modal-danger .modal-body {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background-color: #dd4b39 !important;
+=======
+  background-color: #dd4b39 !important;
+>>>>>>> ben
+=======
+  background-color: #dd4b39 !important;
+=======
+    background-color: #dd4b39 !important;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.bg-yellow,
+.callout.callout-warning,
+.alert-warning,
+.label-warning,
+.modal-warning .modal-body {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background-color: #f39c12 !important;
+=======
+  background-color: #f39c12 !important;
+>>>>>>> ben
+=======
+  background-color: #f39c12 !important;
+=======
+    background-color: #f39c12 !important;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.bg-aqua,
+.callout.callout-info,
+.alert-info,
+.label-info,
+.modal-info .modal-body {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background-color: #00c0ef !important;
+}
+.bg-blue {
+    background-color: #0073b7 !important;
+=======
+=======
+>>>>>>> ben
+  background-color: #00c0ef !important;
+}
+.bg-blue {
+  background-color: #0073b7 !important;
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    background-color: #00c0ef !important;
+}
+.bg-blue {
+    background-color: #0073b7 !important;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.bg-light-blue,
+.label-primary,
+.modal-primary .modal-body {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background-color: #3c8dbc !important;
+=======
+  background-color: #3c8dbc !important;
+>>>>>>> ben
+=======
+  background-color: #3c8dbc !important;
+=======
+    background-color: #3c8dbc !important;
+>>>>>>> staging/master
+>>>>>>> ben
+}
+.bg-green,
+.callout.callout-success,
+.alert-success,
+.label-success,
+.modal-success .modal-body {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    background-color: #00a65a !important;
+}
+.bg-navy {
+    background-color: #001f3f !important;
+}
+.bg-teal {
+    background-color: #39cccc !important;
+}
+.bg-olive {
+    background-color: #3d9970 !important;
+}
+.bg-lime {
+    background-color: #01ff70 !important;
+}
+.bg-orange {
+    background-color: #ff851b !important;
+}
+.bg-fuchsia {
+    background-color: #f012be !important;
+}
+.bg-purple {
+    background-color: #605ca8 !important;
+}
+.bg-maroon {
+    background-color: #d81b60 !important;
+}
+.bg-gray-active {
+    color: #000;
+    background-color: #b5bbc8 !important;
+}
+.bg-black-active {
+    background-color: #000000 !important;
+=======
+=======
+>>>>>>> ben
+  background-color: #00a65a !important;
+}
+.bg-navy {
+  background-color: #001f3f !important;
+}
+.bg-teal {
+  background-color: #39cccc !important;
+}
+.bg-olive {
+  background-color: #3d9970 !important;
+}
+.bg-lime {
+  background-color: #01ff70 !important;
+}
+.bg-orange {
+  background-color: #ff851b !important;
+}
+.bg-fuchsia {
+  background-color: #f012be !important;
+}
+.bg-purple {
+  background-color: #605ca8 !important;
+}
+.bg-maroon {
+  background-color: #d81b60 !important;
+>>>>>>> staging/master
+}
+.bg-gray {
+  color: #000;
+  background-color: #d2d6de !important;
+}
+<<<<<<< HEAD
+.bg-gray-light {
+  background-color: #f7f7f7;
+}
+.bg-black {
+  background-color: #111111 !important;
+=======
+.bg-black-active {
+  background-color: #000000 !important;
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .bg-red,
@@ -8530,7 +12902,70 @@ table.text-center th {
 .label-success,
 .modal-success .modal-body {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background-color: #00a65a !important;
+=======
+    background-color: #008d4c !important;
+}
+.bg-navy-active {
+    background-color: #001a35 !important;
+}
+.bg-teal-active {
+    background-color: #30bbbb !important;
+}
+.bg-olive-active {
+    background-color: #368763 !important;
+}
+.bg-lime-active {
+    background-color: #00e765 !important;
+}
+.bg-orange-active {
+    background-color: #ff7701 !important;
+}
+.bg-fuchsia-active {
+    background-color: #db0ead !important;
+}
+.bg-purple-active {
+    background-color: #555299 !important;
+}
+.bg-maroon-active {
+    background-color: #ca195a !important;
+}
+[class^="bg-"].disabled {
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+}
+.text-red {
+    color: #dd4b39 !important;
+}
+.text-yellow {
+    color: #f39c12 !important;
+}
+.text-aqua {
+    color: #00c0ef !important;
+}
+.text-blue {
+    color: #0073b7 !important;
+}
+.text-black {
+    color: #111111 !important;
+}
+.text-light-blue {
+    color: #3c8dbc !important;
+}
+.text-green {
+    color: #00a65a !important;
+}
+.text-gray {
+    color: #d2d6de !important;
+}
+.text-navy {
+    color: #001f3f !important;
+=======
+=======
+    background-color: #00a65a !important;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .bg-navy {
     background-color: #001f3f !important;
@@ -8562,8 +12997,121 @@ table.text-center th {
 }
 .bg-black-active {
     background-color: #000000 !important;
+<<<<<<< HEAD
 =======
   background-color: #00a65a !important;
+=======
+>>>>>>> staging/master
+}
+.bg-red-active,
+.modal-danger .modal-header,
+.modal-danger .modal-footer {
+<<<<<<< HEAD
+  background-color: #d33724 !important;
+=======
+    background-color: #d33724 !important;
+>>>>>>> staging/master
+}
+.bg-yellow-active,
+.modal-warning .modal-header,
+.modal-warning .modal-footer {
+<<<<<<< HEAD
+  background-color: #db8b0b !important;
+=======
+    background-color: #db8b0b !important;
+>>>>>>> staging/master
+}
+.bg-aqua-active,
+.modal-info .modal-header,
+.modal-info .modal-footer {
+<<<<<<< HEAD
+  background-color: #00a7d0 !important;
+}
+.bg-blue-active {
+  background-color: #005384 !important;
+=======
+    background-color: #00a7d0 !important;
+}
+.bg-blue-active {
+    background-color: #005384 !important;
+>>>>>>> staging/master
+}
+<<<<<<< HEAD
+.no-shadow {
+    box-shadow: none !important;
+=======
+=======
+.bg-light-blue-active,
+.modal-primary .modal-header,
+.modal-primary .modal-footer {
+<<<<<<< HEAD
+  background-color: #357ca5 !important;
+=======
+    background-color: #357ca5 !important;
+>>>>>>> staging/master
+}
+.bg-green-active,
+.modal-success .modal-header,
+.modal-success .modal-footer {
+<<<<<<< HEAD
+>>>>>>> ben
+  background-color: #008d4c !important;
+}
+.bg-navy-active {
+  background-color: #001a35 !important;
+}
+.bg-teal-active {
+  background-color: #30bbbb !important;
+}
+.bg-olive-active {
+  background-color: #368763 !important;
+}
+.bg-lime-active {
+  background-color: #00e765 !important;
+}
+.bg-orange-active {
+  background-color: #ff7701 !important;
+}
+.bg-fuchsia-active {
+  background-color: #db0ead !important;
+}
+.bg-purple-active {
+  background-color: #555299 !important;
+}
+.bg-maroon-active {
+  background-color: #ca195a !important;
+}
+[class^="bg-"].disabled {
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+}
+.text-red {
+  color: #dd4b39 !important;
+}
+.text-yellow {
+  color: #f39c12 !important;
+}
+.text-aqua {
+  color: #00c0ef !important;
+}
+.text-blue {
+  color: #0073b7 !important;
+}
+.text-black {
+  color: #111111 !important;
+}
+.text-light-blue {
+  color: #3c8dbc !important;
+}
+.text-green {
+  color: #00a65a !important;
+}
+.text-gray {
+  color: #d2d6de !important;
+}
+.text-navy {
+  color: #001f3f !important;
+>>>>>>> staging/master
 }
 .bg-navy {
   background-color: #001f3f !important;
@@ -8630,6 +13178,7 @@ table.text-center th {
   background-color: #005384 !important;
 >>>>>>> ben
 }
+<<<<<<< HEAD
 .bg-light-blue-active,
 .modal-primary .modal-header,
 .modal-primary .modal-footer {
@@ -8643,25 +13192,79 @@ table.text-center th {
 .modal-success .modal-header,
 .modal-success .modal-footer {
 <<<<<<< HEAD
+=======
+.no-shadow {
+  box-shadow: none !important;
+<<<<<<< HEAD
+>>>>>>> ben
+}
+.list-unstyled,
+.chart-legend,
+.contacts-list,
+.users-list,
+.mailbox-attachments {
+<<<<<<< HEAD
+    list-style: none;
+    margin: 0;
+    padding: 0;
+=======
+=======
+>>>>>>> staging/master
     background-color: #008d4c !important;
 }
 .bg-navy-active {
     background-color: #001a35 !important;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .bg-teal-active {
     background-color: #30bbbb !important;
 }
+<<<<<<< HEAD
 .bg-olive-active {
     background-color: #368763 !important;
+=======
+<<<<<<< HEAD
+.flat {
+    border-radius: 0 !important;
+=======
+  list-style: none;
+  margin: 0;
+  padding: 0;
+=======
+.bg-olive-active {
+    background-color: #368763 !important;
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .bg-lime-active {
     background-color: #00e765 !important;
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+.flat {
+  border-radius: 0 !important;
+>>>>>>> ben
+}
+.text-bold,
+.text-bold.table td,
+.text-bold.table th {
+<<<<<<< HEAD
+    font-weight: 700;
+=======
+>>>>>>> staging/master
 .bg-orange-active {
     background-color: #ff7701 !important;
 }
 .bg-fuchsia-active {
     background-color: #db0ead !important;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .bg-purple-active {
     background-color: #555299 !important;
@@ -8767,8 +13370,24 @@ table.text-center th {
 .bg-orange-active {
   background-color: #ff7701 !important;
 }
+<<<<<<< HEAD
 .bg-fuchsia-active {
   background-color: #db0ead !important;
+=======
+<<<<<<< HEAD
+.user-block img {
+    width: 40px;
+    height: 40px;
+    float: left;
+=======
+=======
+.text-bold,
+.text-bold.table td,
+.text-bold.table th {
+<<<<<<< HEAD
+>>>>>>> ben
+  font-weight: 700;
+>>>>>>> staging/master
 }
 .bg-purple-active {
   background-color: #555299 !important;
@@ -8858,6 +13477,7 @@ table.text-center th {
   box-shadow: none !important;
 >>>>>>> ben
 }
+<<<<<<< HEAD
 .list-unstyled,
 .chart-legend,
 .contacts-list,
@@ -8891,16 +13511,34 @@ table.text-center th {
 }
 .flat {
   border-radius: 0 !important;
+=======
+.user-block img {
+  width: 40px;
+  height: 40px;
+  float: left;
+<<<<<<< HEAD
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .text-bold,
 .text-bold.table td,
 .text-bold.table th {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    display: block;
+    margin-left: 50px;
+=======
+=======
+>>>>>>> staging/master
     font-weight: 700;
 }
 .text-sm {
     font-size: 12px;
+<<<<<<< HEAD
+=======
+>>>>>>> ben
+>>>>>>> staging/master
 }
 .jqstooltip {
     padding: 5px !important;
@@ -9143,6 +13781,15 @@ table.text-center th {
 .description-block .description-icon {
   font-size: 16px;
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+.user-block .description {
+    color: #999;
+    font-size: 13px;
+=======
+=======
+>>>>>>> staging/master
 .no-pad-top {
   padding-top: 0;
 }
@@ -9188,6 +13835,7 @@ table.text-center th {
 .user-block .description,
 .user-block .comment {
 <<<<<<< HEAD
+<<<<<<< HEAD
     display: block;
     margin-left: 50px;
 }
@@ -9199,6 +13847,9 @@ table.text-center th {
     color: #999;
     font-size: 13px;
 =======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   display: block;
   margin-left: 50px;
 }
@@ -9209,21 +13860,60 @@ table.text-center th {
 .user-block .description {
   color: #999;
   font-size: 13px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    display: block;
+    margin-left: 50px;
+}
+.user-block .username {
+    font-size: 16px;
+    font-weight: 600;
+}
+.user-block .description {
+    color: #999;
+    font-size: 13px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .user-block.user-block-sm .username,
 .user-block.user-block-sm .description,
 .user-block.user-block-sm .comment {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     margin-left: 40px;
 }
 .user-block.user-block-sm .username {
     font-size: 14px;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   margin-left: 40px;
 }
 .user-block.user-block-sm .username {
   font-size: 14px;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    margin-left: 40px;
+}
+.user-block.user-block-sm .username {
+    font-size: 14px;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .img-sm,
@@ -9232,15 +13922,32 @@ table.text-center th {
 .box-comments .box-comment img,
 .user-block.user-block-sm img {
 <<<<<<< HEAD
+<<<<<<< HEAD
     float: left;
 =======
   float: left;
+=======
+<<<<<<< HEAD
+    float: left;
+=======
+  float: left;
+>>>>>>> ben
+=======
+  float: left;
+=======
+    float: left;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 .img-sm,
 .box-comments .box-comment img,
 .user-block.user-block-sm img {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     width: 30px !important;
     height: 30px !important;
 }
@@ -9325,6 +14032,11 @@ table.text-center th {
 .chart canvas {
     width: 100% !important;
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   width: 30px !important;
   height: 30px !important;
 }
@@ -9408,6 +14120,97 @@ table.text-center th {
 .chart svg,
 .chart canvas {
   width: 100% !important;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    width: 30px !important;
+    height: 30px !important;
+}
+.img-sm + .img-push {
+    margin-left: 40px;
+}
+.img-md {
+    width: 60px;
+    height: 60px;
+}
+.img-md + .img-push {
+    margin-left: 70px;
+}
+.img-lg {
+    width: 100px;
+    height: 100px;
+}
+.img-lg + .img-push {
+    margin-left: 110px;
+}
+.img-bordered {
+    border: 3px solid #d2d6de;
+    padding: 3px;
+}
+.img-bordered-sm {
+    border: 2px solid #d2d6de;
+    padding: 2px;
+}
+.attachment-block {
+    border: 1px solid #f4f4f4;
+    padding: 5px;
+    margin-bottom: 10px;
+    background: #f7f7f7;
+}
+.attachment-block .attachment-img {
+    max-width: 100px;
+    max-height: 100px;
+    height: auto;
+    float: left;
+}
+.attachment-block .attachment-pushed {
+    margin-left: 110px;
+}
+.attachment-block .attachment-heading {
+    margin: 0;
+}
+.attachment-block .attachment-text {
+    color: #555;
+}
+.connectedSortable {
+    min-height: 100px;
+}
+.ui-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.sort-highlight {
+    background: #f4f4f4;
+    border: 1px dashed #ddd;
+    margin-bottom: 10px;
+}
+.full-opacity-hover {
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+}
+.full-opacity-hover:hover {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+.chart {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+.chart svg,
+.chart canvas {
+    width: 100% !important;
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
 /*
@@ -9416,6 +14219,10 @@ table.text-center th {
  */
 @media print {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> staging/master
     .no-print,
     .main-sidebar,
     .left-side,
@@ -9455,6 +14262,11 @@ table.text-center th {
         white-space: normal !important;
     }
 =======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ben
+>>>>>>> staging/master
   .no-print,
   .main-sidebar,
   .left-side,
@@ -9493,5 +14305,51 @@ table.text-center th {
   .table-responsive > .table tr td {
     white-space: normal !important;
   }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ben
+=======
+=======
+    .no-print,
+    .main-sidebar,
+    .left-side,
+    .main-header,
+    .content-header {
+        display: none !important;
+    }
+    .content-wrapper,
+    .right-side,
+    .main-footer {
+        margin-left: 0 !important;
+        min-height: 0 !important;
+        -webkit-transform: translate(0, 0) !important;
+        -ms-transform: translate(0, 0) !important;
+        -o-transform: translate(0, 0) !important;
+        transform: translate(0, 0) !important;
+    }
+    .fixed .content-wrapper,
+    .fixed .right-side {
+        padding-top: 0 !important;
+    }
+    .invoice {
+        width: 100%;
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+    .invoice-col {
+        float: left;
+        width: 33.3333333%;
+    }
+    .table-responsive {
+        overflow: auto;
+    }
+    .table-responsive > .table tr th,
+    .table-responsive > .table tr td {
+        white-space: normal !important;
+    }
+>>>>>>> staging/master
+>>>>>>> staging/master
 >>>>>>> ben
 }
