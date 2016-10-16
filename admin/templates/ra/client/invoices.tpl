@@ -59,7 +59,7 @@
     <img src="images/spacer.gif" height="5" width="1"><br>
     <div align="center">
         <input type="submit" value="Search" class="button">
-        <input type="button" value="Create Invoice" class="button" onclick="window.location = 'invoices.php?action=createinvoice&amp;userid=12437&amp;token=cf9d4a51d2e2a6743cc16e0bbd838895c410067c'">
     </div>
 </form>
 {$intable}
+        <input type="button" value="Create Invoice" class="button" onclick="window.location = 'invoices.php?action=createinvoice&amp;userid=12437&amp;token=cf9d4a51d2e2a6743cc16e0bbd838895c410067c'">

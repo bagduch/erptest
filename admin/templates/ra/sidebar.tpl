@@ -7,7 +7,7 @@ $accordion = array(
         "url" => "index.php",
         "glyphicon" => "home"
     ),
-    "clients" => array(
+    "clients" => array( 
         "name" => "Customers",
         "glyphicon" => "user",
 "members" => array(
