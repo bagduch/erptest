@@ -1,6 +1,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
             <input type="hidden" name="submitorder" value="true">
@@ -106,6 +107,8 @@
         {$js}
     {/foreach}
 </script>
+=======
+>>>>>>> ben
 =======
 >>>>>>> ben
 <form method="post" action="{$PHP_SELF}" id="orderfrm">
@@ -393,6 +396,9 @@
     </script>
 {/literal}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ben
 =======
         <form method="post" action="/admin/ordersadd.php" id="orderfrm">
             <input type="hidden" name="submitorder" value="true">
@@ -499,6 +505,9 @@
     {/foreach}
 </script>
 >>>>>>> ben
+<<<<<<< HEAD
 =======
 >>>>>>> staging/master
+>>>>>>> ben
+=======
 >>>>>>> ben
