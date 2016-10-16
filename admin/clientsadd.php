@@ -11,7 +11,7 @@ $aInt = new RA_Admin("Add New Client", false);
 $aInt->title = $aInt->lang("clients", "addnew");
 $aInt->sidebar = "clients";
 $aInt->icon = "clientsadd";
-$aInt->requiredFiles(array("clientfunctions", "customfieldfunctions", "gatewayfunctions"));
+$aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 
 if ($action == "add") {
     check_token("RA.admin.default");
@@ -167,10 +167,11 @@ foreach ($customfields as $customfield) {
         //    echo "</tr><tr>";
     }
 
-    ++$taxindex;
+    ++$taxindex; 
 }
+
 $aInt->assign("infobox", $infobox);
-$aInt->assign("formurl", $PHP_SELF);
+$aInt->assign("formurl", $_SERVER["PHP_SELF"]);
 $aInt->assign('contactoption', $contactoption);
 $aInt->assign("currencyoption", $currencyoption);
 $aInt->assign("securityoption", $securityoption);

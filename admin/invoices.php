@@ -84,8 +84,6 @@ if ($action == "invtooltip") {
     echo "</table>";
     exit();
 }
-
-
 if ($action == "createinvoice") {
     check_token("RA.admin.default");
 
@@ -127,9 +125,7 @@ if ($action == "createinvoice") {
     redir("action=edit&id=" . $invoiceid);
     exit();
 }
-
 $filters = new RA_Filter();
-
 if ($ra->get_req_var("markpaid")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
@@ -147,8 +143,6 @@ if ($ra->get_req_var("markpaid")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("markunpaid")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
@@ -160,8 +154,6 @@ if ($ra->get_req_var("markunpaid")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("markcancelled")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
@@ -173,8 +165,6 @@ if ($ra->get_req_var("markcancelled")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("duplicateinvoice")) {
     check_token("RA.admin.default");
     foreach ($selectedinvoices as $invid) {
@@ -192,8 +182,6 @@ if ($ra->get_req_var("duplicateinvoice")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("massdelete")) {
     check_token("RA.admin.default");
     checkPermission("Delete Invoice");
@@ -204,8 +192,6 @@ if ($ra->get_req_var("massdelete")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("paymentreminder")) {
     check_token("RA.admin.default");
     foreach ($selectedinvoices as $invid) {
@@ -215,8 +201,6 @@ if ($ra->get_req_var("paymentreminder")) {
 
     $filters->redir();
 }
-
-
 if ($ra->get_req_var("delete")) {
     check_token("RA.admin.default");
     checkPermission("Delete Invoice");
@@ -224,8 +208,6 @@ if ($ra->get_req_var("delete")) {
     logActivity("Deleted Invoice - Invoice ID: " . $invoiceid);
     $filters->redir();
 }
-
-
 
 if ($action == "") {
     $aInt->deleteJSConfirm("doDelete", "invoices", "delete", $_SERVER['PHP_SELF'] . "?status=" . $status . "&delete=true&invoiceid=");
@@ -255,153 +237,33 @@ if ($action == "") {
         $invoicetotals = $invoicesModel->getInvoiceTotals();
 
         if (count($invoicetotals)) {
-            echo "<div class=\"contentbox\" style=\"font-size:18px;\">";
+            $topwrap = "<div class=\"contentbox\" style=\"font-size:18px;\">";
             foreach ($invoicetotals as $vals) {
-                echo "<b>" . $vals['currencycode'] . "</b> "
-                . $aInt->lang("status", "draft") . ": <span class=\"textgreen\"><b>" . $vals['draft'] . "</b></span> "
-                . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> "
-                . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> "
-                . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
+                $topwrap.= "<b>" . $vals['currencycode'] . "</b> "
+                        . $aInt->lang("status", "draft") . ": <span class=\"textgreen\"><b>" . $vals['draft'] . "</b></span> "
+                        . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> "
+                        . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> "
+                        . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
             }
 
-            echo "</div><br />";
+            $topwrap.= "</div><br />";
         }
     }
 
-    echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
+
     $clientid = $filters->get("clientid");
     $invoicenum = $filters->get("invoicenum");
-    echo "
-<div id=\"tab0box\" class=\"tabbox\">
-  <div id=\"tab_content\">
-
-<!-- Filter -->
-<form action=\"";
-    echo $PHP_SELF;
-    echo "\" method=\"post\">
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "clientname");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"clientname\" size=\"25\" value=\"";
-    echo $clientname = $filters->get("clientname");
-    echo "\"></td><td width=\"15%\" class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "invoicedate");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"invoicedate\" size=\"15\" value=\"";
-    echo $invoicedate = $filters->get("invoicedate");
-    echo "\" class=\"datepick\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "lineitem");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"lineitem\" size=\"40\" value=\"";
-    echo $lineitem = $filters->get("lineitem");
-    echo "\"></td><td width=\"15%\" class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "duedate");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"duedate\" size=\"15\" value=\"";
-    echo $duedate = $filters->get("duedate");
-    echo "\" class=\"datepick\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "paymentmethod");
-    echo "</td><td class=\"fieldarea\">";
+    $clientname = $filters->get("clientname");
+    $invoicedate = $filters->get("invoicedate");
+    $lineitem = $filters->get("lineitem");
+    $duedate = $filters->get("duedate");
     $paymentmethod = $filters->get("paymentmethod");
-    echo paymentMethodsSelection($aInt->lang("global", "any"));
-    echo "</td><td width=\"15%\" class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "datepaid");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"datepaid\" size=\"15\" value=\"";
-    echo $datepaid = $filters->get("datepaid");
-    echo "\" class=\"datepick\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "status");
-    echo "</td><td class=\"fieldarea\">";
-    echo "<s";
-    echo "elect name=\"status\">
-<option value=\"\">";
-    echo $aInt->lang("global", "any");
-    echo "</option>
-<option value=\"Unpaid\"";
+    $datepaid = $filters->get("datepaid");
     $status = $filters->get("status");
+    $totalto = $filters->get("totalto");
+    $totalfrom = $filters->get("totalfrom");
+    $totalto = $filters->get("totalto");
 
-    if ($status == "Unpaid") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "unpaid");
-    echo "</option>
-<option value=\"Overdue\"";
-
-    if ($status == "Overdue") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "overdue");
-    echo "</option>
-<option value=\"Paid\"";
-
-    if ($status == "Paid") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "paid");
-    echo "</option>
-<option value=\"Cancelled\"";
-
-    if ($status == "Cancelled") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "cancelled");
-    echo "</option>
-<option value=\"Refunded\"";
-
-    if ($status == "Refunded") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "refunded");
-    echo "</option>
-<option value=\"Collections\"";
-
-    if ($status == "Collections") {
-        echo " selected";
-    }
-
-    echo ">";
-    echo $aInt->lang("status", "collections");
-    echo "</option>
-</select></td><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "totaldue");
-    echo "</td><td class=\"fieldarea\">";
-    echo $aInt->lang("filters", "from");
-    echo " <input type=\"text\" name=\"totalfrom\" size=\"10\" value=\"";
-    echo $totalfrom = $filters->get("totalfrom");
-    echo "\"> ";
-    echo $aInt->lang("filters", "to");
-    echo " <input type=\"text\" name=\"totalto\" size=\"10\" value=\"";
-    echo $totalto = $filters->get("totalto");
-    echo "\"></td></tr>
-<tr></tr>
-</table>
-
-<img src=\"images/spacer.gif\" height=\"5\" width=\"1\" /><br />
-<div align=\"center\"><input type=\"submit\" value=\"";
-    echo $aInt->lang("global", "search");
-    echo "\" class=\"button\" /></div>
-
-</form>
-
-  </div>
-</div>
-
-<br />
-
-";
-    echo "<script src=\"../includes/jscript/jquerytt.js\"></script>
-
-";
     $jquerycode = "$(\".invtooltip\").tooltip({cssClass:\"invoicetooltip\"});";
     $aInt->jquerycode = $jquerycode;
     $filters->store();
@@ -421,7 +283,12 @@ if ($action == "") {
         }
 
         $tbl->setMassActionBtns("<input type=\"submit\" value=\"" . $aInt->lang("invoices", "markpaid") . "\" class=\"btn-success\" name=\"markpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markunpaid") . "\" name=\"markunpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markunpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markcancelled") . "\" name=\"markcancelled\" onclick=\"return confirm('" . $aInt->lang("invoices", "markcancelledconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "duplicateinvoice") . "\" name=\"duplicateinvoice\" onclick=\"return confirm('" . $aInt->lang("invoices", "duplicateinvoiceconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "sendreminder") . "\" name=\"paymentreminder\" onclick=\"return confirm('" . $aInt->lang("invoices", "sendreminderconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" class=\"btn-danger\" name=\"massdelete\"  onclick=\"return confirm('" . $aInt->lang("invoices", "massdeleteconfirm", "1") . "')\" />");
-        echo $tbl->output();
+        $table = $tbl->output();
+        $aInt->assign("table", $table);
+        $aInt->assign("PHP_SELF", $_SERVER['PHP_SELF']);
+        $aInt->assign("topwrap", $topwrap);
+        $aInt->assign("paymentmethod", paymentMethodsSelection($aInt->lang("global", "any")));
+        $aInt->template = "invoices/view";
         unset($clientlist);
         unset($invoicesModel);
     }
@@ -767,9 +634,10 @@ if ($action == "") {
             $aInt->assign("balance", $balance);
             $aInt->assign("tokens", get_token());
         }
+        $aInt->template = "invoices/edit";
     }
 }
 
-$aInt->template = "invoices/edit";
+
 $aInt->display();
 ?>

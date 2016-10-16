@@ -10,34 +10,61 @@
         </blockquote>        
     </div>
 </div>
+
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="info-box  bg-info  text-white" id="initial-tour">
             <div class="info-icon bg-info-dark">
                 <h4 class="white-text">
                     <span aria-hidden="true" class="icon icon-layers"></span>{$LANG.navservices} 
-                    <span class="badge font-15 bg-white text-success">{$clientsstats.productsnumtotal}</span>
+                    <span class="badge font-15 bg-white text-success">{$clientsstats.servicenumtotal}</span>
                 </h4>
             </div>
             <div class="info-details">
                 <table class='full-width-table'>
                     <tr>
                         <td>{$LANG.clientareaactive}</td>
-                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumactive}</span></td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumactive}</span></td>
                     </tr>
                     <tr>
                         <td>{$LANG.clientareapending}</td>
-                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumpending}</span></td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumpending}</span></td>
                     </tr>
                     <tr>
                         <td>{$LANG.clientareacancelled}</td>
-                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productsnumcancelled}</span></td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumcancel}</span></td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <div class="info-box  bg-info  text-white" id="initial-tour">
+            <div class="info-icon bg-info-dark">
+                <h4 class="white-text">
+                    <span aria-hidden="true" class="icon icon-layers"></span>{$LANG.navproduct} 
+                    <span class="badge font-15 bg-white text-success">{$clientsstats.producttotal}</span>
+                </h4>
+            </div>
+            <div class="info-details">
+                <table class='full-width-table'>
+                    <tr>
+                        <td>{$LANG.clientareaactive}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productnumactive}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareapending}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productnumpending}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareacancelled}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.productnumcancel}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="info-box  bg-info  text-white">
             <div class="info-icon bg-info-dark">
                 <h4 class="white-text"> 

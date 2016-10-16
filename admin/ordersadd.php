@@ -6,23 +6,19 @@ $aInt = new RA_Admin("Add New Order", false);
 $aInt->title = $aInt->lang("orders", "addnew");
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
-$aInt->requiredFiles(array("orderfunctions", "whoisfunctions", "configoptionsfunctions", "customfieldfunctions", "clientfunctions", "invoicefunctions", "processinvoices", "gatewayfunctions", "fraudfunctions", "modulefunctions", "cartfunctions"));
+$aInt->requiredFiles(array("orderfunctions", "servicefunctions", "whoisfunctions", "configoptionsfunctions", "customfieldfunctions", "clientfunctions", "invoicefunctions", "processinvoices", "gatewayfunctions", "fraudfunctions", "modulefunctions", "cartfunctions"));
 $action = $ra->get_req_var("action");
 $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
 
 if ($action == "createpromo") {
     check_token("RA.admin.default");
-
     if (!$code) {
         exit("Promotion Code is Required");
     }
-
-
     if ($pvalue <= 0) {
         exit("Promotion Value must be greater than zero");
     }
-
     $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
     $data = mysqli_fetch_array($result);
     $duplicates = $data[0];
@@ -53,16 +49,8 @@ if ($action == "createpromo") {
 
 
 if ($action == "getconfigoptions") {
-    check_token("RA.admin.default");
-    releaseSession();
 
-    if (!trim($pid)) {
-        exit();
-    }
-
-    $options = "";
     $configoptions = getCartConfigOptions($pid, "", $cycle);
-    error_log(print_r($configoptions, 1));
 
     if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
@@ -117,7 +105,7 @@ if ($action == "getconfigoptions") {
         $options .= "</table>";
     }
 
-    $customfields = getCustomFields("product", $pid, "", "", "on", $customfields);
+    $customfields = getCustomFields("", $pid, "", "", "on");
 
     if (count($customfields)) {
         $options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
@@ -427,6 +415,7 @@ function loadproductoptions(piddd) {
     $(\"#productconfigoptions\"+ord).html(\"<p align=\\\"center\\\">" . $aInt->lang("global", "loading") . "<br><img src=\\\"../images/loading.gif\\\"></p>\");
     $.post(\"ordersadd.php\", { action: \"getconfigoptions\", pid: pid, cycle: billingcycle, orderid: ord, token: \"" . generate_token("plain") . "\" },
     function(data){
+    console.log(data);
         if (data.addons) {
             $(\"#addonsrow\"+ord).show();
             $(\"#addonscont\"+ord).html(data.addons);
@@ -481,32 +470,8 @@ if ($ra->get_req_var("noselections")) {
 }
 
 echo $infobox;
-echo "<div class=\"content-wrapper\"><section class=\"content\">
-<form method=\"post\" action=\"";
-echo $_SERVER['PHP_SELF'];
-echo "\" id=\"orderfrm\">
-<input type=\"hidden\" name=\"submitorder\" value=\"true\" />
 
-<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td valign=\"top\" class=\"ordersummaryleftcol\">
 
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"130\" class=\"fieldlabel\">";
-echo $aInt->lang("fields", "client");
-echo "</td><td class=\"fieldarea\">";
-echo $aInt->clientsDropDown($userid);
-echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "paymentmethod");
-echo "</td><td class=\"fieldarea\">";
-echo paymentMethodsSelection();
-echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "promocode");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"promocode\" id=\"promodd\" onchange=\"updatesummary()\"><option value=\"\">";
-echo $aInt->lang("global", "none");
-echo "</option><optgroup label=\"Active Promotions\">";
 $result = select_query_i("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
@@ -538,10 +503,10 @@ while ($data = mysqli_fetch_array($result)) {
         $promo_recurring = "";
     }
 
-    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $activepromotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 
-echo "</optgroup><optgroup label=\"Expired Promotions\">";
+
 $result = select_query_i("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
@@ -573,56 +538,9 @@ while ($data = mysqli_fetch_array($result)) {
         $promo_recurring = "";
     }
 
-    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $expireprmotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 
-echo "</optgroup></select> <a href=\"#\" onclick=\"showDialog('createpromo');return false\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
-echo $aInt->lang("orders", "createpromo");
-echo "</a></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("orders", "status");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"orderstatus\">
-<option value=\"Pending\">";
-echo $aInt->lang("status", "pending");
-echo "</option>
-<option value=\"Active\">";
-echo $aInt->lang("status", "active");
-echo "</option>
-</select></td></tr>
-<tr><td width=\"130\" class=\"fieldlabel\"></td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"adminorderconf\" id=\"adminorderconf\" checked /> <label for=\"adminorderconf\">";
-echo $aInt->lang("orders", "orderconfirmation");
-echo "</label> <input type=\"checkbox\" name=\"admingenerateinvoice\" id=\"admingenerateinvoice\" checked /> <label for=\"admingenerateinvoice\">";
-echo $aInt->lang("orders", "geninvoice");
-echo "</label> <input type=\"checkbox\" name=\"adminsendinvoice\" id=\"adminsendinvoice\" checked /> <label for=\"adminsendinvoice\">";
-echo $aInt->lang("global", "sendemail");
-echo "</label></td></tr>
-</table>
-
-<div id=\"products\">
-<div id=\"ord0\" class=\"product\">
-
-<p><b>";
-echo $aInt->lang("fields", "product");
-echo "</b></p>
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"130\" class=\"fieldlabel\">";
-echo $aInt->lang("fields", "product");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"pid[]\" id=\"pid0\" onchange=\"loadproductoptions(this)\">";
-echo $aInt->productDropDown(0, true);
-echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "domain");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"domain[]\" size=\"40\" id=\"domain0\" onkeyup=\"updatesummary()\" /> ";
-echo "<s";
-echo "pan id=\"whoisresult0\"></span></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "billingcycle");
-echo "</td><td class=\"fieldarea\">";
 
 if (!$billingcycle) {
     $billingcycle = "Monthly";
@@ -669,38 +587,28 @@ echo "<s";
 echo "cript> updatesummary(); </script>
 
 ";
-echo $aInt->jqueryDialog("createpromo", $aInt->lang("orders", "createpromo"), "<form id=\"createpromofrm\">
-" . generate_token("form") . "
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\" width=\"110\">" . $aInt->lang("fields", "promocode") . "</td><td class=\"fieldarea\"><input type=\"text\" name=\"code\" id=\"promocode\" /></td></tr>
-<tr><td class=\"fieldlabel\">" . $aInt->lang("fields", "type") . "</td><td class=\"fieldarea\"><select name=\"type\">
-<option value=\"Percentage\">" . $aInt->lang("promos", "percentage") . "</option>
-<option value=\"Fixed Amount\">" . $aInt->lang("promos", "fixedamount") . "</option>
-<option value=\"Price Override\">" . $aInt->lang("promos", "priceoverride") . "</option>
-<option value=\"Free Setup\">" . $aInt->lang("promos", "freesetup") . "</option>
-</select></td></tr>
-<tr><td class=\"fieldlabel\">" . $aInt->lang("promos", "value") . "</td><td class=\"fieldarea\"><input type=\"text\" name=\"pvalue\" size=\"10\" /></td></tr>
-<tr><td class=\"fieldlabel\">" . $aInt->lang("promos", "recurring") . "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"recurring\" id=\"recurring\" value=\"1\" /> <label for=\"recurring\">" . $aInt->lang("promos", "recurenable") . "</label> <input type=\"text\" name=\"recurfor\" size=\"3\" value=\"0\" /> " . $aInt->lang("promos", "recurenable2") . "</td></tr>
-</table>
-<p>* " . $aInt->lang("orders", "createpromoinfo") . "</p>
-</form>", array($aInt->lang("global", "ok") => "savePromo()", $aInt->lang("global", "cancel") => ""), "", "500", "");
-$jscode .= "function savePromo() {
-    jQuery.post(\"ordersadd.php\", \"action=createpromo&\"+jQuery(\"#createpromofrm\").serialize(),
-    function(data){
-        if (data.substr(0,1)==\"<\") {
-            $(\"#promodd\").append(data);
-            $(\"#promodd\").val($(\"#promocode\").val());
-            $(\"#createpromo\").dialog(\"close\");
-        } else {
-            alert(data);
-        }
-    });
-}</section></div>";
+
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
+$aInt->assign("token", generate_token("plain"));
+
+if (!$billingcycle) {
+    $billingcycle = "Monthly";
+}
+$aInt->assign("cyclesDropDown", $aInt->cyclesDropDown($billingcycle, "", "", "billingcycle[]", "updatesummary()"));
+$aInt->assign("createpromo", $createpromo);
+$aInt->assign("activepromotion", $activepromotion);
+$aInt->assign("expireprmotion", $expireprmotion);
+$aInt->assign("PHP_SELF", $_SERVER['PHP_SELF']);
+$aInt->assign("clientdrop", $aInt->clientsDropDown($userid));
+$aInt->assign("productdrop", $aInt->productDropDown(0, true));
+$aInt->assign("paymentdrop", paymentMethodsSelection());
 $aInt->template = "order/add";
 $aInt->jquerycode = $jquerycode;
-$aInt->jscode = $jscode;
+//$aInt->jscode = $jscode;
 $aInt->display();
+
+
+
 ?>

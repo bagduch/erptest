@@ -1,44 +1,41 @@
 {strip}
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>#{$clientsdetails.userid} - {$clientsdetails.firstname} {$clientsdetails.lastname}</h2>
-        </div>
-    </div>
-    <div class="callout ">
 
-        <div class="row">
-            <div id="exemptccetc" class="col-lg-12">
-                {$_ADMINLANG.clientsummary.settingtaxexempt}: 
-                <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
-                    <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
-                        &nbsp;{$clientsdetails.taxstatus}
-                    </strong>
-                </span> 
-                &nbsp;&nbsp;
-                {$_ADMINLANG.clientsummary.settingautocc}: 
-                <span id="autocc" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
-                    <strong class="{if $clientsdetails.autocc == "Yes"}textgreen{else}textred{/if}">
-                        &nbsp; {$clientsdetails.autocc}
-                    </strong>
-                </span> 
-                &nbsp;&nbsp;
-                {$_ADMINLANG.clientsummary.settingreminders}: 
-                <span id="overduenotices" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
-                    <strong class="{if $clientsdetails.overduenotices == "Yes"}textgreen{else}textred{/if}">
-                        &nbsp;{$clientsdetails.overduenotices}
-                    </strong>
-                </span> 
-                &nbsp;&nbsp;
-                {$_ADMINLANG.clientsummary.settinglatefees}: 
-                <span id="latefees" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
-                    <strong class="{if $clientsdetails.latefees == "Yes"}textgreen{else}textred{/if}">
-                        &nbsp;{$clientsdetails.latefees}
-                    </strong>
-                </span> 
+    <div class="row">
+        <div class="callout pull-right">
+
+            <div class="row">
+                <div id="exemptccetc" class="col-lg-12">
+                    {$_ADMINLANG.clientsummary.settingtaxexempt}: 
+                    <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+                        <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
+                            &nbsp;{$clientsdetails.taxstatus}
+                        </strong>
+                    </span> 
+                    &nbsp;&nbsp;
+                    {$_ADMINLANG.clientsummary.settingautocc}: 
+                    <span id="autocc" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+                        <strong class="{if $clientsdetails.autocc == "Yes"}textgreen{else}textred{/if}">
+                            &nbsp; {$clientsdetails.autocc}
+                        </strong>
+                    </span> 
+                    &nbsp;&nbsp;
+                    {$_ADMINLANG.clientsummary.settingreminders}: 
+                    <span id="overduenotices" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+                        <strong class="{if $clientsdetails.overduenotices == "Yes"}textgreen{else}textred{/if}">
+                            &nbsp;{$clientsdetails.overduenotices}
+                        </strong>
+                    </span> 
+                    &nbsp;&nbsp;
+                    {$_ADMINLANG.clientsummary.settinglatefees}: 
+                    <span id="latefees" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
+                        <strong class="{if $clientsdetails.latefees == "Yes"}textgreen{else}textred{/if}">
+                            &nbsp;{$clientsdetails.latefees}
+                        </strong>
+                    </span> 
+                </div>
             </div>
         </div>
     </div>
-
 
 
     {foreach from=$addons_html item=addon_html}
@@ -75,25 +72,13 @@
                             <td>{$_ADMINLANG.fields.address1}</td>
                             <td>{$clientsdetails.address1}</td>
                         </tr>
-                        <tr class="altrow">
-                            <td>{$_ADMINLANG.fields.address2}</td>
-                            <td>{$clientsdetails.address2}</td>
-                        </tr>
                         <tr>
                             <td>{$_ADMINLANG.fields.city}</td>
                             <td>{$clientsdetails.city}</td>
                         </tr>
                         <tr class="altrow">
-                            <td>{$_ADMINLANG.fields.state}</td>
-                            <td>{$clientsdetails.state}</td>
-                        </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.fields.postcode}</td>
-                            <td>{$clientsdetails.postcode}</td>
-                        </tr>
-                        <tr class="altrow">
-                            <td>{$_ADMINLANG.fields.country}</td>
-                            <td>{$clientsdetails.country} - {$clientsdetails.countrylong}</td>
+                            <td>{$_ADMINLANG.fields.dob}</td>
+                            <td>{$clientsdetails.dateofbirth}</td>
                         </tr>
                         <tr>
                             <td>{$_ADMINLANG.fields.phonenumber}</td>
@@ -112,27 +97,7 @@
                     </ul>
                 </div>
             </div>
-            <div id="contactssubaccounts" >
-                <div class="panel panel-primary">
-                    <div class="panel-heading panel-title">
-                        {$_ADMINLANG.clientsummary.contactsheading}
-                    </div>
-                    <div class="panel-body">
-                        {foreach key=num from=$contacts item=contact}
-                            <tr class="{cycle values=",altrow"}">
-                                <td align="center"><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid={$contact.id}">{$contact.firstname} {$contact.lastname}</a> - {$contact.email}</td>
-                            </tr>
-                        {foreachelse}
-                            <tr>
-                                <td align="center">{$_ADMINLANG.clientsummary.nocontacts}</td>
-                            </tr>
-                        {/foreach}
-                    </div>
-                    <ul>
-                        <li><a href="clientscontacts.php?userid={$clientsdetails.userid}&contactid=addnew"><img src="images/icons/clientsadd.png" border="0" align="absmiddle" /> {$_ADMINLANG.clients.addcontact}</a>
-                    </ul>
-                </div>
-            </div>
+
         </div>
 
         <div id="invoicesbilling" class="col-lg-3 col-sm-6">
@@ -175,7 +140,6 @@
                                 return false"><img src="images/icons/addfunds.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.createaddfunds}</a>
                         <li><a href="#" onClick="showDialog('geninvoices');
                                 return false"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>
-                        <li><a href="clientsbillableitems.php?userid={$clientsdetails.userid}&action=manage"><img src="images/icons/billableitems.png" border="0" align="absmiddle" /> {$_ADMINLANG.billableitems.additem}</a>
                         <li><a href="#" onClick="openCCDetails();
                                 return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
                     </ul>
@@ -303,8 +267,8 @@
                         {foreach from=$customactionlinks item=customactionlink}
                             <li>{$customactionlink}</li>
                             {/foreach}
-                        <li><a href="clientsnotes.php?userid={$clientsdetails.userid}"><img src="images/icons/ticketsopen.png" border="0" align="absmiddle" />Add Note</a>
-                        <li><a href="reports.php?report=client_statement&userid={$clientsdetails.userid}"><img src="images/icons/reports.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.accountstatement}</a>
+                        <li><a data-toggle="modal" data-target="#addnotes" href="#"><img src="images/icons/ticketsopen.png" border="0" align="absmiddle" />Add Note</a>
+                        <li><a href="reports.php?report=client_statement&userid={$clientsdetails.userid}"><img src="images/icons/reports.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.pdf}</a>
                         <li><a href="supporttickets.php?action=open&userid={$clientsdetails.userid}"><img src="images/icons/ticketsopen.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.newticket}</a>
                         <li><a href="supporttickets.php?view=any&client={$clientsdetails.userid}"><img src="images/icons/ticketsother.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.viewtickets}</a>
                         <li><a href="{if $affiliateid}affiliates.php?action=edit&id={$affiliateid}{else}clientssummary.php?userid={$clientsdetails.userid}&activateaffiliate=true&token={$csrfToken}{/if}"><img src="images/icons/affiliates.png" border="0" align="absmiddle" /> {if $affiliateid}{$_ADMINLANG.clientsummary.viewaffiliate}{else}{$_ADMINLANG.clientsummary.activateaffiliate}{/if}</a>
@@ -312,13 +276,35 @@
                                 return false"><img src="images/icons/clients.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.mergeclients}</a>
                         <li><a href="#" onClick="closeClient();
                                 return false" style="color:#000000;"><img src="images/icons/delete.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.closeclient}</a>
-                        <li><a href="#" onClick="deleteClient();
-                                return false" style="color:#CC0000;"><img src="images/icons/delete.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.deleteclient}</a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
 
-
+            <div id="addnotes" class="modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="/admin/clientsnotes.php?sub=add">
+                            <input type="hidden" name="userid" value="{$clientsdetails.userid}">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Add Notes</h4>
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control" name="note" rows="6"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary addnotes">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
 
 
             <div id="sendclientemail" class="panel panel-primary">
@@ -470,90 +456,108 @@
 
 
 
-<p align="center">
-    <input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" />
-<div id="massupdatebox" style="width:75%;background-color:#f7f7f7;border:1px dashed #cccccc;padding:10px;margin-left:auto;margin-right:auto;display:none;">
-    <h2 style="text-align:center;margin:0 0 10px 0">{$_ADMINLANG.clientsummary.massupdateitems}</h2>
-    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-        <tr>
-            <td width="15%" class="fieldlabel" nowrap>{$_ADMINLANG.fields.firstpaymentamount}</td>
-            <td class="fieldarea"><input type="text" size="20" name="firstpaymentamount" /></td>
-            <td width="15%" class="fieldlabel" nowrap>{$_ADMINLANG.fields.recurringamount}</td>
-            <td class="fieldarea"><input type="text" size="20" name="recurringamount" /></td>
-        </tr>
-        <tr>
-            <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.nextduedate}</td>
-            <td class="fieldarea"><input type="text" size="20" name="nextduedate" class="datepick" />
-                &nbsp;&nbsp;
-                <input type="checkbox" name="proratabill" id="proratabill" />
-                <label for="proratabill">{$_ADMINLANG.clientsummary.createproratainvoice}</label></td>
-            <td width="15%" class="fieldlabel">{$_ADMINLANG.fields.billingcycle}</td>
-            <td class="fieldarea"><select name="billingcycle">
-                    <option value="">- {$_ADMINLANG.global.nochange} -</option>
-                    <option value="Free Account">{$_ADMINLANG.billingcycles.free}</option>
-                    <option value="One Time">{$_ADMINLANG.billingcycles.onetime}</option>
-                    <option value="Monthly">{$_ADMINLANG.billingcycles.monthly}</option>
-                    <option value="Quarterly">{$_ADMINLANG.billingcycles.quarterly}</option>
-                    <option value="Semi-Annually">{$_ADMINLANG.billingcycles.semiannually}</option>
-                    <option value="Annually">{$_ADMINLANG.billingcycles.annually}</option>
-                    <option value="Biennially">{$_ADMINLANG.billingcycles.biennially}</option>
-                    <option value="Triennially">{$_ADMINLANG.billingcycles.triennially}</option>
-                </select></td>
-        </tr>
-        <tr>
-            <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.paymentmethod}</td>
-            <td class="fieldarea">{$paymentmethoddropdown}</td>
-            <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.status}</td>
-            <td class="fieldarea"><select name="status">
-                    <option value="">- {$_ADMINLANG.global.nochange} -</option>
-                    <option value="Pending">{$_ADMINLANG.status.pending}</option>
-                    <option value="Active">{$_ADMINLANG.status.active}</option>
-                    <option value="Suspended">{$_ADMINLANG.status.suspended}</option>
-                    <option value="Terminated">{$_ADMINLANG.status.terminated}</option>
-                    <option value="Cancelled">{$_ADMINLANG.status.cancelled}</option>
-                    <option value="Fraud">{$_ADMINLANG.status.fraud}</option>
-                </select></td>
-        </tr>
-        <tr>
-            <td class="fieldlabel" width="15%">{$_ADMINLANG.services.modulecommands}</td>
-            <td class="fieldarea" colspan="3"><input type="submit" name="masscreate" value="{$_ADMINLANG.modulebuttons.create}" class="button" />
-                <input type="submit" name="masssuspend" value="{$_ADMINLANG.modulebuttons.suspend}" class="button" />
-                <input type="submit" name="massunsuspend" value="{$_ADMINLANG.modulebuttons.unsuspend}" class="button" />
-                <input type="submit" name="massterminate" value="{$_ADMINLANG.modulebuttons.terminate}" class="button" />
-                <input type="submit" name="masschangepackage" value="{$_ADMINLANG.modulebuttons.changepackage}" class="button" />
-                <input type="submit" name="masschangepw" value="{$_ADMINLANG.modulebuttons.changepassword}" class="button" /></td>
-        </tr>
-        <tr>
-            <td class="fieldlabel" width="15%">{$_ADMINLANG.services.overrideautosusp}</td>
-            <td class="fieldarea" colspan="3"><input type="checkbox" name="overideautosuspend" id="overridesuspend" />
-                <label for="overridesuspend">{$_ADMINLANG.services.nosuspenduntil}</label>
-                <input type="text" name="overidesuspenduntil" class="datepick" /></td>
-        </tr>
-    </table>
-    <br />
-    <div align="center">
-        <input type="submit" name="massupdate" value="{$_ADMINLANG.global.submit}" />
-    </div>
-</div>
+        <p align="center">
+            <input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" />
+        <div id="massupdatebox" style="width:75%;background-color:#f7f7f7;border:1px dashed #cccccc;padding:10px;margin-left:auto;margin-right:auto;display:none;">
+            <h2 style="text-align:center;margin:0 0 10px 0">{$_ADMINLANG.clientsummary.massupdateitems}</h2>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tr>
+                    <td width="15%" class="fieldlabel" nowrap>{$_ADMINLANG.fields.firstpaymentamount}</td>
+                    <td class="fieldarea"><input type="text" size="20" name="firstpaymentamount" /></td>
+                    <td width="15%" class="fieldlabel" nowrap>{$_ADMINLANG.fields.recurringamount}</td>
+                    <td class="fieldarea"><input type="text" size="20" name="recurringamount" /></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.nextduedate}</td>
+                    <td class="fieldarea"><input type="text" size="20" name="nextduedate" class="datepick" />
+                        &nbsp;&nbsp;
+                        <input type="checkbox" name="proratabill" id="proratabill" />
+                        <label for="proratabill">{$_ADMINLANG.clientsummary.createproratainvoice}</label></td>
+                    <td width="15%" class="fieldlabel">{$_ADMINLANG.fields.billingcycle}</td>
+                    <td class="fieldarea"><select name="billingcycle">
+                            <option value="">- {$_ADMINLANG.global.nochange} -</option>
+                            <option value="Free Account">{$_ADMINLANG.billingcycles.free}</option>
+                            <option value="One Time">{$_ADMINLANG.billingcycles.onetime}</option>
+                            <option value="Monthly">{$_ADMINLANG.billingcycles.monthly}</option>
+                            <option value="Quarterly">{$_ADMINLANG.billingcycles.quarterly}</option>
+                            <option value="Semi-Annually">{$_ADMINLANG.billingcycles.semiannually}</option>
+                            <option value="Annually">{$_ADMINLANG.billingcycles.annually}</option>
+                            <option value="Biennially">{$_ADMINLANG.billingcycles.biennially}</option>
+                            <option value="Triennially">{$_ADMINLANG.billingcycles.triennially}</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.paymentmethod}</td>
+                    <td class="fieldarea">{$paymentmethoddropdown}</td>
+                    <td class="fieldlabel" width="15%">{$_ADMINLANG.fields.status}</td>
+                    <td class="fieldarea"><select name="status">
+                            <option value="">- {$_ADMINLANG.global.nochange} -</option>
+                            <option value="Pending">{$_ADMINLANG.status.pending}</option>
+                            <option value="Active">{$_ADMINLANG.status.active}</option>
+                            <option value="Suspended">{$_ADMINLANG.status.suspended}</option>
+                            <option value="Terminated">{$_ADMINLANG.status.terminated}</option>
+                            <option value="Cancelled">{$_ADMINLANG.status.cancelled}</option>
+                            <option value="Fraud">{$_ADMINLANG.status.fraud}</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel" width="15%">{$_ADMINLANG.services.modulecommands}</td>
+                    <td class="fieldarea" colspan="3"><input type="submit" name="masscreate" value="{$_ADMINLANG.modulebuttons.create}" class="button" />
+                        <input type="submit" name="masssuspend" value="{$_ADMINLANG.modulebuttons.suspend}" class="button" />
+                        <input type="submit" name="massunsuspend" value="{$_ADMINLANG.modulebuttons.unsuspend}" class="button" />
+                        <input type="submit" name="massterminate" value="{$_ADMINLANG.modulebuttons.terminate}" class="button" />
+                        <input type="submit" name="masschangepackage" value="{$_ADMINLANG.modulebuttons.changepackage}" class="button" />
+                        <input type="submit" name="masschangepw" value="{$_ADMINLANG.modulebuttons.changepassword}" class="button" /></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel" width="15%">{$_ADMINLANG.services.overrideautosusp}</td>
+                    <td class="fieldarea" colspan="3"><input type="checkbox" name="overideautosuspend" id="overridesuspend" />
+                        <label for="overridesuspend">{$_ADMINLANG.services.nosuspenduntil}</label>
+                        <input type="text" name="overidesuspenduntil" class="datepick" /></td>
+                </tr>
+            </table>
+            <br />
+            <div align="center">
+                <input type="submit" name="massupdate" value="{$_ADMINLANG.global.submit}" />
+            </div>
+        </div>
 
 
-{literal}
-    <!-- DataTables -->
+        {literal}
+            <!-- DataTables -->
 
-    <script type="text/javascript">
-        $("#servicetable").DataTable({
-            "columns": [
-                {"orderable": false},
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                {"orderable": false}]
-        });
-    </script>
+            <script type="text/javascript">
+            {/literal}{if $servicessummary}{literal}
+                $("#servicetable").DataTable({
+                    "columns": [
+                        {"orderable": false},
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        {"orderable": false}]
+                });{/literal}
+                    {/if}
+                        {literal}
 
-{/literal}
-{/strip}
+                            $(".addnotes").click(function (e) {
+                                e.preventDefault();
+                                var token = $("input[name='token']").val();
+                                var notes = $("input[name='note']").val();
+                                $.ajax({
+                                    url: "/admin/clientsnotes.php?sub=add",
+                                    method: "post",
+                                    data: {"userid":{/literal}{$clientsdetails.userid}{literal}, "token": token, "notes": notes}})
+                                        .done(function () {
+                                            $('#addnotes').modal('hide');
+                                        });
+
+                            });
+
+                        </script>
+
+                    {/literal}
+                    {/strip}

@@ -2,7 +2,7 @@
 
 {php}
 $accordion = array(
-    "home" => array (
+    "home" => array(
         "name" => "Home",
         "url" => "index.php",
         "glyphicon" => "home"
@@ -10,9 +10,10 @@ $accordion = array(
     "clients" => array(
         "name" => "Customers",
         "glyphicon" => "user",
-        "members" => array(
+"members" => array(
             "clients.php" => "View Customers",
             "clientsadd.php" => "Add New Client",
+            "configclientgroups.php"=>"Client Groups",
             "cancelrequests.php" => "Cancellation Requests",
             "affiliates.php" => "Manage Affiliates"
         )
@@ -84,9 +85,30 @@ $accordion = array(
             "systememaillog.php" => "Email Message Log",
             "systemmailimportlog.php" => "Ticket Mail Import Log"
         )
+    ),
+    "system" => array(
+        "name" => "System",
+        "glyphicon" => "cog",
+        "members" => array(
+            "configgeneral.php" => "General Settings",
+            "configauto.php" => "Automation Settings",
+   "configemailtemplates.php"=>"Email Templates",
+            "configaddonmods.php"=>"Addon Modules",
+            "configcurrencies.php"=>"Currencies",
+            "configgateways.php"=>"Payment Gateways",
+            "configtax.php"=>"Tax Rules",
+            "configpromotions.php"=>"Promotions",
+            "#" => array(
+                "name" => "Staff Management",
+                "members" => array(
+                    "configadmins.php" => "Administrator Users",
+                    "configadminroles.php" => "Administrator Roles",
+                    "configtwofa.php" => "Two-Factor Authentication"
+                ),
+          
+            ),
+        )
     )
-
-            
 );
 $this->assign('accordion', $accordion);
 {/php}
@@ -100,29 +122,38 @@ $this->assign('accordion', $accordion);
     </div>
 
 </div>
-<form action="#" method="get" class="sidebar-form">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-        </span>
-    </div>
-</form>
+
 <ul class="sidebar-menu">
     <li class="header">MAIN NAVIGATION</li>
         {foreach from=$accordion item=section key=sectionname}
             {if $section.members|is_array}
             <li class="treeview">
                 <a href="#">
-                    <i class="glyphicon glyphicon-{$section.glyphicon}"></i> <span>{$section.name}</span>
+                    <i class="glyphicon glyphicon-{$section.glyphicon}"></i><span>{$section.name}</span>
                     <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <span class="label label-primary pull-right">{$section.num}</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     {foreach from=$section.members item=member key=url}
-                        <li class="active"><a href="{$url}"><i class="fa fa-circle-o"></i>{$member}</a></li>
+                        {if $member.members|is_array}
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i>
+                                    <span>{$member.name}</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {foreach from=$member.members item=submember key=suburl}
+                                        <li><a href="{$suburl}"><i class="fa fa-circle-o"></i>{$submember}</a></li>
+                                            {/foreach}
+                                </ul>
+                            </li>
+                        {else}
+                            <li><a href="{$url}"><i class="fa fa-circle-o"></i>{$member}</a></li>
+                                {/if}
                             {/foreach}
                 </ul>
             </li>

@@ -13,7 +13,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
+$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions","servicefunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
 $id = (int)$ra->get_req_var("id");
 $hostingid = (int)$ra->get_req_var("hostingid");

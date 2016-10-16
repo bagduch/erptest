@@ -94,7 +94,7 @@
                                                         </a>
                                                     </li>
                                                 {/if}
-                                               {if $ccexpiringsoon AND in_array('invoices',$contactpermissions)}
+                                                {if $ccexpiringsoon AND in_array('invoices',$contactpermissions)}
                                                     <li>
                                                         <a href="clientarea.php?action=creditcard">
                                                             <span aria-hidden="true" class="icon noty-icon bg-danger icon-credit-card"></span>
@@ -161,8 +161,8 @@
                                                 <li {if $filename eq "clientarea" and $smarty.get.action eq "security"}class="active"{/if}><a href="clientarea.php?action=security" data-original-title="{$LANG.clientareanavsecurity}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.clientareanavsecurity}</span></a></li>
                                             </ul>
                                         </li> 
-                                        <li {if $filename eq "clientarea" and $smarty.get.action eq "Services"} class="active"{/if}><a href="clientarea.php?action=services" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navproduct}</span><span class="badge badge-default pull-right">{$clientsstats.productsnumactive}</span></a></li>        
-                                        <li {if $filename eq "clientarea" and $smarty.get.action eq "products"} class="active"{/if}><a href="clientarea.php?action=products" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navservices}</span><span class="badge badge-default pull-right">{$clientsstats.productsnumactive}</span></a></li>        
+                                        <li {if $filename eq "clientarea" and $smarty.get.action eq "Services"} class="active"{/if}><a href="clientarea.php?action=services" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navservices}</span><span class="badge badge-default pull-right">{$clientsstats.productsnumactive}</span></a></li>        
+                                        <li {if $filename eq "clientarea" and $smarty.get.action eq "products"} class="active"{/if}><a href="clientarea.php?action=product" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navproduct}</span><span class="badge badge-default pull-right">{$clientsstats.servicenumactive}</span></a></li>        
                                         <li {if $filename eq "clientarea" and $smarty.get.action eq "invoices"} class="active"{/if}><a href="clientarea.php?action=invoices" data-original-title="{$LANG.invoices}"><span aria-hidden="true" class="icon icon-drawer"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.invoices}</span></a></li>
                                         <li class="submenu"><a class="dropdown {if $filename eq "submitticket" || $filename eq "supporttickets" || $filename eq "serverstatus" || $filename eq "downloads" || $filename eq "knowledgebase"}active-parent{/if}" href="javascript:;" data-original-title="{$LANG.navsupport}"><span aria-hidden="true" class="icon icon-support"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navsupport}</span><span class="fa arrow"></span></a>
                                             <ul {php}echo $display{/php}>
