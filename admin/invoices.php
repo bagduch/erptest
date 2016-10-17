@@ -352,8 +352,8 @@ if ($action == "") {
                 $sendconfirmation = "on";
             }
 
-            addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $date);
-            redir("action=edit&id=" . $id);
+         //   addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $date);
+            redir("admin/clientsinvoices.php?userid=12437","",true);
             exit();
         }
 

@@ -33,3 +33,10 @@ and open the template in the editor.
     padding-top: 8px;
 
 }
+.tableitem{
+    margin-right: 5px;
+    display: inline; 
+}
+.table td{
+    vertical-align: middle!important;
+}

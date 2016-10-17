@@ -225,6 +225,19 @@ if ($masspayerr) {
     infoBox($aInt->lang("invoices", "masspay"), $aInt->lang("invoices", "mergeerrordesc"));
 }
 
+if ($addpayment) {
+    check_token("RA.admin.default");
+    checkPermission("Add Transaction");
+
+    if ($sendconfirmation == "on") {
+        $sendconfirmation = "";
+    } else {
+        $sendconfirmation = "on";
+    }
+
+
+    addInvoicePayment($_POST['id'], $_POST['transid'], $_POST['amount'], $_POST['fees'], $_POST['paymentmethod'], $_POST['sendconfirmation'], $_POST['date']);
+}
 
 if ($masspayid) {
     infoBox($aInt->lang("invoices", "masspay"), $aInt->lang("invoices", "masspaysuccess") . " - <a href=\"invoices.php?action=edit&id=" . (int) $masspayid . "\">" . $aInt->lang("fields", "invoicenum") . $masspayid . "</a>");
@@ -321,8 +334,15 @@ if ($qryorderby == "id") {
 
 $result = select_query_i("tblinvoices", "", implode(" AND ", $filters), $qryorderby, $order, $page * $limit . ("," . $limit));
 
+$invoicedata = array();
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
+    $bresult = select_query_i("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
+    $accounts = mysqli_fetch_array($bresult);
+    $transcount = $accounts[0];
+    $amountpaid = $accounts[1];
+    $balance = $data['total'] - $amountpaid;
+    $balance = $rawbalance = sprintf("%01.2f", $balance);
     $invoicenum = $data['invoicenum'];
     $date = $data['date'];
     $duedate = $data['duedate'];
@@ -342,7 +362,9 @@ while ($data = mysqli_fetch_array($result)) {
         $invoicenum = $id;
     }
 
-    $tabledata[] = array("<input type=\"checkbox\" name=\"selectedinvoices[]\" value=\"" . $id . "\" class=\"checkall\">", "<a href=\"invoices.php?action=edit&id=" . $id . "\">" . $invoicenum . "</a>", $date, $duedate, $datepaid, "<a href=\"invoices.php?action=invtooltip&id=" . $id . "&userid=" . $userid . generate_token("link") . ("\" class=\"invtooltip\" lang=\"\">" . $total . "</a>"), $paymentmethod, $status, "<a href=\"invoices.php?action=edit&id=" . $id . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
+    $invoicedata[$id] = $data;
+    $invoicedata[$id]['balance'] = $balance;
+    $tabledata[] = array("<input type=\"checkbox\" name=\"selectedinvoices[]\" value=\"" . $id . "\" class=\"checkall\">", "<a href=\"invoices.php?action=edit&id=" . $id . "\">" . $invoicenum . "</a>", $date, $duedate, $datepaid, "<a href=\"invoices.php?action=invtooltip&id=" . $id . "&userid=" . $userid . generate_token("link") . ("\" class=\"invtooltip\" lang=\"\">" . $total . "</a>"), $balance, $paymentmethod, $status, "<a href=\"../dl.php?type=i&id=" . $id . "\" class=\"btn btn-warning tableitem\"><i class=\"fa fa-file-pdf-o\"></i></a><a href=\"#paymentadd" . $id . "\" data-toggle=\"collapse\" class=\"btn btn-info tableitem\"><i class=\"fa fa-money\"></i></a><a href=\"invoices.php?action=edit&id=" . $id . "\"class=\"btn btn-success tableitem\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><a href=\"#\" onClick=\"doDelete('" . $id . "');return false\" class=\"btn btn-danger tableitem\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
 $tableformurl = $_SERVER['PHP_SELF'] . "?userid=" . $userid . "&filter=1";
@@ -351,7 +373,12 @@ if ($page) {
     $tableformurl .= "&page=" . $page;
 }
 
-$tableformbuttons = "<input type=\"submit\" value=\"" . $aInt->lang("invoices", "markpaid") . "\" class=\"btn-success\" name=\"markpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markunpaid") . "\" name=\"markunpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markunpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markcancelled") . "\" name=\"markcancelled\" onclick=\"return confirm('" . $aInt->lang("invoices", "markcancelledconfirm", "1") . "')\" />   <input type=\"submit\" value=\"" . $aInt->lang("invoices", "duplicateinvoice") . "\" name=\"duplicateinvoice\" onclick=\"return confirm('" . $aInt->lang("invoices", "duplicateinvoiceconfirm", "1") . "')\" />   <input type=\"submit\" value=\"" . $aInt->lang("invoices", "sendreminder") . "\" name=\"paymentreminder\" onclick=\"return confirm('" . $aInt->lang("invoices", "sendreminderconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "merge") . "\" name=\"merge\" onclick=\"return confirm('" . $aInt->lang("invoices", "mergeconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "masspay") . "\" name=\"masspay\" onclick=\"return confirm('" . $aInt->lang("invoices", "masspayconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" class=\"btn-danger\" name=\"massdelete\" onclick=\"return confirm('" . $aInt->lang("invoices", "massdeleteconfirm", "1") . "')\" />";
+$createinvoice = "<input type=\"button\" value=\"Create Invoice\" class=\"button\" onclick=\"window.location ='invoices.php?action=createinvoice&amp;userid=" . $userid . "&amp;token=" . generate_token('plain') . "'\">";
+$tableformbuttons = "<input type=\"submit\" value=\"" . $aInt->lang("invoices", "markpaid") . "\" class=\"btn-success\" name=\"markpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markunpaid") . "\" name=\"markunpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markunpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markcancelled") . "\" name=\"markcancelled\" onclick=\"return confirm('" . $aInt->lang("invoices", "markcancelledconfirm", "1") . "')\" />    <input type=\"submit\" value=\"" . $aInt->lang("invoices", "merge") . "\" name=\"merge\" onclick=\"return confirm('" . $aInt->lang("invoices", "mergeconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" class=\"btn-danger\" name=\"massdelete\" onclick=\"return confirm('" . $aInt->lang("invoices", "massdeleteconfirm", "1") . "')\" /> " . $createinvoice;
+
+
+
+
 $table = $aInt->sortableTable(
         array("checkall",
     array("id", $aInt->lang("fields", "invoicenum")),
@@ -359,14 +386,17 @@ $table = $aInt->sortableTable(
     array("duedate", $aInt->lang("fields", "duedate")),
     array("datepaid", $aInt->lang("fields", "datepaid")),
     array("total", $aInt->lang("fields", "total")),
+    array("balance", $aInt->lang("fields", "balance")),
     array("paymentmethod", $aInt->lang("fields", "paymentmethod")),
     array("status", $aInt->lang("fields", "status")), "", ""), $tabledata, $tableformurl, $tableformbuttons);
 
 $paymentdropdown = paymentMethodsSelection();
 
+$aInt->assign("userid", $userid);
 $aInt->assign("token", generate_token("link"));
 $aInt->assign("paymentdropdown", $paymentdropdown);
 $aInt->assign("intable", $table);
+$aInt->assign("invoicedata", $invoicedata);
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
 $aInt->template = "client/invoices";

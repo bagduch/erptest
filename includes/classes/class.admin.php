@@ -1034,7 +1034,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $content .= "</table>\r\n</div>\r\n";
 
         if ($formbuttons) {
-            $content .= "<div class=\"left\">" . $this->lang("global", "withselected") . ": " . $formbuttons . "\r\n</form></div>\r\n";
+            $content .= "<div class=\"clearfix\"></div><div class=\"left\">" . $this->lang("global", "withselected") . ": " . $formbuttons . "\r\n</form></div>\r\n";
         }
         $content .= "<div class=\"right\">" . $this->lang("global", "jumppage");
         $content .= ": <select name=\"page\" onchange=\"submit()\">";
@@ -1053,7 +1053,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             ++$i;
         }
 
-        $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn-small\" /></div>";
+        $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn-small\" /></div><div class=\"clearfix\"></div>";
 
         if ($this->tablePagination) {
             $content .= "<p align=\"center\">";
