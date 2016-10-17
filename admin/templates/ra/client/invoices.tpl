@@ -91,8 +91,6 @@
                             <td class="fieldarea">
                                 {$paymentdropdown}
                             </td>
-                            <td class="fieldlabel">Transaction Fees</td>
-                            <td class="fieldarea"><input type="text" class="form-control" name="fees" value="" size="10"></td>
                             <td class="fieldlabel">Transaction ID</td>
                             <td class="fieldarea"><input type="text" class="form-control" name="transid" size="25"></td>
                             <td class="fieldlabel">Send Email</td>
