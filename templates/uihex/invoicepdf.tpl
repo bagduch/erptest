@@ -1,184 +1,486 @@
 <?php
+### Variables that you can set ###
 
-# Logo
-if (file_exists(ROOTDIR.'/images/logo.png')) $pdf->Image(ROOTDIR.'/images/logo.png',20,25,75);
-elseif (file_exists(ROOTDIR.'/images/logo.jpg')) $pdf->Image(ROOTDIR.'/images/logo.jpg',20,25,75);
-else $pdf->Image(ROOTDIR.'/images/placeholder.png',20,25,75);
+$invoicevars = array(
+	'pageformat'         => 'A4',    // Either 'LETTER' or 'A4'
+	'custom_tax_name'    => "TAX INVOICE",
+	'tax_number'         => "GST Number: 96-983-506",
+	'tagline'            => "",
+	'phonenumber'        => "64 9 280 4135",
+	'faxnumber'          => "64 9 280 4134",
+	'Remittance1'        => "Please pay by the Due Date and use the Invoice number provided as the reference.",
+	'Remittance2'        => "\nAcc Number: 02-0272-0179921-000\nAcc Name: HD NET LTD",
+	'paybuttontext'      => "",
+	'totalpayable'       => "Total Payable",
+	'dueby'              => "Due By",
+	'statusdatepaid'     => "Date Paid",
+	'statusvia'          => "Via",
+	'invoiceinfoheader'  => "Invoice Information",
+	'accountinfoheader'  => "Account Information",
+	'accountnumber'      => "Account ID",
+	'accountname'        => "Account Owner",
+	'accountusername'    => "Username",
+	'contactinfoheader'  => "Contact Information",
+	'contactweb'         => "Web: www.hd.net.nz",
+	'contactemail'       => "Email: s@hd.net.nz",
+	'contactphone'       => "Phone",
+	'contactfax'         => "Fax",
+	'Remittance'         => "Remittance:",
+	'remittanceto'       => "To:",
+    'hdrra'       		 => "HD",
+    'hdrrb'      		 => "PO Box 26 Westpark Village",
+    'hdrrc'       		 => "Waitakere Auckland",
+    'hdrrd'       		 => "0661",
+    'hdrre'       		 => "New Zealand",
+	'remittancetotaldue' => "Total Payment Due",
+	'paymethodtext'      => "\nAcc Number: 02-0272-0179921-000\nAcc Name: HD NET LTD\n\nPlease pay by the Due Date and use the Invoice number provided as the reference.",
+	'backcolor'          => array(255,255,255),
+	'boxbackcolor'       => array(229,242,254),
+	'headerbgcolor'      => array(153,204,255),
+	'headerfgcolor'      => array(0,0,0),
+	'bordercolor'        => array(0,0,0),
+	'buttoncolor'        => array(204,204,204),
+	'taxnamecolor'       => array(0,0,0),
+	'taglinecolor'       => array(0,0,255),
+	'textcolor'          => array(0,0,0),
+	'cancelledcolor'     => array(204,204,204),
+	'unpaidcolor'        => array(204,0,51),
+	'paidcolor'          => array(153,204,0),
+	'refundedcolor'      => array(34,68,136),
+	'collectionscolor'   => array(255,204,0),
+);
+### DO NOT EDIT UNDER THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING ###
+######################################################################
 
-# Invoice Status
-$statustext = $_LANG['invoices'.strtolower($status)];
-$pdf->SetFillColor(223,85,74);
-$pdf->SetDrawColor(171,49,43);
-if ($status=="Paid") {
-    $pdf->SetFillColor(151,223,74);
-    $pdf->SetDrawColor(110,192,70);
-}elseif ($status=="Cancelled") {
-    $pdf->SetFillColor(200);
-    $pdf->SetDrawColor(140);
-} elseif ($status=="Refunded") {
-    $pdf->SetFillColor(131,182,218);
-    $pdf->SetDrawColor(91,136,182);
-} elseif ($status=="Collections") {
-    $pdf->SetFillColor(3,3,2);
-    $pdf->SetDrawColor(127);
-}
-$pdf->SetXY(0,0);
-$pdf->SetFont('freesans','B',28);
-$pdf->SetTextColor(255);
-$pdf->SetLineWidth(0.75);
-$pdf->StartTransform();
-$pdf->Rotate(-35,100,225);
-$pdf->Cell(100,18,strtoupper($statustext),'TB',0,'C','1');
-$pdf->StopTransform();
-$pdf->SetTextColor(0);
-
-# Company Details
-$pdf->SetXY(15,26);
-$pdf->SetFont('freesans','',13);
-$pdf->Cell(160,6,trim($companyaddress[0]),0,1,'R');
-$pdf->SetFont('freesans','',9);
-for ( $i = 1; $i <= ((count($companyaddress)>6) ? count($companyaddress) : 6); $i += 1) {
-	$pdf->Cell(160,4,trim($companyaddress[$i]),0,1,'R');
-}
-$pdf->Ln(5);
-
-# Header Bar
+extract($invoicevars);
 $invoiceprefix = $_LANG["invoicenumber"];
-/*
-** This code should be uncommented for EU companies using the sequential invoice numbering so that when unpaid it is shown as a proforma invoice **
-if ($status!="Paid") {
-	$invoiceprefix = $_LANG["proformainvoicenumber"];
+
+if ($CONFIG['SequentialInvoiceNumbering'] == 'on') {
+	## This code is for EU companies using the sequential invoice numbering so that when unpaid it is shown as a proforma invoice **
+	if ($status!="Paid") {
+		$invoiceprefix = $_LANG["proformainvoicenumber"];
+	}
 }
-*/
-$pdf->SetFont('freesans','B',15);
-$pdf->SetFillColor(239);
-$pdf->Cell(0,8,$invoiceprefix.$invoicenum,0,1,'L','1');
-$pdf->SetFont('freesans','',10);
-$pdf->Cell(0,6,$_LANG["invoicesdatecreated"].': '.$datecreated.'',0,1,'L','1');
-$pdf->Cell(0,6,$_LANG["invoicesdatedue"].': '.$duedate.'',0,1,'L','1');
-$pdf->Ln(10);
 
-$startpage = $pdf->GetPage();
+if ($status == 'Paid' || $status == 'Cancelled') {
+	$invoicetotal = number_format(0,2);
+} else{
+	$invoicetotal = number_format($total,2);
+}
 
-# Clients Details
-$addressypos = $pdf->GetY();
-$pdf->SetFont('freesans','B',10);
-$pdf->Cell(0,4,$_LANG["invoicesinvoicedto"],0,1);
-$pdf->SetFont('freesans','',9);
 if ($clientsdetails["companyname"]) {
-	$pdf->Cell(0,4,$clientsdetails["companyname"],0,1,'L');
-	$pdf->Cell(0,4,$_LANG["invoicesattn"].": ".$clientsdetails["firstname"]." ".$clientsdetails["lastname"],0,1,'L');
+	$addressline = array($clientsdetails["companyname"],$clientsdetails["address1"],$clientsdetails["city"],$clientsdetails["state"]." ".$clientsdetails["postcode"]." ".$clientsdetails["country"]);
 } else {
-	$pdf->Cell(0,4,$clientsdetails["firstname"]." ".$clientsdetails["lastname"],0,1,'L');
+	$addressline = array($clientsdetails["firstname"]." ".$clientsdetails["lastname"],$clientsdetails["address1"],$clientsdetails["city"],$clientsdetails["state"]." ".$clientsdetails["postcode"]." ".$clientsdetails["country"]);
 }
-$pdf->Cell(0,4,$clientsdetails["address1"],0,1,'L');
-if ($clientsdetails["address2"]) {
-	$pdf->Cell(0,4,$clientsdetails["address2"],0,1,'L');
-}
-$pdf->Cell(0,4,$clientsdetails["city"].", ".$clientsdetails["state"].", ".$clientsdetails["postcode"],0,1,'L');
-$pdf->Cell(0,4,$clientsdetails["country"],0,1,'L');
-if ($customfields) {
-    $pdf->Ln();
-    foreach ($customfields AS $customfield) {
-        $pdf->Cell(0,4,$customfield['fieldname'].': '.$customfield['value'],0,1,'L');
+
+$result2a = select_query_i("tblinvoices","total",array("id"=>$id));
+$dataa = mysqli_fetch_array($result2a);
+$invtotal = $dataa["total"];
+
+$resultb = select_query_i("tblaccounts","SUM(amountin)-SUM(amountout)",array("invoiceid"=>$id));
+$datab = mysqli_fetch_array($resultb);
+$amountpaid = $datab[0];
+
+$balance = $invtotal - $amountpaid;
+$balance = sprintf("%01.2f", $balance);
+$balance = formatCurrency($balance);
+
+$transactions = array();
+$resultc = select_query_i("tblaccounts","",array("invoiceid"=>$id),"date` ASC,`id","ASC");
+while ($datac = mysqli_fetch_array($resultc)) {
+	$date = $datac["date"];
+	$date = fromMySQLDate($date);
+	$gateway = $datac["gateway"];
+	$description = $datac["description"];
+	$amountin = $datac["amountin"];
+	$fees = $datac["fees"];
+    $amountout = $datac["amountout"];
+	$transid = $datac["transid"];
+	$invoiceid = $datac["invoiceid"];
+  	$gateway = $gatewaysarray[$gateway];
+    if (!$gateway) {
+    	$gateway="-";
     }
+    $transactions[] = array(
+    "date" => $date,
+    "gateway" => $gateway,
+	"description" => $description,
+    "transid" => $transid,
+    "amount" => formatCurrency($amountin-$amountout),
+    );
 }
+
+###### START PDF INVOICE ######
+#$pdf->setPageFormat( $pageformat, 'P');
+$pdf->SetMargins(20, 15, 20); # set margins
+$pdf->SetAutoPageBreak(TRUE, 5);
+$preferences = array(
+    'HideToolbar' => false,
+    'HideMenubar' => true,
+    'HideWindowUI' => true,
+    'FitWindow' => true,
+    'CenterWindow' => true,
+    'DisplayDocTitle' => true,
+    'NonFullScreenPageMode' => 'UseNone', // UseNone, UseOutlines, UseThumbs, UseOC
+    'ViewArea' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
+    'ViewClip' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
+    'PrintArea' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
+    'PrintClip' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
+    'PrintScaling' => 'AppDefault', // None, AppDefault
+    'Duplex' => 'DuplexFlipLongEdge', // Simplex, DuplexFlipShortEdge, DuplexFlipLongEdge
+    'PickTrayByPDFSize' => true,
+    'PrintPageRange' => array(1,1,2,3),
+    'NumCopies' => 1
+);
+
+// set pdf viewer preferences
+$pdf->setViewerPreferences($preferences);
+
+#$pdf->SetProtection(array('print'));
+$pdf->SetCreator("Sparky's Mods");
+if (!function_exists ('drawnewinvoicepage')){
+function &drawnewinvoicepage($gatewaysarray,$balance,$invoicenum,$notes,$datecreated,$duedate,$paymentmethod,$clientsdetails,$invoicevars,$addressline,$companyaddress,$total,$invoiceprefix,$status,$statustext,$invoiceid,$datepaid,$CONFIG,$_LANG,$pdf){
+global $data;
+extract($invoicevars);
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetFillColorArray($headerbgcolor);
+
+
+if ($paymentmethod=="Credit Card - Visa or Mastercard") {
+    $paymethodtext="\nPayment will be debited from your credit card on the night before the invoice due date.";
+}
+
+
+
+# DRAW ROUNDED BOXES
+if ($pageformat == 'LETTER') {
+	$pdf->RoundedRect(15, 15, 180, 260, 3.50, '1111', 'DF', null, $backcolor);
+	$pdf->SetFooterMargin(5);
+} else {
+	$pdf->RoundedRect(15, 15, 180, 277, 3.50, '1111', 'DF', null, $backcolor);
+	$pdf->SetFooterMargin(10);
+}
+$pdf->RoundedRect(20, 48, 80, 18, 3.50, '1111', 'DF', null, $boxbackcolor);
+$pdf->RoundedRect(105, 48, 40, 18, 3.50, '1111', 'DF', null, $boxbackcolor);
+$pdf->RoundedRect(150, 48, 40, 18, 3.50, '1111', 'DF', null, $boxbackcolor);
+$pdf->RoundedRect(20, 67.5, 170, 157.5, 3.50, '1111', 'DF', null, $boxbackcolor);
+
+# DRAW LINES
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetLineWidth(1);
+$pdf->Line(20,36.5,190,36.5,array('cap'=>'round'));
+$pdf->Line(60,25,60,42,array('cap'=>'round'));
+$pdf->SetLineWidth(0);
+$pdf->Line(135,67.5,135,225);
+$pdf->Line(100,233,180,233);
+$pdf->Line(100,248,180,248);
+$pdf->Line(20,230,190,230,array('dash'=>'4','color' => array(255, 0, 0)));
+$pdf->SetLineStyle(array('width' => 0, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0,0,0))); 
+
+# SHOW IMAGE
+
+$pdf->Image('https://my.hd.net.nz/images/230x230.png',20,16,0,19,'',$CONFIG['Domain'],'',true,300);
+
+# SHOW COMPANY DETAILS
+$pdf->SetFont('helvetica','',7);
+$pdf->SetTextColorArray($textcolor);
+$pdf->SetXY(62, 25);
+foreach ($companyaddress AS $companyaddressline) {
+	$tmpcompanyaddress .= "$companyaddressline\n";
+}
+$pdf->MultiCell(38,8,html_entity_decode($tmpcompanyaddress));
+
+# SHOW CUSTOM INVOICE NAME IF SET
+if ($custom_tax_name != "") {
+	$pdf->SetXY(150,24);
+	$pdf->SetFont('helvetica','B',19);
+	$pdf->SetTextColorArray($taxnamecolor);
+	$pdf->Cell(36,0,$custom_tax_name,0,0,'C');
+}
+
+# SHOW CUSTOM TAX NUMBER IF SET
+if ($tax_number != "") {
+	$pdf->SetXY(19,39);
+	$pdf->SetFont('helvetica','B',8);
+	$pdf->SetTextColorArray($textcolor);
+	$pdf->Cell(36,0,$tax_number,0,0,'C');
+}
+
+# SHOW CLIENT DETAILS IN INVOICE TO
+$pdf->SetFont('helvetica','B',8);
+$pdf->SetXY(23,50);
+foreach ($addressline AS $addressl) {
+	$tmpaddressline .= "$addressl\n";
+}
+$pdf->MultiCell(76,15,html_entity_decode($tmpaddressline),0,'L');
+
+# SHOW STATUS OF INVOICE
+$pdf->SetXY(107,54);
+if ($status=="Cancelled") {
+	$statustext = $_LANG["invoicescancelled"];
+    $pdf->SetTextColorArray($cancelledcolor);
+} elseif ($status=="Unpaid") {
+	$statustext = $_LANG["invoicesunpaid"];
+    $pdf->SetTextColorArray($unpaidcolor);
+} elseif ($status=="Paid") {
+	$statustext = $_LANG["invoicespaid"];
+    $pdf->SetTextColorArray($paidcolor);
+} elseif ($status=="Refunded") {
+	$statustext = $_LANG["invoicesrefunded"];
+    $pdf->SetTextColorArray($refundedcolor);
+} elseif ($status=="Collections") {
+	$statustext = $_LANG["invoicescollections"];
+    $pdf->SetTextColorArray($collectionscolor);
+}
+$pdf->SetFont('helvetica','B',14);
+$pdf->Cell(36,0,strtoupper($statustext),0,2,'C');
+
+$pdf->SetTextColorArray($textcolor);
+$pdf->SetFont('helvetica','B',8);
+if ($status=="Cancelled") {
+	
+} elseif ($status=="Unpaid") {
+	$pdf->SetFillColorArray($headerbgcolor);
+	$pdf->SetLineWidth(0);
+} elseif ($status=="Paid") {
+	$pdf->SetFillColorArray($headerbgcolor);
+	$pdf->SetLineWidth(0);
+}
+
+
+# SHOW TOTAL BALANCE OWING AND DUE BY
+$pdf->SetFont('helvetica','B',7);
+$pdf->SetTextColorArray($textcolor);
+$pdf->SetXY(152,49);
+$pdf->Cell(36,0,$totalpayable,0,2,'C');
+$pdf->SetFont('helvetica','B',12);
+$pdf->SetTextColorArray($unpaidcolor);
+$pdf->Cell(36,0,$balance,0,2,'C');
+$pdf->SetFont('helvetica','B',7);
+$pdf->SetTextColorArray($textcolor);
+$pdf->Cell(36,0,(($status == 'Paid' || $status == 'Cancelled') ? '' : $dueby),0,2,'C');
+$pdf->SetFont('helvetica','B',12);
+$pdf->SetTextColorArray($unpaidcolor);
+$pdf->Cell(36,0,(($status == 'Paid' || $status == 'Cancelled') ? '' : $duedate),0,2,'C');
+
+# RESET FONT SIZE AND COLOR
+$pdf->SetFont('helvetica','B',8);
+$pdf->SetTextColorArray($textcolor);
+
 $pdf->Ln(10);
 
-# Invoice Items
-$tblhtml = '<table width="100%" bgcolor="#ccc" cellspacing="1" cellpadding="2" border="0">
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;text-align:center;">
-        <td width="80%">'.$_LANG['invoicesdescription'].'</td>
-        <td width="20%">'.$_LANG['quotelinetotal'].'</td>
-    </tr>';
-foreach ($invoiceitems AS $item) {
-    $tblhtml .= '
-    <tr bgcolor="#fff">
-        <td align="left">'.nl2br($item['description']).'<br /></td>
-        <td align="center">'.$item['amount'].'</td>
-    </tr>';
-}
-$tblhtml .= '
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td align="right">'.$_LANG['invoicessubtotal'].'</td>
-        <td align="center">'.$subtotal.'</td>
-    </tr>';
-if ($taxname) $tblhtml .= '
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td align="right">'.$taxrate.'% '.$taxname.'</td>
-        <td align="center">'.$tax.'</td>
-    </tr>';
-if ($taxname2) $tblhtml .= '
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td align="right">'.$taxrate2.'% '.$taxname2.'</td>
-        <td align="center">'.$tax2.'</td>
-    </tr>';
-$tblhtml .= '
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td align="right">'.$_LANG['invoicescredit'].'</td>
-        <td align="center">'.$credit.'</td>
-    </tr>
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td align="right">'.$_LANG['invoicestotal'].'</td>
-        <td align="center">'.$total.'</td>
-    </tr>
-</table>';
+# LEFT COLUMN
 
-$pdf->writeHTML($tblhtml, true, false, false, false, '');
+$pdf->SetXY(22,70);
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetFillColorArray($headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->SetFont('helvetica','',8);
+$pdf->RoundedRect(22, 70, 110, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->Cell(80,5,$_LANG["invoicesdescription"],0,0,'L',0);
+$pdf->Cell(30,5,$_LANG["invoicesamount"],0,0,'R',0);
+$pdf->SetTextColorArray($textcolor);
 
-$pdf->Ln(5);
+# RIGHT COLUMN
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetFillColorArray($headerbgcolor);
+$pdf->SetFont('helvetica','',7);
 
-# Transactions
-$pdf->SetFont('freesans','B',12);
-$pdf->Cell(0,4,$_LANG["invoicestransactions"],0,1);
+# INVOICE INFORMATION
+$pdf->SetXY(136,70);
+$pdf->RoundedRect(136, 70, 53, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->Cell(53,5,$invoiceinfoheader,0,0,'L',0);
+$pdf->SetXY(135,77);
+$pdf->SetTextColorArray($textcolor);
+$pdf->MultiCell(50,0,"$invoiceprefix $invoicenum\n".$_LANG["invoicesdatecreated"]." - $datecreated\n".$_LANG["invoicesdatedue"]." - $duedate\n",0,0);
 
-$pdf->Ln(5);
+# SHOW INVOICE DETAILS
+$pdf->SetXY(136,90);
+$pdf->RoundedRect(136, 90, 53, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->Cell(53,5,$accountinfoheader,0,0,'L',0);
+$pdf->SetXY(135,97);
+$pdf->SetTextColorArray($textcolor);
+$pdf->MultiCell(53,0,"$accountnumber - ".$clientsdetails["userid"]."\n$accountname - ".$clientsdetails["firstname"]." ".$clientsdetails["lastname"]."\n$accountusername - ".$clientsdetails["email"]."\n",0,0);
 
-$pdf->SetFont('freesans','',9);
+# CONTACT INFORMATION
+$pdf->SetXY(136,110);
+$pdf->RoundedRect(136, 110, 53, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->Cell(53,5,$contactinfoheader,0,0,'L',0);
+$pdf->SetXY(135,117);
+$pdf->SetTextColorArray($textcolor);
+$pdf->MultiCell(53,0,"$contactweb ".$CONFIG['Domain']."\n$contactemail ".$CONFIG['Email']."\n$contactphone - $phonenumber\n$contactfax - $faxnumber",0,'L',0);
 
-$tblhtml = '<table width="100%" bgcolor="#ccc" cellspacing="1" cellpadding="2" border="0">
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;text-align:center;">
-        <td width="25%">'.$_LANG['invoicestransdate'].'</td>
-        <td width="25%">'.$_LANG['invoicestransgateway'].'</td>
-        <td width="30%">'.$_LANG['invoicestransid'].'</td>
-        <td width="20%">'.$_LANG['invoicestransamount'].'</td>
-    </tr>';
+# PAYMENT METHOD
+$pdf->SetXY(136,136);
+$pdf->RoundedRect(136, 136, 53, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+//$pdf->Cell(53,5,"Internet Banking/Direct Credit",0,0,'L',0);
+$pdf->Cell(53,5,$paymentmethod,0,0,'L',0);
+$pdf->SetXY(135,142);
+$pdf->SetTextColorArray($textcolor);
+$pdf->MultiCell(55,0,(($paymethodtext == "") ? $paymentmethod : $paymethodtext),0,'L',0);
 
-if (!count($transactions)) {
-    $tblhtml .= '
-    <tr bgcolor="#fff">
-        <td colspan="4" align="center">'.$_LANG['invoicestransnonefound'].'</td>
-    </tr>';
-} else {
-    foreach ($transactions AS $trans) {
-        $tblhtml .= '
-        <tr bgcolor="#fff">
-            <td align="center">'.$trans['date'].'</td>
-            <td align="center">'.$trans['gateway'].'</td>
-            <td align="center">'.$trans['transid'].'</td>
-            <td align="center">'.$trans['amount'].'</td>
-        </tr>';
-    }
-}
-$tblhtml .= '
-    <tr height="30" bgcolor="#efefef" style="font-weight:bold;">
-        <td colspan="3" align="right">'.$_LANG['invoicesbalance'].'</td>
-        <td align="center">'.$balance.'</td>
-    </tr>
-</table>';
-
-$pdf->writeHTML($tblhtml, true, false, false, false, '');
-
-# Notes
+# INVOICE NOTES
+$pdf->SetXY(136,170);
+$pdf->RoundedRect(136, 170, 53, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->Cell(53,5,$_LANG["invoicesnotes"],0,0,'L',0);
+$pdf->SetXY(135,176);
+$pdf->SetTextColorArray($textcolor);
 if ($notes) {
-    $pdf->Ln(5);
-	$pdf->SetFont('freesans','',8);
-	$pdf->MultiCell(170,5,$_LANG["invoicesnotes"].": $notes");
+	$pdf->MultiCell(55,0,$notes,0,'C',0);
 }
 
-# Generation Date
-$pdf->SetFont('freesans','',8);
-$pdf->Ln(5);
-$pdf->Cell(180,4,$_LANG['invoicepdfgenerated'].' '.getTodaysDate(1),'','','C');
+# FOOTER
+$pdf->SetXY(20,231.5);
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetTextColorArray($textcolor);
+$pdf->SetFont('helvetica','',9);
+
+$pdf->Cell(20,0,$Remittance,0,0,'L',0);
+$pdf->Cell(65,0,(($clientsdetails["companyname"])?$clientsdetails["companyname"]:$clientsdetails["firstname"]." ".$clientsdetails["lastname"]),0,1,'L',0);
+$pdf->SetXY(20,235);
+$pdf->Cell(85,0,"",0,0,'L',0);
+$pdf->Cell(50,0,$invoiceprefix,0,0,'L',0);
+$pdf->Cell(35,0,$invoicenum,0,0,'L',0);$pdf->Ln();
+$pdf->Cell(85,0,"",0,0,'L',0);
+$pdf->Cell(50,0,$accountnumber,0,0,'L',0);
+$pdf->Cell(35,0,$clientsdetails["userid"],0,0,'L',0);$pdf->Ln();
+$pdf->Cell(20,0,$remittanceto,0,0,'L',0);
+$pdf->Cell(65,0,$hdrra,0,0,'L',0);
+$pdf->Cell(50,0,$remittancetotaldue,0,0,'L',0);
+$pdf->Cell(35,0,$balance,0,0,'L',0);$pdf->Ln();
+$pdf->Cell(20,0,"",0,0,'L',0);
+$pdf->Cell(65,0,$hdrrb,0,0,'L',0);
+$pdf->Cell(50,0,"",0,0,'L',0);
+$pdf->Cell(35,0,"",0,0,'L',0);$pdf->Ln();
+$pdf->Cell(20,0,"",0,0,'L',0);
+$pdf->Cell(65,0,$hdrrc,0,0,'L',0);
+$pdf->Cell(85,0,"",0,0,'L',0);$pdf->Ln();
+$pdf->Cell(20,0,"",0,0,'L',0);
+$pdf->Cell(65,0,$hdrrd,0,0,'L',0);
+$pdf->Cell(85,0,"",0,0,'L',0);$pdf->Ln();
+$pdf->Cell(20,0,"",0,0,'L',0);
+$pdf->Cell(65,0,$hdrre,0,0,'L',0);
+$pdf->Ln();
+$pdf->SetFont('helvetica','',8);
+$pdf->SetXY(20,($pageformat=='A4') ? 269 : 290);
+$pdf->MultiCell(170,0,$Remittance1,0,'C',0);
+$pdf->MultiCell(170,0,$Remittance2,0,'C',0);
+}
+}
+
+drawnewinvoicepage($gatewaysarray,$balance,$invoicenum,$notes,$datecreated,$duedate,$paymentmethod,$clientsdetails,$invoicevars,$addressline,$companyaddress,$total,$invoiceprefix,$status,$statustext,$invoiceid,$datepaid,$CONFIG,$_LANG,$pdf);
+
+$pdf->SetXY(20,77);
+$last=count($invoiceitems);
+$i=1;
+foreach ($invoiceitems AS $item) {
+	$startx = $pdf->GetX();
+    $starty = $pdf->GetY();
+	if ($item["taxed"] && $taxname) { $pdf->Cell(2,0,''); } else { $pdf->Cell(2,0); }
+    $pdf->MultiCell(80, 0, $item["description"], 0, 'L');
+	$finishy = $pdf->GetY();
+	$pdf->SetXY($startx+82,$starty);
+    $pdf->MultiCell(30,$finishy-$starty,$item["amount"],0,'R','',1);
+	if ($pdf->GetY()>=210) {
+		$pdf->AddPage();
+		drawnewinvoicepage($gatewaysarray,$balance,$invoicenum,$notes,$datecreated,$duedate,$paymentmethod,$clientsdetails,$invoicevars,$addressline,$companyaddress,$total,$invoiceprefix,$status,$statustext,$invoiceid,$datepaid,$CONFIG,$_LANG,$pdf);
+		$pdf->SetXY(20,77);
+	}
+
+	if ($i==$last) {
+		# TOTALS
+		if ($taxname) {
+			$pdf->SetFont('helvetica','B',8);
+			$pdf->SetY($pdf->GetY()+2);
+		}
+		$pdf->Line(22,$pdf->GetY()+1,132.5,$pdf->GetY()+1);
+		$pdf->SetY($pdf->GetY()+2);
+		$pdf->Cell(2,0);
+		$pdf->SetFont('helvetica','B',11);
+		$pdf->Cell(80,0,$_LANG["invoicessubtotal"],0,0,'R',0);
+		$pdf->Cell(30,0,$subtotal,0,0,'R',0);
+		$pdf->Ln();$pdf->Cell(2,0);
+		if ($taxname) {
+			$pdf->SetFont('helvetica','B',11);
+			$pdf->Cell(80,0,$taxrate.'% '.$taxname,0,0,'R',0);
+			$pdf->Cell(30,0,$tax,0,0,'R',0);
+			$pdf->Ln();$pdf->Cell(2,0);
+		}
+
+		if ($taxname2) {
+			$pdf->Cell(80,0,$taxrate2."% ".$taxname2,0,0,'R',0);
+			$pdf->Cell(30,0,$tax2,0,0,'R',0);
+			$pdf->Ln();$pdf->Cell(2,0);
+		}
+		global $data;
+		if ($data["credit"]>0){
+			$pdf->Cell(80,0,$_LANG["invoicescredit"],0,0,'R',0);
+			$pdf->Cell(30,0,$credit,0,0,'R',0);
+			$pdf->Ln();$pdf->Cell(2,0);
+		}
+		$pdf->Cell(80,0,"Total Due",0,0,'R',0);
+		$pdf->Cell(30,0,$total,0,0,'R',0);
+		$pdf->Ln();
+		$pdf->Ln();
+		$pdf->Cell(2,0);
+	}
+$i++;
+}
+
+$pdf->SetDrawColorArray($bordercolor);
+$pdf->SetFillColorArray($headerbgcolor);
+$pdf->SetFont('helvetica','',8);
+$pdf->RoundedRect($pdf->GetX(), $pdf->GetY(), 110, 5, 1.25, '1111', 'DF', null, $headerbgcolor);
+$pdf->SetTextColorArray($headerfgcolor);
+$pdf->Cell(25,5,$_LANG["invoicestransdate"],0,0,'C','0');
+$pdf->Cell(25,5,$_LANG["invoicesdescription"],0,0,'C','0');
+$pdf->Cell(35,5,$_LANG["invoicestransid"],0,0,'C','0');
+$pdf->Cell(25,5,$_LANG["invoicestransamount"],0,1,'R','0');
+$pdf->SetTextColorArray($textcolor);
+
+
+$pdf->SetFont('helvetica','',7);
+$pdf->SetY($pdf->GetY()+.5);
+
+if(count($transactions) > 0) {
+	foreach ($transactions AS $tranitem) {
+	
+		$startx = $pdf->GetX();
+    	$starty = $pdf->GetY();
+
+		$pdf->Cell(2,0);
+    	$pdf->MultiCell(25,0,$tranitem["date"],0,'C','',0);
+		$pdf->MultiCell(25,0,$tranitem["description"],0,'C','',0);
+		$pdf->MultiCell(35,0,$tranitem["transid"],0,'C','',1);
+
+    	$finishy = $pdf->GetY();
+    	$pdf->SetXY($startx+87,$starty);
+
+    	$pdf->MultiCell(25,$finishy-$starty,$tranitem["amount"],0,'R','',1);
+
+    	if ($pdf->GetY()>=210) {
+		$pdf->AddPage();
+		drawnewinvoicepage($gatewaysarray,$balance,$invoicenum,$notes,$datecreated,$duedate,$paymentmethod,$clientsdetails,$invoicevars,$addressline,$companyaddress,$total,$invoiceprefix,$status,$statustext,$invoiceid,$datepaid,$CONFIG,$_LANG,$pdf);
+		$pdf->SetXY(20,77);
+	}
+	}
+} else {
+	$pdf->Cell(2,0);
+	$pdf->Cell(110,7,$_LANG["invoicestransnonefound"],0,1,'C','0');
+}
+
+$pdf->Line(22,$pdf->GetY()+1,132.5,$pdf->GetY()+1);
+$pdf->SetY($pdf->GetY()+2);
+$pdf->SetFont('helvetica','B',11);
+$pdf->Cell(2,0);
+$pdf->Cell(80,7,"Balance Remaining",0,0,'R','0');
+$pdf->Cell(30,7,$balance,0,0,'R','0');
+$pdf->SetFont('helvetica','',7);
 
 ?>

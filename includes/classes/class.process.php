@@ -42,7 +42,6 @@ class RA_Process {
     }
 
     public function caculateTotal() {
-
         if (!isset($this->productdata['pricing'])) {
             $this->getProductDetail();
         } else {
@@ -166,7 +165,6 @@ class RA_Process {
                 $taxdata2 = getTaxRate(2, $state, $country);
                 $taxrate = $taxdata['rate'];
                 $taxrate2 = $taxdata2['rate'];
-                error_log("tax" . $taxrate, 3, "/tmp/php_errors.log");
             }
         } else {
             $taxrate = 0;
@@ -229,9 +227,14 @@ class RA_Process {
 
         if ($this->session['uid']) {
             update_query("tblcustomerservices", array('servicestatus' => 'Pending'), array("id" => $this->session['serviceid']));
-            update_query("tblorders", array('status' => 'Pending', 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));
             updateInvoiceTotal($this->session['invoiceid']);
+
+            $result = select_query_i("tblinvoiceitems", "SUM(amount) as total", array("invoiceid" => $this->session['invoiceid']));
+            $data = mysqli_fetch_assoc($result);
+            error_log(print_r($data, 1), 3, "/tmp/php_errors.log");
+
             update_query("tblinvoices", array('status' => 'Unpaid'), array("id" => $this->session['invoiceid']));
+            update_query("tblorders", array('status' => 'Pending', 'amount' => $data['total'], 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));
         }
     }
 
@@ -292,13 +295,14 @@ class RA_Process {
     }
 
     public function finishorder($data) {
-        $this->pendingOrder();
+
         if ($this->insertAddon() && $this->insertCustomefields($data)) {
             // echo "<pre>", print_r($_SESSION, 1), "</pre>";
-            $this->createtInvoice();
+            // $this->createtInvoice();
             unset($_SESSION['avalialeaddons']);
             $this->step = 3;
         }
+        $this->pendingOrder();
     }
 
     public function checkdraftduplication() {

@@ -263,7 +263,7 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-    error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging

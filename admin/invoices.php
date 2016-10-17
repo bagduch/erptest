@@ -311,8 +311,6 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
-
         if ($save == "notes") {
             check_token("RA.admin.default");
             update_query("tblinvoices", array("notes" => $notes), array("id" => $id));
@@ -320,8 +318,6 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
-
         if ($sub == "statuscancelled") {
             check_token("RA.admin.default");
             update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $id));
@@ -330,8 +326,6 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
-
         if ($sub == "statusunpaid") {
             check_token("RA.admin.default");
             update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $id));
@@ -340,8 +334,6 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
-
         if ($sub == "markpaid") {
             check_token("RA.admin.default");
             checkPermission("Add Transaction");
@@ -356,8 +348,6 @@ if ($action == "") {
             redir("admin/clientsinvoices.php?userid=12437","",true);
             exit();
         }
-
-
         if ($sub == "save") {
             check_token("RA.admin.default");
 
@@ -434,8 +424,6 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
-
         if ($addcredit != "0.00" && $addcredit) {
             check_token("RA.admin.default");
             $result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
@@ -471,8 +459,6 @@ if ($action == "") {
                 }
             }
         }
-
-
         if ($removecredit != "0.00" && $removecredit != "") {
             check_token("RA.admin.default");
             $result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
@@ -494,8 +480,6 @@ if ($action == "") {
                 infoBox("Success", formatCurrency($removecredit) . " credit was successfully removed from the invoice");
             }
         }
-
-
         if ($sub == "delete") {
             check_token("RA.admin.default");
             delete_query("tblinvoiceitems", array("id" => $iid));
@@ -503,17 +487,13 @@ if ($action == "") {
             redir("action=edit&id=" . $id);
             exit();
         }
-
         $result = select_query_i("tblinvoices", "tblpaymentgateways.value", array("tblpaymentgateways.setting" => "type", "tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid INNER JOIN tblpaymentgateways ON tblpaymentgateways.gateway=tblinvoices.paymentmethod");
         $data = mysqli_fetch_array($result);
         $type = $data['value'];
-
         if ($tplname) {
             check_token("RA.admin.default");
             sendMessage($tplname, $id, "", true);
         }
-
-
         if ($type == "CC") {
             if ($sub == "attemptpayment") {
                 check_token("RA.admin.default");
@@ -545,8 +525,6 @@ if ($action == "") {
                 }
             }
         }
-
-
         if ($sub == "refund" && $transid) {
             check_token("RA.admin.default");
             checkPermission("Refund Invoice Payments");
@@ -580,8 +558,6 @@ if ($action == "") {
                 }
             }
         }
-
-
         if ($sub == "deletetrans") {
             check_token("RA.admin.default");
             checkPermission("Delete Transaction");

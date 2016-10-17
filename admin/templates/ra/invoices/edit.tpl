@@ -4,7 +4,6 @@
 <div class="col-lg-12">
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
-        <li role="presentation" class=""><a href="#tab1box" aria-controls="tab1box" role="tab" data-toggle="tab">Add Payment</a></li>
         <li role="presentation" class=""><a href="#tab2box" aria-controls="tab2box" role="tab" data-toggle="tab">Options</a></li>
         <li role="presentation" class=""><a href="#tab3box" aria-controls="tab3box" role="tab" data-toggle="tab">Credit</a></li>
         <li role="presentation" class=""><a href="#tab4box" aria-controls="tab4box" role="tab" data-toggle="tab">Refund</a></li>

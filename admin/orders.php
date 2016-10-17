@@ -427,7 +427,7 @@ if (!$action) {
             }
         } else {
             if (!$promocode) {
-                echo "None";
+                $promocodetext = "None";
             }
         }
 
@@ -528,7 +528,6 @@ if (!$action) {
                 echo "> " . $aInt->lang("orders", "sendwelcome") . "</label></td></tr>";
             }
         }
-
 
 
 

@@ -89,13 +89,6 @@ $nowrapper = false;
 
 if ($_SESSION['address']) {
     $process = new RA_Process($_SESSION, $CONFIG);
-
-
-
-
-    // echo "<pre>", print_r($process->config, 1), "</pre>";
-    // echo "<pre>", print_r($process->clientsdetails, 1), "</pre>";
-    //  error_log(print_r($process, 1), 3, "/tmp/php_errors.log");
     if ($ajax) {
         if ($addonid) {
             if ($actions == "add") {
