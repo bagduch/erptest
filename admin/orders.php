@@ -11,7 +11,7 @@ if ($action == "view") {
 }
 
 $aInt = new RA_Admin($reqperm);
-$aInt->title = $aInt->lang("orders", "manage");
+
 $aInt->sidebar = "orders";
 $aInt->icon = "orders";
 //$aInt->helplink = "Order Management";
@@ -721,6 +721,8 @@ if (!$action) {
     $aInt->template = "order/viewdetail";
 }
 
+
+$aInt->title = $aInt->lang("orders", "manage") . " #" . $id;
 //echo "<pre>", print_r($tblcustomerservices, 1), "</pre>";
 $aInt->assign("infobox", $infobox);
 $aInt->assign("PHP_SELF", $PHP_SELF);

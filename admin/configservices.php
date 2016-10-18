@@ -659,7 +659,7 @@ if ($action == "") {
             }
         }
 
-
+        $aInt->title = "Edit Service #" . $name;
         $aInt->assign('asscoproduct', $asscoproduct);
 
         $templatefile = 'services/edit';

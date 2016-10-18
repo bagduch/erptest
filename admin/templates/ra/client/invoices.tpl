@@ -72,41 +72,49 @@
 </div>
 {$intable}
 {foreach from=$invoicedata item=data}
-    <div id="paymentadd{$data.id}" class="box collapse">
-        <form method="post" action="/admin/clientsinvoices.php?userid={$userid}">
-            <div class="box-header">
-                <h3 class="box-title">Add Payment to Invoice #{$data.id}</h3>
-            </div>
-            <input type="hidden" name="id" value="{$data.id}">
-            <input type="hidden" name="addpayment" value="1">
-            <div class="box-body">
-                <table class="form table">
-                    <tbody>
-                        <tr>
-                            <td class="fieldlabel">Date</td>
-                            <td class="fieldarea"><input type="text" name="date" value="{$data.date}" class="datepick form-control"></td>
-                            <td class="fieldlabel">Amount</td>
-                            <td class="fieldarea"><input type="text" form-control="" name="amount" value="{$data.total}" size="10"></td>
-                            <td class="fieldlabel">Payment Method</td>
-                            <td class="fieldarea">
-                                {$paymentdropdown}
-                            </td>
-                            <td class="fieldlabel">Transaction ID</td>
-                            <td class="fieldarea"><input type="text" class="form-control" name="transid" size="25"></td>
-                            <td class="fieldlabel">Send Email</td>
-                            <td class="fieldarea"><input type="checkbox" name="sendconfirmation" checked=""> Tick to Send Confirmation Email</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br>
-                <p align="center">
-                    <button class="btn btn-danger" data-toggle="collapse" data-target="#paymentadd{$data.id}">Cancel</button>
-                    <button onclick="submit();" id="paymentadd" class="btn btn-success">Pay</button>
-                </p
+    <div id="paymentadd{$data.id}" role="dialog" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" action="/admin/clientsinvoices.php?userid={$userid}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Add Payment to Invoice #{$data.id}</h4>
+                    </div>
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="addpayment" value="1">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input class="form-control datepick" type="text" value="{$data.date}">
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction ID</label>
+                            <input type="text" class="form-control" name="transid" size="25">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="text" class="form-control" name="amount" value="{$data.total}" size="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Payment Method</label>
+                            {$paymentdropdown}
+                        </div>
+                        <div class="form-group">
+                            <label>Send Email</label>
+                            <input type="checkbox" name="sendconfirmation" checked=""> (Tick to Send Confirmation Email)
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button onclick="submit();" id="paymentadd" class="btn btn-success">Pay</button>
+                    </div>
             </div>
 
+            </form>
+        </div>
     </div>
-</form>
 </div>
 {/foreach}
 {literal}

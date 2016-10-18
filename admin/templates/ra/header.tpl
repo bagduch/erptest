@@ -85,8 +85,10 @@
                     </a>
                     <div class='breadcrumb-wrap'>
                         <ol class="breadcrumb">
-                            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                            <li class="active"> {$pagetitle} </li>
+                            <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
+                                {foreach from=$breadcrumb item=row}
+                                <li class="active"><a href="{$row.url}">{$row.pagetitle}</a> </li>
+                                {/foreach}
                         </ol>
                     </div>
                     <div class="navbar-custom-menu">

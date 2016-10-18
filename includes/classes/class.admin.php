@@ -43,6 +43,10 @@ class RA_Admin {
         global $infobox;
         global $ra;
 
+
+
+
+
         $infobox = "";
 
 
@@ -288,13 +292,15 @@ class RA_Admin {
         global $CONFIG;
         global $disable_admin_ticket_page_counts;
         global $_ADMINLANG;
+        $uid = (int) $GLOBALS['userid'];
+
 
         $this->smarty = new Smarty();
         $this->smarty->template_dir = $this->getTemplatePath();
         $this->smarty->compile_dir = $templates_compiledir;
 
         if ($this->inClientsProfile) {
-            $this->title = "Customer Account";
+            $this->title = "Customer Account #" . $uid;
             $this->sidebar = "clients";
             $this->icon = "clientsprofile";
         }
@@ -325,7 +331,24 @@ class RA_Admin {
             $this->assign("adminid", $_SESSION['adminid']);
         }
 
+        session_start();
+        $menu = $this->sidebar();
+        foreach ($menu as $row) {
+            if (isset($row['members'])) {
+                foreach ($row['members'] as $url => $item) {
+                    if ($_SERVER['REQUEST_URI'] == "/admin/" . $url || $_SERVER['REQUEST_URI'] == "/admin/index.php")
+                        session_unset($_SESSION['breadcrumb']);
+                }
+            }
+        }
+        if ($this->title !== "Admin Summary") {
+            $_SESSION['breadcrumb'][$this->title]["pagetitle"] = $this->title;
+            $_SESSION['breadcrumb'][$this->title]["url"] = $_SERVER['REQUEST_URI'];
+        }
+
+
         $this->assign("filename", $this->filename);
+        $this->assign("breadcrumb", $_SESSION['breadcrumb']);
         $this->assign("pagetitle", $this->title);
         $this->assign("helplink", str_replace(" ", "_", $this->helplink));
         $this->assign("sidebar", $this->sidebar);
@@ -1150,7 +1173,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
 
 
 #" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] 
-        echo "<h1>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname']."</h1>";
+        echo "<h1>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . "</h1>";
         echo "<ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {

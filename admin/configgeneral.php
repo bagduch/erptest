@@ -680,22 +680,12 @@ if ($customtcpdffont) {
     echo $CONFIG['TCPDFFont'];
 }
 
-echo "\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("general", "invoiceinc");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"invoiceincrement\"";
-echo " value=\"" . $CONFIG['InvoiceIncrement'] . "\"";
-echo " size=\"5\"> ";
-echo $aInt->lang("general", "invoiceincinfo");
-echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("general", "invoicestartno");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"invoicestartnumber\" value=\"\" size=\"10\"> ";
-echo $aInt->lang("general", "invoicestartnoinfo");
 $query = "SELECT * FROM tblinvoices ORDER BY id DESC LIMIT 0,1";
 $result = full_query_i($query);
 $data = mysqli_fetch_array($result);
 
+
+/// upto here 
 if (!$data[0]) {
     echo "0";
 } else {
@@ -1352,6 +1342,8 @@ echo "\" />
 $content = ob_get_contents();
 ob_end_clean();
 
+
+$aInt->assign("PHP_SELF", $PHP_SELF);
 $aInt->assign("acceptedcctypes", $acceptedcctypes);
 $aInt->assign("supportarray", $supportarray);
 $aInt->assign("ordertemplatearray", $ordertemplatearray);

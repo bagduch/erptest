@@ -164,48 +164,5 @@ $this->assign('accordion', $accordion);
     {/foreach}
 
 </ul>
-<form method="get" action="search.php" class="sidebar-form">
-
-    <table class="table">
-        <tr>
-            <td>
-                <select class="form-control" name="type" id="searchtype" onchange="populate(this)">
-                    <option value="clients">Clients </option>
-                    <option value="orders">Orders </option>
-                    <option value="services">Services </option>
-                    <option value="domains">Domains </option>
-                    <option value="invoices">Invoices </option>
-                    <option value="tickets">Tickets </option>
-                </select>
-
-            </td>
-            <td>
-                <select class="form-control" name="field" id="searchfield">
-                    <option>Client ID</option>
-                    <option selected="selected">Client Name</option>
-                    <option>Company Name</option>
-                    <option>Email Address</option>
-                    <option>Address 1</option>
-                    <option>Address 2</option>
-                    <option>City</option>
-                    <option>State</option>
-                    <option>Postcode</option>
-                    <option>Country</option>
-                    <option>Phone Number</option>
-                    <option>CC Last Four</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"> <input  class="form-control" type="text" name="q" autocomplete="off" style="width:85%;" /></td>
-        </tr>
-        <tr>
-            <td colspan="2">   
-                <input type="submit" value="{$_ADMINLANG.global.search}" class="button" />
-            </td>
-        </tr>
-    </table>
-
-</form>
 
 
