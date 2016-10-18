@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="templates/{$template}/dist/css/AdminLTE.css">
         <link rel="stylesheet" href="templates/{$template}/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" />
+        <link rel="stylesheet" href="templates/{$template}/plugins/select2/select2.css">
         <!-- iCheck -->
         <link rel="stylesheet" href="templates/{$template}/plugins/iCheck/all.css">
         <!-- DataTables -->
@@ -42,6 +43,7 @@
         <!-- daterangepicker -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
         <script src="templates/{$template}/plugins/daterangepicker/daterangepicker.js"></script>
+        <script src="templates/{$template}/plugins/select2/select2.full.min.js"></script>
         <!-- datepicker -->
         <script src="templates/{$template}/plugins/datepicker/bootstrap-datepicker.js"></script>
         <!-- Bootstrap WYSIHTML5 -->
@@ -150,7 +152,7 @@
                                     <li><a href="logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
                                 </ul>
                             </li>
-                          
+
                         </ul>
 
                 </nav>

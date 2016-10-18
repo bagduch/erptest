@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.28, created on 2016-10-17 10:11:39
+<?php /* Smarty version 2.6.28, created on 2016-10-18 11:44:16
          compiled from ra/client/cancelrequest.tpl */ ?>
 
 <div class="row">

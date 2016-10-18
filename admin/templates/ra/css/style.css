@@ -40,3 +40,11 @@ and open the template in the editor.
 .table td{
     vertical-align: middle!important;
 }
+.tabletitle{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -15px;
+    background: #0074cc;
+    color: white;
+    padding: 8px;
+}

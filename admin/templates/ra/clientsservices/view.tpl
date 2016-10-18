@@ -4,36 +4,38 @@
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header with-border">
-                <table class="table">
-                    <tr>
-                        <td>
-                            <form method="get" action="/admin/clientsservices.php" name="frm2" id="frm2">
-                                <input type="hidden" name="userid" value="2">&nbsp;&nbsp;&nbsp; Products: 
-                                {if $servicesarr}
-                                    <select name="id" size="1" onchange="submit()">
-                                        {foreach from=$servicesarr item=row key=serviceid }
-                                            <option value="{$serviceid}" {if $id eq $serviceid}Selected{/if} style="background-color:{$row[0]}">{$row[1]}</option>
-                                        {/foreach}
-                                    </select> 
-                                {/if}
-                                <input type="submit" value="Go" class="btn btn-success">
-                            </form>
-                        </td>
-                        <td align="right">
-                            <input type="button" value="Upgrade/Downgrade" class="btn" onclick="window.open('clientsupgrade.php?id=29', '', 'width=750,height=350,scrollbars=yes')">
-                            <input type="button" value="Move Product/Service" class="btn" onclick="window.open('clientsmove.php?type=hosting&amp;id=29', 'movewindow', 'width=500,height=300,top=100,left=100,scrollbars=yes')"> &nbsp;&nbsp;&nbsp;
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <div class="pull-left">
+                    <form class="form-inline" method="get" action="/admin/clientsservices.php" name="frm2" id="frm2">
+                        <input type="hidden" name="userid" value="2"> 
+                        <div class="form-group">
+                            <label>Services:</label> 
+                            {if $servicesarr}
+                                <select class="form-control select2" name="id" size="1" onchange="submit()">
+                                    {foreach from=$servicesarr item=row key=serviceid }
+                                        <option value="{$serviceid}" {if $id eq $serviceid}Selected{/if} style="background-color:{$row[0]}">{$row[1]}</option>
+                                    {/foreach}
+                                </select> 
+                            {/if}
+                        </div>
+                        <input type="submit" value="Go" class="btn btn-success">
+                    </form>
+                </div>
+                <div class="pull-right">
+                    <input type="button" value="Upgrade/Downgrade" class="btn" onclick="window.open('clientsupgrade.php?id=29', '', 'width=750,height=350,scrollbars=yes')">
+                    <input type="button" value="Move Product/Service" class="btn" onclick="window.open('clientsmove.php?type=hosting&amp;id=29', 'movewindow', 'width=500,height=300,top=100,left=100,scrollbars=yes')"> &nbsp;&nbsp;&nbsp;
+                </div>
             </div>
             <div class="box-body">
 
                 <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
                     <input type="hidden" name="__fpfrm1" value="1">
                     <div class="row" style="padding:15px">
+                        <div class="col-lg-12">
+                            <div class="tabletitle">Order Detail</div>
+                        </div>
                         <div class="col-xs-6">
-                            <table class="table">
+                            <table class="datatable table">
                                 <tr>
                                     <td width="50%"><label for="orderid">Order #</label></td>
                                     <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
@@ -75,7 +77,7 @@
                             </table>
                         </div>
                         <div class="col-xs-6">
-                            <table class="table">
+                            <table class="datatable table">
                                 <tr>
                                     <td width="50%"><label for="#regdate">Registration Date</label></td>
                                     <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
@@ -107,6 +109,9 @@
 
                         <div class="clearfix"></div>
                         {if $servicefield}
+                            <div class="col-lg-12">
+                                <div class="tabletitle">Customer Fields</div>
+                            </div>
                             <div class="col-xs-6">
                                 <table class="table">
                                     {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
@@ -299,6 +304,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $(".select2").select2();
+
             $('.datecontroller').datepicker({
                 format: 'yyyy-mm-dd',
                 startDate: '+1d'

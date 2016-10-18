@@ -61,99 +61,105 @@
 </div>
 
 {$notes}
-<p><b>Order Items</b></p>
 
-<form method="post" action="whois.php" target="_blank" id="frmWhois">
-    <input type="hidden" name="domain" value="" id="frmWhoisDomain">
-</form>
+<div class="box">
 
-<form method="post" action="/admin/orders.php?action=view&amp;id=154&amp;activate=true">
-    <div class="tablebg">
-        <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
-            <tbody>
-                <tr>
-                    <th>Item</th>
-                    <th>Description</th>
-                    <th>Billing Cycle</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Payment Status</th>
-                </tr>
-                {foreach from=$tblcustomerservices item=data}
-                    <tr>
-                        <td align="center">
-                            <a href="clientsservices.php?userid={$data.userid}&amp;id={$data.id}"><b>{$data.id}</b></a>
-                        </td>
-                        <td>{$data.services.groupname} - {$data.services.name}<br>{$data.description}</td>
-                        <td>{$data.billingcycle}</td>
-                        <td>{$data.firstpaymentamount}</td>
-                        <td>{$data.servicestatus}</td>
-                        <td><b> {$paymentstatus}</b></td>
-                    </tr>
-                {/foreach}
-                <tr>
-                    <td style="background-color:#EFF2F9;text-align:center;" colspan="6">
-                        <label><input type="checkbox" name="vars[products][{$data.id}][sendwelcome]" checked=""> Send Welcome Email</label></td>
-                </tr>
-                <tr>
-                    <th colspan="3" style="text-align:right;">Total Due:&nbsp;</th>
-                    <th>$0.00 NZD</th>
-                    <th colspan="2"></th>
-                </tr>
-            </tbody></table>
+    <div class="box-header">
+        <h3 class="box-title">Order Items</h3>
     </div>
 
-    <br>
+    <div class="box-body">
+        <form method="post" action="{$PHP_SELF}?action=view&amp;id={$orderdata.id}&amp;activate=true">
+            <div class="tablebg">
+                <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
+                    <tbody>
+                        <tr>
+                            <th>Item</th>
+                            <th>Description</th>
+                            <th>Billing Cycle</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                        </tr>
+                        {foreach from=$tblcustomerservices item=data}
+                            <tr>
+                                <td align="center">
+                                    <a href="clientsservices.php?userid={$data.userid}&amp;id={$data.id}"><b>{$data.id}</b></a>
+                                </td>
+                                <td>{$data.services.groupname} - {$data.services.name}<br>{$data.description}</td>
+                                <td>{$data.billingcycle}</td>
+                                <td>{$data.firstpaymentamount}</td>
+                                <td>{$data.servicestatus}</td>
+                                <td><b> {$paymentstatus}</b></td>
+                            </tr>
+                        {/foreach}
 
-    <table align="center">
-        <tbody>
-            <tr>
-                <td><input type="submit" value="Accept Order" class="btn btn-success"></td>
-                <td><input type="button" value="Cancel Order" onclick="cancelOrder()" class="btn"></td>
-                <td><input type="button" value="Cancel &amp; Refund" onclick="cancelRefundOrder()" class="btn"></td>
-                <td><input type="button" value="Set as Fraud" onclick="fraudOrder()" class="btn"></td>
-                <td><input type="button" value="Set Back to Pending" onclick="pendingOrder()" class="btn"></td>
-                <td><input type="button" value="Delete Order" onclick="deleteOrder()" class="btn" style="color:#cc0000;"></td>
-            </tr>
-        </tbody>
-    </table>
+                        <tr>
+                            <th colspan="3" style="text-align:right;">Total Due:&nbsp;</th>
+                            <th>{$orderdata.amount}</th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </tbody></table>
+            </div>
 
-    <div id="notesholder" style="display:none"><p><b>Notes / Additional Information</b></p><p align="center"></p><table align="center" cellspacing="0" cellpadding="0"><tbody><tr><td><textarea rows="4" cols="100" id="notes"></textarea></td><td>&nbsp;&nbsp; <input type="button" value="Update/Save" id="savenotesbtn"></td></tr></tbody></table><p></p></div>
+            <br>
+
+            <table align="center">
+                <tbody>
+                    <tr>
+                        <td><input type="submit" value="Accept Order" class="btn btn-success"></td>
+                        <td><input type="button" value="Cancel Order" onclick="cancelOrder()" class="btn"></td>
+                        <td><input type="button" value="Cancel &amp; Refund" onclick="cancelRefundOrder()" class="btn"></td>
+                        <td><input type="button" value="Set as Fraud" onclick="fraudOrder()" class="btn"></td>
+                        <td><input type="button" value="Set Back to Pending" onclick="pendingOrder()" class="btn"></td>
+                        <td><input type="button" value="Delete Order" onclick="deleteOrder()" class="btn" style="color:#cc0000;"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="notesholder" style="display:none"><p><b>Notes / Additional Information</b></p><p align="center"></p><table align="center" cellspacing="0" cellpadding="0"><tbody><tr><td><textarea rows="4" cols="100" id="notes"></textarea></td><td>&nbsp;&nbsp; <input type="button" value="Update/Save" id="savenotesbtn"></td></tr></tbody></table><p></p></div>
 </form>
 
 <div id="affassign" title="Assign to Affiliate" style="display:none;">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 40px 0;"></span>Loading...</p>
 </div>
-
+                        </div>
+</div>
 {literal}
-
     <script type="text/javascript">
         function cancelOrder() {
             if (confirm("Are you sure you want to cancel this order? This will also run module termination for any active products/services."))
-                window.location = "/admin/orders.php?action=view&id=154&cancel=true&token=8bd8b7c27bcec896877c8df715e34fa5e97e2ad5";
+                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&cancel=true&token={/literal}{$token}{literal}";
         }
         function cancelRefundOrder() {
             if (confirm("Are you sure you want to cancel & refund this order? This will also run module termination for any active products/services."))
-                window.location = "/admin/orders.php?action=view&id=154&cancelrefund=true&token=8bd8b7c27bcec896877c8df715e34fa5e97e2ad5";
+                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&cancelrefund=true&token={/literal}{$token}{literal}";
         }
         function fraudOrder() {
             if (confirm("Are you sure you want to cancel this order? This will also run module termination for any active products/services."))
-                window.location = "/admin/orders.php?action=view&id=154&fraud=true&token=8bd8b7c27bcec896877c8df715e34fa5e97e2ad5";
+                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&fraud=true&token={/literal}{$token}{literal}";
         }
         function pendingOrder() {
             if (confirm("Are you sure you want to set this order back to Pending?"))
-                window.location = "/admin/orders.php?action=view&id=154&pending=true&token=8bd8b7c27bcec896877c8df715e34fa5e97e2ad5";
+                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&pending=true&token={/literal}{$token}{literal}";
         }
         function deleteOrder() {
             if (confirm("Are you sure you want to delete this order? This will delete all related products/services & invoice."))
-                window.location = "/admin/orders.php?action=delete&id=154&token=8bd8b7c27bcec896877c8df715e34fa5e97e2ad5";
+                window.location = "{/literal}{$PHP_SELF}{literal}?action=delete&id={/literal}{$orderdata.id}{literal}&token={/literal}{$token}{literal}";
         }
         function showDialog(name) {
             $("#" + name).dialog('open');
         }
 
         $("#savenotesbtn").click(function () {
-            $.post("?actionn=view&id={/literal}{$orderid}{literal}", {updatenotes:true, notes:$("#notes".val(), token:"")});
-        });
-    </script>
+            $.post("?action=view&id={/literal}{$orderid}{literal}",
+            {
+                updatenotes:true,
+                notes:$("#notes").val(), 
+                token:"{/literal}{$token}{literal}"
+            });
+                   
+            });
+   
+</script>
 {/literal}

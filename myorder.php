@@ -104,9 +104,7 @@ if ($_SESSION['address']) {
             }
         }
     }
-    // 
     // login for client 
-
     if (isset($_SESSION['uid'])) {
         if ($checkout) {
             $process->finishorder($_POST['customfield']);

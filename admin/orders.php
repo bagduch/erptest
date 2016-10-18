@@ -319,7 +319,7 @@ if (!$action) {
             exit();
         }
 
-        echo $infobox;
+
         $gatewaysarray = getGatewaysArray();
         require ROOTDIR . "/includes/countries.php";
         $result = select_query_i("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $id), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
@@ -347,26 +347,24 @@ if (!$action) {
         }
 
         $statusoptions .= "</select>&nbsp;<span id=\"orderstatusupdated\" style=\"display:none;padding-top:14px;\"><img src=\"images/icons/tick.png\" /></span>";
-        $orderdata = unserialize($orderdata);
-
-        if ($invoiceid == "0") {
+        // $orderdata = unserialize($orderdata);
+        if ($orderdata['invoiceid'] == "0") {
             $paymentstatus = "<span class=\"textgreen\">" . $aInt->lang("orders", "noinvoicedue") . "</span>";
         } else {
-            if (!$invoicestatus) {
+            if (!$orderdata['invoicestatus']) {
                 $paymentstatus = "<span class=\"textred\">Invoice Deleted</span>";
             } else {
-                if ($invoicestatus == "Paid") {
+                if ($orderdata['invoicestatus'] == "Paid") {
                     $paymentstatus = "<span class=\"textgreen\">" . $aInt->lang("status", "complete") . "</span>";
                 } else {
-                    if ($invoicestatus == "Unpaid") {
+                    if ($orderdata['invoicestatus'] == "Unpaid") {
                         $paymentstatus = "<span class=\"textred\">" . $aInt->lang("status", "incomplete") . "</span>";
                     } else {
-                        $paymentstatus = getInvoiceStatusColour($invoicestatus);
+                        $paymentstatus = getInvoiceStatusColour($orderdata['invoicestatus']);
                     }
                 }
             }
         }
-
         run_hook("ViewOrderDetailsPage", array("orderid" => $id, "ordernum" => $ordernum, "userid" => $userid, "amount" => $amount, "paymentmethod" => $paymentmethod, "invoiceid" => $invoiceid, "status" => $orderstatus));
         $clientnotes = array();
         $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
@@ -724,6 +722,7 @@ if (!$action) {
 }
 
 //echo "<pre>", print_r($tblcustomerservices, 1), "</pre>";
+$aInt->assign("infobox", $infobox);
 $aInt->assign("PHP_SELF", $PHP_SELF);
 $aInt->assign("token", get_token());
 $aInt->assign("filterdata", RA_Cookie::get("FD", true));

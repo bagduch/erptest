@@ -207,6 +207,37 @@ if ($ra->get_req_var("ajaxupdate")) {
     $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
+
+$servicesarr = array();
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type", array("userid" => $userid, "type" => "services"), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
+
+while ($data = mysqli_fetch_array($result)) {
+    $servicelist_id = $data['id'];
+    $servicelist_product = $data['name'];
+    $servicelist_adress = $data['description'];
+    $servicelist_status = $data['servicestatus'];
+
+    if ($servicelist_adress) {
+        $servicelist_product .= " - " . $servicelist_adress;
+    }
+
+
+    if ($servicelist_status == "Pending") {
+        $color = "#ffffcc";
+    } else {
+        if ($servicelist_status == "Suspended") {
+            $color = "#ccff99";
+        } else {
+            if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
+                $color = "#ff9999";
+            } else {
+                $color = "#fff";
+            }
+        }
+    }
+
+    $servicesarr[$servicelist_id] = array($color, $servicelist_product);
+}
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
 $len = count($servicefield);
 $firsthalf = array_slice($servicefield, 0, $len / 2);
@@ -214,6 +245,7 @@ $secondhalf = array_slice($servicefield, $len / 2);
 $aInt->assign("userid", $userid);
 $aInt->assign("token", get_token());
 $aInt->assign('addons', $clientdata->addons);
+$aInt->assign("servicesarr", $servicesarr);
 $aInt->assign('lang', $lang);
 $aInt->assign('emaildropdown', $emailarr);
 $aInt->assign('userid', $userid);
