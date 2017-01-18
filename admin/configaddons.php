@@ -28,6 +28,7 @@ $welcomeemail = $ra->get_req_var("welcomeemail");
 $weight = $ra->get_req_var("weight");
 $action = $ra->get_req_var("action");
 $id = $ra->get_req_var("id");
+$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 
 if ($action == "save") {
     check_token("RA.admin.default");
@@ -181,5 +182,6 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->jscode = $jscode;
+$aInt->jquerycode .=$menuselect;
 $aInt->display();
 ?>

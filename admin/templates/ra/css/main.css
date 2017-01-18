@@ -4689,9 +4689,7 @@ table.tablesorter thead tr th:hover {
 
     .ticketlastreply {
         float: right;
-        margin: -45px 0 0 0;
         padding: 5px 15px;
-
         background-color: #333;
         color: #DDDDDD;
         -moz-border-radius: 6px;
@@ -4713,6 +4711,13 @@ table.tablesorter thead tr th:hover {
         background-color: #FAF8F1;
         box-shadow: 0 0 5px #F3EFDE;
     }
+    #notes .staffreply {
+        margin: 0 0 10px 0;
+        padding: 0;
+        border: 1px solid #EFE9D3;
+        background-color: #FAF8F1;
+        box-shadow: 0 0 5px #F3EFDE;
+    }
     #ticketreplies .reply .leftcol, #ticketreplies .staffreply .leftcol {
         float: left;
         width: 200px;
@@ -4721,6 +4726,18 @@ table.tablesorter thead tr th:hover {
         margin-left: 200px;
         border-left: 1px solid #e5e5e5;
         min-height: 150px;
+    }
+    
+     #notes .reply .leftcol, #notes .staffreply .leftcol {
+        float: left;
+        width: 125px;
+        padding: 10px;
+    }
+    #notes .reply .rightcol, #notes .staffreply .rightcol {
+        margin-left: 125px;
+        border-left: 1px solid #e5e5e5;
+        min-height: 80px;
+        padding: 10px;
     }
     #ticketreplies .submitter {
         text-align: right;
@@ -4740,10 +4757,14 @@ table.tablesorter thead tr th:hover {
         padding: 0 20px;
         text-align: right;
     }
-    #ticketreplies .postedon {
+    #ticketreplies .postedon{
         padding: 10px 12px 0 12px;
 
         color: #999;
+    }
+    #notes .postedon 
+    {color: #999;
+        
     }
     #ticketreplies .quoteicon {
         float: right;

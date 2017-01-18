@@ -5,13 +5,6 @@
 
 
 
-{literal}
-    <script type="text/javascript">
-    {/literal}{$jscode}{literal}
-
-
-    </script>
-{/literal}
 
 
 
@@ -21,7 +14,7 @@
 </div>
 <footer class="main-footer">
     <div class="pull-right hidden-xs"><a href="#">Top</a></div>
-    <strong>Copyright &copy; <a href="#" target="_blank">Robotic Accounting</a>.  All Rights Reserved.</strong>
+    <strong class="copyright">Copyright &copy; <a href="#" target="_blank">Robotic Accounting</a>.  All Rights Reserved.</strong>
 </footer>
 
 <!-- Control Sidebar -->
@@ -222,14 +215,12 @@
 {literal} 
 
     <script type="text/javascript">
-    {/literal}{$jscode}{literal}
+
 
         function searchclose() {
             $("#searchresults").slideUp();
         }
         $(document).ready(function () {
-
-
             $("#intellisearchval").keyup(function () {
                 var value = $(this).val();
                 if (value.length > 2)
@@ -265,6 +256,50 @@
             });
             $("[data-mask]").inputmask();
 
+            $('#menu').multilevelpushmenu({
+                menu: arrMenu,
+                containersToPush: [$('.content-wrapper'), $(".copyright")],
+                menuWidth: '100%',
+                onItemClick: function ()
+                {
+                    var event = arguments[0],
+                            // Second argument is menu level object containing clicked item (<div> element)
+                            $menuLevelHolder = arguments[1],
+                            // Third argument is clicked item (<li> element)
+                            $item = arguments[2],
+                            // Fourth argument is instance settings/options object
+                            options = arguments[3];
+
+                    // You can do some cool stuff here before
+                    // redirecting to href location
+                    // like logging the event or even
+                    // adding some parameters to href, etc...
+
+                    // Anchor href
+                    var itemHref = $item.find('a:first').attr('href');
+                    // Redirecting the page
+                    window.location = itemHref;
+
+                }
+            });
+    {/literal}
+    {if $menuitem}
+        {literal}
+                var menuItems = {/literal}{$menuitem}{literal}
+                var item = $('#menu').multilevelpushmenu('finditemsbyname', '{/literal}{$replacemenu}{literal}');
+                $('#menu').multilevelpushmenu('removeitems', item);
+                var $addTo = $('#menu').multilevelpushmenu('findmenusbytitle', '{/literal}{$addto}{literal}').first();
+                $('#menu').multilevelpushmenu('additems', menuItems, $addTo, 1);
+        {/literal}
+    {/if}
+    {literal}
+
+            url = window.location.href;
+            lasturl = url.split("/");
+            urlcheck = lasturl[lasturl.length - 1]
+            $("#menu a[href='" + urlcheck + "']").parent("li").addClass("itemactive");
+
+    {/literal}{$jscode}{$jquerycode}{literal}
         });
     </script>
 {/literal}

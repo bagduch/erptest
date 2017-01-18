@@ -42,14 +42,7 @@ class RA_Admin {
         global $_ADMINLANG;
         global $infobox;
         global $ra;
-
-
-
-
-
         $infobox = "";
-
-
         if ($CONFIG['AdminForceSSL'] && $CONFIG['SystemSSLURL']) {
             if (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off") {
                 $requesturl = $_SERVER['PHP_SELF'] . "?";
@@ -331,7 +324,6 @@ class RA_Admin {
             $this->assign("adminid", $_SESSION['adminid']);
         }
 
-        session_start();
         $menu = $this->sidebar();
         foreach ($menu as $row) {
             if (isset($row['members'])) {
@@ -438,7 +430,7 @@ class RA_Admin {
             if (!$disable_admin_ticket_page_counts) {
                 $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
                 $data = mysqli_fetch_array($result);
-                echo "<pre class=test>" . print_r($data, 1) . "</pre>";
+                // echo "<pre class=test>" . print_r($data, 1) . "</pre>";
                 $flaggedtickets = $data[0];
                 $flaggedticketschecked = true;
             }
@@ -458,20 +450,39 @@ class RA_Admin {
             $this->assign("ticketdepts", $departments);
         }
 
+        $query = "select * from tbltickets where status !='Closed' Order By date DESC";
+        $result = full_query_i($query);
+        $tickets = array();
+        while ($data = mysqli_fetch_array($result)) {
+            $tickets[$data['id']] = $data;
+            if (!function_exists("getShortLastReplyTime")) {
+                require ROOTDIR . "/includes/ticketfunctions.php";
+            }
+            $lastreply = getShortLastReplyTime($data['lastreply']);
+            $tickets[$data['id']]['lastreply'] = $lastreply;
+            $tickets[$data['id']]['profile'] = ucwords(substr($data['name'], 0, 1));
+        }
+
+        $this->assign('tickets', $tickets);
 
         if (checkPermission("Sidebar Statistics", true)) {
             $templatevars = array();
             $pendingorderstatuses = array();
-            $result = select_query_i("tblorderstatuses", "title", "showpending=1");
+            $result = select_query_i("tblorderstatuses", "title", "");
 
             while ($data = mysqli_fetch_array($result)) {
                 $pendingorderstatuses[] = $data['title'];
             }
 
-            $query = "SELECT COUNT(*) FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.status IN (" . db_build_in_array($pendingorderstatuses) . ")";
+            $query = "SELECT COUNT(*) as total,tblorders.status FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.status IN (" . db_build_in_array($pendingorderstatuses) . ") group by tblorders.status";
+
             $result = full_query_i($query);
-            $data = mysqli_fetch_array($result);
-            $templatevars['orders']['pending'] = $data[0];
+            while ($data = mysqli_fetch_assoc($result)) {
+                $templatevars['orders'][strtolower($data['status'])] = $data['total'];
+            }
+            //  echo "<pre>", print_r($templatevars['orders'], 1), "</pre>";
+
+
             $templatevars['clients']['active'] = $templatevars['clients']['inactive'] = $templatevars['clients']['closed'] = 0;
             $query = "SELECT status,COUNT(*) FROM tblclients GROUP BY status";
             $result = full_query_i($query);
@@ -887,7 +898,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $order;
         global $numrows;
         global $page;
-
+    
         $pages = max(ceil($numrows / $this->rowLimit), 1);
 
         $content = "";
@@ -990,10 +1001,13 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 continue;
             }
 
-
             if ($columnname == "checkall") {
                 $this->internaljquerycode[] = "$(\"#checkall" . $this->sortableTableCount . "\").click(function () {
-    $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").attr(\"checked\",this.checked);
+                    if(!$(this).is(':checked')){
+                      $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",false);
+                    }else{
+    $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",this.checked);
+        }
 });";
                 $content .= "<th width=\"20\"><input type=\"checkbox\" id=\"checkall" . $this->sortableTableCount . "\"></th>";
                 continue;

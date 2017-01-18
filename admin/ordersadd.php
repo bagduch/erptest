@@ -10,6 +10,7 @@ $aInt->requiredFiles(array("orderfunctions", "servicefunctions", "whoisfunctions
 $action = $ra->get_req_var("action");
 $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
+$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
 
 if ($action == "createpromo") {
     check_token("RA.admin.default");
@@ -606,6 +607,7 @@ $aInt->assign("productdrop", $aInt->productDropDown(0, true));
 $aInt->assign("paymentdrop", paymentMethodsSelection());
 $aInt->template = "order/add";
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 //$aInt->jscode = $jscode;
 $aInt->display();
 

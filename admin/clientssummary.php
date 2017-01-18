@@ -25,7 +25,7 @@ $aInt->requiredFiles(
 );
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($return) {
     unset($_SESSION['uid']);
 }
@@ -768,6 +768,7 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

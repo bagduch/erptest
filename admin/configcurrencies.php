@@ -17,6 +17,7 @@ $aInt->title = $aInt->lang("currencies", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "income";
 $aInt->helplink = "Currencies";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("currencyfunctions"));
 
 if ($action == "add") {
@@ -299,6 +300,6 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jscode = $jscode;
+$aInt->jscode = $jscode.$menuselect;
 $aInt->display();
 ?>

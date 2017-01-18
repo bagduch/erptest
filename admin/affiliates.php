@@ -17,6 +17,7 @@ $aInt->title = $aInt->lang("affiliates", "title");
 $aInt->sidebar = "clients";
 $aInt->icon = "affiliates";
 $aInt->helplink = "Affiliates";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->requiredFiles(array("invoicefunctions", "gatewayfunctions"));
 
 if ($action == "save") {
@@ -401,6 +402,7 @@ $aInt->assign("PHP_SELF", $PHP_SELF);
 $aInt->assign("table", $table);
 $aInt->template = "client/affiliates";
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

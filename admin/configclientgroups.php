@@ -17,7 +17,7 @@ $aInt->title = $aInt->lang("clientgroups", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "clients";
 $aInt->helplink = "Client Groups";
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($action == "savegroup") {
     check_token("RA.admin.default");
     insert_query("tblclientgroups", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices));
@@ -100,7 +100,9 @@ if ($ation == "") {
     $separateinvoices;
     $template = "client/clientgroup";
 }
+
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 $aInt->assign("table", $table);
 $aInt->assign("url", $url);

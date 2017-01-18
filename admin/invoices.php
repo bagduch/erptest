@@ -13,7 +13,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Billing');";
 if ($action == "edit" || $action == "invtooltip") {
     $reqperm = "Manage Invoice";
 } else {
@@ -344,8 +344,8 @@ if ($action == "") {
                 $sendconfirmation = "on";
             }
 
-         //   addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $date);
-            redir("admin/clientsinvoices.php?userid=12437","",true);
+            //   addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $date);
+            redir("admin/clientsinvoices.php?userid=12437", "", true);
             exit();
         }
         if ($sub == "save") {
@@ -614,6 +614,7 @@ if ($action == "") {
     }
 }
 
+$aInt->jquerycode.=$menuselect;
 
 $aInt->display();
 ?>

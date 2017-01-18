@@ -11,6 +11,7 @@ $aInt = new RA_Admin("Add New Client", false);
 $aInt->title = $aInt->lang("clients", "addnew");
 $aInt->sidebar = "clients";
 $aInt->icon = "clientsadd";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 
 if ($action == "add") {
@@ -167,7 +168,7 @@ foreach ($customfields as $customfield) {
         //    echo "</tr><tr>";
     }
 
-    ++$taxindex; 
+    ++$taxindex;
 }
 
 $aInt->assign("infobox", $infobox);
@@ -180,6 +181,9 @@ $aInt->assign("countrydrop", $countrydrop);
 $aInt->assign("paymentmethoddrop", $paymentmethoddrop);
 $aInt->assign("langoption", $langoption);
 //$aInt->content = $content;
+
+
+$aInt->jquerycode .=$menuselect;
 $aInt->template = 'client/clientsadd';
 $aInt->display();
 ?>

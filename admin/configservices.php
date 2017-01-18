@@ -13,7 +13,7 @@ $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
 
@@ -148,7 +148,6 @@ if ($action == "save") {
     redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
-
 if ($sub == "deletecustomfield") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
@@ -158,7 +157,6 @@ if ($sub == "deletecustomfield") {
     exit();
 }
 
-
 if ($action == "duplicatenow") {
     check_token("RA.admin.default");
     checkPermission("Create New Products/Services");
@@ -166,12 +164,10 @@ if ($action == "duplicatenow") {
     $data = mysqli_fetch_array($result);
     $addstr = "";
     foreach ($data as $key => $value) {
-
         if (is_numeric($key)) {
             if ($key == "0") {
                 $value = "";
             }
-
 
             if ($key == "3") {
                 $value = $newproductname;
@@ -772,7 +768,7 @@ if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-
+$aInt->jquerycode .=$menuselect;
 
 $aInt->display();
 ?>

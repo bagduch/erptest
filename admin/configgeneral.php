@@ -8,7 +8,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "config";
 $aInt->helplink = "General Settings";
 $aInt->requiredFiles(array("clientfunctions", "configgeneral"));
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 if ($action == "addwhitelistip") {
     check_token("RA.admin.default");
     $whitelistedips = $ra->get_config("WhitelistedIPs");
@@ -1354,7 +1354,7 @@ $aInt->assign("countryarray", $countryarray);
 $aInt->assign("CONFIG", $CONFIG);
 $aInt->template = "configgeneral";
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

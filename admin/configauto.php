@@ -16,7 +16,7 @@ $aInt = new RA_Admin("Configure Automation Settings");
 $aInt->title = $aInt->lang("automation", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "autosettings";
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 if ($sub == "save") {
 	check_token("RA.admin.default");
 	update_query("tblconfiguration", array("value" => $autosuspend), array("setting" => "AutoSuspension"));
@@ -419,6 +419,6 @@ echo "\" class=\"button\"></P>
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jscode = $jscode;
+$aInt->jscode = $jscode.$menuselect;
 $aInt->display();
 ?>

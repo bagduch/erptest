@@ -116,6 +116,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     }
 //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
 
+
     $result = mysqli_query($ramysqli, $query);
 
 
@@ -212,6 +213,8 @@ function update_query($table, $array, $where) {
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
+
+    error_log($query, 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -308,11 +311,11 @@ function delete_query($table, $where) {
 
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
+    } else {
+        return true;
     }
 
-    ++$query_count
-
-    ;
+    ++$query_count;
 }
 
 function full_query_i($query, $userHandle = null) {

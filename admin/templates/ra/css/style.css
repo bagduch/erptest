@@ -43,8 +43,119 @@ and open the template in the editor.
 .tabletitle{
     font-size: 20px;
     font-weight: bold;
-    margin-top: -15px;
+    /*margin-top: -15px;*/
     background: #0074cc;
     color: white;
     padding: 8px;
+}
+.widgethm th,.widgethm td
+{
+    text-align: center;
+}
+
+.profit
+{
+    background: black;
+    color: white;
+    width: 40px;
+    border-radius: 50%;
+    height: 40px;
+    text-align: center;
+    padding-top: 10px;
+
+}
+.a-profit{
+    background: #f0acb6;  
+}
+.b-profit{
+    background: #e07ebc;  
+}
+.c-profit{
+    background: #531cc4;  
+}
+.d-profit{
+    background: #6699cc;  
+}
+.e-profit{
+    background: #33cccc;  
+}
+.f-profit{
+    background: #33cc33;  
+}
+.g-profit{
+    background: #cccc99;  
+}
+.h-profit{
+    background: #ffff66;  
+}
+.i-profit{
+    background: #666600;  
+}
+.j-profit{
+    background: #996633;  
+}
+.k-profit{
+    background: #333333;  
+}
+.l-profit{
+    background: #3399cc;  
+}
+.m-profit{
+    background: #666699;  
+}
+.n-profit{
+    background: #ff0099;  
+}
+.o-profit{
+    background: #996633;  
+}
+.p-profit{
+    background: #336666;  
+}
+.q-profit{
+    background: #9933cc;  
+}
+.r-profit{
+    background: #cccc33;  
+}
+.s-profit{
+    background: #993333;  
+}
+.t-profit{
+    background: #339966;  
+}
+.u-profit{
+    background: #666699;  
+}
+.v-profit{
+    background: #666666;  
+}
+.w-profit{
+    background: #663333;  
+}
+.x-profit{
+    background: #996666;  
+}
+.y-profit{
+    background: #ffcccc;  
+}
+.z-profit{
+    background: #9999cc;  
+}
+.navbar-nav>li>a{
+    color:white;
+}
+
+.tag-list
+{
+    padding: 10px;
+
+}
+.tag-list h3{
+    color: white;
+    font-size: 20px;
+}
+.tag-list a
+{display: inline-block!important;
+
 }

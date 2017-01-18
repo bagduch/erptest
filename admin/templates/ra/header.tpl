@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {if $meta}{$meta}{/if}
         <title>{$pagetitle}</title>
 
         <!-- http://getbootstrap.com/getting-started/ -->
@@ -15,6 +16,8 @@
         <link rel="stylesheet" href="templates/{$template}/plugins/select2/select2.css">
         <!-- iCheck -->
         <link rel="stylesheet" href="templates/{$template}/plugins/iCheck/all.css">
+        <!-- Morris chart -->
+        <link rel="stylesheet" href="templates/{$template}/plugins/morris/morris.css">
         <!-- DataTables -->
         <link rel="stylesheet" href="templates/{$template}/plugins/datatables/dataTables.bootstrap.css">
         <!-- bootstrap wysihtml5 - text editor -->
@@ -25,9 +28,9 @@
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script> 
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 
-        <script>
-            $.widget.bridge('uibutton', $.ui.button);
-        </script>
+        <!-- AngularJs -->
+
+      
         <!-- Bootstrap 3.3.6 -->
         <script src="templates/{$template}/bootstrap/js/bootstrap.min.js"></script>
         <!-- Morris.js charts -->
@@ -60,13 +63,17 @@
         <!-- AdminLTE App -->
         <script src="templates/{$template}/dist/js/app.min.js"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="templates/{$template}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+{*        <script src="templates/{$template}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>*}
         <!-- AdminLTE for demo purposes -->
         <!-- InputMask -->
         <script src="templates/{$template}/plugins/input-mask/jquery.inputmask.js"></script>
         <script src="templates/{$template}/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
         <script src="templates/{$template}/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-
+        <!-- ChartJS 1.0.1 -->
+        <script src="templates/{$template}/plugins/chartjs/Chart.min.js"></script>
+        <script src="templates/{$template}/js/jquery.multilevelpushmenu.min.js"></script>
+        
+        {$headoutput}
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
@@ -80,9 +87,9 @@
                     <span class="logo-lg"><b>Unlimited</b> Internet</span>
                 </a>
                 <nav class="navbar navbar-static-top">
-                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span class="sr-only">Toggle navigation</span>
-                    </a>
+                    {*   <a href="#" class="sidebar-toggle" onclick="hidemenu();" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    </a>*}
                     <div class='breadcrumb-wrap'>
                         <ol class="breadcrumb">
                             <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -116,8 +123,20 @@
                                     <li>
                                         <!-- inner menu: contains the actual data -->
                                         <ul class="menu">
-                                            <li>test</li>
-                                            <li>test2</li>
+                                            <li><!-- start message -->
+                                                {foreach from=$tickets item=data}
+                                                    <a href="/admin/supporttickets.php?action=viewticket&id={$data.id}">
+                                                        <div class="pull-left">
+                                                            <div class="profit {$data.profile}-profit">{$data.profile}</div>
+                                                        </div>
+                                                        <h4>
+                                                            {$data.title}
+                                                            <small><i class="fa fa-clock-o"></i> {$data.lastreply}</small>
+                                                        </h4>
+                                                        <p>{$data.message}</p>
+                                                    </a>
+                                                {/foreach}
+                                            </li>
                                         </ul>
                                     </li>
                                     <li class="footer"><a href="supporttickets.php">{$_ADMINLANG.stats.ticketsawaitingreply} <span class="badge">{$sidebarstats.tickets.awaitingreply}</span></a></li>
@@ -161,7 +180,7 @@
             </header>
             <aside class="main-sidebar">
                 <section class="sidebar">
-                    {include file="$template/sidebar.tpl"}
+                    {include file="$template/sidebar_new.tpl"}
                 </section>
             </aside>
 

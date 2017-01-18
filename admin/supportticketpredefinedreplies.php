@@ -466,7 +466,8 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode."$('#menu').multilevelpushmenu('expand','Support');";
 $aInt->jscode = $jscode;
+
 $aInt->display();
 ?>

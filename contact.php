@@ -3,11 +3,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  **/
 
 define("CLIENTAREA", true);

@@ -293,7 +293,8 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
         "date" => "now()",
         "message" => $message,
         "adminname" => $adminname,
-        "attachment" => $attachfile
+        "attachment" => $attachfile,
+        "draft" => $draft
     );
     $ticketreplyid = insert_query($table, $array);
     $result = select_query_i("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));
@@ -566,7 +567,7 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 
 function uploadTicketAttachments($admin = false) {
     global $attachments_dir;
-
+    echo "here" . $attachments_dir;
     $attachments = "";
 
     if ($_FILES['attachments']) {
@@ -598,8 +599,12 @@ function uploadTicketAttachments($admin = false) {
                         $newfilename = $rand . "_" . $filename;
                     }
 
-                    move_uploaded_file($_FILES['attachments']['tmp_name'][$num], $attachments_dir . $newfilename);
-                    $attachments .= $newfilename . "|";
+
+                    if (move_uploaded_file($_FILES['attachments']['tmp_name'][$num], "../attachments/" . $newfilename)) {
+                        $attachments .= $newfilename . "|";
+                    } else {
+                        return false;
+                    }
                     continue;
                 }
 
@@ -727,9 +732,7 @@ function closeInactiveTickets() {
 
 function deleteTicket($ticketid, $replyid = "") {
     global $attachments_dir;
-
     $where = array("tid" => $ticketid);
-
     if ($replyid) {
         $where = array("id" => $replyid);
     }
@@ -746,7 +749,7 @@ function deleteTicket($ticketid, $replyid = "") {
             }
         }
     }
-
+    delete_query("tbltickettags", array("ticketid" => $ticketid));
 
     if (!$replyid) {
         $result = select_query_i("tbltickets", "", array("id" => $ticketid));
@@ -987,11 +990,11 @@ function getTicketAttachmentsInfo($ticketid, $replyid, $attachment) {
             $file = substr($file, 7);
 
             if ($replyid) {
-                $attachments[] = array("filename" => $file, "dllink" => "dl.php?type=ar&id=" . $replyid . "&i=" . $num, "deletelink" => "" . $PHP_SELF . "?action=viewticket&id=" . $ticketid . "&removeattachment=true&type=r&idsd=" . $replyid . "&filecount=" . $num . generate_token("link"));
+                $attachments[] = array("filename" => $file, "dllink" => "/dl.php?type=ar&id=" . $replyid . "&i=" . $num, "deletelink" => "" . $PHP_SELF . "?action=viewticket&id=" . $ticketid . "&removeattachment=true&type=r&idsd=" . $replyid . "&filecount=" . $num . generate_token("link"));
                 continue;
             }
 
-            $attachments[] = array("filename" => $file, "dllink" => "dl.php?type=a&id=" . $ticketid . "&i=" . $num, "deletelink" => "" . $PHP_SELF . "?action=viewticket&id=" . $ticketid . "&removeattachment=true&idsd=" . $ticketid . "&filecount=" . $num . generate_token("link"));
+            $attachments[] = array("filename" => $file, "dllink" => "/dl.php?type=a&id=" . $ticketid . "&i=" . $num, "deletelink" => "" . $PHP_SELF . "?action=viewticket&id=" . $ticketid . "&removeattachment=true&idsd=" . $ticketid . "&filecount=" . $num . generate_token("link"));
         }
     }
 
@@ -1037,15 +1040,23 @@ function getDepartments() {
 
 function buildAdminTicketListArray($result) {
 
-    global $departmentsarray;
     global $tabledata;
     global $aInt;
     global $tickets;
     global $ramysqli;
-
+    $tabledata = array();
 
     while ($data = mysqli_fetch_array($result)) {
-        error_log("fetcharray loop " . $data);
+        //  echo "<pre>", print_r($data, 1), "</pre>";
+        // error_log("fetcharray loop " . $data);
+//        $result2 = select_query_i("tblticketreplies", "name,adminname", array("tid" => $data['id']), "date", "DESC", "1");
+//        $data3 = mysqli_fetch_array($result2);
+        if (isset($data['rname']) || isset($data['radminname'])) {
+            $lastreplier = $data['rname'] != "" ? $data['rname'] : $data['radminname'];
+        } else {
+            $lastreplier = $data['name'];
+        }
+
         $id = $data['id'];
         $ticketnumber = $data['tid'];
         $did = $data['did'];
@@ -1066,6 +1077,15 @@ function buildAdminTicketListArray($result) {
         $adminread = $data['adminunread'];
         $adminread = explode(",", $adminread);
         $tickets->addTagCloudID($id);
+        $tags = "";
+        $query = "select tag from tbltickettags where ticketid=" . $data['id'] . " ORDER BY `tbltickettags`.`id` DESC";
+        $result2 = full_query_i($query);
+        while ($tag = mysqli_fetch_array($result2)) {
+
+            if (isset($tag['tag'])) {
+                $tags.= "<span style=\"margin-right:3px\" class=\"label label-info\">" . $tag['tag'] . "</span>";
+            }
+        }
 
         if (!in_array($_SESSION['adminid'], $adminread)) {
             $unread = 1;
@@ -1096,6 +1116,7 @@ function buildAdminTicketListArray($result) {
 
         if ($flag == $_SESSION['adminid']) {
             $showflag = "user";
+            $flaggedto = getAdminName($flag);
         } else {
             if ($flag == 0) {
                 $showflag = "none";
@@ -1104,7 +1125,7 @@ function buildAdminTicketListArray($result) {
                 $flaggedto = getAdminName($flag);
             }
         }
-
+        $departmentsarray = getDepartments();
         $department = $departmentsarray[$did];
 
         if ($flaggedto) {
@@ -1121,9 +1142,9 @@ function buildAdminTicketListArray($result) {
             $title = "<strong>" . $title . "</strong>";
         }
 
-        $clientinfo = ($puserid != "0" ? $aInt->outputClientLink($puserid, $firstname, $lastname, $companyname, $groupid) : $name);
+        $clientinfo = ($puserid != "" ? $aInt->outputClientLink($puserid, $firstname, $lastname, $companyname, $groupid) : $name);
         $ticketlink = ("<a href=\"?action=viewticket&id=" . $id . "\"") . ($alttitle ? " title=\"" . $alttitle . "\"" : "") . "" . $ainject . ">";
-        $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), $department, "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $flaggedto, $tstatus, $lastreply);
+        $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $department, $tags, $flaggedto, $tstatus, $lastreplier, $lastreply);
     }
 }
 

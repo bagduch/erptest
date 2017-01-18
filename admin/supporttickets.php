@@ -3,43 +3,53 @@
 define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
+$deptid = $ra->get_req_var("deptid");
+$menuselect = "$('#menu').multilevelpushmenu('expand','Support');";
+$icon = "tickets";
+$departmentshtml = "";
+$departments = array();
+$result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+while ($data = mysqli_fetch_array($result)) {
+    $departments[] = array("id" => $data['id'], "name" => $data['name']);
+    $departmentshtml .= "<option value=\"" . $data['id'] . "\"" . ($data['id'] == $deptid ? " selected" : "") . ">" . $data['name'] . "</option>";
+}
 
 
-$icon ="tickets";
+$supporttickets = new RA_Support($id);
+
 
 if ($action == "viewticket") { // view specific ticket
     $reqperm = "View Support Ticket";
     $aInt = new RA_Admin($reqperm);
+    $statuses = $supporttickets->getTicketstatus();
+    $statuseshtml = $supporttickets->getTicketstatusHtml();
+    if (!$supporttickets->ticket['replyingadmin']) {
+        $adminheaderbodyjs = "onunload=\"endMakingReply();\"";
+    }
 } elseif ($action == "openticket" || $action == "open") { // open new ticket
     $reqperm = "Open New Ticket";
     $icon = "ticketsopen";
     $aInt = new RA_Admin($reqperm);
-} elseif ((!$action) && (!$sub)) { // just show a list of tickets
+} elseif ((!$action) && (!$sub)) { // just show a list of tickets   
     $action = "list";
     $reqperm = "List Support Tickets";
     $aInt = new RA_Admin($reqperm, false);
-}  else {
+} else {
     $reqperm = "List Support Tickets";
     $aInt = new RA_Admin($reqperm, false);
 }
-$title=$reqperm;
-ob_start();
-
-
+$title = $reqperm;
 $aInt->title = $title;
 $aInt->sidebar = "support";
 $aInt->icon = $icon;
 $aInt->helplink = "Support Tickets";
 $aInt->requiredFiles(array("ticketfunctions", "modulefunctions", "customfieldfunctions"));
 $filt = new RA_Filter("tickets");
-
-
 $smartyvalues = array();
 
 if ($ra->get_req_var("ticketid")) {
     $action = "search";
 }
-
 if ($action == "gettags") {
     check_token("RA.admin.default");
     $array = array();
@@ -573,6 +583,7 @@ if ($action == "gettags") {
     exit();
 } elseif ($action == "changeflag") {
     check_token("RA.admin.default");
+    $flag = $_POST['flag'];
     $access = validateAdminTicketAccess($id);
 
     if ($access) {
@@ -744,6 +755,15 @@ if ($action == "gettags") {
 
         $filt->redir();
     }
+} elseif ($action == "deletereply") {
+    $replyid = $ra->get_req_var('replyid');
+    $result = delete_query("tblticketreplies", array("id" => $replyid));
+    if ($result) {
+        addTicketLog($id, "Deleted Ticket Reply (ID: " . $replyid . ")");
+        logActivity("Deleted Ticket Reply - ID: " . $replyid);
+    } else {
+        redir("action=viewticket&id=" . $id);
+    }
 } else {
     if ($action == "mergeticket") {
         check_token("RA.admin.default");
@@ -820,7 +840,6 @@ if ($action == "gettags") {
                 $errormessage = $aInt->lang("support", "ticketsubjecterror");
             }
 
-
             if (!$client) {
                 if (!preg_match('/^([a-zA-Z0-9])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
                     $errormessage = $aInt->lang("support", "ticketemailvalidationerror");
@@ -837,7 +856,6 @@ if ($action == "gettags") {
                 }
             }
 
-
             if (!$errormessage) {
                 $attachments = uploadTicketAttachments(true);
                 $client = (int) str_replace("UserID:", "", $client);
@@ -851,27 +869,24 @@ if ($action == "gettags") {
             }
         } else {
             if ($action == "viewticket") {
+
                 $access = validateAdminTicketAccess($id);
 
                 if ($access == "invalidid") {
                     $aInt->gracefulExit($aInt->lang("support", "ticketnotfound"));
                 }
 
-
                 if ($access == "deptblocked") {
                     $aInt->gracefulExit($aInt->lang("support", "deptnoaccess"));
                 }
-
 
                 if ($access == "flagged") {
                     $aInt->gracefulExit($aInt->lang("support", "flagnoaccess") . ": " . getAdminName($flag));
                 }
 
-
                 if ($access) {
                     exit();
                 }
-
 
                 if ($postreply || $postaction) {
                     check_token("RA.admin.default");
@@ -885,8 +900,7 @@ if ($action == "gettags") {
                             $newstatus = "Closed";
                         } else {
                             if (substr($postaction, 0, 9) == "setstatus") {
-                                $result = select_query_i(
-                                        "tblticketstatuses", "title", array("id" => substr($postaction, 9)));
+                                $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
                                 $data = mysqli_fetch_array($result);
                                 $newstatus = $data[0];
                             } else {
@@ -903,6 +917,8 @@ if ($action == "gettags") {
                         }
 
                         AddReply($id, "NULL", "NULL", $message, true, $attachments, null, $newstatus);
+
+
                         run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => $newstatus, "ticketid" => $id));
 
                         if ($billingdescription && $billingdescription != $aInt->lang("support", "toinvoicedes")) {
@@ -951,10 +967,9 @@ if ($action == "gettags") {
                         }
                     }
 
-                    redir("action=viewticket&id=" . $id);
-                    exit();
-                }
 
+                    redir("action=viewticket&id=" . $id);
+                }
 
                 if ($deptid) {
                     check_token("RA.admin.default");
@@ -973,13 +988,11 @@ if ($action == "gettags") {
                         addTicketLog($id, "Ticket Assigned to User ID " . $userid);
                     }
 
-
                     if ($orig_deptid != $deptid) {
                         $ticket = new RA_Tickets();
                         $ticket->setID($id);
                         $ticket->changeDept($deptid);
                     }
-
 
                     if ($orig_status != $status) {
                         if ($status == "Closed") {
@@ -989,16 +1002,13 @@ if ($action == "gettags") {
                         }
                     }
 
-
                     if ($orig_priority != $priority) {
                         addTicketLog($id, "Priority changed to " . $priority);
                     }
 
-
                     if ($orig_cc != $cc) {
                         addTicketLog($id, "Modified CC Recipients");
                     }
-
 
                     if ($orig_flag != $flagto) {
                         $ticket = new RA_Tickets();
@@ -1007,14 +1017,13 @@ if ($action == "gettags") {
                     }
 
                     $table = "tbltickets";
-                    $array = array("status" => $status, "urgency" => $priority, "title" => $subject, "userid" => $userid, "cc" => $cc);
+                    $array = array("status" => $_POST['status'], "urgency" => $_POST['priority'], "title" => $_POST['subject'], "cc" => $_POST['cc']);
                     $where = array("id" => $id);
                     update_query($table, $array, $where);
 
                     if ($orig_status != "Closed" && $status == "Closed") {
                         run_hook("TicketClose", array("ticketid" => $id));
                     }
-
 
                     if ($mergetid) {
                         redir("action=mergeticket&id=" . $id . "&mergetid=" . $mergetid . generate_token("link"));
@@ -1024,7 +1033,6 @@ if ($action == "gettags") {
                     redir("action=viewticket&id=" . $id);
                     exit();
                 }
-
 
                 if ($removeattachment) {
                     check_token("RA.admin.default");
@@ -1097,6 +1105,7 @@ if ($action == "gettags") {
                 }
 
 
+
                 if ($sub == "delnote") {
                     check_token("RA.admin.default");
                     delete_query("tblticketnotes", array("id" => $idsd));
@@ -1131,23 +1140,24 @@ if ($action == "gettags") {
     }
 }
 
-
-
-
-if ($action == "viewticket") {
-    $result = select_query_i("tbltickets", "", array("id" => $id));
-    $data = mysqli_fetch_array($result);
-    $replyingadmin = $data['replyingadmin'];
-
-    if (!$replyingadmin) {
-        $adminheaderbodyjs = "onunload=\"endMakingReply();\"";
-    }
+if ($action == "updnote") {
+    check_token("RA.admin.default");
+    update_query("tblticketnotes", array("message" => $_POST['msg'], "date" => date("Y-m-d H:i:s")), array("id" => $_POST['noteid']));
+    addTicketLog($id, "Update Ticket Note ID " . $_POST['noteid']);
+    echo $_POST['msg'] = nl2br($_POST['msg']);
+    exit();
+}
+if ($action == "delnote") {
+    check_token("RA.admin.default");
+    delete_query("tblticketnotes", array("id" => $_POST['noteid']));
+    addTicketLog($id, "Delete Ticket Note ID " . $_POST['noteid']);
+    exit();
 }
 
 $supportdepts = getAdminDepartmentAssignments();
 $smartyvalues['ticketfilterdata'] = array("view" => $filt->getFromSession("view"), "deptid" => $filt->getFromSession("deptid"), "subject" => $filt->getFromSession("subject"), "email" => $filt->getFromSession("email"));
 
-if ($action == "list") {
+if ($action == "list" || $action == "") {
     $smartyvalues['inticketlist'] = true;
 
     if (!count($supportdepts)) {
@@ -1156,31 +1166,36 @@ if ($action == "list") {
 
     $tickets = new RA_Tickets();
 
+
     if ($_COOKIE['RAAutoRefresh'] && !$action) {
         $refreshtime = intval($_COOKIE['RAAutoRefresh']) * 60;
 
         if ($refreshtime && !$disable_auto_ticket_refresh) {
-            echo "<meta http-equiv=\"refresh\" content=\"" . $refreshtime . "\">";
+            $meta = "<meta http-equiv=\"refresh\" content=\"" . $refreshtime . "\">";
         }
     }
-    echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
+
     $filt->setAllowedVars(array("view", "deptid", "client", "subject", "email", "tag"));
     $view = $filt->get("view");
+
+    if ($view == "") {
+        $view = $_GET['status'];
+    }
+
     $deptid = $filt->get("deptid");
     $client = $filt->get("client");
     $subject = $filt->get("subject");
     $email = $filt->get("email");
     $tag = $filt->get("tag");
     $aInt->assign(
-        "ticketfilterdata",
-        array(
-            "view" => $view,
-            "deptid" => $deptid,
-            "client" => $client,
-            "subject" => $subject,
-            "email" => $email,
-            "tag" => $tag
-        )
+            "ticketfilterdata", array(
+        "view" => $view,
+        "deptid" => $deptid,
+        "client" => $client,
+        "subject" => $subject,
+        "email" => $email,
+        "tag" => $tag
+            )
     );
 
     $tagjoin = ($tag ? " INNER JOIN tbltickettags ON tbltickettags.ticketid=tbltickets.id" : "");
@@ -1237,7 +1252,12 @@ if ($action == "list") {
 
 
     if ($client) {
-        $filters[] = "tbltickets.userid='" . db_escape_string($client) . "'";
+        if (is_int($client)) {
+            $filters[] = "tbltickets.userid='" . db_escape_string($client) . "'";
+        } else {
+            $filters[] = "(tbltickets.name LIKE '%" . db_escape_string($client) . "%' "
+                    . "OR concat(tblclients.firstname,' ',tblclients.lastname) LIKE '%" . db_escape_string($client) . "%')";
+        }
     }
     if ($deptid) {
         $filters[] = "tbltickets.did='" . db_escape_string($deptid) . "'";
@@ -1274,15 +1294,17 @@ if ($action == "list") {
     $tableformbuttons = "<input onclick=\"return confirm('" . $aInt->lang("support", "massmergeconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("clientsummary", "merge") . "\" name=\"merge\" class=\"btn-small\" /> <input onclick=\"return confirm('" . $aInt->lang("support", "masscloseconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("global", "close") . "\" name=\"close\" class=\"btn-small\" /> <input onclick=\"return confirm('" . $aInt->lang("support", "massdeleteconfirm", "1") . "');\" type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" name=\"delete\" class=\"btn-small\" />";
 
     if (count($tabledata)) {
-        echo "<h2>" . $aInt->lang("support", "assignedtickets") . "</h2><p>" . sprintf($aInt->lang("support", "numticketsassigned"), count($tabledata)) . "</p>" . $aInt->sortableTable(array("checkall", "", $aInt->lang("support", "department"), $aInt->lang("fields", "subject"), $aInt->lang("support", "submitter"), $aInt->lang("fields", "status"), $aInt->lang("support", "lastreply")), $tabledata, $tableformurl, $tableformbuttons) . "<br /><h2>" . $aInt->lang("support", "unassignedtickets") . "</h2>";
+        $yourtickets = "
+                <p>" . sprintf($aInt->lang("support", "numticketsassigned"), count($tabledata)) . "</p>"
+                . $aInt->sortableTable(array("checkall", "", $aInt->lang("fields", "subject"), "Client", $aInt->lang("support", "department"), "Tag", array("flag", "Assigned To"), $aInt->lang("fields", "status"), "Last Replier", $aInt->lang("support", "lastreply")), $tabledata, $tableformurl, $tableformbuttons) . "<br />";
     }
 
     $aInt->sortableTableInit("lastreply", "ASC");
     $tabledata = array();
 
-    $query = " FROM tbltickets LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";
+    $query = " FROM tbltickets LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date) FROM `tblticketreplies` group by tblticketreplies.tid) as replies ON replies.tid=tbltickets.id  LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";
     $filters[] = "tbltickets.flag!=" . (int) $_SESSION['adminid'];
-
+    $filters[] = "tbltickets.flag !=0";
     if ($deptfilter) {
         $filters[] = "did IN (" . db_build_in_array(getAdminDepartmentAssignments()) . ")";
     }
@@ -1294,27 +1316,73 @@ if ($action == "list") {
     $result = full_query_i($numresultsquery);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
-    $query = "SELECT tbltickets.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT tbltickets.*,tblclients.firstname,rname,radminname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
     $result = full_query_i($query);
 
     buildAdminTicketListArray($result);
+//
+//    $table = $aInt->sortableTable(
+//            array(
+//        "checkall",
+//        "",
+//        array("title", $aInt->lang("fields", "subject")),
+//        "Client",
+//        $aInt->lang("support", "department"),
+//        "Tag",
+//        array("flag", "Assigned To"),
+//        array("status", $aInt->lang("fields", "status")),
+//        "Last Replier",
+//        array("lastreply", $aInt->lang("support", "lastreply"))
+//            ), $tabledata, $tableformurl, $tableformbuttons, true
+//    );
+    $supporttickets->tablehtml($tabledata, $view);
 
-    echo $aInt->sortableTable(
+
+    //echo "<pre>",  print_r($statuses,1),"</pre>";
+
+
+
+
+    $query = "SELECT tbltickets.*,tblclients.firstname,rname,radminname,tblclients.lastname,"
+            . "tblclients.companyname,tblclients.groupid FROM "
+            . "tbltickets LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date)"
+            . " FROM `tblticketreplies` group by tblticketreplies.tid) as replies ON replies.tid=tbltickets.id "
+            . "LEFT JOIN tblclients ON tblclients.id=tbltickets.userid "
+            . "WHERE tbltickets.status IN ('Open','Answered','Customer-Reply','Closed','On Hold','In Progress')"
+            . " AND tbltickets.flag=0 AND did IN (1) ORDER BY tbltickets.lastreply ASC LIMIT " . (int) $page * $limit . "," . (int) $limit;
+
+
+    $unsignresult = full_query_i($query);
+    $numresultsquery = "SELECT COUNT(tbltickets.id) from tbltickets where tbltickets.flag=0";
+
+    $result = full_query_i($numresultsquery);
+    $data = mysqli_fetch_array($result);
+    $numrows = $data[0];
+    buildAdminTicketListArray($unsignresult);
+
+    $unsignedtable = $aInt->sortableTable(
             array(
         "checkall",
         "",
-        $aInt->lang("support", "department"),
         array("title", $aInt->lang("fields", "subject")),
-        $aInt->lang("support", "submitter"),
+        "Client",
+        $aInt->lang("support", "department"),
+        "Tag",
         array("flag", "Assigned To"),
         array("status", $aInt->lang("fields", "status")),
+        "Last Replier",
         array("lastreply", $aInt->lang("support", "lastreply"))
             ), $tabledata, $tableformurl, $tableformbuttons, true
     );
+
+
+    $aInt->assign("meta", $meta);
+
     $smartyvalues['tagcloud'] = $tickets->buildTagCloud();
+    $smartyvalues['unsignedtable'] = $unsignedtable;
+    $smartyvalues['yourticket'] = $yourtickets;
+    $template = "support/supporttickets";
 }
-
-
 if ($action == "search") {
     $where = "tid='" . db_escape_string($ticketid) . "' AND did IN (" . db_build_in_array(db_escape_numarray(getAdminDepartmentAssignments())) . ")";
     $result = select_query_i("tbltickets", "", $where);
@@ -1327,15 +1395,13 @@ if ($action == "search") {
         $action = "viewticket";
     }
 }
-
-
 if ($action == "viewticket") {
     releaseSession();
-    $aInt->template = "viewticket";
     $smartyvalues['inticket'] = true;
     $ticket = new RA_Tickets();
     $ticket->setID($id);
     $data = $ticket->getData();
+    //echo "<pre>", print_r($data, 1), "</pre>";
     $id = $data['id'];
     $tid = $data['tid'];
     $deptid = $data['did'];
@@ -1359,26 +1425,21 @@ if ($action == "viewticket") {
     $replyingtime = fromMySQLDate($replyingtime, "time");
     $access = validateAdminTicketAccess($id);
 
+    if (isset($_POST['tag'])) {
+        insert_query("tbltickettags", array("ticketid" => $id, "tag" => $_POST['tag']));
+    }
     if ($access == "invalidid") {
         $aInt->gracefulExit($aInt->lang("support", "ticketnotfound"));
     }
-
-
     if ($access == "deptblocked") {
         $aInt->gracefulExit($aInt->lang("support", "deptnoaccess"));
     }
-
-
     if ($access == "flagged") {
         $aInt->gracefulExit($aInt->lang("support", "flagnoaccess") . ": " . getAdminName($flag));
     }
-
-
     if ($access) {
         exit();
     }
-
-
     if ($updateticket) {
         check_token("RA.admin.default");
 
@@ -1404,8 +1465,6 @@ if ($action == "viewticket") {
             exit();
         }
     }
-
-
     if ($sub == "savecustomfields") {
         check_token("RA.admin.default");
         $customfields = getCustomFields("support", $deptid, $id, true);
@@ -1418,36 +1477,27 @@ if ($action == "viewticket") {
         $adminname = getAdminName();
         addTicketLog($id, "Custom Field Values Modified by " . $adminname);
     }
-
     AdminRead($id);
-
     if ($replyingadmin && $replyingadmin != $_SESSION['adminid']) {
         $result = select_query_i("tbladmins", "", array("id" => $replyingadmin));
         $data = mysqli_fetch_array($result);
         $replyingadmin = ucfirst($data['username']);
         $smartyvalues['replyingadmin'] = array("name" => $replyingadmin, "time" => $replyingtime);
     }
-
     $clientname = $contactname = $clientgroupcolour = "";
-
     if ($pauserid) {
         $clientname = strip_tags($aInt->outputClientLink($pauserid));
     }
-
-
     if ($pacontactid) {
         $contactname = strip_tags($aInt->outputClientLink(array($pauserid, $pacontactid)));
     }
-
     $staffinvolved = array();
     $result = select_query_i("tblticketreplies", "DISTINCT adminname", array("tid" => $id));
-
     while ($data = mysqli_fetch_array($result)) {
         if (trim($data[0])) {
             $staffinvolved[] = $data[0];
         }
     }
-
     $addons_html = run_hook("AdminAreaViewTicketPage", array("ticketid" => $id));
     $smartyvalues['addons_html'] = $addons_html;
     $department = getDepartmentName($deptid);
@@ -1458,15 +1508,14 @@ if ($action == "viewticket") {
 
     $date = fromMySQLDate($date, true);
     $outstatus = getStatusColour($tstatus);
-    $aInt->Tabs();
     $tags = array();
-    $result = select_query_i("tbltickettags", "tag", array("ticketid" => $id), "tag", "ASC");
-
+    $result = select_query_i("tbltickettags", "id,tag", array("ticketid" => $id), "tag", "ASC");
     while ($data = mysqli_fetch_array($result)) {
-        $tags[] = $data['tag'];
+        $tags[$data['id']] = $data['tag'];
     }
 
     $smartyvalues['tags'] = $tags;
+
     $tags = json_encode($tags);
     $csrfToken = generate_token("plain");
     $jsheadoutput = "<script type=\"text/javascript\">
@@ -1481,7 +1530,8 @@ var langloading = \"" . $_ADMINLANG['global']['loading'] . "\";
 var langstatuschanged = \"" . $_ADMINLANG['support']['statuschanged'] . "\";
 var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 </script>
-<script type=\"text/javascript\" src=\"../includes/jscript/admintickets.js\"></script>";
+<script type=\"text/javascript\" src=\"../includes/jscript/admintickets.js\"></script>
+<script type = \"text/javascript\" src=\"../includes/jscript/sisyphus.js\"></script>";
     $aInt->addHeadOutput($jsheadoutput);
     $smartyvalues['infobox'] = $infobox;
     $smartyvalues['ticketid'] = $id;
@@ -1506,54 +1556,30 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $smartyvalues['signature'] = $signature;
     $smartyvalues['predefinedreplies'] = genPredefinedRepliesList(0);
     $smartyvalues['clientnotes'] = array();
-
     $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $pauserid, "sticky" => "1"), "modified", "DESC");
-
     while ($data = mysqli_fetch_assoc($result)) {
         $data['created'] = fromMySQLDate($data['created'], 1);
         $data['modified'] = fromMySQLDate($data['modified'], 1);
         $data['note'] = autoHyperLink(nl2br($data['note']));
         $smartyvalues['clientnotes'][] = $data;
     }
-
     $notes = array();
     $result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "date", "ASC");
-
     while ($data = mysqli_fetch_array($result)) {
-        $notes[] = array("id" => $data['id'], "admin" => getAdminName($data['adminid']), "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
+        $notes[] = array("id" => $data['id'], "adminid" => $data['adminid'], "admin" => getAdminName($data['adminid']), "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
     }
-
     $smartyvalues['notes'] = $notes;
     $smartyvalues['numnotes'] = count($notes);
     $customfields = getCustomFields("support", $deptid, $id, true);
     $smartyvalues['customfields'] = $customfields;
     $smartyvalues['numcustomfields'] = count($customfields);
-    $departmentshtml = "";
-    $departments = array();
-    $result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $departments[] = array("id" => $data['id'], "name" => $data['name']);
-        $departmentshtml .= "<option value=\"" . $data['id'] . "\"" . ($data['id'] == $deptid ? " selected" : "") . ">" . $data['name'] . "</option>";
-    }
-
     $smartyvalues['departments'] = $departments;
     $staff = array();
     $result = select_query_i("tbladmins", "id,firstname,lastname,supportdepts", "disabled=0 OR id='" . (int) $flag . "'", "firstname` ASC,`lastname", "ASC");
-
     while ($data = mysqli_fetch_array($result)) {
         $staff[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname']);
     }
-
     $smartyvalues['staff'] = $staff;
-    $statuses = array();
-    $result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $statuses[] = array("title" => $data['title'], "color" => $data['color'], "id" => $data['id']);
-    }
-
-    $smartyvalues['statuses'] = $statuses;
 
     if ($service) {
         switch (substr($service, 0, 1)) {
@@ -1784,9 +1810,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 
     $attachments = getTicketAttachmentsInfo($id, "", $attachment);
     $replies[] = array("id" => 0, "admin" => $admin, "userid" => $userid, "contactid" => $contactid, "clientname" => $name, "clientemail" => $email, "date" => $date, "friendlydate" => $friendlydate, "friendlytime" => $friendlytime, "message" => $message, "attachments" => $attachments, "numattachments" => count($attachments));
-    $result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+    $result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
+
         $replyid = $data['id'];
         $userid = $data['userid'];
         $contactid = $data['contactid'];
@@ -1801,7 +1828,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $friendlytime = date("H:i", strtotime($date));
         $date = fromMySQLDate($date, true);
         $message = ticketMessageFormat($message);
-
+        $message = html_entity_decode($message);
         if ($userid) {
             $name = $aInt->outputClientLink(array($userid, $contactid));
         }
@@ -1817,20 +1844,33 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
                 ++$i;
             }
         }
-
-        $replies[] = array("id" => $replyid, "admin" => $admin, "userid" => $userid, "contactid" => $contactid, "clientname" => $name, "clientemail" => $email, "date" => $date, "friendlydate" => $friendlydate, "friendlytime" => $friendlytime, "message" => $message, "attachments" => $attachments, "numattachments" => count($attachments), "rating" => $ratingstars);
+        $replies[] = array(
+            "id" => $replyid,
+            "admin" => $admin,
+            "userid" => $userid,
+            "contactid" => $contactid,
+            "clientname" => $name,
+            "clientemail" => $email,
+            "date" => $date,
+            "friendlydate" => $friendlydate,
+            "friendlytime" => $friendlytime,
+            "message" => $message,
+            "attachments" => $attachments,
+            "numattachments" => count($attachments),
+            "rating" => $ratingstars
+        );
     }
-
 
     if ($CONFIG['SupportTicketOrder'] == "DESC") {
         krsort($replies);
     }
-
+    //echo "<pre>", print_r($replies, 1), "</pre>";
     $smartyvalues['replies'] = $replies;
     $smartyvalues['repliescount'] = count($replies);
     $smartyvalues['thumbnails'] = ($CONFIG['AttachmentThumbnails'] ? true : false);
     $splitticketdialog = $aInt->jqueryDialog("splitticket", $aInt->lang("support", "splitticketdialogtitle"), "<p>" . $aInt->lang("support", "splitticketdialoginfo") . "</p><table><tr><td align=\"right\" width=\"120\">" . $aInt->lang("support", "department") . (":</td><td><select id=\"splitdeptidx\">" . $departmentshtml . "</select></td></tr><tr><td align=\"right\">") . $aInt->lang("support", "splitticketdialognewticketname") . (":</td><td><input type=\"text\" id=\"splitsubjectx\" size=\"35\" value=\"" . $title . "\" /></td></tr><tr><td align=\"right\">") . $aInt->lang("support", "priority") . ":</td><td><select id=\"splitpriorityx\"><option value=\"High\"" . ($urgency == "High" ? " selected" : "") . ">High</option><option value=\"Medium\"" . ($urgency == "Medium" ? " selected" : "") . ">Medium</option><option value=\"Low\"" . ($urgency == "Low" ? " selected" : "") . ">Low</option></select></td></tr><tr><td align=\"right\">" . $aInt->lang("support", "splitticketdialognotifyclient") . ":</td><td><label><input type=\"checkbox\" id=\"splitnotifyclientx\" /> " . $aInt->lang("support", "splitticketdialognotifyclientinfo") . "</label></td></tr></table>", array($aInt->lang("global", "submit") => "$('#splitdeptid').val($('#splitdeptidx').val());$('#splitsubject').val($('#splitsubjectx').val());$('#splitpriority').val($('#splitpriorityx').val());$('#splitnotifyclient').val($('#splitnotifyclientx').attr('checked'));$('#ticketreplies').submit();", $aInt->lang("supportreq", "cancel") => ""), "", "400", "");
     $smartyvalues['splitticketdialog'] = $splitticketdialog;
+    $template = "support/viewticket";
 } else {
     if ($action == "open") {
         $result = select_query_i("tbladmins", "signature", array("id" => $_SESSION['adminid']));
@@ -1841,110 +1881,6 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
             infoBox($aInt->lang("global", "validationerror"), $errormessage);
             echo $infobox;
         }
-
-        $jquerycode = "(function() {
-    var fieldSelection = {
-        addToReply: function() {
-            var e = this.jquery ? this[0] : this;
-            var text = arguments[0] || '';
-            return (
-                ('selectionStart' in e && function() {
-                    if (e.value==\"\\n\\n" . str_replace("\r\n", "\n", $signature) . "\") {
-                        e.selectionStart=0;
-                        e.selectionEnd=0;
-                    }
-                    e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
-                    e.focus();
-                    return this;
-                }) ||
-                (document.selection && function() {
-                    e.focus();
-                    document.selection.createRange().text = text;
-                    return this;
-                }) ||
-                function() {
-                    e.value += text;
-                    return this;
-                }
-            )();
-        }
-    };
-    jQuery.each(fieldSelection, function(i) { jQuery.fn[i] = this; });
-    })();
-$(\"#addfileupload\").click(function () {
-    $(\"#fileuploads\").append(\"<input type=\\\"file\\\" name=\\\"attachments[]\\\" size=\\\"85\\\"><br />\");
-    return false;
-});
-$(\"#clientsearchval\").keyup(function () {
-    var ticketuseridsearchlength = $(\"#clientsearchval\").val().length;
-    if (ticketuseridsearchlength>2) {
-    $.post(\"search.php\", { ticketclientsearch: 1, value: $(\"#clientsearchval\").val() },
-        function(data){
-            if (data) {
-                $(\"#ticketclientsearchresults\").html(data);
-                $(\"#ticketclientsearchresults\").slideDown(\"slow\");
-                $(\"#clientsearchcancel\").fadeIn();
-            }
-        });
-    }
-});
-$(\"#clientsearchcancel\").click(function () {
-    $(\"#ticketclientsearchresults\").slideUp(\"slow\");
-    $(\"#clientsearchcancel\").fadeOut();
-});
-$(\"#predefq\").keyup(function () {
-    var intellisearchlength = $(\"#predefq\").val().length;
-    if (intellisearchlength>2) {
-    $.post(\"supporttickets.php\", { action: \"loadpredefinedreplies\", predefq: $(\"#predefq\").val(), token: \"" . generate_token("plain") . "\" },
-        function(data){
-            $(\"#prerepliescontent\").html(data);
-        });
-    }
-});
-";
-        $aInt->jquerycode = $jquerycode;
-        $jscode = "function insertKBLink(url) {
-    $(\"#replymessage\").addToReply(url);
-}
-function selectpredefcat(catid) {
-    $.post(\"supporttickets.php\", { action: \"loadpredefinedreplies\", cat: catid, token: \"" . generate_token("plain") . "\" },
-    function(data){
-        $(\"#prerepliescontent\").html(data);
-    });
-}
-function loadpredef(catid) {
-    $(\"#prerepliescontainer\").slideToggle();
-    $(\"#prerepliescontent\").html('<img src=\"images/loading.gif\" align=\"top\" /> " . $aInt->lang("global", "loading") . "');
-    $.post(\"supporttickets.php\", { action: \"loadpredefinedreplies\", cat: catid, token: \"" . generate_token("plain") . "\" },
-    function(data){
-        $(\"#prerepliescontent\").html(data);
-    });
-}
-function selectpredefreply(artid) {
-    $.post(\"supporttickets.php\", { action: \"getpredefinedreply\", id: artid, token: \"" . generate_token("plain") . "\" },
-    function(data){
-        $(\"#replymessage\").addToReply(data);
-    });
-    $(\"#prerepliescontainer\").slideToggle();
-}
-function searchselectclient(userid,name,email) {
-    $(\"#clientsearchval\").val(\"\");
-    $(\"#clientinput\").val(userid);
-    $(\"#name\").val(name);
-    $(\"#email\").val(email);
-    $(\"#ticketclientsearchresults\").slideUp(\"slow\");
-    $(\"#clientsearchcancel\").fadeOut();
-    $.post(\"supporttickets.php\", { action: \"getcontacts\", userid: userid, token: \"" . generate_token("plain") . "\" },
-    function(data){
-        if (data) {
-            $(\"#contacthtml\").html(data);
-            $(\"#contactrow\").show();
-        } else {
-            $(\"#contactrow\").hide();
-        }
-    });
-}";
-        $aInt->jscode = $jscode;
 
         if ($userid) {
             $result = select_query_i("tblclients", "id,firstname,lastname,companyname,email", array("id" => $userid));
@@ -1968,46 +1904,8 @@ function searchselectclient(userid,name,email) {
             $contactsdata = getTicketContacts($client);
         }
 
-        printf("<form method=\"post\" action=\"%s?action=openticket\" enctype=\"multipart/form-data\">",$PHP_SELF);
-        
-        echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-        printf("<tr><td width=\"15%\" class=\"fieldlabel\">%s</td>",$aInt->lang("emails", "to"));
-        echo "<td class=\"fieldarea\"><table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td width=\"500\"><input type=\"hidden\" name=\"client\" id=\"clientinput\" value=\"";
-        echo $client;
-        echo "\" /><input type=\"text\" name=\"name\" id=\"name\" size=\"40\" value=\"";
-        echo $name;
-        echo "\"></td><td>";
-        echo $aInt->lang("clients", "search");
-        echo ": <input type=\"text\" id=\"clientsearchval\" size=\"15\" /> <img src=\"images/icons/delete.png\" alt=\"Cancel\" class=\"absmiddle\" id=\"clientsearchcancel\" height=\"16\" width=\"16\"><br /><div id=\"ticketclientsearchresults\"></div></td></tr></table></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("fields", "email");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"email\" id=\"email\" size=\"50\" value=\"";
-        echo $email;
-        echo "\"> <label><input type=\"checkbox\" name=\"sendemail\" checked /> ";
-        echo $aInt->lang("global", "sendemail");
-        echo "</label></td></tr>
-<tr id=\"contactrow\"";
 
-        if (!$contactsdata) {
-            echo " style=\"display:none;\"";
-        }
-
-        echo "><td class=\"fieldlabel\">";
-        echo $aInt->lang("clientsummary", "contacts");
-        echo "</td><td class=\"fieldarea\" id=\"contacthtml\">";
-        echo $contactsdata;
-        echo "</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "ccrecipients");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"ccemail\" value=\"";
-        echo $cc;
-        echo "\" size=\"50\"> (";
-        echo $aInt->lang("transactions", "commaseparated");
-        echo ")</td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "department");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<select name=\"deptid\">";
+        $depidoption = "";
         $result = select_query_i("tbladmins", "", array("id" => $_SESSION['adminid']));
         $data = mysqli_fetch_array($result);
         $supportdepts = $data['supportdepts'];
@@ -2019,88 +1917,49 @@ function searchselectclient(userid,name,email) {
             $name = $data['name'];
 
             if (in_array($id, $supportdepts)) {
-                echo "<option value=\"" . $id . "\"";
+                $depidoption.= "<option value=\"" . $id . "\"";
 
                 if ($id == $department) {
-                    echo " selected";
+                    $depidoption.= " selected";
                 }
 
-                echo ">" . $name . "</option>";
+                $depidoption.= ">" . $name . "</option>";
             }
         }
+        $aInt->assign('depidoption', $depidoption);
 
-        echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("fields", "subject");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"subject\" size=\"75\" value=\"";
-        echo $subject;
-        echo "\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "priority");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"priority\"><option>";
-        echo $aInt->lang("status", "high");
-        echo "<option selected>";
-        echo $aInt->lang("status", "medium");
-        echo "<option>";
-        echo $aInt->lang("status", "low");
-        echo "</select></td></tr>
-</table>
-<img src=\"images/spacer.gif\" height=\"8\" width=\"1\"><br>
-<textarea name=\"message\" id=\"replymessage\" rows=20 style=\"width:100%\">";
-
-        if ($message) {
-            echo $message;
-        } else {
-            echo ((("\r\n") . "\r\n") . "\r\n") . $signature;
-        }
-
-        echo "</textarea><br>
-<img src=\"images/spacer.gif\" height=\"8\" width=\"1\"><br>
-<div id=\"insertlinks\" style=\"border:1px solid #DFDCCE;background-color:#F7F7F2;padding:5px;text-align:left;\">
-<div align=\"center\"><a href=\"#\" onClick=\"window.open('supportticketskbarticle.php','kbartwnd','width=500,height=400,scrollbars=yes');return false\">";
-        echo $aInt->lang("support", "insertkblink");
-        echo "</a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href=\"#\" onclick=\"loadpredef('0');return false\">";
-        echo $aInt->lang("support", "insertpredef");
-        echo "</a></div>
-</div>
-<img src=\"images/spacer.gif\" height=\"8\" width=\"1\"><br>
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-        echo $aInt->lang("support", "attachments");
-        echo "</td><td class=\"fieldarea\"><input type=\"file\" name=\"attachments[]\" size=\"85\"> <a href=\"#\" id=\"addfileupload\"><img src=\"images/icons/add.png\" align=\"absmiddle\" border=\"0\" /> ";
-        echo $aInt->lang("support", "addmore");
-        echo "</a><br /><div id=\"fileuploads\"></div></td></tr>
-</table>
-<div id=\"prerepliescontainer\" style=\"display:none;\">
-    <img src=\"images/spacer.gif\" height=\"8\" width=\"1\" />
-    <br />
-    <div style=\"border:1px solid #DFDCCE;background-color:#F7F7F2;padding:5px;text-align:left;\">
-        <div style=\"float:right;\">Search: <input type=\"text\" id=\"predefq\" size=\"25\" /></div>
-        <div id=\"prerepliescontent\"></div>
-    ";
-        echo "</div>
-</div>
-<img src=\"images/spacer.gif\" height=\"8\" width=\"1\"><br>
-<div align=\"center\"><input type=\"submit\" value=\"";
-        echo $aInt->lang("clientsummary", "openticket");
-        echo "\" class=\"button\"></div>
-</form>
-
-";
+        $template = "support/supportopen";
     }
 }
 
-$content = ob_get_contents();
-ob_end_clean();
-if ($action == "list") {
-    $aInt->template = "tickets/list";
+
+
+
+
+
+
+$aInt->assign("replacemenu", "View Tickets");
+$aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
+$menuselect = "$('#menu').multilevelpushmenu('expand','View Tickets');";
+
+$result = select_query_i("tbltickettags", "", "", "id", "DESC");
+$tags = "";
+while ($data = mysqli_fetch_array($result)) {
+    $tags .= "<a href=" . $PHP_SELF . "?tag=" . $data['tag'] . " style=\"margin-right:3px\" class=\"label label-info\">" . $data['tag'] . "</a>";
 }
-$aInt->content = "test";
-$aInt->assign("content",$content);
+
+$tagcontainer = "$('div#tickets').append('<div class=\"tag-list\"><h3>Tags:</h3>" . $tags . "</div>');";
+
+
+$aInt->jquerycode .= $menuselect;
+$aInt->jquerycode .= $tagcontainer;
+$aInt->assign("addto", "Support");
+$aInt->assign("smartyvalues", $smartyvalues);
+$aInt->assign("table", $table);
+$aInt->assign("csrfToken", get_token("plain"));
+$aInt->assign("departmentshtml", $departmentshtml);
+$aInt->assign("statuseshtml", $statuseshtml);
 // $aInt->templatevars = $smartyvalues;
+$aInt->template = $template;
 $aInt->display();
 ?>

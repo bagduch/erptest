@@ -3,7 +3,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
 if ($action == "view") {
     $reqperm = "View Order Details";
 } else {
@@ -730,6 +730,6 @@ $aInt->assign("token", get_token());
 $aInt->assign("filterdata", RA_Cookie::get("FD", true));
 $aInt->assign("clientdropdown", $clients);
 $aInt->assign('table', $table);
-
+$aInt->jquerycode .=$menuselect;
 $aInt->display();
 ?>

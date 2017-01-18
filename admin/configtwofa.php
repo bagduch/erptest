@@ -19,7 +19,7 @@ $aInt->icon = "security";
 $aInt->helplink = "Security Modules";
 $aInt->requiredFiles(array("modulefunctions"));
 $frm = new RA_Form();
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Staff Management');";
 if ($frm->issubmitted()) {
 	$ra->set_config("2fasettings", serialize(array("forceclient" => $ra->get_req_var("forceclient"), "forceadmin" => $ra->get_req_var("forceadmin"), "modules" => $ra->get_req_var("mod"))));
 	redir("success=1");
@@ -156,7 +156,7 @@ function deactivate(mod) {
 }
 ";
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

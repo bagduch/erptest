@@ -1,5 +1,3 @@
-{debug}
-
 <form method="post" action="{$PHP_SELF}?action=save" name="configfrm">
     <div class="row">
         <div class="col-lg-12">

@@ -16,6 +16,7 @@ $aInt = new RA_Admin("View Email Message Log");
 $aInt->title = $aInt->lang("system", "emailmessagelog");
 $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 $aInt->sortableTableInit("date");
 $result = select_query_i("tblemails,tblclients", "COUNT(tblemails.id)", "tblemails.userid=tblclients.id");
 $data = mysqli_fetch_array($result);
@@ -34,5 +35,6 @@ while ($data = mysqli_fetch_array($result)) {
 
 $content = $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("fields", "subject"), $aInt->lang("system", "recepient"), ""), $tabledata);
 $aInt->content = $content;
+$aInt->jquerycode.=$menuselect;
 $aInt->display();
 ?>

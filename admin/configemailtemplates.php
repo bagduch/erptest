@@ -17,6 +17,7 @@ $aInt->title = $aInt->lang("emailtpls", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "massmail";
 $aInt->helplink = "Email Templates";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $activelanguages = array();
 $result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
 
@@ -538,6 +539,6 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->jscode = $jscode;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->display();
 ?>

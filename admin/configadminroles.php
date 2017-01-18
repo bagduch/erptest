@@ -19,7 +19,7 @@ $aInt->icon = "adminroles";
 $aInt->helplink = "Administrator Roles";
 $aInt->requiredFiles(array("reportfunctions"));
 $chart = new RAChart();
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Staff Management');";
 if ($action == "addrole") {
 	check_token("RA.admin.default");
 	$adminrole = insert_query("tbladminroles", array("name" => $name));
@@ -386,6 +386,6 @@ function zUncheckAll(oForm) {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jscode = $jscode;
+$aInt->jscode = $jscode.$menuselect;
 $aInt->display();
 ?>

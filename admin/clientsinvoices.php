@@ -14,7 +14,6 @@ if ($delete || $massdelete) {
     checkPermission("Delete Invoice");
 }
 
-
 if (($markpaid || $markunpaid) || $markcancelled) {
     checkPermission("Manage Invoice");
 }
@@ -30,7 +29,6 @@ if ($markpaid) {
         addInvoicePayment($invid, "", "", "", $paymentmethod);
         run_hook("InvoicePaid", array("invoiceid" => $invoiceid));
     }
-
 
     if ($page) {
         $userid .= "&page=" . $page;

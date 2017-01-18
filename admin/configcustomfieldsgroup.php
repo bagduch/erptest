@@ -11,6 +11,7 @@ $aInt->title = "Product/Service Custom Fields";
 $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 //$aInt->template= "configcustomfieldsgroup"; 
 $action = $ra->get_req_var("action");
 $id = $ra->get_req_var("id");
@@ -361,8 +362,8 @@ if ($action == 'save') {
                     $updatelinkfield = array(
                         "fieldname" => $_POST['updatelinkfieldname'][$upfid],
                         "fieldtype" => $_POST['updatelinkfieldtype'][$upfid],
-                        "description" =>"",
-                        "fieldoptions" =>"",
+                        "description" => "",
+                        "fieldoptions" => "",
                         "regexpr" => "",
                         "adminonly" => 0,
                         "required" => $_POST['updatelinkrequired'][$upfid] == "on" ? 1 : 0,
@@ -453,7 +454,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=deletegroup&id='+id+'" . ge
 }}";
 
 if ($action == "") {
-    $aInt->template = "customfieldgroup/configcustomfieldsgroup";
+
     if ($deleted) {
         infoBox("Success", "The option group has been deleted successfully!");
     }
@@ -472,9 +473,19 @@ if ($action == "") {
         $tabledata[] = array($name, "<a href=\"" . $_SERVER['PHP_SELF'] . ("?action=managegroup&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>"), "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
     }
     $aInt->assign('tabledatas', $tabledata);
+    $aInt->template = "customfieldgroup/configcustomfieldsgroup";
 } else {
     if ($action == "managegroup") {
-
+        $productlinks = cfieldgroupToServices(null, $id);
+        $allservice = array();
+        $services = select_query_i('tblservices', "*");
+        while ($data = mysqli_fetch_array($services)) {
+            $allservice [$data['id']] = array(
+                'data' => $data,
+                'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
+            );
+        }
+        $aInt->assign('productlinks', $allservice);
         if ($id) {
 
             if ($_GET['success']) {
@@ -499,18 +510,10 @@ if ($action == "") {
             $data2 = mysqli_fetch_assoc($result);
             $name = $data2['name'];
             $aInt->assign('datas', $datas);
-            $productlinks = cfieldgroupToServices(null, $id);
-            $allservice = array();
-            $services = select_query_i('tblservices', "*");
-            while ($data = mysqli_fetch_array($services)) {
-                $allservice [$data['id']] = array(
-                    'data' => $data,
-                    'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
-                );
-            }
 
 
-            $aInt->assign('productlinks', $allservice);
+
+
             $aInt->assign('name', $name);
             $aInt->assign('id', $id);
             $aInt->assign('infobox', $infobox);
@@ -520,11 +523,7 @@ if ($action == "") {
             checkPermission("Create New Products/Services");
             $steptitle = "Create a New Group";
             $id = "";
-            $productlinks = array();
-            $result = select_query_i("tblservices", "");
-            while ($data = mysqli_fetch_array($result)) {
-                $productlinks[] = $data['id'];
-            }
+           
             $aInt->template = "customfieldgroup/creategroup";
         }
 
@@ -583,6 +582,7 @@ $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 //$aInt->template = "customfieldgroup/creategroup";
 $aInt->display();

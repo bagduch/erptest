@@ -19,6 +19,7 @@ body {
     height: 100%;
 }
 body {
+    background: #336ca6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -298,6 +299,7 @@ a:focus {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     padding: 0 15px;
     font-weight: 300;
+    color: white;
     overflow: hidden;
 }
 .main-header .logo .logo-lg {
@@ -494,12 +496,14 @@ a:focus {
 .user-panel > .info > p {
     font-weight: 600;
     margin-bottom: 9px;
+    color:white;
 }
 .user-panel > .info > a {
     text-decoration: none;
     padding-right: 5px;
     margin-top: 3px;
     font-size: 11px;
+    color:white;
 }
 .user-panel > .info > a > .fa,
 .user-panel > .info > a > .ion,

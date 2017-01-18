@@ -17,6 +17,7 @@ $aInt->title = $aInt->lang("taxconfig", "taxrulestitle");
 $aInt->sidebar = "config";
 $aInt->icon = "taxrules";
 $aInt->helplink = "Tax/VAT";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 ob_start();
 
 if ($action == "save") {
@@ -343,7 +344,7 @@ echo "\" class=\"button\"></div>
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

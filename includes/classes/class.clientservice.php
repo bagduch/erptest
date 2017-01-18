@@ -89,8 +89,6 @@ class RA_ClientService {
     public function getServiceDatas() {
 
         if (isset($this->servicefirstid)) {
-
-
             $this->servicedata = getServiceData($this->servicefirstid);
         } else if (isset($this->id)) {
             $this->servicedata = getServiceData($this->id);

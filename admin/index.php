@@ -10,6 +10,27 @@
  * 
  *
  * */
+function createDateRangeArray($strDateFrom, $strDateTo) {
+    // takes two dates formatted as YYYY-MM-DD and creates an
+    // inclusive array of the dates between the from and to dates.
+    // could test validity of dates here but I'm already doing
+    // that in the main script
+
+    $aryRange = array();
+
+    $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
+    $iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
+
+    if ($iDateTo >= $iDateFrom) {
+        array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+        while ($iDateFrom < $iDateTo) {
+            $iDateFrom+=86400; // add 24 hours
+            array_push($aryRange, date('Y-m-d', $iDateFrom));
+        }
+    }
+    return $aryRange;
+}
+
 function load_admin_home_widgets() {
     global $aInt;
     global $hooks;
@@ -60,27 +81,19 @@ if (!function_exists("curl_init")) {
     echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>Critical Error</strong><br>CURL is not installed or is disabled on your server and it is required for ra to run</div>";
     exit();
 }
-
 define("ADMINAREA", true);
 require "../init.php";
-
 if (!checkPermission("Main Homepage", true) && checkPermission("Support Center Overview", true)) {
     redir("", "supportcenter.php");
 }
-
 $aInt = new RA_Admin("Main Homepage", false);
-
 $aInt->title = $aInt->lang("global", "hometitle");
 $aInt->sidebar = "home";
 $aInt->icon = "home";
 $aInt->requiredFiles(array("clientfunctions", "invoicefunctions", "gatewayfunctions", "ccfunctions", "processinvoices", "reportfunctions"));
-
-
 $aInt->template = "homepage";
 $chart = new RAChart();
-
 $action = $ra->get_req_var("action");
-
 //
 //if ($ra->get_req_var("createinvoices") || $ra->get_req_var("generateinvoices")) {
 //	check_token("RA.admin.default");
@@ -89,13 +102,9 @@ $action = $ra->get_req_var("action");
 //	createInvoices("", $noemails);
 //	redir("generatedinvoices=1&count=" . $invoicecount);
 //}
-
-
 if ($ra->get_req_var("generatedinvoices")) {
     infoBox($aInt->lang("invoices", "gencomplete"), (int) $ra->get_req_var("count") . " Invoices Created");
 }
-
-
 //if ($ra->get_req_var("attemptccpayments")) {
 //	check_token("RA.admin.default");
 //	checkPermission("Attempts CC Captures");
@@ -109,21 +118,16 @@ if ($ra->get_req_var("generatedinvoices")) {
 //}
 
 releaseSession();
-
 if ($action == "savenotes") {
     check_token("RA.admin.default");
     update_query("tbladmins", array("notes" => $notes), array("id" => $_SESSION['adminid']));
     redir();
 }
-
-
 if ($ra->get_req_var("saveorder")) {
     check_token("RA.admin.default");
     update_query("tbladmins", array("homewidgets" => $widgetdata), array("id" => $_SESSION['adminid']));
     exit();
 }
-
-
 if ($ra->get_req_var("dismissgs")) {
     $roleid = get_query_val("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
     $result = select_query_i("tbladminroles", "widgets", array("id" => $roleid));
@@ -141,8 +145,6 @@ if ($ra->get_req_var("dismissgs")) {
     update_query("tbladminroles", array("widgets" => implode(",", $widgets)), array("id" => $roleid));
     exit();
 }
-
-
 if ($ra->get_req_var("getincome")) {
     check_token("RA.admin.default");
 
@@ -263,11 +265,11 @@ if (is_dir($hooksdir)) {
     $dh = opendir($hooksdir);
 //
     while (false !== ($hookfile = readdir($dh))) {
-        //  print_r($hookfile);
+//  print_r($hookfile);
         if (is_file($hooksdir . $hookfile) && $hookfile != "index.php") {
             $extension = explode(".", $hookfile);
             $extension = end($extension);
-            //   echo "<pre>",$hooksdir . $hookfile,"</pre>";
+//   echo "<pre>",$hooksdir . $hookfile,"</pre>";
 //
             if ($extension == "php") {
                 include $hooksdir . $hookfile;
@@ -295,14 +297,66 @@ $cccapturedialog = $aInt->jqueryDialog("cccapture", $aInt->lang("invoices", "att
 $addons_html = run_hook("AdminHomepage", array());
 $templatevars['addons_html'] = $addons_html;
 
-$query = "select * from tbltickets where status !='Closed'";
-$result = full_query_i($query);
-$tickets = array();
-while ($data = mysqli_fetch_array($result)) {
-    $tickets[$data['id']] = $data;
-}
-$templatevars['tickets']=$tickets;
 
+$query = "select tbl1.* from tbladminlog tbl1 inner join (select * from tbladminlog order by lastvisit DESC) as tbl2 on tbl1.id = tbl2.id GROUP By tbl1.adminusername order by lastvisit DESC";
+$result = full_query_i($query);
+$adminlogin = array();
+while ($data = mysqli_fetch_array($result)) {
+    $adminlogin[] = $data;
+}
+
+
+$clientlogquery = "select firstname,lastname,ip,lastlogin from tblclients order by lastlogin DESC LIMIT 4";
+$result = full_query_i($clientlogquery);
+$clientlog = array();
+while ($data = mysqli_fetch_array($result)) {
+    $clientlog[] = $data;
+}
+
+$end_date = date("Y-m-d");
+$start_date = date("Y-m-d", strtotime("-15 days", strtotime("now")));
+$query = "select * from tblorders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
+$result = full_query_i($query);
+$orders = array();
+$starttime = date("t", strtotime(date("Y-m-01")));
+$datePeriod = createDateRangeArray($start_date, $end_date);
+$income = array();
+foreach ($datePeriod as $date) {
+    $orders[$date]['active'] = 0;
+    $orders[$date]['pending'] = 0;
+    $orders[$date]['draft'] = 0;
+    $orders[$date]['cancel'] = 0;
+    $orders[$date]['total'] = 0;
+    $income[$date]['actual'] = 0;
+    $income[$date]['pending'] = 0;
+}
+
+while ($data = mysqli_fetch_array($result)) {
+    if ($data['status'] == "Active") {
+        $orders[date("Y-m-d", strtotime($data['date']))]['active'] ++;
+        $income[date("Y-m-d", strtotime($data['date']))]['actual'] += $data['amount'];
+    }
+    if ($data['status'] == "Pending") {
+        $orders[date("Y-m-d", strtotime($data['date']))]['pending'] ++;
+        $income[date("Y-m-d", strtotime($data['date']))]['pending'] += $data['amount'];
+    }
+    if ($data['status'] == "Draft") {
+        $orders[date("Y-m-d", strtotime($data['date']))]['draft'] ++;
+        $income[date("Y-m-d", strtotime($data['date']))]['pending'] += $data['amount'];
+    }
+    if ($data['status'] == "Fraud") {
+        $orders[date("Y-m-d", strtotime($data['date']))]['cancel'] ++;
+    }
+    $orders[date("Y-m-d", strtotime($data['date']))]['total'] ++;
+}
+
+
+
+
+$templatevars["income"] = $income;
+$templatevars["order"] = $orders;
+$templatevars["adminlogin"] = $adminlogin;
+$templatevars["clientlogin"] = $clientlog;
 $aInt->jscode = $jscode;
 $aInt->jquerycode = $jquerycode;
 $aInt->templatevars = $templatevars;

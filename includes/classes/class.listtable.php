@@ -192,7 +192,15 @@ class RA_ListTable {
 
             if ($columnname == "checkall") {
                 $aInt->internaljquerycode[] = "$(\"#checkall" . $this->sortableTableCount . "\").click(function () {
-    $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").attr(\"checked\",this.checked);
+ 
+
+if(!$(this).is(\":checked\"))
+{
+$(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",false);
+}
+else{
+$(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",true);
+    }
 });";
                 $content .= "<th width=\"20\"><input type=\"checkbox\" id=\"checkall" . $this->sortableTableCount . "\"></th>";
                 continue;

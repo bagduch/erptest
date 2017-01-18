@@ -16,6 +16,7 @@ $aInt = new RA_Admin("List Clients");
 $aInt->title = $aInt->lang("clients", "viewsearch");
 $aInt->sidebar = "clients";
 $aInt->icon = "clients";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $name = "clients";
 $orderby = "id";
 $sort = "DESC";
@@ -25,11 +26,6 @@ $tbl = new RA_ListTable($pageObj);
 $tbl->setColumns(array("checkall", array("id", $aInt->lang("fields", "id")), array("firstname", $aInt->lang("fields", "firstname")), array("lastname", $aInt->lang("fields", "lastname")), array("companyname", $aInt->lang("fields", "companyname")), array("email", $aInt->lang("fields", "email")), $aInt->lang("fields", "services"), "Products", array("datecreated", $aInt->lang("fields", "created")), array("status", $aInt->lang("fields", "status"))));
 $clientsModel = new RA_Clients($pageObj);
 $filters = new RA_Filter();
-ob_start();
-echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
-
-
-
 $langdata = array(
     'searchfilterlang' => $aInt->lang("global", "searchfilter"),
     'clientnamelang' => $aInt->lang("fields", "clientname"),
@@ -107,30 +103,25 @@ if ($filters->isActive() && $numresults == 1) {
 } else {
     $clientlist = $pageObj->getData();
     foreach ($clientlist as $client) {
-	    $linkopen = sprintf("<a href=\"clientssummary.php?userid=%d\"%s>",
-		    $client['id'],
-		    ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "")
-	    );
+        $linkopen = sprintf("<a href=\"clientssummary.php?userid=%d\"%s>", $client['id'], ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "")
+        );
 
-        
+
         $linkclose = "</a>";
         $tbl->addRow(
                 array(
                     sprintf(
-                        "<input type=\"checkbox\" name=\"selectedclients[]\" value=\"%d\" class=\"checkall\">",
-                        $client['id']
+                            "<input type=\"checkbox\" name=\"selectedclients[]\" value=\"%d\" class=\"checkall\">", $client['id']
                     ),
                     $linkopen . $client['id'] . $linkclose,
-                    $linkopen . $client['firstname'] . $linkclose, 
-                    $linkopen . $client['lastname'] . $linkclose, 
+                    $linkopen . $client['firstname'] . $linkclose,
+                    $linkopen . $client['lastname'] . $linkclose,
                     $client['companyname'],
                     sprintf(
-                        "<a href=\"sendmessage.php?type=general&id=%d\">%s</a>",
-                        $client['id'],
-                        $client['email']
+                            "<a href=\"sendmessage.php?type=general&id=%d\">%s</a>", $client['id'], $client['email']
                     ),
-                    sprintf("%s (%s)",$client['services'],$client['totalservices']),
-                    sprintf("%s (%s)",$client['products'],$client['totalproducts']),
+                    sprintf("%s (%s)", $client['services'], $client['totalservices']),
+                    sprintf("%s (%s)", $client['products'], $client['totalproducts']),
                     $client['datecreated'],
                     "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
     }
@@ -145,9 +136,7 @@ $aInt->assign('lang', $langdata);
 $aInt->assign('filterdata', $filterdata);
 $aInt->assign('clientgroups', $clientgroup);
 $aInt->assign('currencys', $currencys);
-$content = ob_get_contents();
-ob_end_clean();
-$aInt->content = $content;
+$aInt->jquerycode .=$menuselect;
 $aInt->template = 'client/clients';
 $aInt->display();
 ?>

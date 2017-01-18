@@ -75,14 +75,11 @@ if ($module) {
     if (!isValidforPath($module)) {
         exit("Invalid Server Module Name");
     }
-
     $modulepath = ROOTDIR . "/modules/servers/" . $module . "/" . $module . ".php";
 
     if (file_exists($modulepath)) {
         require_once $modulepath;
     }
-
-
     if (function_exists($module . "_AdminCustomButtonArray")) {
         $adminbuttonarray = call_user_func($module . "_AdminCustomButtonArray");
     }
@@ -131,11 +128,9 @@ if ($modop == "changepw") {
 if ($modop == "custom") {
     check_token("RA.admin.default");
     $result = ServerCustomFunction($id, $ac);
-
     if (substr($result, 0, 9) == "redirect|") {
         exit($result);
     }
-
     wSetCookie("ModCmdResult", $result);
     redir("userid=" . $userid . "&id=" . $id . "&act=custom&ajaxupdate=1");
 }
@@ -195,7 +190,6 @@ while ($data = mysqli_fetch_array($result)) {
 }
 if ($ra->get_req_var("ajaxupdate")) {
     $content = preg_replace('/(<form\W[^>]*\bmethod=(\'|"|)POST(\'|"|)\b[^>]*>)/i', '$1' . "\n" . generate_token(), $content);
-
 //        echo $content;
 //        exit();
 } else {
@@ -207,21 +201,18 @@ if ($ra->get_req_var("ajaxupdate")) {
     $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
-
 $servicesarr = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type", array("userid" => $userid, "type" => "services"), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
-
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type,tblservicegroups.name as gname", array("userid" => $userid, "tblservices.type" => "services"), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$i = 0;
 while ($data = mysqli_fetch_array($result)) {
+
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
     $servicelist_adress = $data['description'];
     $servicelist_status = $data['servicestatus'];
-
     if ($servicelist_adress) {
         $servicelist_product .= " - " . $servicelist_adress;
     }
-
-
     if ($servicelist_status == "Pending") {
         $color = "#ffffcc";
     } else {
@@ -235,9 +226,14 @@ while ($data = mysqli_fetch_array($result)) {
             }
         }
     }
+    $gname = str_replace(" ", "_", $data['gname']);
+    $i++;
+    $userarray[$gname][] = $data;
 
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
+
+
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
 $len = count($servicefield);
 $firsthalf = array_slice($servicefield, 0, $len / 2);
@@ -246,9 +242,10 @@ $aInt->assign("userid", $userid);
 $aInt->assign("token", get_token());
 $aInt->assign('addons', $clientdata->addons);
 $aInt->assign("servicesarr", $servicesarr);
+$aInt->assign("totalservice", $i);
+$aInt->assign("userarray", $userarray);
 $aInt->assign('lang', $lang);
 $aInt->assign('emaildropdown', $emailarr);
-$aInt->assign('userid', $userid);
 $aInt->assign('contentbox', $contentbox);
 $aInt->assign('ordertable', $ordertable);
 $aInt->assign('content', $content);
@@ -260,6 +257,11 @@ $aInt->assign("servicefieldnd", $secondhalf);
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));
-$aInt->template = "clientsservices/view";
+if ($userid && $ra->get_req_var("id")) {
+    $aInt->template = "clientsservices/view";
+}
+if ($userid && !$ra->get_req_var("id")) {
+    $aInt->template = "clientsservices/serivceview";
+}
 $aInt->display();
 ?>

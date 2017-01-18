@@ -1,5 +1,3 @@
-
-
 {php}
 $accordion = array(
     "home" => array(

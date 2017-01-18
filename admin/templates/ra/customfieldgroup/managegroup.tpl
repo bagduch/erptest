@@ -15,7 +15,7 @@
         }
     </script>
 {/literal}
-
+ 
 <form id="managefrm" method="post" action="/admin/configcustomfieldsgroup.php?action=save&amp;id={$id}" name="managefrm">
     <p><b>Create a New Group</b></p>
     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">

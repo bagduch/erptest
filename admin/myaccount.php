@@ -18,6 +18,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "home";
 $aInt->requiredFiles(array("ticketfunctions"));
 $action = $ra->get_req_var("action");
+
 $errormessage = "";
 $twofa = new RA_2FA();
 $twofa->setAdminID($_SESSION['adminid']);
@@ -141,9 +142,9 @@ $(\"#admindialogcont input:text:visible:first\").focus();
 
 if ($action == "save") {
     check_token("RA.admin.default");
-    
+
     if ($password != $password2) {
-        $errormessage = $aInt->lang("administrators", "pwmatcherror");  
+        $errormessage = $aInt->lang("administrators", "pwmatcherror");
         $action = "edit";
     } else {
         update_query("tbladmins", array("firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "ticketnotifications" => implode(",", $ticketnotify)), array("id" => $_SESSION['adminid']));
@@ -151,9 +152,9 @@ if ($action == "save") {
         logActivity("Administrator Account Modified (" . $firstname . " " . $lastname . ")");
 
         if ($password) {
-                update_query("tbladmins", array(
-                        "passwordhash" => password_hash($password, PASSWORD_DEFAULT)
-                ), array("id" => $_SESSION['adminid'])
+            update_query("tbladmins", array(
+                "passwordhash" => password_hash($password, PASSWORD_DEFAULT)
+                    ), array("id" => $_SESSION['adminid'])
             );
         }
 
@@ -342,5 +343,6 @@ if ($ra->get_req_var("2faenforce")) {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
+$aInt->jquerycode.=$menuselect;
 $aInt->display();
 ?>

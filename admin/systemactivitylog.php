@@ -16,6 +16,7 @@ $aInt = new RA_Admin("View Activity Log");
 $aInt->title = $aInt->lang("system", "activitylog");
 $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 ob_start();
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 echo "
@@ -144,6 +145,6 @@ echo $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("fiel
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->display();
 ?>

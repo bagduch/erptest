@@ -17,7 +17,7 @@
             </div>
             <div class="box-body">
                 <br>
-                <form method="post" action="{$PHP_SELF}?action=save&amp;userid={$data.userid}&amp;contactid={$data.id}">
+                <form method="post" action="{$PHP_SELF}?action=add&amp;userid={$data.userid}&amp;contactid={$data.id}">
                     {$infobox}
                     <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
@@ -25,7 +25,7 @@
                                 <td width="15%" class="fieldlabel">First Name</td>
                                 <td class="fieldarea"><input class="form-control" type="text" size="30" name="firstname" tabindex="1" value="{$data.firstname}"></td>
                                 <td width="15%" class="fieldlabel">Address 1</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="address1" tabindex="7" value="{$data.address1 }"></td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="address1" tabindex="7" value="{$data.address1}"></td>
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Last Name</td>

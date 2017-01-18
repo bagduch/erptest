@@ -342,11 +342,7 @@
         var datepickerformat = "dd/mm/yy";
         $(document).ready(function () {
 
-            $('#productdownloadsbrowser').fileTree({root: '0', script: 'configservices.php?action=getdownloads&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502', folderEvent: 'click', expandSpeed: 1, collapseSpeed: 1}, function (file) {
-                $.post("configservices.php?action=managedownloads&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502&adddl=" + file, function (data) {
-                    $("#productdownloadslist").html(data);
-                });
-            });
+         
 
             function checkgroup()
             {
@@ -408,12 +404,7 @@
                     $("#contractop").hide();
                 }
             });
-            $(".removedownload").livequery("click", function (event) {
-                var dlid = $(this).attr("rel");
-                $.post("configservices.php?action=managedownloads&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502&remdl=" + dlid, function (data) {
-                    $("#productdownloadslist").html(data);
-                });
-            });
+        
             $("#showquickupload").click(
                     function () {
                         $("#quickupload").dialog("open");

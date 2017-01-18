@@ -30,6 +30,7 @@ $aInt->title = $aInt->lang("setup", "gateways");
 $aInt->sidebar = "config";
 $aInt->icon = "offlinecc";
 $aInt->helplink = "Payment Gateways";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("gatewayfunctions", "modulefunctions"));
 
 $GatewayValues = $GatewayConfig = $ActiveGateways = $DisabledGateways = array();
@@ -355,7 +356,7 @@ function deactivateGW(module,friendlyname) {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

@@ -2,12 +2,6 @@
 /**
  *
  * @ RA
- *
- * 
- * 
- * 
- * 
- *
  **/
 
 define("ADMINAREA", true);
@@ -31,7 +25,6 @@ if ($displaymessage == "true") {
         $content .= "<b>" . $aInt->lang("emails", "cc") . ":</b> " . $cc . "<br />";
     }
 
-
     if ($bcc) {
         $content .= "<b>" . $aInt->lang("emails", "bcc") . ":</b> " . $bcc . "<br />";
     }
@@ -44,11 +37,9 @@ if ($displaymessage == "true") {
     exit();
 }
 
-
 if ($action == "send" && $messagename == "newmessage") {
     redir("type=" . $type . "&id=" . $id, "sendmessage.php");
 }
-
 
 if ($action == "delete") {
     check_token("RA.admin.default");

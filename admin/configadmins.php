@@ -18,7 +18,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "admins";
 $aInt->helplink = "Administrators";
 $validate = new RA_Validate();
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Staff Management');";
 if ($action == "save") {
 	check_token("RA.admin.default");
 	$auth = new RA_Auth();
@@ -405,6 +405,6 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jscode = $jscode;
+$aInt->jscode = $jscode.$menuselect;
 $aInt->display();
 ?>

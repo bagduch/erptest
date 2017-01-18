@@ -12,7 +12,7 @@ $aInt->title = $aInt->lang("clients", "cancelrequests");
 $aInt->sidebar = "clients";
 $aInt->icon = "cancelrequests";
 $aInt->helplink = "Cancellation Requests";
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($action == "delete") {
     check_token("RA.admin.default");
     delete_query("tblcancelrequests", array("id" => $id));
@@ -109,6 +109,7 @@ $aInt->assign("table", $table);
 $aInt->assign("completed", $completed);
 $aInt->template = "client/cancelrequest";
 $aInt->jquerycode = $jquerycode;
+$aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

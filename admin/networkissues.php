@@ -17,7 +17,7 @@ $aInt->title = "Network Issues";
 $aInt->sidebar = "support";
 $aInt->icon = "networkissues";
 $upd = fromMySQLDate(date("Y-m-d H:i:s"), true);
-
+$menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 if ($action == "save") {
 	check_token("RA.admin.default");
 
@@ -410,7 +410,7 @@ $(\"#enddate\").datetimepicker({showSecond:false,ampm:false,";
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

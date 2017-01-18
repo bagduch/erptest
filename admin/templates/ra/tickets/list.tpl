@@ -1,4 +1,3 @@
-{debug}
 TEMPLATE START
 <div id="tab0box" class="tabbox">
   <div id="tab_content">

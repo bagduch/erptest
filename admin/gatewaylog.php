@@ -16,6 +16,7 @@ $aInt = new RA_Admin("View Gateway Log");
 $aInt->title = $aInt->lang("gatewaytranslog", "gatewaytranslogtitle");
 $aInt->sidebar = "billing";
 $aInt->icon = "logs";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Billing');";
 ob_start();
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 
@@ -148,6 +149,6 @@ echo $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("gate
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->display();
 ?>

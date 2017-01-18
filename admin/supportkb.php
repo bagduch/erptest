@@ -51,6 +51,7 @@ $aInt = new RA_Admin("Manage Knowledgebase");
 $aInt->title = $aInt->lang("support", "knowledgebase");
 $aInt->sidebar = "support";
 $aInt->icon = "knowledgebase";
+$menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 $catid = (int)$catid;
 $categorieslist = "";
 
@@ -600,7 +601,7 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode;
+$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>
