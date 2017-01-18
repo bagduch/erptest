@@ -61,17 +61,59 @@ if ($action == "save") {
 		$ticketnotify = implode(",", $ticketnotify);
 		$disabled = ($disabled ? 1 : 0);
 
-		if ($id) {
-			update_query("tbladmins", array("roleid" => $roleid, "username" => $username, "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "disabled" => $disabled, "notes" => $notes, "template" => $template, "language" => $language, "supportdepts" => $supportdepts, "ticketnotifications" => $ticketnotify), array("id" => $id));
+        if ($id) {
+            update_query("tbladmins", 
+                array(
+                    "roleid" => $roleid, 
+                    "username" => $username, 
+                    "firstname" => $firstname, 
+                    "lastname" => $lastname, 
+                    "email" => $email, 
+                    "signature" => $signature, 
+                    "disabled" => $disabled, 
+                    "notes" => $notes, 
+                    "template" => $template, 
+                    "language" => $language, 
+                    "supportdepts" => $supportdepts, 
+                    "ticketnotifications" => $ticketnotify
+                ), 
+                array(
+                    "id" => $id
+                )
+            );
 
 			if ($password) {
-				update_query("tbladmins", array("password" => password_hash($password,PASSWORD_DEFAULT)), array("id" => $id));
+                update_query(
+                    "tbladmins", 
+                    array(
+                        "password_hash" => password_hash($password,PASSWORD_DEFAULT)
+                    ), 
+                    array(
+                        "id" => $id
+                    )
+                );
 			}
 
 			redir("saved=true");
 		}
 		else {
-			insert_query("tbladmins", array("roleid" => $roleid, "username" => $username, "password" => password_hash(trim($password),PASSWORD_DEFAULT), "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "supportdepts" => $supportdepts, "ticketnotifications" => $ticketnotify));
+            insert_query(
+                "tbladmins", 
+                array(
+                    "roleid" => $roleid,
+                    "username" => $username,
+                    "passwordhash" => password_hash(trim($password),PASSWORD_DEFAULT),
+                    "firstname" => $firstname, 
+                    "lastname" => $lastname, 
+                    "email" => $email, 
+                    "signature" => $signature, 
+                    "notes" => $notes, 
+                    "template" => $template, 
+                    "language" => $language, 
+                    "supportdepts" => $supportdepts, 
+                    "ticketnotifications" => $ticketnotify
+                )
+            );
 			redir("added=true");
 		}
 
@@ -114,16 +156,9 @@ if ($action == "") {
         }
     } else alert(\"" . $aInt->lang("administrators", "deleteonlyadmin", 1) . "\");
     }";
-	echo "<p>";
-	echo $aInt->lang("administrators", "description");
-	echo "</p>
-<p><b>";
-	echo $aInt->lang("fields", "options");
-	echo ":</b> <a href=\"configadmins.php?action=manage\">";
-	echo $aInt->lang("administrators", "addnew");
-	echo "</a></p>
+    printf("<p>%s</p>",$aInt->lang("administrators", "description"));
+    printf("<p><b>%s:</b> <a href=\"configadmins.php?action=manage\">%s</a></p>",$aInt->lang("fields", "options"),$aInt->lang("administrators", "addnew"));
 
-";
 	echo "<h2>" . $aInt->lang("administrators", "active") . " </h2>";
 	$aInt->sortableTableInit("nopagination");
 	$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "0"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
@@ -145,10 +180,29 @@ if ($action == "") {
 			$deptnames[] = $aInt->lang("global", "none");
 		}
 
-		$tabledata[] = array($data['firstname'] . " " . $data['lastname'], "<a href=\"mailto:" . $data['email'] . "\">" . $data['email'] . "</a>", $data['username'], $data['name'], implode(", ", $deptnames), "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "')\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
+        $tabledata[] = array(
+            $data['firstname'] . " " . $data['lastname'], 
+            "<a href=\"mailto:" . $data['email'] . "\">" . $data['email'] . "</a>", 
+            $data['username'], 
+            $data['name'], 
+            implode(", ", $deptnames), 
+            "<a href=\"" . $PHP_SELF . "?action=manage&id=" . $data['id'] . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", 
+            "<a href=\"#\" onClick=\"doDelete('" . $data['id'] . "')\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>"
+        );
 	}
 
-	echo $aInt->sortableTable(array($aInt->lang("fields", "name"), $aInt->lang("fields", "email"), $aInt->lang("fields", "username"), $aInt->lang("administrators", "adminrole"), $aInt->lang("administrators", "assigneddepts"), "", ""), $tabledata);
+    echo $aInt->sortableTable(
+        array(
+            $aInt->lang("fields", "name"), 
+            $aInt->lang("fields", "email"), 
+            $aInt->lang("fields", "username"), 
+            $aInt->lang("administrators", "adminrole"), 
+            $aInt->lang("administrators", "assigneddepts"), 
+            "", 
+            ""
+        ), 
+        $tabledata
+    );
 	echo "<h2>" . $aInt->lang("administrators", "inactive") . " </h2>";
 	$tabledata = array();
 	$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
