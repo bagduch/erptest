@@ -3,9 +3,10 @@ ini_set("error_log","/tmp/guydev.utilities.log");
 ini_set("display_errors",0);
 ini_set("log_errors",1);
 
-include '../include/class.hbwrapper.php';
 
+include '../include/class.hbwrapper.php';
 include '../../dbconnect.php';
+include '../include/hostbill_dbconnect.php';
 
 echo "<pre>";
 delete_query("tblclients",array(id=>8017));
