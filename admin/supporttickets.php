@@ -14,7 +14,6 @@ while ($data = mysqli_fetch_array($result)) {
     $departmentshtml .= "<option value=\"" . $data['id'] . "\"" . ($data['id'] == $deptid ? " selected" : "") . ">" . $data['name'] . "</option>";
 }
 
-
 $supporttickets = new RA_Support($id);
 
 
@@ -1335,9 +1334,8 @@ if ($action == "list" || $action == "") {
 //        array("lastreply", $aInt->lang("support", "lastreply"))
 //            ), $tabledata, $tableformurl, $tableformbuttons, true
 //    );
+    $supporttickets->getLang($aInt);
     $supporttickets->tablehtml($tabledata, $view);
-
-
     //echo "<pre>",  print_r($statuses,1),"</pre>";
 
 

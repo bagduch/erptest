@@ -4,11 +4,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
 class RA_Support {
 
@@ -25,7 +20,10 @@ class RA_Support {
             $result = select_query_i("tbltickets");
             $this->tickets = mysqli_fetch_array($result);
         }
-        $this->aInt = $this->aInt;
+    }
+
+    public function getLang($aInt) {
+        $this->aInt = $aInt;
     }
 
     public function getTicketstatus() {
