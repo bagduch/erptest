@@ -98,11 +98,9 @@ while ($data = mysqli_fetch_array($result)) {
 	$addon_name = $data['name'];
 	$predefinedaddons[$addon_id] = $addon_name;
 	echo "<option value=\"" . $addon_id . "\"";
-
 	if ($addon == $addon_id) {
 		echo " selected";
 	}
-
 	echo ">" . $addon_name . "</option>";
 }
 

@@ -16,8 +16,34 @@ while ($data = mysqli_fetch_array($result)) {
 
 $supporttickets = new RA_Support($id, $action);
 
-$aInt=$supporttickets->aInt;
-$filt = $supporttickets->filt;
+
+if ($action == "viewticket") { // view specific ticket
+    $reqperm = "View Support Ticket";
+    $aInt = new RA_Admin($reqperm);
+    $statuses = $supporttickets->getTicketstatus();
+    $statuseshtml = $supporttickets->getTicketstatusHtml();
+    if (!$supporttickets->ticket['replyingadmin']) {
+        $adminheaderbodyjs = "onunload=\"endMakingReply();\"";
+    }
+} elseif ($action == "openticket" || $action == "open") { // open new ticket
+    $reqperm = "Open New Ticket";
+    $icon = "ticketsopen";
+    $aInt = new RA_Admin($reqperm);
+} elseif ((!$action) && (!$sub)) { // just show a list of tickets   
+    $action = "list";
+    $reqperm = "List Support Tickets";
+    $aInt = new RA_Admin($reqperm, false);
+} else {
+    $reqperm = "List Support Tickets";
+    $aInt = new RA_Admin($reqperm, false);
+}
+$title = $reqperm;
+$aInt->title = $title;
+$aInt->sidebar = "support";
+$aInt->icon = $icon;
+$aInt->helplink = "Support Tickets";
+$aInt->requiredFiles(array("ticketfunctions", "modulefunctions", "customfieldfunctions"));
+$filt = new RA_Filter("tickets");
 $smartyvalues = array();
 
 
@@ -867,8 +893,25 @@ if ($action == "list" || $action == "") {
     $result = full_query_i($query);
 
     buildAdminTicketListArray($result);
-
+//
+//    $table = $aInt->sortableTable(
+//            array(
+//        "checkall",
+//        "",
+//        array("title", $aInt->lang("fields", "subject")),
+//        "Client",
+//        $aInt->lang("support", "department"),
+//        "Tag",
+//        array("flag", "Assigned To"),
+//        array("status", $aInt->lang("fields", "status")),
+//        "Last Replier",
+//        array("lastreply", $aInt->lang("support", "lastreply"))
+//            ), $tabledata, $tableformurl, $tableformbuttons, true
+//    );
+    $supporttickets->getLang($aInt);
     $table = $supporttickets->tablehtml($tabledata, $view);
+    //echo "<pre>",  print_r($statuses,1),"</pre>";
+
 
     $query = "SELECT tbltickets.*,tblclients.firstname,rname,radminname,tblclients.lastname,"
             . "tblclients.companyname,tblclients.groupid FROM "

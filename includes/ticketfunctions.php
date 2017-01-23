@@ -1145,6 +1145,7 @@ function buildAdminTicketListArray($result) {
         $clientinfo = ($puserid != "" ? $aInt->outputClientLink($puserid, $firstname, $lastname, $companyname, $groupid) : $name);
         $ticketlink = ("<a href=\"?action=viewticket&id=" . $id . "\"") . ($alttitle ? " title=\"" . $alttitle . "\"" : "") . "" . $ainject . ">";
         $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $department, $tags, $flaggedto, $tstatus, $lastreplier, $lastreply);
+ 
     }
 }
 

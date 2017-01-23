@@ -27,6 +27,8 @@ if ($modop) {
 }
 $clientdata = new RA_ClientService($userid, $id);
 $id = $clientdata->id;
+
+
 //echo "<pre>",  print_r($clientdata->servicedata,1),"</pre>";
 if ($clientdata->errorbox != "" && $clientdata->errorbox != "No Addons") {
     $aInt->gracefulExit($clientdata->errorbox);
@@ -206,6 +208,8 @@ $result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblc
 $i = 0;
 while ($data = mysqli_fetch_array($result)) {
 
+
+
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
     $servicelist_adress = $data['description'];
@@ -226,18 +230,21 @@ while ($data = mysqli_fetch_array($result)) {
             }
         }
     }
+
+
     $gname = str_replace(" ", "_", $data['gname']);
     $i++;
-    $userarray[$gname][] = $data;
-
+    $userarray[$gname][$servicelist_id] = $data;
+    $userarray[$gname][$servicelist_id]['color'] = $color;
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
 
-
+//echo "<pre>", print_r($userarray, 1), "</pre>";
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
 $len = count($servicefield);
 $firsthalf = array_slice($servicefield, 0, $len / 2);
 $secondhalf = array_slice($servicefield, $len / 2);
+$aInt->assign("service", array("Pending", "Active", "Draft", "Suspended", "Terminated", "Cancelled", "Fraud"));
 $aInt->assign("userid", $userid);
 $aInt->assign("token", get_token());
 $aInt->assign('addons', $clientdata->addons);
@@ -257,11 +264,10 @@ $aInt->assign("servicefieldnd", $secondhalf);
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));
-if ($userid && $ra->get_req_var("id")) {
+if ($userid) {
     $aInt->template = "clientsservices/view";
 }
-if ($userid && !$ra->get_req_var("id")) {
-    $aInt->template = "clientsservices/serivceview";
-}
+
+
 $aInt->display();
 ?>
