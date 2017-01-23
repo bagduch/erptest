@@ -37,7 +37,7 @@ class RA_ClientService {
     }
 
     public function getFirstServiceId() {
-        $query = "select * from tblcustomerservices where parent is null or parent=0 AND userid=" . $this->userid . " limit 1";
+        $query = "select * from tblcustomerservices where (parent is null or parent=0) AND userid=" . $this->userid . " ORDER BY id DESC limit 1";
         $result = full_query_i($query);
         if ($result->num_rows > 0) {
             $data = mysqli_fetch_array($result);

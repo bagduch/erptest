@@ -2,25 +2,16 @@
 
 <div class="row">
     <div class="col-xs-12">
+
+        <div class="box-header with-border">
+            {include file="$template/clientsservices/serviceview.tpl"}
+        </div>
         <div class="box">
-            <div class="box-header with-border">
-                
-
-
-
-          
-                {include file="$template/clientsservices/serivceview.tpl"}
-            </div>
             <div class="box-body">
-
-                
-                
                 <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
                     <input type="hidden" name="__fpfrm1" value="1">
                     <div class="row" style="padding:15px">
-                        <div class="col-lg-12">
-                            <div class="tabletitle">Order Detail</div>
-                        </div>
+
                         <div class="col-xs-6">
                             <table class="datatable table">
                                 <tr>
@@ -96,9 +87,7 @@
 
                         <div class="clearfix"></div>
                         {if $servicefield}
-                            <div class="col-lg-12">
-                                <div class="tabletitle">Customer Fields</div>
-                            </div>
+
                             <div class="col-xs-6">
                                 <table class="table">
                                     {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
@@ -150,10 +139,7 @@
                                 </table>  
                             </div>
                         {/if}
-
-
                         <div class="clearfix"></div>
-
                         <div class="box">
                             <div class="panel-heading">
                                 Addon Services/Product
@@ -162,7 +148,6 @@
                                         <i class="fa fa-fw fa-plus-circle"></i>
                                     </button>
                                 </div>
-
                             </div>
                             <div class="box-body">
                                 {if isset($services.addon)}
@@ -202,7 +187,6 @@
                                     </div>
                                 {/if}
                             </div>
-
                             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -232,15 +216,12 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                         <br>
                         <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"><br>
-                            <a href="#" onclick="showDialog('delete');" style="color:#cc0000"><strong>Delete</strong></a></div></form>
-
+                            <a href="#" onclick="showDialog('delete');" style="color:#cc0000"><strong>Delete</strong></a></div>
+                </form>
                 <br>
-
                 <div class="contentbox">
                     <table align="center"><tbody><tr><td>
                                     <strong>Send Message</strong>
@@ -274,35 +255,28 @@
                         </tbody>
                     </table>
                 </div>
-
                 {foreach from=$test item=row}
                     {$row}
                 {/foreach}
-                <form method="post" action="whois.php" target="_blank" id="frmWhois">
-                    <input type="hidden" name="domain" value="">
-                </form>
+
             </div>
+
         </div>
     </div>
 </div>
+</div>
 <div class="clear"></div>
-
 {literal}
     <script type="text/javascript">
-
         $(document).ready(function () {
             $(".select2").select2();
-
             $('.datecontroller').datepicker({
                 format: 'yyyy-mm-dd',
                 startDate: '+1d'
             });
-
             $(".addonaddbutton").click(function () {
                 $("#frm1").submit();
             });
-
-
         });
         function doDeleteAddon(id) {
             if (confirm("Are you sure you want to delete this addon?")) {
@@ -311,25 +285,21 @@
         }
         function runModuleCommand(cmd, custom) {
             $("#mod" + cmd).dialog("close");
-
             $("#modcmdbtns").css("filter", "alpha(opacity=20)");
             $("#modcmdbtns").css("-moz-opacity", "0.2");
             $("#modcmdbtns").css("-khtml-opacity", "0.2");
             $("#modcmdbtns").css("opacity", "0.2");
             var position = $("#modcmdbtns").position();
-
             $("#modcmdworking").css("position", "absolute");
             $("#modcmdworking").css("top", position.top);
             $("#modcmdworking").css("left", position.left);
             $("#modcmdworking").css("padding", "9px 50px 0");
             $("#modcmdworking").fadeIn();
-
             var reqstr = "userid=1&id=35&modop=" + cmd + "&token=0951db7664024f53758d62b7cb94336b96566473";
             if (custom)
                 reqstr += "&ac=" + custom;
             else if (cmd == "suspend")
                 reqstr += "&suspreason=" + encodeURIComponent($("#suspreason").val()) + "&suspemail=" + $("#suspemail").is(":checked");
-
             $.post("clientsservices.php", reqstr,
                     function (data) {
                         if (data.substr(0, 9) == "redirect|") {
@@ -338,11 +308,8 @@
                             $("#servicecontent").html(data);
                         }
                     });
-
         }
-
     </script>
-
 {/literal}
 
 

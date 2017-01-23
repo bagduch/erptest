@@ -1,15 +1,10 @@
-
-
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_all" data-toggle="tab">All Products ({$totalservice})</a></li>
             {foreach from=$userarray key=gname item=row}
             <li><a href="#tab_{$gname}" data-toggle="tab">{$gname} ({$row|@count})</a></li>
             {/foreach}
-        <li class="pull-right">
-            <input type="button" value="Upgrade/Downgrade" class="btn" onclick="window.open('clientsupgrade.php?id=29', '', 'width=750,height=350,scrollbars=yes')">
-            <input type="button" value="Move Product/Service" class="btn" onclick="window.open('clientsmove.php?type=hosting&amp;id=29', 'movewindow', 'width=500,height=300,top=100,left=100,scrollbars=yes')"> &nbsp;&nbsp;&nbsp;
-        </li>
+
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_all">
@@ -18,20 +13,30 @@
                     <table id="sortabletbl1" class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
                         <tbody>
                             <tr>
+                                <th style="width:10px"></th>
                                 <th>Acccount ID</th>
                                 <th>Product Name</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            {foreach from=$row item=item}
+                            {foreach from=$row key=accountid item=item}
                                 <tr>
+                                    <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
                                     <td><a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
-                                    <td>{$item.status}</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <select name="servicestatus[{$accountid}]">
+                                            {foreach from=$service item=row}
+                                                <option {if $item.servicestatus eq $row}SELECTED{/if}>{$row}</option>
+                                            {/foreach}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+
+                                    </td>
                                 </tr>
                             {/foreach}
                         </tbody>
@@ -45,6 +50,7 @@
                     <table id="sortabletbl1" class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
                         <tbody>
                             <tr>
+                                <th style="width:10px"></th>
                                 <th>Acccount ID</th>
                                 <th>Product Name</th>
                                 <th>Description</th>
@@ -53,11 +59,21 @@
                             </tr>
                             {foreach from=$row item=item}
                                 <tr>
-                                    <td>{$item.id}</td>
+                                    <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
+                                    <td><a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
-                                    <td>{$item.status}</td>
-                                    <td></td>
+                                    <td>
+                                        <select name="servicestatus[{$accountid}]">
+                                            {foreach from=$service item=row}
+                                                <option {if $item.servicestatus eq $row}SELECTED{/if}>{$row}</option>
+                                            {/foreach}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+
+                                    </td>
                                 </tr>
                             {/foreach}
                         </tbody>
