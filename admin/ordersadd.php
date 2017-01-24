@@ -110,7 +110,7 @@ if ($action == "getconfigoptions") {
 
     if (count($customfields)) {
         $options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+<table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
         foreach ($customfields as $customfield) {
             $inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
             $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";

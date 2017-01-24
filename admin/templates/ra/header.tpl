@@ -72,7 +72,12 @@
         <!-- ChartJS 1.0.1 -->
         <script src="templates/{$template}/plugins/chartjs/Chart.min.js"></script>
         <script src="templates/{$template}/js/jquery.multilevelpushmenu.min.js"></script>
-        
+       {literal}
+        <script>
+            {/literal}{$jscode}{$jquerycode}{literal}
+            
+        </script>
+        {/literal}
         {$headoutput}
     </head>
 

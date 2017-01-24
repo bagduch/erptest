@@ -226,7 +226,7 @@
                     dataType: "json",
                     data: {action: "getconfigoptions", pid: pid, cycle: billingcycle, orderid: ord, token: "{/literal}{$token}{literal}"},
                 }).done(function (data) {
-                    console.log(data);
+                  
                     if (data.addons) {
                         $("#addonsrow" + ord).show();
                         $("#addonscont" + ord).html(data.addons);

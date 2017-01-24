@@ -250,6 +250,10 @@
                 radioClass: 'iradio_flat-green'
             });
 
+            $(".nextduedate").datepicker({
+                autoclose: true,
+                format: 'yyyy-mm-dd',
+            });
             $('.datepick').datepicker({
                 autoclose: true,
                 format: 'dd/mm/yyyy',
@@ -299,8 +303,10 @@
             urlcheck = lasturl[lasturl.length - 1]
             $("#menu a[href='" + urlcheck + "']").parent("li").addClass("itemactive");
 
-    {/literal}{$jscode}{$jquerycode}{literal}
+
         });
+
+
     </script>
 {/literal}
 </body>
