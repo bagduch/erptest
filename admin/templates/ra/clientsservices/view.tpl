@@ -11,7 +11,6 @@
         <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" name="frm1" id="frm1">
             <input type="hidden" name="__fpfrm1" value="1">
             <div class="row" style="padding:15px">
-
                 <div class="col-xs-6">
                     <table class="datatable table">
                         <tr>

@@ -5005,8 +5005,7 @@ table.tablesorter thead tr th:hover {
         text-align: center;
     }
     .ordersummaryleftcol {
-        width: 60%;
-        min-width: 600px;
+       
     }
     #ordersummary {
         margin: 20px 5px 0 20px;

@@ -16,7 +16,7 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
     }
     $datas = getServiceCustomFields($relid);
     $customfields = array();
-   // error_log(print_r($datas, 1), 3, "/tmp/php_errors.log");
+    // error_log(print_r($datas, 1), 3, "/tmp/php_errors.log");
     foreach ($datas as $data) {
         //   echo "<pre>", print_r($data, 1), "</pre>";
         $id = $data['id'];
@@ -55,16 +55,16 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
                     $webaddr = "http://" . $webaddr;
                 }
 
-                $input = ("<input type=\"text\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"40\" /> " . ($customfieldval ? "<a href=\"" . $webaddr . "\" target=\"_blank\">www</a>" : "");
+                $input = ("<input type=\"text\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"40\" /> " . ($customfieldval ? "<a href=\"" . $webaddr . "\" target=\"_blank\">www</a>" : "");
                 $customfieldval = "<a href=\"" . $webaddr . "\" target=\"_blank\">" . $customfieldval . "</a>";
             } else {
 
                 if ($fieldtype == "date") {
-                    $input = ("<input type=\"password\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+                    $input = ("<input type=\"password\" class=\"form-control datepick\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
                 }
 
                 if ($fieldtype == "password") {
-                    $input = ("<input type=\"password\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+                    $input = ("<input type=\"password\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
 
                     if ($hidepw) {
                         $pwlen = strlen($customfieldval);
@@ -78,10 +78,10 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
                     }
                 } else {
                     if ($fieldtype == "textarea") {
-                        $input = ("<textarea name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" rows=\"3\" style=\"width:90%;\">" . $customfieldval . "</textarea>";
+                        $input = ("<textarea class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" rows=\"3\" style=\"width:90%;\">" . $customfieldval . "</textarea>";
                     } else {
                         if ($fieldtype == "dropdown") {
-                            $input = ("<select name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\">";
+                            $input = ("<select class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\">";
                             $fieldoptions = explode(",", $fieldoptions);
                             foreach ($fieldoptions as $optionvalue) {
                                 $input .= ("<option value=\"" . $optionvalue . "\"");

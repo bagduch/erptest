@@ -109,14 +109,16 @@ if ($action == "getconfigoptions") {
     $customfields = getCustomFields("", $pid, "", "", "on");
 
     if (count($customfields)) {
-        $options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
+        $options .="<div class=\"box\"><div class='box-header'>
+                                <h3 class='box-title'>" . $aInt->lang("setup", "customfields") . "</h3>
+                            </div>
 <table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
         foreach ($customfields as $customfield) {
             $inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
             $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";
         }
 
-        $options .= "</table>";
+        $options .= "</table></div>";
     }
 
     $addonshtml = "";
@@ -389,17 +391,7 @@ $(function(){
       $(\"#regdomain0\").val($(\"#domain0\").val());
     });
 
-    $(\".regdomain\").live(\"keyup\", function(){
-        var domainname = $(this).val();
-        if(domainname.length >= 5){
-            var ord = $(this).attr(\"id\").replace(\"regdomain\",\"\");
-            $.post(\"ordersadd.php\", { action: \"getdomainaddlfields\", domain: domainname, order:ord, token: \"" . generate_token("plain") . "\" },
-            function(data){
-                $(\".domainaddlfields\"+ord).remove();
-                $(\"#domainaddlfieldserase\"+ord).after(data);
-            });
-        }
-    });
+   
 
 });
 ";
@@ -610,7 +602,4 @@ $aInt->jquerycode = $jquerycode;
 $aInt->jquerycode .=$menuselect;
 //$aInt->jscode = $jscode;
 $aInt->display();
-
-
-
 ?>

@@ -1,9 +1,13 @@
 
 <form method="post" action="{$PHP_SELF}" id="orderfrm">
     <input type="hidden" name="submitorder" value="true">
-    <div class="box">
-        <div class="row">
-            <div class="col-md-8">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Client</h3>
+                </div>
                 <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody><tr>
                             <td width="130" class="fieldlabel">Client</td>
@@ -65,11 +69,14 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="products">
+                <div id="ord0" class="product">
 
-                <div id="products">
-                    <div id="ord0" class="product">
-
-                        <h2>Product/Service</h2>
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Product/Service</h3>
+                        </div>
                         <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                             <tbody><tr><td width="130" class="fieldlabel">Product/Service</td><td class="fieldarea">
                                         <select class="form-control" name="pid[]" id="pid0" onchange="loadproductoptions(this)">
@@ -106,31 +113,52 @@
                                     </td>
                                 </tr>
                             </tbody></table>
-
-                        <div id="productconfigoptions0"></div>
-
                     </div>
+                    <div id="productconfigoptions0"></div>
                 </div>
-                <p style="padding-left:20px;"><a href="#" class="addproduct"><img src="images/icons/add.png" border="0" align="absmiddle"> Add Another Product</a></p>
-
-            </div>
-            <div class="col-md-4">
-                <table width="100%" cellspacing="0" cellpadding="0"><tbody><tr><td valign="top" class="ordersummaryleftcol table">
-
-                            </td><td valign="top">
-
-                                <div id="ordersumm"><div class="ordersummarytitle">Order Summary</div>
-                                    <div id="ordersummary">
-                                        <table>
-                                            <tbody><tr class="item"><td colspan="2"><div class="itemtitle" align="center">No Items Selected</div></td></tr><tr class="subtotal"><td>Subtotal</td><td class="alnright">$0.00 NZD</td></tr><tr class="tax"><td>GST @ 15.00%</td><td class="alnright">$0.00 NZD</td></tr><tr class="total"><td width="140">Total</td><td class="alnright">$0.00 NZD</td></tr></tbody></table>
-                                    </div></div>
-
-                                <div class="ordersummarytitle"><input type="submit" value="Submit Order »" class="btn-primary" style="font-size:20px;padding:12px 30px ;"></div>
-
-                            </td></tr></tbody></table>
-            </div>
         </div>
+        <p style="padding-left:20px;"><a href="#" class="addproduct"><img src="images/icons/add.png" border="0" align="absmiddle"> Add Another Product</a></p>
     </div>
+                                    
+    <div class="col-md-4">
+        <table class="table" width="100%" >
+            <tbody>
+                <tr>
+                    <td valign="top" class="ordersummaryleftcol">
+                    </td>
+                    <td valign="top">
+                        <div id="ordersumm"><div class="ordersummarytitle">Order Summary</div>
+                            <div id="ordersummary">
+                                <table>
+                                    <tbody>
+                                        <tr class="item">
+                                            <td colspan="2"><div class="itemtitle" align="center">No Items Selected</div></td>
+                                        </tr>
+                                        <tr class="subtotal">
+                                            <td>Subtotal</td>
+                                            <td class="alnright">$0.00 NZD</td>
+                                        </tr><tr class="tax"><td>GST @ 15.00%</td>
+                                            <td class="alnright">$0.00 NZD</td>
+                                        </tr>
+                                        <tr class="total">
+                                            <td width="140">Total</td>
+                                            <td class="alnright">$0.00 NZD</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="ordersummarytitle">
+                            <br>
+                            <input type="submit" value="Submit Order" class="btn-primary" style="font-size:20px;padding:12px 30px ;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
 </form>
 
 <div class="modal" id="myModal">
@@ -187,99 +215,99 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-</div>
 
 
-<div id="createpromo" title="Create Custom Promo" style="display:none;">
-    <p></p><form id="createpromofrm">
-        <input type="hidden" name="token" value="14cb1db9b2dd40e27b77721390a501edb02b7f14">
-        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-            <tbody><tr><td class="fieldlabel" width="110">Promotion Code</td><td class="fieldarea"><input class="form-control" type="text" name="code" id="promocode"></td></tr>
-                <tr><td class="fieldlabel">Type</td><td class="fieldarea"><select name="type">
-                            <option value="Percentage">Percentage</option>
-                            <option value="Fixed Amount">Fixed Amount</option>
-                            <option value="Price Override">Price Override</option>
-                            <option value="Free Setup">Free Setup</option>
-                        </select></td></tr>
-                <tr><td class="fieldlabel">Value</td><td class="fieldarea"><input type="text" name="pvalue" size="10"></td></tr>
-                <tr><td class="fieldlabel">Recurring</td><td class="fieldarea"><input type="checkbox" name="recurring" id="recurring" value="1"> <label for="recurring">Enable - Recur For</label> <input type="text" name="recurfor" size="3" value="0"> Times (0 = Unlimited)</td></tr>
-            </tbody></table>
-        <p>* Promotional Discounts created "on the fly" here apply to all items in an order</p>
-    </form><p></p>
-</div>
-{literal}
-    <script type="text/javascript">
 
-        function loadproductoptions(piddd) {
-            var ord = piddd.id.substring(3);
-            var pid = piddd.value;
-            var billingcycle = $("#billingcycle option:selected").val();
-            if (pid == 0) {
-                $("#productconfigoptions" + ord).html("");
-                $("#addonsrow" + ord).hide();
-                updatesummary();
-            } else {
-                $("#productconfigoptions" + ord).html("<p align=\"center\">Loading...<br><img src=\"../images/loading.gif\"></p>");
-                $.ajax({
-                    type: "POST",
-                    url: "ordersadd.php",
-                    dataType: "json",
-                    data: {action: "getconfigoptions", pid: pid, cycle: billingcycle, orderid: ord, token: "{/literal}{$token}{literal}"},
-                }).done(function (data) {
-                  
-                    if (data.addons) {
-                        $("#addonsrow" + ord).show();
-                        $("#addonscont" + ord).html(data.addons);
-                    } else {
-                        $("#addonsrow" + ord).hide();
-                    }
-                    $("#productconfigoptions" + ord).html(data.options);
+    <div id="createpromo" title="Create Custom Promo" style="display:none;">
+        <p></p><form id="createpromofrm">
+            <input type="hidden" name="token" value="{$token}">
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody><tr><td class="fieldlabel" width="110">Promotion Code</td><td class="fieldarea"><input class="form-control" type="text" name="code" id="promocode"></td></tr>
+                    <tr><td class="fieldlabel">Type</td><td class="fieldarea"><select name="type">
+                                <option value="Percentage">Percentage</option>
+                                <option value="Fixed Amount">Fixed Amount</option>
+                                <option value="Price Override">Price Override</option>
+                                <option value="Free Setup">Free Setup</option>
+                            </select></td></tr>
+                    <tr><td class="fieldlabel">Value</td><td class="fieldarea"><input type="text" name="pvalue" size="10"></td></tr>
+                    <tr><td class="fieldlabel">Recurring</td><td class="fieldarea"><input type="checkbox" name="recurring" id="recurring" value="1"> <label for="recurring">Enable - Recur For</label> <input type="text" name="recurfor" size="3" value="0"> Times (0 = Unlimited)</td></tr>
+                </tbody></table>
+            <p>* Promotional Discounts created "on the fly" here apply to all items in an order</p>
+        </form><p></p>
+    </div>
+    {literal}
+        <script type="text/javascript">
+
+            function loadproductoptions(piddd) {
+                var ord = piddd.id.substring(3);
+                var pid = piddd.value;
+                var billingcycle = $("#billingcycle option:selected").val();
+                if (pid == 0) {
+                    $("#productconfigoptions" + ord).html("");
+                    $("#addonsrow" + ord).hide();
                     updatesummary();
+                } else {
+                    $("#productconfigoptions" + ord).html("<p align=\"center\">Loading...<br><img src=\"../images/loading.gif\"></p>");
+                    $.ajax({
+                        type: "POST",
+                        url: "ordersadd.php",
+                        dataType: "json",
+                        data: {action: "getconfigoptions", pid: pid, cycle: billingcycle, orderid: ord, token: "{/literal}{$token}{literal}"},
+                    }).done(function (data) {
 
-                });
-            }
-        }
-        function loaddomainoptions(domrd, type) {
-            var ord = domrd.id.substring(6);
-            if (type == 1) {
-                $("#domrowdn" + ord).css("display", "");
-                $("#domrowrp" + ord).css("display", "");
-                $("#domrowep" + ord).css("display", "none");
-                $("#domrowad" + ord).css("display", "");
-            } else if (type == 2) {
-                $("#domrowdn" + ord).css("display", "");
-                $("#domrowrp" + ord).css("display", "");
-                $("#domrowep" + ord).css("display", "");
-                $("#domrowad" + ord).css("display", "");
-            } else {
-                $("#domrowdn" + ord).css("display", "none");
-                $("#domrowrp" + ord).css("display", "none");
-                $("#domrowep" + ord).css("display", "none");
-                $("#domrowad" + ord).css("display", "none");
-            }
-        }
-        function updatesummary() {
-            jQuery.post("ordersadd.php", "submitorder=1&calconly=1&" + jQuery("#orderfrm").serialize(),
-                    function (data) {
-                        jQuery("#ordersumm").html(data);
-                    });
-        }
-        function savePromo() {
-            jQuery.post("ordersadd.php", "action=createpromo&" + jQuery("#createpromofrm").serialize(),
-                    function (data) {
-
-                        if (data.substr(0, 1) == "<") {
-                            $("#promodd").append(data);
-                            $("#promodd").val($("#promocode").val());
-                            $("#createpromo").dialog("close");
+                        if (data.addons) {
+                            $("#addonsrow" + ord).show();
+                            $("#addonscont" + ord).html(data.addons);
                         } else {
-                            alert(data);
+                            $("#addonsrow" + ord).hide();
                         }
+                        $("#productconfigoptions" + ord).html(data.options);
+                        updatesummary();
+
                     });
-        }
+                }
+            }
+            function loaddomainoptions(domrd, type) {
+                var ord = domrd.id.substring(6);
+                if (type == 1) {
+                    $("#domrowdn" + ord).css("display", "");
+                    $("#domrowrp" + ord).css("display", "");
+                    $("#domrowep" + ord).css("display", "none");
+                    $("#domrowad" + ord).css("display", "");
+                } else if (type == 2) {
+                    $("#domrowdn" + ord).css("display", "");
+                    $("#domrowrp" + ord).css("display", "");
+                    $("#domrowep" + ord).css("display", "");
+                    $("#domrowad" + ord).css("display", "");
+                } else {
+                    $("#domrowdn" + ord).css("display", "none");
+                    $("#domrowrp" + ord).css("display", "none");
+                    $("#domrowep" + ord).css("display", "none");
+                    $("#domrowad" + ord).css("display", "none");
+                }
+            }
+            function updatesummary() {
+                jQuery.post("ordersadd.php", "submitorder=1&calconly=1&" + jQuery("#orderfrm").serialize(),
+                        function (data) {
+                            jQuery("#ordersumm").html(data);
+                        });
+            }
+            function savePromo() {
+                jQuery.post("ordersadd.php", "action=createpromo&" + jQuery("#createpromofrm").serialize(),
+                        function (data) {
+
+                            if (data.substr(0, 1) == "<") {
+                                $("#promodd").append(data);
+                                $("#promodd").val($("#promocode").val());
+                                $("#createpromo").dialog("close");
+                            } else {
+                                alert(data);
+                            }
+                        });
+            }
 
 
 
 
-    </script>
-{/literal}
+        </script>
+    {/literal}
