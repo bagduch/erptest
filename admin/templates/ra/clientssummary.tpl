@@ -1,5 +1,15 @@
 {strip}
 
+{foreach from=$notes item=note}
+  <div class="alert alert-warning">
+    <h3>Client Note #{$note.id} {$note.created} by {$note.adminuser} </h3>
+    <p>{$note.note}</p>
+    {if $note.created neq $note.modified}
+    Last modified {$note.modified}
+    {/if}
+</div>
+{/foreach}
+
     <div class="row">
         <div class="callout pull-right">
 
