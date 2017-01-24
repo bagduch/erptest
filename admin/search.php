@@ -46,13 +46,14 @@ if ($intellisearch) {
     if (checkPermission("List Clients", true) || checkPermission("View Clients Summary", true)) {
         $query = "SELECT id,firstname,lastname,companyname,email,status FROM tblclients WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
 
+      
         if (is_numeric($value)) {
             $query .= " OR id='" . $value . "'";
         }
 
 
         if (is_numeric($value) && strlen($value) == 4) {
-            $query .= " OR cardlastfour='" . $value . "'";
+//            $query .= " OR cardlastfour='" . $value . "'";
         } else {
             $query .= " OR city LIKE '%" . $value . "%' OR state LIKE '%" . $value . "%' OR email LIKE '%" . $value . "%'";
         }

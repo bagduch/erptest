@@ -4,8 +4,9 @@
             {foreach from=$userarray key=gname item=row}
             <li><a href="#tab_{$gname}" data-toggle="tab">{$gname} ({$row|@count})</a></li>
             {/foreach}
-
+      
     </ul>
+     
     <div class="tab-content">
         <div class="tab-pane active" id="tab_all">
             {foreach from=$userarray key=gname item=row}

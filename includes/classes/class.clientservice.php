@@ -44,7 +44,7 @@ class RA_ClientService {
             $this->servicefirstid = $data['id'];
             $this->id = $this->servicefirstid;
         } else {
-            $this->errorbox = "<a href=\"ordersadd.php?userid=%d\">No Service Avaliable</a>";
+            $this->errorbox = "<a href=\"ordersadd.php?userid=".$this->userid."\">No Service Avaliable</a>";
         }
     }
 
