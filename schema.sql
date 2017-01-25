@@ -98,10 +98,11 @@ CREATE TABLE `tblactivitylog` (
   `description` text NOT NULL,
   `user` text NOT NULL,
   `userid` int(10) DEFAULT NULL,
+  `account_id` int(11) DEFAULT NULL,
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7847 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7860 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
