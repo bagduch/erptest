@@ -629,16 +629,14 @@ if ($action == "") {
 
             $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
         }
-        $query = "select * from tblservicetoservice
-                  where children_id = " . $id;
+        $query = "SELECT * FROM `tblservicetoservice` WHERE `parent_id` = " . $id;
+ 
         $result = full_query_i($query);
         $asscoiateid = array();
         while ($data = mysqli_fetch_assoc($result)) {
-            $asscoiateid[] = $data['parent_id'];
+            $asscoiateid[] = $data['children_id'];
         }
         $query2 = "select * from tblgrouptogroup";
-
-
 
         $asscoproduct = array();
         $query = "SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices 
@@ -648,6 +646,7 @@ if ($action == "") {
         while ($data = mysqli_fetch_assoc($result)) {
             $asscoproduct[$data['groupname']][$data['id']] = $data;
 
+          
             if (in_array($data['id'], $asscoiateid)) {
                 $asscoproduct[$data['groupname']][$data['id']]['check'] = "checked";
             } else {

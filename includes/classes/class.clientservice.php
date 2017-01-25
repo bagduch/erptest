@@ -32,7 +32,7 @@ class RA_ClientService {
         if ($this->errorbox == "") {
             $this->getServiceDatas();
             $this->getAddonProduct();
-            //  $this->getAlladdons();
+            $this->getAlladdons();
         }
     }
 
@@ -44,7 +44,7 @@ class RA_ClientService {
             $this->servicefirstid = $data['id'];
             $this->id = $this->servicefirstid;
         } else {
-            $this->errorbox = "<a href=\"ordersadd.php?userid=".$this->userid."\">No Service Avaliable</a>";
+            $this->errorbox = "<a href=\"ordersadd.php?userid=" . $this->userid . "\">No Service Avaliable</a>";
         }
     }
 
@@ -128,9 +128,9 @@ class RA_ClientService {
         }
     }
 
+    
     public function getAlladdons() {
         if (!empty($this->servicedata)) {
-
             $query = "select * from tblservicetoservice as tsts LEFT JOIN tblservices as ts on tsts.children_id=ts.id where tsts.parent_id=" . $this->servicedata['packageid'];
             $result = full_query_i($query);
             if ($result->num_rows > 0) {
@@ -199,10 +199,10 @@ class RA_ClientService {
         return $id;
     }
 
-    public function updateService($data) {
+    public function updateService($data, $id) {
 
         if (!empty($data)) {
-            update_query("tblcustomerservices", $data);
+            update_query("tblcustomerservices", $data, array("id" => $id));
         }
     }
 

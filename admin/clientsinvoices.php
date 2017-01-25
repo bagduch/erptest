@@ -249,7 +249,7 @@ $filters = array();
 $filters[] = "userid='" . (int) $userid . "'";
 
 if ($serviceid = $filt->get("serviceid")) {
-    $filters[] = "id IN (SELECT invoiceid FROM tblinvoiceitems WHERE type='Hosting' AND relid='" . (int) $serviceid . "')";
+    $filters[] = "id IN (SELECT invoiceid FROM tblinvoiceitems WHERE relid='" . (int) $serviceid . "')";
 }
 
 
@@ -387,6 +387,13 @@ $table = $aInt->sortableTable(
     array("balance", $aInt->lang("fields", "balance")),
     array("paymentmethod", $aInt->lang("fields", "paymentmethod")),
     array("status", $aInt->lang("fields", "status")), "", ""), $tabledata, $tableformurl, $tableformbuttons);
+
+
+if ($_POST['ajax']) {
+    echo $table;
+    exit();
+}
+
 
 $paymentdropdown = paymentMethodsSelection();
 

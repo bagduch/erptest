@@ -44,13 +44,48 @@ if ($userid && !$id) {
         $aInt->gracefulExit("Invalid User ID");
     }
 }
-$frm = new RA_Form();
-if ($frm->issubmitted()) {
+$servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
+
+$len = count($servicefield);
+$firsthalf = array_slice($servicefield, 0, $len / 2);
+$secondhalf = array_slice($servicefield, $len / 2);
+if ($_POST['frm1']) {
     check_token("RA.admin.default");
     if ($_POST['addonid']) {
         $addonid = $clientdata->addaddon($_POST['addonid'], $_POST['paymentmethod']);
-        logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid);
-        redir("userid=" . $userid);
+        logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid, $id);
+        // redir("userid=" . $userid);
+    }
+    $logDetail = "";
+    foreach ($servicefield as $key => $row) {
+        if ($_POST['customefield'][$key] != $row['value']) {
+            update_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key]), array("cfid" => $key, "relid" => $id));
+            $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
+        }
+    }
+    $data = array(
+        "packageid" => $_POST['packageid'],
+        "description" => $_POST['description'],
+        "servicestatus" => $_POST['status'],
+        "regdate" => $_POST['regdate'],
+        "amount" => $_POST['amount'],
+        "firstpaymentamount" => $_POST['firstpaymentamount'],
+        "nextduedate" => $_POST['nextduedate'],
+        "billingcycle" => $_POST['billingcycle'],
+        "paymentmethod" => $_POST['paymentmethod'],
+        "lastupdate" => "now()"
+    );
+
+    foreach ($data as $key => $row) {
+        if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
+            $logDetail.= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
+        }
+    }
+
+    if ($logDetail != "") {
+        $clientdata->updateService($data, $id);
+        logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
+        redir("userid=" . $userid . "&id=" . $id);
     }
 }
 if ($action == "delete") {
@@ -61,7 +96,7 @@ if ($action == "delete") {
     delete_query("tblserviceaddons", array("hostingid" => $id));
     //  delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "'");
-    logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
+    logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid, $id);
     redir("userid=" . $userid);
 }
 if ($action == "deladdon") {
@@ -69,7 +104,7 @@ if ($action == "deladdon") {
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
     delete_query("tblcustomerservices", array("id" => $aid));
-    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
+    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 $adminbuttonarray = "";
@@ -208,8 +243,6 @@ $result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblc
 $i = 0;
 while ($data = mysqli_fetch_array($result)) {
 
-
-
     $servicelist_id = $data['id'];
     $servicelist_product = $data['name'];
     $servicelist_adress = $data['description'];
@@ -239,15 +272,20 @@ while ($data = mysqli_fetch_array($result)) {
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
 
-//echo "<pre>", print_r($userarray, 1), "</pre>";
-$servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
-$len = count($servicefield);
-$firsthalf = array_slice($servicefield, 0, $len / 2);
-$secondhalf = array_slice($servicefield, $len / 2);
+
+
+$accountlog = array();
+$resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
+while ($data = mysqli_fetch_array($resutlt)) {
+
+    $accountlog[] = $data;
+}
+
 $aInt->assign("service", array("Pending", "Active", "Draft", "Suspended", "Terminated", "Cancelled", "Fraud"));
 $aInt->assign("userid", $userid);
+$aInt->assign("accountlog", $accountlog);
 $aInt->assign("token", get_token());
-$aInt->assign('addons', $clientdata->addons);
+$aInt->assign('alladdons', $clientdata->addons);
 $aInt->assign("servicesarr", $servicesarr);
 $aInt->assign("totalservice", $i);
 $aInt->assign("userarray", $userarray);

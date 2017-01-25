@@ -102,6 +102,7 @@ function getServiceCustomFields($sid, $csid = null) {
             unset($returnvals[$cfid]);
         }
     }
+  //  echo "<pre>",  print_r($returnvals,1),"</pre>";
 
     return $returnvals;
 }
