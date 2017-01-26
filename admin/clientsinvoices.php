@@ -9,17 +9,13 @@ require "../init.php";
 $aInt = new RA_Admin("List Invoices", false);
 $aInt->requiredFiles(array("gatewayfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
-
 if ($delete || $massdelete) {
     checkPermission("Delete Invoice");
 }
-
 if (($markpaid || $markunpaid) || $markcancelled) {
     checkPermission("Manage Invoice");
 }
-
 $aInt->valUserID($userid);
-
 if ($markpaid) {
     check_token("RA.admin.default");
     foreach ($selectedinvoices as $invid) {
@@ -29,14 +25,11 @@ if ($markpaid) {
         addInvoicePayment($invid, "", "", "", $paymentmethod);
         run_hook("InvoicePaid", array("invoiceid" => $invoiceid));
     }
-
     if ($page) {
         $userid .= "&page=" . $page;
     }
-
     redir("userid=" . $userid . "&filter=1");
 }
-
 
 if ($markunpaid) {
     check_token("RA.admin.default");

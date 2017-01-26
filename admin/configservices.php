@@ -97,7 +97,7 @@ if ($action == "save") {
 
     update_query("tblservices", $array, array("id" => $id));
     foreach ($_POST['currency'] as $currency_id => $pricing) {
-        update_query("tblpricing", $pricing, array("type" => $_POST['type'], "currency" => $currency_id, "relid" => $id));
+        update_query("tblpricing", $pricing, array("currency" => $currency_id, "relid" => $id));
     }
     if ($customfieldname) {
         foreach ($customfieldname as $fid => $value) {
@@ -389,7 +389,7 @@ if ($action == "") {
             $servicegroup[$groups['id']]['group']['deletelink'] = "doGroupDelete('" . $groups['id'] . "')";
         }
 
-        $query2 = select_query_i("tblservices", "", array("gid" => $groups['id']), "order", "DESC");
+        $query2 = select_query_i("tblservices", "", array("gid" => $groups['id']), "order", "ASC");
         while ($services = mysqli_fetch_array($query2)) {
             $servicegroup[$groups['id']]['service'][$services['id']] = $services;
             $result2 = select_query_i("tblcustomerservices", "COUNT(*)", array("packageid" => $services['id']));
@@ -492,7 +492,7 @@ if ($action == "") {
         $servertype = $data['servertype'];
         $configserice = getCustomeFieldGroup($id);
         $aInt->assign('configservice', $configserice);
-      //  $aInt->assign('data', $data);
+        //  $aInt->assign('data', $data);
         $counter = 1;
         while ($counter <= 24) {
             $packageconfigoption[$counter] = $data["configoption" . $counter];

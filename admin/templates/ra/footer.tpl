@@ -302,7 +302,7 @@
             lasturl = url.split("/");
             urlcheck = lasturl[lasturl.length - 1]
             $("#menu a[href='" + urlcheck + "']").parent("li").addClass("itemactive");
-
+    {/literal}{$jquerycode}{literal}
 
         });
 
