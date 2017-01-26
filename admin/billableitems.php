@@ -3,39 +3,28 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  **/
 
 define("ADMINAREA", true);
 require "../init.php";
-
 if (!$action) {
 	$reqperm = "View Billable Items";
 }
 else {
 	$reqperm = "Manage Billable Items";
 }
-
 $aInt = new RA_Admin($reqperm);
 $aInt->title = $aInt->lang("billableitems", "title");
 $aInt->sidebar = "billing";
 $aInt->icon = "billableitems";
 $aInt->requiredFiles(array("invoicefunctions", "gatewayfunctions"));
-
 if ($action == "save") {
 	check_token("RA.admin.default");
-
 	if (!$userid) {
 		$aInt->gracefulExit($aInt->lang("billableitems", "noclientsmsg"));
 	}
-
 	$duedate = toMySQLDate($duedate);
 	getUsersLang($userid);
-
 	if ($id) {
 		if ($hours != 0) {
 			if (strpos($description, " " . $_LANG['billableitemshours'] . " @ ")) {
@@ -58,16 +47,12 @@ if ($action == "save") {
 
 	redir();
 }
-
-
 if ($action == "delete") {
 	check_token("RA.admin.default");
 	delete_query("tblbillableitems", array("id" => $id));
 	redir();
 }
-
 ob_start();
-
 if (!$action) {
 	if ($invoice && is_array($bitem)) {
 		foreach ($bitem as $id => $v) {
@@ -297,7 +282,6 @@ else {
 			$description = $data['description'];
 			$hours = $data['hours'];
 			$amount = $data['amount'];
-
 			if ($hours != 0) {
 				$amount = format_as_currency($amount / $hours);
 			}

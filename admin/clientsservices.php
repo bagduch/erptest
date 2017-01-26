@@ -15,6 +15,7 @@ $aInt->requiredFiles(
             "invoicefunctions",
             "processinvoices")
 );
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->inClientsProfile = true;
 $id = (int) $ra->get_req_var("id") ? : (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");

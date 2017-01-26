@@ -14,6 +14,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
 $menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
+
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
 
@@ -491,13 +492,13 @@ if ($action == "") {
         $servertype = $data['servertype'];
         $configserice = getCustomeFieldGroup($id);
         $aInt->assign('configservice', $configserice);
-        $aInt->assign('data', $data);
+      //  $aInt->assign('data', $data);
         $counter = 1;
         while ($counter <= 24) {
             $packageconfigoption[$counter] = $data["configoption" . $counter];
             $counter += 1;
         }
-        // $aInt->assign('services', $data);
+        $aInt->assign('services', $data);
 
         $recurringcycles = $data['recurringcycles'];
         $autoterminatedays = $data['autoterminatedays'];
@@ -630,7 +631,7 @@ if ($action == "") {
             $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
         }
         $query = "SELECT * FROM `tblservicetoservice` WHERE `parent_id` = " . $id;
- 
+
         $result = full_query_i($query);
         $asscoiateid = array();
         while ($data = mysqli_fetch_assoc($result)) {
@@ -646,7 +647,7 @@ if ($action == "") {
         while ($data = mysqli_fetch_assoc($result)) {
             $asscoproduct[$data['groupname']][$data['id']] = $data;
 
-          
+
             if (in_array($data['id'], $asscoiateid)) {
                 $asscoproduct[$data['groupname']][$data['id']]['check'] = "checked";
             } else {

@@ -1458,25 +1458,15 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $template = "support/supportopen";
     }
 }
-
-
-
-
-
-
-
 $aInt->assign("replacemenu", "View Tickets");
 $aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
 $menuselect = "$('#menu').multilevelpushmenu('expand','View Tickets');";
-
 $result = select_query_i("tbltickettags", "", "", "id", "DESC");
 $tags = "";
 while ($data = mysqli_fetch_array($result)) {
     $tags .= "<a href=" . $PHP_SELF . "?tag=" . $data['tag'] . " style=\"margin-right:3px\" class=\"label label-info\">" . $data['tag'] . "</a>";
 }
-
 $tagcontainer = "$('div#tickets').append('<div class=\"tag-list\"><h3>Tags:</h3>" . $tags . "</div>');";
-
 
 $aInt->jquerycode .= $menuselect;
 $aInt->jquerycode .= $tagcontainer;

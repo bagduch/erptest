@@ -567,8 +567,6 @@ while ($data = mysqli_fetch_array($result)) {
     if ($servicelist_domain) {
         $servicelist_product .= " - " . $servicelist_domain;
     }
-
-
     if ($servicelist_status == "Pending") {
         $color = "#ffffcc";
     }
@@ -585,7 +583,6 @@ while ($data = mysqli_fetch_array($result)) {
             }
         }
     }
-
     $servicesarr[$servicelist_id] = array($color, $servicelist_product);
 }
 

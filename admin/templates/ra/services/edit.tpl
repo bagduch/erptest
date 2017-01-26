@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-lg-12">
         <h2>Edit Product</h2>
-        <form method="post" action="/admin/configservices.php?action=save&amp;id={$data.id}" name="packagefrm">
+
+        <form method="post" action="/admin/configservices.php?action=save&amp;id={$services.id}" name="packagefrm">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
@@ -21,11 +22,11 @@
                                         <td class="fieldlabel">{$langs.fields}</td>
                                         <td class="fieldarea">
                                             <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                                <option value="services" {if $data.type eq 'services'}selected{/if}>Services</option>
-                                                <option value="wholesell" {if $data.type eq 'wholesell'}selected{/if}>Whole Sell</option>
-                                                <option value="product" {if $data.type eq 'server'}selected{/if}>Product</option>
-                                                <option value="addon" {if $data.type eq 'addon'}selected{/if}>Addon</option>
-                                                <option value="other" {if $data.type eq 'other'}selected{/if}>{$langs.other}</option>
+                                                <option value="services" {if $services.type eq 'services'}selected{/if}>Services</option>
+                                                <option value="wholesell" {if $services.type eq 'wholesell'}selected{/if}>Whole Sell</option>
+                                                <option value="product" {if $services.type eq 'server'}selected{/if}>Product</option>
+                                                <option value="addon" {if $services.type eq 'addon'}selected{/if}>Addon</option>
+                                                <option value="other" {if $services.type eq 'other'}selected{/if}>{$langs.other}</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -33,8 +34,9 @@
                                         <td class="fieldlabel">{$langs.servicegroup}</td>
                                         <td class="fieldarea">
                                             <select class="form-control" name="gid">
+                                      
                                                 {foreach from=$servicegroups item=row key=gid}
-                                                    <option value="{$gid}" {if $gid==$data.gid}selected{/if}>{$row}</option>
+                                                    <option value="{$gid}" {if $gid eq $services.gid}selected{/if}>{$row}</option>
                                                 {/foreach}
                                             </select>
                                         </td>
@@ -42,32 +44,32 @@
                                     <tr>
                                         <td class="fieldlabel">Revenue Codes</td>
                                         <td class="fieldarea">
-                                            <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Supply Codes</td>
                                         <td class="fieldarea">
-                                            <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Supply Revenue</td>
                                         <td class="fieldarea">
-                                            <input class="form-control" type="text" size="40" name="rcode" value="{$data.revenuecode}">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Individual Sale</td>
                                         <td class="fieldarea">
-                                            <input type="checkbox" name="isale" {if $data.individual}checked{/if}/> (Can be sale as an individual product)
+                                            <input type="checkbox" name="isale" {if $services.individual}checked{/if}/> (Can be sale as an individual product)
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td class="fieldlabel">{$langs.servicename}</td>
                                         <td class="fieldarea">
-                                            <input class="form-control" type="text" size="40" name="name" value="{$data.name}">
+                                            <input class="form-control" type="text" size="40" name="name" value="{$services.name}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -77,7 +79,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <textarea class="form-control" name="description" cols="60" rows="5">{$data.description}</textarea>
+                                                            <textarea class="form-control" name="description" cols="60" rows="5">{$services.description}</textarea>
                                                         </td>
                                                         <td>
                                                             {$langs.htmlallowed}
@@ -99,25 +101,25 @@
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">{$langs.applytax}</td>
-                                        <td class="fieldarea"><label><input type="checkbox" name="tax" {if $data.tax}checked{/if}> {$lang.applytaxdesc}</label></td>
+                                        <td class="fieldarea"><label><input type="checkbox" name="tax" {if $services.tax}checked{/if}> {$lang.applytaxdesc}</label></td>
                                     </tr>
                                     <tr>
-                                        <td class="fieldlabel">{$langs.hidden}</td><td class="fieldarea"><label><input type="checkbox" name="hidden" {if $data.hidden}checked{/if}> {$langs.hiddendesc}</label></td>
+                                        <td class="fieldlabel">{$langs.hidden}</td><td class="fieldarea"><label><input type="checkbox" name="hidden" {if $services.hidden}checked{/if}> {$langs.hiddendesc}</label></td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">{$langs.retired}</td>
-                                        <td class="fieldarea"><label><input type="checkbox" name="retired" {if $data.retired}checked{/if}> {$langs.retireddesc}</label></td>
+                                        <td class="fieldarea"><label><input type="checkbox" name="retired" {if $services.retired}checked{/if}> {$langs.retireddesc}</label></td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">{$langs.contract}</td>
-                                        <td class="fieldarea"><label><input type="checkbox" name="contract" {if $data.etf}checked{/if}>{$langs.contractdes}</label></td>
+                                        <td class="fieldarea"><label><input type="checkbox" name="contract" {if $services.etf}checked{/if}>{$langs.contractdes}</label></td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td class="fieldarea">
                                             <div style="display: none" id="contractop" class="form-inline">
-                                                <input style="width:40px" class="form-control" type="text" name="etf" value="{$data.etf}"> <label>{$langs.etf}</label>
-                                                <input style="width:40px" class="form-control" type="text" name="term" value="{$data.term}"> <label>{$langs.term}</label>
+                                                <input style="width:40px" class="form-control" type="text" name="etf" value="{$services.etf}"> <label>{$langs.etf}</label>
+                                                <input style="width:40px" class="form-control" type="text" name="term" value="{$services.term}"> <label>{$langs.term}</label>
                                             </div>
 
                                         </td>
@@ -135,9 +137,9 @@
                                     <tr>
                                         <td class="fieldlabel">Payment Type</td>
                                         <td class="fieldarea">
-                                            <label><input type="radio" name="paytype" {if $data.paytype eq 'free'}checked{/if} value="free"> Free</label>
-                                            <label><input type="radio" name="paytype" {if $data.paytype eq 'onetime'}checked{/if} value="onetime"> One Time</label>
-                                            <label><input type="radio" name="paytype" {if $data.paytype eq 'recurring'}checked{/if} value="recurring"> Recurring</label>
+                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'free'}checked{/if} value="free"> Free</label>
+                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'onetime'}checked{/if} value="onetime"> One Time</label>
+                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'recurring'}checked{/if} value="recurring"> Recurring</label>
                                         </td>
                                     </tr>
                                     <tr class="tableprice">
@@ -181,17 +183,17 @@
                                             (Set Price to -1.00 to disable any of the payment term options - leave Setup Fee at zero)<br><br>
                                         </td>
                                     </tr>
-                                    <tr><td class="fieldlabel">Allow Multiple Quantities</td><td class="fieldarea"><input type="checkbox" name="allowqty" {if $data.allowqty}checked{/if}> Tick this box to allow customers to specify if they want more than 1 of this item when ordering (must not require separate config)</td></tr>
+                                    <tr><td class="fieldlabel">Allow Multiple Quantities</td><td class="fieldarea"><input type="checkbox" name="allowqty" {if $services.allowqty}checked{/if}> Tick this box to allow customers to specify if they want more than 1 of this item when ordering (must not require separate config)</td></tr>
                                     <tr><td class="fieldlabel">Recurring Cycles Limit</td>
                                         <td class="fieldarea">
                                             <div class="form-inline">
-                                                <input style="width:50px" class="form-control" type="text" name="recurringcycles" value="{$data.recurringcycles}" size="7">
+                                                <input style="width:50px" class="form-control" type="text" name="recurringcycles" value="{$services.recurringcycles}" size="7">
                                                 To limit this service to only recur a fixed number of times, enter the total number of times to invoice (0 = Unlimited)
                                             </div>
                                         </td></tr>
                                     <tr><td class="fieldlabel">Auto Terminate/Fixed Term</td><td class="fieldarea">
                                             <div class="form-inline">
-                                                <input style="width:50px" class="form-control" type="text" name="autoterminatedays" value="{$data.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
+                                                <input style="width:50px" class="form-control" type="text" name="autoterminatedays" value="{$services.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
                                     <tr><td class="fieldlabel">Termination Email</td><td class="fieldarea">
                                             <div class="form-inline">
                                                 <select class="form-control" name="autoterminateemail">
@@ -274,17 +276,17 @@
                                     <tr>
                                         <td class="fieldlabel">Custom Affiliate Payout</td>
                                         <td class="fieldarea">
-                                            <input type="radio" name="affiliatepaytype" {if $data.affiliatepaytype eq ''}checked{/if} value=""> Use Default 
-                                            <input type="radio" name="affiliatepaytype" {if $data.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage 
-                                            <input type="radio" name="affiliatepaytype" {if $data.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount 
-                                            <input type="radio" name="affiliatepaytype" {if $data.affiliatepaytype eq 'none'}checked{/if} value="none"> No Commission
+                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq ''}checked{/if} value=""> Use Default 
+                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage 
+                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount 
+                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'none'}checked{/if} value="none"> No Commission
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Affiliate Pay Amount</td>
                                         <td class="fieldarea">
-                                            <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$data.affiliatepayamount}" size="10"> 
-                                            <input type="checkbox" name="affiliateonetime" {if $data.affiliateonetime eq 'on'}checked{/if}> One Time Payout (Default is Recurring)
+                                            <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$services.affiliatepayamount}" size="10"> 
+                                            <input type="checkbox" name="affiliateonetime" {if $services.affiliateonetime eq 'on'}checked{/if}> One Time Payout (Default is Recurring)
                                         </td>
                                     </tr>
 
@@ -299,19 +301,19 @@
                                 <tbody>
                                     <tr>
                                         <td class="fieldlabel">Direct Shopping Cart Link</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}" readonly=""></td>
+                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}" readonly=""></td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}&amp;carttpl=cart" readonly=""></td>
+                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;carttpl=cart" readonly=""></td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Direct Shopping Cart Link Including Domain</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$data.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
+                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Service Group Cart Link</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?gid={$data.gid}" readonly=""></td>
+                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://dev.roboticaccounting.com/cart.php?gid={$services.gid}" readonly=""></td>
                                     </tr>
                                 </tbody>
                             </table>
