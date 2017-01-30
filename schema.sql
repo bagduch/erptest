@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1339 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1340 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -749,7 +749,7 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
