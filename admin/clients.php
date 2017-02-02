@@ -3,12 +3,6 @@
 /**
  *
  * @ RA
- *
- * 
- * 
- * 
- * 
- *
  * */
 define("ADMINAREA", true);
 require "../init.php";
@@ -21,8 +15,10 @@ $name = "clients";
 $orderby = "id";
 $sort = "DESC";
 $pageObj = new RA_Pagination($name, $orderby, $sort);
+
 $pageObj->digestCookieData();
 $tbl = new RA_ListTable($pageObj);
+
 $tbl->setColumns(array("checkall", array("id", $aInt->lang("fields", "id")), array("firstname", $aInt->lang("fields", "firstname")), array("lastname", $aInt->lang("fields", "lastname")), array("companyname", $aInt->lang("fields", "companyname")), array("email", $aInt->lang("fields", "email")), $aInt->lang("fields", "services"), "Products", array("datecreated", $aInt->lang("fields", "created")), array("status", $aInt->lang("fields", "status"))));
 $clientsModel = new RA_Clients($pageObj);
 $filters = new RA_Filter();
@@ -46,7 +42,6 @@ $langdata = array(
     'currencylang' => $aInt->lang("currencies", "currency"),
 );
 
-
 $clientgroup = array();
 foreach ($clientsModel->getGroups() as $id => $values) {
     $clientgroup [$id] = $values['name'];
@@ -57,7 +52,6 @@ $currencys = array();
 while ($data = mysqli_fetch_assoc($result)) {
     $currencys[$data['id']] = $data['code'];
 }
-
 
 $filterdata = array(
     "userid" => $filters->get("userid"),
@@ -76,12 +70,6 @@ $filterdata = array(
 );
 
 
-
-
-
-
-
-
 $result = select_query_i("tblcustomfields", "id,fieldname", array("type" => "client"));
 
 while ($data = mysqli_fetch_array($result)) {
@@ -90,23 +78,21 @@ while ($data = mysqli_fetch_array($result)) {
     echo "<tr><td class=\"fieldlabel\">" . $fieldname . "</td><td class=\"fieldarea\" colspan=\"3\"><input type=\"text\" name=\"customfields[" . $fieldid . "]\" size=\"30\" value=\"" . $customfields[$fieldid] . "\" /></td></tr>";
 }
 
-
 $filters->store();
-
 $clientsModel->execute($filterdata);
-$numresults = $pageObj->getNumResults();
 
+$numresults = $pageObj->getNumResults();
 
 if ($filters->isActive() && $numresults == 1) {
     $client = $pageObj->getOne();
     redir("userid=" . $client['id'], "clientssummary.php");
 } else {
     $clientlist = $pageObj->getData();
+
     foreach ($clientlist as $client) {
+//          echo "<pre>", print_r($client, 1), "</pre>";
         $linkopen = sprintf("<a href=\"clientssummary.php?userid=%d\"%s>", $client['id'], ($client['groupcolor'] ? " style=\"background-color:" . $client['groupcolor'] . "\"" : "")
         );
-
-
         $linkclose = "</a>";
         $tbl->addRow(
                 array(
@@ -125,7 +111,6 @@ if ($filters->isActive() && $numresults == 1) {
                     $client['datecreated'],
                     "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
     }
-
 
     $table = $tbl->output();
     unset($clientlist);

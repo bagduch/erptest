@@ -251,7 +251,7 @@ if ($sub == "savegroup") {
 
 
     if ($ids) {
-        update_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
+        update_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
         delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
 
 
@@ -262,7 +262,7 @@ if ($sub == "savegroup") {
             }
         }
     } else {
-        $id = insert_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
+        $id = insert_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
         foreach ($customefield as $row) {
             insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }

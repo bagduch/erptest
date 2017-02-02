@@ -12,6 +12,15 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="fieldlabel">Service Group Type</td>
+                                <td>
+                                    <select name="type" class="form-control">
+                                        <option {if $groupdata.type eq "service"}Selected{/if}>Service</option>
+                                        <option {if $groupdata.type eq "product"}Selected{/if}>Product</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="fieldlabel">
                                     <label>Customer Fields Group<br></label>
                                 </td>

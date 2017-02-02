@@ -1,36 +1,38 @@
 <?php
+
 /**
  *
  * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
-
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions","servicefunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
+$aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "servicefunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
-$id = (int)$ra->get_req_var("id");
-$hostingid = (int)$ra->get_req_var("hostingid");
-$userid = (int)$ra->get_req_var("userid");
+$id = (int) $ra->get_req_var("id");
+$hostingid = (int) $ra->get_req_var("hostingid");
+$userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
 $modop = $ra->get_req_var("modop");
+$query = "SELECT tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product')";
+$result = full_query_i($query);
+$product_data = array();
+
+while ($data = mysqli_fetch_assoc($result)) {
+    $product_data[$data['id']] = $data;
+}
+if (count($product_data) < 1) {
+    $aInt->gracefulExit("<a href=\"ordersadd.php?userid=12767\">Add a Product</a>");
+}
 
 if ($modop) {
     checkPermission("Perform Server Operations");
 }
 
-
 if (!$id && $hostingid) {
     $id = $hostingid;
 }
-
 
 if (!$userid && !$id) {
     $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
@@ -44,57 +46,14 @@ if ($userid && !$id) {
     if (!$userid) {
         $aInt->gracefulExit("Invalid User ID");
     }
-
-    $id = get_query_val("tblcustomerservices", "id", array("userid" => $userid), "description", "ASC", "0,1");
+    $arrayKeys = array_keys($product_data);
+    $id = $arrayKeys[0];
 }
+$productarray = getServiceAndProductdata("product", $userid);
 
 
-if (!$id) {
-    $aInt->gracefulExit($aInt->lang("services", "noproductsinfo") . " <a href=\"ordersadd.php?userid=" . $userid . "\">" . $aInt->lang("global", "clickhere") . "</a> " . $aInt->lang("orders", "toplacenew"));
-}
-$query = "select tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product') WHERE tblcustomerservices.id=" . $id;
 
-$result = full_query_i($query);
-$service_data = mysqli_fetch_array($result);
-$id = $service_data['id'];
-
-if (!$id) {
-    $aInt->gracefulExit("Service ID Not Found");
-}
-
-$userid = $service_data['userid'];
-$aInt->valUserID($userid);
-$producttype = $service_data['type'];
-$module = $service_data['servertype'];
-$orderid = $service_data['orderid'];
-$packageid = $service_data['packageid'];
-$server = $service_data['server'];
-$regdate = $service_data['regdate'];
-$domain = $service_data['domain'];
-$paymentmethod = $service_data['paymentmethod'];
-$firstpaymentamount = $service_data['firstpaymentamount'];
-$amount = $service_data['amount'];
-$billingcycle = $service_data['billingcycle'];
-$nextduedate = $service_data['nextduedate'];
-$servicestatus = $service_data['servicestatus'];
-$username = $service_data['username'];
-$password = decrypt($service_data['password']);
-$notes = $service_data['notes'];
-$subscriptionid = $service_data['subscriptionid'];
-$promoid = $service_data['promoid'];
-$suspendreason = $service_data['suspendreason'];
-$overideautosuspend = $service_data['overideautosuspend'];
-$ns1 = $service_data['ns1'];
-$ns2 = $service_data['ns2'];
-$dedicatedip = $service_data['dedicatedip'];
-$diskusage = $service_data['diskusage'];
-$disklimit = $service_data['disklimit'];
-$bwusage = $service_data['bwusage'];
-$bwlimit = $service_data['bwlimit'];
-$lastupdate = $service_data['lastupdate'];
-$overidesuspenduntil = $service_data['overidesuspenduntil'];
 $frm = new RA_Form();
-
 if ($frm->issubmitted()) {
     checkPermission("Edit Clients Products/Services");
     $packageid = $ra->get_req_var("packageid");
@@ -133,40 +92,33 @@ if ($frm->issubmitted()) {
 
             if ($oldserviceid != $id) {
                 logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid);
-            }
-            else {
+            } else {
                 logActivity("Modified Addon - Addon ID: " . $aid . " - Service ID: " . $id);
             }
 
 
             if ($oldstatus != "Active" && $status == "Active") {
                 run_hook("AddonActivated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-            }
-            else {
+            } else {
                 if ($oldstatus != "Suspended" && $status == "Suspended") {
                     run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                }
-                else {
+                } else {
                     if ($oldstatus != "Terminated" && $status == "Terminated") {
                         run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                    }
-                    else {
+                    } else {
                         if ($oldstatus != "Cancelled" && $status == "Cancelled") {
                             run_hook("AddonCancelled", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                        }
-                        else {
+                        } else {
                             if ($oldstatus != "Fraud" && $status == "Fraud") {
                                 run_hook("AddonFraud", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                            }
-                            else {
+                            } else {
                                 run_hook("AddonEdit", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
                             }
                         }
                     }
                 }
             }
-        }
-        else {
+        } else {
             checkPermission("Add New Order");
             $predefname = "";
 
@@ -232,12 +184,10 @@ if ($frm->issubmitted()) {
 
         if ($fieldname == "regdate" || $fieldname == "nextduedate") {
             $newval = toMySQLDate($newval);
-        }
-        else {
+        } else {
             if ($fieldname == "password") {
                 $oldval = decrypt($oldval);
-            }
-            else {
+            } else {
                 if ($fieldname == "amount" && 0 <= $newamount) {
                     $newval = $newamount;
                 }
@@ -252,22 +202,19 @@ if ($frm->issubmitted()) {
     }
 
     $updatearr = array();
-    $updatefields = array("packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "overideautosuspend", "overidesuspenduntil", "servicestatus" );
+    $updatefields = array("packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "overideautosuspend", "overidesuspenduntil", "servicestatus");
     foreach ($updatefields as $fieldname) {
         $newval = $ra->get_req_var($fieldname);
 
         if ($fieldname == "nextduedate" && $ra->get_req_var("billingcycle") == "Free Account") {
             $newval = "0000-00-00";
-        }
-        else {
+        } else {
             if (($fieldname == "regdate" || $fieldname == "nextduedate") || $fieldname == "overidesuspenduntil") {
                 $newval = toMySQLDate($newval);
-            }
-            else {
+            } else {
                 if ($fieldname == "password") {
                     $newval = encrypt($newval);
-                }
-                else {
+                } else {
                     if ($fieldname == "amount" && 0 <= $newamount) {
                         $newval = $newamount;
                     }
@@ -290,12 +237,10 @@ if ($frm->issubmitted()) {
     if ($autoterminateendcycle) {
         if ($cancelid) {
             update_query("tblcancelrequests", array("reason" => $autoterminatereason), array("id" => $cancelid));
-        }
-        else {
+        } else {
             createCancellationRequest($userid, $id, $autoterminatereason, "End of Billing Period");
         }
-    }
-    else {
+    } else {
         if ($cancelid) {
             delete_query("tblcancelrequests", array("id" => $cancelid));
             logActivity("Removed Automatic Cancellation for End of Current Cycle - Service ID: " . $id, $userid);
@@ -328,7 +273,6 @@ if ($frm->issubmitted()) {
     redir("userid=" . $userid . "&id=" . $id . "&success=true");
 }
 
-
 if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
@@ -341,7 +285,6 @@ if ($action == "delete") {
     redir("userid=" . $userid);
 }
 
-
 if ($action == "deladdon") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
@@ -350,7 +293,6 @@ if ($action == "deladdon") {
     logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
     redir("userid=" . $userid . "&id=" . $id);
 }
-
 ob_start();
 $adminbuttonarray = "";
 
@@ -358,14 +300,10 @@ if ($module) {
     if (!isValidforPath($module)) {
         exit("Invalid Server Module Name");
     }
-
     $modulepath = ROOTDIR . "/modules/servers/" . $module . "/" . $module . ".php";
-
     if (file_exists($modulepath)) {
         require_once $modulepath;
     }
-
-
     if (function_exists($module . "_AdminCustomButtonArray")) {
         $adminbuttonarray = call_user_func($module . "_AdminCustomButtonArray");
     }
@@ -443,8 +381,7 @@ if (in_array($ra->get_req_var("act"), array("create", "suspend", "unsuspend", "t
     if ($result = wGetCookie("ModCmdResult")) {
         if ($result != "success") {
             infoBox($aInt->lang("services", "moduleerror"), $result, "error");
-        }
-        else {
+        } else {
             infoBox($aInt->lang("services", "modulesuccess"), $aInt->lang("services", $act . "success"), "success");
         }
     }
@@ -555,36 +492,7 @@ if (count($clientnotes)) {
 }
 
 echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
-$servicesarr = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus", array("userid" => $userid), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id");
 
-while ($data = mysqli_fetch_array($result)) {
-    $servicelist_id = $data['id'];
-    $servicelist_product = $data['name'];
-    $servicelist_domain = $data['domain'];
-    $servicelist_status = $data['servicestatus'];
-
-    if ($servicelist_domain) {
-        $servicelist_product .= " - " . $servicelist_domain;
-    }
-    if ($servicelist_status == "Pending") {
-        $color = "#ffffcc";
-    }
-    else {
-        if ($servicelist_status == "Suspended") {
-            $color = "#ccff99";
-        }
-        else {
-            if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
-                $color = "#ff9999";
-            }
-            else {
-                $color = "#fff";
-            }
-        }
-    }
-    $servicesarr[$servicelist_id] = array($color, $servicelist_product);
-}
 
 $frmsub = new RA_Form("frm2");
 echo $frmsub->form("", "", "", "get", true);
@@ -614,16 +522,16 @@ if ($lastupdate && $lastupdate != "0000-00-00 00:00:00") {
 <strong>" . $aInt->lang("services", "diskusage") . ":</strong> " . $diskusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "disklimit") . ":</strong> " . $disklimit . " " . $aInt->lang("fields", "mb") . ", ";
 
     if ($diskusage == $aInt->lang("global", "unlimited") || $disklimit == $aInt->lang("global", "unlimited")) {
-    }
-    else {
+        
+    } else {
         echo "<strong>" . round($diskusage / $disklimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong> :: ";
     }
 
     echo "<strong>" . $aInt->lang("services", "bwusage") . ":</strong> " . $bwusage . " " . $aInt->lang("fields", "mb") . ", <strong>" . $aInt->lang("services", "bwlimit") . ":</strong> " . $bwlimit . " " . $aInt->lang("fields", "mb") . ", ";
 
     if ($bwusage == $aInt->lang("global", "unlimited") || $bwlimit == $aInt->lang("global", "unlimited")) {
-    }
-    else {
+        
+    } else {
         echo "<strong>" . round($bwusage / $bwlimit * 100, 0) . "% " . $aInt->lang("services", "used") . "</strong><br>";
     }
 
@@ -643,8 +551,7 @@ if ($aid) {
         $recurring = "0.00";
         $regdate = $nextduedate = getTodaysDate();
         $notes = "";
-    }
-    else {
+    } else {
         $managetitle = $aInt->lang("addons", "editaddon");
         $result = select_query_i("tblserviceaddons", "", array("id" => $aid));
         $data = mysqli_fetch_array($result);
@@ -693,8 +600,7 @@ if ($aid) {
     }
 
     echo "<p align=\"center\">" . $frm->submit($aInt->lang("global", "savechanges"), "btn btn-primary") . " " . $frm->button($aInt->lang("global", "cancel"), "window.location='?userid=" . $userid . "&id=" . $id . "'") . "</p>";
-}
-else {
+} else {
     $serversarr = $serversarr2 = array();
     $result = select_query_i("tblservers", "", array("type" => $module), "name", "ASC");
 
@@ -737,8 +643,7 @@ else {
 
         if ($promo_type == "Percentage") {
             $promo_value .= "%";
-        }
-        else {
+        } else {
             $promo_value = formatCurrency($promo_value);
         }
 
@@ -810,8 +715,7 @@ else {
                 }
 
                 $inputcode .= "</select>";
-            }
-            else {
+            } else {
                 if ($optiontype == "2") {
                     $inputcode = "";
                     foreach ($configoption['options'] as $option) {
@@ -829,8 +733,7 @@ else {
 
                         $inputcode .= "> " . $option['name'] . "<br />";
                     }
-                }
-                else {
+                } else {
                     if ($optiontype == "3") {
                         $inputcode = ("<input type=\"checkbox\" name=\"configoption[" . $optionid . "]") . "\" value=\"1\"";
 
@@ -839,8 +742,7 @@ else {
                         }
 
                         $inputcode .= "> " . $configoption['options'][0]['name'];
-                    }
-                    else {
+                    } else {
                         if ($optiontype == "4") {
                             $inputcode = ("<input type=\"text\" name=\"configoption[" . $optionid . "]") . "\" value=\"" . $selectedqty . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
                         }
@@ -976,11 +878,10 @@ echo $frmsub->submit($aInt->lang("emails", "senddefaultproductwelcome"));
 echo $frmsub->close();
 echo "</td></tr></table>
 </div>
-
 <form method=\"post\" action=\"whois.php\" target=\"_blank\" id=\"frmWhois\">
 <input type=\"hidden\" name=\"domain\" value=\"" . $domain . "\" />
-</form>
-";
+</form>";
+
 $content = ob_get_contents();
 ob_end_clean();
 
@@ -989,8 +890,7 @@ if ($ra->get_req_var("ajaxupdate")) {
 
     echo $content;
     exit();
-}
-else {
+} else {
     $content = "<div id=\"servicecontent\">" . $content . "</div>";
     $content .= $aInt->jqueryDialog("modcreate", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "createsure"), array($aInt->lang("global", "yes") => "runModuleCommand('create')", $aInt->lang("global", "no") => ""), "", "450");
     $content .= $aInt->jqueryDialog("modsuspend", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "suspendsure") . "<br /><div align=\"center\">" . $aInt->lang("services", "suspendreason") . ": <input type=\"text\" id=\"suspreason\" size=\"20\" /><br /><br /><input type=\"checkbox\" id=\"suspemail\" /> " . $aInt->lang("services", "suspendsendemail") . "</div>", array($aInt->lang("global", "yes") => "runModuleCommand('suspend')", $aInt->lang("global", "no") => ""), "", "450");
@@ -1000,6 +900,24 @@ else {
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
 
-$aInt->content = $content;
+$accountlog = array();
+$resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
+while ($data = mysqli_fetch_array($resutlt)) {
+
+    $accountlog[] = $data;
+}
+
+$aInt->assign("id", $id);
+$aInt->assign("products", $product_data);
+$aInt->assign("userid", $userid);
+$aInt->assign("accountlog", $accountlog);
+$aInt->assign("servicesarr", $productarray['servicesarr']);
+$aInt->assign("totalservice", $productarray['total']);
+$aInt->assign("userarray", $productarray['userarray']);
+$aInt->assign("status", $aInt->productStatusDropDown($product_data[$id]['servicestatus']));
+$aInt->assign("servicedrop", $aInt->productDropDown($product_data[$id]['packageid']));
+$aInt->assign("billingcycle", $aInt->cyclesDropDown($product_data[$id]['billingcycle'], "", "Free"));
+$aInt->assign("paymentmethod", paymentMethodsSelection($product_data[$id]['paymentmethod']));
+$aInt->template = "clientproducts/view";
 $aInt->display();
 ?>

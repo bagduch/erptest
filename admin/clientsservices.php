@@ -48,6 +48,7 @@ if ($userid && !$id) {
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
 
 $len = count($servicefield);
+
 $firsthalf = array_slice($servicefield, 0, $len / 2);
 $secondhalf = array_slice($servicefield, $len / 2);
 if ($_POST['frm1']) {
@@ -239,42 +240,8 @@ if ($ra->get_req_var("ajaxupdate")) {
     $content .= $aInt->jqueryDialog("modchangepackage", $aInt->lang("services", "confirmcommand"), $aInt->lang("services", "chgpacksure"), array($aInt->lang("global", "yes") => "runModuleCommand('changepackage')", $aInt->lang("global", "no") => ""), "", "450");
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
-$servicesarr = array();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type,tblservicegroups.name as gname", array("userid" => $userid, "tblservices.type" => "services"), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
-$i = 0;
-while ($data = mysqli_fetch_array($result)) {
 
-    $servicelist_id = $data['id'];
-    $servicelist_product = $data['name'];
-    $servicelist_adress = $data['description'];
-    $servicelist_status = $data['servicestatus'];
-    if ($servicelist_adress) {
-        $servicelist_product .= " - " . $servicelist_adress;
-    }
-    if ($servicelist_status == "Pending") {
-        $color = "#ffffcc";
-    } else {
-        if ($servicelist_status == "Suspended") {
-            $color = "#ccff99";
-        } else {
-            if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
-                $color = "#ff9999";
-            } else {
-                $color = "#fff";
-            }
-        }
-    }
-
-
-    $gname = str_replace(" ", "_", $data['gname']);
-    $i++;
-    $userarray[$gname][$servicelist_id] = $data;
-    $userarray[$gname][$servicelist_id]['color'] = $color;
-    $servicesarr[$servicelist_id] = array($color, $servicelist_product);
-}
-
-
-
+$servicesarray = getServiceAndProductdata("service",$userid);
 $accountlog = array();
 $resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
 while ($data = mysqli_fetch_array($resutlt)) {
@@ -287,9 +254,9 @@ $aInt->assign("userid", $userid);
 $aInt->assign("accountlog", $accountlog);
 $aInt->assign("token", get_token());
 $aInt->assign('alladdons', $clientdata->addons);
-$aInt->assign("servicesarr", $servicesarr);
-$aInt->assign("totalservice", $i);
-$aInt->assign("userarray", $userarray);
+$aInt->assign("servicesarr", $servicesarray['servicesarr']);
+$aInt->assign("totalservice", $servicesarray['total']);
+$aInt->assign("userarray", $servicesarray['userarray']);
 $aInt->assign('lang', $lang);
 $aInt->assign('emaildropdown', $emailarr);
 $aInt->assign('contentbox', $contentbox);
@@ -298,7 +265,7 @@ $aInt->assign('content', $content);
 $aInt->assign("services", $clientdata->servicedata);
 $aInt->assign("status", $aInt->productStatusDropDown($clientdata->servicedata['servicestatus']));
 $aInt->assign("promo", $clientdata->getPromocode());
-$aInt->assign("servicefield", $firsthalf);
+$aInt->assign("servicefield", !empty($firsthalf) ? $firsthalf : FALSE);
 $aInt->assign("servicefieldnd", $secondhalf);
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));

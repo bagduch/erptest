@@ -198,6 +198,8 @@ class RA_ClientService {
         $id = insert_query("tblcustomerservices", $array);
         return $id;
     }
+    
+
 
     public function updateService($data, $id) {
 

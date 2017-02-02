@@ -1,12 +1,10 @@
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab_all" data-toggle="tab">All Services ({$totalservice})</a></li>
+        <li class="active"><a href="#tab_all" data-toggle="tab">All Product ({$totalservice})</a></li>
             {foreach from=$userarray key=gname item=row}
             <li><a href="#tab_{$gname}" data-toggle="tab">{$gname} ({$row|@count})</a></li>
             {/foreach}
-      
     </ul>
-     
     <div class="tab-content">
         <div class="tab-pane active" id="tab_all">
             {foreach from=$userarray key=gname item=row}
@@ -15,8 +13,8 @@
                         <tbody>
                             <tr>
                                 <th style="width:10px"></th>
-                                <th>Acccount ID</th>
-                                <th>Service Name</th>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -24,7 +22,7 @@
                             {foreach from=$row key=accountid item=item}
                                 <tr>
                                     <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
-                                    <td><a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
+                                    <td><a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
                                     <td>
@@ -35,8 +33,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-
+                                        <a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             {/foreach}
@@ -52,7 +49,7 @@
                         <tbody>
                             <tr>
                                 <th style="width:10px"></th>
-                                <th>Acccount ID</th>
+                                <th>Product ID</th>
                                 <th>Product Name</th>
                                 <th>Description</th>
                                 <th>Status</th>
@@ -61,7 +58,7 @@
                             {foreach from=$row item=item}
                                 <tr>
                                     <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
-                                    <td><a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
+                                    <td><a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
                                     <td>
@@ -72,8 +69,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-
+                                        <a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             {/foreach}
