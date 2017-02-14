@@ -102,7 +102,7 @@ CREATE TABLE `tblactivitylog` (
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7982 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8001 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -438,6 +438,44 @@ CREATE TABLE `tblcancelrequests` (
   KEY `serviceid` (`relid`),
   CONSTRAINT `tblcancelrequests_ibfk_1` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblclientfields`
+--
+
+DROP TABLE IF EXISTS `tblclientfields`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblclientfields` (
+  `cfid` int(10) NOT NULL AUTO_INCREMENT,
+  `fieldname` text NOT NULL COMMENT 'Name to show on forms',
+  `fieldtype` enum('dropdown','textarea','text','tickbox','link','password','date','option','more') DEFAULT NULL COMMENT 'Custom field type',
+  `description` text,
+  `fieldoptions` text,
+  `regexpr` text COMMENT 'Regex which must be matched for value to be valid',
+  `adminonly` tinyint(1) DEFAULT '0' COMMENT 'Whether only visible to admin / system',
+  `required` tinyint(1) DEFAULT '0' COMMENT 'Whether customfield is required',
+  `showinvoice` tinyint(1) DEFAULT '0' COMMENT 'Whether to show on client-facing invoices',
+  `sortorder` int(10) NOT NULL DEFAULT '0',
+  `showorder` int(10) DEFAULT NULL COMMENT 'Order to display in on order form, client area and admin area',
+  `parent_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cfid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblclientfieldsvalues`
+--
+
+DROP TABLE IF EXISTS `tblclientfieldsvalues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblclientfieldsvalues` (
+  `cfid` int(10) NOT NULL,
+  `relid` int(10) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
