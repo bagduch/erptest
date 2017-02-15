@@ -10,13 +10,29 @@ $hbsqli = new mysqli("hc2.hd.net.nz","unlimite_radev","m[U*gUZFgu&d", "unlimite_
 
 
 echo "<pre>";
+
+// cleanup
 delete_query("tblclients",array(id=>8017));
-HBWrapper::setAPI('https://my.unlimitedinternet.co.nz/admin/api.php','1d964d625b897c3a2e5d','2d485b0d0f73f5a24546');
-$params = array('id'=>8017);
-$hbclients = HBWrapper::singleton()->getClientDetails($params);
-error_log(print_r($hbclients),1);
-foreach ($hbclients as $client) {
-    $clientid = $client['id'];
+
+// get desired clients
+if ($result = $hbsqli->query("
+    SELECT 
+        hb_cd.id
+ FROM hb_client_details hb_cd
+    WHERE id=8017")) {
+    var_dump($result);
+    while ($row = $result->fetch_assoc()) {
+        $clientids[] = (int)$row['id'];
+    }
+}
+
+foreach ($clientids as $clientid) {
+    var_dump($clientid);
+    HBWrapper::setAPI('https://my.unlimitedinternet.co.nz/admin/api.php','1d964d625b897c3a2e5d','2d485b0d0f73f5a24546');
+    $hbclient = HBWrapper::singleton()->getClientDetails(array(id=>$clientid));
+    $client = $hbclient["client"];
+    var_dump($client);
+
     insert_query("tblclients",
         array(
             id => $client['id'],
@@ -60,7 +76,7 @@ foreach ($hbclients as $client) {
             overrideautoclose=>0,
             dateofbirth=>"0000-00-00"
         )
-    );  
+    );   
 
     if ($hbsqli_clientnotes = $hbsqli->prepare("SELECT id,admin_id,date,note FROM hb_notes WHERE type LIKE 'client' AND rel_id = ?")) {
         $hbsqli_clientnotes->bind_param('i',$clientid);
@@ -71,7 +87,6 @@ foreach ($hbclients as $client) {
         }
         $hbsqli_clientnotes->bind_result($note['id'],$note['admin_id'],$note['date'],$note['note']);
         while ($hbsqli_clientnotes->fetch()) {
-            var_dump($note);
             insert_query("tblnotes",
                 array(
                     userid => $clientid,
@@ -88,13 +103,10 @@ foreach ($hbclients as $client) {
            
     HBWrapper::setAPI('https://my.unlimitedinternet.co.nz/admin/api.php','1d964d625b897c3a2e5d','2d485b0d0f73f5a24546');
    $accounts = HBWrapper::singleton()->getAccountDetails($client['id']);
-    var_dump($accounts);
 
 }   
 $result=select_query_i("tblclients","",array(id=>8017));
-var_dump($result);
 while ($clientres = $result->fetch_assoc()) {
-    var_dump($clientres);
 }
 
 /* foreach ($hbaccounts['accounts'] as $hbaccount) {
