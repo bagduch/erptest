@@ -171,7 +171,26 @@ foreach ($customfields as $customfield) {
     ++$taxindex;
 }
 
+$clientfields = getClientfieldshtml();
+$clientfieldshtml = array();
+foreach ($clientfields as $key => $row) {
+
+    if ($key % 2 == 1 && $key != 0) {
+        $clientfieldshtml[$key - 1][] = $clientfields[$key];
+    } else {
+        $clientfieldshtml[$key][] = $clientfields[$key];
+    }
+}
+
+include "../includes/countries.php";
+$status = array("Active", "Inactive", "Closed");
+
+
+
+$aInt->assign("clientfields", $clientfieldshtml);
+$aInt->assign("status", $status);
 $aInt->assign("infobox", $infobox);
+$aInt->assign("coutries", $countries);
 $aInt->assign("formurl", $_SERVER["PHP_SELF"]);
 $aInt->assign('contactoption', $contactoption);
 $aInt->assign("currencyoption", $currencyoption);
@@ -181,6 +200,7 @@ $aInt->assign("countrydrop", $countrydrop);
 $aInt->assign("paymentmethoddrop", $paymentmethoddrop);
 $aInt->assign("langoption", $langoption);
 //$aInt->content = $content;
+
 
 
 $aInt->jquerycode .=$menuselect;

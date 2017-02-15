@@ -14,6 +14,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
 $menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
+
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
 
@@ -96,7 +97,7 @@ if ($action == "save") {
 
     update_query("tblservices", $array, array("id" => $id));
     foreach ($_POST['currency'] as $currency_id => $pricing) {
-        update_query("tblpricing", $pricing, array("type" => $_POST['type'], "currency" => $currency_id, "relid" => $id));
+        update_query("tblpricing", $pricing, array("currency" => $currency_id, "relid" => $id));
     }
     if ($customfieldname) {
         foreach ($customfieldname as $fid => $value) {
@@ -250,7 +251,7 @@ if ($sub == "savegroup") {
 
 
     if ($ids) {
-        update_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
+        update_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden), array("id" => $ids));
         delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
 
 
@@ -261,7 +262,7 @@ if ($sub == "savegroup") {
             }
         }
     } else {
-        $id = insert_query("tblservicegroups", array("name" => $name, "type" => 2, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
+        $id = insert_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
         foreach ($customefield as $row) {
             insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }
@@ -388,7 +389,7 @@ if ($action == "") {
             $servicegroup[$groups['id']]['group']['deletelink'] = "doGroupDelete('" . $groups['id'] . "')";
         }
 
-        $query2 = select_query_i("tblservices", "", array("gid" => $groups['id']), "order", "DESC");
+        $query2 = select_query_i("tblservices", "", array("gid" => $groups['id']), "order", "ASC");
         while ($services = mysqli_fetch_array($query2)) {
             $servicegroup[$groups['id']]['service'][$services['id']] = $services;
             $result2 = select_query_i("tblcustomerservices", "COUNT(*)", array("packageid" => $services['id']));
@@ -491,13 +492,13 @@ if ($action == "") {
         $servertype = $data['servertype'];
         $configserice = getCustomeFieldGroup($id);
         $aInt->assign('configservice', $configserice);
-        $aInt->assign('data', $data);
+        //  $aInt->assign('data', $data);
         $counter = 1;
         while ($counter <= 24) {
             $packageconfigoption[$counter] = $data["configoption" . $counter];
             $counter += 1;
         }
-        // $aInt->assign('services', $data);
+        $aInt->assign('services', $data);
 
         $recurringcycles = $data['recurringcycles'];
         $autoterminatedays = $data['autoterminatedays'];
@@ -629,16 +630,14 @@ if ($action == "") {
 
             $aInt->assign('tblserviceconfiglinks', $configoptionlinks);
         }
-        $query = "select * from tblservicetoservice
-                  where children_id = " . $id;
+        $query = "SELECT * FROM `tblservicetoservice` WHERE `parent_id` = " . $id;
+
         $result = full_query_i($query);
         $asscoiateid = array();
         while ($data = mysqli_fetch_assoc($result)) {
-            $asscoiateid[] = $data['parent_id'];
+            $asscoiateid[] = $data['children_id'];
         }
         $query2 = "select * from tblgrouptogroup";
-
-
 
         $asscoproduct = array();
         $query = "SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices 
@@ -647,6 +646,7 @@ if ($action == "") {
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
             $asscoproduct[$data['groupname']][$data['id']] = $data;
+
 
             if (in_array($data['id'], $asscoiateid)) {
                 $asscoproduct[$data['groupname']][$data['id']]['check'] = "checked";

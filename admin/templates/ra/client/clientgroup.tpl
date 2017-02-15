@@ -1,9 +1,7 @@
 <section class="content">
-
     <p>Client Groups can be used to differentiate between your customers more easily and apply overides to certain functions.</p>
     {$table}
     <h2>Add Client Group</h2>
-
     <form method="post" action="{$url}">
         <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody>
@@ -31,26 +29,13 @@
         </table>
         <p align="center"><input type="submit" value="Save Changes" class="button"></p>
     </form>
-
-
-
-
-
-
-
-
     {literal}
         <script type="text/javascript">
             function doDelete(id) {
                 if (confirm("Click OK if you are sure you want to delete this Client Group?")) {
-                    window.location = '/admin/configclientgroups.php?action=delete&id=' + id + '&token=47fedb2fdda7323fac98764fb37e21fe8ec741c6';
+                    window.location = '/admin/configclientgroups.php?action=delete&id=' + id + '&token={/literal}{$token}{literal}';
                 }
             }
-
-
         </script>
     {/literal}
-
-
-
 </section>

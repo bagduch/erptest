@@ -3,11 +3,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  **/
 
 define("ADMINAREA", true);

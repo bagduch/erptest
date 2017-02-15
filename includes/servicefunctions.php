@@ -84,6 +84,7 @@ function getServiceCustomFields($sid, $csid = null) {
 
     //mail("peter@hd.net.nz", "query", $query);
     $result = full_query_i($query);
+    //  error_log(print_r($result), 3, "/tmp/php_errors.log");
     $returnvals = array();
     //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
@@ -102,7 +103,24 @@ function getServiceCustomFields($sid, $csid = null) {
             unset($returnvals[$cfid]);
         }
     }
+    //  echo "<pre>",  print_r($returnvals,1),"</pre>";
 
+    return $returnvals;
+}
+
+function getClientFields() {
+    $returnvals = array();
+    $query = "select * from tblclientfields";
+    $result = full_query_i($query);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $returnvals[$row['cfid']] = $row;
+    }
+    foreach ($returnvals as $cfid => $row) {
+        if (isset($returnvals[$row["parent_id"]])) {
+            $returnvals[$row["parent_id"]]['children'][] = $row;
+            unset($returnvals[$cfid]);
+        }
+    }
     return $returnvals;
 }
 
@@ -166,7 +184,7 @@ function cfieldgroupToServices($cfid = null, $cfgid = null) {
     }
     return $data;
 }
- 
+
 // takes csid per above, and an array of fieldname->values
 function updateServiceCustomFieldValues($relid, $valarray = array()) {
     global $query_count;
@@ -189,6 +207,50 @@ function updateServiceCustomFieldValues($relid, $valarray = array()) {
         }
         return true;
     }
+}
+
+function getServiceAndProductdata($type, $userid) {
+    $servicesarr = $userarray = array();
+    $result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type,tblservicegroups.name as gname", array("userid" => $userid, "tblservicegroups.type" => $type), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+
+    $i = 0;
+    while ($data = mysqli_fetch_array($result)) {
+
+        $servicelist_id = $data['id'];
+        $servicelist_product = $data['name'];
+        $servicelist_adress = $data['description'];
+        $servicelist_status = $data['servicestatus'];
+        if ($servicelist_adress) {
+            $servicelist_product .= " - " . $servicelist_adress;
+        }
+        if ($servicelist_status == "Pending") {
+            $color = "#ffffcc";
+        } else {
+            if ($servicelist_status == "Suspended") {
+                $color = "#ccff99";
+            } else {
+                if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
+                    $color = "#ff9999";
+                } else {
+                    $color = "#fff";
+                }
+            }
+        }
+
+
+        $gname = str_replace(" ", "_", $data['gname']);
+        $i++;
+        $userarray[$gname][$servicelist_id] = $data;
+        $userarray[$gname][$servicelist_id]['color'] = $color;
+        $servicesarr[$servicelist_id] = array($color, $servicelist_product);
+    }
+
+    $data = array(
+        "servicesarr" => $servicesarr,
+        "userarray" => $userarray,
+        "total" => $i
+    );
+    return $data;
 }
 
 ?>

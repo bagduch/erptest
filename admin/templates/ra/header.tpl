@@ -74,7 +74,7 @@
         <script src="templates/{$template}/js/jquery.multilevelpushmenu.min.js"></script>
        {literal}
         <script>
-            {/literal}{$jscode}{$jquerycode}{literal}
+            {/literal}{$jscode}{literal}
             
         </script>
         {/literal}

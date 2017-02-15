@@ -111,7 +111,6 @@ if ($action == "delete") {
 
 if ($error) {
     infoBox($aInt->lang("global", "validationerror"), $error);
-    ;
 }
 
 $result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
@@ -190,16 +189,14 @@ if ($contactid && $contactid != "addnew") {
     $password = $aInt->lang("fields", "entertochange");
 }
 
-
 if (!is_array($permissions)) {
     $permissions = array();
 }
 
-
 if ($contactid != "addnew") {
     
 }
-
+$aInt->assign("userid", $userid);
 $aInt->assign("token", generate_token("plain"));
 $aInt->assign("countrydrop", getCountriesDropDown($country, "", "12"));
 $aInt->assign("infobox", $infobox);
@@ -208,6 +205,6 @@ $aInt->assign("PHP_SELF", $_SERVER['PHP_SELF']);
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
-$aInt->template = "client/clientsadd";
+$aInt->template = "client/contacts";
 $aInt->display();
 ?>

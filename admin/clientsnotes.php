@@ -4,11 +4,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
 define("ADMINAREA", true);
 require "../init.php";
@@ -100,7 +95,7 @@ while ($data = mysqli_fetch_array($result)) {
     $tabledata[] = array($created, $note, $admin, $modified, "<img src=\"images/" . $importantnote . "priority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">", "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
-echo $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
+$table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
 echo "
 <br>
 
@@ -137,6 +132,8 @@ if ($action == "edit") {
 
 $content = ob_get_contents();
 ob_end_clean();
+//$aInt->assign("table", $table);
+//$aInt->template = "client/notes";
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;

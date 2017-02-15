@@ -1,6 +1,7 @@
 {strip}
 
     <form method="post" action="/admin/clientsprofile.php?save=true&amp;userid={$clientsdetails.userid}">
+        {$infobox}
         <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody><tr><td width="15%" class="fieldlabel">First Name</td>
                     <td class="fieldarea"><input class="form-control"  type="text" size="30" name="firstname" value="{$clientsdetails.firstname}" tabindex="1"></td>
@@ -94,8 +95,8 @@
                 <tr>
 
                     <td class="fieldlabel">Currency</td>
-                    <td class="fieldarea"><select class="form-control" name="currency" tabindex="25"><option value="1" selected="">NZD</option></select></td>
-                      <td class="fieldlabel">Client Group</td>
+                    <td class="fieldarea"><select class="form-control" name="currency" tabindex="25">{$currencyoption}</select></td>
+                    <td class="fieldlabel">Client Group</td>
                     <td class="fieldarea">
                         <select class="form-control"  name="groupid" tabindex="27">
                             <option value="0">None</option>
@@ -107,6 +108,14 @@
                         </select>
                     </td>
                 </tr>
+                {foreach from=$clientfields item=clientfielddata}
+                    <tr>
+                        {foreach from=$clientfielddata item=row}
+                            <td class="fieldlabel">{$row.name}</td>
+                            <td class="fieldarea">{$row.input}</td>
+                        {/foreach}
+                    </tr>
+                {/foreach}
 
             </tbody>
         </table>

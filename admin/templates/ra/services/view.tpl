@@ -7,7 +7,7 @@
                 <p><strong>Options:</strong> <a class="btn btn-default" href="/admin/configservices.php?action=creategroup">Create Group</a> <a class="btn btn-default" href="/admin/configservices.php?action=create">Create Service</a></p>
             </div>
             <div class="box-body">
-                <form method="post" action="configpservices.php?action=updatesort">
+                <form method="post" action="configservices.php?action=updatesort">
                     <div class="tablebg">
                         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
                             <tbody>

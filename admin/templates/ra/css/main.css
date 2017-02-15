@@ -28,7 +28,7 @@
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     color: #428bca;
     cursor: default;
-    background-color: #fff;
+    background-color: #f4f4f4;
     border: 1px solid #ddd;
     border-bottom-color: transparent;
 }
@@ -4050,7 +4050,7 @@ table.tablesorter thead tr th:hover {
         filter: progid:dximagetransform.microsoft.gradient(enabled=false);
     }
     .btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
-        background-color: #0055cc;
+        background-color: #0055cc!important;
     }
     .btn-primary:active, .btn-primary.active {
         background-color: #004099 \9;
@@ -4090,7 +4090,7 @@ table.tablesorter thead tr th:hover {
         filter: progid:dximagetransform.microsoft.gradient(enabled=false);
     }
     .btn-danger:hover, .btn-danger:active, .btn-danger.active, .btn-danger.disabled, .btn-danger[disabled] {
-        background-color: #bd362f;
+        background-color: #bd362f!important;
     }
     .btn-danger:active, .btn-danger.active {
         background-color: #942a25 \9;
@@ -4350,7 +4350,7 @@ table.tablesorter thead tr th:hover {
         font-weight: bold;
     }
     #tab_content {
-        background-color: #fff;
+        background-color: #f4f4f4;
         text-align: left;
         margin: 0px;
         padding: 10px;
@@ -5005,8 +5005,7 @@ table.tablesorter thead tr th:hover {
         text-align: center;
     }
     .ordersummaryleftcol {
-        width: 60%;
-        min-width: 600px;
+       
     }
     #ordersummary {
         margin: 20px 5px 0 20px;

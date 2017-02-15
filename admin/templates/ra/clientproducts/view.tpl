@@ -1,16 +1,9 @@
 
-{literal}
-    <style>
-        .table tr td:first-child
-        {
-            text-align: right;
-        }
-    </style>
-{/literal}
 
 <div class="box-header with-border">
-    {include file="$template/clientsservices/serviceview.tpl"}
+    {include file="$template/clientproducts/productview.tpl"}
 </div>
+
 <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
 
     <input type="hidden" name="frm1" value="1">
@@ -21,7 +14,6 @@
                     {if $servicefield}
                     <li><a href="#tab_customer" data-toggle="tab">Customer Field</a></li>
                     {/if}
-                <li><a href="#tab_addon" data-toggle="tab">Addons</a></li>
                 <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>
                 <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
                 <li class="pull-right">
@@ -38,7 +30,7 @@
                             <table class="datatable table">
                                 <tr>
                                     <td width="50%"><label for="orderid">Order #</label></td>
-                                    <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
+                                    <td>{$products[$id].orderid}- <a href="orders.php?action=view&id={$products[$id].orderid}" class="btn btn-primary">View Order</a></td>
                                 </tr>
                                 <tr>
                                     <td><label for="orderid">Service</label></td>
@@ -50,7 +42,7 @@
                                 </tr>
                                 <tr>
                                     <td><label for="#description">Description (Address)</label></td>
-                                    <td><input id="description" name="description" type="text" class="form-control" value="{$services.description}"></td>
+                                    <td><input id="description" name="description" type="text" class="form-control" value="{$products[$id].description}"></td>
                                 </tr>
                                 <tr>
                                     <td><label for="#status">Order Status</label></td>
@@ -80,19 +72,19 @@
                             <table class="datatable table">
                                 <tr>
                                     <td width="50%"><label for="#regdate">Registration Date</label></td>
-                                    <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
+                                    <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$products[$id].regdate}"></td>
                                 </tr>
                                 <tr>
                                     <td><label for="#firstpaymentamount">First Payment Amount</label></td>
-                                    <td><input id="firstpaymentamount" name="firstpaymentamount" type="text" class="form-control" value="{$services.firstpaymentamount}"></td>
+                                    <td><input id="firstpaymentamount" name="firstpaymentamount" type="text" class="form-control" value="{$products[$id].firstpaymentamount}"></td>
                                 </tr>
                                 <tr>
                                     <td><label for="#firstpaymentamount">Recurring Amount</label></td>
-                                    <td><input id="amount" name="amount" type="text" class="form-control" value="{$services.amount}"></td>
+                                    <td><input id="amount" name="amount" type="text" class="form-control" value="{$products[$id].amount}"></td>
                                 </tr>
                                 <tr>
                                     <td><label for="#nextduedate">Next Due Date</label></td>
-                                    <td><input id="nextduedate" name="nextduedate" type="text" class="form-control nextduedate" value="{$services.nextduedate}"></td>
+                                    <td><input id="nextduedate" name="nextduedate" type="text" class="form-control nextduedate" value="{$products[$id].nextduedate}"></td>
 
                                 </tr>
                                 <tr>
@@ -165,45 +157,7 @@
                         </div>
                     </div>
                 {/if}
-                <div class="tab-pane" id="tab_addon">
-                    {if isset($services.addon)}
-                        <table class="datatable table" style="width:100%">
-                            <tr>
-                                <th>Reg Date</th>
-                                <th>Name</th>
-                                <th>First Payment</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Billing Cycle</th>
-                                <th>Action</th>
-                            </tr>
-                            {foreach from=$services.addon item=itema}
-                                <tr>
-                                    <td>{$itema.regdate}</td>
-                                    <td>{$itema.name}</td>
-                                    <td>{$itema.firstpaymentamount}</td>
-                                    <td>{$itema.amount}</td>
-                                    <td>{$itema.servicestatus}</td>
-                                    <td>{$itema.billingcycle}</td>
-                                    <td>
-                                        <a href="#" class="btn btn-primary">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a href="#" onclick="doDeleteAddon({$itema.id})" class="btn btn-danger">
-                                            <i class="fa fa-minus-circle" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {/foreach}
-                        </table>
-                    {else}
-                        <div class="alert alert-danger" role="alert">
-                            This addon doen't have any addon   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-fw fa-plus-circle"></i>
-                            </button>
-                        </div>
-                    {/if}
-                </div>
+            
                 <div class="tab-pane" id ="tab_invoice">
 
                 </div>
@@ -272,114 +226,3 @@
     </div>
 
 </form>
-<br>
-<div class="contentbox">
-    <table align="center"><tbody><tr><td>
-                    <strong>Send Message</strong>
-                </td><td>
-                    <form method="post" action="clientsemails.php?userid={$userid}" name="frm3" id="frm3">
-                        <input type="hidden" name="__fpfrm3" value="1">
-                        <input type="hidden" name="action" value="send">
-                        <input type="hidden" name="type" value="product">
-                        <input type="hidden" name="id" value="{$id}">
-                        {if $emaildropdown}
-                            <select name="messagename">
-                                {foreach item=row from=$emaildropdown}
-                                    <option value="{$row}">{$row}</option>
-                                {/foreach}
-                            </select>
-                        {/if}
-                        <input type="submit" value="Send Message" class="btn">
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="clientsemails.php?userid=2" name="frm4" id="frm4">
-                        <input type="hidden" name="__fpfrm4" value="1">
-                        <input type="hidden" name="action" value="send">
-                        <input type="hidden" name="type" value="product">
-                        <input type="hidden" name="id" value="{$id}">
-                        <input type="hidden" name="messagename" value="defaultnewacc">
-                        <input type="submit" value="Resend Product Welcome Email" class="btn">
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-{foreach from=$test item=row}
-    {$row}
-{/foreach}
-
-</div>
-
-</div>
-</div>
-
-<div class="clear"></div>
-{literal}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(".select2").select2();
-            $('.datecontroller').datepicker({
-                format: 'yyyy-mm-dd',
-                startDate: '+1d'
-            });
-            $(".addonaddbutton").click(function () {
-                $("#frm1").submit();
-            });
-            $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-                var target = $(e.target).attr("href") // activated tab
-                if (target == "#tab_invoice")
-                {
-                    $.ajax({
-                        method: "POST",
-                        url: "clientsinvoices.php?userid=2&serviceid={/literal}{$id}{literal}",
-                        data: {ajax: 1},
-                    }).done(function (data) {
-                        $("#tab_invoice").html(data);
-                    });
-                }
-            });
-        });
-
-        function doDeleteAddon(id) {
-            if (confirm("Are you sure you want to delete this addon?")) {
-                window.location = '/admin/clientsservices.php?userid={/literal}{$userid}{literal}&action=deladdon&aid=' + id + '&token={/literal}{$token}{literal}';
-            }
-        }
-        function deleteaccount(id) {
-            if (confirm("Are you sure you want to delete this account?")) {
-                window.location = '/admin/clientsservices.php?userid={/literal}{$userid}{literal}&action=delete&id=' + id + '&token={/literal}{$token}{literal}';
-            }
-        }
-
-        function runModuleCommand(cmd, custom) {
-            $("#mod" + cmd).dialog("close");
-            $("#modcmdbtns").css("filter", "alpha(opacity=20)");
-            $("#modcmdbtns").css("-moz-opacity", "0.2");
-            $("#modcmdbtns").css("-khtml-opacity", "0.2");
-            $("#modcmdbtns").css("opacity", "0.2");
-            var position = $("#modcmdbtns").position();
-            $("#modcmdworking").css("position", "absolute");
-            $("#modcmdworking").css("top", position.top);
-            $("#modcmdworking").css("left", position.left);
-            $("#modcmdworking").css("padding", "9px 50px 0");
-            $("#modcmdworking").fadeIn();
-            var reqstr = "userid=1&id=35&modop=" + cmd + "&token=0951db7664024f53758d62b7cb94336b96566473";
-            if (custom)
-                reqstr += "&ac=" + custom;
-            else if (cmd == "suspend")
-                reqstr += "&suspreason=" + encodeURIComponent($("#suspreason").val()) + "&suspemail=" + $("#suspemail").is(":checked");
-            $.post("clientsservices.php", reqstr,
-                    function (data) {
-                        if (data.substr(0, 9) == "redirect|") {
-                            window.location = data.substr(9);
-                        } else {
-                            $("#servicecontent").html(data);
-                        }
-                    });
-        }
-    </script>
-{/literal}
-
-

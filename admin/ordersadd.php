@@ -109,14 +109,16 @@ if ($action == "getconfigoptions") {
     $customfields = getCustomFields("", $pid, "", "", "on");
 
     if (count($customfields)) {
-        $options .= "<p><b>" . $aInt->lang("setup", "customfields") . "</b></p>
+        $options .="<div class=\"box\"><div class='box-header'>
+                                <h3 class='box-title'>" . $aInt->lang("setup", "customfields") . "</h3>
+                            </div>
 <table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
         foreach ($customfields as $customfield) {
             $inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
             $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";
         }
 
-        $options .= "</table>";
+        $options .= "</table></div>";
     }
 
     $addonshtml = "";
@@ -175,21 +177,14 @@ if ($ra->get_req_var("submitorder")) {
                 continue;
             }
         }
-
-
-
         if ($promocode) {
             $_SESSION['cart']['promo'] = $promocode;
         }
-
         $_SESSION['cart']['orderconfdisabled'] = ($adminorderconf ? false : true);
         $_SESSION['cart']['geninvoicedisabled'] = ($admingenerateinvoice ? false : true);
-
         if (!$adminsendinvoice) {
             $CONFIG['NoInvoiceEmailOnOrder'] = true;
         }
-
-
         if ($calconly) {
             $ordervals = calcCartTotals();
             echo "<div class=\"ordersummarytitle\">Order Summary</div>
@@ -205,17 +200,13 @@ if ($ra->get_req_var("submitorder")) {
                     if ($cartprod['domain']) {
                         echo " - " . $cartprod['domain'];
                     }
-
                     echo "<div class=\"itempricing\">";
-
                     if ($cartprod['priceoverride']) {
                         echo formatCurrency($cartprod['priceoverride']) . "*";
                     } else {
                         echo $cartprod['pricingtext'];
                     }
-
                     echo "</div>";
-
                     if ($cartprod['configoptions']) {
                         foreach ($cartprod['configoptions'] as $cartcoption) {
 
@@ -223,7 +214,6 @@ if ($ra->get_req_var("submitorder")) {
                                 echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['value'];
                                 continue;
                             }
-
 
                             if ($cartcoption['type'] == "3") {
                                 echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": ";
@@ -236,7 +226,6 @@ if ($ra->get_req_var("submitorder")) {
                                 echo $aInt->lang("global", "no");
                                 continue;
                             }
-
 
                             if ($cartcoption['type'] == "4") {
                                 echo "<br />&nbsp;&raquo;&nbsp;" . $cartcoption['name'] . ": " . $cartcoption['qty'] . " x " . $cartcoption['option'];
@@ -389,17 +378,7 @@ $(function(){
       $(\"#regdomain0\").val($(\"#domain0\").val());
     });
 
-    $(\".regdomain\").live(\"keyup\", function(){
-        var domainname = $(this).val();
-        if(domainname.length >= 5){
-            var ord = $(this).attr(\"id\").replace(\"regdomain\",\"\");
-            $.post(\"ordersadd.php\", { action: \"getdomainaddlfields\", domain: domainname, order:ord, token: \"" . generate_token("plain") . "\" },
-            function(data){
-                $(\".domainaddlfields\"+ord).remove();
-                $(\"#domainaddlfieldserase\"+ord).after(data);
-            });
-        }
-    });
+   
 
 });
 ";
@@ -469,9 +448,7 @@ if ($userid && !$paymentmethod) {
 if ($ra->get_req_var("noselections")) {
     infoBox($aInt->lang("global", "validationerror"), $aInt->lang("orders", "noselections"));
 }
-
 echo $infobox;
-
 
 $result = select_query_i("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
 
@@ -487,23 +464,16 @@ while ($data = mysqli_fetch_array($result)) {
     } else {
         $promo_value = formatCurrency($promo_value);
     }
-
-
     if ($promo_type == "Free Setup") {
         $promo_value = $aInt->lang("promos", "freesetup");
     }
-
     $promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
-
     if ($promo_type == "Price Override") {
         $promo_recurring = $aInt->lang("promos", "priceoverride");
     }
-
-
     if ($promo_type == "Free Setup") {
         $promo_recurring = "";
     }
-
     $activepromotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 
@@ -577,17 +547,8 @@ echo "</a></p>
 
 <div class=\"ordersummarytitle\"><input type=\"submit\" value=\"";
 echo $aInt->lang("orders", "submit");
-echo " &raquo;\" class=\"btn-primary\" style=\"font-size:20px;padding:12px 30px ;\" /></div>
-
-</td></tr></table>
-
-</form>
-
-";
-echo "<s";
-echo "cript> updatesummary(); </script>
-
-";
+echo " &raquo;\" class=\"btn-primary\" style=\"font-size:20px;padding:12px 30px ;\" /></div></td></tr></table></form>";
+echo "<script> updatesummary(); </script>";
 
 $content = ob_get_contents();
 ob_end_clean();
@@ -610,7 +571,4 @@ $aInt->jquerycode = $jquerycode;
 $aInt->jquerycode .=$menuselect;
 //$aInt->jscode = $jscode;
 $aInt->display();
-
-
-
 ?>
