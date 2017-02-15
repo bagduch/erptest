@@ -5,13 +5,10 @@ require "../init.php";
 $aInt = new RA_Admin("View Credit Log", false);
 $aInt->title = $aInt->lang("credit", "creditmanagement");
 ob_start();
-
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 $currency = getCurrency($userid);
 $clientsdetails = getClientsDetails($userid);
-
-
 $result = select_query_i("tblclients", "", array("id" => $userid));
 $data = mysqli_fetch_array($result);
 $name = stripslashes($data['firstname'] . " " . $data['lastname']);

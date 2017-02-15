@@ -3,16 +3,16 @@
 
 <div id="menu">
     <div class="user-panel">
-    <div class="pull-left image">
-        <img src="templates/{$template}/dist/img/avatar.png" class="img-circle" alt="User Image">
-    </div>
-    <div class="pull-left info">
-        <p>{$adminsonline}</p>
-        <a href="#"><i class="fa fa-circle text-success" style="color: #33ff99;"></i> Online</a>
+        <div class="pull-left image">
+            <img src="templates/{$template}/dist/img/avatar.png" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+            <p>{$adminsonline}</p>
+            <a href="#"><i class="fa fa-circle text-success" style="color: #33ff99;"></i> Online</a>
+        </div>
+
     </div>
 
-</div>
-    
 </div>
 {literal}
     <script type="text/javascript">
@@ -49,6 +49,11 @@
                                         name: "Client Groups",
                                         icon: "",
                                         link: "configclientgroups.php"
+                                    },
+                                    {
+                                        name: "Client Fields",
+                                        icon: "",
+                                        link: "clientfields.php"
                                     },
                                     {
                                         name: "Cancellation Requests",
@@ -382,6 +387,6 @@
                 ]
             }
         ];
-      
+
     </script>
 {/literal}

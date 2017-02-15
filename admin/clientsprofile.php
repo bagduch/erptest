@@ -55,7 +55,7 @@ if ($ra->get_req_var("save")) {
             }
         }
 
-        $customfields = getCustomFields("client", "", $userid, "on", "");
+        $customfields = getClientfieldshtml($userid);
         foreach ($customfields as $k => $v) {
             $k = $v['id'];
             $customfieldsarray[$k] = $_POST['customfield'][$k];
@@ -82,7 +82,7 @@ if ($ra->get_req_var("save")) {
             }
         }
 
-        saveCustomFields($userid, $customfieldsarray);
+        saveClientFields($userid, $customfieldsarray);
         clientChangeDefaultGateway($userid, $paymentmethod);
 
         if (!count($changelist)) {
@@ -118,7 +118,7 @@ if ($ra->get_req_var("emailexists")) {
     }
 }
 
-echo $infobox;
+
 $clientsdetails = getClientsDetails($userid);
 
 
@@ -150,7 +150,33 @@ $result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstna
 while ($data = mysqli_fetch_array($result)) {
     $billingcid[$data['id']] = $data;
 }
+$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
+while ($data = mysqli_fetch_array($result)) {
+    $currencyoption.= "<option value=\"" . $data['id'] . "\"";
+
+    if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
+        $currencyoption.= " selected";
+    }
+
+    $currencyoption.= ">" . $data['code'] . "</option>";
+}
+
+
+$clientfields = getClientfieldshtml($userid);
+$clientfieldshtml = array();
+foreach ($clientfields as $key => $row) {
+
+    if ($key % 2 == 1 && $key != 0) {
+        $clientfieldshtml[$key - 1][] = $clientfields[$key];
+    } else {
+        $clientfieldshtml[$key][] = $clientfields[$key];
+    }
+}
+
+$aInt->assign("infobox", $infobox);
+$aInt->assign("clientfields", $clientfieldshtml);
+$aInt->assign("currencyoption", $currencyoption);
 $aInt->assign("paymmentmethod", paymentMethodsSelection($aInt->lang("clients", "changedefault"), 21));
 $aInt->assign("billingcid", $billingcid);
 $aInt->assign("coutries", $countries);

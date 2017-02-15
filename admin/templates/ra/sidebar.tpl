@@ -12,6 +12,7 @@ $accordion = array(
             "clients.php" => "View Customers",
             "clientsadd.php" => "Add New Client",
             "configclientgroups.php"=>"Client Groups",
+            "clientfield.php"=>"Client Field",
             "cancelrequests.php" => "Cancellation Requests",
             "affiliates.php" => "Manage Affiliates"
         )

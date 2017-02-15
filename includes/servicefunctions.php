@@ -108,6 +108,22 @@ function getServiceCustomFields($sid, $csid = null) {
     return $returnvals;
 }
 
+function getClientFields() {
+    $returnvals = array();
+    $query = "select * from tblclientfields";
+    $result = full_query_i($query);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $returnvals[$row['cfid']] = $row;
+    }
+    foreach ($returnvals as $cfid => $row) {
+        if (isset($returnvals[$row["parent_id"]])) {
+            $returnvals[$row["parent_id"]]['children'][] = $row;
+            unset($returnvals[$cfid]);
+        }
+    }
+    return $returnvals;
+}
+
 function getCustomeFieldGroup($sid) {
 
     $data = array();

@@ -9,6 +9,7 @@ require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
 $aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "servicefunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
+$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $id = (int) $ra->get_req_var("id");
 $hostingid = (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -23,7 +24,7 @@ while ($data = mysqli_fetch_assoc($result)) {
     $product_data[$data['id']] = $data;
 }
 if (count($product_data) < 1) {
-    $aInt->gracefulExit("<a href=\"ordersadd.php?userid=12767\">Add a Product</a>");
+    $aInt->gracefulExit("<a href=\"ordersadd.php?userid=" . $userid . "\">Add a Product</a>");
 }
 
 if ($modop) {
@@ -51,10 +52,9 @@ if ($userid && !$id) {
 }
 $productarray = getServiceAndProductdata("product", $userid);
 
-
-
 $frm = new RA_Form();
-if ($frm->issubmitted()) {
+if ($_POST['frm1']) {
+
     checkPermission("Edit Clients Products/Services");
     $packageid = $ra->get_req_var("packageid");
     $oldserviceid = $ra->get_req_var("oldserviceid");
@@ -79,7 +79,6 @@ if ($frm->issubmitted()) {
             $nextduedate = fromMySQLDate("0000-00-00");
         }
 
-
         if (is_numeric($aid)) {
             $oldstatus = get_query_val("tblserviceaddons", "status", array("id" => $aid));
             $array = array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes);
@@ -91,11 +90,10 @@ if ($frm->issubmitted()) {
             update_query("tblserviceaddons", $array, array("id" => $aid));
 
             if ($oldserviceid != $id) {
-                logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid);
+                logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid,$id);
             } else {
                 logActivity("Modified Addon - Addon ID: " . $aid . " - Service ID: " . $id);
             }
-
 
             if ($oldstatus != "Active" && $status == "Active") {
                 run_hook("AddonActivated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
@@ -202,24 +200,16 @@ if ($frm->issubmitted()) {
     }
 
     $updatearr = array();
-    $updatefields = array("packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "username", "password", "notes", "subscriptionid", "overideautosuspend", "overidesuspenduntil", "servicestatus");
+    $updatefields = array("packageid", "description", "paymentmethod", "firstpaymentamount", "amount", "billingcycle", "regdate", "nextduedate", "notes", "overideautosuspend", "overidesuspenduntil", "servicestatus");
     foreach ($updatefields as $fieldname) {
         $newval = $ra->get_req_var($fieldname);
 
+        if ($fieldname == "servicestatus") {
+            $newval = $status;
+        }
+
         if ($fieldname == "nextduedate" && $ra->get_req_var("billingcycle") == "Free Account") {
             $newval = "0000-00-00";
-        } else {
-            if (($fieldname == "regdate" || $fieldname == "nextduedate") || $fieldname == "overidesuspenduntil") {
-                $newval = toMySQLDate($newval);
-            } else {
-                if ($fieldname == "password") {
-                    $newval = encrypt($newval);
-                } else {
-                    if ($fieldname == "amount" && 0 <= $newamount) {
-                        $newval = $newamount;
-                    }
-                }
-            }
         }
 
         $updatearr[$fieldname] = $newval;
@@ -231,7 +221,7 @@ if ($frm->issubmitted()) {
     }
 
     update_query("tblcustomerservices", $updatearr, array("id" => $id));
-    logActivity("Modified Product/Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid);
+    logActivity("Modified Product/Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid, $id);
     $cancelid = get_query_val("tblcancelrequests", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
 
     if ($autoterminateendcycle) {
@@ -243,7 +233,7 @@ if ($frm->issubmitted()) {
     } else {
         if ($cancelid) {
             delete_query("tblcancelrequests", array("id" => $cancelid));
-            logActivity("Removed Automatic Cancellation for End of Current Cycle - Service ID: " . $id, $userid);
+            logActivity("Removed Automatic Cancellation for End of Current Cycle - Service ID: " . $id, $userid, $id);
         }
     }
 
@@ -281,7 +271,7 @@ if ($action == "delete") {
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
-    logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid);
+    logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid,$id);
     redir("userid=" . $userid);
 }
 
@@ -290,7 +280,7 @@ if ($action == "deladdon") {
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
     delete_query("tblserviceaddons", array("id" => $aid));
-    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid);
+    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid,$id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 ob_start();
@@ -706,7 +696,6 @@ if ($aid) {
                         $inputcode .= " style='color:#ccc;'";
                     }
 
-
                     if ($selectedvalue == $option['id']) {
                         $inputcode .= " selected";
                     }
@@ -919,5 +908,6 @@ $aInt->assign("servicedrop", $aInt->productDropDown($product_data[$id]['packagei
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($product_data[$id]['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($product_data[$id]['paymentmethod']));
 $aInt->template = "clientproducts/view";
+$aInt->jquerycode .=$menuselect;
 $aInt->display();
 ?>

@@ -48,37 +48,6 @@ if ($action == "delete") {
         exit();
     }
 }
-
-
-if ($action == "edit") {
-    $result = select_query_i("tblclientgroups", "", array("id" => $id));
-    $data = mysqli_fetch_assoc($result);
-    foreach ($data as $name => $value) {
-        $name = $value;
-    }
-}
-
-
-
-if ($added) {
-    infoBox($aInt->lang("clientgroups", "addsuccess"), $aInt->lang("clientgroups", "addsuccessinfo"));
-}
-
-
-if ($update) {
-    infoBox($aInt->lang("clientgroups", "editsuccess"), $aInt->lang("clientgroups", "editsuccessinfo"));
-}
-
-
-if ($deletesuccess) {
-    infoBox($aInt->lang("clientgroups", "delsuccess"), $aInt->lang("clientgroups", "delsuccessinfo"));
-}
-
-
-if ($deleteerror) {
-    infoBox($aInt->lang("global", "erroroccurred"), $aInt->lang("clientgroups", "delerrorinfo"));
-}
-
 if ($ation == "") {
     $aInt->sortableTableInit("nopagination");
     $result = select_query_i("tblclientgroups", "", "");
@@ -101,10 +70,37 @@ if ($ation == "") {
     $template = "client/clientgroup";
 }
 
+if ($action == "edit") {
+    $result = select_query_i("tblclientgroups", "", array("id" => $id));
+    $data = mysqli_fetch_assoc($result);
+    $aInt->assign("groupid", $id);
+    $aInt->assign("editdata", $data);
+    $template = "client/clientgroupedit";
+}
+
+if ($added) {
+    infoBox($aInt->lang("clientgroups", "addsuccess"), $aInt->lang("clientgroups", "addsuccessinfo"));
+}
+
+if ($update) {
+    infoBox($aInt->lang("clientgroups", "editsuccess"), $aInt->lang("clientgroups", "editsuccessinfo"));
+}
+
+
+if ($deletesuccess) {
+    infoBox($aInt->lang("clientgroups", "delsuccess"), $aInt->lang("clientgroups", "delsuccessinfo"));
+}
+
+
+if ($deleteerror) {
+    infoBox($aInt->lang("global", "erroroccurred"), $aInt->lang("clientgroups", "delerrorinfo"));
+}
+
 $aInt->jquerycode = $jquerycode;
 $aInt->jquerycode .=$menuselect;
 $aInt->jscode = $jscode;
 $aInt->assign("table", $table);
+$aInt->assign("token", get_token('plain'));
 $aInt->assign("url", $url);
 $aInt->template = $template;
 $aInt->display();

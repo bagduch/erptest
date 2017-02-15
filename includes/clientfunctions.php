@@ -472,7 +472,7 @@ function addClient($firstname, $lastname, $companyname, $email, $address1, $addr
         require ROOTDIR . "/includes/customfieldfunctions.php";
     }
 
-    saveCustomFields($uid, $_POST['customfield'], "client");
+    saveClientFields($uid, $_POST['customfield']);
 
     if ($sendemail) {
         sendMessage("Client Signup Email", $uid, array("client_password" => $password));

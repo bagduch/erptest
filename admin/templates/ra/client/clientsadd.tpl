@@ -2,109 +2,122 @@
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header">
-                <form action="{$PHP_SELF}" method="get">
-
-
-                    <input type="hidden" name="userid" value="{$data.userid}">
-                    <div class="form-inline">
-                        Contacts: <select class="form-control" name="contactid" onchange="submit();">
-                            {$contactlist}
-                        </select>
-                        <input type="submit" value="Go">
-                    </div>
-
-                </form>
+                <h3 class='box-title'>Add New Client</h3>
             </div>
             <div class="box-body">
                 <br>
-                <form method="post" action="{$PHP_SELF}?action=add&amp;userid={$data.userid}&amp;contactid={$data.id}">
+                <form method="post" action="{$PHP_SELF}?action=add&amp;userid={$data.userid}">
                     {$infobox}
-                    <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
-                        <tbody>
-                            <tr>
-                                <td width="15%" class="fieldlabel">First Name</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="firstname" tabindex="1" value="{$data.firstname}"></td>
-                                <td width="15%" class="fieldlabel">Address 1</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="address1" tabindex="7" value="{$data.address1}"></td>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody><tr><td width="15%" class="fieldlabel">First Name</td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="30" name="firstname" tabindex="1"></td>
+                                <td class="fieldlabel" width="15%">Address 1</td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="30" name="address1" tabindex="8"></td>
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Last Name</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="lastname" tabindex="2" value="{$data.lastname}"></td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="30" name="lastname" tabindex="2"></td>
                                 <td class="fieldlabel">City</td>
-                                <td class="fieldarea"><input class="form-control" type="text" tabindex="9" size="25" name="city" value="{$data.city}"></td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="25" name="city"  tabindex="10"></td>
+
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Company Name</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="30" name="companyname" tabindex="3" value="{$data.companyname}"><small>(Optional)</small></td>
+                                <td class="fieldarea">
+                                    <input class="form-control"  type="text" size="30" name="companyname" tabindex="3">
+                                    <font color="#cccccc"><small>(Optional)</small></font>
+                                </td>
                                 <td class="fieldlabel">Region</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="25" name="state" tabindex="10" value="{$data.state}"></td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="25" name="state"  tabindex="11"></td>
+
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Email Address</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="35" name="email" tabindex="4" value="{$data.email}"</td>
-                                <td class="fieldlabel">Country</td><td class="fieldarea">
-                                    {$countrydrop}
-                                </td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="35" name="email"  tabindex="4"></td>
+                                <td class="fieldlabel">Postcode</td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="14" name="postcode" tabindex="12"></td>
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Password</td>
+                                <td class="fieldarea"><input class="form-control"  type="text" size="20" name="password"  tabindex="5"></td>
+                                <td class="fieldlabel">Country</td>
                                 <td class="fieldarea">
-                                    <input class="form-control" type="text" size="20" name="password" tabindex="6" value="Enter to Change" onfocus="if (this.value == 'Enter to Change')
-                                           {this.value=''}"> <a href="clientscontacts.php?userid={$data.userid}&amp;contactid={$data.id}&amp;resetpw=true&amp;token={$token}"><img src="images/icons/resetpw.png" border="0" align="absmiddle"> Reset &amp; Send Password</a></td>
-                                <td class="fieldlabel">Postcode</td>
-                                <td class="fieldarea"><input class="form-control" type="text" tabindex="11" size="14" name="postcode" value="{$data.postcode}"></td>
+                                    <select class="form-control" name="country" id="country" tabindex="13">
+                                        {foreach from=$coutries item=country key=code}
+                                            <option value="{$country}" {if $data.country eq $country}selected{/if}>{$country}</option>
+                                        {/foreach}
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
-                                <td class="fieldlabel">Email Notifications</td><td class="fieldarea">
-                                    <label><input type="checkbox" name="generalemails" {if $data.generalemails}checked{/if} tabindex="14"> General</label>
-                                    <label><input type="checkbox" name="invoiceemails" {if $data.invoiceemails}checked{/if} tabindex="15"> Invoice</label>
-                                    <label><input type="checkbox" name="supportemails" {if $data.supportemails}checked{/if} tabindex="16"> Support</label><br>
-                                    <label><input type="checkbox" name="productemails" {if $data.productemails}checked{/if} tabindex="17"> Product</label>
-                                    <label><input type="checkbox" name="affiliateemails" {if $data.affiliateemails}checked{/if} tabindex="19"> Affiliate</label>
+                                <td class="fieldlabel">Date Of Birth</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="dateofbirth" value="{$data.dateofbirth}" tabindex="14"></td>
+                                <td class="fieldlabel">Language</td>
+                                <td class="fieldarea"><select  class="form-control"  name="language" tabindex="23"><option value="">Default</option><option value="en">En</option></select></td>
+                            </tr>
+                            <tr>    
+                                <td class="fieldlabel">Status</td>
+                                <td class="fieldarea">
+                                    <select class="form-control"  name="status" tabindex="24">
+                                        {foreach from=$status item=row}
+                                            <option value="{$row}" {if $row eq $data.status}selected{/if}>{$row}</option>
+                                        {/foreach}
+                                    </select>
                                 </td>
                                 <td class="fieldlabel">Phone Number</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="phonenumber" tabindex="13" value="{$data.phonenumber}"></td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="phonenumber" value="{$data.phonenumber}" tabindex="14"></td>
                             </tr>
+                          
                             <tr>
-                                <td class="fieldlabel"></td>
-                                <td class="fieldarea"></td>
-                                <td class="fieldlabel">Mobile Number</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="mobilenumber" tabindex="13" value="{$data.mobilenumber}"></td>
-                            </tr>
-                            <tr><td class="fieldlabel">Permissions</td>
-                                <td class="fieldarea" colspan="3">
-                                    <table width="100%" cellspacing="0" cellpadding="0">
-                                        <tbody>
-                                            <tr>
-                                                <td width="50%" valign="top">
-                                                    <br>
-                                                    <label>
-                                                        <input type="checkbox" name="permissions[]" tabindex="22" value="contacts" {if $data.productemails}checked{/if}> View &amp; Manage Contacts</label>
-                                                    <br>
-                                                    <label>
-                                                        <input type="checkbox" name="permissions[]" tabindex="23" value="products" {if $data.productemails}checked{/if}> View Products &amp; Services</label>
-                                                    <br><label>
-                                                        <input type="checkbox" name="permissions[]" tabindex="24" value="manageproducts" {if $data.productemails}checked{/if}> View &amp; Modify Product Passwords</label>
-                                                    <br>
-                                                </td>
-                                                <td width="50%" valign="top">
-                                                    <label><input type="checkbox" name="permissions[]" tabindex="27" {if $data.permissions.invoices}checked{/if} value="invoices"> View &amp; Pay Invoices</label><br>
-                                                    <label><input type="checkbox" name="permissions[]" tabindex="28" {if $data.permissions.tickets}checked{/if} value="tickets"> View &amp; Open Support Tickets</label><br>
-                                                    <label><input type="checkbox" name="permissions[]" tabindex="29" {if $data.permissions.affiliates}checked{/if} value="affiliates"> View &amp; Manage Affiliate Account</label><br>
-                                                    <label><input type="checkbox" name="permissions[]" tabindex="30" {if $data.permissions.emails}checked{/if} value="emails"> View Emails</label><br>
-                                                    <label><input type="checkbox" name="permissions[]" tabindex="31" {if $data.permissions.orders}checked{/if} value="orders"> Place New Orders/Upgrades/Cancellations</label>
-                                                    <br>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <td class="fieldlabel">Late Fees</td>
+                                <td class="fieldarea"><input type="checkbox" name="latefeeoveride" tabindex="15" {if $data.latefeeoveride}checked{/if}> Don't Apply Late Fees</td>
+                                <td class="fieldlabel">Payment Method</td>
+                                <td class="fieldarea">
+                                    {$paymentmethoddrop}
                                 </td>
                             </tr>
-                        </tbody></table>
-
-                    <p align="center"><input type="submit" value="Save Changes" class="btn btn-primary" tabindex="31"> <input type="reset" value="Cancel Changes" class="button" tabindex="32"><br>
-                        <a href="#" onclick="deleteContact('2');
-                                            return false" style="color:#cc0000"><b>Delete</b></a></p>
+                            <tr>
+                                <td class="fieldlabel">Overdue Notices</td>
+                                <td class="fieldarea"><input type="checkbox" name="overideduenotices" tabindex="16" {if $data.overideduenotices}checked{/if}> Don't Send Overdue Emails</td>
+                                <td class="fieldlabel">Billing Contact</td>
+                                <td class="fieldarea">
+                                    <select class="form-control"  name="billingcid" tabindex="22">
+                                        <option value="0">Default</option>
+                                        {if $billingcid}
+                                            {foreach from=$billingcid item=row key=id}
+                                                <option value="{$id}" {if $id eq $clientsdetail.billingid}selected{/if}>{$row.firstname} {$row.lastname}</option>
+                                            {/foreach}
+                                        {/if}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Currency</td>
+                                <td class="fieldarea"><select class="form-control" name="currency" tabindex="25">{$currencyoption}</select></td>
+                                <td class="fieldlabel">Client Group</td>
+                                <td class="fieldarea">
+                                    <select class="form-control"  name="groupid" tabindex="27">
+                                        <option value="0">None</option>
+                                        {if isset($groupid)}
+                                            {foreach from=$$groupoption item=row key=id}
+                                                <option value="{$id}" {if $id eq $data.groupid}selected{/if} style="background-color:{$row.groupcolour}}">{$row.groupname}</option>
+                                            {/foreach}
+                                        {/if}
+                                    </select>
+                                </td>
+                            </tr>
+                            {foreach from=$clientfields item=clientfielddata}
+                                <tr>
+                                    {foreach from=$clientfielddata item=row}
+                                        <td class="fieldlabel">{$row.name}</td>
+                                        <td class="fieldarea">{$row.input}</td>
+                                    {/foreach}
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                    <p align="center"><input type="submit" value="Add Client" class="btn btn-primary" tabindex="31"> <br>
+                    </p>
                 </form>
             </div>
         </div>
