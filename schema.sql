@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1412 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1413 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1175,7 +1175,7 @@ CREATE TABLE `tblnotes` (
   KEY `adminid` (`adminid`),
   CONSTRAINT `tblnotes_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tblnotes_ibfk_2` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1299,7 +1299,7 @@ CREATE TABLE `tblpricing` (
   `biennially` decimal(10,2) NOT NULL,
   `triennially` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1526,7 +1526,7 @@ CREATE TABLE `tblservicegroups` (
   `order` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `order` (`order`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1574,7 +1574,7 @@ CREATE TABLE `tblservices` (
   CONSTRAINT `tblservices_ibfk_3` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblservices_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`),
   CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
