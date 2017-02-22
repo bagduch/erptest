@@ -1166,6 +1166,8 @@ CREATE TABLE `tblnotes` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
   `adminid` int(10) DEFAULT NULL,
+  `assign` int(11) NOT NULL,
+  `flag` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `note` text NOT NULL,
