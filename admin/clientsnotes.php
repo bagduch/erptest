@@ -27,16 +27,16 @@ if (intval($sticky) > 0) {
 if ($sub == "add") {
     check_token("RA.admin.default");
     checkPermission("Add/Edit Client Notes");
-    insert_query(
-            "tblnotes", array(
+    insert_query("tblnotes", array(
         "userid" => $userid,
         "adminid" => $_SESSION['adminid'],
         "created" => "now()",
+        "duedate" => date("YYYY-mm-dd", strtotime($_POST['duedate'])),
+        "flag" => $_POST['imports'],
+        "assign" => $_POST['assign'],
         "modified" => "now()",
-        "note" => $note,
-        "sticky" => $sticky
-            )
-    );
+        "note" => $_POST['notes'],
+        "sticky" => $sticky));
     logActivity("Added Note - User ID: " . $userid);
     redir("userid=" . $userid);
     exit();
@@ -95,23 +95,23 @@ while ($data = mysqli_fetch_array($result)) {
     $tabledata[] = array($created, $note, $admin, $modified, "<img src=\"images/" . $importantnote . "priority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">", "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
-$table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
+echo $table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
 echo "
 <br>
 
 ";
 
 if ($action == "edit") {
+
     $notesdata = get_query_vals("tblnotes", "note, sticky", array("userid" => $userid, "id" => $id));
     $note = $notesdata['note'];
     $importantnote = ($notesdata['sticky'] ? " checked" : "");
-    sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=save&id=%s\">", $PHP_SELF, $userid, $id
-    );
+    echo "<form method=\"post\" action=" . $PHP_SELF . "?userid=" . $userid . "&sub=save&id=" . $id . "\">";
     echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
     echo "<tr><td class=\"fieldarea\">";
-    sprintf("<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\">%s</textarea>", $note);
+    echo "<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\">" . $note . "</textarea>";
     echo "</td><td align=\"center\" width=\"60\">";
-    sprintf("<input type=\"submit\" value=\"%s\" class=\"button\">", $aInt->lang("global", "savechanges"));
+    echo "<input type=\"submit\" value=" . $aInt->lang("global", "savechanges") . " class=\"button\">";
     echo "<br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
     echo $importantnote;
     echo " /> ";

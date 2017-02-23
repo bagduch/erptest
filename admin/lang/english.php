@@ -294,6 +294,7 @@ $_ADMINLANG['clientsummary']['stickynotescheck'] = "Make Sticky (Important)";
 
 # Services
 $_ADMINLANG['services']['title'] = "Services";
+$_ADMINLANG['products']['title'] = "Products";
 $_ADMINLANG['services']['listall'] = "List All Services";
 $_ADMINLANG['services']['listhosting'] = "Shared Hosting";
 $_ADMINLANG['services']['listreseller'] = "Reseller Accounts";
@@ -566,6 +567,8 @@ $_ADMINLANG['orders']['sharedhosting'] = "Shared Hosting";
 $_ADMINLANG['orders']['resellerhosting'] = "Reseller Hosting";
 $_ADMINLANG['orders']['server'] = "VPS/Server";
 $_ADMINLANG['orders']['other'] = "Product/Service";
+$_ADMINLANG['orders']['product'] = "Product";
+$_ADMINLANG['orders']['service'] = "Service";
 $_ADMINLANG['orders']['addon'] = "Addon";
 $_ADMINLANG['orders']['runmodule'] = "Run Module Create";
 $_ADMINLANG['orders']['sendwelcome'] = "Send Welcome Email";
@@ -1114,7 +1117,7 @@ $_ADMINLANG['fields']['lastname'] = "Last Name";
 $_ADMINLANG['fields']['companyname'] = "Company Name";
 $_ADMINLANG['fields']['email'] = "Email Address";
 $_ADMINLANG['fields']['address'] = "Address";
-$_ADMINLANG['fields']['address1'] = "Address 1";
+$_ADMINLANG['fields']['address1'] = "Address";
 $_ADMINLANG['fields']['address2'] = "Address 2";
 $_ADMINLANG['fields']['city'] = "City";
 $_ADMINLANG['fields']['state'] = "Region";

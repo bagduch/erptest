@@ -214,7 +214,7 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-   error_log($query, 3, "/tmp/php_errors.log");
+    error_log($query, 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -267,6 +267,7 @@ function insert_query($table, $array) {
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
 
+    error_log($query, 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging

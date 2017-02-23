@@ -5,7 +5,7 @@
         <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody><tr><td width="15%" class="fieldlabel">First Name</td>
                     <td class="fieldarea"><input class="form-control"  type="text" size="30" name="firstname" value="{$clientsdetails.firstname}" tabindex="1"></td>
-                    <td class="fieldlabel" width="15%">Address 1</td>
+                    <td class="fieldlabel" width="15%">Address</td>
                     <td class="fieldarea"><input class="form-control"  type="text" size="30" name="address1" value="{$clientsdetails.address1}" tabindex="8"></td>
                 </tr>
                 <tr>

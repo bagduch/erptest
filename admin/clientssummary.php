@@ -4,11 +4,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
 define("ADMINAREA", true);
 require "../init.php";
@@ -732,7 +727,7 @@ $templatevars['files'] = $files;
 $paymentmethoddropdown = paymentMethodsSelection("- " . $aInt->lang("global", "nochange") . " -");
 $templatevars['paymentmethoddropdown'] = $paymentmethoddropdown;
 $templatevars['notes'] = array();
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid), "modified", "DESC");
 
 while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
@@ -749,6 +744,12 @@ foreach ($tmplinks as $tmplinks2) {
     foreach ($tmplinks2 as $tmplinks3) {
         $actionlinks[] = $tmplinks3;
     }
+}
+
+
+$result = select_query_i("tbladmins", '');
+while ($data = mysqli_fetch_assoc($result)) {
+    $templatevars['adminlist'][] = $data;
 }
 
 $templatevars['customactionlinks'] = $actionlinks;

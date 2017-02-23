@@ -10,7 +10,7 @@
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
-                <h3>{$sidebarstats.orders.pending}</h3>
+                <h3>{if $sidebarstats.orders.pending}{$sidebarstats.orders.pending}{else}0{/if}</h3>
                 <p>New Orders</p>
             </div>
             <div class="icon">
@@ -24,7 +24,7 @@
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <h3>{$sidebarstats.orders.cancelled}</h3>
+                <h3>{if $sidebarstats.orders.cancelled}{$sidebarstats.orders.cancelled}{else}0{/if}</h3>
                 <p>Cancel Orders</p>
             </div>
             <div class="icon">
@@ -38,7 +38,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3>{$sidebarstats.clients.active}</h3>
+                <h3>{if $sidebarstats.orders.active}{$sidebarstats.orders.active}{else}0{/if}</h3>
                 <p>Active Clients</p>
             </div>
             <div class="icon">
@@ -52,7 +52,7 @@
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <h3>{$sidebarstats.invoices.unpaid}</h3>
+                <h3>{if $sidebarstats.orders.unpaid}{$sidebarstats.orders.unpaid}{else}0{/if}</h3>
                 <p>Unpaid Invoice</p>
             </div>
             <div class="icon">
