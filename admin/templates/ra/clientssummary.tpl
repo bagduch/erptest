@@ -1,10 +1,36 @@
 {strip}
     {foreach from=$notes item=data}
-        {if $data.flag}
-            <div class="alert alert-warning alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
-                {$data.adminuser}: {$data.note}
+        {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+            <div class="alert alert-{$data.color} alert-dismissible">
+                <form class="notesupdate{$data.id}" method="post" action="">
+                    <input type="hidden" name="noteid" value="{$data.id}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
+                    <table class="table">
+                        <tr>
+                            <td colspa="2">{$data.adminuser}: </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2"> 
+                                <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2">              
+                                <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                                <div style="margin-left: 25px;" class="updatetime btn btn-default">Update Time</div><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2"> 
+                                <input type="hidden" name="done" value="0">
+                                <div class="notesdone btn btn-default">Done</div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </form>
             </div>
         {/if}
     {/foreach}
@@ -12,7 +38,7 @@
         <div class="callout pull-right">
             <div class="row">
                 <div id="exemptccetc" class="col-lg-12">
-                    {$_ADMINLANG.clientsummary.settingtaxexempt}: 
+                    {$_ADMINLANG.clientsummary.settingtaxexempt}:   
                     <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
                         <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
                             &nbsp;{$clientsdetails.taxstatus}
@@ -586,6 +612,15 @@
                 });{/literal}
                     {/if}
                         {literal}
+
+                            $(".updatetime").click(function () {
+                                $(this).closest('form').submit();
+                            });
+
+                            $(".notesdone").click(function (e) {
+                                $("input[name='done']").val(1);
+                                $(this).closest('form').submit();
+                            });
 
                             $(".addnotes").click(function (e) {
                                 e.preventDefault();

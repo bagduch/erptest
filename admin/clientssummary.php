@@ -18,11 +18,28 @@ $aInt->requiredFiles(
             "servicefunctions",
             "modulefunctions")
 );
+
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 $menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($return) {
     unset($_SESSION['uid']);
+}
+
+if (isset($_POST['noteid'])) {
+    $array = array(
+        "duedate" => $_POST['updatetime'],
+        "modified" => "now()",
+        "note" => $_POST['notesdata'],
+        "sticky" => $_POST['done'],
+    );
+    
+    update_query("tblnotes", $array, array("id" => $_POST['noteid']));
+    if ($_POST['done']) {
+        logActivity("Notes Update match as done - User ID: " . $userid, $userid);
+    } else {
+        logActivity("Notes Update new Due Date " . $_POST['updatetime'] . " - User ID: " . $userid, $userid);
+    }
 }
 
 
@@ -727,9 +744,16 @@ $templatevars['files'] = $files;
 $paymentmethoddropdown = paymentMethodsSelection("- " . $aInt->lang("global", "nochange") . " -");
 $templatevars['paymentmethoddropdown'] = $paymentmethoddropdown;
 $templatevars['notes'] = array();
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid), "modified", "DESC");
+$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid), "duedate", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
+    if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
+        $data['color'] = "warning";
+    } else if (strtotime($data['duedate']) < strtotime(date("d.m.Y"))) {
+        $data['color'] = "danger";
+    } else {
+        $data['color'] = "success";
+    }
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
     $data['note'] = autoHyperLink(nl2br($data['note']));
@@ -751,7 +775,8 @@ $result = select_query_i("tbladmins", '');
 while ($data = mysqli_fetch_assoc($result)) {
     $templatevars['adminlist'][] = $data;
 }
-
+$templatevars["adminid"] = $_SESSION['adminid'];
+$templatevars['userid'] = $userid;
 $templatevars['customactionlinks'] = $actionlinks;
 $templatevars['tokenvar'] = generate_token("link");
 $templatevars['csrfToken'] = generate_token("plain");
@@ -767,6 +792,7 @@ echo $aInt->jqueryDialog("addfunds", $aInt->lang("clientsummary", "createaddfund
     $aInt->lang("global", "cancel") => ""));
 $content = ob_get_contents();
 ob_end_clean();
+
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jquerycode .=$menuselect;

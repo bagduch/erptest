@@ -214,7 +214,8 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-    error_log($query, 3, "/tmp/php_errors.log");
+    //error_log($query, 3, "/tmp/php_errors.log");
+   // echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
