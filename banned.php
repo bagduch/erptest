@@ -36,3 +36,4 @@ $smartyvalues['expires'] = $expires;
 $templatefile = "banned";
 outputClientArea($templatefile);
 ?>
+
