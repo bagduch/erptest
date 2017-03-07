@@ -102,7 +102,7 @@ CREATE TABLE `tblactivitylog` (
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=267 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=272 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1532 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1535 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1167,12 +1167,11 @@ CREATE TABLE `tblnotes` (
   `userid` int(10) NOT NULL,
   `adminid` int(10) DEFAULT NULL,
   `assignto` int(11) NOT NULL,
-  `flag` int(11) NOT NULL,
-  `created` datetime NOT NULL,
   `duedate` date NOT NULL,
-  `modified` datetime NOT NULL,
   `note` text NOT NULL,
   `sticky` int(1) NOT NULL DEFAULT '1',
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   KEY `adminid` (`adminid`),
