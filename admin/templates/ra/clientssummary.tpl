@@ -1,21 +1,44 @@
 {strip}
+    {foreach from=$notes item=data}
+        {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+            <div class="alert alert-{$data.color} alert-dismissible">
+                <form class="notesupdate{$data.id}" method="post" action="">
+                    <input type="hidden" name="noteid" value="{$data.id}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
+                    <table class="table">
+                        <tr>
+                            <td colspa="2">{$data.adminuser}: </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2"> 
+                                <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2">              
+                                <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                                <div style="margin-left: 25px;" class="updatetime btn btn-default">Update Time</div><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspa="2"> 
+                                <input type="hidden" name="done" value="0">
+                                <div class="notesdone btn btn-default">Done</div>
+                            </td>
+                        </tr>
+                    </table>
 
-{foreach from=$notes item=note}
-  <div class="alert alert-warning">
-    <h3>Client Note #{$note.id} {$note.created} by {$note.adminuser} </h3>
-    <p>{$note.note}</p>
-    {if $note.created neq $note.modified}
-    Last modified {$note.modified}
-    {/if}
-</div>
-{/foreach}
 
+                </form>
+            </div>
+        {/if}
+    {/foreach}
     <div class="row">
         <div class="callout pull-right">
-
             <div class="row">
                 <div id="exemptccetc" class="col-lg-12">
-                    {$_ADMINLANG.clientsummary.settingtaxexempt}: 
+                    {$_ADMINLANG.clientsummary.settingtaxexempt}:   
                     <span id="taxstatus" class="csajaxtoggle" style="text-decoration:underline;cursor:pointer">
                         <strong class="{if $clientsdetails.taxstatus == "Yes"}textgreen{else}textred{/if}">
                             &nbsp;{$clientsdetails.taxstatus}
@@ -46,14 +69,11 @@
             </div>
         </div>
     </div>
-
-
     {foreach from=$addons_html item=addon_html}
         <div style="margin-top:10px;">
             {$addon_html}
         </div>
     {/foreach}
-
     <div class="row">
         <div id="clientsinformation" class="col-lg-3 col-sm-6">
             <div class="panel panel-primary">
@@ -107,9 +127,7 @@
                     </ul>
                 </div>
             </div>
-
         </div>
-
         <div id="invoicesbilling" class="col-lg-3 col-sm-6">
             <div class="panel panel-primary">
                 <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.billingheading}</div>
@@ -155,8 +173,6 @@
                     </ul>
                 </div>
             </div>
-
-
             <div id="otherinformation" >
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.otherinfoheading}</div>
@@ -194,33 +210,32 @@
                 <div class="panel-body">
                     <table class="clientssummarystats" cellspacing="0" cellpadding="2">
                         <tr>
-                            <td>{$_ADMINLANG.orders.sharedhosting}</td>
-                            <td>{$stats.productsnumactivehosting} ({$stats.productsnumhosting} Total)</td>
+                            <td>{$_ADMINLANG.orders.service}</td>
+                            <td>{$stats.servicenumactive} ({$stats.servicenumtotal} Total)</td>
                         </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.orders.resellerhosting}</td>
-                            <td>{$stats.productsnumactivereseller} ({$stats.productsnumreseller} Total)</td>
-                        </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.orders.server}</td>
-                            <td>{$stats.productsnumactiveservers} ({$stats.productsnumservers} Total)</td>
-                        </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.orders.other}</td>
-                            <td>{$stats.productsnumactiveother} ({$stats.productsnumother} Total)</td>
-                        </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.domains.title}</td>
-                            <td>{$stats.numactivedomains} ({$stats.numdomains} Total)</td>
-                        </tr>
-                        <tr>
-                            <td>{$_ADMINLANG.stats.acceptedquotes}</td>
-                            <td>{$stats.numacceptedquotes} ({$stats.numquotes} Total)</td>
-                        </tr>
+
                         <tr>
                             <td>{$_ADMINLANG.support.supporttickets}</td>
                             <td>{$stats.numactivetickets} ({$stats.numtickets} Total)</td>
                         </tr>
+                        <tr>
+                            <td>{$_ADMINLANG.stats.affiliatesignups}</td>
+                            <td>{$stats.numaffiliatesignups}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading panel-title">{$_ADMINLANG.products.title}</div>
+                <div class="panel-body">
+                    <table class="clientssummarystats" cellspacing="0" cellpadding="2">
+                        <tr>
+                            <td>{$_ADMINLANG.orders.product}</td>
+                            <td>{$stats.productsnumactiveother} ({$stats.productsnumother} Total)</td>
+                        </tr>
+
+
                         <tr>
                             <td>{$_ADMINLANG.stats.affiliatesignups}</td>
                             <td>{$stats.numaffiliatesignups}</td>
@@ -303,7 +318,26 @@
                                 <h4 class="modal-title">Add Notes</h4>
                             </div>
                             <div class="modal-body">
-                                <textarea class="form-control" name="note" rows="6"></textarea>
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <textarea name="notes" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Assign To</label>
+                                    <select class="form-control" name="flag">
+                                        {foreach from=$adminlist item=row}
+                                            <option value="{$row.id}">{$row.firstname} {$row.lastname}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input class="datepick form-control" type="text" name="duedate">
+                                </div>
+                                <div class="form-group">
+
+                                    <input type="checkbox" name="import" value="1">  <label>Important</label>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -315,7 +349,6 @@
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-
 
             <div id="sendclientemail" class="panel panel-primary">
                 <div class="panel-heading panel-title">{$_ADMINLANG.clientsummary.sendemailheading}</div>
@@ -349,9 +382,6 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
     <div class="row">
         <form method="post" action="{$smarty.server.PHP_SELF}?userid={$clientsdetails.userid}&action=massaction">
@@ -368,6 +398,40 @@
                         $(".checkdomains").attr("checked", this.checked);
                     });
                 });</script>{/literal}
+
+                <div class="col-lg-12">
+                    <div class="box box-primary">
+                        <div class="box-heading">
+                            <div class="box-title">
+                                <h3 class="box-title">Notes</h3>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="tablebg">
+                                <table id="sortabletbl1" class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <th>Created</th>
+                                            <th>Note</th>
+                                            <th>Admin</th>
+                                            <th>Last Modified</th>
+
+                                        </tr>
+
+                                        {foreach from=$notes item=data}
+                                            <tr>
+                                                <td>{$data.created}</td>
+                                                <td>{$data.note}</td>
+                                                <td>{$data.adminuser}</td>
+                                                <td>{$data.modified}</td>
+                                            </tr>
+                                        {/foreach}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="clientsservices col-lg-12">
 
                     <div class="box box-primary">
@@ -462,10 +526,6 @@
             <img src="images/spacer.gif" width="1" height="4" /><br />
         </div>
 
-
-
-
-
         <p align="center">
             <input type="button" value="{$_ADMINLANG.clientsummary.massupdateitems}" class="button" onclick="$('#massupdatebox').slideToggle()" />
         <div id="massupdatebox" style="width:75%;background-color:#f7f7f7;border:1px dashed #cccccc;padding:10px;margin-left:auto;margin-right:auto;display:none;">
@@ -553,17 +613,37 @@
                     {/if}
                         {literal}
 
+                            $(".updatetime").click(function () {
+                                $(this).closest('form').submit();
+                            });
+
+                            $(".notesdone").click(function (e) {
+                                $("input[name='done']").val(1);
+                                $(this).closest('form').submit();
+                            });
+
                             $(".addnotes").click(function (e) {
                                 e.preventDefault();
                                 var token = $("input[name='token']").val();
-                                var notes = $("input[name='note']").val();
+                                var notes = $("textarea[name='notes']").val();
+                                var assign = $("select[name='flag']").val();
+                                var duedate = $("input[name='duedate']").val();
+                                var imports = $("input[name='import']").val();
+
                                 $.ajax({
                                     url: "/admin/clientsnotes.php?sub=add",
                                     method: "post",
-                                    data: {"userid":{/literal}{$clientsdetails.userid}{literal}, "token": token, "notes": notes}})
-                                        .done(function () {
-                                            $('#addnotes').modal('hide');
-                                        });
+                                    data: {
+                                        "userid":{/literal}{$clientsdetails.userid}{literal},
+                                        "token": token,
+                                        "notes": notes,
+                                        "assign": assign,
+                                        "duedate": duedate,
+                                        "imports": imports
+                                    }}).done(function () {
+                                    $('#addnotes').modal('hide');
+                                    location.reload();
+                                });
 
                             });
 

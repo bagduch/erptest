@@ -161,9 +161,9 @@ if ($resetpw) {
 
 if ($contactid && $contactid != "addnew") {
     $result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
-    $data = mysqli_fetch_array($result);
+    $data = mysqli_fetch_assoc($result);
     $data['permissions'] = explode(",", $data['permissions']);
-    $aInt->assign("data", $data);
+    $aInt->assign("cdata", $data);
     $contactid = $data['id'];
     $firstname = $data['firstname'];
     $lastname = $data['lastname'];
@@ -196,7 +196,9 @@ if (!is_array($permissions)) {
 if ($contactid != "addnew") {
     
 }
+include "../includes/countries.php";
 $aInt->assign("userid", $userid);
+$aInt->assign("contactid", $contactid);
 $aInt->assign("token", generate_token("plain"));
 $aInt->assign("countrydrop", getCountriesDropDown($country, "", "12"));
 $aInt->assign("infobox", $infobox);

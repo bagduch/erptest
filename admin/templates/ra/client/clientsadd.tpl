@@ -11,7 +11,7 @@
                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody><tr><td width="15%" class="fieldlabel">First Name</td>
                                 <td class="fieldarea"><input class="form-control"  type="text" size="30" name="firstname" tabindex="1"></td>
-                                <td class="fieldlabel" width="15%">Address 1</td>
+                                <td class="fieldlabel" width="15%">Address</td>
                                 <td class="fieldarea"><input class="form-control"  type="text" size="30" name="address1" tabindex="8"></td>
                             </tr>
                             <tr>
@@ -42,11 +42,7 @@
                                 <td class="fieldarea"><input class="form-control"  type="text" size="20" name="password"  tabindex="5"></td>
                                 <td class="fieldlabel">Country</td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="country" id="country" tabindex="13">
-                                        {foreach from=$coutries item=country key=code}
-                                            <option value="{$country}" {if $data.country eq $country}selected{/if}>{$country}</option>
-                                        {/foreach}
-                                    </select>
+                                        {$countrydrop}
                                 </td>
                             </tr>
                             <tr>

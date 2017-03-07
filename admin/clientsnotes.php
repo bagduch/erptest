@@ -27,16 +27,16 @@ if (intval($sticky) > 0) {
 if ($sub == "add") {
     check_token("RA.admin.default");
     checkPermission("Add/Edit Client Notes");
-    insert_query(
-            "tblnotes", array(
+    insert_query("tblnotes", array(
         "userid" => $userid,
         "adminid" => $_SESSION['adminid'],
         "created" => "now()",
+        "duedate" => $_POST['duedate'],
+        "flag" => $_POST['imports'],
+        "assignto" => $_POST['assign'],
         "modified" => "now()",
-        "note" => $note,
-        "sticky" => $sticky
-            )
-    );
+        "note" => $_POST['notes'],
+        "sticky" => $sticky));
     logActivity("Added Note - User ID: " . $userid);
     redir("userid=" . $userid);
     exit();
@@ -74,14 +74,16 @@ $aInt->sortableTableInit("created", "ASC");
 $result = select_query_i("tblnotes", "COUNT(*)", array("userid" => $userid), "created", "ASC", "", "tbladmins ON tbladmins.id=tblnotes.adminid");
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid), "modified", "DESC");
+$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.assignto) AS assignee", array("userid" => $userid), "modified", "DESC");
 
 while ($data = mysqli_fetch_array($result)) {
     $noteid = $data['id'];
+    $duedate = $data['duedate'];
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
     $admin = $data['adminuser'];
+    $assigned = $data['assignee'];
 
     if (!$admin) {
         $admin = "Admin Deleted";
@@ -92,31 +94,40 @@ while ($data = mysqli_fetch_array($result)) {
     $created = fromMySQLDate($created, "time");
     $modified = fromMySQLDate($modified, "time");
     $importantnote = ($data['sticky'] ? "high" : "low");
-    $tabledata[] = array($created, $note, $admin, $modified, "<img src=\"images/" . $importantnote . "priority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">", "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
+    $tabledata[] = array($created, $note, $admin, $assigned, $duedate, $modified, "<img src=\"images/" . $importantnote . "priority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">", "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
 }
 
-$table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
-echo "
-<br>
-
-";
+echo $table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), "Assignee", "Due Date", $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
+echo "<br>";
 
 if ($action == "edit") {
-    $notesdata = get_query_vals("tblnotes", "note, sticky", array("userid" => $userid, "id" => $id));
+    $notesdata = get_query_vals("tblnotes", "note, sticky,assignto,duedate", array("userid" => $userid, "id" => $id));
     $note = $notesdata['note'];
     $importantnote = ($notesdata['sticky'] ? " checked" : "");
-    sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=save&id=%s\">", $PHP_SELF, $userid, $id
-    );
+    $result = select_query_i("tbladmins", "id,firstname,lastname");
+    $select = "<select class=\"form-control\" name=\"assignto\">";
+    while ($data = mysqli_fetch_array($result)) {
+        if ($data['id'] == $notesdata['assignto']) {
+            $current = "SELECTED";
+        } else {
+            $current = "";
+        }
+
+        $select.= "<option value='" . $data['id'] . "' " . $current . ">" . $data['firstname'] . " " . $data['lastname'] . "</option>";
+    }
+    $select .="</select>";
+
+    echo "<form method=\"post\" action=" . $PHP_SELF . "?userid=" . $userid . "&sub=save&id=" . $id . "\">";
     echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-    echo "<tr><td class=\"fieldarea\">";
-    sprintf("<tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\">%s</textarea>", $note);
-    echo "</td><td align=\"center\" width=\"60\">";
-    sprintf("<input type=\"submit\" value=\"%s\" class=\"button\">", $aInt->lang("global", "savechanges"));
-    echo "<br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
+    echo "<tr><td class=\"fieldarea\"><textarea class=\"form-control\" name=\"note\" rows=\"6\">" . $note . "</textarea>";
+    echo "<tr><td><input name=\"duetime\" class=\"datepick form-control\" type=\"text\" value='" . $notesdata['duedate'] . "'></td></tr>";
+    echo "</td></tr>";
+    echo "<tr><td>" . $select . "</td></tr>";
+    echo "<tr><td width=\"60\">";
+    echo "<label>Task Done:<input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
     echo $importantnote;
-    echo " /> ";
-    echo $aInt->lang("clientsummary", "stickynotescheck");
-    echo "</label></td></tr></table></form>";
+    echo " />";
+    echo "</label></td></tr><tr><td><input type=\"submit\" value=" . $aInt->lang("global", "savechanges") . " class=\"button\"></td></tr></table></form>";
 } else {
     sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=add\">", $PHP_SELF, $userid);
     echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
