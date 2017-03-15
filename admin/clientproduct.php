@@ -136,14 +136,11 @@ if ($_POST['frm1']) {
                     $recurring = $data['monthly'];
                 }
             }
-
             $newaddonid = insert_query("tblserviceaddons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
             logActivity("Added New Addon - " . $name . $predefname . " - Addon ID: " . $newaddonid . " - Service ID: " . $id);
-
             if ($geninvoice) {
                 $invoiceid = createInvoices($userid, "", "", array("addons" => array($newaddonid)));
             }
-
             run_hook("AddonAdd", array("id" => $newaddonid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
         }
 

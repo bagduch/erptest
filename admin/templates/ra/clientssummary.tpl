@@ -8,8 +8,8 @@
                     <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
                     <table class="table">
                         <tr>
-                            <td colspa="2">{$data.adminuser}: </td>
-                        </tr>
+                            <td colspa="2">{$data.name}: </td>
+                        </tr> 
                         <tr>
                             <td colspa="2"> 
                                 <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
@@ -28,8 +28,6 @@
                             </td>
                         </tr>
                     </table>
-
-
                 </form>
             </div>
         {/if}

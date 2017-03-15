@@ -24,6 +24,7 @@
                 <li><a href="#tab_addon" data-toggle="tab">Addons</a></li>
                 <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>
                 <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
+                <li><a href="#tab_notes" data-toggle="tab">Notes</a></li>
                 <li class="pull-right">
                     <a style="float:right" href="#" class="btn btn-danger" onclick="deleteaccount({$id});"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
                     <a style="float:right;margin-right:10px" class="btn btn-primary" href="ordersadd.php?userid={$userid}"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
@@ -205,7 +206,6 @@
                     {/if}
                 </div>
                 <div class="tab-pane" id ="tab_invoice">
-
                 </div>
                 <div class="tab-pane" id ="tab_log">
                     {if $accountlog}
@@ -231,7 +231,40 @@
                             </table>   
                         </div>
                     {/if}
-
+                </div>
+                <div class="tab-pane" id="tab_notes">
+                    <input type="hidden" name="userid" value="{$userid}">
+                    <input type="hidden" name="account" value="{$id}">
+                    <input type="hidden" name="rel_type" value="account">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Add Notes</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea name="notes" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Assign To</label>
+                            <select class="form-control" name="flag">
+                                {foreach from=$adminlist item=row}
+                                    <option value="{$row.id}">{$row.firstname} {$row.lastname}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input class="datepick form-control" type="text" name="duedate">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" name="import" value="1">  <label>Important</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary addnotes">Add Notes</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -333,12 +366,37 @@
                 {
                     $.ajax({
                         method: "POST",
-                        url: "clientsinvoices.php?userid=2&serviceid={/literal}{$id}{literal}",
+                        url: "clientsinvoices.php?userid={/literal}{$userid}{literal}&serviceid={/literal}{$id}{literal}",
                         data: {ajax: 1},
                     }).done(function (data) {
                         $("#tab_invoice").html(data);
                     });
                 }
+            });
+
+            $(".addnotes").click(function () {
+                var token = $("input[name='token']").val();
+                var notes = $("textarea[name='notes']").val();
+                var assign = $("select[name='flag']").val();
+                var duedate = $("input[name='duedate']").val();
+                var imports = $("input[name='import']").val();
+                var type = $("input[name='rel_type']").val();
+                var account = $("input[name='account']").val();
+                $.ajax({
+                    url: "/admin/clientsnotes.php?sub=add",
+                    method: "post",
+                    data: {
+                        "userid":{/literal}{$userid}{literal},
+                        "token": token,
+                        "notes": notes,
+                        "assign": assign,
+                        "duedate": duedate,
+                        "rel_type": type,
+                        "account": account,
+                        "imports": imports
+                    }}).done(function () {
+                    location.reload();
+                });
             });
         });
 

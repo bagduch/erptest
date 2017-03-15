@@ -330,6 +330,10 @@ foreach ($datePeriod as $date) {
     $income[$date]['actual'] = 0;
     $income[$date]['pending'] = 0;
 }
+$result = select_query_i("tbladmins", "");
+while ($data = mysqli_fetch_assoc($result)) {
+    $templatevars['adminlist'][] = $data;
+}
 
 while ($data = mysqli_fetch_array($result)) {
     if ($data['status'] == "Active") {
