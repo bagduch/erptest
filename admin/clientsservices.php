@@ -65,6 +65,8 @@ if ($_POST['frm1']) {
             $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
         }
     }
+
+
     $data = array(
         "packageid" => $_POST['packageid'],
         "description" => $_POST['description'],
@@ -77,19 +79,20 @@ if ($_POST['frm1']) {
         "paymentmethod" => $_POST['paymentmethod'],
         "lastupdate" => "now()"
     );
-
-    foreach ($data as $key => $row) {
-        if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
-            $logDetail.= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
-        }
-    }
-
-    if ($logDetail != "") {
-        $clientdata->updateService($data, $id);
-        logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
-        redir("userid=" . $userid . "&id=" . $id);
+}
+foreach ($data as $key => $row) {
+    if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
+        $logDetail.= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
     }
 }
+
+if ($logDetail != "") {
+    $clientdata->updateService($data, $id);
+    logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
+    redir("userid=" . $userid . "&id=" . $id);
+}
+
+
 if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
@@ -241,7 +244,7 @@ if ($ra->get_req_var("ajaxupdate")) {
     $content .= $aInt->jqueryDialog("delete", $aInt->lang("services", "deleteproduct"), $aInt->lang("services", "proddeletesure"), array($aInt->lang("global", "yes") => "window.location='" . $PHP_SELF . "?userid=" . $userid . "&id=" . $id . "&action=delete" . generate_token("link") . "'", $aInt->lang("global", "no") => ""), "180", "450");
 }
 
-$servicesarray = getServiceAndProductdata("service",$userid);
+$servicesarray = getServiceAndProductdata("service", $userid);
 $accountlog = array();
 $resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
 while ($data = mysqli_fetch_array($resutlt)) {
@@ -249,6 +252,42 @@ while ($data = mysqli_fetch_array($resutlt)) {
     $accountlog[] = $data;
 }
 
+$result = select_query_i("tbladmins", "");
+while ($data = mysqli_fetch_assoc($result)) {
+    $templatevars['adminlist'][] = $data;
+}
+
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
+    $noteid = $data['id'];
+    $duedate = $data['duedate'];
+    $created = $data['created'];
+    $modified = $data['modified'];
+    $note = $data['note'];
+    $admin = $data['adminuser'];
+    $assigned = $data['assignee'];
+    if (!$admin) {
+        $admin = "Admin Deleted";
+    }
+    $note = nl2br($note);
+    $note = autoHyperLink($note);
+    $created = fromMySQLDate($created, "time");
+    $modified = fromMySQLDate($modified, "time");
+    if ($data['flag']) {
+        $importantnote = "<img src=\"images/highpriority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">";
+    } else {
+        $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
+    }
+    $tabledata[] = array($data['type'], $created, $note, $admin, $assigned, $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>",
+$noteid);
+}
+$aInt->assign("tabledata", $tabledata);
+$aInt->assign("adminlist", $templatevars['adminlist']);
 $aInt->assign("service", array("Pending", "Active", "Draft", "Suspended", "Terminated", "Cancelled", "Fraud"));
 $aInt->assign("userid", $userid);
 $aInt->assign("accountlog", $accountlog);

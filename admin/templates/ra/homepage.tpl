@@ -63,6 +63,41 @@
     </div>
     <!-- ./col -->
 </div>
+{foreach from=$notes item=data}
+    {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+        <div class="alert alert-{$data.color} alert-dismissible">
+            <form class="notesupdate{$data.id}" method="post" action="">
+                <input type="hidden" name="noteid" value="{$data.id}">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
+                <table class="table">
+                    <tr>
+                        <td colspa="2">{$data.adminuser}: </td>
+                    </tr>
+                    <tr>
+                        <td colspa="2"> 
+                            <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspa="2">              
+                            <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                            <div style="margin-left: 25px;" class="updatetime btn btn-default">Update Time</div><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspa="2"> 
+                            <input type="hidden" name="done" value="0">
+                            <div class="notesdone btn btn-default">Done</div>
+                        </td>
+                    </tr>
+                </table>
+
+
+            </form>
+        </div>
+    {/if}
+{/foreach}
 
 <!-- END WHMCS -->
 <div class="row">

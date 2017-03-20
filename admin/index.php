@@ -330,6 +330,10 @@ foreach ($datePeriod as $date) {
     $income[$date]['actual'] = 0;
     $income[$date]['pending'] = 0;
 }
+$result = select_query_i("tbladmins", "");
+while ($data = mysqli_fetch_assoc($result)) {
+    $templatevars['adminlist'][] = $data;
+}
 
 while ($data = mysqli_fetch_array($result)) {
     if ($data['status'] == "Active") {
@@ -349,8 +353,22 @@ while ($data = mysqli_fetch_array($result)) {
     }
     $orders[date("Y-m-d", strtotime($data['date']))]['total'] ++;
 }
+$templatevars['notes'] = array();
+$result = select_query_i("tblnotes", "*", array("assignto" => $_SESSION['adminid']));
 
-
+while ($data = mysqli_fetch_assoc($result)) {
+    if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
+        $data['color'] = "warning";
+    } else if (strtotime($data['duedate']) < strtotime(date("d.m.Y"))) {
+        $data['color'] = "danger";
+    } else {
+        $data['color'] = "success";
+    }
+    $data['created'] = fromMySQLDate($data['created'], 1);
+    $data['modified'] = fromMySQLDate($data['modified'], 1);
+    $data['note'] = autoHyperLink(nl2br($data['note']));
+    $templatevars['notes'][] = $data;
+}
 
 
 $templatevars["income"] = $income;

@@ -29,11 +29,11 @@ if ($return) {
 if (isset($_POST['noteid'])) {
     $array = array(
         "duedate" => $_POST['updatetime'],
-        "modified" => "now()",
+        //   "modified" => "now()",
         "note" => $_POST['notesdata'],
         "sticky" => $_POST['done'],
     );
-    
+
     update_query("tblnotes", $array, array("id" => $_POST['noteid']));
     if ($_POST['done']) {
         logActivity("Notes Update match as done - User ID: " . $userid, $userid);
@@ -744,8 +744,12 @@ $templatevars['files'] = $files;
 $paymentmethoddropdown = paymentMethodsSelection("- " . $aInt->lang("global", "nochange") . " -");
 $templatevars['paymentmethoddropdown'] = $paymentmethoddropdown;
 $templatevars['notes'] = array();
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid), "duedate", "ASC");
-
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
+$result = full_query_i($query);
 while ($data = mysqli_fetch_assoc($result)) {
     if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
         $data['color'] = "warning";

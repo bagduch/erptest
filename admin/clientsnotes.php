@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @ RA
@@ -7,13 +6,21 @@
  * */
 define("ADMINAREA", true);
 require "../init.php";
-
 if ($action == "edit") {
     $reqperm = "Add/Edit Client Notes";
 } else {
     $reqperm = "View Clients Notes";
 }
-
+if ($_POST['update']) {
+    $array = array(
+        "note" => $_POST['notes'],
+        "assignto" => $_POST['assign'],
+        "modified" => "now()",
+        "duedate" => $_POST['duedate'],
+    );
+    update_query("tblnotes", $array, array("id" => $_POST['id']));
+    exit();
+}
 $aInt = new RA_Admin($reqperm);
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
@@ -23,13 +30,13 @@ if (intval($sticky) > 0) {
 } else {
     $sticky = 0;
 }
-
 if ($sub == "add") {
-    check_token("RA.admin.default");
-    checkPermission("Add/Edit Client Notes");
+//    check_token("RA.admin.default");
+//    checkPermission("Add/Edit Client Notes");
     insert_query("tblnotes", array(
-        "userid" => $userid,
+        "rel_id" => $_POST['account'],
         "adminid" => $_SESSION['adminid'],
+        "type" => $_POST['rel_type'],
         "created" => "now()",
         "duedate" => $_POST['duedate'],
         "flag" => $_POST['imports'],
@@ -74,34 +81,44 @@ $aInt->sortableTableInit("created", "ASC");
 $result = select_query_i("tblnotes", "COUNT(*)", array("userid" => $userid), "created", "ASC", "", "tbladmins ON tbladmins.id=tblnotes.adminid");
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.assignto) AS assignee", array("userid" => $userid), "modified", "DESC");
 
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
+INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
+
+
+$result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
+
     $noteid = $data['id'];
     $duedate = $data['duedate'];
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
-    $admin = $data['adminuser'];
     $assigned = $data['assignee'];
 
-    if (!$admin) {
-        $admin = "Admin Deleted";
-    }
+
 
     $note = nl2br($note);
     $note = autoHyperLink($note);
     $created = fromMySQLDate($created, "time");
     $modified = fromMySQLDate($modified, "time");
-    $importantnote = ($data['sticky'] ? "high" : "low");
-    $tabledata[] = array($created, $note, $admin, $assigned, $duedate, $modified, "<img src=\"images/" . $importantnote . "priority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">", "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>");
+    if ($data['flag']) {
+        $importantnote = "<img src=\"images/highpriority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">";
+    } else {
+        $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
+    }
+    $tabledata[] = array($data['type'], $created, $note, $data['name'], $data['assignname'], $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>", $noteid);
 }
 
-echo $table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), "Assignee", "Due Date", $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
-echo "<br>";
+//$table = $aInt->sortableTable(array($aInt->lang("fields", "created"), $aInt->lang("fields", "note"), $aInt->lang("fields", "admin"), "Assignee", "Due Date", $aInt->lang("fields", "lastmodified"), "", "", ""), $tabledata);
+
 
 if ($action == "edit") {
-    $notesdata = get_query_vals("tblnotes", "note, sticky,assignto,duedate", array("userid" => $userid, "id" => $id));
+    $notesdata = get_query_vals("tblnotes", "note,sticky,assignto,duedate", array("id" => $id));
     $note = $notesdata['note'];
     $importantnote = ($notesdata['sticky'] ? " checked" : "");
     $result = select_query_i("tbladmins", "id,firstname,lastname");
@@ -117,25 +134,20 @@ if ($action == "edit") {
     }
     $select .="</select>";
 
-    echo "<form method=\"post\" action=" . $PHP_SELF . "?userid=" . $userid . "&sub=save&id=" . $id . "\">";
-    echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-    echo "<tr><td class=\"fieldarea\"><textarea class=\"form-control\" name=\"note\" rows=\"6\">" . $note . "</textarea>";
-    echo "<tr><td><input name=\"duetime\" class=\"datepick form-control\" type=\"text\" value='" . $notesdata['duedate'] . "'></td></tr>";
-    echo "</td></tr>";
-    echo "<tr><td>" . $select . "</td></tr>";
-    echo "<tr><td width=\"60\">";
-    echo "<label>Task Done:<input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\"";
-    echo $importantnote;
-    echo " />";
-    echo "</label></td></tr><tr><td><input type=\"submit\" value=" . $aInt->lang("global", "savechanges") . " class=\"button\"></td></tr></table></form>";
+
+    $aInt->assign("notesdata", $notesdata);
+    $aInt->assign("PHP_SELF", $PHP_SELF);
+    $aInt->assign("id", $id);
+    $aInt->assign("userid", $userid);
+    $aInt->assign("select", $select);
 } else {
     sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=add\">", $PHP_SELF, $userid);
-    echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
+    $form.= "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\"></textarea></td><td align=\"center\" width=\"60\"><input type=\"submit\" value=\"";
-    echo $aInt->lang("global", "addnew");
-    echo "\" class=\"button\" /><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\" /> ";
-    echo $aInt->lang("clientsummary", "stickynotescheck");
-    echo "</label></td></tr>
+    $form.= $aInt->lang("global", "addnew");
+    $form.= "\" class=\"button\" /><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\" /> ";
+    $form.= $aInt->lang("clientsummary", "stickynotescheck");
+    $form.= "</label></td></tr>
 </table>
 </form>
 ";
@@ -143,8 +155,16 @@ if ($action == "edit") {
 
 $content = ob_get_contents();
 ob_end_clean();
-//$aInt->assign("table", $table);
-//$aInt->template = "client/notes";
+$result = select_query_i("tbladmins", "id,firstname,lastname");
+while ($data = mysqli_fetch_array($result)) {
+    $adminlist[$data['id']] = $data['firstname'] . " " . $data['lastname'];
+}
+$aInt->assign("adminlist", $adminlist);
+$aInt->assign("tabledata", $tabledata);
+$aInt->assign("formbottom", $form);
+$aInt->template = "client/notes";
+
+
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
