@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @ RA
@@ -7,7 +6,6 @@
  * */
 define("ADMINAREA", true);
 require "../init.php";
-
 if ($action == "edit") {
     $reqperm = "Add/Edit Client Notes";
 } else {
@@ -20,11 +18,9 @@ if ($_POST['update']) {
         "modified" => "now()",
         "duedate" => $_POST['duedate'],
     );
-
     update_query("tblnotes", $array, array("id" => $_POST['id']));
     exit();
 }
-
 $aInt = new RA_Admin($reqperm);
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
@@ -34,8 +30,6 @@ if (intval($sticky) > 0) {
 } else {
     $sticky = 0;
 }
-
-
 if ($sub == "add") {
 //    check_token("RA.admin.default");
 //    checkPermission("Add/Edit Client Notes");

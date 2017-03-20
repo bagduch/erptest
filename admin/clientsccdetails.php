@@ -23,7 +23,6 @@ if ($ccstoredisabled) {
 }
 else {
 	$validhash = "";
-
 	if ($action == "clear") {
 		check_token("RA.admin.default");
 		checkPermission("Update/Delete Stored Credit Card");
