@@ -28,6 +28,8 @@ if ($modop) {
 }
 $clientdata = new RA_ClientService($userid, $id);
 $id = $clientdata->id;
+$userid = $clientdata->userid;
+
 
 
 //echo "<pre>",  print_r($clientdata->servicedata,1),"</pre>";
@@ -283,8 +285,9 @@ while ($data = mysqli_fetch_array($result)) {
     } else {
         $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
     }
+    
     $tabledata[] = array($data['type'], $created, $note, $admin, $assigned, $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>",
-$noteid);
+        $noteid);
 }
 $aInt->assign("tabledata", $tabledata);
 $aInt->assign("adminlist", $templatevars['adminlist']);

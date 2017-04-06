@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @ RA
@@ -17,6 +18,7 @@ if ($_POST['update']) {
         "assignto" => $_POST['assign'],
         "modified" => "now()",
         "duedate" => $_POST['duedate'],
+        "sticky" => $_POST['done'] ? 1 : 0
     );
     update_query("tblnotes", $array, array("id" => $_POST['id']));
     exit();

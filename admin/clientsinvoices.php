@@ -80,7 +80,6 @@ if ($duplicateinvoice) {
         logActivity("Duplicated Invoice(s) - Invoice ID: " . $invid, $userid);
     }
 
-
     if ($page) {
         $userid .= "&page=" . $page;
     }

@@ -15,10 +15,8 @@ $name = "clients";
 $orderby = "id";
 $sort = "DESC";
 $pageObj = new RA_Pagination($name, $orderby, $sort);
-
 $pageObj->digestCookieData();
 $tbl = new RA_ListTable($pageObj);
-
 $tbl->setColumns(array("checkall", array("id", $aInt->lang("fields", "id")), array("firstname", $aInt->lang("fields", "firstname")), array("lastname", $aInt->lang("fields", "lastname")), array("companyname", $aInt->lang("fields", "companyname")), array("email", $aInt->lang("fields", "email")), $aInt->lang("fields", "services"), "Products", array("datecreated", $aInt->lang("fields", "created")), array("status", $aInt->lang("fields", "status"))));
 $clientsModel = new RA_Clients($pageObj);
 $filters = new RA_Filter();

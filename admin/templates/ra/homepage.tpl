@@ -63,41 +63,52 @@
     </div>
     <!-- ./col -->
 </div>
-{foreach from=$notes item=data}
-    {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
-        <div class="alert alert-{$data.color} alert-dismissible">
-            <form class="notesupdate{$data.id}" method="post" action="">
-                <input type="hidden" name="noteid" value="{$data.id}">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
-                <table class="table">
-                    <tr>
-                        <td colspa="2">{$data.adminuser}: </td>
-                    </tr>
-                    <tr>
-                        <td colspa="2"> 
-                            <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspa="2">              
-                            <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
-                            <div style="margin-left: 25px;" class="updatetime btn btn-default">Update Time</div><br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspa="2"> 
-                            <input type="hidden" name="done" value="0">
-                            <div class="notesdone btn btn-default">Done</div>
-                        </td>
-                    </tr>
-                </table>
-
-
-            </form>
-        </div>
-    {/if}
-{/foreach}
+<div class="row">
+    {foreach from=$notes item=data}
+        {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+            <div class="col-lg-3 col-xs-6">
+                <div class="alert alert-{$data.color} alert-dismissible">
+                    <form class="notesupdate{$data.id}" method="post" action="">
+                        <input type="hidden" name="noteid" value="{$data.id}">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-warning"></i> Notes {$data.modified}</h4>
+                        <table class="table">
+                            <tr>
+                                <td colspa="2">{$data.name}: <input type="hidden" name='assign' value="{$data.assignto}"></td>
+                            </tr> 
+                            <tr>
+                                <td colspa="2"> 
+                                    <textarea name="notesdata" class="form-control" style="color:black">{$data.note}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspa="2">              
+                                    <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="finishtask" value='0'>
+                                            done
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspa="2"> 
+                                    <div class="notesdone btn btn-default">Update</div>
+                                    <a style='color:black;margin-left:10px' class="btn btn-default" href ="{$data.type}">View</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        {/if}
+    {/foreach}
+</div>
 
 <!-- END WHMCS -->
 <div class="row">
@@ -226,6 +237,8 @@
 {literal}
     <script type="text/javascript">
         $(function () {
+
+
             var area = new Morris.Area({
                 element: 'revenue-chart',
                 resize: true,

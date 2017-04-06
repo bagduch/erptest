@@ -761,6 +761,7 @@ while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
     $data['note'] = autoHyperLink(nl2br($data['note']));
+    $data['type'] = $data['type'] == 'client' ? 'clientssummary.php?userid=' . $data['rel_id'] : "clientsservices.php?id=" . $data['rel_id'];
     $templatevars['notes'][] = $data;
 }
 

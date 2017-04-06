@@ -478,6 +478,7 @@ function pdfInvoice($invoiceid) {
     global $_LANG;
     global $currency;
 
+ 
     $invoice = new RA_Invoice();
     $invoice->pdfCreate();
     $invoice->pdfInvoicePage($invoiceid);

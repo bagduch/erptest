@@ -374,6 +374,7 @@
                 }
             });
 
+         
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();
