@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1659 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1661 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1549,6 +1549,8 @@ CREATE TABLE `tblservices` (
   `etf` double NOT NULL,
   `term` int(11) NOT NULL,
   `name` text NOT NULL,
+  `stock` int(11) NOT NULL,
+  `cost` float NOT NULL,
   `description` text NOT NULL,
   `revenuecode` varchar(10) DEFAULT NULL,
   `hidden` text NOT NULL,
@@ -1575,9 +1577,9 @@ CREATE TABLE `tblservices` (
   KEY `gid` (`gid`),
   KEY `name` (`name`(64)),
   KEY `welcomeemail` (`welcomeemail`),
-  CONSTRAINT `tblservices_ibfk_3` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblservices_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`),
-  CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`)
+  CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`),
+  CONSTRAINT `tblservices_ibfk_3` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
