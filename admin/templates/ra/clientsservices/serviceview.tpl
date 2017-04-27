@@ -28,11 +28,7 @@
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
                                     <td>
-                                        <select name="servicestatus[{$accountid}]">
-                                            {foreach from=$service item=row}
-                                                <option {if $item.servicestatus eq $row}SELECTED{/if}>{$row}</option>
-                                            {/foreach}
-                                        </select>
+                                    {$item.servicestatus}
                                     </td>
                                     <td>
                                         <a href="/admin/clientsservices.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>

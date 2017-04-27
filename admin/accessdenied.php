@@ -1,6 +1,7 @@
 <?php
+
 /**
- *
+*
  * @ RA
  *
  **/
@@ -47,7 +48,6 @@ echo "</title>
 <link href=\"templates/original/style.css\" rel=\"stylesheet\" type=\"text/css\" />
 </head>
 <body>
-
 <br /><br /><br /><br /><br />
 <p align=\"center\" style=\"font-size:24px;\">";
 echo $_ADMINLANG['permissions']['accessdenied'];
@@ -66,7 +66,6 @@ echo "</p>
 echo $_ADMINLANG['global']['goback'];
 echo " \" onClick=\"javascript:history.go(-1)\"></p>
 <br /><br />
-
 </body>
 </html>";
 ?>

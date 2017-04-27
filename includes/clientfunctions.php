@@ -337,6 +337,47 @@ function getCountriesDropDown($selected = "", $fieldname = "", $tabindex = "") {
     return $dropdowncode;
 }
 
+function getClientNotes($userid,$limit="",$table=true)
+{
+    $notes = array();
+if($limit !="")
+{
+   $limitquery = "limit 5";
+
+}else{
+    $limitquery= "";
+}
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
+INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC ".$limitquery;
+
+  $result = full_query_i($query);
+while ($data = mysqli_fetch_assoc($result)) {
+
+    if($table){
+    if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
+        $data['color'] = "warning";
+    } else if (strtotime($data['duedate']) < strtotime(date("d.m.Y"))) {
+        $data['color'] = "danger";
+    } else {
+        $data['color'] = "success";
+    }
+    $data['created'] = fromMySQLDate($data['created'], 1);
+    $data['modified'] = fromMySQLDate($data['modified'], 1);
+    $data['note'] = autoHyperLink(nl2br($data['note']));
+    $data['type'] = $data['type'] == 'client' ? 'clientssummary.php?userid=' . $data['rel_id'] : "clientsservices.php?id=" . $data['rel_id'];
+   $notes[]=$data;
+    }else{
+    $notes []=$data;
+    }
+}
+
+return $notes;
+}
+
 function checkDetailsareValid($uid = "", $signup = false, $checkemail = true, $captcha = true, $checkcustomfields = true) {
     global $ra;
     global $CONFIG;
