@@ -142,8 +142,9 @@ while ($data = mysqli_fetch_assoc($result)) {
 }
 
 
-$status = array("Active", "Inactive", "Closed");
+$status = array("Active", "Inactive", "Archived");
 include "../includes/countries.php";
+
 
 $billingcid = array();
 $result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");

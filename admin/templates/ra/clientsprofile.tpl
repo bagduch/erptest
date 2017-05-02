@@ -22,7 +22,9 @@
                         <font color="#cccccc"><small>(Optional)</small></font>
                     </td>
                     <td class="fieldlabel">Region</td>
-                    <td class="fieldarea"><input class="form-control"  type="text" size="25" name="state" value="{$clientsdetails.state}" tabindex="11"></td>
+                    <td class="fieldarea region">
+                        <input class="form-control"  type="text" size="25" name="state" value="{$clientsdetails.state}" tabindex="11">
+                    </td>
 
                 </tr>
                 <tr>
@@ -37,7 +39,7 @@
                                 this.value = ''" tabindex="5"> <a href="clientsprofile.php?userid=12437&amp;resetpw=true&amp;token=08d71233b8e79ff6a3f1b010d65562c4f1e12fa4"><img src="images/icons/resetpw.png" border="0" align="absmiddle"> Reset &amp; Send Password</a></td>
                     <td class="fieldlabel">Country</td>
                     <td class="fieldarea">
-                        <select class="form-control" name="country" id="country" tabindex="13">
+                        <select class="form-control country" name="country" tabindex="13">
                             {foreach from=$coutries item=country key=code}
                                 <option value="{$country}" {if $clientsdetails.country eq $country}selected{/if}>{$country}</option>
                             {/foreach}
@@ -123,3 +125,7 @@
         <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary" tabindex="1"> <input type="reset" value="Cancel Changes" class="button" tabindex="2"></div>
     </form>
 {/strip}
+
+{literal}
+    
+{/literal}

@@ -60,7 +60,7 @@ if (!$CONFIG['AllowClientRegister']) {
 }
 
 include "includes/countries.php";
-$countriesdropdown = getCountriesDropDown($country);
+$countriesdropdown = getCountriesDropDown("New Zealand");
 $smarty->assign("errormessage", $errormessage);
 $smarty->assign("clientfirstname", $firstname);
 $smarty->assign("clientlastname", $lastname);

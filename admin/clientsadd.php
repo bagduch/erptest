@@ -73,7 +73,7 @@ foreach ($questions as $quest => $ions) {
 
 
 include "../includes/countries.php";
-$countrydrop = getCountriesDropDown($country, "", 13);
+$countrydrop = getCountriesDropDown("New Zealand", "", 13);
 
 $langoption = "";
 foreach ($ra->getValidLanguages() as $lang) {

@@ -6,6 +6,33 @@
 
 
 $(document).ready(function () {
+
+    state = $("input[name='state']").val();
+    $.ajax({
+        url: "region.php",
+        method: "POST",
+        data: {"region": $(".country").val(), 'state': state}
+    }).done(function (data) {
+        if (data)
+        {
+            $(".region").html(data);
+        }
+    });
+
+    $(".country").change(function () {
+        $.ajax({
+            url: "region.php",
+            method: "POST",
+            data: {"region": $(this).val()}
+        }).done(function (data) {
+            if (data)
+            {
+                $(".region").html(data);
+
+            }
+        });
+    });
+
     $(".notesdone").click(function () {
         var notes = $("textarea[name='notesdata']").val();
         var assign = $("input[name='assign']").val();

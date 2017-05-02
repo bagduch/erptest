@@ -17,7 +17,7 @@ while ($data = mysqli_fetch_array($result)) {
     $clientstats[$data[0]] = $data[1];
 }
 
-$query = "SELECT country, COUNT(*) FROM  tblhosting INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE servicestatus='Active' GROUP BY country ORDER BY country";
+$query = "SELECT country, COUNT(*) FROM  tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE servicestatus='Active' GROUP BY country ORDER BY country";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
 

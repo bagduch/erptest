@@ -1,4 +1,5 @@
-{strip} {debug}
+{strip}
+
 <div class="row">
     <div class="callout pull-right">
         <div class="row">
@@ -470,11 +471,12 @@
         </div>
 </div>
 <div class="row">
+{if $lastfivenotes}
     <div class="clientnotes col-lg-12">
         <div class="box box-primary">
             <div class="box-heading">
                 <div class="box-title">
-                    <h3 class="box-title">Notes
+                    <h3 class="box-title">Latest Five Notes
                     </h3>
                 </div>
             </div>
@@ -483,7 +485,6 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="sui-columnheader">
-                                <th width="10"><input type="checkbox" id="addonsall" /></th>
                                 <th>Create Date</th>
                                 <th>Notes</th>
                                 <th>Create Admin</th>
@@ -499,11 +500,14 @@
                                 <td>{$item.created}</td>
                                 <td>{$item.note }</td>
                                 <td>{$item.name}</td>
-                                <td>{$item.created}</td>
-                                <td>{$item.created}</td>
-                                <td>{$item.created}</td>
-                                <td>{$item.created}</td>
-                                <td>{$item.created}</td>
+                                <td>{$item.assignname}</td>
+                                <td>{$item.duedate}</td>
+                                <td>{$item.modified}</td>
+                                <td>{$item.sticky}</td>
+                                <td>
+                                <a href="/admin/clientsnotes.php?userid=8019&amp;action=edit&amp;id={$item.id}" class="btn btn-success editnotes"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a href="#" onclick="doDelete('{$item.id}');return false" class="btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                                </td>
                             </tr>
                             {foreachelse}
                             <tr>
@@ -515,7 +519,21 @@
             </div>
         </div>
     </div>
+{/if}
 
+    <div class="clientsinvoices col-lg-12">
+      <div class="box box-primary">
+           <div class="box-heading">
+                <div class="box-title">
+                    <h3 class="box-title">Invoices
+                    </h3>
+                </div>
+            </div>
+             <div class="box-body">
+
+             </div>
+     </div>
+    </div>
 
     <div class="clientsproducts col-lg-12">
         <div class="box box-primary">
@@ -638,8 +656,18 @@
     <!-- DataTables -->
 
     <script type="text/javascript">
-        {
-            /literal}{if $servicessummary}{literal}
+
+
+              $.ajax({
+                        method: "POST",
+                        url: "clientsinvoices.php?userid={/literal}{$userid}{literal}",
+                        data: {ajax: 1},
+                    }).done(function (data) {
+                      $('.clientsinvoices .box-body').html(data);
+                     
+                    });
+
+        {/literal}{if $servicessummary}{literal}
             $("#servicetable").DataTable({
                 "columns": [{
                         "orderable": false
@@ -652,12 +680,9 @@
                     null,
                     null, {
                         "orderable": false
-                    }
+                    } 
                 ]
-            }); {
-                /literal} { /
-                if
-            } {
+            }); {/literal} {/if} {
                 literal
             }
 
@@ -670,6 +695,7 @@
                 $(this).closest('form').submit();
             });
 
+
             $(".addnotes").click(function(e) {
                         e.preventDefault();
                         var token = $("input[name='token']").val();
@@ -678,7 +704,7 @@
                         var duedate = $("input[name='duedate']").val();
                         var imports = $("input[name='import']").val();
 
-                        $.ajax({
+                        $.ajax({ 
                                 url: "/admin/clientsnotes.php?sub=add",
                                 method: "post",
                                 data: {

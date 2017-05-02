@@ -27,7 +27,7 @@ class RA_Invoice {
         while ($data = mysqli_fetch_array($sresult)) {
             $setting[$data['setting']] = $data['value'];
         }
-        echo "<pre>", print_r($data, 1), "</pre>";
+       // echo "<pre>", print_r($data, 1), "</pre>";
     }
 
     public function setID($invoiceid) {

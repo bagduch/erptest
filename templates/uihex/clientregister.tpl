@@ -93,7 +93,7 @@
 
     <div class="form-group">
 	    <label class="control-label" for="state">{$LANG.clientareastate}</label>
-		<div class="controls">
+		<div class="controls state">
 		    <input type="text" name="state" id="state" value="{$clientstate}"{if in_array('state',$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
