@@ -401,6 +401,14 @@ $_LANG['invoices'] = "My Invoices";
 $_LANG['transection'] = "My Transection";
 $_LANG['credit'] = "My Credit Use";
 $_LANG['creditcard'] = "Manage Credit Card";
+
+$_LANG['transectiontitle'] = "My Transactions";
+$_LANG['transectiondate'] = "Date";
+$_LANG['transectiontype'] = "Type";
+$_LANG['transectiondes'] = "Description";
+$_LANG['transectionamount'] = "Amount";
+
+
 $_LANG['invoicesamount'] = "Amount";
 $_LANG['invoicesattn'] = "ATTN";
 $_LANG['invoicesbacktoclientarea'] = "&laquo; Back to Client Area";
