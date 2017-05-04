@@ -102,15 +102,7 @@ CREATE TABLE `tblactivitylog` (
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)
-<<<<<<< HEAD
 ) ENGINE=InnoDB AUTO_INCREMENT=1387 DEFAULT CHARSET=utf8;
-=======
-<<<<<<< HEAD
-) ENGINE=InnoDB AUTO_INCREMENT=8026 DEFAULT CHARSET=utf8;
-=======
-) ENGINE=InnoDB AUTO_INCREMENT=8010 DEFAULT CHARSET=utf8;
->>>>>>> parent of 483c826... Schema Commit
->>>>>>> peter
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,15 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-<<<<<<< HEAD
 ) ENGINE=InnoDB AUTO_INCREMENT=1687 DEFAULT CHARSET=utf8;
-=======
-<<<<<<< HEAD
-) ENGINE=InnoDB AUTO_INCREMENT=1411 DEFAULT CHARSET=utf8;
-=======
-) ENGINE=InnoDB AUTO_INCREMENT=1407 DEFAULT CHARSET=utf8;
->>>>>>> parent of 483c826... Schema Commit
->>>>>>> peter
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
