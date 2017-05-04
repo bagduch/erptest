@@ -7739,7 +7739,6 @@ $webcolor = array (
                 $ph = $this->getHTMLUnitToUnits($h, 0, $this->pdfunit, true) * $this->imgscale * $this->k;
                 $imsize = array($pw, $ph);
             } else {
-                $this->Error('[Image] Unable to get image: '.$file);
             }
         }
         // get original image width and height in pixels

@@ -25,6 +25,7 @@
             </style>
         {/literal}
     </head>
+    {debug}
     <body>
         <div class="container row">
             <h1>UI Order Process</h1>

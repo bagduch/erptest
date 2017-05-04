@@ -354,8 +354,10 @@ while ($data = mysqli_fetch_array($result)) {
     $orders[date("Y-m-d", strtotime($data['date']))]['total'] ++;
 }
 $templatevars['notes'] = array();
-$result = select_query_i("tblnotes", "*", array("assignto" => $_SESSION['adminid']));
 
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) where tbn.assignto='" . $_SESSION['adminid'] . "'";
+$result = full_query_i($query);
 while ($data = mysqli_fetch_assoc($result)) {
     if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
         $data['color'] = "warning";
@@ -364,6 +366,8 @@ while ($data = mysqli_fetch_assoc($result)) {
     } else {
         $data['color'] = "success";
     }
+    $data['assignto'] = $data['assignto'];
+    $data['type'] = $data['type'] == 'client' ? 'clientssummary.php?userid=' . $data['rel_id'] : "clientsservices.php?id=" . $data['rel_id'];
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
     $data['note'] = autoHyperLink(nl2br($data['note']));

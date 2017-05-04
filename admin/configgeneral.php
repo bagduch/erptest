@@ -86,7 +86,6 @@ if ($action == "save") {
         if (!$template) {
             $template = "default";
         }
-
         $acceptedcardtypes = ($acceptedcctypes ? implode(",", $acceptedcctypes) : "");
         $clientsprofoptional = ($clientsprofoptional ? implode(",", $clientsprofoptional) : "");
         $clientsprofuneditable = ($clientsprofuneditable ? implode(",", $clientsprofuneditable) : "");
@@ -94,7 +93,6 @@ if ($action == "save") {
         if (($tcpdffont != "helvetica" && $tcpdffont != "freesans") && $tcpdffontcustom) {
             $tcpdffont = $tcpdffontcustom;
         }
-
         $addfundsminimum = format_as_currency($addfundsminimum);
         $addfundsmaximum = format_as_currency($addfundsmaximum);
         $addfundsmaximumbalance = format_as_currency($addfundsmaximumbalance);
@@ -104,7 +102,6 @@ if ($action == "save") {
         if (!$ra->get_config("CCNeverStore") && $ccneverstore) {
             update_query("tblclients", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), "");
         }
-
         $domain = cleanSystemURL($domain);
         $systemurl = cleanSystemURL($systemurl);
         $systemsslurl = cleanSystemURL($systemsslurl, true, true);
@@ -112,10 +109,20 @@ if ($action == "save") {
         if (current(parse_url(cleanSystemURL($systemurl))) == current(parse_url(cleanSystemURL($systemsslurl)))) {
             $systemsslurl = "";
         }
-
         $save_arr = array("CompanyName" => html_entity_decode($companyname), "Email" => $email, "Domain" => $domain, "LogoURL" => $logourl, "SystemURL" => $systemurl, "SystemSSLURL" => $systemsslurl, "Template" => $template, "MaintenanceModeURL" => $maintenancemodeurl, "ClientDateFormat" => $clientdateformat, "FreeDomainAutoRenewRequiresProduct" => $freedomainautorenewrequiresproduct, "DomainToDoListEntries" => $domaintodolistentries, "AllowIDNDomains" => $allowidndomains, "BulkCheckTLDs" => $bulkchecktldsstring, "DomainSyncEnabled" => $domainsyncenabled, "DomainSyncNextDueDate" => $domainsyncnextduedate, "DomainSyncNextDueDateDays" => $domainsyncnextduedatedays, "DomainSyncNotifyOnly" => $domainsyncnotifyonly, "DefaultNameserver1" => $ns1, "DefaultNameserver2" => $ns2, "DefaultNameserver3" => $ns3, "DefaultNameserver4" => $ns4, "DefaultNameserver5" => $ns5, "RegistrarAdminFirstName" => $domfirstname, "RegistrarAdminLastName" => $domlastname, "RegistrarAdminCompanyName" => $domcompanyname, "RegistrarAdminEmailAddress" => $domemail, "RegistrarAdminAddress1" => $domaddress1, "RegistrarAdminAddress2" => $domaddress2, "RegistrarAdminCity" => $domcity, "RegistrarAdminStateProvince" => $domstate, "RegistrarAdminPostalCode" => $dompostcode, "RegistrarAdminCountry" => $domcountry, "RegistrarAdminPhone" => $domphone, "RegistrarAdminUseClientDetails" => $domuseclientsdetails, "SMTPHost" => $smtphost, "SMTPUsername" => $smtpusername, "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
-            "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "AdminForceSSL" => $adminforcessl, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting);
-
+            "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "AdminForceSSL" => $adminforcessl, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting, "gst" => $gst,
+            "invphone" => $invphone,
+            "invfax" => $invfax,
+            "invwebsite" => $invwebsite,
+            "invaccount" => $invaccount,
+            "invname" => $invname,
+            "invaddress" => $invaddress,
+            "invcompany" => $invcompany,
+            "invpobox" => $invpobox,
+            "invcity" => $invcity,
+            "invpostcode" => $invpostcode,
+            "invcountry" => $invcountry
+        );
         foreach ($save_arr as $k => $v) {
             $ra->set_config($k, trim($v));
         }
@@ -1354,7 +1361,7 @@ $aInt->assign("countryarray", $countryarray);
 $aInt->assign("CONFIG", $CONFIG);
 $aInt->template = "configgeneral";
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode.$menuselect;
+$aInt->jquerycode = $jquerycode . $menuselect;
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

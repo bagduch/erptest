@@ -206,7 +206,7 @@ if ($action == "savegroup") {
         update_query("tblcustomfieldsgroup", array("name" => $name), array("id" => $id));
         $response = "saved";
     } else {
-        $id = insert_query("tblcustomfieldsgroup", array("name" => $name));
+        $id = insert_query("tblcustomfieldsgroupnames", array("name" => $name));
         $response = "added";
     }
 

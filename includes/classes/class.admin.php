@@ -898,7 +898,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $order;
         global $numrows;
         global $page;
-    
+
         $pages = max(ceil($numrows / $this->rowLimit), 1);
 
         $content = "";
@@ -1172,7 +1172,15 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $tabarray['clientscredits'] = $this->lang("clientsummary", "credits");
         $tabarray['clientstransactions'] = $this->lang("clientsummary", "transactions");
         $tabarray['clientsemails'] = $this->lang("clientsummary", "emails");
-        $tabarray['clientsnotes'] = $this->lang("clientsummary", "notes") . " (" . get_query_val("tblnotes", "COUNT(id)", array("userid" => $uid)) . ")";
+        $query = "select count(tbn.id) as total from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . " OR tbcs.userid=" . $uid . " ORDER BY tbn.flag DESC";
+        $result = full_query_i($query);
+        $data = mysqli_fetch_assoc($result);
+        $numbers = $data['total'];
+        $tabarray['clientsnotes'] = $this->lang("clientsummary", "notes") . " (" . $numbers . ")";
         $tabarray['clientslog'] = $this->lang("clientsummary", "log");
 
 

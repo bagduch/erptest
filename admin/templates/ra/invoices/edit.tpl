@@ -218,6 +218,7 @@
         </div>
     </div>
 </div>
+                    {debug}
 <div class="col-lg-12">
     <div class="box">
         <div class="box-header">
@@ -228,7 +229,7 @@
                 <input type="hidden" name="token" value="{$token}">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="{$invoice.id}">
-                <input type="hidden" name="userid" value="12437">
+                <input type="hidden" name="userid" value="{$invoice.userid}">
                 <input type="hidden" name="sub" value="save">
                 <div class="tablebg">
                     <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">

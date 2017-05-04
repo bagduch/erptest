@@ -167,7 +167,7 @@ $_LANG['clientareaerrors'] = "The following errors occurred:";
 $_LANG['clientareaerrorstate'] = "You did not enter your state";
 $_LANG['clientareaexpired'] = "Expired";
 $_LANG['clientareafirstname'] = "First Name";
-$_LANG['clientareafirstname'] = "Date of Birth";
+//$_LANG['clientareafirstname'] = "Date of Birth";
 $_LANG['clientareafraud'] = "Fraud";
 $_LANG['clientareafullname'] = "Client Name";
 $_LANG['clientareaheader'] = "Welcome to our client area where you can manage your account with us. This page provides a brief overview of your account including any open support requests and unpaid invoices.  Please ensure you keep your contact details up to date.";
@@ -398,6 +398,17 @@ $_LANG['invoicenumber'] = "Invoice #";
 $_LANG['invoiceofflinepaid'] = "Offline Credit Card Payments are processed manually.<br />You will receive confirmation by email once your payment has been processed.";
 $_LANG['invoicerefnum'] = "Reference Number";
 $_LANG['invoices'] = "My Invoices";
+$_LANG['transection'] = "My Transection";
+$_LANG['credit'] = "My Credit Use";
+$_LANG['creditcard'] = "Manage Credit Card";
+
+$_LANG['transectiontitle'] = "My Transactions";
+$_LANG['transectiondate'] = "Date";
+$_LANG['transectiontype'] = "Type";
+$_LANG['transectiondes'] = "Description";
+$_LANG['transectionamount'] = "Amount";
+
+
 $_LANG['invoicesamount'] = "Amount";
 $_LANG['invoicesattn'] = "ATTN";
 $_LANG['invoicesbacktoclientarea'] = "&laquo; Back to Client Area";

@@ -2,10 +2,6 @@
 /**
  *
  * @ RA
- *
- * 
- * 
- * 
  * 
  *
  **/
@@ -139,7 +135,6 @@ else {
 		$result = select_query_i("tblaffiliates", "", array("clientid" => $resultinguserid));
 		$data = mysqli_fetch_array($result);
 		$newaffid = $data['id'];
-
 		if (!$newaffid) {
 			$newaffid = insert_query("tblaffiliates", array("date" => "now()", "clientid" => $resultinguserid));
 		}

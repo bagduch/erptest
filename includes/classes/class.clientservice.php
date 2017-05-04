@@ -95,6 +95,7 @@ class RA_ClientService {
         } else {
             $this->servicedata = getServiceData();
         }
+        $this->userid = $this->servicedata['userid'];
     }
 
     public function getAllclientproducts($clientid) {
@@ -128,7 +129,6 @@ class RA_ClientService {
         }
     }
 
-    
     public function getAlladdons() {
         if (!empty($this->servicedata)) {
             $query = "select * from tblservicetoservice as tsts LEFT JOIN tblservices as ts on tsts.children_id=ts.id where tsts.parent_id=" . $this->servicedata['packageid'];
@@ -198,8 +198,6 @@ class RA_ClientService {
         $id = insert_query("tblcustomerservices", $array);
         return $id;
     }
-    
-
 
     public function updateService($data, $id) {
 

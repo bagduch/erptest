@@ -44,6 +44,7 @@ $invoicevars = array(
 	'taglinecolor'       => array(0,0,255),
 	'textcolor'          => array(0,0,0),
 	'cancelledcolor'     => array(204,204,204),
+        'draftcolor'         => array(255,153,51),
 	'unpaidcolor'        => array(204,0,51),
 	'paidcolor'          => array(153,204,0),
 	'refundedcolor'      => array(34,68,136),
@@ -85,6 +86,8 @@ $amountpaid = $datab[0];
 $balance = $invtotal - $amountpaid;
 $balance = sprintf("%01.2f", $balance);
 $balance = formatCurrency($balance);
+
+
 
 $transactions = array();
 $resultc = select_query_i("tblaccounts","",array("invoiceid"=>$id),"date` ASC,`id","ASC");
@@ -180,7 +183,14 @@ $pdf->SetLineStyle(array('width' => 0, 'cap' => 'butt', 'join' => 'miter', 'dash
 
 # SHOW IMAGE
 
-$pdf->Image('https://my.hd.net.nz/images/230x230.png',20,16,0,19,'',$CONFIG['Domain'],'',true,300);
+$setting = array();
+$sresult = select_query_i("tblconfiguration","*");
+while($data =  mysqli_fetch_array($sresult)) {
+$setting[$data['setting']] = $data['value'];
+
+}
+
+$pdf->Image($setting['LogoURL'],20,23,0,9,'',$CONFIG['Domain'],'',true,150);
 
 # SHOW COMPANY DETAILS
 $pdf->SetFont('helvetica','',7);
@@ -204,7 +214,7 @@ if ($tax_number != "") {
 	$pdf->SetXY(19,39);
 	$pdf->SetFont('helvetica','B',8);
 	$pdf->SetTextColorArray($textcolor);
-	$pdf->Cell(36,0,$tax_number,0,0,'C');
+	$pdf->Cell(36,0,$setting['gst'],0,0,'C');
 }
 
 # SHOW CLIENT DETAILS IN INVOICE TO
@@ -226,7 +236,12 @@ if ($status=="Cancelled") {
 } elseif ($status=="Paid") {
 	$statustext = $_LANG["invoicespaid"];
     $pdf->SetTextColorArray($paidcolor);
-} elseif ($status=="Refunded") {
+} elseif($status=="Draft")
+{
+$statustext = "Draft";
+ $pdf->SetTextColorArray($draftcolor);
+}
+elseif ($status=="Refunded") {
 	$statustext = $_LANG["invoicesrefunded"];
     $pdf->SetTextColorArray($refundedcolor);
 } elseif ($status=="Collections") {
@@ -312,7 +327,7 @@ $pdf->SetTextColorArray($headerfgcolor);
 $pdf->Cell(53,5,$contactinfoheader,0,0,'L',0);
 $pdf->SetXY(135,117);
 $pdf->SetTextColorArray($textcolor);
-$pdf->MultiCell(53,0,"$contactweb ".$CONFIG['Domain']."\n$contactemail ".$CONFIG['Email']."\n$contactphone - $phonenumber\n$contactfax - $faxnumber",0,'L',0);
+$pdf->MultiCell(53,0,$setting['invwebsite'].$CONFIG['Domain']."\n".$setting['invemail'].$CONFIG['Email']."\n$contactphone - $phonenumber\n$contactfax - $faxnumber",0,'L',0);
 
 # PAYMENT METHOD
 $pdf->SetXY(136,136);
@@ -351,26 +366,27 @@ $pdf->Cell(85,0,"",0,0,'L',0);
 $pdf->Cell(50,0,$accountnumber,0,0,'L',0);
 $pdf->Cell(35,0,$clientsdetails["userid"],0,0,'L',0);$pdf->Ln();
 $pdf->Cell(20,0,$remittanceto,0,0,'L',0);
-$pdf->Cell(65,0,$hdrra,0,0,'L',0);
+$pdf->Cell(65,0,$setting['invcompany'],0,0,'L',0);
 $pdf->Cell(50,0,$remittancetotaldue,0,0,'L',0);
 $pdf->Cell(35,0,$balance,0,0,'L',0);$pdf->Ln();
 $pdf->Cell(20,0,"",0,0,'L',0);
-$pdf->Cell(65,0,$hdrrb,0,0,'L',0);
+$pdf->Cell(65,0,$setting['invpobox'],0,0,'L',0);
 $pdf->Cell(50,0,"",0,0,'L',0);
 $pdf->Cell(35,0,"",0,0,'L',0);$pdf->Ln();
 $pdf->Cell(20,0,"",0,0,'L',0);
-$pdf->Cell(65,0,$hdrrc,0,0,'L',0);
+$pdf->Cell(65,0,$setting['invcity'],0,0,'L',0);
 $pdf->Cell(85,0,"",0,0,'L',0);$pdf->Ln();
 $pdf->Cell(20,0,"",0,0,'L',0);
-$pdf->Cell(65,0,$hdrrd,0,0,'L',0);
+$pdf->Cell(65,0,$setting['invpostcode'],0,0,'L',0);
 $pdf->Cell(85,0,"",0,0,'L',0);$pdf->Ln();
 $pdf->Cell(20,0,"",0,0,'L',0);
-$pdf->Cell(65,0,$hdrre,0,0,'L',0);
+$pdf->Cell(65,0,$setting['invcountry'],0,0,'L',0);
 $pdf->Ln();
 $pdf->SetFont('helvetica','',8);
 $pdf->SetXY(20,($pageformat=='A4') ? 269 : 290);
 $pdf->MultiCell(170,0,$Remittance1,0,'C',0);
-$pdf->MultiCell(170,0,$Remittance2,0,'C',0);
+$pdf->MultiCell(170,0,"Acc Number:".$setting['invaccount'],0,'C',0);
+$pdf->MultiCell(170,0,"Acc Name:".$setting['invname'],0,'C',0);
 }
 }
 

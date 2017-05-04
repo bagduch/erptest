@@ -12,8 +12,9 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="templates/{$template}/css/owl.carousel.css">
     <link rel='stylesheet' href="templates/{$template}/css/animate.min.css" />
-    <link rel='stylesheet' id='hexa-css'  href='templates/{$template}/css/whmcs.css' type='text/css' media='all' />
+    <link rel='stylesheet' id='hexa-css' href='templates/{$template}/css/whmcs.css' type='text/css' media='all' />
     <script src="templates/{$template}/js/jquery.js"></script>
+    <script src="templates/{$template}/js/client.js"></script>
     {$headoutput}
 </head>
 <body>
@@ -63,7 +64,7 @@
                             {if $loggedin}
                                 <div class="collapse navbar-collapse">
                                     <ul class="nav navbar-nav user-menu navbar-right" id="user-menu">
-                                        <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><img src="https://secure.gravatar.com/avatar/{php}$userid = $this->_tpl_vars['clientsdetails']['userid'];$result = mysqli_query("SELECT email FROM tblclients WHERE id=$userid");$data = mysqli_fetch_array($result);$email = $data["email"];echo md5( strtolower( trim( $email ) ) );{/php}?s=50&d=mm" class="user-avatar" alt="">  {$clientsdetails.firstname} {$clientsdetails.lastname} </span></a>
+                                        <li><a href="clientarea.php?action=details" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><img src="https://secure.gravatar.com/avatar/{php}$userid = $this->_tpl_vars['clientsdetails']['userid'];$result = mysqli_query("SELECT email FROM tblclients WHERE id=$userid");$data = mysqli_fetch_array($result);$email = $data["email"];echo md5( strtolower( trim( $email ) ) );{/php}?s=50&d=mm" class="user-avatar" alt="">  {$clientsdetails.firstname} {$clientsdetails.lastname} </span></a>
                                             <ul class="dropdown-menu">          
                                                 <li><a href="clientarea.php?action=details"><span aria-hidden="true" class="icon icon-user"></span> {$LANG.editaccountdetails}</a></li>
                                                 <li><a href="clientarea.php?action=changepw"><span aria-hidden="true" class="icon icon-lock"></span> {$LANG.clientareanavchangepw}</a></li>
@@ -163,7 +164,15 @@
                                         </li> 
                                         <li {if $filename eq "clientarea" and $smarty.get.action eq "Services"} class="active"{/if}><a href="clientarea.php?action=services" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navservices}</span><span class="badge badge-default pull-right">{$clientsstats.productsnumactive}</span></a></li>        
                                         <li {if $filename eq "clientarea" and $smarty.get.action eq "products"} class="active"{/if}><a href="clientarea.php?action=product" data-original-title="{$LANG.navservices}"><span aria-hidden="true" class="icon icon-layers"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navproduct}</span><span class="badge badge-default pull-right">{$clientsstats.servicenumactive}</span></a></li>        
-                                        <li {if $filename eq "clientarea" and $smarty.get.action eq "invoices"} class="active"{/if}><a href="clientarea.php?action=invoices" data-original-title="{$LANG.invoices}"><span aria-hidden="true" class="icon icon-drawer"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.invoices}</span></a></li>
+
+                                        <li class="submenu"><a class="dropdown {if $filename eq "invoices"  || $filename eq "transection" || $filename eq "credit" || $filename eq "creditcard"}active-parent{/if}" href="javascript:;" data-original-title="{$LANG.navsupport}"><span aria-hidden="true" class="icon icon-drawer"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navbilling}</span><span class="fa arrow"></span></a>
+                                            <ul {php}echo $display{/php}>
+                                                <li {if $filename eq "invoices"} class="active"{/if}><a href="clientarea.php?action=invoices" data-original-title="{$LANG.invoices}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.invoices}</span></a></li>  
+                                                <li {if $filename eq "transection"} class="active"{/if}><a href="clientarea.php?action=transection" data-original-title="{$LANG.transection}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.transection}</span></a></li>
+                                                <li {if $filename eq "credit"} class="active"{/if}><a href="downloads.php" data-original-title="{$LANG.credit}"><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.credit}</span></a></li>
+                                                <li {if $filename eq "creditcard"} class="active"{/if}><a href="knowledgebase.php" data-original-title="{$LANG.creditcard}"><span class="hidden-minibar {php}echo $hide{/php}">{$LANG.creditcard}</span></a></li>
+                                            </ul>
+                                        </li>
                                         <li class="submenu"><a class="dropdown {if $filename eq "submitticket" || $filename eq "supporttickets" || $filename eq "serverstatus" || $filename eq "downloads" || $filename eq "knowledgebase"}active-parent{/if}" href="javascript:;" data-original-title="{$LANG.navsupport}"><span aria-hidden="true" class="icon icon-support"></span><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.navsupport}</span><span class="fa arrow"></span></a>
                                             <ul {php}echo $display{/php}>
                                                 <li {if $filename eq "submitticket"} class="active"{/if}><a href="submitticket.php" data-original-title="{$LANG.opennewticket}"><span class="hidden-minibar {php}echo $hide{/php}"> {$LANG.opennewticket}</span></a></li>  

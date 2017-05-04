@@ -15,6 +15,7 @@
                     <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">Mail</a></li>
                     <li role="presentation"><a href="#tab5" aria-controls="tab5" role="tab" data-toggle="tab">Support</a></li>
                     <li role="presentation"><a href="#tab6" aria-controls="tab6" role="tab" data-toggle="tab">Invoices</a></li>
+                    <li role="presentation"><a href="#tab12" aria-controls="tab12" role="tab" data-toggle="tab">Invoices Details</a></li>
                     <li role="presentation"><a href="#tab7" aria-controls="tab7" role="tab" data-toggle="tab">Credit</a></li>
                     <li role="presentation"><a href="#tab8" aria-controls="tab8" role="tab" data-toggle="tab">Affiliates</a></li>
                     <li role="presentation"><a href="#tab9" aria-controls="tab9" role="tab" data-toggle="tab">Security</a></li>
@@ -385,13 +386,64 @@
                                 <tr><td class="fieldlabel">Invoice Starting #</td><td class="fieldarea">
                                         <input type="text" class="form-control" name="invoicestartnumber" value="" size="10"> Enter to set the next invoice number, must be greater than last #152031 (Blank for no change)</td></tr>
                             </tbody></table>
+                    </div>
+                    <div role="tabpanel" id="tab12" class="tab-pane">
+                        <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                                <tr>
+                                    <td class="fieldlabel">GST Number:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="gst" value="{$CONFIG.gst}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Phone Number:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invphone" value="{$CONFIG.invphone}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Fax Number:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invfax" value="{$CONFIG.invfax}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Website:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invwebsite" value="{$CONFIG.invwebsite}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Email:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invemail" value="{$CONFIG.invemail}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Bank Account:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invaccount" value="{$CONFIG.invaccount}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Bank Name:</td>
+                                    <td class="fieldarea"><input type="text" class="form-control" name="invname" value="{$CONFIG.invname}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Company Name:</td>
+                                    <td class="fieldarea"><input class="form-control" name="invcompany" value="{$CONFIG.invcompany}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">PO Box:</td>
+                                    <td class="fieldarea"><input class="form-control" name="invpoxbox" value="{$CONFIG.invpoxbox}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">City:</td>
+                                    <td class="fieldarea"><input class="form-control" name="invcity" value="{$CONFIG.invcity}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Post Code:</td>
+                                    <td class="fieldarea"><input class="form-control" name="invpostcode" value="{$CONFIG.invpostcode}" size="35"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Country:</td>
+                                    <td class="fieldarea"><input class="form-control" name="invcountry" value="{$CONFIG.invcountry}" size="35"></td>
+                                </tr>
 
-
+                            </tbody>
+                        </table>
                     </div>
                     <!-- Credit -->
                     <div role="tabpanel" id="tab7" class="tab-pane">
-
-
                         <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                             <tbody><tr><td class="fieldlabel">Enable/Disable</td><td class="fieldarea"><label><input type="checkbox" class="flat-red" name="addfundsenabled"> Tick this box to enable adding of funds by clients from the client area</label></td></tr>
                                 <tr><td class="fieldlabel">Minimum Deposit</td><td class="fieldarea"><input type="text" class="form-control" name="addfundsminimum" size="10" value="10.00"> Enter the minimum amount a client can add in a single transaction</td></tr>
@@ -399,11 +451,9 @@
                                 <tr><td class="fieldlabel">Maximum Balance</td><td class="fieldarea"><input type="text" class="form-control" name="addfundsmaximumbalance" size="10" value="300.00"> Enter the maximum balance that a client can add in credit</td></tr>
                                 <tr><td class="fieldlabel">Require Active Order</td><td class="fieldarea"><label><input type="checkbox" class="flat-red" name="addfundsrequireorder" checked=""> Require an active order before allowing Add Funds use (used to protect against fraud, means an admin must have manually reviewed the client &amp; approved an order before allowing credit to be added)</label></td></tr>
                             </tbody></table>
-
                     </div>
                     <!-- Affiliates -->
                     <div role="tabpanel" id="tab8" class="tab-pane">
-
                         <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                             <tbody><tr><td class="fieldlabel">Enable/Disable</td><td class="fieldarea"><label><input type="checkbox" class="flat-red" name="affiliateenabled"> Tick this box to enable the affiliate system</label></td></tr>
                                 <tr><td class="fieldlabel">Affiliate Earning Percentage</td><td class="fieldarea"><input type="text" class="form-control" name="affiliateearningpercent" size="10" value="0"> Enter the percentage of each payment you want affiliates to receive</td></tr>
@@ -413,12 +463,9 @@
                                 <tr><td class="fieldlabel">Payout Request Department</td><td class="fieldarea"><select class="form-control"name="affiliatedepartment"><option value="1" selected="">Provisioning</option></select> Select the support department to use for affiliate withdrawal requests</td></tr>
                                 <tr><td class="fieldlabel">Affiliate Links</td><td class="fieldarea"><textarea class="form-control" name="affiliatelinks" rows="10" style="width:100%"></textarea class="form-control"><br>Enter [AffiliateLinkCode] where the affiliate's customised link code should be inserted<br>Use <b>&lt;(</b> for open brackets and <b>)&gt;</b> for close brackets in HTML or else the HTML will be executed on the page</td></tr>
                             </tbody></table>
-
                     </div>
                     <!-- Security -->
                     <div role="tabpanel" id="tab9" class="tab-pane">
-
-
                         <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                             <tbody><tr><td class="fieldlabel">Captcha Form Protection</td><td class="fieldarea"><label><input type="radio" class="flat-red" name="captchasetting" value="on"> Always On (code shown to ensure human submission)</label><br><label><input type="radio" class="flat-red" name="captchasetting" value="offloggedin" checked=""> Off when logged in</label><br><label><input type="radio" class="flat-red" name="captchasetting" value=""> Always Off</label></td></tr>
                                 <tr><td class="fieldlabel">Captcha Type</td><td class="fieldarea"><label><input type="radio" class="flat-red" name="captchatype" value="" onclick="$('.recaptchasetts').hide();"> Default (5 Character Verification Code)</label><br><label><input type="radio" class="flat-red" name="captchatype" value="recaptcha" onclick="$('.recaptchasetts').show();" checked=""> reCAPTCHA (<a href="http://www.google.com/recaptcha" target="_blank">Google's reCAPTCHA system</a>)</label></td></tr>
@@ -437,7 +484,6 @@
                                 <tr class="csrftoken" style="display:none"><td class="fieldlabel">CSRF Tokens: General</td><td class="fieldarea"><span>RA.default</span><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_default" value="on" checked=""> Enabled (Default)</label><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_default" value="off"> Disabled</label></td></tr>
                                 <tr class="csrftoken" style="display:none"><td class="fieldlabel">RA.admin.default</td><td class="fieldarea"><span>RA.admin.default</span><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_admin_ns_default" value="on" checked=""> Enabled (Default)</label><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_admin_ns_default" value="off"> Disabled</label></td></tr>
                                 <tr class="csrftoken" style="display:none"><td class="fieldlabel">RA.domainchecker</td><td class="fieldarea"><span>RA.domainchecker</span><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_domainchecker" value="on"> Enabled</label><br><label><input type="radio" class="flat-red" name="csrftoken_ns_RA_ns_domainchecker" value="off" checked=""> Disabled (Default)</label></td></tr>
-
                             </tbody></table>
 
                     </div>

@@ -28,7 +28,7 @@
                                     <font color="#cccccc"><small>(Optional)</small></font>
                                 </td>
                                 <td class="fieldlabel">Region</td>
-                                <td class="fieldarea"><input class="form-control"  type="text" size="25" name="state"  tabindex="11"></td>
+                                <td class="fieldarea region"><input class="form-control"  type="text" size="25" name="state"  tabindex="11"></td>
 
                             </tr>
                             <tr>

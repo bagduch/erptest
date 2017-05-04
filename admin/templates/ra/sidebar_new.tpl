@@ -45,16 +45,7 @@
                                         icon: "",
                                         link: "clientsadd.php"
                                     },
-                                    {
-                                        name: "Client Groups",
-                                        icon: "",
-                                        link: "configclientgroups.php"
-                                    },
-                                    {
-                                        name: "Client Fields",
-                                        icon: "",
-                                        link: "clientfields.php"
-                                    },
+                                   
                                     {
                                         name: "Cancellation Requests",
                                         icon: "",
@@ -109,39 +100,7 @@
                         ]
 
                     },
-                    {
-                        name: 'Services',
-                        icon: 'fa fa-files-o',
-                        link: '#',
-                        items: [
-                            {
-                                title: "Services",
-                                icon: 'fa fa-files-o',
-                                items: [
-                                    {
-                                        name: 'Services',
-                                        icon: '',
-                                        link: 'configservices.php',
-                                    },
-                                    {
-                                        name: 'Create Service Group',
-                                        icon: '',
-                                        link: 'configservices.php?action=creategroup',
-                                    },
-                                    {
-                                        name: 'Custom Fields',
-                                        icon: '',
-                                        link: 'configcustomfieldsgroup.php',
-                                    },
-                                    {
-                                        name: 'Service Products',
-                                        icon: '',
-                                        link: 'configaddons.php',
-                                    }
-                                ]
-                            }
-                        ]
-                    },
+                  
                     {
                         name: 'Billing',
                         icon: 'fa fa-files-o',
@@ -321,6 +280,16 @@
                                         icon: '',
                                         link: 'configauto.php',
                                     },
+                                     {
+                                        name: "Client Groups",
+                                        icon: "",
+                                        link: "configclientgroups.php"
+                                    },
+                                    {
+                                        name: "Client Fields",
+                                        icon: "",
+                                        link: "clientfields.php"
+                                    },
                                     {
                                         name: 'Email Templates',
                                         icon: '',
@@ -351,6 +320,45 @@
                                         icon: '',
                                         link: 'configpromotions.php',
                                     },
+
+                                      {
+                        name: 'Services',
+                        icon: 'fa fa-files-o',
+                        link: '#',
+                        items: [
+                            {
+                                title: "Services",
+                                icon: 'fa fa-files-o',
+                                items: [
+                                    {
+                                        name: 'Services',
+                                        icon: '',
+                                        link: 'configservices.php',
+                                    },
+                                         {
+                                        name: 'Product',
+                                        icon: '',
+                                        link: 'configproducts.php',
+                                    },
+                                    {
+                                        name: 'Create Service Group',
+                                        icon: '',
+                                        link: 'configservices.php?action=creategroup',
+                                    },
+                                    {
+                                        name: 'Custom Fields',
+                                        icon: '',
+                                        link: 'configcustomfieldsgroup.php',
+                                    },
+                                    {
+                                        name: 'Service Products',
+                                        icon: '',
+                                        link: 'configaddons.php',
+                                    }
+                                ]
+                            }
+                        ]
+                    },
                                     {
                                         name: 'Staff Management',
                                         icon: 'fa fa-user-circle-o',

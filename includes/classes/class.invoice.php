@@ -22,6 +22,12 @@ class RA_Invoice {
         if ($invoiceid) {
             $this->setID($invoiceid);
         }
+        $setting = array();
+        $sresult = select_query_i("tblconfiguration", "*");
+        while ($data = mysqli_fetch_array($sresult)) {
+            $setting[$data['setting']] = $data['value'];
+        }
+       // echo "<pre>", print_r($data, 1), "</pre>";
     }
 
     public function setID($invoiceid) {

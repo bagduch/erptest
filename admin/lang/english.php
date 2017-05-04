@@ -1254,7 +1254,7 @@ $_ADMINLANG['contactpermissions']['permorders'] = "Place New Orders/Upgrades/Can
 # Statuses
 $_ADMINLANG['status']['active'] = "Active";
 $_ADMINLANG['status']['inactive'] = "Inactive";
-$_ADMINLANG['status']['closed'] = "Closed";
+$_ADMINLANG['status']['closed'] = "Archived";
 $_ADMINLANG['status']['pending'] = "Pending";
 $_ADMINLANG['status']['suspended'] = "Suspended";
 $_ADMINLANG['status']['fraud'] = "Fraud";

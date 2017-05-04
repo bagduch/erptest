@@ -26,8 +26,8 @@
                 <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
                 <li><a href="#tab_notes" data-toggle="tab">Notes</a></li>
                 <li class="pull-right">
-                    <a style="float:right" href="#" class="btn btn-danger" onclick="deleteaccount({$id});"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-                    <a style="float:right;margin-right:10px" class="btn btn-primary" href="ordersadd.php?userid={$userid}"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                    <a style="float:right" href="#" class="btn btn-danger" onclick="deleteaccount({$id});" data-toggle="tooltip" data-placement="top" title="Delete this Account"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                    <a style="float:right;margin-right:10px" class="btn btn-primary" href="ordersadd.php?userid={$userid}" data-toggle="tooltip" data-placement="top" title="Add an Account"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
                 </li>
 
             </ul>
@@ -374,6 +374,7 @@
                 }
             });
 
+         
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();
