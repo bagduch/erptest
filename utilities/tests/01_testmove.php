@@ -5,14 +5,58 @@ ini_set("log_errors",1);
 
 include '../include/functions.php';
 include '../include/class.hbwrapper.php';
-include '../../dbconnect.php';
+include '../../dbconnect.php'; // $ramyqli exists
 $hbsqli = new mysqli("hc2.hd.net.nz","unlimite_radev","m[U*gUZFgu&d", "unlimite_hostbill");
 
-
 echo "<pre>";
+//var_dump(get_defined_vars());
 
-// cleanup
-delete_query("tblclients",array(id=>8017));
+
+$clientid=8017;
+
+// move products
+$ramysqli->query("DELETE FROM tblservicegroups");
+$ramysqli->query("DELETE FROM tblservices");
+$ramysqli->query("DELETE FROM tblclients");
+$ramysqli->query("DELETE FROM tblnotes");
+$ramysqli->query("DELETE FROM tblorders");
+
+
+// move categories
+if ($result = $hbsqli->query("SELECT * FROM hb_categories")) {
+    while ($row = $result->fetch_assoc()) {
+        insert_query("tblservicegroups",
+            array(
+                id=>$row['id'],
+                name=>$row['name'],
+                type=>'service',
+                orderfrmtpl=>$row['template'],
+                disabledgateways=>null,
+                hidden=>($row['visible'] == 0) ? 1 : 0,
+                order=>$row['sort_order']
+            ));
+    }
+}
+
+// move products
+ if ($result = $hbsqli->query("SELECT * FROM hb_products")) {
+     while ($row = $result->fetch_assoc()) {
+            insert_query("tblservices",
+               array(
+                   id=> $row['id'],
+                   gid=> $row['category_id'],
+                   type=>$row['type'],
+                   name=>$row['name'],
+                   description=>$row['description'],
+                   hidden=>($row['visible'] == 0) ? 1 : 0,
+                   retired=>($row['visible'] == 0) ? 1 : 0,
+                    tax=>$row['tax']
+
+               ));
+        }
+ }
+
+
 
 // get desired clients
 if ($result = $hbsqli->query("
@@ -78,6 +122,8 @@ foreach ($clientids as $clientid) {
         )
     );   
 
+
+            // move clientnotes
     if ($hbsqli_clientnotes = $hbsqli->prepare("SELECT id,admin_id,date,note FROM hb_notes WHERE type LIKE 'client' AND rel_id = ?")) {
         $hbsqli_clientnotes->bind_param('i',$clientid);
         $hbsqli_clientnotes->execute();
@@ -101,10 +147,67 @@ foreach ($clientids as $clientid) {
 
     }
            
-    HBWrapper::setAPI('https://my.unlimitedinternet.co.nz/admin/api.php','1d964d625b897c3a2e5d','2d485b0d0f73f5a24546');
-   $accounts = HBWrapper::singleton()->getAccountDetails($client['id']);
+}
 
-}   
+// copy orders
+//
+$query = sprintf("SELECT * FROM hb_orders WHERE  client_id=%s",$clientid);
+if ($result = $hbsqli->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        insert_query("tblorders",array(
+            id=>$row['id'],
+            ordernum=>$row['number'],
+            userid=>$row['client_id'],
+            contactid=>NULL,
+            date=>$row['date_created'],
+            nameservers=>NULL,
+            promocode=>NULL,
+            promotype=>NULL,
+            promovalue=>NULL,
+            orderdata=>NULL,
+            amount=>$row['total'],
+            paymentmethod=>$row['payment_module'],
+            invoiceid=>$row['invoice_id'],
+            status=>$row['status'],
+            ipaddress=>$row['order_ip'],
+            fraudmodule=>NULL,
+            fraudoutput=>NULL,
+            notes=>$row['notes']
+        ));
+    }
+}
+
+
+// move accounts -> services
+$query = sprintf("SELECT * FROM hb_accounts WHERE client_id=%s",$clientid);
+if ($result = $hbsqli->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        //        var_dump($row);
+        insert_query("tblcustomerservices",array(
+            id=>$row['id'],
+            userid=>$row['client_id'],
+            assign_id=>NULL,
+            orderid=>$row['order_id'],
+            packageid=>$row['product_id'],
+            parent=>NULL,
+            regdate=>$row['date_created'],
+            description=>$row['domain'],
+            paymentmethod=>$row['payment_module'],
+            firstpaymentamount=>$row['firstpayment'],
+            amount=>$row['total'],
+            billingcycle=>$row['billingcycle'],
+            nextduedate=>$row['next_due'],
+            nextinvoicedate=>$row['next_invoice'],
+            servicestatus=>$row['status'],
+            billstatus=>$row['status'],
+            suspendreason=>$row['autosuspend'],
+            overideautosuspend=>($row['autosuspend'] == 0) ? 1 : 0,
+            overidesuspenduntil=>$row['autosuspend_date'],
+            lastupdate=>$row['date_changed'],
+            notes=>$row['notes']
+        ));
+    }
+}
 $result=select_query_i("tblclients","",array(id=>8017));
 while ($clientres = $result->fetch_assoc()) {
 }
