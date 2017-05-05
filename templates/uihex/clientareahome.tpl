@@ -10,6 +10,17 @@
         </blockquote>        
     </div>
 </div>
+<div class='row'>
+    <div class="col-md-12">
+        <div class='balance-wrap'>
+            <div class='balancetext badge badge-circle badge-important'>Your Balances:</div>
+            <div class="balance">${$creditdata}</div>
+            <div class="addfund">
+                <a href="clientarea.php?action=addfunds"><span class="badge badge-circle badge-important">Add Fund</span></a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-4">

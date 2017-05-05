@@ -480,9 +480,7 @@ else {
 
 
 				if ($data['description']) {
-					$description = $data['description'];
-				}
-
+					$description = $data['description'];			 
 				$kbcats[$i] = array("id" => $idkb, "name" => $name, "urlfriendlyname" => getModRewriteFriendlyString($name), "description" => $description);
 				$idnumbers = array();
 				$idnumbers[] = $idkb;

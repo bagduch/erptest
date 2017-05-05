@@ -378,11 +378,7 @@
                                                         icon: '',
                                                         link: 'configadminroles.php',
                                                     },
-                                                    {
-                                                        name: "Two-Factor Authentication",
-                                                        icon: '',
-                                                        link: 'configtwofa.php',
-                                                    }
+                                                   
                                                 ]
                                             }
                                         ]

@@ -7,16 +7,19 @@
 
 jQuery(document).ready(function () {
     state = jQuery("input[name='state']").val();
-    jQuery.ajax({
-        url: "region.php",
-        method: "POST",
-        data: {"region": jQuery(".country").val(), 'state': state}
-    }).done(function (data) {
-        if (data)
-        {
-            jQuery(".state").html(data);
-        }
-    });
+    if (typeof (state) != 'undefined')
+    {
+        jQuery.ajax({
+            url: "region.php",
+            method: "POST",
+            data: {"region": jQuery(".country").val(), 'state': state}
+        }).done(function (data) {
+            if (data)
+            {
+                jQuery(".state").html(data);
+            }
+        });
+    }
     jQuery(".country").change(function () {
         jQuery.ajax({
             url: "region.php",

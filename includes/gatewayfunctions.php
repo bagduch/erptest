@@ -32,6 +32,7 @@ function loadGatewayModule($paymentmethod) {
 
     $base_path = fetchGatewayModuleDirectory();
     $expected_file = $base_path . "/" . $paymentmethod . ".php";
+  
     $state = false;
 
     if (file_exists($expected_file)) {
@@ -139,6 +140,7 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
     global $CONFIG;
     global $_LANG;
     global $clientsdetails;
+
 
     $res = loadGatewayModule($gateway);
 

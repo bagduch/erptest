@@ -248,7 +248,7 @@ function getClientsStats($userid) {
     $stats['productsnumcancelled'] = $stats['productsnumcancelledhosting'] + $stats['productsnumcancelledreseller'] + $stats['productsnumcancelledservers'] + $stats['productsnumcancelledother'];
     $stats['productsnumtotal'] = $stats['productsnumhosting'] + $stats['productsnumreseller'] + $stats['productsnumservers'] + $stats['productsnumother'];
     $domainstats = array();
-    select_query_i("tbldomains", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
+    select_query_i("tblcustomerservices", "status,COUNT(*)", "userid=" . (int) $userid . " GROUP BY status");
 
     while ($data = mysqli_fetch_array($result)) {
         $domainstats[$data[0]] = $data[1];
@@ -586,7 +586,7 @@ function deleteClient($userid) {
 
     delete_query("tblorders", array("userid" => $userid));
     delete_query("tblcustomerservices", array("userid" => $userid));
-    delete_query("tbldomains", array("userid" => $userid));
+    delete_query("tblcustomerservices", array("userid" => $userid));
     delete_query("tblemails", array("userid" => $userid));
     delete_query("tblinvoices", array("userid" => $userid));
     delete_query("tblinvoiceitems", array("userid" => $userid));
@@ -825,7 +825,7 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
         $freedomain = $data[1];
 
         if ($freedomain && $domain) {
-            $data = get_query_vals("tbldomains", "id,recurringamount,registrationperiod,dnsmanagement,emailforwarding,idprotection", array("userid" => $userid, "domain" => $domain), "status", "ASC");
+            $data = get_query_vals("tblcustomerservices", "id,recurringamount,registrationperiod,dnsmanagement,emailforwarding,idprotection", array("userid" => $userid, "domain" => $domain), "status", "ASC");
             $domainid = $data['id'];
             $recurringamount = $data['recurringamount'];
             $regperiod = $data['registrationperiod'];
@@ -859,7 +859,7 @@ function createCancellationRequest($userid, $serviceid, $reason, $type) {
                     $recurringamount += $domainidprotectionprice;
                 }
 
-                update_query("tbldomains", array("recurringamount" => $recurringamount), array("id" => $domainid));
+                update_query("tblcustomerservices", array("recurringamount" => $recurringamount), array("id" => $domainid));
             }
         }
 
@@ -1024,9 +1024,9 @@ function closeClient($userid) {
         update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $domainlistid, "status" => "Suspended"));
     }
 
-    update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending"));
-    update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Active"));
-    update_query("tbldomains", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending-Transfer"));
+    update_query("tblcustomerservices", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending"));
+    update_query("tblcustomerservices", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Active"));
+    update_query("tblcustomerservices", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Pending-Transfer"));
     update_query("tblinvoices", array("status" => "Cancelled"), array("userid" => $userid, "status" => "Unpaid"));
     update_query("tblbillableitems", array("invoiceaction" => "0"), array("userid" => $userid));
     logActivity("Client Status changed to Closed - User ID: " . $userid, $userid);
@@ -1070,7 +1070,7 @@ function clientChangeDefaultGateway($userid, $paymentmethod) {
         update_query("tblclients", array("defaultgateway" => $paymentmethod), array("id" => $userid));
         update_query("tblcustomerservices", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
         update_query("tblserviceaddons", array("paymentmethod" => $paymentmethod), "hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=" . (int) $userid . ")");
-        update_query("tbldomains", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
+        update_query("tblcustomerservices", array("paymentmethod" => $paymentmethod), array("userid" => $userid));
         update_query("tblinvoices", array("paymentmethod" => $paymentmethod), array("userid" => $userid, "status" => "Unpaid"));
     }
 }

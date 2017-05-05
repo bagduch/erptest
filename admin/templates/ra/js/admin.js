@@ -8,17 +8,19 @@
 $(document).ready(function () {
 
     state = $("input[name='state']").val();
-    $.ajax({
-        url: "region.php",
-        method: "POST",
-        data: {"region": $(".country").val(), 'state': state}
-    }).done(function (data) {
-        if (data)
-        {
-            $(".region").html(data);
-        }
-    });
-
+    if (typeof (state) != 'undefined')
+    {
+        $.ajax({
+            url: "region.php",
+            method: "POST",
+            data: {"region": $(".country").val(), 'state': state}
+        }).done(function (data) {
+            if (data)
+            {
+                $(".region").html(data);
+            }
+        });
+    }
     $(".country").change(function () {
         $.ajax({
             url: "region.php",

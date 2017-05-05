@@ -344,6 +344,15 @@ input[type="submit"],input[type="button"]{font-family:FontAwesome;}
 .infobox-small>.infobox-data{display:inline-block;text-align:left;font-size:11px;vertical-align:middle;max-width:115px;min-width:0;}
 .qsl a:hover,.right-sidebar-holder a:hover{text-decoration:none;}
 
+.balancetext
+{
+    float:left;
+}
+.balance {
+    font-size: 19px;
+    float: left;
+    margin-left: 5px;
+}
 /* RESPONSIVE ADJUSTMENTS */
 
 @media (max-width: 768px) {
