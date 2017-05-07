@@ -445,7 +445,7 @@
                     <!-- Credit -->
                     <div role="tabpanel" id="tab7" class="tab-pane">
                         <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
-                            <tbody><tr><td class="fieldlabel">Enable/Disable</td><td class="fieldarea"><label><input type="checkbox" class="flat-red" name="addfundsenabled"> Tick this box to enable adding of funds by clients from the client area</label></td></tr>
+                            <tbody><tr><td class="fieldlabel">Enable/Disable</td><td class="fieldarea"><label><input type="checkbox" class="flat-red" name="addfundsenabled" {if $CONFIG.AddFundsEnabled eq 'on'}checked{/if}> Tick this box to enable adding of funds by clients from the client area</label></td></tr>
                                 <tr><td class="fieldlabel">Minimum Deposit</td><td class="fieldarea"><input type="text" class="form-control" name="addfundsminimum" size="10" value="10.00"> Enter the minimum amount a client can add in a single transaction</td></tr>
                                 <tr><td class="fieldlabel">Maximum Deposit</td><td class="fieldarea"><input type="text" class="form-control" name="addfundsmaximum" size="10" value="100.00"> Enter the maximum amount a client can add in a single transaction</td></tr>
                                 <tr><td class="fieldlabel">Maximum Balance</td><td class="fieldarea"><input type="text" class="form-control" name="addfundsmaximumbalance" size="10" value="300.00"> Enter the maximum balance that a client can add in credit</td></tr>

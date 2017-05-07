@@ -83,10 +83,17 @@ if ($action == "") {
     $tickets = array();
     $statusfilter = "";
     $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
-
     while ($data = mysqli_fetch_array($result)) {
         $statusfilter .= "'" . $data[0] . "',";
     }
+    $result = select_query_i("tblcredit", "sum(amount) as total", array("clientid" => $client->getID));
+    $data = mysqli_fetch_assoc($result);
+    if (isset($data['total'])) {
+        $creditdata = $data['total'];
+    } else {
+        $creditdata = 0;
+    }
+    $ca->assign("creditdata", number_format($creditdata, 2));
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
     $result = select_query_i("tbltickets", "", "userid=" . (int) ($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
@@ -1337,10 +1344,21 @@ if ($action == "") {
     redir("gid=renewals", "cart.php");
 } elseif ($action == "transection") {
     $result = select_query_i("tblaccounts", "", array("userid" => $client->getID()), "id", "DESC");
+    $transection = array();
     while ($data = mysqli_fetch_array($result)) {
-        
+        $transection[$data['id']] = $data;
+        $transection[$data['id']]['amount'] = $data['amountout'] - $data['amountin'];
     }
+    $smartyvalues["transection"] = $transection;
     $ca->setTemplate("clientareatransection");
+} elseif ($action == 'creditus') {
+    $creditus = array();
+    $result = select_query_i("tblcredit", "", array("clientid" => $client->getID()), $orderby, $sort, $limit);
+    while ($data = mysqli_fetch_array($result)) {
+        $creditus[$data['id']] = $data;
+    }
+    $smartyvalues["creditus"] = $creditus;
+    $ca->setTemplate("clientareacredituse");
 } elseif ($action == "invoices") {
     checkContactPermission("invoices");
     $ca->setTemplate("clientareainvoices");
@@ -1490,84 +1508,88 @@ if ($action == "") {
 
     if (!$CONFIG['AddFundsEnabled']) {
         $smartyvalues['addfundsdisabled'] = true;
-    } else {
-        if (!$numactiveorders) {
-            $smartyvalues['notallowed'] = true;
-        } else {
-            if ($amount) {
-                check_token();
-                $totalcredit = $clientsdetails['credit'] + $amount;
+    } elseif (!$numactiveorders) {
+        $smartyvalues['notallowed'] = true;
+    } elseif ($amount) {
+        check_token();
+        $totalcredit = $clientsdetails['credit'] + $amount;
 
-                if ($addfundsmaxbal < $totalcredit) {
-                    $errormessage = $_LANG['addfundsmaximumbalanceerror'] . " " . formatCurrency($addfundsmaxbal);
-                }
-
-                if ($addfundsmax < $amount) {
-                    $errormessage = $_LANG['addfundsmaximumerror'] . " " . formatCurrency($addfundsmax);
-                }
-
-                if ($amount < $addfundsmin) {
-                    $errormessage = $_LANG['addfundsminimumerror'] . " " . formatCurrency($addfundsmin);
-                }
-
-                if ($errormessage) {
-                    $ca->assign("errormessage", $errormessage);
-                } else {
-                    $paymentmethods = getGatewaysArray();
-
-                    if (!array_key_exists($paymentmethod, $paymentmethods)) {
-                        $paymentmethod = getClientsPaymentMethod($client->getID());
-                    }
-
-                    $paymentmethod = RA_Gateways::makesafename($paymentmethod);
-
-                    if (!$paymentmethod) {
-                        exit("Unexpected payment method value. Exiting.");
-                    }
-
-                    require "includes/processinvoices.php";
-                    $invoiceid = createInvoices($client->getID());
-                    insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $amount, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
-                    $invoiceid = createInvoices($client->getID(), "", true);
-                    $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
-                    $data = mysqli_fetch_array($result);
-                    $gatewaytype = $data['value'];
-
-                    if ($gatewaytype == "CC" || $gatewaytype == "OfflineCC") {
-                        if (!isValidforPath($paymentmethod)) {
-                            exit("Invalid Payment Gateway Name");
-                        }
-
-                        $gatewaypath = ROOTDIR . "/modules/gateways/" . $paymentmethod . ".php";
-
-                        if (file_exists($gatewaypath)) {
-                            require_once $gatewaypath;
-                        }
-
-                        if (!function_exists($paymentmethod . "_link")) {
-                            redir("invoiceid=" . (int) $invoiceid, "creditcard.php");
-                        }
-                    }
-
-                    $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
-                    $data = mysqli_fetch_array($result);
-                    $id = $data['id'];
-                    $total = $data['total'];
-                    $paymentmethod = $data['paymentmethod'];
-                    $clientsdetails = getClientsDetails($client->getID());
-                    $params = getGatewayVariables($paymentmethod, $id, $total);
-                    $paymentbutton = call_user_func($paymentmethod . "_link", $params);
-                    $ca->setTemplate("forwardpage");
-                    $ca->assign("message", $_LANG['forwardingtogateway']);
-                    $ca->assign("code", $paymentbutton);
-                    $ca->assign("invoiceid", $id);
-                    $ca->output();
-                    exit();
-                }
-            } else {
-                $amount = $addfundsmin;
-            }
+        if ($addfundsmaxbal < $totalcredit) {
+            $errormessage = $_LANG['addfundsmaximumbalanceerror'] . " " . formatCurrency($addfundsmaxbal);
         }
+
+        if ($addfundsmax < $amount) {
+            $errormessage = $_LANG['addfundsmaximumerror'] . " " . formatCurrency($addfundsmax);
+        }
+
+        if ($amount < $addfundsmin) {
+            $errormessage = $_LANG['addfundsminimumerror'] . " " . formatCurrency($addfundsmin);
+        }
+
+        if ($errormessage) {
+            $ca->assign("errormessage", $errormessage);
+        } else {
+
+
+            $paymentmethods = getGatewaysArray();
+
+
+            if (!array_key_exists($paymentmethod, $paymentmethods)) {
+                $paymentmethod = getClientsPaymentMethod($client->getID());
+            }
+
+            $paymentmethod = RA_Gateways::makesafename($paymentmethod);
+
+
+            if (!$paymentmethod) {
+                exit("Unexpected payment method value. Exiting.");
+            }
+
+            require "includes/processinvoices.php";
+            $invoiceid = createInvoices($client->getID());
+
+            insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $amount, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
+            $invoiceid = createInvoices($client->getID(), "", true);
+
+            $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+            $data = mysqli_fetch_array($result);
+            $gatewaytype = $data['value'];
+
+            if ($gatewaytype == "CC" || $gatewaytype == "OfflineCC") {
+                if (!isValidforPath($paymentmethod)) {
+                    exit("Invalid Payment Gateway Name");
+                }
+
+                $gatewaypath = ROOTDIR . "/modules/gateways/" . $paymentmethod . ".php";
+
+                if (file_exists($gatewaypath)) {
+                    require_once $gatewaypath;
+                }
+
+                if (!function_exists($paymentmethod . "_link")) {
+                    redir("invoiceid=" . (int) $invoiceid, "creditcard.php");
+                }
+            }
+
+            $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
+            $data = mysqli_fetch_array($result);
+            $id = $data['id'];
+            $total = $data['total'];
+            $paymentmethod = $data['paymentmethod'];
+            $clientsdetails = getClientsDetails($client->getID());
+
+            $params = getGatewayVariables($paymentmethod, $id, $total);
+
+            $paymentbutton = call_user_func($paymentmethod . "_link", $params);
+            $ca->setTemplate("forwardpage");
+            $ca->assign("message", $_LANG['forwardingtogateway']);
+            $ca->assign("code", $paymentbutton);
+            $ca->assign("invoiceid", $id);
+            $ca->output();
+            exit();
+        }
+    } else {
+        $amount = $addfundsmin;
     }
 
     $ca->setTemplate("clientareaaddfunds");

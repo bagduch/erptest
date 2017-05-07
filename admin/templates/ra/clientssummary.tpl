@@ -30,7 +30,7 @@
     </div>
 </div>
 <div class="row">
-    {foreach from=$notes item=data} {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+    {foreach from=$notes item=data} {if $data.flag && $adminid eq $data.assignto && $data.sticky eq '0'}
     <div class="col-lg-3 col-xs-6">
         <div class="alert alert-{$data.color} alert-dismissible">
             <form class="notesupdate{$data.id}" method="post" action="">

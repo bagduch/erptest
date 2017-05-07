@@ -102,7 +102,6 @@ $accordion = array(
                 "members" => array(
                     "configadmins.php" => "Administrator Users",
                     "configadminroles.php" => "Administrator Roles",
-                    "configtwofa.php" => "Two-Factor Authentication"
                 ),
           
             ),

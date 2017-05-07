@@ -222,9 +222,10 @@ if ($action == "save") {
     $token_manager = &getTokenManager();
 
     $token_manager->processAdminHTMLSave($ra);
-    redir("success=true&tab=" . $tab);
+    redir("success=true");
     exit();
 } // end of action==save
+
 
 releaseSession();
 ob_start();
@@ -715,7 +716,7 @@ echo ")</td></tr>
 echo $aInt->lang("general", "enabledisable");
 echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"addfundsenabled\"";
 
-if ($CONFIG['AddFundsEnabled']) {
+if ($CONFIG['AddFundsEnabled'] == "on") {
     echo " CHECKED";
 }
 

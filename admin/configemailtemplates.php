@@ -270,8 +270,8 @@ if ($action == "") {
 	outputEmailTpls("general");
 	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typeproduct")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
 	outputEmailTpls("product");
-	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typedomain")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
-	outputEmailTpls("domain");
+//	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typedomain")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
+//	outputEmailTpls("domain");
 	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typeinvoice")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";
 	outputEmailTpls("invoice");
 	echo "<h2>" . ucfirst($aInt->lang("emailtpls", "typesupport")) . " " . $aInt->lang("emailtpls", "messages") . "</h2>";

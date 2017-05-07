@@ -7,10 +7,38 @@
  */
 $region = array(
     "New Zealand" => array(
-        "Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson",
-        "Marlborough", "West Coast", "Canterbury", "Otago", "Southland"
+        "Northland",
+        "Auckland",
+        "Coromandel",
+        "Bay of Plenty",
+        "Waikato",
+        "Rotorua",
+        "Eastland",
+        "Taupo",
+        "Ruapehu",
+        "Taranaki",
+        "Hawke's Bay",
+        "Wanganui",
+        "Manawatu",
+        "Wairarapa",
+        "Wellington",
+        "Nelson",
+        "Marlborough",
+        "West Coast",
+        "Christchurch",
+        "Canterbury",
+        "Mt Cook",
+        "Wanaka",
+        "Queenstown",
+        "Otago",
+        "Dunedin",
+        "Fiordland",
+        "Southland"
     )
 );
+
+
+
 
 
 

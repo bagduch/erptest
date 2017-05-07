@@ -322,33 +322,33 @@ echo $aInt->lang("automation", "ccnoremoveinfo");
 echo "</label></td></tr>
 </table>
 <p><b>";
-echo $aInt->lang("automation", "currencysettings");
-echo "</b></p>
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "exchangerates");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"currencyautoupdateexchangerates\"";
-
-if ($CONFIG['CurrencyAutoUpdateExchangeRates'] == "on") {
-	echo " CHECKED";
-}
-
-echo "> ";
-echo $aInt->lang("automation", "exchangeratesinfo");
-echo "</label></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("automation", "productprices");
-echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"currencyautoupdateproductprices\"";
-
-if ($CONFIG['CurrencyAutoUpdateProductPrices'] == "on") {
-	echo " CHECKED";
-}
-
-echo "> ";
-echo $aInt->lang("automation", "productpricesinfo");
-echo "</label></td></tr>
-</table>
-<p><b>";
+// echo $aInt->lang("automation", "currencysettings");
+//echo "</b></p>
+//<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
+//<tr><td class=\"fieldlabel\">";
+//echo $aInt->lang("automation", "exchangerates");
+//echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"currencyautoupdateexchangerates\"";
+//
+//if ($CONFIG['CurrencyAutoUpdateExchangeRates'] == "on") {
+//	echo " CHECKED";
+//}
+//
+//echo "> ";
+//echo $aInt->lang("automation", "exchangeratesinfo");
+//echo "</label></td></tr>
+//<tr><td class=\"fieldlabel\">";
+//echo $aInt->lang("automation", "productprices");
+//echo "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"currencyautoupdateproductprices\"";
+//
+//if ($CONFIG['CurrencyAutoUpdateProductPrices'] == "on") {
+//	echo " CHECKED";
+//}
+//
+//echo "> ";
+//echo $aInt->lang("automation", "productpricesinfo");
+//echo "</label></td></tr>
+//</table>
+echo "<p><b>";
 echo $aInt->lang("automation", "ticketsettings");
 echo "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">

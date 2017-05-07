@@ -3,22 +3,16 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+
  *
  **/
 
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
-
 if ($userid && $hostingid) {
 	redir("userid=" . $userid . "&id=" . $hostingid, "clientsservices.php");
 }
-
-
 if ($userid && $id) {
 	redir("userid=" . $userid . "&id=" . $id, "clientsservices.php");
 }
