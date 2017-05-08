@@ -212,7 +212,7 @@ if ($cron->isScheduled("domainrenewalnotices")) {
 				if (date("d") == 11) {
 					$renewaldatestart = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
 					$renewaldateend = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
-					$result = select_query_i_i("tbldomains", "id,userid", "status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
+					$result = select_query_i_i("tblcustomerservices", "id,userid", "status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
 
 					while ($data = mysqli_fetch_array($result)) {
 						$domainid = $data['id'];
@@ -224,11 +224,11 @@ if ($cron->isScheduled("domainrenewalnotices")) {
 						$domainsids[] = $domainid;
 						$userid = $data['userid'];
 						$domains = array();
-						$result2 = select_query_i_i("tbldomains", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
+						$result2 = select_query_i_i("tblcustomerservices", "id,	description,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
 
 						while ($data = mysqli_fetch_array($result2)) {
 							$domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate'], "days" => round((strtotime($data['nextduedate']) - strtotime(date("Ymd"))) / 86400));
-							update_query("tbldomains", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
+							update_query("tblcustomerservices", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
 							$domainsids[] = $data['id'];
 						}
 
@@ -243,7 +243,7 @@ if ($cron->isScheduled("domainrenewalnotices")) {
 			}
 
 			$renewaldate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
-			$result = select_query_i_i("tbldomains", "id,userid", "status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
+			$result = select_query_i_i("tblcustomerservices", "id,userid", "status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$domainid = $data['id'];
@@ -255,11 +255,11 @@ if ($cron->isScheduled("domainrenewalnotices")) {
 				$domainsids[] = $domainid;
 				$userid = $data['userid'];
 				$domains = array();
-				$result2 = select_query_i("tbldomains", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
+				$result2 = select_query_i("tblcustomerservices", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
 
 				while ($data = mysqli_fetch_array($result2)) {
 					$domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate']);
-					update_query("tbldomains", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
+					update_query("tblcustomerservices", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
 					$domainsids[] = $data['id'];
 				}
 
@@ -301,7 +301,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 		$freedomain = $data2['freedomain'];
 
 		if ($freedomain) {
-			$result2 = select_query_i("tbldomains", "id,registrationperiod", array("domain" => $domain, "recurringamount" => "0.00"));
+			$result2 = select_query_i("tblcustomerservices", "id,registrationperiod", array("domain" => $domain, "recurringamount" => "0.00"));
 			$data2 = mysqli_fetch_array($result2);
 			$domainid = $data2['id'];
 			$regperiod = $data2['registrationperiod'];
@@ -312,7 +312,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 				$currency = getCurrency($userid);
 				$temppricelist = getTLDPriceList("." . $tld);
 				$renewprice = $temppricelist[$regperiod]['renew'];
-				update_query("tbldomains", array("recurringamount" => $renewprice), array("id" => $domainid));
+				update_query("tblcustomerservices", array("recurringamount" => $renewprice), array("id" => $domainid));
 			}
 		}
 
@@ -998,7 +998,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 
 	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['id'];
-		$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
+		$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
 		$data = mysqli_fetch_array($result2);
 		$totalactivecount = $data[0];
 
@@ -1021,7 +1021,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 		update_query("tblclients", array("status" => "Active"), array("id" => $userid));
 	}
 
-	$result = full_query_i("SELECT tbldomains.userid FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tbldomains.status IN ('Active','Pending-Transfer')");
+	$result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblcustomerservices.status IN ('Active','Pending-Transfer')");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['userid'];
@@ -1031,7 +1031,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 	$cron->logActivity("Done", true);
 }
 
-$query = "UPDATE tbldomains SET status='Expired' WHERE expirydate<'" . date("Y-m-d") . "' AND expirydate!='00000000' AND status='Active'";
+$query = "UPDATE tblcustomerservices SET status='Expired' WHERE expirydate<'" . date("Y-m-d") . "' AND expirydate!='00000000' AND status='Active'";
 $result = full_query_i($query);
 $cron->logActivity("Completed");
 $cron->emailReport();
