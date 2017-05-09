@@ -16,7 +16,7 @@ $aInt->title = "Client Custom Fields";
 $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 
 

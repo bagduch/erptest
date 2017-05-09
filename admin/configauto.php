@@ -69,10 +69,10 @@ if ($success) {
 
 
 
-$aInt->assign('CONFIG',$CONFIG);
-$aInt->assign('PHP_SELF',$PHP_SELF);
+$aInt->assign('CONFIG', $CONFIG);
+$aInt->assign('PHP_SELF', $PHP_SELF);
 $aInt->template = "configauto";
-
-$aInt->jscode = $jscode . $menuselect;
+$aInt->jscode = $jscode;
+$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>
