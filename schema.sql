@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1725 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1726 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,6 +208,7 @@ CREATE TABLE `tbladminroles` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `widgets` varchar(64) NOT NULL,
+  `report` varchar(64) NOT NULL,
   `systememails` int(1) NOT NULL,
   `accountemails` int(1) NOT NULL,
   `supportemails` int(1) NOT NULL,
