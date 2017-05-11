@@ -50,7 +50,16 @@ if ($action == "duplicaterole") {
 
 if ($action == "save") {
     check_token("RA.admin.default");
-    update_query("tbladminroles", array("name" => $name, "widgets" => implode(",", $widget), "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
+
+    if (!empty($report)) {
+        $reportdata = "";
+        foreach ($report as $row) {
+            $reportdata .= $row . ",";
+        }
+    } else {
+        $reportdata = "";
+    }
+    update_query("tbladminroles", array("name" => $name, "widgets" => implode(",", $widget), "report" => $reportdata, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
     delete_query("tbladminperms", array("roleid" => $id));
 
     if ($adminperms) {
@@ -189,11 +198,13 @@ if (!$action) {
             if (is_file($reportdir . $reportfile) && $reportfile != "index.php") {
                 $extension = explode(".", $reportfile);
                 $reportfilename = str_replace("_", " ", $extension[0]);
-                echo ucwords($reportfilename);
+
+                $reporthtml.="<input id='" . $extension[0] . "' type='checkbox' name='report[]' value='" . $extension[0] . "'>";
+                $reporthtml.="<label for='" . $extension[0] . "'>" . ucwords($reportfilename) . "</label><br />";
             }
         }
     }
-    $reporthtml = "</td></tr></table>";
+    $reporthtml .= "</td></tr></table>";
 
     closedir($dh);
 
@@ -239,6 +250,8 @@ if (!$action) {
     }
 
     $widgethtml.= "</td></tr></table>";
+
+    $aInt->assign("reporthtml", $reporthtml);
     $aInt->assign("supportemails", $supportemails);
     $aInt->assign("accountemails", $accountemails);
     $aInt->assign("systememails", $systememails);
