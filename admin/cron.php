@@ -68,7 +68,7 @@ if ($escalations) {
 			$tickettime = date("Y-m-d H:i:s", mktime(date("H"), date("i") - $timeelapsed, date("s"), date("m"), date("d"), date("Y")));
 			$ticketlasttime = date("Y-m-d H:i:s", strtotime("" . $lastruntime . " - " . $timeelapsed . " minutes"));
 			$ticketsqry .= "lastreply>'" . $ticketlasttime . "' AND lastreply<='" . $tickettime . "' AND ";
-		}
+                    }
 
 		$ticketsqry = substr($ticketsqry, 0, 0 - 5);
 		$result2 = full_query_i_i($ticketsqry);
@@ -204,8 +204,6 @@ if ($cron->isScheduled("invoicereminders")) {
 	SendOverdueInvoiceReminders();
 }
 
-
-
 if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests")) {
 	$i = 0;
 	$terminatedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
@@ -231,7 +229,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 		$freedomain = $data2['freedomain'];
 
 		if ($freedomain) {
-			$result2 = select_query_i("tbldomains", "id,registrationperiod", array("domain" => $domain, "recurringamount" => "0.00"));
+			$result2 = select_query_i("tblcustomerservices", "id,registrationperiod", array("domain" => $domain, "recurringamount" => "0.00"));
 			$data2 = mysqli_fetch_array($result2);
 			$domainid = $data2['id'];
 			$regperiod = $data2['registrationperiod'];
@@ -242,7 +240,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 				$currency = getCurrency($userid);
 				$temppricelist = getTLDPriceList("." . $tld);
 				$renewprice = $temppricelist[$regperiod]['renew'];
-				update_query("tbldomains", array("recurringamount" => $renewprice), array("id" => $domainid));
+				update_query("tblcustomerservices", array("recurringamount" => $renewprice), array("id" => $domainid));
 			}
 		}
 
@@ -947,7 +945,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 
 	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['id'];
-		$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tbldomains WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
+		$result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int)$userid . " LIMIT 1");
 		$data = mysqli_fetch_array($result2);
 		$totalactivecount = $data[0];
 
@@ -970,7 +968,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 		update_query("tblclients", array("status" => "Active"), array("id" => $userid));
 	}
 
-	$result = full_query_i("SELECT tbldomains.userid FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tbldomains.status IN ('Active','Pending-Transfer')");
+	$result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblcustomerservices.status IN ('Active','Pending-Transfer')");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$userid = $data['userid'];
@@ -980,7 +978,7 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 	$cron->logActivity("Done", true);
 }
 
-$query = "UPDATE tbldomains SET status='Expired' WHERE expirydate<'" . date("Y-m-d") . "' AND expirydate!='00000000' AND status='Active'";
+$query = "UPDATE tblcustomerservices SET status='Expired' WHERE expirydate<'" . date("Y-m-d") . "' AND expirydate!='00000000' AND status='Active'";
 $result = full_query_i($query);
 $cron->logActivity("Completed");
 $cron->emailReport();

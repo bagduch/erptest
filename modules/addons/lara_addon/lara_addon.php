@@ -11,7 +11,7 @@
  * @link       http://www.whmcsadmintheme.com
  */
 
-if (!defined("WHMCS"))
+if (!defined("RA"))
     die("This file cannot be accessed directly");
 
 define("currentLaraVersion", "3.1.1");
