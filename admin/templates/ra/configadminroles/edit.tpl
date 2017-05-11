@@ -37,6 +37,12 @@
                         {$widgethtml}
 
                     </td></tr>
+                <tr>
+                    <td class="fieldlabel">Report</td>
+                    <td class='fieldarea'>
+                        {$reporthtml}
+                    </td>
+                </tr>
                 <tr><td class="fieldlabel">Email Messages</td>
                     <td class="fieldarea"><input type="checkbox" name="systememails" value="1" {if $systememails}checked{/if}> System Emails (eg. Cron Notifications, Invalid Login Attempts, etc...)<br>
                         <input type="checkbox" name="accountemails" value="1"  {if $accountemails}checked{/if}> Account Emails (eg. Order Confirmations, Details Changes, Automatic Setup Notifications, etc...)<br>

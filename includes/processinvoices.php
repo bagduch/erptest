@@ -30,8 +30,40 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
         $statusfilter .= ",'Suspended'";
     }
 
-    $hostingquery = "paymentmethod!='' AND servicestatus IN (" . $statusfilter . ") AND billingcycle!='Free' AND billingcycle!='Free Account' AND nextduedate!='00000000' AND nextinvoicedate!='00000000' AND ((billingcycle='Monthly' AND " . $matchfield . "<='" . $invoicedatemonthly . ("') OR (billingcycle='Quarterly' AND " . $matchfield . "<='") . $invoicedatequarterly . ("') OR (billingcycle='Semi-Annually' AND " . $matchfield . "<='") . $invoicedatesemiannually . ("') OR (billingcycle='Annually' AND " . $matchfield . "<='") . $invoicedateannually . ("') OR (billingcycle='Biennially' AND " . $matchfield . "<='") . $invoicedatebiennially . ("') OR (billingcycle='Triennially' AND " . $matchfield . "<='") . $invoicedatetriennially . "') OR (billingcycle='One Time'))";
-    $descriptionquery = "paymentmethod!='' AND (donotrenew='' OR `status`='Pending') AND `status` IN (" . $statusfilter . ") AND " . $matchfield . "<='" . $descriptioninvoicedate . "'";
+    $hostingquery = "paymentmethod!='' 
+            AND servicestatus IN (" . $statusfilter . ") 
+            AND billingcycle!='Free' 
+            AND billingcycle!='Free Account' 
+            AND nextduedate!='00000000' 
+            AND nextinvoicedate!='00000000' 
+            AND (
+                    (
+                        billingcycle='Monthly'
+                        AND " . $matchfield . "<='" . $invoicedatemonthly . ("'
+                    ) OR (
+                        billingcycle='Quarterly' 
+                        AND " . $matchfield . "<='") . $invoicedatequarterly . ("'
+                    ) OR (
+                        billingcycle='Semi-Annually' 
+                        AND " . $matchfield . "<='") . $invoicedatesemiannually . ("'
+                    ) OR (
+                        billingcycle='Annually' 
+                        AND " . $matchfield . "<='") . $invoicedateannually . ("'
+                    ) OR (
+                        billingcycle='Biennially' 
+                        AND " . $matchfield . "<='") . $invoicedatebiennially . ("'
+                    ) OR (
+                        billingcycle='Triennially' 
+                        AND " . $matchfield . "<='") . $invoicedatetriennially . "'
+                    ) OR (
+                        billingcycle='One Time'
+                    )
+            )";
+$descriptionquery = "
+    paymentmethod!='' 
+    AND (donotrenew='' OR `status`='Pending') 
+    AND `status` IN (" . $statusfilter . ") 
+    AND " . $matchfield . "<='" . $descriptioninvoicedate . "'";
     $hostingaddonsquery = "tblserviceaddons.paymentmethod!='' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.status IN (" . $statusfilter . ") AND tblserviceaddons.nextduedate!='00000000' AND tblserviceaddons.nextinvoicedate!='00000000' AND ((tblserviceaddons.billingcycle='Monthly' AND tblserviceaddons." . $matchfield . "<='" . $invoicedatemonthly . ("') OR (tblserviceaddons.billingcycle='Quarterly' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatequarterly . ("') OR (tblserviceaddons.billingcycle='Semi-Annually' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatesemiannually . ("') OR (tblserviceaddons.billingcycle='Annually' AND tblserviceaddons." . $matchfield . "<='") . $invoicedateannually . ("') OR (tblserviceaddons.billingcycle='Biennially' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatebiennially . ("') OR (tblserviceaddons.billingcycle='Triennially' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatetriennially . "') OR (tblserviceaddons.billingcycle='One Time'))";
     $i = 0;
     $billableitemqry = "";
@@ -73,7 +105,26 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
             $cancellationreqids[] = $data[0];
         }
 //promoid removed
-        $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.nextduedate,tblcustomerservices.nextinvoicedate,tblcustomerservices.billingcycle,tblcustomerservices.regdate,tblcustomerservices.firstpaymentamount,tblcustomerservices.amount,tblcustomerservices.description,tblcustomerservices.paymentmethod,tblcustomerservices.packageid,tblcustomerservices.servicestatus", $hostingquery, "description", "ASC");
+        $result = select_query_i(
+            "tblcustomerservices", 
+            
+            "tblcustomerservices.id,
+            tblcustomerservices.userid,
+            tblcustomerservices.nextduedate,
+            tblcustomerservices.nextinvoicedate,
+            tblcustomerservices.billingcycle,
+            tblcustomerservices.regdate,
+            tblcustomerservices.firstpaymentamount,
+            tblcustomerservices.amount,
+            tblcustomerservices.description,
+            tblcustomerservices.paymentmethod,
+            tblcustomerservices.packageid,
+            tblcustomerservices.servicestatus", 
+
+            $hostingquery, 
+            "description", 
+            "ASC"
+        );
         $totalservicerows = mysqli_num_rows($result);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -84,7 +135,16 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                 $nextduedate = $data[$matchfield];
                 $billingcycle = $data['billingcycle'];
                 $status = $data['servicestatus'];
-                $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Hosting", "relid" => $serviceid, "duedate" => $nextduedate));
+                $num_rows = get_query_val(
+                    "tblinvoiceitems", 
+                    "COUNT(id)", 
+                    array(
+                        "userid" => $userid, 
+                        "type" => "Hosting", 
+                        "relid" => $serviceid, 
+                        "duedate" => $nextduedate
+                    )
+                );
                 $contblock = false;
 
                 if ((!$num_rows && $continvoicegen) && $status == "Pending") {
@@ -139,18 +199,48 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
 
             if ($hostingaddonsquery) {
-                $result3 = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblcustomerservices.userid,tblcustomerservices.description", $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), "tblserviceaddons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+                $result3 = select_query_i(
+                    "tblserviceaddons", 
+
+                    "tblserviceaddons.*,
+                    tblserviceaddons.regdate AS addonregdate,
+                    tblcustomerservices.userid,
+                    tblcustomerservices.description", 
+
+                    $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), 
+                    "tblserviceaddons`.`name", 
+                    "ASC", 
+                    "", 
+                    "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid"
+                );
 
                 while ($data = mysqli_fetch_array($result3)) {
                     $id = $data['id'];
                     $userid = $data['userid'];
                     $nextduedate = $data[$matchfield];
                     $status = $data['status'];
-                    $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id, "duedate" => $nextduedate));
+                    $num_rows = get_query_val(
+                        "tblinvoiceitems", 
+                        "COUNT(id)", 
+                        array(
+                            "userid" => $userid, 
+                            "type" => "Addon", 
+                            "relid" => $id, 
+                            "duedate" => $nextduedate
+                        )
+                    );
                     $contblock = false;
 
                     if ((!$num_rows && $continvoicegen) && $status == "Pending") {
-                        $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id));
+                        $num_rows = get_query_val(
+                            "tblinvoiceitems", 
+                            "COUNT(id)", 
+                            array(
+                                "userid" => $userid, 
+                                "type" => "Addon", 
+                                "relid" => $id
+                            )
+                        );
                         $contblock = true;
                     }
 
@@ -183,7 +273,16 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                             $paydates = "(" . fromMySQLDate($nextduedate) . " - " . fromMySQLDate($invoicepayuntildate) . ")";
                         }
 
-                        $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id, "duedate" => $nextduedate));
+                        $num_rows = get_query_val(
+                            "tblinvoiceitems", 
+                            "COUNT(id)", 
+                            array(
+                                "userid" => $userid, 
+                                "type" => "Addon", 
+                                "relid" => $id, 
+                                "duedate" => $nextduedate
+                            )
+                        );
 
                         if ($num_rows == 0) {
                             if (!in_array($serviceid, $cancellationreqids)) {
@@ -197,14 +296,34 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                                 }
 
                                 $description = $_LANG['orderaddon'] . (" " . $description . "- " . $name . " " . $paydates);
-                                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Addon", "relid" => $id, "description" => $description, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+                                insert_query(
+                                    "tblinvoiceitems", 
+                                    array(
+                                        "userid" => $userid, 
+                                        "type" => "Addon", 
+                                        "relid" => $id, 
+                                        "description" => $description, 
+                                        "amount" => $amount, 
+                                        "taxed" => $tax, 
+                                        "duedate" => $nextduedate, 
+                                        "paymentmethod" => $paymentmethod
+                                    )
+                                );
                                 $AddonSpecificIDs[] = $id;
                             }
                         }
 
 
                         if (!$contblock && $continvoicegen) {
-                            update_query("tblserviceaddons", array("nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)), array("id" => $id));
+                            update_query(
+                                "tblserviceaddons", 
+                                array(
+                                    "nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)
+                                ), 
+                                array(
+                                    "id" => $id
+                                )
+                            );
                         }
                     }
                 }
