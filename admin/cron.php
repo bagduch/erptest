@@ -25,6 +25,7 @@ $cron->raiseLimits();
 releaseSession();
 $escalations = (((is_array($_SERVER['argv']) && in_array("escalations", $_SERVER['argv'])) || isset($_GET['escalations'])) ? true : false);
 
+// run ticket escalations
 if ($escalations) {
 	include ROOTDIR . "/includes/adminfunctions.php";
 	$lastruntime = $CONFIG['TicketEscalationLastRun'];
@@ -142,8 +143,11 @@ if ($escalations) {
 }
 
 $cron->logactivity("Starting");
+// clean up invoices
 full_query_i_i("DELETE FROM tblinvoices WHERE userid NOT IN (SELECT id FROM tblclients)");
+// ensure tickets have a department
 full_query_i_i("UPDATE tbltickets SET did=(SELECT id FROM tblticketdepartments ORDER BY `order` ASC LIMIT 1) WHERE did NOT IN (SELECT id FROM tblticketdepartments)");
+// ensure clients and accounts have a currency
 update_query_i("tblclients", array("currency" => "1"), array("currency" => "0"));
 update_query_i("tblaccounts", array("currency" => "1"), array("currency" => "0", "userid" => "0"));
 
@@ -200,80 +204,6 @@ if ($cron->isScheduled("invoicereminders")) {
 	SendOverdueInvoiceReminders();
 }
 
-
-if ($cron->isScheduled("domainrenewalnotices")) {
-	$domainsids = array();
-	$renewalsnoticescount = 0;
-	$renewals = explode(",", $CONFIG['DomainRenewalNotices']);
-	foreach ($renewals as $renewal) {
-
-		if ($renewal) {
-			if (30 <= $renewal) {
-				if (date("d") == 11) {
-					$renewaldatestart = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
-					$renewaldateend = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
-					$result = select_query_i_i("tbldomains", "id,userid", "status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
-
-					while ($data = mysqli_fetch_array($result)) {
-						$domainid = $data['id'];
-
-						if (in_array($domainid, $domainsids)) {
-							continue;
-						}
-
-						$domainsids[] = $domainid;
-						$userid = $data['userid'];
-						$domains = array();
-						$result2 = select_query_i_i("tbldomains", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
-
-						while ($data = mysqli_fetch_array($result2)) {
-							$domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate'], "days" => round((strtotime($data['nextduedate']) - strtotime(date("Ymd"))) / 86400));
-							update_query("tbldomains", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
-							$domainsids[] = $data['id'];
-						}
-
-						sendMessage("Upcoming Domain Renewal Notice", $domainid, array("expiring_domains" => $domains, "days_until_expiry" => $renewal));
-						++$renewalsnoticescount;
-					}
-
-					continue;
-				}
-
-				continue;
-			}
-
-			$renewaldate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
-			$result = select_query_i_i("tbldomains", "id,userid", "status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
-
-			while ($data = mysqli_fetch_array($result)) {
-				$domainid = $data['id'];
-
-				if (in_array($domainid, $domainsids)) {
-					continue;
-				}
-
-				$domainsids[] = $domainid;
-				$userid = $data['userid'];
-				$domains = array();
-				$result2 = select_query_i("tbldomains", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int)$renewal . "|%'");
-
-				while ($data = mysqli_fetch_array($result2)) {
-					$domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate']);
-					update_query("tbldomains", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
-					$domainsids[] = $data['id'];
-				}
-
-				sendMessage("Upcoming Domain Renewal Notice", $domainid, array("domains" => $domains));
-				++$renewalsnoticescount;
-			}
-
-			continue;
-		}
-	}
-
-	$cron->logActivity("Sent " . $renewalsnoticescount . " Notices", true);
-	$cron->emailLog($renewalsnoticescount . " Domain Renewal Notices Sent");
-}
 
 
 if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests")) {
@@ -396,7 +326,26 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
 		}
 	}
 
-	$query3 = "SELECT tblserviceaddons.*,tblcustomerservices.userid,tblcustomerservices.packageid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.groupid FROM tblserviceaddons INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblserviceaddons.status='Active' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.billingcycle!='One Time' AND tblserviceaddons.nextduedate<='" . $suspenddate . "' AND tblcustomerservices.overideautosuspend!='on' AND tblcustomerservices.overideautosuspend!='1' ORDER BY tblserviceaddons.name ASC";
+        $query3 = "SELECT 
+                    tblserviceaddons.*,
+                    tblcustomerservices.userid,
+                    tblcustomerservices.packageid,
+                    tblcustomerservices.domain,
+                    tblclients.firstname,
+                    tblclients.lastname,
+                    tblclients.groupid 
+            FROM tblserviceaddons 
+                INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid 
+                INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid 
+            WHERE tblserviceaddons.status='Active' 
+                AND tblserviceaddons.billingcycle!='Free' 
+                AND tblserviceaddons.billingcycle!='Free Account' 
+                AND tblserviceaddons.billingcycle!='One Time' 
+                AND tblserviceaddons.nextduedate<='" . $suspenddate . "' 
+                AND tblcustomerservices.overideautosuspend!='on' 
+                AND tblcustomerservices.overideautosuspend!='1' 
+            ORDER BY tblserviceaddons.name ASC";
+
 	$result3 = full_query_i_i($query3);
 
 	while ($data = mysqli_fetch_array($result3)) {
