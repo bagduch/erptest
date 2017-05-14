@@ -11,8 +11,6 @@ initialiseClientArea();
 <html>
     <head>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
-
-
     </head>
     <body>
         <form method="post" action="myorder.php">
@@ -37,14 +35,11 @@ initialiseClientArea();
 </html>
 
 <script type="text/javascript">
-
     var input = document.getElementById('searchTextField');
     var options = {
         componentRestrictions: {country: 'nz'}
     };
-
     autocomplete = new google.maps.places.Autocomplete(input, options);
-
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
         hdregion = [
             "Ashburton",
@@ -79,8 +74,6 @@ initialiseClientArea();
             country: 'long_name',
             postal_code: 'short_name'
         };
-
-
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (addressType in componentForm)
@@ -88,21 +81,8 @@ initialiseClientArea();
                 var val = place.address_components[i][componentForm[addressType]];
                 document.getElementById(addressType).value = val;
                 console.log(addressType);
-
             }
-
         }
-//        for (var i = 0; i < place.address_components.length; i++) {
-//            var addressType = place.address_components[i].types[0];
-//            if (componentForm[addressType]) {
-//                var val = place.address_components[i][componentForm[addressType]];
-//                document.getElementById(addressType).value = val;
-//            }
-//        }
-
-
-
-
     });
 
 </script>

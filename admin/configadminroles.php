@@ -59,6 +59,8 @@ if ($action == "save") {
     } else {
         $reportdata = "";
     }
+
+
     update_query("tbladminroles", array("name" => $name, "widgets" => implode(",", $widget), "report" => $reportdata, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
     delete_query("tbladminperms", array("roleid" => $id));
 
@@ -68,7 +70,7 @@ if ($action == "save") {
         }
     }
 
-    redir("saved=true");
+   redir("saved=true");
 }
 
 
@@ -146,6 +148,8 @@ if (!$action) {
     $accountemails = $data['accountemails'];
     $supportemails = $data['supportemails'];
     $widgets = explode(",", $widgets);
+    $report = $data['report'];
+    $report = explode(",", $report);
     $adminpermsarray = getAdminPermsArray();
     $totalpermissions = count($adminpermsarray);
     $totalpermissionspercolumn = round($totalpermissions / 3);
@@ -186,26 +190,38 @@ if (!$action) {
         }
     }
     closedir($dh);
-
-
-
-    $reporthtml = "<table><tr><td>";
-
+    $reporthtml = "<table width=\"100%\"><tr>";
     $reportdir = ROOTDIR . "/modules/reports/";
+    $roleone = $roletow = $rolethree = "<td width=\"33%\" valign=\"top\">";
     if (is_dir($reportdir)) {
         $dh = opendir($reportdir);
+        $i = 0;
         while (false !== $reportfile = readdir($dh)) {
             if (is_file($reportdir . $reportfile) && $reportfile != "index.php") {
+                $i++;
                 $extension = explode(".", $reportfile);
                 $reportfilename = str_replace("_", " ", $extension[0]);
-
-                $reporthtml.="<input id='" . $extension[0] . "' type='checkbox' name='report[]' value='" . $extension[0] . "'>";
-                $reporthtml.="<label for='" . $extension[0] . "'>" . ucwords($reportfilename) . "</label><br />";
+                $reportcol = "";
+                $reportcol.="<input id='" . $extension[0] . "' type='checkbox' name='report[]' value='" . $extension[0] . "'";
+                if (in_array($extension[0], $report)) {
+                    $reportcol.= " checked";
+                }
+                $reportcol.="/> <label for='" . $extension[0] . "'>" . ucwords($reportfilename) . "</label><br />";
+                if ($i % 3 == 1) {
+                    $roleone.=$reportcol;
+                }
+                if ($i % 3 == 2) {
+                    $roletow.=$reportcol;
+                } if ($i % 3 == 0) {
+                    $rolethree.=$reportcol;
+                }
             }
         }
     }
-    $reporthtml .= "</td></tr></table>";
-
+    $roleone .= "</td>";
+    $roletow .= "</td>";
+    $rolethree .= "</td>";
+    $reporthtml .= $roleone . $roletow . $rolethree . "</tr></table>";
     closedir($dh);
 
     function load_admin_home_widgets() {
