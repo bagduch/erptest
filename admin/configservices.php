@@ -106,10 +106,10 @@ if ($action == "save") {
     }
 
     if (isset($_POST['linkasscoiateservice'])) {
-        delete_query("tblservicetoservice", array("children_id" => $id));
+        delete_query("tblservicetoservice", array("parent_id" => $id));
         foreach ($_POST['linkasscoiateservice'] as $key => $value) {
             if ($value == "on") {
-                insert_query("tblservicetoservice", array("parent_id" => $key, "children_id" => $id));
+                insert_query("tblservicetoservice", array("children_id" => $key, "parent_id" => $id));
             }
         }
     }

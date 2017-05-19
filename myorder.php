@@ -56,7 +56,6 @@ $addonid = $ra->get_req_var("addonid");
 $actions = $ra->get_req_var("actions");
 $checkout = $ra->get_req_var("checkout");
 $address1 = $ra->get_req_var("streetnumber") . $ra->get_req_var("address2");
-
 $city = $ra->get_req_var("locality");
 $state = $ra->get_req_var("administrative_area_level_1");
 $country = $ra->get_req_var("country");
@@ -314,6 +313,25 @@ if ($_SESSION['address']) {
     outputClientArea($templatefile, true);
 } else {
 
-    echo print_r($_SESSION, 1);
+    $services = array();
+    $result = select_query_i("tblservices", "", array('retired' => 0));
+    while ($data = mysqli_fetch_array($result)) {
+        $services [$data['id']] = $data;
+        $result2 = select_query_i("tblpricing", "", array("currency" => 1, "relid" => $data['id']));
+        $pricedata = mysqli_fetch_array($result2);
+        $recurring = $pricedata['monthly'] . "/month";
+        $oneoff = formatCurrency(($pricedata['msetupfee'] == "0.00" ? "" : formatCurrency($pricedata['msetupfee'])) + $pricedata['monthly']) . " one off";
+        if ($data['paytype'] == "recurring") {
+            $price = formatCurrency($recurring);
+        } else {
+            $price = $oneoff;
+        }
+        $services[$data['id']]['price'] = $price;
+    }
+
+    $smartyvalues['carttpl'] = $orderfrm->getTemplate();
+    $smartyvalues['services'] = $services;
+    $templatefile = "addresscheck";
+    outputClientArea($templatefile, true);
 }
 ?>

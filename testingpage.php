@@ -14,18 +14,15 @@ initialiseClientArea();
     </head>
     <body>
         <form method="post" action="myorder.php">
-            <div class="">
-                <input type="hidden" value="<?php echo generate_token("plain") ?>">
+            <div class="container-wrap>
                 input your address
-                <input id="searchTextField" type="text" name="address" value="11c piermark Drive">
+                <input id="searchTextField" type="text" name="address" value="">
                 <input id="street_number" name="streetnumber" type="text">
                 <input id="route" name="address2" type="text">
                 <input id="locality" name="locality" type="text">
                 <input id="administrative_area_level_1" name="region" type="text">
                 <input id="country" name="country" type="text">
                 <input id="postal_code" name="zip" type="text">
-
-
                 your product id
                 <input type="text" name="fpid" value="3">
                 <input type="submit">
