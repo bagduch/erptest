@@ -30,6 +30,7 @@
                                 <td class="fieldarea">
                                     <select class="form-control" name="type" onchange="doFieldUpdate()">
                                         <option value="services" {if $data.type eq 'services'}selected{/if}>Services</option>
+                                        <option value="business" {if $data.type eq 'business'}selected{/if}>Business Contract</option>
                                         <option value="wholesell" {if $data.type eq 'wholesell'}selected{/if}>Whole Sell</option>
                                         <option value="product" {if $data.type eq 'server'}selected{/if}>Product</option>
                                         <option value="addon" {if $data.type eq 'addon'}selected{/if}>Addon</option>
@@ -342,7 +343,7 @@
         var datepickerformat = "dd/mm/yy";
         $(document).ready(function () {
 
-         
+
 
             function checkgroup()
             {
@@ -404,7 +405,7 @@
                     $("#contractop").hide();
                 }
             });
-        
+
             $("#showquickupload").click(
                     function () {
                         $("#quickupload").dialog("open");
@@ -424,7 +425,7 @@
 
         });
 
-      
+
 
         function deletecustomfield(id) {
             if (confirm("Are you sure you want to delete this field and ALL DATA associated with it?")) {
@@ -436,7 +437,7 @@
                 window.location = '/admin/configservices.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
-      
+
     </script>
 
 

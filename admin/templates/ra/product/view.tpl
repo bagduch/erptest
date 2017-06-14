@@ -3,7 +3,8 @@
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header">
-                <p><strong>Options:</strong> <a class="btn btn-default" href="/admin/configservices.php?action=creategroup">Create Group</a> <a class="btn btn-default" href="/admin/configservices.php?action=create">Create Service</a></p>
+                <p><strong>Options:</strong> <a class="btn btn-default" href="/admin/configproducts.php?action=creategroup">Create Group</a>
+                    <a class="btn btn-default" href="/admin/configproducts.php?action=create">Create Product</a></p>
             </div>
             <div class="box-body">
                 <form method="post" action="configservices.php?action=updatesort">

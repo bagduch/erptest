@@ -10,15 +10,15 @@
                 <div class="box-title">
                     <h2>Create Service</h2>
                 </div>
-                <form method="post" action="/admin/configservices.php?action=add" name="packagefrm">
+                <form method="post" action="/admin/configproducts.php?action=add" name="packagefrm">
                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr>
                                 <td width="150" class="fieldlabel">Product Type</td>
                                 <td class="fieldarea">
                                     <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                        <option value="residential" {if $data.type eq 'residential'}selected{/if}>Residential</option>
-                                        <option value="business" {if $data.type eq 'business'}selected{/if}>Business</option>
+                                        <option value="addon" {if $data.type eq "addon"}Selected{/if}>Addon</option>
+                                        <option  value="individual" {if $data.type eq "individual"}Selected{/if}>Individual</option>
                                         {*          <option value="wholesell" {if $data.type eq 'wholesell'}selected{/if}>Whole Sell</option>
                                         <option value="product" {if $data.type eq 'server'}selected{/if}>Product</option>
                                         <option value="addon" {if $data.type eq 'addon'}selected{/if}>Addon</option>

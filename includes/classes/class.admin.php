@@ -333,11 +333,20 @@ class RA_Admin {
                 }
             }
         }
-        if ($this->title !== "Admin Summary") {
-            $_SESSION['breadcrumb'][$this->title]["pagetitle"] = $this->title;
-            $_SESSION['breadcrumb'][$this->title]["url"] = $_SERVER['REQUEST_URI'];
-        }
+        session_start();
 
+//        if (!in_array($this->title, $_SESSION['breadmarker']['market'])) {
+//            $_SESSION['breadmarker']['market'][] = $this->title;
+//            $_SESSION['breadmarker']['position'] = sizeof($_SESSION['breadmarker']['market']);
+//        }
+        if ($this->title !== "Admin Summary") {
+            $title = $this->title;
+            if (sizeof($_SESSION['breadcrumb']) == 7) {
+                array_shift($_SESSION['breadcrumb']);
+            }
+            $_SESSION['breadcrumb'][$title]["pagetitle"] = $this->title;
+            $_SESSION['breadcrumb'][$title]["url"] = $_SERVER['REQUEST_URI'];
+        }
 
         $this->assign("filename", $this->filename);
         $this->assign("breadcrumb", $_SESSION['breadcrumb']);

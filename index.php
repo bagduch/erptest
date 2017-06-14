@@ -19,6 +19,7 @@ $breadcrumbnav = "<a href=\"index.php\">" . $_LANG['globalsystemname'] . "</a>";
 $templatefile = "homepage";
 $pageicon = "";
 
+
 initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav);
 
 if ($m = $ra->get_req_var("m")) {

@@ -60,7 +60,6 @@ if ($action == "save") {
         $reportdata = "";
     }
 
-
     update_query("tbladminroles", array("name" => $name, "widgets" => implode(",", $widget), "report" => $reportdata, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
     delete_query("tbladminperms", array("roleid" => $id));
 
@@ -70,7 +69,7 @@ if ($action == "save") {
         }
     }
 
-   redir("saved=true");
+    redir("saved=true");
 }
 
 

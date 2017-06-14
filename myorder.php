@@ -113,19 +113,16 @@ if ($_SESSION['address']) {
         }
     } else {
         $step = "";
-        if (!empty($login)) {
+        if (!empty($login)) { 
             $loginsuccess = $istwofa = false;
             $twofa = new RA_2FA();
             if ($twofa->isActiveClients() && isset($_SESSION['2faverifyc'])) {
                 $twofa->setClientID($_SESSION['2faclientid']);
-
                 if ($ra->get_req_var("backupcode")) {
                     $success = $twofa->verifyBackupCode($ra->get_req_var("code"));
                 } else {
                     $success = $twofa->moduleCall("verify");
                 }
-
-
                 if ($success) {
                     validateClientLogin(get_query_val("tblclients", "email", array("id" => $_SESSION['2faclientid'])), "", true);
 

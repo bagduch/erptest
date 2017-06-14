@@ -375,7 +375,7 @@ if ($action == "") {
         "nogroupssetup" => $aInt->lang("services", "nogroupssetup")
     );
     $servicegroup = array();
-    $result = select_query_i("tblservicegroups", "", array('type'=>'service'), "order", "DESC");
+    $result = select_query_i("tblservicegroups", "", array('type' => 'service'), "order", "DESC");
     while ($groups = mysqli_fetch_array($result)) {
         // error_log(print_r($groups, 1), 3, "/tmp/php_errors.log");
         $servicegroup[$groups['id']]['group'] = $groups;
@@ -458,11 +458,9 @@ if ($action == "") {
         'none' => $aInt->lang("global", "none"),
         'setupfee' => $aInt->lang("fields", "setupfee")
     );
-    $result2 = select_query_i('tblservicegroups', '*', "", 'order', 'ASC');
-    $servicegroups = array();
-    while ($groups = mysqli_fetch_assoc($result2)) {
-        $servicegroups[$groups['id']] = $groups['name'];
-    }
+    $result2 = select_query_i('tblservicegroups', '*', array('name' => 'Service'), 'order', 'ASC', '1');
+    $groups = mysqli_fetch_assoc($result2);
+    $groupsid = $groups['id'];
 
     if ($action == "edit") {
         // get all service data
@@ -757,7 +755,7 @@ if ($action == "") {
     }
 
     $aInt->assign('autoemail', $autoemail);
-    $aInt->assign('servicegroups', $servicegroups);
+    $aInt->assign('groupsid', $groupsid);
     $aInt->assign('langs', $lang);
     $aInt->assign('infobox', $infobox);
     $aInt->assign('tabledata', $tabledata);

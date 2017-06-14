@@ -2,6 +2,8 @@
 
 // Unlimited Internet Home Page Address Checker, Written by Milos 09/09/2014 - 5PM, version 1.0
 // For Fastcom API address checker.
+define("CLIENTAREA", true);
+require "init.php";
 
 header('access-control-allow-origin: null');
 
@@ -48,30 +50,27 @@ if ($_POST['lat']) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $response = curl_exec($ch);
-    $_SESSION['useraddress'] = $_POST['address'];
     $data = json_decode($response);
 
-
-
+    $sql = "SELECT tblservices.*,tblpricing.msetupfee,tblpricing.monthly FROM tblservices INNER JOIN tblpricing on tblpricing.relid=tblservices.id where tblservices.gid = 9 AND (";
     if ($data->results[4]->availability == "Available") {
-        $_SESSION['plan']['adsl'] = 1;
-    } else {
-        $_SESSION['plan']['adsl'] = 0;
+        $sql .= "tblservices.name like '%ADSL%' OR ";
     }
-
     if ($data->results[2]->availability == "Available") {
-        $_SESSION['plan']['vdsl'] = 1;
-    } else {
-        $_SESSION['plan']['vdsl'] = 0;
+        $sql .= "tblservices.name like '%VDSL%' OR ";
     }
-
     if ($data->results[0]->availability == "Available" && $data->results[0]->technology == "Fibre" && !checkregion($_POST['region'])) {
-        $_SESSION['plan']['ufb'] = 1;
-    } else {
-        $_SESSION['plan']['ufb'] = 0;
+        $sql .= "tblservices.name like '%UFB%'";
+    }
+    $sql .=")";
+
+
+    $result = full_query_i($sql);
+    $service = array();
+    while ($data = mysqli_fetch_assoc($result)) {
+        $service[] = $data;
     }
 
-
-    echo json_encode($response);
+    echo json_encode($service);
 }
 ?>

@@ -26,7 +26,7 @@
                 }
             </style>
         {/literal}
-  
+
     </head>
     <body>
         <div class="container row">
@@ -41,7 +41,7 @@
                 <div id="order-modern">
                     <div class="products">
                         {foreach from=$services key=id item=row}
-                            <div class="product" id="product{$id}" onclick="window.location = 'cart.php?a=adds&amp;pid=48'">
+                            <div class="product" id="product{$id}">
                                 <table class="border">
                                     <tbody>
                                         <tr>
@@ -63,7 +63,9 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <form method="post" action="cart.php?a=adds&amp;pid=48">
+                                                <form method="post" action="">
+                                                    <input class="addressorder" type="hidden" name="address" value="{$id}">
+                                                    <input type="hidden" name="uid" value="{$id}">
                                                     <div class="ordernowbox"><input type="submit" value="Order Now »" class="ordernow"></div>
                                                 </form>
                                             </td>
@@ -119,8 +121,8 @@
                         data: {address: input.value, lat: lat, lng: lng, region: region}
                     }).done(function (data) {
                         data = JSON.parse(data);
+                        $(".addressorder").val(input.value);
 
-                        console.log(data.results);
                         for (var i = 0; i < data.results.length; i++)
                         {
                             if (data.results[i].availability == 'Available')
@@ -130,7 +132,7 @@
                                 }
                                 if (data.results[i].technology == "VDSL")
                                 {
-                                    console.log(data.results[i]);
+
                                 }
                                 if (data.results[i].technology == "ADSL")
                                 {

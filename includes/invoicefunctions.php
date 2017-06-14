@@ -36,8 +36,7 @@ function getInvoicePayUntilDate($nextduedate, $billingcycle, $fulldate = "") {
 }
 
 function addTransaction($userid, $currencyid, $description, $amountin, $fees, $amountout, $gateway = "", $transid = "", $invoiceid = "", $date = "", $refundid = "", $rate = "") {
-    $date = ($date ? toMySQLDate($date) . date(" H:i:s") : "now()");
-
+    $date = ($date ? $date . date(" H:i:s") : "now()");
     if ($userid) {
         $currency = getCurrency($userid);
         $currencyid = $currency['id'];
@@ -123,13 +122,11 @@ function updateInvoiceTotal($id) {
         $tax2 = round($tax2, 2);
     }
 
-
     if ($CONFIG['TaxType'] == "Inclusive") {
         $subtotal = $subtotal - $tax - $tax2;
     } else {
         $total = $subtotal + $tax + $tax2;
     }
-
 
     if (0 < $credit) {
         if ($total < $credit) {
@@ -478,7 +475,7 @@ function pdfInvoice($invoiceid) {
     global $_LANG;
     global $currency;
 
- 
+
     $invoice = new RA_Invoice();
     $invoice->pdfCreate();
     $invoice->pdfInvoicePage($invoiceid);

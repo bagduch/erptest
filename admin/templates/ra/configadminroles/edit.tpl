@@ -45,11 +45,12 @@
                 </div>
                 <div role="tabpanel" id="tab1" class="tab-pane">
                     <table class="table">
-                        <tr><td class="fieldlabel">Widgets</td><td class="fieldarea">
-
+                        <tr>
+                            <td class="fieldlabel">Widgets</td>
+                            <td class="fieldarea">
                                 {$widgethtml}
-
-                            </td></tr>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div role="tabpanel" id="tab2" class="tab-pane">
