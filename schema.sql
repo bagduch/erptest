@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1835 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1836 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1017,7 +1017,7 @@ CREATE TABLE `tblinvoiceitems` (
   CONSTRAINT `tblinvoiceitems_ibfk_6` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`) ON UPDATE SET NULL,
   CONSTRAINT `tblinvoiceitems_ibfk_7` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tblinvoiceitems_ibfk_8` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
