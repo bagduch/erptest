@@ -102,7 +102,7 @@ CREATE TABLE `tblactivitylog` (
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1825 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1826 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1840 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1841 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -545,6 +545,8 @@ CREATE TABLE `tblclients` (
   `emailoptout` int(1) NOT NULL,
   `overrideautoclose` int(1) NOT NULL,
   `dateofbirth` date DEFAULT NULL,
+  `email_notification` text NOT NULL,
+  `txt_notification` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `firstname_lastname` (`firstname`(32),`lastname`(32)),
   KEY `email` (`email`(64)),
