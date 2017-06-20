@@ -59,7 +59,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                         billingcycle='One Time'
                     )
             )";
-$descriptionquery = "
+    $descriptionquery = "
     paymentmethod!='' 
     AND (donotrenew='' OR `status`='Pending') 
     AND `status` IN (" . $statusfilter . ") 
@@ -106,9 +106,7 @@ $descriptionquery = "
         }
 //promoid removed
         $result = select_query_i(
-            "tblcustomerservices", 
-            
-            "tblcustomerservices.id,
+                "tblcustomerservices", "tblcustomerservices.id,
             tblcustomerservices.userid,
             tblcustomerservices.nextduedate,
             tblcustomerservices.nextinvoicedate,
@@ -119,11 +117,7 @@ $descriptionquery = "
             tblcustomerservices.description,
             tblcustomerservices.paymentmethod,
             tblcustomerservices.packageid,
-            tblcustomerservices.servicestatus", 
-
-            $hostingquery, 
-            "description", 
-            "ASC"
+            tblcustomerservices.servicestatus", $hostingquery, "description", "ASC"
         );
         $totalservicerows = mysqli_num_rows($result);
 
@@ -136,14 +130,12 @@ $descriptionquery = "
                 $billingcycle = $data['billingcycle'];
                 $status = $data['servicestatus'];
                 $num_rows = get_query_val(
-                    "tblinvoiceitems", 
-                    "COUNT(id)", 
-                    array(
-                        "userid" => $userid, 
-                        "type" => "Hosting", 
-                        "relid" => $serviceid, 
-                        "duedate" => $nextduedate
-                    )
+                        "tblinvoiceitems", "COUNT(id)", array(
+                    "userid" => $userid,
+                    "type" => "Hosting",
+                    "relid" => $serviceid,
+                    "duedate" => $nextduedate
+                        )
                 );
                 $contblock = false;
 
@@ -200,18 +192,10 @@ $descriptionquery = "
 
             if ($hostingaddonsquery) {
                 $result3 = select_query_i(
-                    "tblserviceaddons", 
-
-                    "tblserviceaddons.*,
+                        "tblserviceaddons", "tblserviceaddons.*,
                     tblserviceaddons.regdate AS addonregdate,
                     tblcustomerservices.userid,
-                    tblcustomerservices.description", 
-
-                    $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), 
-                    "tblserviceaddons`.`name", 
-                    "ASC", 
-                    "", 
-                    "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid"
+                    tblcustomerservices.description", $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), "tblserviceaddons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid"
                 );
 
                 while ($data = mysqli_fetch_array($result3)) {
@@ -220,26 +204,22 @@ $descriptionquery = "
                     $nextduedate = $data[$matchfield];
                     $status = $data['status'];
                     $num_rows = get_query_val(
-                        "tblinvoiceitems", 
-                        "COUNT(id)", 
-                        array(
-                            "userid" => $userid, 
-                            "type" => "Addon", 
-                            "relid" => $id, 
-                            "duedate" => $nextduedate
-                        )
+                            "tblinvoiceitems", "COUNT(id)", array(
+                        "userid" => $userid,
+                        "type" => "Addon",
+                        "relid" => $id,
+                        "duedate" => $nextduedate
+                            )
                     );
                     $contblock = false;
 
                     if ((!$num_rows && $continvoicegen) && $status == "Pending") {
                         $num_rows = get_query_val(
-                            "tblinvoiceitems", 
-                            "COUNT(id)", 
-                            array(
-                                "userid" => $userid, 
-                                "type" => "Addon", 
-                                "relid" => $id
-                            )
+                                "tblinvoiceitems", "COUNT(id)", array(
+                            "userid" => $userid,
+                            "type" => "Addon",
+                            "relid" => $id
+                                )
                         );
                         $contblock = true;
                     }
@@ -274,14 +254,12 @@ $descriptionquery = "
                         }
 
                         $num_rows = get_query_val(
-                            "tblinvoiceitems", 
-                            "COUNT(id)", 
-                            array(
-                                "userid" => $userid, 
-                                "type" => "Addon", 
-                                "relid" => $id, 
-                                "duedate" => $nextduedate
-                            )
+                                "tblinvoiceitems", "COUNT(id)", array(
+                            "userid" => $userid,
+                            "type" => "Addon",
+                            "relid" => $id,
+                            "duedate" => $nextduedate
+                                )
                         );
 
                         if ($num_rows == 0) {
@@ -297,17 +275,16 @@ $descriptionquery = "
 
                                 $description = $_LANG['orderaddon'] . (" " . $description . "- " . $name . " " . $paydates);
                                 insert_query(
-                                    "tblinvoiceitems", 
-                                    array(
-                                        "userid" => $userid, 
-                                        "type" => "Addon", 
-                                        "relid" => $id, 
-                                        "description" => $description, 
-                                        "amount" => $amount, 
-                                        "taxed" => $tax, 
-                                        "duedate" => $nextduedate, 
-                                        "paymentmethod" => $paymentmethod
-                                    )
+                                        "tblinvoiceitems", array(
+                                    "userid" => $userid,
+                                    "type" => "Addon",
+                                    "relid" => $id,
+                                    "description" => $description,
+                                    "amount" => $amount,
+                                    "taxed" => $tax,
+                                    "duedate" => $nextduedate,
+                                    "paymentmethod" => $paymentmethod
+                                        )
                                 );
                                 $AddonSpecificIDs[] = $id;
                             }
@@ -316,13 +293,11 @@ $descriptionquery = "
 
                         if (!$contblock && $continvoicegen) {
                             update_query(
-                                "tblserviceaddons", 
-                                array(
-                                    "nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)
-                                ), 
-                                array(
-                                    "id" => $id
-                                )
+                                    "tblserviceaddons", array(
+                                "nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)
+                                    ), array(
+                                "id" => $id
+                                    )
                             );
                         }
                     }
@@ -614,8 +589,11 @@ $descriptionquery = "
     }
 
     $result = select_query_i("tblinvoiceitems", "DISTINCT tblinvoiceitems.userid,tblinvoiceitems.duedate,tblinvoiceitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "tblclients ON tblclients.id=tblinvoiceitems.userid LEFT JOIN tblclientgroups ON tblclientgroups.id=tblclients.groupid");
-
+    echo print_r($result);
     while ($data = mysqli_fetch_array($result)) {
+
+
+
         createInvoicesProcess($data, $noemails, $nocredit);
     }
 
@@ -630,8 +608,9 @@ $descriptionquery = "
 
         $where[] = "(tblclients.separateinvoices='on' OR tblclientgroups.separateinvoices='on')";
         $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.userid,tblinvoiceitems.type,tblinvoiceitems.relid,tblinvoiceitems.duedate,tblinvoiceitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "tblclients ON tblclients.id=tblinvoiceitems.userid LEFT JOIN tblclientgroups ON tblclientgroups.id=tblclients.groupid");
-
         while ($data = mysqli_fetch_array($result)) {
+
+
             createInvoicesProcess($data, $noemails, $nocredit);
         }
     }

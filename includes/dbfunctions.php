@@ -114,6 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
+
 //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
 
 
@@ -268,7 +269,6 @@ function insert_query($table, $array) {
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
 
-    error_log($query, 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
     // GUYGUYGUY logging
