@@ -47,29 +47,20 @@ if ($action == "preview") {
 }
 if ($action == "send") {
     check_token("RA.admin.default");
-
     if (!$step) {
         if (!$message) {
             infoBox($aInt->lang("sendmessage", "validationerrortitle"), $aInt->lang("sendmessage", "validationerrormsg"));
         }
-
-
         if (!$subject) {
             infoBox($aInt->lang("sendmessage", "validationerrortitle"), $aInt->lang("sendmessage", "validationerrorsub"));
         }
-
-
         if (!$fromemail) {
             infoBox($aInt->lang("sendmessage", "validationerrortitle"), $aInt->lang("sendmessage", "validationerroremail"));
         }
-
-
         if (!$fromname) {
             infoBox($aInt->lang("sendmessage", "validationerrortitle"), $aInt->lang("sendmessage", "validationerrorname"));
         }
     }
-
-
     if ($infobox) {
         $showform = true;
     } else {
@@ -270,18 +261,14 @@ if ($showform) {
 
             if (is_array($customfield)) {
                 foreach ($customfield as $k => $v) {
-
                     if ($v) {
                         if ($v == "cfon") {
                             $v = "on";
                         }
-
-
                         if ($v == "cfoff") {
                             $query .= " AND ((SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='' OR (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1) IS NULL)";
                             continue;
                         }
-
                         $query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
                         continue;
                     }
@@ -510,12 +497,11 @@ if ($showform) {
     echo $infobox;
 
     if ($sub == "loadmessage") {
-        $language = (((!$massmailquery && !$multiple) && (int) $data['id']) ? get_query_val("tblclients", "language", array("id" => $data['id'])) : "");
-        $result = select_query_i("tblemailtemplates", "", array("name" => $messagename, "language" => $language));
+        $result = select_query_i("tblsmstemplate", "", array("name" => $messagename));
         $data = mysqli_fetch_array($result);
 
         if (!$data['id']) {
-            $result = select_query_i("tblemailtemplates", "", array("name" => $messagename));
+            $result = select_query_i("tblsmstemplate", "", array("name" => $messagename));
             $data = mysqli_fetch_array($result);
         }
 
@@ -675,13 +661,13 @@ frmmessage.subject.select();
             name=\"messagename\"><option value=\"\">";
     echo $aInt->lang("sendmessage", "choose");
     echo "...";
-    $query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' ORDER BY custom,name ASC";
+    $query = "SELECT * FROM tblsmstemplate";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
         $messid = $data['id'];
         $messagename = $data['name'];
-        echo "<option style=\"background-color:#ffffff\">" . $messagename . "</option>";
+        echo "<option value='" . $messagename . "' style=\"background-color:#ffffff\">" . $messagename . "</option>";
     }
 
 
@@ -740,6 +726,7 @@ $(\"#emailoptout\").click(function(){
 }
 $content = ob_get_contents();
 ob_end_clean();
+$aInt->template = "smstemplate/send";
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;

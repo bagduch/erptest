@@ -20,8 +20,22 @@
             </div>
             <div class="box-body">
 
+                {foreach from=$temdata key=key item=row}
+                    <h2>{$key}</h2>
+                    {foreach from=$row item=data}
+
+                        <div class="emailtplstandard">
+                            <a href='?action=edit&id={$data.id}'>
+                                <img src="images/icons/massmail.png" align="absmiddle" border="0" alt="Edit">
+                                {$data.name}
+                            </a>
+                        </div>
+
+                    {/foreach}
+                    <div style="clear:left;"></div>
+                {/foreach}
 
             </div>
         </div>
     </div>
-</div>
+</div> 

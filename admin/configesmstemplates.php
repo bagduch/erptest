@@ -21,11 +21,28 @@ if ($action == 'new') {
     exit();
 } elseif ($action == "edit") {
     $result = select_query_i("tblsmstemplate", "*", array('id' => $id));
-    $data = mysqli_fetch_assoc($result);
-    echo print_r($data, 1);
-    $aInt->assign("data", $data);
+    $sms = mysqli_fetch_assoc($result);
+    $aInt->assign("sms", $sms);
     $template = "smstemplate/edit";
+} elseif ($action == "update") {
+    $id = $_POST['id'];
+    $data = array(
+        'smsgrp' => $_POST['smsgrp'],
+        'name' => $_POST['name'],
+        'message' => $_POST['message']
+    );
+    $result = update_query("tblsmstemplate", $data, array('id' => $id));
+
+redir();
 } else {
+
+    $data = array();
+    $result = select_query_i("tblsmstemplate", "*");
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[$row['smsgrp']][] = $row;
+    }
+
+    $aInt->assign("temdata", $data);
     $template = "smstemplate/view";
 }
 
