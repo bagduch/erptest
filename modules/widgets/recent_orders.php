@@ -3,19 +3,26 @@
 if (!defined("RA"))
     die("This file cannot be accessed directly");
 
-function widget_recent_orders($vars) {
+function widget_recent_left_orders($vars) {
     global $_ADMINLANG;
-    $title = "Client Log Overview";
+    $title = "Recent Order";
 
-    $clientlogquery = "select firstname,lastname,ip,lastlogin from tblclients order by lastlogin DESC LIMIT 4";
+    $clientlogquery = "select tlo.id,tlc.firstname,tlc.lastname,tlo.ordernum,tlo.date,tlo.amount,tlo.status,ti.status as paymentstatus from tblorders as tlo 
+        INNER JOIN tblclients as tlc ON tlo.userid=tlc.id 
+        INNER JOIN tblinvoices as ti on tlo.invoiceid = ti.id
+        where tlo.status='Pending' ORDER BY tlo.date DESC limit 5
+";
     $result = full_query_i($clientlogquery);
     $clientlog = array();
 
     while ($data = mysqli_fetch_array($result)) {
         $table .= "<tr>
+            <td><a href='orders.php?action=view&id=".$data['id']."'>" . $data['ordernum'] . "</a></td>
              <td>" . $data['firstname'] . " " . $data['lastname'] . "</td>
-             <td>" . $data['ip'] . "</td>
-             <td>" . $data['lastlogin'] . "</td>
+             <td>" . $data['date'] . "</td>
+             <td>$" . $data['amount'] . "</td>
+                 <td>" . $data['status'] . "</td>
+                     <td>" . $data['paymentstatus'] . "</td>
                   </tr>";
     }
 
@@ -23,9 +30,12 @@ function widget_recent_orders($vars) {
                 <table class="table table-bordered widgethm">
                     <tbody>
                         <tr>
-                           <th>Client</th>
-        <th>IP Address</th>
-        <th>Last Access</th>
+                           <th>Order Number</th>
+        <th>Name</th>
+        <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payemnt Status</th>
                         </tr>
                       $table
                     </tbody>
@@ -35,5 +45,5 @@ EOF;
     return array('title' => $title, 'content' => $content);
 }
 
-add_hook("AdminHomeWidgets", 1, "widget_client_log");
+add_hook("AdminHomeWidgets", 1, "widget_recent_left_orders");
 ?>

@@ -411,7 +411,7 @@
                     });
                 });</script>{/literal}
 
-          
+
                 <div class="clientsservices col-lg-12">
 
                     <div class="box box-primary">
@@ -614,7 +614,8 @@
                                     url: "/admin/clientsnotes.php?sub=add",
                                     method: "post",
                                     data: {
-                                        "userid":{/literal}{$clientsdetails.userid}{literal},
+                                        "account":{/literal}{$clientsdetails.userid}{literal},
+                                        "rel_type": "client",
                                         "token": token,
                                         "notes": notes,
                                         "assign": assign,

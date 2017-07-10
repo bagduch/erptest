@@ -30,10 +30,8 @@ if ($action == "save") {
 			if (strpos($description, " " . $_LANG['billableitemshours'] . " @ ")) {
 				$description = substr($description, 0, strrpos($description, " - ")) . " - " . $hours . " " . $_LANG['billableitemshours'] . " @ " . $amount . "/" . $_LANG['billableitemshour'];
 			}
-
 			$amount = $amount * $hours;
 		}
-
 		update_query("tblbillableitems", array("userid" => $userid, "description" => $description, "hours" => $hours, "amount" => $amount, "recur" => $recur, "recurcycle" => $recurcycle, "recurfor" => $recurfor, "invoiceaction" => $invoiceaction, "duedate" => $duedate, "invoicecount" => $invoicecount), array("id" => $id));
 	}
 	else {
@@ -41,10 +39,8 @@ if ($action == "save") {
 			$description .= " - " . $hours . " " . $_LANG['billableitemshours'] . " @ " . $amount . "/" . $_LANG['billableitemshour'];
 			$amount = $amount * $hours;
 		}
-
 		$id = insert_query("tblbillableitems", array("userid" => $userid, "description" => $description, "hours" => $hours, "amount" => $amount, "recur" => $recur, "recurcycle" => $recurcycle, "recurfor" => $recurfor, "invoiceaction" => $invoiceaction, "duedate" => $duedate));
 	}
-
 	redir();
 }
 if ($action == "delete") {
@@ -62,23 +58,18 @@ if (!$action) {
 		infoBox($aInt->lang("billableitems", "invoiceitems"), $aInt->lang("billableitems", "itemswillinvoice"));
 		echo $infobox;
 	}
-
-
 	if ($delete && is_array($bitem)) {
 		foreach ($bitem as $id => $v) {
 			delete_query("tblbillableitems", array("id" => $id));
 		}
-
 		infoBox($aInt->lang("billableitems", "itemsdeleted"), $aInt->lang("billableitems", "itemsdeleteddesc"));
 		echo $infobox;
 	}
-
 	$aInt->deleteJSConfirm("doDelete", "billableitems", "itemsdeletequestion", "billableitems.php?userid=" . $userid . "&action=delete&id=");
 	echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 	echo "
 <div id=\"tab0box\" class=\"tabbox\">
   <div id=\"tab_content\">
-
 <form action=\"";
 	echo $_SERVER['PHP_SELF'];
 	echo "\" method=\"get\">

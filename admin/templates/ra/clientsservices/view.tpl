@@ -233,6 +233,34 @@
                     {/if}
                 </div>
                 <div class="tab-pane" id="tab_notes">
+
+
+                    <table class="datatable table">
+                        <tr>
+                            <th>Create Date</th>
+                            <th>Notes</th>
+                            <th>Create Admin</th>
+                            <th>Assign To</th>
+                            <th>Due Date</th>
+                            <th>Update Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        {foreach from=$tabledata item=row}
+                            {if $row[0] eq 'account'}
+                                <tr class="itemrow_{$row[10]}">
+                                    <td>{$row[1]}</td>
+                                    <td>{$row[2]}</td>
+                                    <td>{$row[3]}</td>
+                                    <td>{$row[4]}</td>
+                                    <td>{$row[5]}</td>
+                                    <td>{$row[6]}</td>
+                                    <td>{$row[7]}</td>
+                                    <td>{$row[8]}{$row[9]}</td>
+                                </tr>
+                            {/if}
+                        {/foreach}
+                    </table>
                     <input type="hidden" name="userid" value="{$userid}">
                     <input type="hidden" name="account" value="{$id}">
                     <input type="hidden" name="rel_type" value="account">
@@ -374,7 +402,7 @@
                 }
             });
 
-         
+
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();

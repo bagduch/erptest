@@ -12,7 +12,7 @@
     position: absolute;
     overflow: hidden;
     top: 0;
-    background: #336ca6;
+    background: #253a47;
     width: auto;
     min-height: 100%;
     font-family: 'Open Sans Condensed', sans-serif;
@@ -43,7 +43,7 @@
 }
 
 .multilevelpushmenu_wrapper .multilevelpushmenu_inactive {
-    background: #2e6196;
+    background: #314d5b;
 }
 
 .multilevelpushmenu_wrapper h2 {
@@ -63,16 +63,16 @@
 
 .multilevelpushmenu_wrapper li {
     cursor: pointer;
-    border-top: 1px solid #295685;
+    border-top: 1px solid #253a47;
     padding: .4em .4em .4em .4em;
 }
 
 .multilevelpushmenu_wrapper li:last-child {
-    border-bottom: 1px solid #295685;
+    border-bottom: 1px solid #253a47;
 }
 
 .multilevelpushmenu_wrapper li:hover {
-    background-color: #295685;
+    background-color: #314d5b;
 }
 
 .multilevelpushmenu_wrapper a {
@@ -93,8 +93,8 @@
 .multilevelpushmenu_wrapper .backItemClass {
     display: block;
     padding: .4em .4em .4em .4em;
-    background: #2e6196;
-    border-top: 1px solid #295685;
+/*    background: #2e6196;
+    border-top: 1px solid #295685;*/
 }
 
 .multilevelpushmenu_wrapper .floatRight {
@@ -118,5 +118,5 @@
 }
 .itemactive{
 
-    background-color: #295685;
+    background-color: #314d5b;
 }

@@ -81,6 +81,19 @@ if ($_POST['frm1']) {
         "paymentmethod" => $_POST['paymentmethod'],
         "lastupdate" => "now()"
     );
+    if (isset($_POST['account'])) {
+        insert_query("tblnotes", array(
+            "rel_id" => $_POST['account'],
+            "adminid" => $_SESSION['adminid'],
+            "type" => $_POST['rel_type'],
+            "created" => "now()",
+            "duedate" => $_POST['duedate'],
+            "flag" => $_POST['imports'],
+            "assignto" => $_POST['assign'],
+            "modified" => "now()",
+            "note" => $_POST['notes'],
+            "sticky" => $sticky));
+    }
 }
 foreach ($data as $key => $row) {
     if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
@@ -271,11 +284,9 @@ while ($data = mysqli_fetch_array($result)) {
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
-    $admin = $data['adminuser'];
+    $admin = $data['name'];
     $assigned = $data['assignee'];
-    if (!$admin) {
-        $admin = "Admin Deleted";
-    }
+   
     $note = nl2br($note);
     $note = autoHyperLink($note);
     $created = fromMySQLDate($created, "time");
@@ -285,7 +296,7 @@ while ($data = mysqli_fetch_array($result)) {
     } else {
         $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
     }
-    
+
     $tabledata[] = array($data['type'], $created, $note, $admin, $assigned, $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>",
         $noteid);
 }

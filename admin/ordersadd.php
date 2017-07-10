@@ -28,10 +28,17 @@ if ($action == "createpromo") {
         exit("Promotion Code already exists. Please try another.");
     }
 
-    $promoid = insert_query("tblpromotions", array("code" => $code,
+    $promoid = insert_query("tblpromotions", array(
+        "code" => $code,
         "type" => $type,
-        "recurring" =>
-        $recurring, "value" => $pvalue, "maxuses" => "1", "recurfor" => $recurfor, "expirationdate" => "0000-00-00", "notes" => "Order Process One Off Custom Promo"));
+        "recurring" => $recurring,
+        "value" => $pvalue,
+        "maxuses" => "1",
+        "recurfor" => $recurfor,
+        "expirationdate" => "0000-00-00",
+        "notes" => "Order Process One Off Custom Promo"
+            )
+    );
     $promo_type = $type;
     $promo_value = $pvalue;
     $promo_recurring = $recurring;
@@ -44,15 +51,11 @@ if ($action == "createpromo") {
     }
 
     $promo_recurring = ($promo_recurring ? "Recurring" : "One Time");
-    echo "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
     exit();
 }
-
-
 if ($action == "getconfigoptions") {
-
+    $pid = 48;
     $configoptions = getCartConfigOptions($pid, "", $cycle);
-
     if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
@@ -94,7 +97,7 @@ if ($action == "getconfigoptions") {
                         $options .= "> " . $configoption['options'][0]['name'];
                     } else {
                         if ($configoption['optiontype'] == "4") {
-                            $options .= "<input type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
+                            $options .= "<input class=\"form-control\" type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
                         }
                     }
                 }
@@ -105,14 +108,14 @@ if ($action == "getconfigoptions") {
 
         $options .= "</table>";
     }
-
     $customfields = getCustomFields("", $pid, "", "", "on");
-
+// echo "<pre>", print_r($customfields, 1), "</pre>";
     if (count($customfields)) {
         $options .="<div class=\"box\"><div class='box-header'>
                                 <h3 class='box-title'>" . $aInt->lang("setup", "customfields") . "</h3>
                             </div>
 <table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+
         foreach ($customfields as $customfield) {
             $inputfield = str_replace("name=\"customfield", "name=\"customfield[" . $orderid . "]", $customfield['input']);
             $options .= "<tr><td width=\"130\" class=\"fieldlabel\">" . $customfield['name'] . "</td><td class=\"fieldarea\">" . $inputfield . "</td></tr>";
@@ -120,6 +123,7 @@ if ($action == "getconfigoptions") {
 
         $options .= "</table></div>";
     }
+
 
     $addonshtml = "";
     $addonsarray = getAddons($pid);
@@ -135,12 +139,15 @@ if ($action == "getconfigoptions") {
             $addonshtml .= "</label><br />";
         }
     }
-
+    $options.= "<script type='text/javascript'> 
+        $('.datepick').datepicker({
+                    autoclose: true,
+                    format: 'yyyy-mm-dd',
+                });
+                </script>";
     echo json_encode(array("options" => $options, "addons" => $addonshtml));
     exit();
 }
-
-
 if ($ra->get_req_var("submitorder")) {
     check_token("RA.admin.default");
     $userid = get_query_val("tblclients", "id", array("id" => $userid));
@@ -260,77 +267,52 @@ if ($ra->get_req_var("submitorder")) {
             if (!$cartitems) {
                 echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\" align=\"center\">No Items Selected</div></td></tr>";
             }
-
             echo "<tr class=\"subtotal\"><td>Subtotal</td><td class=\"alnright\">" . $ordervals['subtotal'] . "</td></tr>";
-
             if ($ordervals['promotype']) {
                 echo "<tr class=\"promo\"><td>Promo Discount</td><td class=\"alnright\">" . $ordervals['discount'] . "</td></tr>";
             }
-
-
             if ($ordervals['taxrate']) {
                 echo "<tr class=\"tax\"><td>" . $ordervals['taxname'] . " @ " . $ordervals['taxrate'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal'] . "</td></tr>";
             }
-
-
             if ($ordervals['taxrate2']) {
                 echo "<tr class=\"tax\"><td>" . $ordervals['taxname2'] . " @ " . $ordervals['taxrate2'] . "%</td><td class=\"alnright\">" . $ordervals['taxtotal2'] . "</td></tr>";
             }
-
             echo "<tr class=\"total\"><td width=\"140\">Total</td><td class=\"alnright\">" . $ordervals['total'] . "</td></tr>";
-
             if ((((($ordervals['totalrecurringmonthly'] || $ordervals['totalrecurringquarterly']) || $ordervals['totalrecurringsemiannually']) || $ordervals['totalrecurringannually']) || $ordervals['totalrecurringbiennially']) || $ordervals['totalrecurringtriennially']) {
                 echo "<tr class=\"recurring\"><td>Recurring</td><td class=\"alnright\">";
-
                 if ($ordervals['totalrecurringmonthly']) {
                     echo "" . $ordervals['totalrecurringmonthly'] . " Monthly<br />";
                 }
-
-
                 if ($ordervals['totalrecurringquarterly']) {
                     echo "" . $ordervals['totalrecurringquarterly'] . " Quarterly<br />";
                 }
-
-
                 if ($ordervals['totalrecurringsemiannually']) {
                     echo "" . $ordervals['totalrecurringsemiannually'] . " Semi-Annually<br />";
                 }
-
-
                 if ($ordervals['totalrecurringannually']) {
                     echo "" . $ordervals['totalrecurringannually'] . " Annually<br />";
                 }
-
-
                 if ($ordervals['totalrecurringbiennially']) {
                     echo "" . $ordervals['totalrecurringbiennially'] . " Biennially<br />";
                 }
-
-
                 if ($ordervals['totalrecurringtriennially']) {
                     echo "" . $ordervals['totalrecurringtriennially'] . " Triennially<br />";
                 }
-
                 echo "</td></tr>";
             }
-
             echo "</table>
 </div>";
             exit();
         }
         $cartitems = count($_SESSION['cart']['products']) + count($_SESSION['cart']['addons']) + count($_SESSION['cart']['renewals']);
-
         if (!$cartitems) {
             redir("noselections=1");
         }
-
         calcCartTotals(true);
         unset($_SESSION['uid']);
-
         if ($orderstatus == "Active") {
             update_query("tblorders", array("status" => "Active"), array("id" => $_SESSION['orderdetails']['OrderID'])
             );
-
             if (is_array($_SESSION['orderdetails']['Products'])) {
                 foreach ($_SESSION['orderdetails']['Products'] as $productid) {
                     update_query("tblcustomerservices", array("servicestatus" => "Active"), array("id" => $productid)
@@ -338,15 +320,12 @@ if ($ra->get_req_var("submitorder")) {
                 }
             }
         }
-
         getUsersLang(0);
         redir("action=view&id=" . $_SESSION['orderdetails']['OrderID'], "orders.php");
         exit();
     }
 }
-
 releaseSession();
-
 $jquerycode = "
 $(function(){
     var prodtemplate = $(\"#products .product:first\").clone();
@@ -365,7 +344,6 @@ $(function(){
         return false;
     }
     $(\".addproduct\").click(addProduct);
-
     var domainsCount = 0;
     window.addDomain = function(){
         domainsCount++;
@@ -373,13 +351,9 @@ $(function(){
         return false;
     }
     $(\".adddomain\").click(addDomain);
-
     $(\"#domain0\").keyup(function() {
       $(\"#regdomain0\").val($(\"#domain0\").val());
     });
-
-   
-
 });
 ";
 $jscode = "
@@ -434,24 +408,17 @@ function updatesummary() {
 }
 ";
 ob_start();
-
 if (!checkActiveGateway()) {
     $aInt->gracefulExit($aInt->lang("gateways", "nonesetup"));
 }
-
-
 if ($userid && !$paymentmethod) {
     $paymentmethod = getClientsPaymentMethod($userid);
 }
-
-
 if ($ra->get_req_var("noselections")) {
     infoBox($aInt->lang("global", "validationerror"), $aInt->lang("orders", "noselections"));
 }
 echo $infobox;
-
 $result = select_query_i("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
-
 while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];
@@ -476,47 +443,34 @@ while ($data = mysqli_fetch_array($result)) {
     }
     $activepromotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
-
-
 $result = select_query_i("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
-
 while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];
     $promo_type = $data['type'];
     $promo_recurring = $data['recurring'];
     $promo_value = $data['value'];
-
     if ($promo_type == "Percentage") {
         $promo_value .= "%";
     } else {
         $promo_value = formatCurrency($promo_value);
     }
-
-
     if ($promo_type == "Free Setup") {
         $promo_value = $aInt->lang("promos", "freesetup");
     }
-
     $promo_recurring = ($promo_recurring ? $aInt->lang("status", "recurring") : $aInt->lang("status", "onetime"));
-
     if ($promo_type == "Price Override") {
         $promo_recurring = $aInt->lang("promos", "priceoverride");
     }
-
-
     if ($promo_type == "Free Setup") {
         $promo_recurring = "";
     }
-
     $expireprmotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
-
-
+//tEPJADs9nmInC107
 if (!$billingcycle) {
     $billingcycle = "Monthly";
 }
-
 echo $aInt->cyclesDropDown($billingcycle, "", "", "billingcycle[]", "updatesummary()");
 echo "</td></tr>
 <tr id=\"addonsrow0\" style=\"display:none;\"><td class=\"fieldlabel\">";

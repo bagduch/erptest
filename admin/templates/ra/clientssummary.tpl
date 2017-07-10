@@ -227,7 +227,48 @@
                     </div>
                 </div>
             </div>
+            <div id="addnotes" class="modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="/admin/clientsnotes.php?sub=add">
+                            <input type="hidden" name="userid" value="{$clientsdetails.userid}">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Add Notes</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <textarea name="notes" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Assign To</label>
+                                    <select class="form-control" name="flag">
+                                        {foreach from=$adminlist item=row}
+                                            <option value="{$row.id}">{$row.firstname} {$row.lastname}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input class="datepick form-control" type="text" name="duedate">
+                                </div>
+                                <div class="form-group">
 
+                                    <input type="checkbox" name="import" value="1">  <label>Important</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary addnotes">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
             <div id="productsservices" class="col-lg-3 col-sm-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-title">{$_ADMINLANG.services.title}</div>
@@ -341,19 +382,7 @@
                 </div>
 
 
-                <div id="addnotes" class="modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Add Notes</h4>
-                        </div>
-                        <div class="modal-body">
 
-
-                        </div>
-                    </div>
-                </div>
 
                 <div id="addnotes" class="modal">
                     <div class="modal-dialog">
@@ -744,15 +773,17 @@
                                 /literal}{$clientsdetails.userid}{literal},
                                         "token": token,
                                         "notes": notes,
+                                        "rel_type":"client",
                                         "assign": assign,
                                         "duedate": duedate,
                                         "imports": imports
                                 }
-                                }).done(function() {
-                        $('#addnotes').modal('hide');
-                                location.reload();
-                        });
-                        });
+                                }
+                        }).done(function() {
+                $('#addnotes').modal('hide');
+                        location.reload();
+                });
+                });
                 </script>
 
             {/literal} {/strip}

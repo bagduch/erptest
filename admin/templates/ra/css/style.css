@@ -22,12 +22,17 @@ and open the template in the editor.
 }
 .breadcrumb-wrap{
     float: left;
-    margin-top: 9px
+    margin-top: 7px;
+    margin-left:15px;
 
+}
+.breadcrumb a {
+    color:white;
 }
 .breadcrumb{
 
     margin-bottom: 0px;
+    background:#1f4164;
 }
 .search-bar{
     padding-top: 8px;

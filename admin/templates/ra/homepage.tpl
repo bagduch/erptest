@@ -112,8 +112,9 @@
 <div class="row">
     <section class="col-lg-7 connectedSortable">
         <!-- Custom tabs (Charts with tabs)-->
+
         {foreach from=$widgets.left item=data}
-            <div class="box box-success">
+            <div class="box box-success" id="{$data.name}">
                 <div class="box-header">
                     <i class="fa fa-inbox"></i>
                     <h3 class="box-title">{$data.title}</h3>
@@ -128,19 +129,17 @@
     <section class="col-lg-5 connectedSortable">
         {foreach from=$widgets.right item=data}
             <div class="box box-solid">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        {$data.title}
+                    </h3>
+                    <div class="pull-right box-tools">
+                        <button type="button" class="btn btn-info btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
+                            <i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
                 <div class="box-body">
-                    <div class="box-header">
-                        <h3 class="box-title">
-                            {$data.title}
-                        </h3>
-                        <div class="pull-right box-tools">
-                            <button type="button" class="btn btn-info btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
-                                <i class="fa fa-minus"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        {$data.content}
-                    </div>
+                    {$data.content}
                 </div>
             </div>
         {/foreach}

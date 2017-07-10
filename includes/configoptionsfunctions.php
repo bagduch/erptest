@@ -2,12 +2,7 @@
 /**
  *
  * @ RA
- *
  * 
- * 
- * 
- * 
- *
  **/
 
 function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform = "") { 
