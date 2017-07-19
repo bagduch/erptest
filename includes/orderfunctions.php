@@ -442,7 +442,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             "ipaddress" => $remote_ip,
             "notes" => $ordernotes)
         );
-        $hostid = insert_query($table, $array);
+//        $hostid = insert_query($table, $array);
         logActivity("New Order Placed - Order ID: " . $orderid . " - User ID: " . $userid);
         $descriptioneppcodes = array();
     }
@@ -753,11 +753,10 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
                     $serverid = ($servertype ? getServerID($servertype, $servergroup) : "");
                     $hostingquerydates = ($databasecycle == "Free Account" ? "0000-00-00" : date("Y-m-d"));
-                    $serviceid = insert_query("tblcustomerservices", array(
+                    $services = array(
                         "userid" => $userid,
                         "orderid" => $orderid,
                         "packageid" => $pid,
-//                        "server" => $serverid,
                         "regdate" => "now()",
                         "description" => $description,
                         "paymentmethod" => $paymentmethod,
@@ -767,9 +766,10 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         "nextduedate" => $hostingquerydates,
                         "nextinvoicedate" => $hostingquerydates,
                         "servicestatus" => "Pending"
-//                        "password" => $serverrootpw
-                            )
                     );
+
+                    $serviceid = insert_query("tblcustomerservices", $services);
+
                     $multiqtyids[$qtycount] = $serviceid;
                     $orderproductids[] = $serviceid;
 
@@ -791,25 +791,23 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     $invoice_tax = $productdetails['tax'];
 
                     if (!$_SESSION['cart']['geninvoicedisabled']) {
-                        $prodinvoicearray = array();
-                        $prodinvoicearray['userid'] = $userid;
-                        $prodinvoicearray['type'] = "Hosting";
-                        $prodinvoicearray['relid'] = $serviceid;
-                        $prodinvoicearray['taxed'] = $invoice_tax;
-                        $prodinvoicearray['duedate'] = $hostingquerydates;
-                        $prodinvoicearray['paymentmethod'] = $paymentmethod;
-
-                        if (0 < $product_setup) {
+                        $prodinvoicearray = array(
+                            "userid" => $userid,
+                            "type" => "Service",
+                            "relid" => $serviceid,
+                            "taxed" => $invoice_tax,
+                            "duedate" => $hostingquerydates,
+                            "paymentmethod" => $paymentmethod,
+                        );
+                        if ($product_setup > 0) {
                             $prodinvoicearray['description'] = $productname . " " . $_LANG['ordersetupfee'];
                             $prodinvoicearray['amount'] = $product_setup;
                             insert_query("tblinvoiceitems", $prodinvoicearray);
-                            $prodinvoicearray['type'] = "";
-                            $prodinvoicearray['relid'] = 0;
                         }
 
-
-                        if (0 < $product_onetime) {
+                        if ($product_onetime > 0) {
                             $prodinvoicearray['description'] = $invoice_description;
+                            $prodinvoicearray['type'] = "Item";
                             $prodinvoicearray['amount'] = $product_onetime;
                             insert_query("tblinvoiceitems", $prodinvoicearray);
                         }
@@ -817,10 +815,32 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         $promovals = getInvoiceProductPromo($product_total_today_db, $promoid, $userid, $serviceid, $product_setup + $product_onetime);
 
                         if ($promovals['description']) {
-                            $prodinvoicearray['type'] = "PromoHosting";
+                            $prodinvoicearray['type'] = "Promo";
                             $prodinvoicearray['description'] = $promovals['description'];
                             $prodinvoicearray['amount'] = $promovals['amount'];
                             insert_query("tblinvoiceitems", $prodinvoicearray);
+                        }
+                        //mark here
+                        $invoiceid = createInvoices($userid, true, "", array("products" => $orderproductids, "addons" => $orderaddonids, "descriptions" => $orderdescriptionids));
+                        if ($CONFIG['OrderDaysGrace']) {
+                            $new_time = mktime(0, 0, 0, date("m"), date("d") + $CONFIG['OrderDaysGrace'], date("Y"));
+                            $duedate = date("Y-m-d", $new_time);
+                            update_query("tblinvoices", array("duedate" => $duedate), array("id" => $invoiceid));
+                        }
+                        if ($invoiceid) {
+                            update_query("tblorders", array("invoiceid" => $invoiceid), array("id" => $orderid));
+                            $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+                            $data = mysqli_fetch_array($result);
+                            $status = $data['status'];
+
+                            if ($status == "Paid") {
+                                $invoiceid = "";
+                            }
+                        }
+
+
+                        if (!$CONFIG['NoInvoiceEmailOnOrder']) {
+                            sendMessage("Invoice Created", $invoiceid);
                         }
                     }
 
@@ -981,13 +1001,10 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     $productdata['pricing']['totaltoday'] += $addon_total_today;
                 }
             }
-
             $productdata['addons'] = $addonsarray;
             $totaltaxrates = 1;
-
             if (($CONFIG['TaxEnabled'] && $tax) && !$clientsdetails['taxexempt']) {
                 $product_tax = $productdata['pricing']['totaltoday'];
-
                 if ($CONFIG['TaxType'] == "Inclusive") {
                     $totaltaxrates = 1 + ($taxrate + $taxrate2);
                     $total_without_tax = $productdata['pricing']['totaltoday'] = $product_tax / $totaltaxrates;
@@ -1462,7 +1479,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $adminemailitems .= "<br>\r\n";
                 $tax = ($CONFIG['TaxDomains'] ? "1" : "0");
                 update_query("tbldescriptions", array("registrationperiod" => $regperiod, "recurringamount" => $description_renew_price_db), array("id" => $descriptionid));
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Domain", "relid" => $descriptionid, "description" => $descriptiondesc, "amount" => $description_renew_price_db, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+
                 $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $descriptionid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
 
                 while ($data = mysqli_fetch_array($result)) {
@@ -1492,7 +1509,9 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     foreach ($adjustments as $k => $adjvals) {
 
         if ($checkout) {
-            insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "", "relid" => "", "description" => $adjvals['description'], "amount" => $adjvals['amount'], "taxed" => $adjvals['taxed'], "duedate" => "now()", "paymentmethod" => $paymentmethod));
+            $invoicesitem = array("userid" => $userid, "type" => "", "relid" => "", "description" => $adjvals['description'], "amount" => $adjvals['amount'], "taxed" => $adjvals['taxed'], "duedate" => "now()", "paymentmethod" => $paymentmethod);
+//            email("peter@hd.net.nz", "here",print_r($invoicesitem, 1));
+            insert_query("tblinvoiceitems", $invoicesitem);
         }
 
         $adjustments[$k]['amount'] = formatCurrency($adjvals['amount']);
@@ -1564,25 +1583,6 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             "amount" => $cart_total
                 ), array("id" => $orderid));
         $invoiceid = 0;
-
-        if (!$_SESSION['cart']['geninvoicedisabled']) {
-            if (!$userid) {
-                exit("An Error Occurred");
-            }
-
-            $invoiceid = createInvoices($userid, true, "", array("products" => $orderproductids, "addons" => $orderaddonids, "descriptions" => $orderdescriptionids));
-
-            if ($CONFIG['OrderDaysGrace']) {
-                $new_time = mktime(0, 0, 0, date("m"), date("d") + $CONFIG['OrderDaysGrace'], date("Y"));
-                $duedate = date("Y-m-d", $new_time);
-                update_query("tblinvoices", array("duedate" => $duedate), array("id" => $invoiceid));
-            }
-
-
-            if (!$CONFIG['NoInvoiceEmailOnOrder']) {
-                sendMessage("Invoice Created", $invoiceid);
-            }
-        }
 
 
         if ($invoiceid) {

@@ -27,7 +27,7 @@ class RA_Invoice {
         while ($data = mysqli_fetch_array($sresult)) {
             $setting[$data['setting']] = $data['value'];
         }
-       // echo "<pre>", print_r($data, 1), "</pre>";
+        // echo "<pre>", print_r($data, 1), "</pre>";
     }
 
     public function setID($invoiceid) {
@@ -312,6 +312,10 @@ class RA_Invoice {
         $tplvars['transactions'] = $transactions;
         $this->pdfAddPage("invoicepdf.tpl", $tplvars);
         return true;
+    }
+
+    public function pdfLateFee($latefeeid) {
+        
     }
 
     public function pdfAddPage($tplfile, $tplvars) {

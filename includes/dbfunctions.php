@@ -115,10 +115,9 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
         error_log($query);
     }
 
-   
-//error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
-
-
+    if ($table == "tblinvoiceitems") {
+        
+    }
     $result = mysqli_query($ramysqli, $query);
 
 
@@ -196,8 +195,11 @@ function update_query($table, $array, $where) {
                     $key = "`order`";
                 }
             }
-
-            $query .= " " . $key . " = '" . db_escape_string($value) . "' AND";
+            if ($value == "NULL") {
+                $query .= " " . $key . " is NULL  AND";
+            } else {
+                $query .= " " . $key . " = '" . db_escape_string($value) . "' AND";
+            }
         }
 
         $query = substr($query, 0, 0 - 4);
@@ -216,8 +218,11 @@ function update_query($table, $array, $where) {
         error_log($query);
     }
 
-  
-   // echo "<pre>",  print_r($query,1),"</pre>";
+
+    if ($table == "tblinvoiceitems") {
+        error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
+    }
+    // echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -271,16 +276,13 @@ function insert_query($table, $array) {
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
 
     $result = mysqli_query($ramysqli, $query);
-
     // GUYGUYGUY logging
     if ($_SESSION['adminid'] == 3) {
         error_log(__METHOD__ . $query);
     }
-
     if (!$result && ($CONFIG['SQLErrorReporting'])) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
-
     ++$query_count;
     $id = mysqli_insert_id($ramysqli);
     return $id;

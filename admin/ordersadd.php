@@ -23,11 +23,9 @@ if ($action == "createpromo") {
     $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
     $data = mysqli_fetch_array($result);
     $duplicates = $data[0];
-
     if ($duplicates) {
         exit("Promotion Code already exists. Please try another.");
     }
-
     $promoid = insert_query("tblpromotions", array(
         "code" => $code,
         "type" => $type,
@@ -168,7 +166,15 @@ if ($ra->get_req_var("submitorder")) {
                     $qty[$k] = 1;
                 }
 
-                $productarray = array("pid" => $prodid, "domain" => $domain[$k], "billingcycle" => str_replace(array("-", " "), "", strtolower($billingcycle[$k])), "server" => "", "configoptions" => $configoption[$k], "customfields" => $customfield[$k], "addons" => $addons[$k]);
+                $productarray = array(
+                    "pid" => $prodid,
+                    "description" => $description[$k],
+                    "billingcycle" => str_replace(array("-", " "), "", strtolower($billingcycle[$k])),
+                    "server" => "",
+                    "configoptions" => $configoption[$k],
+                    "customfields" => $customfield[$k],
+                    "addons" => $addons[$k]
+                ); 
 
                 if (strlen($_POST['priceoverride'][$k])) {
                     $productarray['priceoverride'] = $_POST['priceoverride'][$k];
@@ -204,8 +210,8 @@ if ($ra->get_req_var("submitorder")) {
                     echo "<tr class=\"item\"><td colspan=\"2\"><div class=\"itemtitle\">" . $cartprod['productinfo']['groupname'] . " - " . $cartprod['productinfo']['name'] . "</div>";
                     echo $aInt->lang("billingcycles", $cartprod['billingcycle']);
 
-                    if ($cartprod['domain']) {
-                        echo " - " . $cartprod['domain'];
+                    if ($cartprod['description']) {
+                        echo " - " . $cartprod['description'];
                     }
                     echo "<div class=\"itempricing\">";
                     if ($cartprod['priceoverride']) {
@@ -255,7 +261,7 @@ if ($ra->get_req_var("submitorder")) {
 
 
             $cartitems = 0;
-            foreach (array("products", "addons", "domains", "renewals") as $k) {
+            foreach (array("products", "addons", "descriptions", "renewals") as $k) {
 
                 if (array_key_exists($k, $ordervals)) {
                     $cartitems += count($ordervals[$k]);
@@ -325,6 +331,9 @@ if ($ra->get_req_var("submitorder")) {
         exit();
     }
 }
+
+
+
 releaseSession();
 $jquerycode = "
 $(function(){
@@ -344,15 +353,15 @@ $(function(){
         return false;
     }
     $(\".addproduct\").click(addProduct);
-    var domainsCount = 0;
+    var descriptionsCount = 0;
     window.addDomain = function(){
-        domainsCount++;
-        $('<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\" style=\"margin-top:10px;\"><tr><td width=\"130\" class=\"fieldlabel\">" . $aInt->lang("domains", "regtype", 1) . "</td><td class=\"fieldarea\"><input type=\"radio\" name=\"regaction['+domainsCount+']\" id=\"domnon'+domainsCount+'\" value=\"\" onclick=\"loaddomainoptions(this,0);updatesummary()\" checked /> <label for=\"domnon'+domainsCount+'\">" . $aInt->lang("global", "none", 1) . "</label> <input type=\"radio\" name=\"regaction['+domainsCount+']\" value=\"register\" id=\"domreg'+domainsCount+'\" onclick=\"loaddomainoptions(this,1);updatesummary()\" /> <label for=\"domreg'+domainsCount+'\">" . $aInt->lang("domains", "register", 1) . "</label> <input type=\"radio\" name=\"regaction['+domainsCount+']\" value=\"transfer\" id=\"domtrf'+domainsCount+'\" onclick=\"loaddomainoptions(this,2);updatesummary()\" /> <label for=\"domtrf'+domainsCount+'\">" . $aInt->lang("domains", "transfer", 1) . "</label></td></tr><tr class=\"hiddenrow\" id=\"domrowdn'+domainsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("fields", "domain", 1) . "</td><td class=\"fieldarea\"><input type=\"text\" class=\"regdomain\" id=\"regdomain'+domainsCount+'\" name=\"regdomain['+domainsCount+']\" size=\"40\" onkeyup=\"updatesummary()\" /></td></tr><tr class=\"hiddenrow\" id=\"domrowrp'+domainsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("domains", "regperiod", 1) . "</td><td class=\"fieldarea\"><select name=\"regperiod['+domainsCount+']\" onchange=\"updatesummary()\">" . $regperiods . "</select></td></tr><tr class=\"hiddentransrow\" id=\"domrowep'+domainsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("domains", "eppcode", 1) . "</td><td class=\"fieldarea\"><input type=\"text\" name=\"eppcode['+domainsCount+']\" size=\"20\" /></td></tr><tr class=\"hiddenrow\" id=\"domrowad'+domainsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("domains", "addons", 1) . "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"dnsmanagement['+domainsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("domains", "dnsmanagement", 1) . "</label> <label><input type=\"checkbox\" name=\"emailforwarding['+domainsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("domains", "emailforwarding", 1) . "</label> <label><input type=\"checkbox\" name=\"idprotection['+domainsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("domains", "idprotection", 1) . "</label></td></tr><tr id=\"domainaddlfieldserase'+domainsCount+'\" style=\"display:none\"></tr></table>').appendTo(\"#domains\");
+        descriptionsCount++;
+        $('<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\" style=\"margin-top:10px;\"><tr><td width=\"130\" class=\"fieldlabel\">" . $aInt->lang("descriptions", "regtype", 1) . "</td><td class=\"fieldarea\"><input type=\"radio\" name=\"regaction['+descriptionsCount+']\" id=\"domnon'+descriptionsCount+'\" value=\"\" onclick=\"loaddescriptionoptions(this,0);updatesummary()\" checked /> <label for=\"domnon'+descriptionsCount+'\">" . $aInt->lang("global", "none", 1) . "</label> <input type=\"radio\" name=\"regaction['+descriptionsCount+']\" value=\"register\" id=\"domreg'+descriptionsCount+'\" onclick=\"loaddescriptionoptions(this,1);updatesummary()\" /> <label for=\"domreg'+descriptionsCount+'\">" . $aInt->lang("descriptions", "register", 1) . "</label> <input type=\"radio\" name=\"regaction['+descriptionsCount+']\" value=\"transfer\" id=\"domtrf'+descriptionsCount+'\" onclick=\"loaddescriptionoptions(this,2);updatesummary()\" /> <label for=\"domtrf'+descriptionsCount+'\">" . $aInt->lang("descriptions", "transfer", 1) . "</label></td></tr><tr class=\"hiddenrow\" id=\"domrowdn'+descriptionsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("fields", "description", 1) . "</td><td class=\"fieldarea\"><input type=\"text\" class=\"regdescription\" id=\"regdescription'+descriptionsCount+'\" name=\"regdescription['+descriptionsCount+']\" size=\"40\" onkeyup=\"updatesummary()\" /></td></tr><tr class=\"hiddenrow\" id=\"domrowrp'+descriptionsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("descriptions", "regperiod", 1) . "</td><td class=\"fieldarea\"><select name=\"regperiod['+descriptionsCount+']\" onchange=\"updatesummary()\">" . $regperiods . "</select></td></tr><tr class=\"hiddentransrow\" id=\"domrowep'+descriptionsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("descriptions", "eppcode", 1) . "</td><td class=\"fieldarea\"><input type=\"text\" name=\"eppcode['+descriptionsCount+']\" size=\"20\" /></td></tr><tr class=\"hiddenrow\" id=\"domrowad'+descriptionsCount+'\" style=\"display:none;\"><td class=\"fieldlabel\">" . $aInt->lang("descriptions", "addons", 1) . "</td><td class=\"fieldarea\"><label><input type=\"checkbox\" name=\"dnsmanagement['+descriptionsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("descriptions", "dnsmanagement", 1) . "</label> <label><input type=\"checkbox\" name=\"emailforwarding['+descriptionsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("descriptions", "emailforwarding", 1) . "</label> <label><input type=\"checkbox\" name=\"idprotection['+descriptionsCount+']\" onclick=\"updatesummary()\" /> " . $aInt->lang("descriptions", "idprotection", 1) . "</label></td></tr><tr id=\"descriptionaddlfieldserase'+descriptionsCount+'\" style=\"display:none\"></tr></table>').appendTo(\"#descriptions\");
         return false;
     }
-    $(\".adddomain\").click(addDomain);
-    $(\"#domain0\").keyup(function() {
-      $(\"#regdomain0\").val($(\"#domain0\").val());
+    $(\".adddescription\").click(addDomain);
+    $(\"#description0\").keyup(function() {
+      $(\"#regdescription0\").val($(\"#description0\").val());
     });
 });
 ";
@@ -381,7 +390,7 @@ function loadproductoptions(piddd) {
     },\"json\");
     }
 }
-function loaddomainoptions(domrd,type) {
+function loaddescriptionoptions(domrd,type) {
     var ord = domrd.id.substring(6);
     if (type==1) {
         $(\"#domrowdn\"+ord).css(\"display\",\"\");

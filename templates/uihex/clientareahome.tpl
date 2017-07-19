@@ -1,3 +1,4 @@
+{debug}
 <div class="row">
     <div class="col-md-12">
         <h3 class="page-header"><span aria-hidden="true" class="icon icon-home"></span> Welcome Back {$clientfirstname} {$clientlastname} <i class="fa fa-info-circle animated bounce show-info"></i>

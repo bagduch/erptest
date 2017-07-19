@@ -140,7 +140,7 @@ function updateInvoiceTotal($id) {
     $subtotal = format_as_currency($subtotal);
     $tax = format_as_currency($tax);
     $total = format_as_currency($total);
-    update_query("tblinvoices", array("subtotal" => $subtotal, "tax" => $tax, "tax2" => $tax2, "total" => $total), array("id" => $id));
+    update_query("tblinvoices", array("invoicenum" => $id, "subtotal" => $subtotal, "tax" => $tax, "tax2" => $tax2, "total" => $total), array("id" => $id));
     run_hook("UpdateInvoiceTotal", array("invoiceid" => $id));
 }
 
