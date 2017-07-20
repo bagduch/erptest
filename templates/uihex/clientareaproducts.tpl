@@ -1,4 +1,4 @@
-<h3 class="page-header"><span aria-hidden="true" class="icon icon-layers"></span> {$pagetitle} <i class="fa fa-info-circle animated bounce show-info"></i></h3>
+ <h3 class="page-header"><span aria-hidden="true" class="icon icon-layers"></span> {$pagetitle} <i class="fa fa-info-circle animated bounce show-info"></i></h3>
 <blockquote class="page-information hidden">
     <p>{$LANG.clientareaproductsintro}</p>
 </blockquote>

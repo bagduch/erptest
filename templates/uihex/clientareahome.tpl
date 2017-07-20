@@ -1,37 +1,27 @@
-<div class="row">
-    <div class="col-md-12">
-        <h3 class="page-header"><span aria-hidden="true" class="icon icon-home"></span> Welcome Back {$clientfirstname} {$clientlastname} <i class="fa fa-info-circle animated bounce show-info"></i>
-            {if $showqsl} 
-                <span class="pull-right qsl"><a href="#" data-original-title="Quick Server Logins"><span aria-hidden="true" class="icon icon-settings settings-toggle"></span></a></span>
-                    {/if}
-        </h3>        
-        <blockquote class="page-information hidden">
-            <p>{$LANG.dashboardintro}</p>
-        </blockquote>        
-    </div>
+{debug}  
+<div class="row welcome">
+    <div class="col-md-12"><h3>Hi <strong>{$clientsdetails.firstname}</strong>. Welcome back! </h3></div>
 </div>
-<div class='row'>
-    <div class="col-md-12">
-        <div class='balance-wrap'>
-            <div class='balancetext badge badge-circle badge-important'>Your Balances:</div>
-            <div class="balance">${$creditdata}</div>
-            <div class="addfund">
-                <a href="clientarea.php?action=addfunds"><span class="badge badge-circle badge-important">Add Fund</span></a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <div class="info-box  bg-info  text-white" id="initial-tour">
-            <div class="info-icon bg-info-dark">
-                <h4 class="white-text">
-                    <span aria-hidden="true" class="icon icon-layers"></span>{$LANG.navservices} 
+<div class="row main-panel-contain">
+    <div class="col-md-3">
+        <div class="info-box  bg-info  text-white supportticket" id="initial-tour">
+            <div class="info-icon bg-info-dark">            
+                <div class="headcont">
+                    <div class="col-md-12">
+                        <span aria-hidden="true" class="fa fa-ticket"></span>{$LANG.supportticketsopentickets} 
+                    </div>   
+                </div>
+                <div class="mainstats">
                     <span class="badge font-15 bg-white text-success">{$clientsstats.servicenumtotal}</span>
-                </h4>
+                </div>
+                <div class="footcont">
+                    <div class="action"> 
+                        <div class="col-md-6 eddeets"><a href="supporttickets.php">View Tickets</a></div>
+                        <div class="col-md-6 edpsw"><a href="submitticket.php">Open Ticket</a></div>
+                    </div>   
+                </div>
             </div>
-            <div class="info-details">
+            <div class="info-details"  style="display: none;">
                 <table class='full-width-table'>
                     <tr>
                         <td>{$LANG.clientareaactive}</td>
@@ -49,15 +39,97 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="info-box  bg-info  text-white" id="initial-tour">
-            <div class="info-icon bg-info-dark">
-                <h4 class="white-text">
-                    <span aria-hidden="true" class="icon icon-layers"></span>{$LANG.navproduct} 
-                    <span class="badge font-15 bg-white text-success">{$clientsstats.producttotal}</span>
-                </h4>
+    <div class="col-md-3">
+        <div class="info-box  bg-info  text-white activeservice" id="initial-tour">
+            <div class="info-icon bg-info-dark">          
+                <div class="headcont">
+                    <div class="col-md-12">
+                        <span aria-hidden="true" class="fa fa-cogs"></span>{$LANG.clientareaactive} {$LANG.navservices} 
+                    </div>   
+                </div>
+                <div class="mainstats">
+                    <span class="badge font-15 bg-white text-success">{$clientsstats.servicenumtotal}</span>
+                </div>
+                <div class="footcont">
+                    <div class="action"> 
+                        <div class="col-md-6 eddeets"><a href="clientarea.php?action=services">View Services</a></div>
+                        <div class="col-md-6 edpsw"><a href="cart.php">Add Service</a></div>
+                    </div>   
+                </div>
             </div>
-            <div class="info-details">
+            <div class="info-details"  style="display: none;">
+                <table class='full-width-table'>
+                    <tr>
+                        <td>{$LANG.clientareaactive}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumactive}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareapending}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumpending}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.clientareacancelled}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.servicenumcancel}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box  bg-info  text-white invoicesdue">
+            <div class="info-icon bg-info-dark">          
+                <div class="headcont">
+                    <div class="col-md-12">
+                        <span aria-hidden="true" class="fa fa-file-text-o"></span>{$LANG.invoicesdue}
+                    </div>
+                </div>
+                <div class="mainstats">
+                    <span class="badge font-15 bg-white text-success">{$clientsstats.numdueinvoices}</span>
+                </div>
+                <div class="footcont">
+                    <div class="action"> 
+                        <div class="col-md-6 eddeets"><a href="clientarea.php?action=invoices">View Invoices</a></div>
+                        <div class="col-md-6 edpsw"><a href="clientarea.php?action=masspay&all=true">Pay</a></div>
+                    </div>   
+                </div>
+            </div>
+            <div class="info-details"  style="display: none;">
+                <table class='full-width-table'>
+                    <tr>
+                        <td>{$LANG.statscreditbalance}</td>
+                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.creditbalance}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.invoicesdue}</td>
+                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.dueinvoicesbalance}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.invoicesoverdue}</td>
+                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.overdueinvoicesbalance}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box  bg-info  text-white voipbalance" id="initial-tour">
+            <div class="info-icon bg-info-dark">          
+                <div class="headcont">
+                    <div class="col-md-12">
+                        <span aria-hidden="true" class="fa fa-phone"></span>{$LANG.voipbalance} 
+                    </div>   
+                </div>
+                <div class="mainstats">
+                    <span class="badge font-15 bg-white text-success">{$clientsstats.producttotal}</span>
+                </div>
+                <div class="footcont">
+                    <div class="action"> 
+                        <div class="col-md-6 eddeets"><a href="#">View Details</a></div>
+                        <div class="col-md-6 edpsw"><a href="#">Top Up</a></div>
+                    </div>   
+                </div>
+            </div>
+            <div class="info-details"  style="display: none;">
                 <table class='full-width-table'>
                     <tr>
                         <td>{$LANG.clientareaactive}</td>
@@ -75,29 +147,45 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="info-box  bg-info  text-white">
-            <div class="info-icon bg-info-dark">
-                <h4 class="white-text"> 
-                    <span aria-hidden="true" class="icon icon-drawer"></span>{$LANG.invoicesdue}
-                    <span class="badge font-15 bg-white text-success">{$clientsstats.numdueinvoices}</span>
-                </h4>
+</div>
+<div class="row account">
+    <div class="col-md-6">
+        <div class="container">
+            <div class="headcont">
+                <div class="col-md-12 acdeetstxt">  Account Info:</div>   
             </div>
-            <div class="info-details">
-                <table class='full-width-table'>
-                    <tr>
-                        <td>{$LANG.statscreditbalance}</td>
-                        <td><span class="badge pull-right bg-white text-success"> {$clientsstats.creditbalance}</span></td>
-                    </tr>
-                    <tr>
-                        <td>{$LANG.invoicesdue}</td>
-                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.dueinvoicesbalance}</span></td>
-                    </tr>
-                    <tr>
-                        <td>{$LANG.invoicesoverdue}</td>
-                        <td><span class="badge pull-right bg-white text-success">{$clientsstats.overdueinvoicesbalance}</span></td>
-                    </tr>
-                </table>
+            <div class="acdeets">
+                    <div class="col-md-6 acfname">First Name: <div class="data">{$clientfirstname}</div></div>
+                    <div class="col-md-6 aclname">Last Name:  <div class="data">{$clientlastname}</div></div>
+                    <div class="col-md-6 acid">Client ID: <div class="data">{$clientsdetails.userid}</div></div>
+                    <div class="col-md-6 acemail">Email: <div class="data">{$clientsdetails.email}</div></div>
+                    <div class="col-md-12 acadd">Service Address: <div class="data">{$clientsdetails.address1}, {$clientsdetails.address2}, {$clientsdetails.city}, {$clientsdetails.country} - {$clientsdetails.postcode}</div></div>
+            </div>
+            <div class="footcont">
+                <div class="action"> 
+                    <div class="col-md-6 eddeets"><a href="#">Edit Details</a></div>
+                    <div class="col-md-6 edpsw"><a href="#">Change Password</a></div>
+                </div>   
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 balance-cont">
+        <div class="container">
+            <div class='balance-wrap'>
+                <div class='balancetext badge badge-circle badge-important'>Account<br>Balance:</div>
+                <div class="balance">{$clientsstats.overdueinvoicesbalancenumber}</div>
+                <div class="addfund">
+                    <a href="clientarea.php?action=addfunds"><span class="badge badge-circle badge-important">Pay</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 referal">
+        <div class="container">
+            <div class='cashback-wrap'>
+                <div class="cashback-head">Get $20 cashback for each friend that signs up with us!</div>
+                <div class="cashback-link">{$clientsstats.dueinvoicesbalance}</div>
+                <div class="cashback-share">                </div>
             </div>
         </div>
     </div>
@@ -135,7 +223,7 @@
             {/if}
             {foreach from=$addons_html item=addon_html}
                 <div style="margin: 15px 0;">{$addon_html}</div>{/foreach}
-                <div class="row">
+                <div class="row" style="display: none;">
                     <div class="col-lg-12">
                         {if in_array('tickets',$contactpermissions)}
                             <ul class="nav nav-tabs">

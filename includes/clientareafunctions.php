@@ -153,7 +153,7 @@ function outputClientArea($templatefile, $nowrapper = false) {
 
 
     if (isset($_SESSION['adminid'])) {
-        $adminloginlink = "<div style=\"position:absolute;top:0px;right:0px;padding:5px;background-color:#000066;font-family:Tahoma;font-size:11px;color:#ffffff\" class=\"adminreturndiv\">Logged in as Administrator | <a href=\"" . $ra->get_admin_folder_name() . "/";
+        $adminloginlink = "<div class=\"adminreturndiv\">Logged in as Administrator | <a href=\"" . $ra->get_admin_folder_name() . "/";
 
         if (isset($_SESSION['uid'])) {
             $adminloginlink .= "clientssummary.php?userid=" . $_SESSION['uid'] . "&return=1";

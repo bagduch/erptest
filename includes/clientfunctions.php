@@ -151,6 +151,7 @@ function getClientsStats($userid) {
     $data = mysqli_fetch_array($result);
     $stats['numoverdueinvoices'] = $data[0];
     $stats['overdueinvoicesbalance'] = formatCurrency($data[1]);
+    $stats['overdueinvoicesbalancenumber'] = number_format(round($data[1], 2),2);
     $invoicestats = array();
     $result = select_query_i("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
 
