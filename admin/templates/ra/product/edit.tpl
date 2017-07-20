@@ -20,11 +20,8 @@
                                         <td class="fieldlabel">{$langs.fields}</td>
                                         <td class="fieldarea">
                                             <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                                <option value="services" {if $services.type eq 'services'}selected{/if}>Services</option>
-                                                <option value="wholesell" {if $services.type eq 'wholesell'}selected{/if}>Whole Sell</option>
-                                                <option value="product" {if $services.type eq 'server'}selected{/if}>Product</option>
-                                                <option value="addon" {if $services.type eq 'addon'}selected{/if}>Addon</option>
-                                                <option value="other" {if $services.type eq 'other'}selected{/if}>{$langs.other}</option>
+                                                <option value="addon" {if $services.type eq "addon"}Selected{/if}>Addon</option>
+                                                <option value="individual" {if $services.type eq "individual"}Selected{/if}>Individual</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -32,7 +29,7 @@
                                         <td class="fieldlabel">{$langs.servicegroup}</td>
                                         <td class="fieldarea">
                                             <select class="form-control" name="gid">
-                                      
+
                                                 {foreach from=$servicegroups item=row key=gid}
                                                     <option value="{$gid}" {if $gid eq $services.gid}selected{/if}>{$row}</option>
                                                 {/foreach}
@@ -55,7 +52,7 @@
                                         <td class="fieldlabel">Supply Revenue</td>
                                         <td class="fieldarea">
                                             <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
-                                              <input type="hidden" name="isale" value='on'/> 
+                                            <input type="hidden" name="isale" value='on'/> 
                                         </td>
                                     </tr>
 
@@ -72,7 +69,7 @@
                                             <input class="form-control" type="text" size="40" name="stock" value="{$services.stock}">
                                         </td>
                                     </tr>
-   <tr>
+                                    <tr>
                                         <td class="fieldlabel">Stock Alert</td>
                                         <td class="fieldarea">
                                             <input class="form-control" type="text" size="40" name="stockalert" value="{$services.stockalert}">
@@ -335,7 +332,7 @@
 
             <p align="center">
                 <input type="submit" value="Save Changes" class="button"> 
-                <input type="button" value="Back to Service List" onclick="window.location = 'configservices.php'" class="button">
+                <input type="button" value="Back to Service List" onclick="window.location = 'configproducts.php'" class="button">
             </p>
 
             <input type="hidden" name="tab" id="tab" value="">
@@ -348,7 +345,7 @@
         var datepickerformat = "dd/mm/yy";
         $(document).ready(function () {
 
-    
+
 
             function checkgroup()
             {
@@ -410,18 +407,18 @@
                     $("#contractop").hide();
                 }
             });
-        
+
             $("#showquickupload").click(
                     function () {
                         $("#quickupload").dialog("open");
-                        $("#quickupload").load("configservices.php?action=quickupload&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502");
+                        $("#quickupload").load("configproducts.php?action=quickupload&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502");
                         return false;
                     }
             );
             $("#showadddownloadcat").click(
                     function () {
                         $("#adddownloadcat").dialog("open");
-                        $("#adddownloadcat").load("configservices.php?action=adddownloadcat&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502");
+                        $("#adddownloadcat").load("configproducts.php?action=adddownloadcat&id=3&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502");
                         return false;
                     }
             );
@@ -436,12 +433,12 @@
 
         function deletecustomfield(id) {
             if (confirm("Are you sure you want to delete this field and ALL DATA associated with it?")) {
-                window.location = '/admin/configservices.php?action=edit&id=3&tab=3&sub=deletecustomfield&fid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
+                window.location = '/admin/configproducts.php?action=edit&id=3&tab=3&sub=deletecustomfield&fid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
         function deleteoption(id) {
             if (confirm("Are you sure you want to delete this product configuration?")) {
-                window.location = '/admin/configservices.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
+                window.location = '/admin/configproducts.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
         function showDialog(name) {

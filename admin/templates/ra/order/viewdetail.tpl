@@ -1,3 +1,4 @@
+
 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
     <tbody>
         <tr>
@@ -43,24 +44,50 @@
 <div id="togglenotesbtnholder" style="float:right;margin:10px;"><input type="button" value="Add Notes" id="togglenotesbtn"></div>
 
 <div class="box box-primary collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"> 
-            <input type="button" value="Add Notes" class="btn btn-default" data-widget="collapse">
-            </button>
-        </h3>
-        <!-- /.box-tools -->
-    </div>
+    <form action="?action=addnotes" method="post">
+        <div class="box-header with-border">
+            <h3 class="box-title"> 
+                <input type="button" value="Add Notes" class="btn btn-default" data-widget="collapse">
+                </button>
+            </h3>
+            <!-- /.box-tools -->
+        </div>
+        <div class="box-body">
+            <p>
+                <b>Notes / Additional Information</b>
+            </p>
+            <input type="hidden" name="account" value="{$orderdata.id}">
+            <input type="hidden" name="rel_type" value="order">
+
+            <textarea class="form-control" name="notes" id="note"></textarea>
+            <br>
+            <input type="submit" value="Update/Save" id="savenotesbtn">
+        </div>
+    </form>
+</div>
+
+<div class="box box-primary">
+
+
     <div class="box-body">
-        <p>
-            <b>Notes / Additional Information</b>
-        </p>
-        <textarea  class="form-control" id="notes"></textarea>
-        <br>
-        <input type="button" value="Update/Save" id="savenotesbtn">
+        <table class="table">
+            <thead>
+            <th>Name</th>
+            <th>Notes</th>
+            <th>Date</th>
+            </thead>
+            {foreach from=$tabledata item=data}
+                <tr>
+                    <td>{$data[3]}</td>
+                    <td>{$data[2]}</td>
+                    <td>{$data[1]}</td>
+                </tr>
+
+            {/foreach}
+        </table>
     </div>
 </div>
 
-{$notes}
 
 <div class="box">
 
@@ -130,36 +157,47 @@
         function cancelOrder() {
             if (confirm("Are you sure you want to cancel this order? This will also run module termination for any active products/services."))
                 window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&cancel=true&token={/literal}{$token}{literal}";
-        }
-        function cancelRefundOrder() {
-            if (confirm("Are you sure you want to cancel & refund this order? This will also run module termination for any active products/services."))
-                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&cancelrefund=true&token={/literal}{$token}{literal}";
-        }
-        function fraudOrder() {
-            if (confirm("Are you sure you want to cancel this order? This will also run module termination for any active products/services."))
-                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&fraud=true&token={/literal}{$token}{literal}";
-        }
-        function pendingOrder() {
-            if (confirm("Are you sure you want to set this order back to Pending?"))
-                window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&pending=true&token={/literal}{$token}{literal}";
-        }
-        function deleteOrder() {
-            if (confirm("Are you sure you want to delete this order? This will delete all related products/services & invoice."))
-                window.location = "{/literal}{$PHP_SELF}{literal}?action=delete&id={/literal}{$orderdata.id}{literal}&token={/literal}{$token}{literal}";
-        }
-        function showDialog(name) {
-            $("#" + name).dialog('open');
-        }
+                    }
+                    function cancelRefundOrder() {
+                        if (confirm("Are you sure you want to cancel & refund this order? This will also run module termination for any active products/services."))
+                            window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&cancelrefund=true&token={/literal}{$token}{literal}";
+                                }
+                                function fraudOrder() {
+                                    if (confirm("Are you sure you want to cancel this order? This will also run module termination for any active products/services."))
+                                        window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&fraud=true&token={/literal}{$token}{literal}";
+                                            }
+                                            function pendingOrder() {
+                                                if (confirm("Are you sure you want to set this order back to Pending?"))
+                                                    window.location = "{/literal}{$PHP_SELF}{literal}?action=view&id={/literal}{$orderdata.id}{literal}&pending=true&token={/literal}{$token}{literal}";
+                                                        }
+                                                        function deleteOrder() {
+                                                            if (confirm("Are you sure you want to delete this order? This will delete all related products/services & invoice."))
+                                                                window.location = "{/literal}{$PHP_SELF}{literal}?action=delete&id={/literal}{$orderdata.id}{literal}&token={/literal}{$token}{literal}";
+                                                                    }
+                                                                    function showDialog(name) {
+                                                                        $("#" + name).dialog('open');
+                                                                    }
 
-        $("#savenotesbtn").click(function () {
-            $.post("?action=view&id={/literal}{$orderid}{literal}",
-            {
-                updatenotes:true,
-                notes:$("#notes").val(), 
-                token:"{/literal}{$token}{literal}"
-            });
-                   
-            });
-   
+
+
+
+                                                                    $("#savenotesbtn").click(function () {
+                                                                        console.log("ok");
+                                                                        $.ajax({
+                                                                            url: "/admin/clientsnotes.php?sub=add",
+                                                                            method: "post",
+                                                                            data: {
+                                                                                account:{/literal}{$orderdata.id}{literal},
+                                                                                token: "{/literal}{$token}{literal}",
+                                                                                note: $("#notes").val(),
+                                                                                type: "order",
+                                                                            }
+
+                                                                        }).done(function () {
+                                                                            location.reload();
+                                                                        });
+
+                                                                    });
+
 </script>
 {/literal}

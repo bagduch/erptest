@@ -466,14 +466,14 @@ if ($action == "addfunds") {
     if (0 < $addfundsamt) {
         $invoiceid = createInvoices($userid);
         $paymentmethod = getClientsPaymentMethod($userid);
+
         insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $addfundsamt, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
+
         $invoiceid = createInvoices($userid, "", true);
-        redir("userid=" . $userid . "&addfunds=true&invoiceid=" . $invoiceid);
+//        redir("userid=" . $userid . "&addfunds=true&invoiceid=" . $invoiceid);
     } else {
         redir("userid=" . $userid);
     }
-
-    exit();
 }
 
 
@@ -510,27 +510,22 @@ if ($csajaxtoggle) {
         exit("Permission Denied");
     }
 
-
     if ($csajaxtoggle == "autocc") {
         $csajaxtoggle = "disableautocc";
+    } else if ($csajaxtoggle == "taxstatus") {
+        $csajaxtoggle = "taxexempt";
+    } elseif ($csajaxtoggle == "overduenotices") {
+        $csajaxtoggle = "overideduenotices";
+    } elseif ($csajaxtoggle == "latefees") {
+        $csajaxtoggle = "latefeeoveride";
+    } elseif ($csajaxtoggle == "splitinvoices") {
+        $csajaxtoggle = "separateinvoices";
+    } elseif ($csajaxtoggle == "email") {
+        $csajaxtoggle = "email_notification";
+    } elseif ($csajaxtoggle == "txt") {
+        $csajaxtoggle = "txt_notification";
     } else {
-        if ($csajaxtoggle == "taxstatus") {
-            $csajaxtoggle = "taxexempt";
-        } else {
-            if ($csajaxtoggle == "overduenotices") {
-                $csajaxtoggle = "overideduenotices";
-            } else {
-                if ($csajaxtoggle == "latefees") {
-                    $csajaxtoggle = "latefeeoveride";
-                } else {
-                    if ($csajaxtoggle == "splitinvoices") {
-                        $csajaxtoggle = "separateinvoices";
-                    } else {
-                        exit();
-                    }
-                }
-            }
-        }
+        exit();
     }
 
     $csajaxtoggleval = get_query_val("tblclients", $csajaxtoggle, array("id" => $userid));
@@ -611,13 +606,15 @@ if ($affactivated) {
     infoBox($aInt->lang("clientsummary", "activateaffiliate"), $aInt->lang("clientsummary", "affiliateactivatesuccess"));
 }
 
-echo $infobox;
+//echo $infobox;
 $clientstats = getClientsStats($userid);
 $clientsdetails['status'] = $aInt->lang("status", strtolower($clientsdetails['status']));
 $clientsdetails['autocc'] = ($clientsdetails['disableautocc'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
 $clientsdetails['taxstatus'] = ($clientsdetails['taxexempt'] ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
 $clientsdetails['overduenotices'] = ($clientsdetails['overideduenotices'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
 $clientsdetails['latefees'] = ($clientsdetails['latefeeoveride'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
+$clientsdetails['email_notification'] = ($clientsdetails['email_notification'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
+$clientsdetails['txt_notification'] = ($clientsdetails['txt_notification'] ? $aInt->lang("global", "no") : $aInt->lang("global", "yes"));
 $clientsdetails['splitinvoices'] = ($clientsdetails['separateinvoices'] ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
 $templatevars['clientsdetails'] = $clientsdetails;
 include "../includes/countries.php";
@@ -761,11 +758,13 @@ $result = select_query_i("tbladmins", '');
 while ($data = mysqli_fetch_assoc($result)) {
     $templatevars['adminlist'][] = $data;
 }
+
 $templatevars["adminid"] = $_SESSION['adminid'];
 $templatevars['userid'] = $userid;
 $templatevars['customactionlinks'] = $actionlinks;
 $templatevars['tokenvar'] = generate_token("link");
 $templatevars['csrfToken'] = generate_token("plain");
+$templatevars['infobox'] = $infobox;
 $aInt->templatevars = $templatevars;
 echo $aInt->getTemplate("clientssummary");
 

@@ -3,11 +3,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  **/
 
 function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $cardstart, $cardissue, $noremotestore = "", $fullclear = "") {

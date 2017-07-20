@@ -38,10 +38,12 @@
                     <tr>
                         <td class="fieldlabel">Activate Sub-Account</td>
                         <td class="fieldarea"><input type="checkbox" tabindex="5" name="subaccount" {if $cdata.subaccount}checked{/if} id="subaccount"> <label for="subaccount">Tick to Enable</label></td>
-                        <td class="fieldlabel">Country</td>
+                        <td class="fieldlabel">Region</td>
                         <td class="fieldarea">
-                            {$countrydrop}     
+                            <input class="form-control" type="text" tabindex="11" size="14" name="state" value="{$cdata.state}">
                         </td>
+
+
                     </tr>
                     <tr>
                         <td class="fieldlabel">Password</td>
@@ -49,8 +51,11 @@
                                                      {this.value=''}">
                             <a href="clientscontacts.php?userid={$userid}&amp;contactid={$contactid}&amp;resetpw=true&amp;token={$token}"><img src="images/icons/resetpw.png" border="0" align="absmiddle"> Reset &amp; Send Password</a>
                         </td>
-                        <td class="fieldlabel">Phone Number</td>
-                        <td class="fieldarea"><input class="form-control" type="text" size="20" name="phonenumber" tabindex="13" value="{$cdata.phonenumber}"></td>
+                        <td class="fieldlabel">Country</td>
+                        <td class="fieldarea">
+                            {$countrydrop}     
+                        </td>
+
                     </tr>
                     <tr>
                         <td class="fieldlabel">Email Notifications</td>
@@ -61,10 +66,16 @@
                             <label><input type="checkbox" name="productemails" {if $cdata.productemails}checked{/if} tabindex="17"> Product</label>
                             <label><input type="checkbox" name="affiliateemails" {if $cdata.affiliateemails}checked{/if} tabindex="19"> Affiliate</label>
                         </td>
+                        <td class="fieldlabel">Phone Number</td>
+                        <td class="fieldarea"><input class="form-control" type="text" size="20" name="phonenumber" tabindex="13" value="{$cdata.phonenumber}"></td>
+
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
                         <td class="fieldlabel">Mobile Number</td>
                         <td class="fieldarea"><input class="form-control" type="text" size="20" name="mobilenumber" tabindex="13" value="{$cdata.mobilenumber}"></td>
                     </tr>
-
                     <tr>
                         <td class="fieldlabel">Permissions</td>
                         <td class="fieldarea" colspan="3">
@@ -97,7 +108,9 @@
                                 </tbody>
                             </table>
                         </td>
+
                     </tr>
+
                 </tbody></table>
 
             <p align="center"><input type="submit" value="Save Changes" class="btn btn-primary" tabindex="31"> <input type="reset" value="Cancel Changes" class="button" tabindex="32"><br>

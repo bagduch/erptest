@@ -3,12 +3,7 @@
 /**
  *
  * @ RA
- *
  * 
- * 
- * 
- * 
- *
  * */
 define("ADMINAREA", true);
 require "../init.php";
@@ -39,11 +34,8 @@ $addon_modules = $addonmodulehooks = array();
 
 if (is_dir(ROOTDIR . "/modules/addons/")) {
     $dh = opendir(ROOTDIR . "/modules/addons/");
-
     while (false !== $file = readdir($dh)) {
-
         $modfilename = ROOTDIR . ("/modules/addons/" . $file . "/" . $file . ".php");
-
         if (is_file($modfilename)) {
             require $modfilename;
             $configarray = call_user_func($file . "_config");
@@ -66,6 +58,7 @@ if (is_dir(ROOTDIR . "/modules/admin/")) {
 
     closedir($dh);
 }
+
 
 ksort($addon_modules);
 $action = $ra->get_req_var("action");
@@ -117,8 +110,6 @@ if ($action == "save") {
 
     redir("savedref=true#" . $module);
 }
-
-
 if ($action == "activate") {
     check_token("RA.admin.default");
 
@@ -146,8 +137,6 @@ if ($action == "activate") {
     redir("activated=true");
     exit();
 }
-
-
 if ($action == "deactivate") {
     check_token("RA.admin.default");
 
@@ -179,41 +168,29 @@ if ($action == "deactivate") {
     redir("deactivated=true");
     exit();
 }
-
 ob_start();
-
 if ($action == "") {
     if ($ra->get_req_var("saved")) {
         infoBox($aInt->lang("addonmodules", "changesuccess"), $aInt->lang("addonmodules", "changesuccessinfo"));
     }
-
-
     if ($ra->get_req_var("activated")) {
         $response = wGetCookie("AddonModActivate", 1);
         $desc = $status = "";
-
         if (is_array($response)) {
             if ($response['description']) {
                 $desc = $response['description'];
             }
-
-
             if (in_array($response['status'], array("info", "success", "error"))) {
                 $status = $response['status'];
             }
         }
-
         $title = $aInt->lang("addonmodules", "moduleactivated");
-
         if (!$desc) {
             $desc = $aInt->lang("addonmodules", "moduleactivatedinfo");
         }
-
-
         if (!$status) {
             $status = "success";
         }
-
         infoBox($title, $desc, $status);
     }
 

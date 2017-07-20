@@ -344,8 +344,9 @@ if ($action == "") {
                 $sendconfirmation = "on";
             }
 
-            //   addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $date);
-            redir("admin/clientsinvoices.php?userid=12437", "", true);
+            addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $_POST['date']);
+
+            redir("action=edit&id=" . $id);
             exit();
         }
         if ($sub == "save") {
@@ -613,6 +614,7 @@ if ($action == "") {
         $aInt->template = "invoices/edit";
     }
 }
+
 
 $aInt->jquerycode.=$menuselect;
 

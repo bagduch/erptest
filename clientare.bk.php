@@ -87,10 +87,10 @@ if ($action == "") {
     while ($data = mysqli_fetch_array($result)) {
         $statusfilter .= "'" . $data[0] . "',";
     }
+   
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
     $result = select_query_i("tbltickets", "", "userid=" . (int) ($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
-
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $tid = $data['tid'];

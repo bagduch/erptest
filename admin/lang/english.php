@@ -173,6 +173,8 @@ $_ADMINLANG['clients']['duplicateemailexp'] = "The email address entered is alre
 $_ADMINLANG['clients']['billingcontact'] = "Billing Contact";
 $_ADMINLANG['clients']['changedefault'] = "Select to Change Default";
 $_ADMINLANG['clients']['latefees'] = "Late Fees";
+$_ADMINLANG['clients']['emailnotif'] = "Email Notification";
+$_ADMINLANG['clients']['txtnotif'] = "Txt Notification";
 $_ADMINLANG['clients']['latefeesdesc'] = "Don't Apply Late Fees";
 $_ADMINLANG['clients']['overduenotices'] = "Overdue Notices";
 $_ADMINLANG['clients']['overduenoticesdesc'] = "Don't Send Overdue Emails";
@@ -247,6 +249,7 @@ $_ADMINLANG['clientsummary']['filesheading'] = "Files";
 $_ADMINLANG['clientsummary']['settingsheading'] = "Clients Settings";
 $_ADMINLANG['clientsummary']['emailsheading'] = "Recent Emails";
 $_ADMINLANG['clientsummary']['sendemailheading'] = "Send Email";
+$_ADMINLANG['clientsummary']['sendtxtheading'] = "Send TXT";
 $_ADMINLANG['clientsummary']['actionsheading'] = "Other Actions";
 $_ADMINLANG['clientsummary']['ccinfo'] = "Credit Card Information";
 $_ADMINLANG['clientsummary']['loginasclient'] = "Login as Client";
@@ -289,6 +292,8 @@ $_ADMINLANG['clientsummary']['settingtaxexempt'] = "Exempt from Tax";
 $_ADMINLANG['clientsummary']['settingautocc'] = "Auto CC Processing";
 $_ADMINLANG['clientsummary']['settingreminders'] = "Send Overdue Reminders";
 $_ADMINLANG['clientsummary']['settinglatefees'] = "Apply Late Fees";
+$_ADMINLANG['clientsummary']['settingemail'] = "Email Notification";
+$_ADMINLANG['clientsummary']['settingtxt'] = "TXT Notification";
 $_ADMINLANG['clientsummary']['settingtoggle'] = "Toggle";
 $_ADMINLANG['clientsummary']['stickynotescheck'] = "Make Sticky (Important)";
 
@@ -1424,6 +1429,8 @@ $_ADMINLANG['permissions']['80'] = "Configure Custom Client Fields";
 $_ADMINLANG['permissions']['87'] = "Configure Security Questions";
 $_ADMINLANG['permissions']['83'] = "Configure Database Backups";
 $_ADMINLANG['permissions']['81'] = "API Access";
+$_ADMINLANG['permissions']['150'] = "View TXT Templates";
+
 
 # Addon Modules
 $_ADMINLANG['addonmodules']['choose'] = "Choose an addon module from below";

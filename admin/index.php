@@ -10,27 +10,6 @@
  * 
  *
  * */
-function createDateRangeArray($strDateFrom, $strDateTo) {
-    // takes two dates formatted as YYYY-MM-DD and creates an
-    // inclusive array of the dates between the from and to dates.
-    // could test validity of dates here but I'm already doing
-    // that in the main script
-
-    $aryRange = array();
-
-    $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
-    $iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
-
-    if ($iDateTo >= $iDateFrom) {
-        array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
-        while ($iDateFrom < $iDateTo) {
-            $iDateFrom+=86400; // add 24 hours
-            array_push($aryRange, date('Y-m-d', $iDateFrom));
-        }
-    }
-    return $aryRange;
-}
-
 function load_admin_home_widgets() {
     global $aInt;
     global $hooks;
@@ -53,6 +32,7 @@ function load_admin_home_widgets() {
     while (list($key, $hook) = each($hooks[$hook_name])) {
         $widgetname = substr($hook['hook_function'], 7);
 
+
         if (in_array($widgetname, $allowedwidgets) && function_exists($hook['hook_function'])) {
             $res = call_user_func($hook['hook_function'], $args);
 
@@ -66,7 +46,11 @@ function load_admin_home_widgets() {
                     $jscode .= $res['jscode'] . "\r\n";
                 }
 
-                $results[] = array_merge(array("name" => $widgetname), $res);
+                if (strpos($widgetname, "left") !== false) {
+                    $results['left'][] = array_merge(array("name" => $widgetname), $res);
+                } else {
+                    $results['right'][] = array_merge(array("name" => $widgetname), $res);
+                }
             }
         }
     }
@@ -86,6 +70,7 @@ require "../init.php";
 if (!checkPermission("Main Homepage", true) && checkPermission("Support Center Overview", true)) {
     redir("", "supportcenter.php");
 }
+
 $aInt = new RA_Admin("Main Homepage", false);
 $aInt->title = $aInt->lang("global", "hometitle");
 $aInt->sidebar = "home";
@@ -318,41 +303,7 @@ $start_date = date("Y-m-d", strtotime("-15 days", strtotime("now")));
 $query = "select * from tblorders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
 $result = full_query_i($query);
 $orders = array();
-$starttime = date("t", strtotime(date("Y-m-01")));
-$datePeriod = createDateRangeArray($start_date, $end_date);
-$income = array();
-foreach ($datePeriod as $date) {
-    $orders[$date]['active'] = 0;
-    $orders[$date]['pending'] = 0;
-    $orders[$date]['draft'] = 0;
-    $orders[$date]['cancel'] = 0;
-    $orders[$date]['total'] = 0;
-    $income[$date]['actual'] = 0;
-    $income[$date]['pending'] = 0;
-}
-$result = select_query_i("tbladmins", "");
-while ($data = mysqli_fetch_assoc($result)) {
-    $templatevars['adminlist'][] = $data;
-}
 
-while ($data = mysqli_fetch_array($result)) {
-    if ($data['status'] == "Active") {
-        $orders[date("Y-m-d", strtotime($data['date']))]['active'] ++;
-        $income[date("Y-m-d", strtotime($data['date']))]['actual'] += $data['amount'];
-    }
-    if ($data['status'] == "Pending") {
-        $orders[date("Y-m-d", strtotime($data['date']))]['pending'] ++;
-        $income[date("Y-m-d", strtotime($data['date']))]['pending'] += $data['amount'];
-    }
-    if ($data['status'] == "Draft") {
-        $orders[date("Y-m-d", strtotime($data['date']))]['draft'] ++;
-        $income[date("Y-m-d", strtotime($data['date']))]['pending'] += $data['amount'];
-    }
-    if ($data['status'] == "Fraud") {
-        $orders[date("Y-m-d", strtotime($data['date']))]['cancel'] ++;
-    }
-    $orders[date("Y-m-d", strtotime($data['date']))]['total'] ++;
-}
 $templatevars['notes'] = array();
 
 $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
@@ -375,9 +326,8 @@ while ($data = mysqli_fetch_assoc($result)) {
 }
 
 
-$templatevars["income"] = $income;
 $templatevars["order"] = $orders;
-$templatevars["adminlogin"] = $adminlogin;
+
 $templatevars["clientlogin"] = $clientlog;
 $aInt->jscode = $jscode;
 $aInt->jquerycode = $jquerycode;

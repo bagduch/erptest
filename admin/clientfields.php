@@ -1,11 +1,9 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  * @ RA
  * */
@@ -18,8 +16,6 @@ $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
 $menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
-
-
 if ($action == "") {
     $result = select_query_i("tblclientfields", "");
     while ($data = mysqli_fetch_assoc($result)) {
@@ -27,7 +23,6 @@ if ($action == "") {
     }
     $aInt->assign('datas', $clientfields);
 }
-
 if ($action == "save") {
     if (isset($_POST['fieldname'])) {
         foreach ($_POST['fieldname'] as $fid => $value) {

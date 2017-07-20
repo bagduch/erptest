@@ -9,7 +9,7 @@ input , select { outline: none; }
 .tl {text-align: left !important;}
 
 body {
-    background:#6ed7fe url(/templates/uihex/css/img/whmcs-city-bg.jpg) no-repeat top center;
+    background:#336ca6;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;

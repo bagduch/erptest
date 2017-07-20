@@ -254,6 +254,8 @@
                 autoclose: true,
                 format: 'yyyy-mm-dd',
             });
+            
+            
             $('.datepick').datepicker({
                 autoclose: true,
                 format: 'yyyy-mm-dd',

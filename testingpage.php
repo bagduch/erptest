@@ -11,23 +11,18 @@ initialiseClientArea();
 <html>
     <head>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
-
-
     </head>
     <body>
         <form method="post" action="myorder.php">
-            <div class="">
-                <input type="hidden" value="<?php echo generate_token("plain") ?>">
+            <div class="container-wrap>
                 input your address
-                <input id="searchTextField" type="text" name="address" value="11c piermark Drive">
+                <input id="searchTextField" type="text" name="address" value="">
                 <input id="street_number" name="streetnumber" type="text">
                 <input id="route" name="address2" type="text">
                 <input id="locality" name="locality" type="text">
                 <input id="administrative_area_level_1" name="region" type="text">
                 <input id="country" name="country" type="text">
                 <input id="postal_code" name="zip" type="text">
-
-
                 your product id
                 <input type="text" name="fpid" value="3">
                 <input type="submit">
@@ -37,14 +32,11 @@ initialiseClientArea();
 </html>
 
 <script type="text/javascript">
-
     var input = document.getElementById('searchTextField');
     var options = {
         componentRestrictions: {country: 'nz'}
     };
-
     autocomplete = new google.maps.places.Autocomplete(input, options);
-
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
         hdregion = [
             "Ashburton",
@@ -79,8 +71,6 @@ initialiseClientArea();
             country: 'long_name',
             postal_code: 'short_name'
         };
-
-
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (addressType in componentForm)
@@ -88,21 +78,8 @@ initialiseClientArea();
                 var val = place.address_components[i][componentForm[addressType]];
                 document.getElementById(addressType).value = val;
                 console.log(addressType);
-
             }
-
         }
-//        for (var i = 0; i < place.address_components.length; i++) {
-//            var addressType = place.address_components[i].types[0];
-//            if (componentForm[addressType]) {
-//                var val = place.address_components[i][componentForm[addressType]];
-//                document.getElementById(addressType).value = val;
-//            }
-//        }
-
-
-
-
     });
 
 </script>
