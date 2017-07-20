@@ -333,11 +333,20 @@ class RA_Admin {
                 }
             }
         }
-        if ($this->title !== "Admin Summary") {
-            $_SESSION['breadcrumb'][$this->title]["pagetitle"] = $this->title;
-            $_SESSION['breadcrumb'][$this->title]["url"] = $_SERVER['REQUEST_URI'];
-        }
+        session_start();
 
+//        if (!in_array($this->title, $_SESSION['breadmarker']['market'])) {
+//            $_SESSION['breadmarker']['market'][] = $this->title;
+//            $_SESSION['breadmarker']['position'] = sizeof($_SESSION['breadmarker']['market']);
+//        }
+        if ($this->title !== "Admin Summary") {
+            $title = $this->title;
+            if (sizeof($_SESSION['breadcrumb']) == 7) {
+                array_shift($_SESSION['breadcrumb']);
+            }
+            $_SESSION['breadcrumb'][$title]["pagetitle"] = $this->title;
+            $_SESSION['breadcrumb'][$title]["url"] = $_SERVER['REQUEST_URI'];
+        }
 
         $this->assign("filename", $this->filename);
         $this->assign("breadcrumb", $_SESSION['breadcrumb']);
@@ -720,7 +729,7 @@ class RA_Admin {
         echo $content;
 
         if ($this->inClientsProfile) {
-            echo "</div></div>";
+            echo "</div></div></div>";
         }
 
         $this->smarty->display($this->adminTemplate . "/footer.tpl");
@@ -1196,7 +1205,7 @@ where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . "
 
 #" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] 
         echo "<h1>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . "</h1>";
-        echo "<ul class=\"nav nav-tabs\">";
+        echo "  <div class=\"nav-tabs-custom\"><ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
                 $class = " class=\"active\"";
@@ -1207,9 +1216,8 @@ where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . "
             printf("<li %s><a href=\"%s.php?userid=%d\">%s</a></li>", $class, $link, (int) $_GET['userid'], $name
             );
         }
-
         echo "</ul>";
-        echo "<div id=\"tab0box\" class=\"tabbox\">\r\n  <div id=\"tab_content\" style=\"text-align:left;\">";
+        echo "<div id=\"tab0box\" class=\"tab-content\">\r\n  <div id=\"tab0\" style=\"text-align:left;\">";
     }
 
     public function gracefulExit($msg) {

@@ -42,6 +42,8 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['id'] = $details['userid'] = $data['id'];
     $details['firstname'] = $data['firstname'];
     $details['lastname'] = $data['lastname'];
+    $details['email_notification'] = $data['email_notification'];
+    $details['txt_notification'] = $data['txt_notification'];
     $details['companyname'] = $data['companyname'];
     $details['email'] = $data['email'];
     $details['address1'] = $data['address1'];

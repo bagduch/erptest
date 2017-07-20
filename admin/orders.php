@@ -55,7 +55,40 @@ if ($ra->get_req_var("rerunfraudcheck")) {
 
     exit();
 }
+if ($action == "addnotes") {
+    if (!isset($_POST['account'])) {
+        $account = $userid;
+    } else {
+        $account = $_POST['account'];
+    }
 
+    if (isset($_POST['duedate'])) {
+        $duedate = $_POST['duedate'];
+    } else {
+        $duedate = 'now()';
+    }
+
+    if (isset($_POST['assignto'])) {
+        $assingto = $_POST['assignto'];
+    } else {
+        $assingto = $_SESSION['adminid'];
+    }
+    insert_query("tblnotes", array(
+        "rel_id" => $account,
+        "adminid" => $_SESSION['adminid'],
+        "type" => $_POST['rel_type'],
+        "created" => "now()",
+        "duedate" => $duedate,
+        "flag" => $_POST['imports'],
+        "assignto" => $_POST['assign'],
+        "modified" => "now()",
+        "note" => $_POST['notes'],
+        "sticky" => $sticky));
+
+    logActivity("Add Note - Order ID: " . $account);
+    redir("action=view&id=$account");
+    exit();
+}
 
 if ($action == "affassign") {
     if ($orderid && $affid) {
@@ -167,6 +200,8 @@ if ($ra->get_req_var("sendmessage")) {
 
     redir("type=general&multiple=true&" . substr($clientslist, 0, 0 - 1), "sendmessage.php");
 }
+
+
 
 
 if (!$action) {
@@ -711,6 +746,32 @@ if (!$action) {
     });
     return false;
 });";
+
+    $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
+LEFT JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+where tbo.id=" . $id;
+    $result = full_query_i($query);
+    while ($data = mysqli_fetch_array($result)) {
+        $noteid = $data['id'];
+        $duedate = $data['duedate'];
+        $created = $data['created'];
+        $modified = $data['modified'];
+        $note = $data['note'];
+        $assigned = $data['assignee'];
+        $note = nl2br($note);
+        $note = autoHyperLink($note);
+        $created = fromMySQLDate($created, "time");
+        $modified = fromMySQLDate($modified, "time");
+        if ($data['flag']) {
+            $importantnote = "<img src=\"images/highpriority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">";
+        } else {
+            $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
+        }
+        $tabledata[] = array($data['type'], $created, $note, $data['name'], $data['assignname'], $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>", $noteid);
+    }
+    $aInt->assign("tabledata", $tabledata);
     $aInt->assign("jquerycode", "adc");
     $aInt->assign("notes", $notes);
     $aInt->assign("promocodetext", $promocodetext);

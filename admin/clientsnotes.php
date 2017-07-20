@@ -35,12 +35,29 @@ if (intval($sticky) > 0) {
 if ($sub == "add") {
 //    check_token("RA.admin.default");
 //    checkPermission("Add/Edit Client Notes");
+    if (!isset($_POST['account'])) {
+        $account = $userid;
+    } else {
+        $account = $_POST['account'];
+    }
+
+    if (isset($_POST['duedate'])) {
+        $duedate = $_POST['duedate'];
+    } else {
+        $duedate = 'now()';
+    }
+
+    if (isset($_POST['assignto'])) {
+        $assingto = $_POST['assignto'];
+    } else {
+        $assingto = $_SESSION['adminid'];
+    }
     insert_query("tblnotes", array(
-        "rel_id" => $_POST['account'],
+        "rel_id" => $account,
         "adminid" => $_SESSION['adminid'],
         "type" => $_POST['rel_type'],
         "created" => "now()",
-        "duedate" => $_POST['duedate'],
+        "duedate" => $duedate,
         "flag" => $_POST['imports'],
         "assignto" => $_POST['assign'],
         "modified" => "now()",
@@ -78,7 +95,6 @@ if ($sub == "add") {
 }
 
 $aInt->deleteJSConfirm("doDelete", "clients", "deletenote", "clientsnotes.php?userid=" . $userid . "&sub=delete&id=");
-ob_start();
 $aInt->sortableTableInit("created", "ASC");
 $result = select_query_i("tblnotes", "COUNT(*)", array("userid" => $userid), "created", "ASC", "", "tbladmins ON tbladmins.id=tblnotes.adminid");
 $data = mysqli_fetch_array($result);
@@ -86,24 +102,19 @@ $numrows = $data[0];
 
 $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
 INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
-INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
 LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
-LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id and tbn.type='account')
 where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
-
 
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
-
     $noteid = $data['id'];
     $duedate = $data['duedate'];
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
     $assigned = $data['assignee'];
-
-
-
     $note = nl2br($note);
     $note = autoHyperLink($note);
     $created = fromMySQLDate($created, "time");
@@ -155,8 +166,7 @@ if ($action == "edit") {
 ";
 }
 
-$content = ob_get_contents();
-ob_end_clean();
+
 $result = select_query_i("tbladmins", "id,firstname,lastname");
 while ($data = mysqli_fetch_array($result)) {
     $adminlist[$data['id']] = $data['firstname'] . " " . $data['lastname'];

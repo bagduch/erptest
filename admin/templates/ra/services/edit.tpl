@@ -21,23 +21,10 @@
                                         <td class="fieldlabel">{$langs.fields}</td>
                                         <td class="fieldarea">
                                             <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                                <option value="services" {if $services.type eq 'services'}selected{/if}>Services</option>
-                                                <option value="wholesell" {if $services.type eq 'wholesell'}selected{/if}>Whole Sell</option>
-                                                <option value="product" {if $services.type eq 'server'}selected{/if}>Product</option>
-                                                <option value="addon" {if $services.type eq 'addon'}selected{/if}>Addon</option>
-                                                <option value="other" {if $services.type eq 'other'}selected{/if}>{$langs.other}</option>
+                                                <option value="residential" {if $services.type eq 'residential'}selected{/if}>Residential</option>
+                                                <option value="business" {if $services.type eq 'business'}selected{/if}>Business</option>
                                             </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fieldlabel">{$langs.servicegroup}</td>
-                                        <td class="fieldarea">
-                                            <select class="form-control" name="gid">
-                                      
-                                                {foreach from=$servicegroups item=row key=gid}
-                                                    <option value="{$gid}" {if $gid eq $services.gid}selected{/if}>{$row}</option>
-                                                {/foreach}
-                                            </select>
+                                             <input type="hidden" name="gid" value="{$groupsid}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -338,7 +325,7 @@
         var datepickerformat = "dd/mm/yy";
         $(document).ready(function () {
 
-    
+
 
             function checkgroup()
             {
@@ -400,7 +387,7 @@
                     $("#contractop").hide();
                 }
             });
-        
+
             $("#showquickupload").click(
                     function () {
                         $("#quickupload").dialog("open");

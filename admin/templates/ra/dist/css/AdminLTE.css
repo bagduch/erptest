@@ -19,7 +19,7 @@ body {
     height: 100%;
 }
 body {
-    background: #336ca6;
+    background: #314d5b;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -97,14 +97,14 @@ body {
 .content-wrapper,
 .right-side {
     min-height: 100%;
-    background-color: #ecf0f5;
+    background-color: #314d5b;
     z-index: 800;
 }
 .main-footer {
-    background: #fff;
+    background: #3bab97;
     padding: 15px;
-    color: #444;
-    border-top: 1px solid #d2d6de;
+    color: white;
+ 
 }
 /* Fixed layout */
 .fixed .main-header,
@@ -204,6 +204,7 @@ a:focus {
     margin-left: 230px;
     border: none;
     min-height: 50px;
+    background:#3bab97;
     border-radius: 0;
 }
 .layout-top-nav .main-header .navbar {

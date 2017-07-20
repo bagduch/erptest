@@ -17,7 +17,7 @@ $aInt->title = $aInt->lang("clientgroups", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "clients";
 $aInt->helplink = "Client Groups";
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
+$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 if ($action == "savegroup") {
     check_token("RA.admin.default");
     insert_query("tblclientgroups", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices));

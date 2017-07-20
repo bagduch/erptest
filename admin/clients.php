@@ -2,7 +2,7 @@
 
 /**
  *
- * @ RA
+ * @ wEAcVfcs
  * */
 define("ADMINAREA", true);
 require "../init.php";

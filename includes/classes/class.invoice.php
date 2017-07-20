@@ -27,7 +27,7 @@ class RA_Invoice {
         while ($data = mysqli_fetch_array($sresult)) {
             $setting[$data['setting']] = $data['value'];
         }
-       // echo "<pre>", print_r($data, 1), "</pre>";
+        // echo "<pre>", print_r($data, 1), "</pre>";
     }
 
     public function setID($invoiceid) {
@@ -292,6 +292,29 @@ class RA_Invoice {
     }
 
     public function pdfInvoicePage($invoiceid = "") {
+        global $ra;
+        global $currency;
+
+        if ($invoiceid) {
+            $this->setID($invoiceid);
+            $invoiceexists = $this->loadData();
+
+            if (!$invoiceexists) {
+                return false;
+            }
+        }
+
+        $this->pdf->SetTitle($ra->get_lang("invoicenumber") . $this->getData("invoicenum"));
+        $tplvars = $this->getOutput(true);
+        $invoiceitems = $this->getLineItems(true);
+        $tplvars['invoiceitems'] = $invoiceitems;
+        $transactions = $this->getTransactions();
+        $tplvars['transactions'] = $transactions;
+        $this->pdfAddPage("invoicepdf.tpl", $tplvars);
+        return true;
+    }
+
+    public function pdfLateFee($latefeeid) {
         global $ra;
         global $currency;
 

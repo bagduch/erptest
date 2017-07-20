@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @ RA
  * */
@@ -96,7 +97,7 @@ if ($a == "remove") {
             $_SESSION['cart']['addons'] = array_values($_SESSION['cart']['addons']);
         } else {
             if ($r == "d") {
-              
+                
             } else {
                 if ($r == "r") {
                     unset($_SESSION['cart']['renewals'][$i]);
@@ -158,110 +159,108 @@ if (!$a) {
     if ($gid == "domains") {
         redir("a=add&domain=register");
         exit();
-    } else {
-        if ($gid == "addons") {
-            if (!$_SESSION['uid']) {
-                $orderform = false;
-                require "login.php";
+    } elseif ($gid == "addons") {
+        if (!$_SESSION['uid']) {
+            $orderform = false;
+            require "login.php";
+        }
+
+        $smarty->assign("gid", "addons");
+        $templatefile = "addons";
+        $productgroups = $orderfrm->getProductGroups();
+        $smarty->assign("productgroups", $productgroups);
+        $where = array();
+        $where['userid'] = $_SESSION['uid'];
+        $where['servicestatus'] = "Active";
+
+        if ($pid) {
+            $where["tblcustomerservices.id"] = $pid;
+        }
+
+        $productids = array();
+        $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,description,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
+
+        while ($data = mysqli_fetch_array($result)) {
+            $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "description" => $data['description']);
+
+            if (!in_array($data['packageid'], $productids)) {
+                $productids[] = $data['packageid'];
             }
+        }
 
-            $smarty->assign("gid", "addons");
-            $templatefile = "addons";
-            $productgroups = $orderfrm->getProductGroups();
-            $smarty->assign("productgroups", $productgroups);
-            $where = array();
-            $where['userid'] = $_SESSION['uid'];
-            $where['servicestatus'] = "Active";
+        $addonids = array();
+        $result = select_query_i("tbladdons", "id,packages", "");
 
-            if ($pid) {
-                $where["tblcustomerservices.id"] = $pid;
-            }
+        while ($data = mysqli_fetch_array($result)) {
+            $id = $data['id'];
+            $packages = $data['packages'];
+            $packages = explode(",", $packages);
+            foreach ($productids as $productid) {
 
-            $productids = array();
-            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,description,packageid,name", $where, "", "", "", "tblproducts ON tblproducts.id=tblcustomerservices.packageid");
-
-            while ($data = mysqli_fetch_array($result)) {
-                $productstoids[$data['packageid']][] = array("id" => $data['id'], "product" => $data['name'], "description" => $data['description']);
-
-                if (!in_array($data['packageid'], $productids)) {
-                    $productids[] = $data['packageid'];
+                if (in_array($productid, $productids) && !in_array($id, $addonids)) {
+                    $addonids[] = $id;
+                    continue;
                 }
             }
+        }
 
-            $addonids = array();
-            $result = select_query_i("tbladdons", "id,packages", "");
+        $addons = array();
+
+        if (count($addonids)) {
+            $result = select_query_i("tbladdons", "", "id IN (" . db_build_in_array($addonids) . ")", "weight` ASC,`name", "ASC");
 
             while ($data = mysqli_fetch_array($result)) {
-                $id = $data['id'];
+                $addonid = $data['id'];
                 $packages = $data['packages'];
                 $packages = explode(",", $packages);
-                foreach ($productids as $productid) {
+                $name = $data['name'];
+                $description = $data['description'];
+                $billingcycle = $data['billingcycle'];
+                $free = false;
 
-                    if (in_array($productid, $productids) && !in_array($id, $addonids)) {
-                        $addonids[] = $id;
+                if ($billingcycle == "Free Account") {
+                    $free = true;
+                } else {
+                    $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $data = mysqli_fetch_array($result2);
+                    $setupfee = $data['msetupfee'];
+                    $recurring = $data['monthly'];
+                    $setupfee = ($setupfee == "0.00" ? "" : formatCurrency($setupfee));
+                }
+
+                $billingcycle = RA_ClientArea::getrawstatus($billingcycle);
+                $billingcycle = $_LANG["orderpaymentterm" . $billingcycle];
+                $packageids = array();
+                foreach ($packages as $packageid) {
+                    $thisaddonspackages = "";
+                    $thisaddonspackages = $productstoids[$packageid];
+
+                    if ($thisaddonspackages) {
+                        $packageids = array_merge($packageids, $thisaddonspackages);
                         continue;
                     }
                 }
-            }
 
-            $addons = array();
-
-            if (count($addonids)) {
-                $result = select_query_i("tbladdons", "", "id IN (" . db_build_in_array($addonids) . ")", "weight` ASC,`name", "ASC");
-
-                while ($data = mysqli_fetch_array($result)) {
-                    $addonid = $data['id'];
-                    $packages = $data['packages'];
-                    $packages = explode(",", $packages);
-                    $name = $data['name'];
-                    $description = $data['description'];
-                    $billingcycle = $data['billingcycle'];
-                    $free = false;
-
-                    if ($billingcycle == "Free Account") {
-                        $free = true;
-                    } else {
-                        $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
-                        $data = mysqli_fetch_array($result2);
-                        $setupfee = $data['msetupfee'];
-                        $recurring = $data['monthly'];
-                        $setupfee = ($setupfee == "0.00" ? "" : formatCurrency($setupfee));
-                    }
-
-                    $billingcycle = RA_ClientArea::getrawstatus($billingcycle);
-                    $billingcycle = $_LANG["orderpaymentterm" . $billingcycle];
-                    $packageids = array();
-                    foreach ($packages as $packageid) {
-                        $thisaddonspackages = "";
-                        $thisaddonspackages = $productstoids[$packageid];
-
-                        if ($thisaddonspackages) {
-                            $packageids = array_merge($packageids, $thisaddonspackages);
-                            continue;
-                        }
-                    }
-
-                    if (count($packageids)) {
-                        $addons[] = array("id" => $addonid, "name" => $name, "description" => $description, "free" => $free, "setupfee" => $setupfee, "recurringamount" => formatCurrency($recurring), "billingcycle" => $billingcycle, "productids" => $packageids);
-                    }
+                if (count($packageids)) {
+                    $addons[] = array("id" => $addonid, "name" => $name, "description" => $description, "free" => $free, "setupfee" => $setupfee, "recurringamount" => formatCurrency($recurring), "billingcycle" => $billingcycle, "productids" => $packageids);
                 }
             }
+        }
 
-            $smarty->assign("addons", $addons);
+        $smarty->assign("addons", $addons);
 
-            if (!count($addons)) {
-                $smarty->assign("noaddons", true);
-            }
-        } else {
-            if ($gid == "renewals") {
-                if (!$CONFIG['EnableDomainRenewalOrders']) {
-                    redir("", "clientarea.php");
-                }
+        if (!count($addons)) {
+            $smarty->assign("noaddons", true);
+        }
+    } elseif ($gid == "renewals") {
+        if (!$CONFIG['EnableDomainRenewalOrders']) {
+            redir("", "clientarea.php");
+        }
 
-                if (!$_SESSION['uid']) {
-                    $orderform = false;
-                    require "login.php";
-                }
+        if (!$_SESSION['uid']) {
+            $orderform = false;
+            require "login.php";
+        }
 
 //                $smarty->assign("gid", "renewals");
 //                $templatefile = "domainrenewals";
@@ -339,49 +338,47 @@ if (!$a) {
 //                }
 //
 //                $smartyvalues['renewals'] = $renewals;
-            } else {
+    } else {
 
-                $templatefile = "services";
-                $productgroups = $orderfrm->getProductGroups();
+        $templatefile = "services";
+        $productgroups = $orderfrm->getProductGroups();
 
-                $smartyvalues['productgroups'] = $productgroups;
+        $smartyvalues['productgroups'] = $productgroups;
 
 
 //    echo "<pre>",  print_r($_SESSION['cart'],1),"</pre>";
 
-                $productservice = $orderfrm->getServiceGroups();
-                $smartyvalues['productservices'] = $productservice;
+        $productservice = $orderfrm->getServiceGroups();
+        $smartyvalues['productservices'] = $productservice;
 
-                if ($pid) {
-                    $result = select_query_i("tblservices", "id,gid", array("id" => $pid));
-                    $data = mysqli_fetch_array($result);
-                    $pid = $data['id'];
-                    $gid = $data['gid'];
-                    $smartyvalues['pid'] = $pid;
-                } else {
-                    if (!$gid) {
-                        $gid = $productservice[0]['gid'];
-                    }
-                }
-                $type = select_query_i('tblservicegroups', "type", array("id" => $gid));
-                $typedata = mysqli_fetch_array($result);
-                $smartyvalues['type'] = $typedata['type'];
-                $groupinfo = $orderfrm->getProductGroupInfo($gid);
-
-                if (count($productgroups) && !$groupinfo) {
-                    redir();
-                }
-
-                $smartyvalues['gid'] = $groupinfo['id'];
-                $smartyvalues['carts'] = $_SESSION['cart'];
-                $smartyvalues['groupname'] = $groupinfo['name'];
-                $products = $orderfrm->getProducts($gid, true, true);
-
-//$services = $orderfrm->getServices($gid, true, true);
-                $smartyvalues['products'] = $products;
-                $smartyvalues['productscount'] = count($products);
+        if ($pid) {
+            $result = select_query_i("tblservices", "id,gid", array("id" => $pid));
+            $data = mysqli_fetch_array($result);
+            $pid = $data['id'];
+            $gid = $data['gid'];
+            $smartyvalues['pid'] = $pid;
+        } else {
+            if (!$gid) {
+                $gid = $productservice[0]['gid'];
             }
         }
+        $type = select_query_i('tblservicegroups', "type", array("id" => $gid));
+        $typedata = mysqli_fetch_array($result);
+        $smartyvalues['type'] = $typedata['type'];
+        $groupinfo = $orderfrm->getProductGroupInfo($gid);
+
+        if (count($productgroups) && !$groupinfo) {
+            redir();
+        }
+
+        $smartyvalues['gid'] = $groupinfo['id'];
+        $smartyvalues['carts'] = $_SESSION['cart'];
+        $smartyvalues['groupname'] = $groupinfo['name'];
+        $products = $orderfrm->getProducts($gid, true, true);
+
+//$services = $orderfrm->getServices($gid, true, true);
+        $smartyvalues['products'] = $products;
+        $smartyvalues['productscount'] = count($products);
     }
 }
 
@@ -647,12 +644,12 @@ if ($a == "confservice") {
     if (!empty($_SESSION['cart']['products'][$i]['customfields'])) {
         foreach ($_SESSION['cart']['products'][$i]['customfields'] as $key => $row) {
             $customfields[$key]['value'] = $row;
-        } 
+        }
     }
     $addonsarray = getAddons($pid, $addons);
     $recurringcycles = 0;
 
-    if ($pricing['type'] == "recurring") {  
+    if ($pricing['type'] == "recurring") {
         if (0 <= $pricing['rawpricing']['monthly']) {
             ++$recurringcycles;
         }

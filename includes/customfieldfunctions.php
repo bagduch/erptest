@@ -24,7 +24,7 @@ function getClientfieldshtml($relid2 = FALSE) {
         $fieldtype = $data['fieldtype'];
         $description = $data['description'];
         $fieldoptions = $data['fieldoptions'];
-      
+
         $required = $data['required'];
         $adminonly = $data['adminonly'];
         $customfieldval = (is_array($ordervalues) ? $ordervalues[$id] : "");
@@ -135,8 +135,8 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
     $customfields = array();
     // error_log(print_r($datas, 1), 3, "/tmp/php_errors.log");
     foreach ($datas as $data) {
-        //   echo "<pre>", print_r($data, 1), "</pre>";
-        $id = $data['id'];
+        //     echo "<pre>", print_r($data, 1), "</pre>";
+        $id = $data['cfid'];
         $fieldname = $data['fieldname'];
 
         if (strpos($fieldname, "|")) {
@@ -150,93 +150,77 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
         $required = $data['required'];
         $adminonly = $data['adminonly'];
         $customfieldval = (is_array($ordervalues) ? $ordervalues[$id] : "");
-
         if ($relid2) {
             $customfieldval = get_query_val("tblcustomfieldsvalues", "value", array("fieldid" => $id, "relid" => $relid2));
         }
-
         $rawvalue = $customfieldval;
 
         if ($required == "on") {
             $required = "*";
         }
 
-
         if ($fieldtype == "text" || ($fieldtype == "password" && $admin)) {
-            $input = ("<input type=\"text\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
-        } else {
-            if ($fieldtype == "link") {
-                $webaddr = trim($customfieldval);
 
-                if (substr($webaddr, 0, 4) == "www.") {
-                    $webaddr = "http://" . $webaddr;
-                }
+            $input = ("<input type=\"text\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+        } elseif ($fieldtype == "link") {
+            $webaddr = trim($customfieldval);
 
-                $input = ("<input type=\"text\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"40\" /> " . ($customfieldval ? "<a href=\"" . $webaddr . "\" target=\"_blank\">www</a>" : "");
-                $customfieldval = "<a href=\"" . $webaddr . "\" target=\"_blank\">" . $customfieldval . "</a>";
-            } else {
+            if (substr($webaddr, 0, 4) == "www.") {
+                $webaddr = "http://" . $webaddr;
+            }
 
-                if ($fieldtype == "date") {
-                    $input = ("<input type=\"password\" class=\"form-control datepick\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
-                }
+            $input = ("<input type=\"text\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"40\" /> " . ($customfieldval ? "<a href=\"" . $webaddr . "\" target=\"_blank\">www</a>" : "");
+            $customfieldval = "<a href=\"" . $webaddr . "\" target=\"_blank\">" . $customfieldval . "</a>";
+        } elseif ($fieldtype == "date") {
+            $input = ("<input type=\"text\" class=\"form-control datepick\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+        } elseif ($fieldtype == "password") {
+            $input = ("<input type=\"password\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
 
-                if ($fieldtype == "password") {
-                    $input = ("<input type=\"password\" class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+            if ($hidepw) {
+                $pwlen = strlen($customfieldval);
+                $customfieldval = "";
+                $i = 1;
 
-                    if ($hidepw) {
-                        $pwlen = strlen($customfieldval);
-                        $customfieldval = "";
-                        $i = 1;
-
-                        while ($i <= $pwlen) {
-                            $customfieldval .= "*";
-                            ++$i;
-                        }
-                    }
-                } else {
-                    if ($fieldtype == "textarea") {
-                        $input = ("<textarea class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" rows=\"3\" style=\"width:90%;\">" . $customfieldval . "</textarea>";
-                    } else {
-                        if ($fieldtype == "dropdown") {
-                            $input = ("<select class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\">";
-                            $fieldoptions = explode(",", $fieldoptions);
-                            foreach ($fieldoptions as $optionvalue) {
-                                $input .= ("<option value=\"" . $optionvalue . "\"");
-
-                                if ($customfieldval == $optionvalue) {
-                                    $input .= " selected";
-                                }
-
-
-                                if (strpos($optionvalue, "|")) {
-                                    $optionvalue = explode("|", $optionvalue);
-                                    $optionvalue = trim($optionvalue[1]);
-                                }
-
-                                $input .= ">" . $optionvalue . "</option>";
-                            }
-
-                            $input .= "</select>";
-                        } else {
-                            if ($fieldtype == "tickbox") {
-                                $input = (("<input type=\"checkbox\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\"");
-
-                                if ($customfieldval == "on") {
-                                    $input .= " checked";
-                                }
-
-                                $input .= " />";
-                            }
-                        }
-                    }
+                while ($i <= $pwlen) {
+                    $customfieldval .= "*";
+                    ++$i;
                 }
             }
-        }
+        } elseif ($fieldtype == "textarea") {
+            $input = ("<textarea class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" rows=\"3\" style=\"width:90%;\">" . $customfieldval . "</textarea>";
+        } elseif ($fieldtype == "dropdown") {
+            $input = ("<select class=\"form-control\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\">";
+            $fieldoptions = explode(",", $fieldoptions);
+            foreach ($fieldoptions as $optionvalue) {
+                $input .= ("<option value=\"" . $optionvalue . "\"");
+
+                if ($customfieldval == $optionvalue) {
+                    $input .= " selected";
+                }
 
 
-        if ($fieldtype != "link" && strpos($customfieldval, "|")) {
+                if (strpos($optionvalue, "|")) {
+                    $optionvalue = explode("|", $optionvalue);
+                    $optionvalue = trim($optionvalue[1]);
+                }
+
+                $input .= ">" . $optionvalue . "</option>";
+            }
+
+            $input .= "</select>";
+        } elseif ($fieldtype == "tickbox") {
+            $input = (("<input type=\"checkbox\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\"");
+
+            if ($customfieldval == "on") {
+                $input .= " checked";
+            }
+
+            $input .= " />";
+        } elseif ($fieldtype != "link" && strpos($customfieldval, "|")) {
             $customfieldval = explode("|", $customfieldval);
             $customfieldval = trim($customfieldval[1]);
+        } else {
+            
         }
 
         $customfields[] = array("id" => $id, "name" => $fieldname, "description" => $description, "type" => $fieldtype, "input" => $input, "value" => $customfieldval, "rawvalue" => $rawvalue, "required" => $required, "adminonly" => $adminonly);

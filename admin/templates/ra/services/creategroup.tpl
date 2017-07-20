@@ -45,7 +45,7 @@
                                             <label>
                                                 <img src="{$tvalue.thumb}" width="165" height="90" style="border:5px solid #fff;">
                                                 <br>
-                                                <input type="radio" name="orderfrmtpl" value="{$tvalue.template}"> {$tvalue.template}</label>
+                                                <input type="radio" name="orderfrmtpl" value="{$tvalue.template}" {if $groupdata.orderfrmtpl eq $tvalue.template}checked{/if}> {$tvalue.template}</label>
                                         </div>
                                     {/foreach}
 

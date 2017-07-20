@@ -2,6 +2,7 @@
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#tab0box" aria-controls="tab0box" role="tab" data-toggle="tab">Summary</a></li>
+            <li role="presentation" class=""><a href="#tab5box" aria-controls="tab5box" role="tab" data-toggle="tab">Add Payment</a></li>
             <li role="presentation" class=""><a href="#tab2box" aria-controls="tab2box" role="tab" data-toggle="tab">Options</a></li>
             <li role="presentation" class=""><a href="#tab3box" aria-controls="tab3box" role="tab" data-toggle="tab">Credit</a></li>
             <li role="presentation" class=""><a href="#tab4box" aria-controls="tab4box" role="tab" data-toggle="tab">Refund</a></li>
@@ -150,6 +151,76 @@
                     <div align="center"><input type="submit" value="Save Changes" class="button"></div>
                 </form>
             </div>
+            <div  role="tabpanel" id="tab5box" class="tabbox tab-pane">
+                <form method="post" action="/admin/invoices.php">
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="id" value="{$invoice.id}">
+                    <input type="hidden" name="sub" value="markpaid">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody><tr>
+                                <td width="20%" class="fieldlabel">
+                                    Date
+                                </td>
+                                <td class="fieldarea">
+                                    <input type="text" name="date" value="" class="datepick form-control">
+                                </td>
+                                <td width="20%" class="fieldlabel">
+                                    Amount
+                                </td>
+                                <td class="fieldarea">
+                                    <div class="row">
+                                        <div class="col-xs-9 col-md-5">
+                                            <input type="text" name="amount" value="{$balance}" class="form-control">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">
+                                    Payment Method
+                                </td>
+                                <td class="fieldarea">
+                                    {$paymentmethod}
+                                </td>
+                                <td class="fieldlabel">
+                                    Transaction Fees
+                                </td>
+                                <td class="fieldarea">
+                                    <div class="row">
+                                        <div class="col-xs-9 col-md-5">
+                                            <input type="text" name="fees" value="0.00" class="form-control">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">
+                                    Transaction ID
+                                </td>
+                                <td class="fieldarea">
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <input type="text" name="transid" class="form-control">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fieldlabel">
+                                    Send Email
+                                </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="sendconfirmation" checked="">
+                                        Tick to Send Confirmation Email
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    <img src="images/spacer.gif" width="1" height="10"><br>
+                    <div align="center"><input type="submit" value="Save Changes" class="button"></div>
+                </form>
+            </div>
+
+
             <div role="tabpanel" id="tab3box" class="tabbox tab-pane">
                 <table class="table" width="75%" align="center">
                     <tbody>
@@ -218,7 +289,7 @@
         </div>
     </div>
 </div>
-                    {debug}
+
 <div class="col-lg-12">
     <div class="box">
         <div class="box-header">
@@ -323,16 +394,18 @@
                             <tr><td colspan="6">No Records Found</td></tr>
                         {else}
                             {foreach from=$transactions item=transaction}
-                            <td>{$transaction.date}</td>
-                            <td>{$transaction.gateway}</td>
-                            <td>{$transaction.id}</td>
-                            <td>{$transaction.amountin}</td>
-                            <td>{$transaction.fees}</td>
-                            <td>
-                                <a href="#" onclick="doDeleteTransaction({$transaction.id});"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a>
-                            </td>
-                        {/foreach}
-                    {/if}
+                                <tr>
+                                    <td>{$transaction.date}</td>
+                                    <td>{$transaction.gateway}</td>
+                                    <td>{$transaction.id}</td>
+                                    <td>{$transaction.amountin}</td>
+                                    <td>{$transaction.fees}</td>
+                                    <td>
+                                        <a href="#" onclick="doDeleteTransaction({$transaction.id});"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a>
+                                    </td>
+                                </tr>
+                            {/foreach}
+                        {/if}
                     </tbody>
                 </table>
             </div>

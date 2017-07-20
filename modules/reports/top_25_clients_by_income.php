@@ -3,12 +3,12 @@
 if (!defined("RA"))
 	die("This file cannot be accessed directly");
 
-$reportdata["title"] = "Top 10 Clients by Income";
-$reportdata["description"] = "This report shows the 10 clients with the highest net income according to the transactions entered in ra.";
+$reportdata["title"] = "Top 25 Clients by Income";
+$reportdata["description"] = "This report shows the 25 clients with the highest net income according to the transactions entered in ra.";
 
 $reportdata["tableheadings"] = array("Client ID","Client Name","Total Amount In","Total Fees","Total Amount Out","Balance");
 
-$query = "SELECT tblclients.id,tblclients.firstname, tblclients.lastname, SUM(tblaccounts.amountin/tblaccounts.rate), SUM(tblaccounts.fees/tblaccounts.rate), SUM(tblaccounts.amountout/tblaccounts.rate), SUM((tblaccounts.amountin/tblaccounts.rate)-(tblaccounts.fees/tblaccounts.rate)-(tblaccounts.amountout/tblaccounts.rate)) AS balance, tblaccounts.rate FROM tblaccounts INNER JOIN tblclients ON tblclients.id = tblaccounts.userid GROUP BY userid ORDER BY balance DESC LIMIT 0,10";
+$query = "SELECT tblclients.id,tblclients.firstname, tblclients.lastname, SUM(tblaccounts.amountin/tblaccounts.rate), SUM(tblaccounts.fees/tblaccounts.rate), SUM(tblaccounts.amountout/tblaccounts.rate), SUM((tblaccounts.amountin/tblaccounts.rate)-(tblaccounts.fees/tblaccounts.rate)-(tblaccounts.amountout/tblaccounts.rate)) AS balance, tblaccounts.rate FROM tblaccounts INNER JOIN tblclients ON tblclients.id = tblaccounts.userid GROUP BY userid ORDER BY balance DESC LIMIT 0,25";
 $result=full_query_i($query);
 while($data = mysqli_fetch_array($result)) {
     $userid = $data[0];

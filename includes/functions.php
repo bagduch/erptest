@@ -268,8 +268,8 @@ if (!function_exists("emailtpl_template")) {
                     }
                 }
             } else {
-                if ($type == "domain") {
-                    $result = select_query_i("tbldomains", "", array("id" => $func_id));
+                if ($type == "service") {
+                    $result = select_query_i("tblcustomerservices", "", array("id" => $func_id));
                     $data = mysqli_fetch_array($result);
                     $id = $data['id'];
                     $userid = $data['userid'];
@@ -2103,10 +2103,10 @@ if (!function_exists("emailtpl_template")) {
         if ($currencyType === false || !is_numeric($currencyType)) {
             if (is_numeric($currency)) {
                 $currencyType = $currency;
+            } elseif ((is_array($currency) && isset($currency['id'])) && is_numeric($currency['id'])) {
+                $currencyType = $currency['id'];
             } else {
-                if ((is_array($currency) && isset($currency['id'])) && is_numeric($currency['id'])) {
-                    $currencyType = $currency['id'];
-                }
+                
             }
         }
 
@@ -2128,26 +2128,20 @@ if (!function_exists("emailtpl_template")) {
             $format_dm = "2";
             $format_dp = ".";
             $format_ts = "";
+        } elseif ($currencyDetails['format'] == 2) {
+            $format_dm = "2";
+            $format_dp = ".";
+            $format_ts = ",";
+        } elseif ($currencyDetails['format'] == 3) {
+            $format_dm = "2";
+            $format_dp = ",";
+            $format_ts = ".";
+        } elseif ($currencyDetails['format'] == 4) {
+            $format_dm = "0";
+            $format_dp = "";
+            $format_ts = ",";
         } else {
-            if ($currencyDetails['format'] == 2) {
-                $format_dm = "2";
-                $format_dp = ".";
-                $format_ts = ",";
-            } else {
-                if ($currencyDetails['format'] == 3) {
-                    $format_dm = "2";
-                    $format_dp = ",";
-                    $format_ts = ".";
-                } else {
-                    if ($currencyDetails['format'] == 4) {
-                        $format_dm = "0";
-                        $format_dp = "";
-                        $format_ts = ",";
-                    } else {
-                        exit(sprintf("Cannot apply currency format to %s. Unknown currency format details for currency type %s", htmlspecialchars($amount, ENT_QUOTES, "UTF-8"), htmlspecialchars($currencyType, ENT_QUOTES, "UTF-8")));
-                    }
-                }
-            }
+            exit(sprintf("Cannot apply currency format to %s. Unknown currency format details for currency type %s", htmlspecialchars($amount, ENT_QUOTES, "UTF-8"), htmlspecialchars($currencyType, ENT_QUOTES, "UTF-8")));
         }
 
         $amount = $currencyDetails['prefix'] . number_format($amount, $format_dm, $format_dp, $format_ts) . $currencyDetails['suffix'];
