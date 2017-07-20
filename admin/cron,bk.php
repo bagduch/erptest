@@ -165,6 +165,7 @@ if ($cron->isScheduled("latefees")) {
     InvoicesAddLateFee();
 }
 
+
 if ($cron->isScheduled("ccprocessing")) {
     ccProcessing();
 }
