@@ -315,7 +315,26 @@ class RA_Invoice {
     }
 
     public function pdfLateFee($latefeeid) {
-        
+        global $ra;
+        global $currency;
+
+        if ($invoiceid) {
+            $this->setID($invoiceid);
+            $invoiceexists = $this->loadData();
+
+            if (!$invoiceexists) {
+                return false;
+            }
+        }
+
+        $this->pdf->SetTitle($ra->get_lang("invoicenumber") . $this->getData("invoicenum"));
+        $tplvars = $this->getOutput(true);
+        $invoiceitems = $this->getLineItems(true);
+        $tplvars['invoiceitems'] = $invoiceitems;
+        $transactions = $this->getTransactions();
+        $tplvars['transactions'] = $transactions;
+        $this->pdfAddPage("invoicepdf.tpl", $tplvars);
+        return true;
     }
 
     public function pdfAddPage($tplfile, $tplvars) {

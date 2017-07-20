@@ -152,22 +152,18 @@ if ($ra->get_config("CurrencyAutoUpdateExchangeRates") && $cron->isScheduled("up
     $cron->logActivity("Done", true);
 }
 
-
 if ($ra->get_config("CurrencyAutoUpdateProductPrices") && $cron->isScheduled("updatepricing")) {
     currencyUpdatePricing();
     $cron->logActivity("Done", true);
 }
 
-
 if ($cron->isScheduled("invoices")) {
     createInvoices();
 }
 
-
 if ($cron->isScheduled("latefees")) {
     InvoicesAddLateFee();
 }
-
 
 if ($cron->isScheduled("ccprocessing")) {
     ccProcessing();
@@ -175,11 +171,104 @@ if ($cron->isScheduled("ccprocessing")) {
 
 
 if ($cron->isScheduled("invoicereminders")) {
-    $data = invoicereminders($CONFIG);
-    if (!empt($data)) {
-        $cron->logActivity("Sent " . count($data['id']) . " Unpaid Invoice Payment Reminders" . $data['number'], true);
-        $cron->emailLog(count($data['id']) . " Unpaid Invoice Payment Reminders Sent" . $data['number']);
+    if ($CONFIG['SendReminder'] == "on") {
+        $reminders = "";
+
+        if ($CONFIG['SendInvoiceReminderDays']) {
+            $invoiceids = array();
+            $invoicedateyear = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['SendInvoiceReminderDays'], date("Y")));
+            $query = "SELECT * FROM tblinvoices WHERE duedate='" . $invoicedateyear . "' AND `status`='Unpaid'";
+            $result = full_query_i_i($query);
+
+            while ($data = mysqli_fetch_array($result)) {
+                $id = $data['id'];
+                sendMessage("Invoice Payment Reminder", $id);
+                run_hook("InvoicePaymentReminder", array("invoiceid" => $id, "type" => "reminder"));
+                $invoiceids[] = $id;
+            }
+
+            $invoicenums = (count($invoiceids) ? " to Invoice Numbers " . implode(",", $invoiceids) : "");
+            $cron->logActivity("Sent " . count($invoiceids) . " Unpaid Invoice Payment Reminders" . $invoicenums, true);
+            $cron->emailLog(count($invoiceids) . " Unpaid Invoice Payment Reminders Sent" . $invoicenums);
+        }
     }
+
+    SendOverdueInvoiceReminders();
+}
+
+
+if ($cron->isScheduled("domainrenewalnotices")) {
+    $domainsids = array();
+    $renewalsnoticescount = 0;
+    $renewals = explode(",", $CONFIG['DomainRenewalNotices']);
+    foreach ($renewals as $renewal) {
+
+        if ($renewal) { 
+            if (30 <= $renewal) {
+                if (date("d") == 11) {
+                    $renewaldatestart = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
+                    $renewaldateend = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+                    $result = select_query_i_i("tblcustomerservices", "id,userid", "status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int) $renewal . "|%'");
+
+                    while ($data = mysqli_fetch_array($result)) {
+                        $domainid = $data['id'];
+
+                        if (in_array($domainid, $domainsids)) {
+                            continue;
+                        }
+
+                        $domainsids[] = $domainid;
+                        $userid = $data['userid'];
+                        $domains = array();
+                        $result2 = select_query_i_i("tblcustomerservices", "id,	description,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate>='" . $renewaldateend . "' AND nextduedate<='" . $renewaldatestart . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int) $renewal . "|%'");
+
+                        while ($data = mysqli_fetch_array($result2)) {
+                            $domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate'], "days" => round((strtotime($data['nextduedate']) - strtotime(date("Ymd"))) / 86400));
+                            update_query("tblcustomerservices", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
+                            $domainsids[] = $data['id'];
+                        }
+
+                        sendMessage("Upcoming Domain Renewal Notice", $domainid, array("expiring_domains" => $domains, "days_until_expiry" => $renewal));
+                        ++$renewalsnoticescount;
+                    }
+
+                    continue;
+                }
+
+                continue;
+            }
+
+            $renewaldate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") + $renewal, date("Y")));
+            $result = select_query_i_i("tblcustomerservices", "id,userid", "status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int) $renewal . "|%'");
+
+            while ($data = mysqli_fetch_array($result)) {
+                $domainid = $data['id'];
+
+                if (in_array($domainid, $domainsids)) {
+                    continue;
+                }
+
+                $domainsids[] = $domainid;
+                $userid = $data['userid'];
+                $domains = array();
+                $result2 = select_query_i("tblcustomerservices", "id,domain,nextduedate,expirydate,reminders", "userid=" . $userid . " AND status='Active' AND nextduedate='" . $renewaldate . "' AND recurringamount!='0.00' AND reminders NOT LIKE '%|" . (int) $renewal . "|%'");
+
+                while ($data = mysqli_fetch_array($result2)) {
+                    $domains[] = array("domainid" => $data['id'], "name" => $data['domain'], "nextduedate" => $data['nextduedate'], "expirydate" => $data['expirydate']);
+                    update_query("tblcustomerservices", array("reminders" => $data['reminders'] . "|" . $renewal . "|"), array("id" => $data['id']));
+                    $domainsids[] = $data['id'];
+                }
+
+                sendMessage("Upcoming Domain Renewal Notice", $domainid, array("domains" => $domains));
+                ++$renewalsnoticescount;
+            }
+
+            continue;
+        }
+    }
+
+    $cron->logActivity("Sent " . $renewalsnoticescount . " Notices", true);
+    $cron->emailLog($renewalsnoticescount . " Domain Renewal Notices Sent");
 }
 
 
@@ -192,7 +281,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
         $userid = $data['userid'];
-        $description = $data['description'];
+        $domain = $data['domain'];
         $nextduedate = $data['nextduedate'];
         $packageid = $data['packageid'];
         $regdate = fromMySQLDate($regdate);
@@ -201,10 +290,28 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
         $data2 = mysqli_fetch_array($result2);
         $firstname = $data2['firstname'];
         $lastname = $data2['lastname'];
-        $result2 = select_query_i("tblservices", "name,servertype", array("id" => $packageid));
+        $result2 = select_query_i("tblservices", "name,servertype,freedomain", array("id" => $packageid));
         $data2 = mysqli_fetch_array($result2);
         $prodname = $data2['name'];
         $module = $data2['servertype'];
+        $freedomain = $data2['freedomain'];
+
+        if ($freedomain) {
+            $result2 = select_query_i("tblcustomerservices", "id,registrationperiod", array("domain" => $domain, "recurringamount" => "0.00"));
+            $data2 = mysqli_fetch_array($result2);
+            $domainid = $data2['id'];
+            $regperiod = $data2['registrationperiod'];
+
+            if ($domainid) {
+                $domainparts = explode(".", $domain, 2);
+                $tld = $domainparts[1];
+                $currency = getCurrency($userid);
+                $temppricelist = getTLDPriceList("." . $tld);
+                $renewprice = $temppricelist[$regperiod]['renew'];
+                update_query("tblcustomerservices", array("recurringamount" => $renewprice), array("id" => $domainid));
+            }
+        }
+
         $serverresult = "No Module";
         logActivity("Cron Job: Processing Cancellation Request - Service ID: " . $id);
 
@@ -213,11 +320,11 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
         }
 
 
-        if ($description) {
-            $description = " - " . $description;
+        if ($domain) {
+            $domain = " - " . $domain;
         }
 
-        $loginfo = $firstname . " " . $lastname . " - " . $prodname . $description . " (Due Date: " . $nextduedate . ")";
+        $loginfo = $firstname . " " . $lastname . " - " . $prodname . $domain . " (Due Date: " . $nextduedate . ")";
 
         if ($serverresult == "success") {
             update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("id" => $id));

@@ -148,8 +148,6 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                     $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $serviceid));
                     $contblock = true;
                 }
-
-
                 if ($num_rows == 0) {
                     $regdate = $data['regdate'];
                     $amount = ($regdate == $nextduedate ? $data['firstpaymentamount'] : $data['amount']);
@@ -229,7 +227,6 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                         $contblock = true;
                     }
 
-
                     if ($num_rows == 0) {
                         $hostingid = $serviceid = $data['hostingid'];
                         $addonid = $data['addonid'];
@@ -272,7 +269,6 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                                 if ($regdate == $nextduedate) {
                                     $amount = $amount + $setupfee;
                                 }
-
 
                                 if ($description) {
                                     $description = "(" . $description . ") ";
@@ -631,6 +627,29 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
     if ($func_userid) {
         return $invoiceid;
     }
+}
+
+function invoicereminders($CONFIG) {
+    if ($CONFIG['SendReminder'] == "on") {
+        $reminders = "";
+        if ($CONFIG['SendInvoiceReminderDays']) {
+            $invoiceids = array();
+            $invoicedateyear = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['SendInvoiceReminderDays'], date("Y")));
+            $query = "SELECT * FROM tblinvoices WHERE duedate='" . $invoicedateyear . "' AND `status`='Unpaid'";
+            $result = full_query_i($query);
+            while ($data = mysqli_fetch_array($result)) {
+                $id = $data['id'];
+                sendMessage("Invoice Payment Reminder", $id);
+                run_hook("InvoicePaymentReminder", array("invoiceid" => $id, "type" => "reminder"));
+                $invoiceids[] = $id;
+            }
+
+            $invoicenums = (count($invoiceids) ? " to Invoice Numbers " . implode(",", $invoiceids) : "");
+            $returnvalue = array("number" => $invoicenums, "id" => $invoiceids);
+        }
+    }
+    SendOverdueInvoiceReminders();
+    return $returnvalue;
 }
 
 function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
