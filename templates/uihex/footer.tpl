@@ -12,4 +12,6 @@
 {$footeroutput}
 {$setlanguage}
 </body>
+<footer>
+</footer>
 </html>

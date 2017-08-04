@@ -9,7 +9,7 @@
     <form  method="post" action="{$smarty.server.PHP_SELF}?action=changepw">
         <div class="row details">
 
-        {include file="$template/pageheader.tpl" title=$LANG.clientareanavchangepw}
+        <!--{include file="$template/pageheader.tpl" title=$LANG.clientareanavchangepw}-->
 
              {if $successful}
             <div class="alert alert-success">
