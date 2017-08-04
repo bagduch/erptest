@@ -13,7 +13,7 @@
     <form method="post" action="{$smarty.server.PHP_SELF}?action=details">
         
         <div class="row details">
-            <h3 class="page-header"><span aria-hidden="true" class="icon icon-user"></span> {$LANG.clientareanavdetails}</h3>
+            <!--<h3 class="page-header"><span aria-hidden="true" class="icon icon-user"></span> {$LANG.clientareanavdetails}</h3>-->
                 {if $successful}
                     <div class="alert alert-success">
                         <p>{$LANG.changessavedsuccessfully}</p>

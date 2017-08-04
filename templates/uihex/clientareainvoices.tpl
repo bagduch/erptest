@@ -7,8 +7,8 @@
     
         <div class="table-wrap">
             <div class="resultsbox">
-                <p class="invdesc">{$LANG.invoicesintro}</p>
-                <p class="invnum">{$numitems} {$LANG.recordsfound}, {$LANG.page} {$pagenumber} {$LANG.pageof} {$totalpages}</p>
+                <p class="tbldesc">{$LANG.invoicesintro}</p>
+                <p class="tblnum">{$numitems} {$LANG.recordsfound}, {$LANG.page} {$pagenumber} {$LANG.pageof} {$totalpages}</p>
             </div>
 
             <div class="clear"></div>

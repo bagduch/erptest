@@ -1,6 +1,6 @@
 {debug}  
 <div class="row welcome">
-    <div class="col-md-12"><h3>Hi <strong>{$clientsdetails.firstname}</strong>. Welcome back! </h3></div>
+    <div class="col-md-12"><h3>Hi <strong>{$clientsdetails.firstname}</strong>. Welcome back!  <div class="cl-id">Client ID:{$clientsdetails.userid}</div></h3></div>
 </div>
 <div class="row main-panel-contain">
     <div class="col-md-3">
