@@ -1,0 +1,383 @@
+
+.fc-unthemed {
+  	.fc-popover {
+  		background-color: $white-color;
+  		.fc-header {
+  			background: $light-gray;
+  			.fc-close {
+  				color: $link-disabled-color;
+  			}
+  		}
+  	}
+  	.fc-divider {
+  		background: $light-gray;
+  	}
+  	.fc-today {
+  		background: $smoke-bg;
+  	}
+}
+
+.fc-highlight ,
+.fc-bgevent{
+  filter: alpha(opacity=30); /* for IE */
+}
+
+.fc-icon {
+  width: 1em;
+  &:after {
+    margin: 0 -1em; /* ensures character will be centered, regardless of width */
+  }
+}
+
+.fc-icon-left-single-arrow:after {
+  left: 3%;
+}
+
+.fc-icon-right-single-arrow:after {
+  left: -3%;
+}
+
+.fc-icon-left-triangle:after {
+  left: -2%;
+}
+
+.fc-icon-right-triangle:after {
+  left: 2%;
+}
+
+.fc button {
+	  border-radius: $border-radius-btn-base;
+    box-sizing: border-box;
+    border-width: $border-thick;
+    background-color: $transparent-bg;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semi;
+
+    padding: $padding-base-vertical $padding-base-horizontal;
+    height: auto;
+
+    @include btn-styles($default-color, $default-states-color);
+    @include transition($fast-transition-time, linear);
+    &.fc-corner-left,
+    &.fc-corner-right {
+      border-radius: $border-radius-btn-base;
+    }
+
+    &:hover,
+    &:focus{
+        outline: 0 ;
+    }
+    &:active,
+    &.active,
+    .open > &.dropdown-toggle {
+         @include box-shadow(none);
+         outline: 0 ;
+    }
+
+    &.btn-icon{
+        border-radius: 25px;
+        padding: 6px 10px;
+        i{
+          margin-right: 0px;
+        }
+
+    }
+
+}
+
+.fc-state-default {
+	background-color: #f5f5f5;
+	background-image: none;
+	border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	color: #333;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.fc-state-disabled {
+  color: $black-color;
+}
+
+.fc button[disabled],
+.fc button[disabled]:focus,
+.fc button[disabled]:hover{
+    background-color: $light-gray;
+    border-color: $light-gray;
+    cursor: default;
+	@include opacity(.65);
+	color: $font-color;
+}
+
+.fc-state-hover {
+    background-color: $smoke-bg;
+}
+
+.fc .fc-state-active,
+.fc .fc-state-active:focus,
+.fc .fc-state-active:hover,
+.fc .fc-state-active:active:focus,
+.fc .fc-state-active:active:hover,
+.fc .fc-state-active:active {
+	background-color: $default-color;
+    color: $white-color;
+}
+
+.fc .fc-button-group > * { /* extra precedence b/c buttons have margin set to zero */
+	float: left;
+	margin: 0 2px 0 0;
+}
+
+.fc-popover {
+	position: absolute;
+	@include box-shadow($dropdown-shadow);
+}
+
+.fc th {
+	text-align: right;
+    border-bottom-width: 1px;
+    font-size: $font-size-h6;
+    text-transform: uppercase;
+    color: $dark-gray;
+    font-weight: $font-weight-normal;
+    padding-bottom: 3px;
+}
+
+.fc .fc-widget-header{
+    border: 0;
+}
+
+.fc .fc-head .fc-widget-header{
+    margin-top: $margin-base-vertical;
+}
+
+/* Scrolling Container
+--------------------------------------------------------------------------------------------------*/
+
+.fc-scroller { /* this class goes on elements for guaranteed vertical scrollbars */
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.fc-scroller > * { /* we expect an immediate inner element */
+	position: relative; /* re-scope all positions */
+	width: 100%; /* hack to force re-sizing this inner element when scrollbars appear/disappear */
+	overflow: hidden; /* don't let negative margins or absolute positioning create further scroll */
+}
+
+
+/* Global Event Styles
+--------------------------------------------------------------------------------------------------*/
+
+.fc-event {
+	position: relative; /* for resize handle and other inner positioning */
+	display: block; /* make the <a> tag block */
+	font-size: .85em;
+	line-height: 1.3;
+	border-radius: 2px;
+	background-color: $light-blue; /* default BACKGROUND color */
+	font-weight: normal; /* undo jqui's ui-widget-header bold */
+
+    &.event-azure{
+        background-color: $light-azure;
+    }
+    &.event-green{
+        background-color: $light-green;
+    }
+    &.event-orange{
+        background-color: $light-orange;
+    }
+    &.event-red{
+        background-color: $light-red;
+    }
+}
+
+/* overpower some of bootstrap's and jqui's styles on <a> tags */
+.fc-event,
+.fc-event:hover,
+.ui-widget .fc-event {
+	color: $black-color; /* default TEXT color */
+	text-decoration: none; /* if <a> has an href */
+}
+
+.fc-event .fc-bg { /* the generic .fc-bg already does position */
+	z-index: 1;
+	background: $white-color;
+	opacity: .25;
+	filter: alpha(opacity=25); /* for IE */
+}
+
+.fc-event .fc-resizer {
+	z-index: 3;
+}
+
+/* resizer */
+
+.fc-h-event .fc-resizer { /* positioned it to overcome the event's borders */
+	top: -1px;
+	bottom: -1px;
+	left: -1px;
+	right: -1px;
+	width: 5px;
+}
+
+/* left resizer  */
+.fc-ltr .fc-h-event .fc-start-resizer,
+.fc-ltr .fc-h-event .fc-start-resizer:before,
+.fc-ltr .fc-h-event .fc-start-resizer:after,
+.fc-rtl .fc-h-event .fc-end-resizer,
+.fc-rtl .fc-h-event .fc-end-resizer:before,
+.fc-rtl .fc-h-event .fc-end-resizer:after {
+	right: auto; /* ignore the right and only use the left */
+	cursor: w-resize;
+}
+
+/* right resizer */
+.fc-ltr .fc-h-event .fc-end-resizer,
+.fc-ltr .fc-h-event .fc-end-resizer:before,
+.fc-ltr .fc-h-event .fc-end-resizer:after,
+.fc-rtl .fc-h-event .fc-start-resizer,
+.fc-rtl .fc-h-event .fc-start-resizer:before,
+.fc-rtl .fc-h-event .fc-start-resizer:after {
+	left: auto; /* ignore the left and only use the right */
+	cursor: e-resize;
+}
+
+
+/* DayGrid events
+----------------------------------------------------------------------------------------------------
+We use the full "fc-day-grid-event" class instead of using descendants because the event won't
+be a descendant of the grid when it is being dragged.
+*/
+
+.fc-day-grid-event {
+	margin: 2px 5px 0;
+	padding: 1px 2px;
+	.fc-resizer {
+		left: -3px;
+		right: -3px;
+		width: 7px;
+	}
+}
+
+.fc-basic-view {
+	.fc-week-number {
+		padding: 0 2px;
+		text-align: center;
+		span {
+			display: inline-block;
+			min-width: 1.25em;
+		}
+	}
+	.fc-day-number {
+		padding: 0 2px;
+	}
+	td {
+		&.fc-day-number {
+			padding: 8px;
+		}
+		&.fc-week-number span {
+			padding: 8px;
+		}
+	}
+}
+.fc-time-grid {
+	.fc-event-container {
+		position: relative;
+	}
+	.fc-bgevent-container {
+		position: relative;
+	}
+}
+.fc-basicWeek-view .fc-content-skeleton {
+	padding-top: 1px;
+	padding-bottom: 1em;
+}
+.fc-basicDay-view .fc-content-skeleton {
+	padding-top: 1px;
+	padding-bottom: 1em;
+}
+.fc-ltr .fc-basic-view .fc-day-number {
+	text-align: right;
+}
+.fc-rtl .fc-basic-view .fc-day-number {
+	text-align: left;
+}
+.fc-day-number.fc-other-month {
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+}
+.fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
+	padding-top: 1px;
+}
+
+.card-calendar{
+    .content{
+        padding: 0 ;
+    }
+    .fc-toolbar{
+        padding-top: $padding-default-horizontal;
+        padding-left: $padding-default-horizontal;
+        padding-right: $padding-default-horizontal;
+    }
+    .fc td:first-child{
+        border-left: 0;
+    }
+    .fc td:last-child{
+        border-right: 0;
+    }
+    .fc-basic-view td:last-child.fc-week-number span,
+    .fc-basic-view td:last-child.fc-day-number{
+        padding-right: $padding-default-horizontal;
+    }
+    .fc .fc-day-header:last-child{
+        padding-right: 15px;
+    }
+    .fc .fc-row:last-child td{
+        border-bottom: 0;
+    }
+    .fc .fc-body .fc-widget-content{
+        border-bottom: 0;
+    }
+}
+
+@media (min-device-width : 768px) and (max-device-width : 1024px)   {
+  .fc-toolbar {
+    .fc-center {
+      clear: both;
+      display: block;
+      margin-left: calc((100% - 135px)/2);
+    }
+    h2 {
+      font-size: 22px;
+    }
+    button {
+      padding: 7px 10px;
+    }
+  }
+}
+
+@media (max-width:767px) {
+  .card-calendar{
+    .fc-toolbar {
+      padding-left: 15px;
+      padding-right: 15px;
+      .fc-left,.fc-right {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .fc-center {
+        clear: both;
+        display: block;
+        margin-left: calc((100% - 135px)/2);
+      }
+      h2 {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      button {
+        padding: 5px;
+      }
+    }
+  }
+}
