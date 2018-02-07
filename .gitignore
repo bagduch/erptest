@@ -4,3 +4,4 @@ attachments/*
 .vscode
 configuration.php
 .vagrant
+*.retry
