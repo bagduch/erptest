@@ -3,3 +3,4 @@ templates_c/*
 attachments/*
 .vscode
 configuration.php
+.vagrant
