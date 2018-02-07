@@ -1,0 +1,343 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 6/09/2016, 4:08:24 PM
+    Author     : peter
+*/
+body{
+    font-size: 13px;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+.customefield{
+    padding:15px;
+}
+
+.textgreen{
+    color: green;
+}
+
+.textred
+{
+    color:red;
+}
+.breadcrumb-wrap{
+    float: left;
+    margin-top: 7px;
+    margin-left:15px;
+
+}
+.breadcrumb a {
+    color:black;
+}
+.breadcrumb{
+
+    margin-bottom: 0px;
+    background:#DDDDDD;
+}
+.search-bar{
+    padding-top: 8px;
+
+}
+.tableitem{
+    margin-right: 5px;
+    display: inline;
+}
+.table td{
+    vertical-align: middle!important;
+}
+.tabletitle{
+    font-size: 20px;
+    font-weight: bold;
+    /*margin-top: -15px;*/
+    background: #0074cc;
+    color: white;
+    padding: 8px;
+}
+.widgethm th,.widgethm td
+{
+    text-align: center;
+}
+
+.profit
+{
+    background: black;
+    color: white;
+    width: 40px;
+    border-radius: 50%;
+    height: 40px;
+    text-align: center;
+    padding-top: 10px;
+
+}
+.a-profit{
+    background: #f0acb6;
+}
+.b-profit{
+    background: #e07ebc;
+}
+.c-profit{
+    background: #531cc4;
+}
+.d-profit{
+    background: #6699cc;
+}
+.e-profit{
+    background: #33cccc;
+}
+.f-profit{
+    background: #33cc33;
+}
+.g-profit{
+    background: #cccc99;
+}
+.h-profit{
+    background: #ffff66;
+}
+.i-profit{
+    background: #666600;
+}
+.j-profit{
+    background: #996633;
+}
+.k-profit{
+    background: #333333;
+}
+.l-profit{
+    background: #3399cc;
+}
+.m-profit{
+    background: #666699;
+}
+.n-profit{
+    background: #ff0099;
+}
+.o-profit{
+    background: #996633;
+}
+.p-profit{
+    background: #336666;
+}
+.q-profit{
+    background: #9933cc;
+}
+.r-profit{
+    background: #cccc33;
+}
+.s-profit{
+    background: #993333;
+}
+.t-profit{
+    background: #339966;
+}
+.u-profit{
+    background: #666699;
+}
+.v-profit{
+    background: #666666;
+}
+.w-profit{
+    background: #663333;
+}
+.x-profit{
+    background: #996666;
+}
+.y-profit{
+    background: #ffcccc;
+}
+.z-profit{
+    background: #9999cc;
+}
+.navbar-nav>li>a{
+    color:black;
+}
+
+.tag-list
+{
+    padding: 10px;
+
+}
+.tag-list h3{
+    color: white;
+    font-size: 20px;
+}
+.tag-list a
+{display: inline-block!important;
+
+}
+
+/*Login Page*/
+
+.bodybg {
+    position: fixed;
+    width: 130vw;
+    height: 150vh;
+    margin: -20vmin;
+    background-image: url(/admin/images/bg.jpg);
+    background-size: 100% 100%;
+    filter: blur(30px);
+}
+.bodybg1 {
+    position: fixed;
+    width: 150vw;
+    height: 150vh;
+    margin: -20vmin;
+    background-color: rgba(28, 40, 82, 0.5);
+}
+
+div#login_wrapper {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+div#logo {
+    width: 100%;
+    height: 100px;
+    margin: 20px 0;
+}
+
+#logo h6 {
+    text-transform: uppercase;
+    color: #1c2852;
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.45em;
+    margin: 0 0 50px 75px;
+}
+div#login_wrapper #login_container #login_msg {
+    font-size: 11px;
+    margin: -5px 20px 25px;
+    padding: 5px;
+    background: rgba(128, 167, 226, 0.3) !important;
+    color: #1c2852;
+    border: none !important;
+}
+form#frmlogin {
+    padding: 0 20px;
+    margin: 35px 0 15px !important;
+}
+form#frmlogin .login-title span {
+    display: block;
+    float: left;
+    width: 20%;
+    margin: 0;
+    margin: 0;
+    font-size: 25px;
+    margin-top: 6px;
+}
+
+#login_container{  
+    border: none!important;  
+    box-shadow: 0 20px 26px 22px rgba(0,0,0,0.1) !important;
+    border-radius: 5px;
+    background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #fcfcfc 90%, #ededed 100%);
+    background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%,#fcfcfc 90%,#ededed 100%);
+    background: radial-gradient(ellipse at center, #ffffff 0%,#fcfcfc 90%,#ededed 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=1 );
+    width: 400px !important;
+    max-width: 400px !important;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    position: relative;
+    overflow: hidden;
+
+}
+form#frmlogin input.login_inputs {
+    max-width: 80%;
+    float: right;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: none;
+    font-size: 16px;
+    color: #1c2852;
+    margin: 0;
+    padding: 3px 18px !important;
+    line-height: 29px;
+}
+.login-title, .login-options{
+    display: block;
+    min-height: 35px;
+    margin-top: 15px;
+}
+.login-title {
+    border-bottom: 1px solid #1c2852;
+    color: #1c2852;
+}
+
+.login-remember{    
+    float: left;
+    width: 50%;
+}
+#login_container .login-remember label {
+    float: left;
+    top: 1px;
+    left: 6px;
+    font-size: 11px;
+    position: relative;
+}
+#login_container .login-remember #rememberme {
+    float: left;
+    top: -2px;
+    left: 3px;
+    position: relative;
+}
+.login-forgot, .login-return{    
+    float: right;
+    width: 50%;
+    padding-top: 0;
+    text-align: right;
+    font-size: 11px;
+}
+.login-forgot a, .login-return a{    
+    color: #1c2852;
+    text-decoration: none;
+}
+.login-return{    
+    float: none;
+    width: 100%;
+    text-align: center;
+}
+.login-button{
+    clear: both;
+    float: none;
+    display: block;
+    height: 80px;
+}
+#login_container #frmlogin input.button {
+    top: 20px;
+    left: 0;
+    width: 200px;
+    color: #fff;
+    background-color: #1c2852;
+    border-color: #1c2852;
+    border-radius: 26px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    padding: 12px;
+}
+#login_container #frmlogin input.button:hover {
+    background-color: #1c2852;
+    border-color: #1c2852;
+}
+#login_container #extRA_info {
+    font-size: 11px;
+    border: none !important;
+    margin: 0 -20px 0 !important;
+    padding: 10px 20px !important;
+    text-align: left;
+    background: rgba(128, 167, 226, 0.3) !important;
+    font-family: inherit;
+}
+div#extRA_info td, div#extRA_info td a {
+    font-size: 10.5px;
+    color: #1c2852;
+    text-decoration: none;
+}

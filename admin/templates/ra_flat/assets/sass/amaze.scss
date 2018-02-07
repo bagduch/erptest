@@ -1,0 +1,139 @@
+/*-------------------------------------------------------------------
+
+* Amaze Admin Dashboard V1.1
+
+* Copyright 2017 Amaze
+
+---------------------
+[Table of contents]
+---------------------
+[Plugins]
+
+- animate
+- sweetalert2
+- bootstrap-table
+- datatables.net
+- fullcalendar
+- perfect-scrollbar
+- jquery.jvectormap
+- datetime-picker
+- select-bootstrap
+
+[Amaze]
+
+- Typography
+- Sidebar and Main Panel
+- Buttons
+- Inputs
+- Progress
+- Sliders
+- forms
+- alerts
+- tables
+- tooltips-and-popovers
+- navbars
+- footers
+- cards
+- timeline
+- labels
+- chat-message
+- checkbox-radio
+
+- dropdown
+- social
+- tags
+- collapse
+- carousel
+- animated-buttons
+- switch
+- tabs-navs-pagination
+- circlechart
+- chart
+- accordion
+- pricing-table
+- modal
+- wizard
+- fileupload
+- fullcalendar
+- pages
+
+
+-------------------------------------------------------------------*/
+
+@import "amaze/colors";
+
+@import "paper/variables";
+@import "amaze/variables";
+
+
+@import "paper/mixins";
+
+
+
+
+//plugins css
+@import "paper/plugins/animate";
+@import "paper/plugins/sweetalert2";
+@import "paper/plugins/bootstrap-table";
+@import "paper/plugins/datatables.net";
+@import "paper/plugins/fullcalendar";
+@import "paper/plugins/chartist";
+@import "paper/plugins/perfect-scrollbar";
+@import "paper/plugins/jquery.jvectormap";
+@import "paper/plugins/bootstrap-select";
+@import "paper/plugins/datetime-picker";
+
+// Core CSS
+@import "paper/typography";
+@import "paper/sidebar-and-main-panel";
+@import "paper/buttons";
+@import "paper/misc";
+@import "paper/inputs";
+@import "paper/progress-bars";
+@import "paper/sliders";
+@import "paper/forms";
+@import "paper/alerts";
+@import "paper/tables";
+@import "paper/tooltips-and-popovers";
+@import "paper/navbars";
+@import "paper/footers";
+@import "paper/cards";
+@import "paper/timeline";
+@import "paper/labels";
+@import "paper/chat-message";
+@import "paper/checkbox-radio";
+
+// Fancy Stuff
+@import "paper/dropdown";
+@import "paper/social";
+@import "paper/tags";
+@import "paper/collapse";
+@import "paper/carousel";
+@import "paper/animated-buttons";
+@import "paper/switch";
+@import "paper/modal";
+
+
+//SCSS for Pages
+@import "paper/pages";
+
+@import "paper/tabs-navs-pagination";
+@import "paper/circlechart";
+
+@import "paper/responsive";
+
+@import "bootstrap-mixins/text-overflow";
+@import "bootstrap-mixins/vendor-prefixes";
+@import "bootstrap-mixins/clearfix";
+
+@import "amaze/mixins/misc";
+
+@import "amaze/chart";
+@import "amaze/misc2";
+@import "amaze/accordion";
+@import "amaze/pricing-table";
+//@import "amaze/modal";
+@import "amaze/wizard";
+@import "amaze/fileupload";
+@import "amaze/fullcalendar";
+@import "amaze/pages";
