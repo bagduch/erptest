@@ -5,3 +5,4 @@ attachments/*
 configuration.php
 .vagrant
 *.retry
+*.ignore

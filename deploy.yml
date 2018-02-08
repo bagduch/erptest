@@ -111,6 +111,47 @@
         package: mariadb-server
         state: installed
 
+    - name: install python-mysqldb
+      apt:
+        package: python-mysqldb
+        state: installed
+
+    - name: add /root/.my.cnf
+      template:
+        src: templates/my.cnf.j2
+        dest: /root/.my.cnf
+        mode: 0400
+
+    - name: Copy database to tmp
+      copy:
+        src: robotacct_blank.sql
+        dest: /tmp/robotacct.sql
+
+    - name: Add RA database
+      mysql_db:
+        name: "ra"
+        state: import
+        target: /tmp/robotacct.sql
+
+
+    - name: Create RA DB user
+      mysql_user:
+        name: "ra"
+        state: present
+        priv: '*.*:ALL,GRANT'
+        password: "rapassword"
+
+    - name: WHMCS configuration.php
+      template:
+        src: templates/configuration.php.j2
+        dest: /var/www/html/configuration.php
+
+    - name: templates cache dir
+      file:
+        path: /var/www/html/templates_c
+        state: directory
+        mode: 777
+
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted
