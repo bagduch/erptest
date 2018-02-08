@@ -17,7 +17,7 @@ $aInt->requiredFiles(
 );
 $menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->inClientsProfile = true;
-$id = (int) $ra->get_req_var("id") ? : (int) $ra->get_req_var("hostingid");
+$id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
@@ -48,9 +48,7 @@ if ($userid && !$id) {
     }
 }
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
-
 $len = count($servicefield);
-
 $firsthalf = array_slice($servicefield, 0, $len / 2);
 $secondhalf = array_slice($servicefield, $len / 2);
 if ($_POST['frm1']) {
@@ -63,7 +61,8 @@ if ($_POST['frm1']) {
     $logDetail = "";
     foreach ($servicefield as $key => $row) {
         if ($_POST['customefield'][$key] != $row['value']) {
-            update_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key]), array("cfid" => $key, "relid" => $id));
+            delete_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $id));
+            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key], "cfid" => $key, "relid" => $id));
             $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
         }
     }
@@ -97,7 +96,7 @@ if ($_POST['frm1']) {
 }
 foreach ($data as $key => $row) {
     if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
-        $logDetail.= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
+        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
     }
 }
 
@@ -267,6 +266,10 @@ while ($data = mysqli_fetch_array($resutlt)) {
     $accountlog[] = $data;
 }
 
+$accountinvoice = array();
+
+
+
 $result = select_query_i("tbladmins", "");
 while ($data = mysqli_fetch_assoc($result)) {
     $templatevars['adminlist'][] = $data;
@@ -286,7 +289,7 @@ while ($data = mysqli_fetch_array($result)) {
     $note = $data['note'];
     $admin = $data['name'];
     $assigned = $data['assignee'];
-   
+
     $note = nl2br($note);
     $note = autoHyperLink($note);
     $created = fromMySQLDate($created, "time");
