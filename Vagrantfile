@@ -190,6 +190,7 @@ Vagrant.configure(2) do |config|
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network "public_network"
+  config.vm.network "forwarded_port", guest: 80, host: 7080
 
   # config.vm.synced_folder "./", "/usr/share/nginx/"
 
