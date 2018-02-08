@@ -351,7 +351,7 @@ CREATE TABLE `tbladmins` (
 
 LOCK TABLES `tbladmins` WRITE;
 /*!40000 ALTER TABLE `tbladmins` DISABLE KEYS */;
-INSERT INTO `tbladmins` VALUES (1,1,'raadmin','','','Sample','Admin','default@example.com','','','ra','english',0,0,'1','','calendar:true,orders_overview:true,supporttickets_overview:true,my_notes:true,client_activity:true,open_invoices:true,activity_log:true|income_overview:true,system_overview:true,sysinfo:true,admin_activity:true,todo_list:true,income_forecast:true|','$1$xyz$PPirjAc2drfJW1BFPc5FY0');
+INSERT INTO `tbladmins` VALUES (1,1,'raadmin','','','Sample','Admin','default@example.com','','','ra_flat','english',0,0,'1','','calendar:true,orders_overview:true,supporttickets_overview:true,my_notes:true,client_activity:true,open_invoices:true,activity_log:true|income_overview:true,system_overview:true,sysinfo:true,admin_activity:true,todo_list:true,income_forecast:true|','$1$xyz$PPirjAc2drfJW1BFPc5FY0');
 /*!40000 ALTER TABLE `tbladmins` ENABLE KEYS */;
 UNLOCK TABLES;
 
