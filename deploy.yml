@@ -150,7 +150,7 @@
       file:
         path: /var/www/html/templates_c
         state: directory
-        mode: 777
+        mode: 0777
 
   handlers:
     - name: restart nginx
