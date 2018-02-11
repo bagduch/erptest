@@ -30,7 +30,7 @@
 
     - name: add mariadb apt repo keys
       apt_key:
-        keyserver: keyserver.ubuntu.com
+        keyserver: hkp://keyserver.ubuntu.com:80
         id: "F1656F24C74CD1D8"
 
     # https://downloads.mariadb.org/mariadb/repositories/#mirror=aarnet_pty_ltd&distro=Debian&distro_release=stretch--stretch&version=10.2
