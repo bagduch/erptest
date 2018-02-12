@@ -1,4 +1,10 @@
 <?php
+    ini_set("log_errors",1);
+    ini_set("error_log","/tmp/php-error.log");
+    ini_set("error_reporting","E_ALL");
+    ini_set("display_errors",1);
+    ini_set("display_startup_errors",1);
+
     $db_host = 'localhost';
     $db_username = 'ra';
     $db_password = 'rapassword';
@@ -6,5 +12,5 @@
     $cc_encryption_hash = 'DONOTUSEINPRODUCTION';
     $templates_compiledir = 'templates_c/';
     $mysql_charset = 'utf8';
+// vim: ai ts=2 sts=2 et sw=4 ft=php
 ?>
-
