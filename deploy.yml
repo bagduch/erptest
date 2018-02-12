@@ -72,6 +72,12 @@
       - php7.0-curl
       - php7.0-zip
 
+    - name: Disable sendfile in nginx (for Virtualbox compatibilty)
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: ".*sendfile.*"
+        line: "\tsendfile off;"
+
     - name: Nginx default host
       template:
         src: templates/nginx-default.j2

@@ -12,12 +12,10 @@ Vagrant.configure(2) do |config|
     override.vm.box = "sagepe/stretch"
     override.vm.box_version = "1.0.0"
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-   end
+  end
 
   config.vm.provider "libvirt" do |v, override|
   end
-
-
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
