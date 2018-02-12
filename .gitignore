@@ -3,4 +3,6 @@ templates_c/*
 attachments/*
 .vscode
 configuration.php
-/nbproject/private/
+.vagrant
+*.retry
+*.ignore
