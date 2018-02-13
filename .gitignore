@@ -1,4 +1,5 @@
-templates_c/*
+html/templates_c/*
+html/configuration.php
 .*swp
 attachments/*
 .vscode
