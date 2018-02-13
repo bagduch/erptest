@@ -40,6 +40,9 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "deploy.yml"
     ansible.verbose = "vvvv"
   end
+  config.vm.provision "shell" do |shell|
+    shell.inline =  "rsync -av /vagrant/html/ /var/www/html/"
+  end
 
 end
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby

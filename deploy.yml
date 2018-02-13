@@ -150,11 +150,11 @@
     - name: WHMCS configuration.php
       template:
         src: templates/configuration.php.j2
-        dest: /vagrant/html/configuration.php
+        dest: /var/www/html/configuration.php
 
     - name: templates cache dir
       file:
-        path: /vagrant/html/templates_c
+        path: /var/www/html/templates_c
         state: directory
         mode: 0777
 

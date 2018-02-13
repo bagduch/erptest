@@ -15,3 +15,7 @@ This repo contains all of the RA code, along with a Vagrant environment for test
 `vagrant ssh -c "mysql -ura -prapassword ra -e 'truncate table tbladminlog';
 `vagrant ssh -c "mysqldump -ura -prapassword ra --tables DESIREDTABLE" > robotacct_NAMEHERE.sql`
 
+## Doing a copy-only deployment
+
+`vagrant provision --provision-with=shell`
+
