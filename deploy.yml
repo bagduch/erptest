@@ -130,14 +130,14 @@
 
     - name: Copy database to tmp
       copy:
-        src: robotacct_blank.sql
-        dest: /tmp/robotacct.sql
+        src: db/
+        dest: /tmp/ra_db/
 
     - name: Add RA database
-      mysql_db:
-        name: "ra"
-        state: import
-        target: /tmp/robotacct.sql
+      action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}} 
+      with_items:
+      - 01_robotacct_schema.sql
+      - 02_robotacct_data.sql
 
 
     - name: Create RA DB user
