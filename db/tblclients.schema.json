@@ -1,0 +1,167 @@
+{
+  "id": 99113,
+  "num_rows": 1000,
+  "file_format": "sql",
+  "name": "tblclients",
+  "table_name": "tblclients",
+  "include_create_sql": false,
+  "columns": [
+    {
+      "name": "firstname",
+      "null_percentage": 0,
+      "type": "First Name",
+      "formula": ""
+    },
+    {
+      "name": "lastname",
+      "null_percentage": 0,
+      "type": "Last Name",
+      "formula": ""
+    },
+    {
+      "name": "companyname",
+      "null_percentage": 70,
+      "type": "Company Name",
+      "formula": ""
+    },
+    {
+      "name": "email",
+      "null_percentage": 0,
+      "type": "Email Address",
+      "formula": ""
+    },
+    {
+      "name": "address1",
+      "null_percentage": 20,
+      "type": "Street Address",
+      "formula": ""
+    },
+    {
+      "name": "address2",
+      "null_percentage": 30,
+      "type": "City",
+      "formula": ""
+    },
+    {
+      "name": "state",
+      "null_percentage": 50,
+      "type": "City",
+      "formula": ""
+    },
+    {
+      "name": "postcode",
+      "null_percentage": 20,
+      "type": "Postal Code",
+      "formula": ""
+    },
+    {
+      "name": "country",
+      "null_percentage": 15,
+      "type": "Country",
+      "countries": [
+        "New Zealand",
+        "Australia",
+        "United States"
+      ],
+      "formula": ""
+    },
+    {
+      "name": "phonenumber",
+      "null_percentage": 15,
+      "type": "Phone",
+      "format": "+# ### ### ####",
+      "formula": ""
+    },
+    {
+      "name": "mobilenumber",
+      "null_percentage": 12,
+      "type": "Phone",
+      "format": "+# ### ### ####",
+      "formula": ""
+    },
+    {
+      "name": "datecreated",
+      "null_percentage": 0,
+      "type": "Date",
+      "min": "02/15/2007",
+      "max": "02/15/2018",
+      "format": "%Y-%m-%d",
+      "formula": ""
+    },
+    {
+      "name": "notes",
+      "null_percentage": 20,
+      "type": "Sentences",
+      "min": 1,
+      "max": 10,
+      "formula": ""
+    },
+    {
+      "name": "lastlogin",
+      "null_percentage": 50,
+      "type": "Date",
+      "min": "02/15/2007",
+      "max": "02/15/2018",
+      "format": "%Y-%m-%d",
+      "formula": ""
+    },
+    {
+      "name": "ip",
+      "null_percentage": 50,
+      "type": "IP Address v4",
+      "formula": ""
+    },
+    {
+      "name": "host",
+      "null_percentage": 50,
+      "type": "IP Address v4",
+      "formula": ""
+    },
+    {
+      "name": "status",
+      "null_percentage": 0,
+      "type": "Custom List",
+      "values": [
+        "Active",
+        "Inactive",
+        "Closed"
+      ],
+      "selectionStyle": "random",
+      "distribution": null,
+      "formula": ""
+    },
+    {
+      "name": "emailoptout",
+      "null_percentage": 0,
+      "type": "Boolean",
+      "formula": ""
+    },
+    {
+      "name": "overrideautoclose",
+      "null_percentage": 0,
+      "type": "Boolean",
+      "formula": ""
+    },
+    {
+      "name": "dateofbirth",
+      "null_percentage": 0,
+      "type": "Date",
+      "min": "02/15/1907",
+      "max": "02/15/2010",
+      "format": "%Y-%m-%d",
+      "formula": ""
+    },
+    {
+      "name": "email_notification",
+      "null_percentage": 50,
+      "type": "Boolean",
+      "formula": ""
+    },
+    {
+      "name": "txt_notification",
+      "null_percentage": 50,
+      "type": "Boolean",
+      "formula": ""
+    }
+  ]
+}
