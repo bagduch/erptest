@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.12-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.13-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.12-MariaDB-10.2.12+maria~stretch-log
+-- Server version	10.2.13-MariaDB-10.2.13+maria~stretch-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,16 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `ra`
+--
+
+/*!40000 DROP DATABASE IF EXISTS `ra`*/;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ra` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `ra`;
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -27,10 +37,6 @@ CREATE TABLE `migrations` (
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `mod_staffboard`
@@ -53,10 +59,6 @@ CREATE TABLE `mod_staffboard` (
   CONSTRAINT `mod_staffboard_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblaccounts`
@@ -94,10 +96,6 @@ CREATE TABLE `tblaccounts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblactivitylog`
 --
 
@@ -118,10 +116,6 @@ CREATE TABLE `tblactivitylog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbladdonmodules`
 --
 
@@ -135,10 +129,6 @@ CREATE TABLE `tbladdonmodules` (
   KEY `module` (`module`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbladdons`
@@ -167,10 +157,6 @@ CREATE TABLE `tbladdons` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbladdontoservice`
 --
 
@@ -182,10 +168,6 @@ CREATE TABLE `tbladdontoservice` (
   `serviceid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbladminlog`
@@ -211,10 +193,6 @@ CREATE TABLE `tbladminlog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbladminperms`
 --
 
@@ -228,10 +206,6 @@ CREATE TABLE `tbladminperms` (
   CONSTRAINT `tbladminperms_ibfk_1` FOREIGN KEY (`roleid`) REFERENCES `tbladminroles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbladminroles`
@@ -251,10 +225,6 @@ CREATE TABLE `tbladminroles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbladmins`
@@ -290,10 +260,6 @@ CREATE TABLE `tbladmins` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbladresschecker`
 --
 
@@ -309,10 +275,6 @@ CREATE TABLE `tbladresschecker` (
   `lng` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblaffiliates`
@@ -337,10 +299,6 @@ CREATE TABLE `tblaffiliates` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblaffiliatesaccounts`
 --
 
@@ -359,10 +317,6 @@ CREATE TABLE `tblaffiliatesaccounts` (
   CONSTRAINT `tblaffiliatesaccounts_ibfk_2` FOREIGN KEY (`affiliateid`) REFERENCES `tblaffiliates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblaffiliateshistory`
@@ -387,10 +341,6 @@ CREATE TABLE `tblaffiliateshistory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblaffiliatespending`
 --
 
@@ -408,10 +358,6 @@ CREATE TABLE `tblaffiliatespending` (
   CONSTRAINT `tblaffiliatespending_ibfk_1` FOREIGN KEY (`affaccid`) REFERENCES `tblaffiliatesaccounts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblaffiliateswithdrawals`
@@ -432,10 +378,6 @@ CREATE TABLE `tblaffiliateswithdrawals` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblbannedemails`
 --
 
@@ -450,10 +392,6 @@ CREATE TABLE `tblbannedemails` (
   KEY `domain` (`domain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblbannedips`
@@ -471,10 +409,6 @@ CREATE TABLE `tblbannedips` (
   KEY `ip` (`ip`(32))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblcalendar`
@@ -499,10 +433,6 @@ CREATE TABLE `tblcalendar` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcancelrequests`
 --
 
@@ -520,10 +450,6 @@ CREATE TABLE `tblcancelrequests` (
   CONSTRAINT `tblcancelrequests_ibfk_1` FOREIGN KEY (`relid`) REFERENCES `tblcustomerservices` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblclientfields`
@@ -550,10 +476,6 @@ CREATE TABLE `tblclientfields` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblclientfieldsvalues`
 --
 
@@ -566,10 +488,6 @@ CREATE TABLE `tblclientfieldsvalues` (
   `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblclientgroups`
@@ -588,10 +506,6 @@ CREATE TABLE `tblclientgroups` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblclients`
@@ -652,12 +566,8 @@ CREATE TABLE `tblclients` (
   CONSTRAINT `tblclients_ibfk_1` FOREIGN KEY (`groupid`) REFERENCES `tblclientgroups` (`id`),
   CONSTRAINT `tblclients_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`),
   CONSTRAINT `tblclients_ibfk_3` FOREIGN KEY (`defaultgateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblclientsfiles`
@@ -680,10 +590,6 @@ CREATE TABLE `tblclientsfiles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblconfiguration`
 --
 
@@ -698,10 +604,6 @@ CREATE TABLE `tblconfiguration` (
   KEY `setting` (`setting`(32))
 ) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblcontacts`
@@ -744,10 +646,6 @@ CREATE TABLE `tblcontacts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcredit`
 --
 
@@ -771,10 +669,6 @@ CREATE TABLE `tblcredit` (
   CONSTRAINT `tblcredit_ibfk_3` FOREIGN KEY (`relid`) REFERENCES `tblinvoices` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblcreditcards`
@@ -801,10 +695,6 @@ CREATE TABLE `tblcreditcards` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcurrencies`
 --
 
@@ -822,10 +712,6 @@ CREATE TABLE `tblcurrencies` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblcustomerservices`
@@ -872,10 +758,6 @@ CREATE TABLE `tblcustomerservices` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcustomfields`
 --
 
@@ -900,10 +782,6 @@ CREATE TABLE `tblcustomfields` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcustomfieldsgrouplinks`
 --
 
@@ -926,10 +804,6 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcustomfieldsgroupmembers`
 --
 
@@ -947,10 +821,6 @@ CREATE TABLE `tblcustomfieldsgroupmembers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcustomfieldsgroupnames`
 --
 
@@ -963,10 +833,6 @@ CREATE TABLE `tblcustomfieldsgroupnames` (
   PRIMARY KEY (`cfgid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblcustomfieldslinks`
@@ -991,10 +857,6 @@ CREATE TABLE `tblcustomfieldslinks` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblcustomfieldsvalues`
 --
 
@@ -1014,10 +876,6 @@ CREATE TABLE `tblcustomfieldsvalues` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbldownloadcats`
 --
 
@@ -1035,10 +893,6 @@ CREATE TABLE `tbldownloadcats` (
   CONSTRAINT `tbldownloadcats_ibfk_1` FOREIGN KEY (`parentid`) REFERENCES `tbldownloadcats` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbldownloads`
@@ -1067,10 +921,6 @@ CREATE TABLE `tbldownloads` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblemails`
 --
 
@@ -1091,10 +941,6 @@ CREATE TABLE `tblemails` (
   CONSTRAINT `tblemails_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblemailtemplates`
@@ -1124,10 +970,6 @@ CREATE TABLE `tblemailtemplates` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblgatewaylog`
 --
 
@@ -1147,10 +989,6 @@ CREATE TABLE `tblgatewaylog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblgrouptogroup`
 --
 
@@ -1162,10 +1000,6 @@ CREATE TABLE `tblgrouptogroup` (
   `children_group_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblinvoiceitems`
@@ -1194,10 +1028,6 @@ CREATE TABLE `tblinvoiceitems` (
   CONSTRAINT `tblinvoiceitems_ibfk_5` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblinvoices`
@@ -1231,10 +1061,6 @@ CREATE TABLE `tblinvoices` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblknowledgebase`
 --
 
@@ -1255,10 +1081,6 @@ CREATE TABLE `tblknowledgebase` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblknowledgebasecats`
@@ -1283,10 +1105,6 @@ CREATE TABLE `tblknowledgebasecats` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblknowledgebaselinks`
 --
 
@@ -1302,10 +1120,6 @@ CREATE TABLE `tblknowledgebaselinks` (
   CONSTRAINT `tblknowledgebaselinks_ibfk_2` FOREIGN KEY (`categoryid`) REFERENCES `tblknowledgebasecats` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblmodulelog`
@@ -1329,10 +1143,6 @@ CREATE TABLE `tblmodulelog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblnetworkissues`
 --
 
@@ -1354,10 +1164,6 @@ CREATE TABLE `tblnetworkissues` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblnotes`
@@ -1385,10 +1191,6 @@ CREATE TABLE `tblnotes` (
   CONSTRAINT `tblnotes_ibfk_2` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblorders`
@@ -1430,10 +1232,6 @@ CREATE TABLE `tblorders` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblorderstatuses`
 --
 
@@ -1454,10 +1252,6 @@ CREATE TABLE `tblorderstatuses` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblpaymentgatewaynames`
 --
 
@@ -1472,10 +1266,6 @@ CREATE TABLE `tblpaymentgatewaynames` (
   KEY `gateway` (`gateway`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblpaymentgateways`
@@ -1497,10 +1287,6 @@ CREATE TABLE `tblpaymentgateways` (
   CONSTRAINT `tblpaymentgateways_ibfk_1` FOREIGN KEY (`gateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
 ) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblpricing`
@@ -1529,10 +1315,6 @@ CREATE TABLE `tblpricing` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblpromotions`
@@ -1570,10 +1352,6 @@ CREATE TABLE `tblpromotions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblservergroups`
 --
 
@@ -1587,10 +1365,6 @@ CREATE TABLE `tblservergroups` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblservergroupsrel`
@@ -1608,10 +1382,6 @@ CREATE TABLE `tblservergroupsrel` (
   CONSTRAINT `tblservergroupsrel_ibfk_2` FOREIGN KEY (`groupid`) REFERENCES `tblservergroups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblservers`
@@ -1644,10 +1414,6 @@ CREATE TABLE `tblservers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblserviceaddons`
@@ -1685,10 +1451,6 @@ CREATE TABLE `tblserviceaddons` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblserviceconfiggroups`
 --
 
@@ -1702,10 +1464,6 @@ CREATE TABLE `tblserviceconfiggroups` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tblserviceconfiggroups';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblserviceconfiglinks`
@@ -1723,10 +1481,6 @@ CREATE TABLE `tblserviceconfiglinks` (
   CONSTRAINT `tblserviceconfiglinks_ibfk_2` FOREIGN KEY (`pid`) REFERENCES `tblservices` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblserviceconfigoptions`
@@ -1751,10 +1505,6 @@ CREATE TABLE `tblserviceconfigoptions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblserviceconfigoptionssub`
 --
 
@@ -1772,10 +1522,6 @@ CREATE TABLE `tblserviceconfigoptionssub` (
   CONSTRAINT `tblserviceconfigoptionssub_ibfk_1` FOREIGN KEY (`configid`) REFERENCES `tblserviceconfigoptions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblservicegroups`
@@ -1796,10 +1542,6 @@ CREATE TABLE `tblservicegroups` (
   KEY `order` (`order`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblservices`
@@ -1853,10 +1595,6 @@ CREATE TABLE `tblservices` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblservicetoservice`
 --
 
@@ -1868,10 +1606,6 @@ CREATE TABLE `tblservicetoservice` (
   `children_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblsmstemplate`
@@ -1888,10 +1622,6 @@ CREATE TABLE `tblsmstemplate` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbltax`
@@ -1913,10 +1643,6 @@ CREATE TABLE `tbltax` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketbreaklines`
 --
 
@@ -1929,10 +1655,6 @@ CREATE TABLE `tblticketbreaklines` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblticketdepartments`
@@ -1961,10 +1683,6 @@ CREATE TABLE `tblticketdepartments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketfeedback`
 --
 
@@ -1988,10 +1706,6 @@ CREATE TABLE `tblticketfeedback` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketlog`
 --
 
@@ -2007,10 +1721,6 @@ CREATE TABLE `tblticketlog` (
   KEY `tid` (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblticketmaillog`
@@ -2036,10 +1746,6 @@ CREATE TABLE `tblticketmaillog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketnotes`
 --
 
@@ -2061,10 +1767,6 @@ CREATE TABLE `tblticketnotes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketpredefinedcats`
 --
 
@@ -2079,10 +1781,6 @@ CREATE TABLE `tblticketpredefinedcats` (
   KEY `parentid_name` (`parentid`,`name`(64))
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblticketpredefinedreplies`
@@ -2101,10 +1799,6 @@ CREATE TABLE `tblticketpredefinedreplies` (
   CONSTRAINT `tblticketpredefinedreplies_ibfk_1` FOREIGN KEY (`catid`) REFERENCES `tblticketpredefinedcats` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblticketreplies`
@@ -2137,10 +1831,6 @@ CREATE TABLE `tblticketreplies` (
   CONSTRAINT `tblticketreplies_ibfk_5` FOREIGN KEY (`contactid`) REFERENCES `tblcontacts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbltickets`
@@ -2190,10 +1880,6 @@ CREATE TABLE `tbltickets` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tblticketspamfilters`
 --
 
@@ -2208,10 +1894,6 @@ CREATE TABLE `tblticketspamfilters` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tblticketstatuses`
@@ -2234,10 +1916,6 @@ CREATE TABLE `tblticketstatuses` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
---
-
-
---
 -- Table structure for table `tbltickettags`
 --
 
@@ -2253,10 +1931,6 @@ CREATE TABLE `tbltickettags` (
   CONSTRAINT `tbltickettags_ibfk_1` FOREIGN KEY (`ticketid`) REFERENCES `tbltickets` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 
 --
 -- Table structure for table `tbltodolist`
@@ -2279,10 +1953,6 @@ CREATE TABLE `tbltodolist` (
   CONSTRAINT `tbltodolist_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
---
-
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -2293,4 +1963,4 @@ CREATE TABLE `tbltodolist` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-08  0:10:46
+-- Dump completed on 2018-02-15  5:26:33
