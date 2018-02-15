@@ -189,7 +189,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -518,45 +518,45 @@ CREATE TABLE `tblclients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(256) NOT NULL,
   `lastname` varchar(256) NOT NULL,
-  `companyname` varchar(256) NOT NULL,
+  `companyname` varchar(255) DEFAULT NULL,
   `email` text NOT NULL,
-  `address1` varchar(256) NOT NULL,
-  `address2` varchar(256) NOT NULL,
-  `city` varchar(256) NOT NULL,
-  `state` varchar(256) NOT NULL,
-  `postcode` text NOT NULL,
-  `country` varchar(256) NOT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `postcode` varchar(32) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
   `phonenumber` text DEFAULT NULL,
   `mobilenumber` varchar(16) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `authmodule` text NOT NULL,
-  `authdata` text NOT NULL,
-  `currency` int(10) NOT NULL,
+  `authmodule` text DEFAULT NULL,
+  `authdata` text DEFAULT NULL,
+  `currency` int(10) DEFAULT 1,
   `defaultgateway` varchar(64) DEFAULT NULL,
-  `credit` decimal(10,2) NOT NULL,
-  `taxexempt` text NOT NULL,
-  `latefeeoveride` text NOT NULL,
+  `credit` decimal(10,2) DEFAULT 0.00,
+  `taxexempt` tinyint(1) DEFAULT 0,
+  `latefeeoveride` text DEFAULT NULL,
   `overideduenotices` text DEFAULT NULL,
-  `separateinvoices` text NOT NULL,
-  `disableautocc` text NOT NULL,
+  `separateinvoices` tinyint(1) DEFAULT 0,
+  `disableautocc` tinyint(1) DEFAULT 0,
   `datecreated` date NOT NULL,
-  `notes` text NOT NULL,
-  `billingcid` int(10) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `billingcid` int(10) DEFAULT NULL,
   `securityqid` int(10) DEFAULT NULL,
-  `securityqans` text NOT NULL,
+  `securityqans` varchar(255) DEFAULT NULL,
   `groupid` int(10) unsigned DEFAULT 0,
   `lastlogin` datetime DEFAULT NULL,
-  `ip` text NOT NULL,
-  `host` text NOT NULL,
+  `ip` varchar(255) DEFAULT NULL,
+  `host` varchar(255) DEFAULT NULL,
   `status` enum('Active','Inactive','Closed') NOT NULL DEFAULT 'Active',
-  `language` text NOT NULL,
-  `pwresetkey` text NOT NULL,
-  `pwresetexpiry` int(10) NOT NULL,
+  `language` enum('en') DEFAULT 'en',
+  `pwresetkey` varchar(255) DEFAULT NULL,
+  `pwresetexpiry` datetime DEFAULT NULL,
   `emailoptout` int(1) NOT NULL,
   `overrideautoclose` int(1) NOT NULL,
   `dateofbirth` date DEFAULT NULL,
-  `email_notification` text NOT NULL,
-  `txt_notification` text NOT NULL,
+  `email_notification` tinyint(1) DEFAULT 1,
+  `txt_notification` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `firstname_lastname` (`firstname`(32),`lastname`(32)),
   KEY `email` (`email`(64)),
@@ -566,7 +566,7 @@ CREATE TABLE `tblclients` (
   CONSTRAINT `tblclients_ibfk_1` FOREIGN KEY (`groupid`) REFERENCES `tblclientgroups` (`id`),
   CONSTRAINT `tblclients_ibfk_2` FOREIGN KEY (`currency`) REFERENCES `tblcurrencies` (`id`),
   CONSTRAINT `tblclients_ibfk_3` FOREIGN KEY (`defaultgateway`) REFERENCES `tblpaymentgatewaynames` (`gateway`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1963,4 +1963,4 @@ CREATE TABLE `tbltodolist` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-15  5:26:33
+-- Dump completed on 2018-02-15 22:12:49

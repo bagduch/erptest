@@ -138,6 +138,7 @@
       with_items:
       - 01_robotacct_schema.sql
       - 02_robotacct_data.sql
+      - 901_datacleanup.sql
 
 
     - name: Create RA DB user
