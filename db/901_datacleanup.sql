@@ -1,3 +1,4 @@
 USE `ra`;
-TRUNCATE TABLE tbladminlog;
 TRUNCATE TABLE tblactivitylog;
+TRUNCATE TABLE tbladminlog;
+TRUNCATE TABLE tblclients;
