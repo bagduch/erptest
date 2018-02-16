@@ -41,7 +41,7 @@ Vagrant.configure(2) do |config|
     ansible.verbose = "vvvv"
   end
   config.vm.provision "shell" do |shell|
-    shell.inline =  "rsync -av /vagrant/html/ /var/www/html/"
+    shell.inline =  "rsync -av --delete --exclude=templates_c --exclude=configuration.php /vagrant/html/ /var/www/html/"
   end
 
 end
