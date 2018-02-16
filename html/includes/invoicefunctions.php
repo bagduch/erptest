@@ -4,11 +4,6 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
 function getInvoiceStatusColour($status, $clientarea = true) {
     if (!$clientarea) {
@@ -330,11 +325,9 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
     if ($invoicestatus != "Unpaid") {
         return false;
     }
-
     $date = ($date ? toMySQLDate($date) . date(" H:i:s") : "now()");
     update_query("tblinvoices", array("status" => "Paid", "datepaid" => $date), array("id" => $invoiceid));
     logActivity("Invoice Marked Paid - Invoice ID: " . $invoiceid, $userid);
-
     if ($CONFIG['SequentialInvoiceNumbering'] && !$invoicenum) {
         $invoicenumber = $CONFIG['SequentialInvoiceNumberFormat'];
         $invnumval = get_query_val("tblconfiguration", "value", array("setting" => "SequentialInvoiceNumberValue"));
@@ -343,9 +336,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
         update_query("tblinvoices", array("invoicenum" => $invoicenumber), array("id" => $invoiceid));
         ++$CONFIG['SequentialInvoiceNumberValue'];
     }
-
     run_hook("InvoicePaidPreEmail", array("invoiceid" => $invoiceid));
-
     if (!$noemail) {
         sendMessage("Invoice Payment Confirmation", $invoiceid);
     }
@@ -479,6 +470,19 @@ function pdfInvoice($invoiceid) {
     $invoice = new RA_Invoice();
     $invoice->pdfCreate();
     $invoice->pdfInvoicePage($invoiceid);
+    $pdfdata = $invoice->pdfOutput();
+    return $pdfdata;
+}
+
+function pdfLatefee($invoiceid) {
+    global $ra;
+    global $CONFIG;
+    global $_LANG;
+    global $currency;
+
+    $invoice = new RA_Invoice();
+    $invoice->pdfCreate();
+    $invoice->pdfLateFee($invoiceid);
     $pdfdata = $invoice->pdfOutput();
     return $pdfdata;
 }

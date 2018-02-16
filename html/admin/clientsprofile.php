@@ -154,13 +154,13 @@ while ($data = mysqli_fetch_array($result)) {
 $result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
-    $currencyoption.= "<option value=\"" . $data['id'] . "\"";
+    $currencyoption .= "<option value=\"" . $data['id'] . "\"";
 
     if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
-        $currencyoption.= " selected";
+        $currencyoption .= " selected";
     }
 
-    $currencyoption.= ">" . $data['code'] . "</option>";
+    $currencyoption .= ">" . $data['code'] . "</option>";
 }
 
 
@@ -169,9 +169,9 @@ $clientfieldshtml = array();
 foreach ($clientfields as $key => $row) {
 
     if ($key % 2 == 1 && $key != 0) {
-        $clientfieldshtml[$key - 1][] = $clientfields[$key];
+        $clientfieldshtml['left'][] = $clientfields[$key];
     } else {
-        $clientfieldshtml[$key][] = $clientfields[$key];
+        $clientfieldshtml["right"][] = $clientfields[$key];
     }
 }
 

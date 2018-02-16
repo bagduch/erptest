@@ -240,7 +240,9 @@ $filt->setAllowedVars($filterops);
 $filters = array();
 $filters[] = "userid='" . (int) $userid . "'";
 
+
 if ($serviceid = $filt->get("serviceid")) {
+
     $filters[] = "id IN (SELECT invoiceid FROM tblinvoiceitems WHERE relid='" . (int) $serviceid . "')";
 }
 
@@ -249,10 +251,6 @@ if ($addonid = $filt->get("addonid")) {
     $filters[] = "id IN (SELECT invoiceid FROM tblinvoiceitems WHERE type='Addon' AND relid='" . (int) $addonid . "')";
 }
 
-
-if ($domainid = $filt->get("domainid")) {
-    $filters[] = "id IN (SELECT invoiceid FROM tblinvoiceitems WHERE type IN ('DomainRegister','DomainTransfer','Domain') AND relid='" . (int) $domainid . "')";
-}
 
 
 if ($clientname = $filt->get("clientname")) {
@@ -363,9 +361,9 @@ if ($page) {
     $tableformurl .= "&page=" . $page;
 }
 
-$createinvoice = "<input type=\"button\" value=\"Create Invoice\" class=\"button\" onclick=\"window.location ='invoices.php?action=createinvoice&amp;userid=" . $userid . "&amp;token=" . generate_token('plain') . "'\">";
-$tableformbuttons = "<input type=\"submit\" value=\"" . $aInt->lang("invoices", "markpaid") . "\" class=\"btn-success\" name=\"markpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markunpaid") . "\" name=\"markunpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markunpaidconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("invoices", "markcancelled") . "\" name=\"markcancelled\" onclick=\"return confirm('" . $aInt->lang("invoices", "markcancelledconfirm", "1") . "')\" />    <input type=\"submit\" value=\"" . $aInt->lang("invoices", "merge") . "\" name=\"merge\" onclick=\"return confirm('" . $aInt->lang("invoices", "mergeconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" class=\"btn-danger\" name=\"massdelete\" onclick=\"return confirm('" . $aInt->lang("invoices", "massdeleteconfirm", "1") . "')\" /> " . $createinvoice;
 
+$createinvoice = "<input  class=\"btn btn-default\"  type=\"button\" value=\"Create Invoice\" class=\"button\" onclick=\"window.location ='invoices.php?action=createinvoice&amp;userid=" . $userid . "&amp;token=" . generate_token('plain') . "'\">";
+$tableformbuttons = "<input type=\"submit\" value=\"" . $aInt->lang("invoices", "markpaid") . "\" class=\"btn btn-success\" name=\"markpaid\" onclick=\"return confirm('" . $aInt->lang("invoices", "markpaidconfirm", "1") . "')\" /> <input type=\"submit\" class=\"btn btn-default\" value=\"" . $aInt->lang("invoices", "markunpaid") . "\" name=\"markunpaid\"  class=\"btn btn-default\"  onclick=\"return confirm('" . $aInt->lang("invoices", "markunpaidconfirm", "1") . "')\" /> <input  class=\"btn btn-default\"  type=\"submit\" value=\"" . $aInt->lang("invoices", "markcancelled") . "\" name=\"markcancelled\" onclick=\"return confirm('" . $aInt->lang("invoices", "markcancelledconfirm", "1") . "')\" />    <input  class=\"btn btn-default\"  type=\"submit\" value=\"" . $aInt->lang("invoices", "merge") . "\" name=\"merge\" onclick=\"return confirm('" . $aInt->lang("invoices", "mergeconfirm", "1") . "')\" /> <input type=\"submit\" value=\"" . $aInt->lang("global", "delete") . "\" class=\"btn btn-danger\" name=\"massdelete\" onclick=\"return confirm('" . $aInt->lang("invoices", "massdeleteconfirm", "1") . "')\" /> " . $createinvoice;
 
 
 

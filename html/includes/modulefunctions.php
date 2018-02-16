@@ -715,7 +715,7 @@ function moduleConfigFieldOutput($values) {
 
 
 	if ($values['Type'] == "text") {
-		$code = "<input type=\"text\" name=\"" . $values['Name'] . "\" size=\"" . $values['Size'] . "\" value=\"" . $values['Value'] . "\" />";
+		$code = "<input class=\"form-control\" type=\"text\" name=\"" . $values['Name'] . "\" size=\"" . $values['Size'] . "\" value=\"" . $values['Value'] . "\" />";
 
 		if ($values['Description']) {
 			$code .= " " . $values['Description'];
@@ -723,7 +723,7 @@ function moduleConfigFieldOutput($values) {
 	}
 	else {
 		if ($values['Type'] == "password") {
-			$code = "<input type=\"password\" name=\"" . $values['Name'] . "\" size=\"" . $values['Size'] . "\" value=\"" . $values['Value'] . "\" />";
+			$code = "<input class=\"form-control\" type=\"password\" name=\"" . $values['Name'] . "\" size=\"" . $values['Size'] . "\" value=\"" . $values['Value'] . "\" />";
 
 			if ($values['Description']) {
 				$code .= " " . $values['Description'];
@@ -731,7 +731,7 @@ function moduleConfigFieldOutput($values) {
 		}
 		else {
 			if ($values['Type'] == "yesno") {
-				$code = "<label><input type=\"checkbox\" name=\"" . $values['Name'] . "\"";
+				$code = "<label><input  type=\"checkbox\" name=\"" . $values['Name'] . "\"";
 
 				if ($values['Value']) {
 					$code .= " checked=\"checked\"";

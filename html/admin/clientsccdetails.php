@@ -16,8 +16,6 @@ $aInt = new RA_Admin("View Credit Card Details");
 $aInt->title = $aInt->lang("clients", "ccdetails");
 $aInt->requiredFiles(array("ccfunctions", "clientfunctions"));
 
-
-
 $result = select_query_i("tbladmins", "username", array('id' => $_SESSION['adminid']));
 $data = mysqli_fetch_array($result);
 

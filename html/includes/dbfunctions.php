@@ -114,10 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
-
-    if ($table == "tblinvoiceitems") {
-        
-    }
+ 
     $result = mysqli_query($ramysqli, $query);
 
 
@@ -222,7 +219,7 @@ function update_query($table, $array, $where) {
     if ($table == "tblinvoiceitems") {
         error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     }
-    // echo "<pre>",  print_r($query,1),"</pre>";
+// echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 

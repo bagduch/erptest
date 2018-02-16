@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @ RA
@@ -8,8 +9,7 @@
  * 
  * 
  *
- **/
-
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Gateway Log");
@@ -21,8 +21,8 @@ ob_start();
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
 
 if (!count($_REQUEST)) {
-	$startdate = fromMySQLDate(date("Y-m-d", mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"))));
-	$enddate = getTodaysDate();
+    $startdate = fromMySQLDate(date("Y-m-d", mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"))));
+    $enddate = getTodaysDate();
 }
 
 echo "
@@ -51,14 +51,14 @@ $query = "SELECT DISTINCT gateway FROM tblgatewaylog ORDER BY gateway ASC";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
-	$gateway = $data['gateway'];
-	echo "<option";
+    $gateway = $data['gateway'];
+    echo "<option";
 
-	if ($gateway == $filtergateway) {
-		echo " selected";
-	}
+    if ($gateway == $filtergateway) {
+        echo " selected";
+    }
 
-	echo ">" . $gateway . "</option>";
+    echo ">" . $gateway . "</option>";
 }
 
 echo "</select></td></tr>
@@ -77,14 +77,14 @@ $query = "SELECT DISTINCT result FROM tblgatewaylog ORDER BY result ASC";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
-	$resultval = $data['result'];
-	echo "<option";
+    $resultval = $data['result'];
+    echo "<option";
 
-	if ($resultval == $filterresult) {
-		echo " selected";
-	}
+    if ($resultval == $filterresult) {
+        echo " selected";
+    }
 
-	echo ">" . $resultval . "</option>";
+    echo ">" . $resultval . "</option>";
 }
 
 echo "</select></td></tr>
@@ -107,27 +107,27 @@ $aInt->sortableTableInit("id", "DESC");
 $where = array();
 
 if ($filterdebugdata) {
-	$where[] = "data LIKE '%" . db_escape_string(html_entity_decode($filterdebugdata)) . "%'";
+    $where[] = "data LIKE '%" . db_escape_string(html_entity_decode($filterdebugdata)) . "%'";
 }
 
 
 if ($startdate) {
-	$where[] = "date>='" . toMySQLDate($startdate) . " 00:00:00'";
+    $where[] = "date>='" . toMySQLDate($startdate) . " 00:00:00'";
 }
 
 
 if ($enddate) {
-	$where[] = "date<='" . toMySQLDate($enddate) . " 23:59:59'";
+    $where[] = "date<='" . toMySQLDate($enddate) . " 23:59:59'";
 }
 
 
 if ($filtergateway) {
-	$where[] = "gateway='" . db_escape_string($filtergateway) . "'";
+    $where[] = "gateway='" . db_escape_string($filtergateway) . "'";
 }
 
 
 if ($filterresult) {
-	$where[] = "result='" . db_escape_string($filterresult) . "'";
+    $where[] = "result='" . db_escape_string($filterresult) . "'";
 }
 
 $result = select_query_i("tblgatewaylog", "COUNT(*)", implode(" AND ", $where), "id", "DESC");
@@ -136,19 +136,21 @@ $numrows = $data[0];
 $result = select_query_i("tblgatewaylog", "", implode(" AND ", $where), "id", "DESC", $page * $limit . ("," . $limit));
 
 while ($data = mysqli_fetch_array($result)) {
-	$id = $data['id'];
-	$date = $data['date'];
-	$gateway = $data['gateway'];
-	$data2 = $data['data'];
-	$res = $data['result'];
-	$date = fromMySQLDate($date, "time");
-	$tabledata[] = array($date, $gateway, "<textarea rows=\"6\" cols=\"80\">" . $data2 . "</textarea>", "<strong>" . $res . "</strong>");
+    $id = $data['id'];
+    $date = $data['date'];
+    $gateway = $data['gateway'];
+    $data2 = $data['data'];
+    $res = $data['result'];
+    $date = fromMySQLDate($date, "time");
+    $tabledata[] = array($date, $gateway, "<textarea rows=\"6\" cols=\"80\">" . $data2 . "</textarea>", "<strong>" . $res . "</strong>");
 }
 
 echo $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("gatewaytranslog", "gateway"), $aInt->lang("gatewaytranslog", "debugdata"), $aInt->lang("fields", "result")), $tabledata);
 $content = ob_get_contents();
 ob_end_clean();
+
+$aInt->template = "gateway/view";
 $aInt->content = $content;
-$aInt->jquerycode = $jquerycode.$menuselect;
+$aInt->jquerycode = $jquerycode . $menuselect;
 $aInt->display();
 ?>

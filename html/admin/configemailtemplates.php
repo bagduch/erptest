@@ -295,7 +295,7 @@ if ($action == "") {
 ";
 
 	if (checkPermission("Manage Email Template Languages", true)) {
-		echo "<div class=\"contextbar\">
+		echo "<div class=\"card\">
 <form method=\"post\" action=\"";
 		echo $PHP_SELF;
 		echo "\">

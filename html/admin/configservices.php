@@ -60,12 +60,9 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-
     if ($tax == "on") {
         $tax = "1";
     }
-
-    // $overagesenabled = ($overagesenabled ? "1," . $overageunitsdisk . "," . $overageunitsbw : "");
     if ($_POST['welcomeemail'] == 0) {
         $welcomeemail = "NULL";
     } else {
@@ -96,6 +93,8 @@ if ($action == "save") {
     );
 
     update_query("tblservices", $array, array("id" => $id));
+   
+
     foreach ($_POST['currency'] as $currency_id => $pricing) {
         update_query("tblpricing", $pricing, array("currency" => $currency_id, "relid" => $id));
     }
@@ -458,9 +457,15 @@ if ($action == "") {
         'none' => $aInt->lang("global", "none"),
         'setupfee' => $aInt->lang("fields", "setupfee")
     );
-    $result2 = select_query_i('tblservicegroups', '*', array('name' => 'Service'), 'order', 'ASC', '1');
-    $groups = mysqli_fetch_assoc($result2);
-    $groupsid = $groups['id'];
+    $result2 = select_query_i('tblservicegroups', '*', array('type' => 'service'));
+    $groups = array();
+    while ($data = mysqli_fetch_array($result2)) {
+        $groups[] = $data;
+    }
+
+
+
+
 
     if ($action == "edit") {
         // get all service data
@@ -469,7 +474,7 @@ if ($action == "") {
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
         $type = $data['type'];
-        $groupid = $gid = $data['gid'];
+        $groupsid = $gid = $data['gid'];
         $name = $data['name'];
         $description = $data['description'];
         $hidden = $data['hidden'];
@@ -517,15 +522,9 @@ if ($action == "") {
         $overagesenabled = explode(",", $overagesenabled);
         $downloads = unserialize($downloads);
         $order = $data['order'];
-
-
         if ($success) {
             infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
         }
-
-
-
-
 
         $tabledata = array();
         $result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
@@ -657,116 +656,110 @@ if ($action == "") {
         $aInt->assign('asscoproduct', $asscoproduct);
 
         $templatefile = 'services/edit';
-    } else {
-        if ($action == "create") {
-            checkPermission("Create New Products/Services");
-
-
-            $templatefile = 'services/create';
-        } else {
-            if ($action == "duplicate") {
-                checkPermission("Create New Products/Services");
-                $query = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
-                $result = full_query_i($query);
-                $service = array();
-                while ($data = mysqli_fetch_array($result)) {
-                    $gid = $data['id'];
-                    $gname = $data['name'];
-                    $query2 = "SELECT * FROM tblservices WHERE gid=" . (int) $gid;
-                    $result2 = full_query_i($query2);
-                    while ($data = mysqli_fetch_array($result2)) {
-                        $service [$data['id']] = array(
-                            'gname' => $gname,
-                            'prodname' => $data['name']
-                        );
-                    }
-                }
-                $aInt->assign('service', $service);
-                $templatefile = 'services/duplicate';
-            } else {
-                if ($action == "creategroup" || $action == "editgroup") {
-                    checkPermission("Manage Product Groups");
-                    $result = select_query_i("tblservicegroups", "", array("id" => $ids));
-                    $groupdata = mysqli_fetch_array($result);
-
-                    $ids = $groupdata['id'];
-                    $name = $groupdata['name'];
-                    $orderfrmtpl = $groupdata['orderfrmtpl'];
-                    $disabledgateways = $groupdata['disabledgateways'];
-                    $hidden = $groupdata['hidden'];
-                    $disabledgateways = explode(",", $disabledgateways);
-                    $queryone = "SELECT * FROM tblcustomfieldsgroupnames as tcgn LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on (tcgn.cfgid=tcfgl.cfgid AND tcfgl.servicegid=" . $ids . ")";
-                    $result = full_query_i($queryone);
-                    $option = mysqli_fetch_array($query);
-                    $cdata = array();
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        $cdata[$data['cfgid']] = $data;
-                        if (isset($data['id'])) {
-                            $cdata[$data['cfgid']]['check'] = true;
-                        } else {
-                            $cdata[$data['cfgid']]['check'] = false;
-                        }
-                    }
-                    $ordertemplates = array();
-                    $ordertplfolder = ROOTDIR . "/templates/orderforms/";
-                    if (is_dir($ordertplfolder)) {
-                        $dh = opendir($ordertplfolder);
-
-                        while (false !== $folder = readdir($dh)) {
-                            if (file_exists($ordertplfolder . $folder . "/services.tpl")) {
-                                $thumbnail = "../templates/orderforms/" . $folder . "/thumbnail.gif";
-                                if (!file_exists($thumbnail)) {
-                                    $thumbnail = "images/ordertplpreview.gif";
-                                }
-                                $ordertemplates[] = array(
-                                    'template' => $folder,
-                                    'thumb' => $thumbnail,
-                                    'checked' => $template == $orderfrmtpl ? "checked" : ""
-                                );
-                            }
-                        }
-
-                        closedir($dh);
-                    }
-
-
-                    $avaiablegateways = array();
-                    $gateways = getGatewaysArray();
-                    foreach ($gateways as $gateway => $name) {
-                        $avaiablegateway [] = array(
-                            'value' => $gateway,
-                            'name' => $name,
-                            'check' => !in_array($gateway, $disabledgateways) ? " checked" : ""
-                        );
-                    }
-                    $aInt->assign('cdata', $cdata);
-                    if (empty($groupdata)) {
-                        $aInt->title = "Create Group";
-                    } else {
-                        $aInt->title = "Edit Group";
-                    }
-                    $aInt->assign("groupdata", $groupdata);
-                    $aInt->assign('ordertemplates', $ordertemplates);
-                    $aInt->assign('avaiablegateway', $avaiablegateway);
-                    $templatefile = 'services/creategroup';
-                }
+    } elseif ($action == "create") {
+        checkPermission("Create New Products/Services");
+        $templatefile = 'services/create';
+    } elseif ($action == "duplicate") {
+        checkPermission("Create New Products/Services");
+        $query = "SELECT * FROM tblservicegroups ORDER BY `order` ASC";
+        $result = full_query_i($query);
+        $service = array();
+        while ($data = mysqli_fetch_array($result)) {
+            $gid = $data['id'];
+            $gname = $data['name'];
+            $query2 = "SELECT * FROM tblservices WHERE gid=" . (int) $gid;
+            $result2 = full_query_i($query2);
+            while ($data = mysqli_fetch_array($result2)) {
+                $service [$data['id']] = array(
+                    'gname' => $gname,
+                    'prodname' => $data['name']
+                );
             }
         }
-    }
+        $aInt->assign('service', $service);
+        $templatefile = 'services/duplicate';
+    } elseif ($action == "creategroup" || $action == "editgroup") {
+        checkPermission("Manage Product Groups");
+        $result = select_query_i("tblservicegroups", "", array("id" => $ids));
+        $groupdata = mysqli_fetch_array($result);
 
+        $ids = $groupdata['id'];
+        $name = $groupdata['name'];
+        $orderfrmtpl = $groupdata['orderfrmtpl'];
+        $disabledgateways = $groupdata['disabledgateways'];
+        $hidden = $groupdata['hidden'];
+        $disabledgateways = explode(",", $disabledgateways);
+        $queryone = "SELECT * FROM tblcustomfieldsgroupnames as tcgn LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on (tcgn.cfgid=tcfgl.cfgid AND tcfgl.servicegid=" . $ids . ")";
+        $result = full_query_i($queryone);
+        $option = mysqli_fetch_array($query);
+        $cdata = array();
+        while ($data = mysqli_fetch_assoc($result)) {
+            $cdata[$data['cfgid']] = $data;
+            if (isset($data['id'])) {
+                $cdata[$data['cfgid']]['check'] = true;
+            } else {
+                $cdata[$data['cfgid']]['check'] = false;
+            }
+        }
+        $ordertemplates = array();
+        $ordertplfolder = ROOTDIR . "/templates/orderforms/";
+        if (is_dir($ordertplfolder)) {
+            $dh = opendir($ordertplfolder);
+
+            while (false !== $folder = readdir($dh)) {
+                if (file_exists($ordertplfolder . $folder . "/services.tpl")) {
+                    $thumbnail = "../templates/orderforms/" . $folder . "/thumbnail.gif";
+                    if (!file_exists($thumbnail)) {
+                        $thumbnail = "images/ordertplpreview.gif";
+                    }
+                    $ordertemplates[] = array(
+                        'template' => $folder,
+                        'thumb' => $thumbnail,
+                        'checked' => $template == $orderfrmtpl ? "checked" : ""
+                    );
+                }
+            }
+
+            closedir($dh);
+        }
+
+
+        $avaiablegateways = array();
+        $gateways = getGatewaysArray();
+        foreach ($gateways as $gateway => $name) {
+            $avaiablegateway [] = array(
+                'value' => $gateway,
+                'name' => $name,
+                'check' => !in_array($gateway, $disabledgateways) ? " checked" : ""
+            );
+        }
+        $aInt->assign('cdata', $cdata);
+        if (empty($groupdata)) {
+            $aInt->title = "Create Group";
+        } else {
+            $aInt->title = "Edit Group";
+        }
+        $aInt->assign("groupdata", $groupdata);
+        $aInt->assign('ordertemplates', $ordertemplates);
+        $aInt->assign('avaiablegateway', $avaiablegateway);
+        $templatefile = 'services/creategroup';
+    } else {
+        
+    }
+//    echo "<pre>", print_r($groups, 1), "</pre>";
     $aInt->assign('autoemail', $autoemail);
     $aInt->assign('groupsid', $groupsid);
+    $aInt->assign('groups', $groups);
     $aInt->assign('langs', $lang);
     $aInt->assign('infobox', $infobox);
     $aInt->assign('tabledata', $tabledata);
-    //  echo print_r($servicegroups);
 }
 $aInt->assign('langs', $lang);
 if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 
 $aInt->display();
 ?>

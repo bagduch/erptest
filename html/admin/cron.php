@@ -4,12 +4,8 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
- *
  * */
+
 require dirname(__FILE__) . "/../init.php";
 include ROOTDIR . "/includes/clientfunctions.php";
 include ROOTDIR . "/includes/modulefunctions.php";
@@ -23,6 +19,7 @@ include ROOTDIR . "/includes/currencyfunctions.php";
 $cron = RA_Cron::init();
 $cron->raiseLimits();
 releaseSession();
+
 $escalations = (((is_array($_SERVER['argv']) && in_array("escalations", $_SERVER['argv'])) || isset($_GET['escalations'])) ? true : false);
 
 if ($escalations) {
@@ -70,7 +67,7 @@ if ($escalations) {
         }
 
         $ticketsqry = substr($ticketsqry, 0, 0 - 5);
-        $result2 = full_query_i_i($ticketsqry);
+        $result2 = full_query_i($ticketsqry);
 
         while ($data = mysqli_fetch_array($result2)) {
             $ticketid = $data['id'];
@@ -141,11 +138,11 @@ if ($escalations) {
     exit();
 }
 
-$cron->logactivity("Starting");
-full_query_i_i("DELETE FROM tblinvoices WHERE userid NOT IN (SELECT id FROM tblclients)");
-full_query_i_i("UPDATE tbltickets SET did=(SELECT id FROM tblticketdepartments ORDER BY `order` ASC LIMIT 1) WHERE did NOT IN (SELECT id FROM tblticketdepartments)");
-update_query_i("tblclients", array("currency" => "1"), array("currency" => "0"));
-update_query_i("tblaccounts", array("currency" => "1"), array("currency" => "0", "userid" => "0"));
+//$cron->logactivity("Starting");
+full_query_i("DELETE FROM tblinvoices WHERE userid NOT IN (SELECT id FROM tblclients)");
+full_query_i("UPDATE tbltickets SET did=(SELECT id FROM tblticketdepartments ORDER BY `order` ASC LIMIT 1) WHERE did NOT IN (SELECT id FROM tblticketdepartments)");
+update_query("tblclients", array("currency" => "1"), array("currency" => "0"));
+update_query("tblaccounts", array("currency" => "1"), array("currency" => "0", "userid" => "0"));
 
 if ($ra->get_config("CurrencyAutoUpdateExchangeRates") && $cron->isScheduled("updaterates")) {
     currencyUpdateRates();
@@ -161,6 +158,8 @@ if ($ra->get_config("CurrencyAutoUpdateProductPrices") && $cron->isScheduled("up
 
 if ($cron->isScheduled("invoices")) {
     createInvoices();
+    
+   $cron->logActivity("Invoices Create Done", true); 
 }
 
 
@@ -176,18 +175,17 @@ if ($cron->isScheduled("ccprocessing")) {
 
 if ($cron->isScheduled("invoicereminders")) {
     $data = invoicereminders($CONFIG);
-    if (!empt($data)) {
+    if (!empty($data)) {
         $cron->logActivity("Sent " . count($data['id']) . " Unpaid Invoice Payment Reminders" . $data['number'], true);
         $cron->emailLog(count($data['id']) . " Unpaid Invoice Payment Reminders Sent" . $data['number']);
     }
 }
 
-
 if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests")) {
     $i = 0;
     $terminatedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
     $query = "SELECT * FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id = tblcancelrequests.relid WHERE (servicestatus!='Terminated' AND servicestatus!='Cancelled') AND (type='Immediate' OR (type='End of Billing Period' AND nextduedate<='" . $terminatedate . "\')) AND (tblcustomerservices.billingcycle='Free' OR tblcustomerservices.billingcycle='Free Account' OR tblcustomerservices.nextduedate != '0000-00-00') ORDER BY domain ASC";
-    $result = full_query_i_i($query);
+    $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -234,13 +232,12 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
     $cron->emailLog($i . " Cancellation Requests Processed");
 }
 
-
 if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
     update_query("tblcustomerservices", array("overideautosuspend" => ""), "(overideautosuspend='on' OR overideautosuspend='1') AND overidesuspenduntil<'" . date("Y-m-d") . "' AND overidesuspenduntil!='0000-00-00'");
     $i = 0;
     $suspenddate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AutoSuspensionDays'], date("Y")));
     $query3 = "SELECT * FROM tblcustomerservices WHERE servicestatus='Active' AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND overideautosuspend!='on' AND overideautosuspend!='1' AND nextduedate<='" . $suspenddate . "' ORDER BY domain ASC";
-    $result3 = full_query_i_i($query3);
+    $result3 = full_query_i($query3);
 
     while ($data = mysqli_fetch_array($result3)) {
         $id = $data['id'];
@@ -268,7 +265,6 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
                 $serverresult = ServerSuspendAccount($id);
             }
 
-
             if ($domain) {
                 $domain = " - " . $domain;
             }
@@ -286,7 +282,7 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
     }
 
     $query3 = "SELECT tblserviceaddons.*,tblcustomerservices.userid,tblcustomerservices.packageid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.groupid FROM tblserviceaddons INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblserviceaddons.status='Active' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.billingcycle!='One Time' AND tblserviceaddons.nextduedate<='" . $suspenddate . "' AND tblcustomerservices.overideautosuspend!='on' AND tblcustomerservices.overideautosuspend!='1' ORDER BY tblserviceaddons.name ASC";
-    $result3 = full_query_i_i($query3);
+    $result3 = full_query_i($query3);
 
     while ($data = mysqli_fetch_array($result3)) {
         $id = $data['id'];
@@ -342,7 +338,6 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
                     }
                 }
             }
-
             ++$i;
         }
     }
@@ -351,12 +346,11 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
     $cron->emailLog($i . " Services Suspended");
 }
 
-
 if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
     $i = 0;
     $terminatedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AutoTerminationDays'], date("Y")));
     $query = "SELECT * FROM tblcustomerservices WHERE (servicestatus='Active' OR servicestatus='Suspended') AND billingcycle!='Free Account' AND billingcycle!='One Time' AND nextduedate<='" . $terminatedate . "' AND tblcustomerservices.nextduedate != '0000-00-00' AND overideautosuspend!='on' AND overideautosuspend!='1' ORDER BY domain ASC";
-    $result = full_query_i_i($query);
+    $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
         $serviceid = $data['id'];
@@ -375,7 +369,6 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
         $result2 = select_query_i("tblclientgroups", "susptermexempt", array("id" => $groupid));
         $data2 = mysqli_fetch_array($result2);
         $susptermexempt = $data2['susptermexempt'];
-
         if (!$susptermexempt) {
             $serverresult = "No Module";
             logActivity("Cron Job: Terminating Service - Service ID: " . $serviceid);
@@ -384,11 +377,9 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
                 $serverresult = ServerTerminateAccount($serviceid);
             }
 
-
             if ($domain) {
                 $domain = " - " . $domain;
             }
-
             $loginfo = $firstname . " " . $lastname . " - " . $prodname . $domain . " (Service ID: " . $serviceid . " - User ID: " . $userid . ")";
 
             if ($serverresult == "success") {
@@ -401,7 +392,7 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
     }
 
     $query = "UPDATE tblserviceaddons SET status='Terminated' WHERE (status='Active' OR status='Suspended') AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND nextduedate!='0000-00-00' AND nextduedate<='" . $terminatedate . "'";
-    $result = full_query_i_i($query);
+    $result = full_query_i($query);
     $cron->logActivity("Processed " . $i . " Terminations", true);
     $cron->emailLog($i . " Services Terminated");
 }
@@ -913,14 +904,12 @@ if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatus
 
     $cron->logActivity("Done", true);
 }
-
 $query = "UPDATE tblcustomerservices SET status='Expired' WHERE expirydate<'" . date("Y-m-d") . "' AND expirydate!='00000000' AND status='Active'";
 $result = full_query_i($query);
 $cron->logActivity("Completed");
-$cron->emailReport();
+//$cron->emailReport();
 run_hook("DailyCronJob", array());
-$cron->log("Cron Job Hooks Run...");
-
+$cron->logActivity("Cron Job Hooks Run...");
 if ($cron->isScheduled("backups")) {
     $backupdata = $db_name = "";
     require ROOTDIR . "/configuration.php";
@@ -1021,8 +1010,8 @@ if ($cron->isScheduled("backups")) {
         $cron->logActivity("FTP Backup - Completed Successfully");
     }
 
-    $cron->log("Backup Complete...");
+    $cron->logActivity("Backup Complete...");
 }
+$cron->logActivity("Goodbye");
 
-$cron->log("Goodbye");
 ?>

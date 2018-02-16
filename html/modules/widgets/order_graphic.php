@@ -1,5 +1,4 @@
 <?php
-
 if (!defined("RA"))
     die("This file cannot be accessed directly");
 
@@ -17,7 +16,7 @@ function createDateRangeArraysecond($strDateFrom, $strDateTo) {
     if ($iDateTo >= $iDateFrom) {
         array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
         while ($iDateFrom < $iDateTo) {
-            $iDateFrom+=86400; // add 24 hours
+            $iDateFrom += 86400; // add 24 hours
             array_push($aryRange, date('Y-m-d', $iDateFrom));
         }
     }
@@ -38,6 +37,7 @@ function widget_order_left_overview($vars) {
         
     }
     $datePeriod = createDateRangeArraysecond($start_date, $end_date);
+
     $income = array();
     foreach ($datePeriod as $date) {
         $orders[$date]['active'] = 0;
@@ -70,40 +70,112 @@ function widget_order_left_overview($vars) {
 
     $dataarray = array();
     foreach ($orders as $date => $row) {
-        $dataarray[] = array(
-            'y' => $date,
-            'item1' => $row['total'],
-            'item5' => $row['pending'],
-            'item2' => $row['active'],
-            'item3' => $row['draft'],
-            'item4' => $row['cancel'],
-        );
+        $active[] = $row['active'];
+        $pending[] = $row['pending'];
+        $cancel[] = $row['cancel'];
+        $draft[] = $row['draft'];
     }
-    $dataarray = json_encode($dataarray);
-    $content = <<<EOF
-              <div class="chart tab-pane" id="revenue-chart" style="position: relative; height: 300px;"></div>
-                <script type="text/javascript">
-                  var area = new Morris.Area({
-                element: 'revenue-chart',
-                resize: true,
-                behaveLikeLine: true,
-                data: $dataarray,
-                    xkey: 'y',
-                            ykeys: ['item1', 'item5', 'item2', 'item3', 'item4'],
-                    labels: ['Total', 'pending', 'Active', 'draft', 'cancel'],
-                            lineColors: ['#f0f0f0', '#7998f0', '#aded7a', '#f1d552', '#f34869'],
-                    hideHover: 'auto'
-                });
+    $datePeriod = json_encode($datePeriod);
+
+    $active = json_encode($active);
+    $pending = json_encode($pending);
+    $cancel = json_encode($cancel);
+    $draft = json_encode($draft);
+
+    ob_start();
+    ?>
+
+    <canvas id="orderChart"></canvas>
+    <script type="text/javascript">
+        function orderjqueryLoaded() {
+            //do stuff
+
+            $(document).ready(function () {
+                var orderChartData = {
+                    labels: <?= $datePeriod ?>,
+
+                    datasets: [{
+                            type: 'bar',
+                            label: 'Active',
+                            borderColor: "#7AC29A",
+                            backgroundColor: "#7AC29A",
+                            borderWidth: 2,
+                            fill: false,
+                            data: <?= $active ?>
+                        }, {
+                            type: 'bar',
+                            label: 'Pending',
+                            borderColor: "#68B3C8",
+                            backgroundColor: "#68B3C8",
+                            data: <?= $pending ?>,
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }, {
+                            type: 'bar',
+                            label: 'Cancel',
+                            borderColor: "#FF6384",
+                            backgroundColor: "#FF6384",
+                            data: <?= $cancel ?>
+                        }, {
+                            type: 'bar',
+                            label: 'Draft',
+                            borderColor: "#F3BB45",
+                            backgroundColor: "#F3BB45",
+                            data: <?= $draft ?>
+                        }]
+
+                };
 
 
-                    $('.box ul.nav a').on('shown.bs.tab', function () {
-                       area.redraw();
-                    });
-             </script>
-EOF;
+                var orderconfig = {
+                    type: 'bar',
+                    data: orderChartData,
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Orders'
+                        },
+                        scales: {
+                            yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                        }
+                    }
+                }
 
+
+                if ($('#orderChart')[0]) {
+                    var orderChartCanvas = $("#orderChart").get(0).getContext("2d");
+                    var orderChart = new Chart(orderChartCanvas, orderconfig);
+
+                }
+            });
+        }
+
+        function ordercheckJquery() {
+            if (window.jQuery && jQuery.ui) {
+                orderjqueryLoaded();
+            } else {
+                window.setTimeout(ordercheckJquery, 100);
+            }
+        }
+
+        ordercheckJquery();
+
+    </script>
+
+
+    <?php
+    $content = ob_get_contents();
+    ob_end_clean();
     return array('title' => $title, 'content' => $content);
 }
 
-add_hook("AdminHomeWidgets", 1, "widget_order_left_overview");
+add_hook("AdminHomeWidgets", 2, "widget_order_left_overview");
 ?>

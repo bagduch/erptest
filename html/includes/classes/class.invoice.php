@@ -19,9 +19,11 @@ class RA_Invoice {
     private $totalbalance = 0;
 
     public function __construct($invoiceid = "") {
+
         if ($invoiceid) {
             $this->setID($invoiceid);
         }
+
         $setting = array();
         $sresult = select_query_i("tblconfiguration", "*");
         while ($data = mysqli_fetch_array($sresult)) {
@@ -45,7 +47,10 @@ class RA_Invoice {
         }
 
         $result = select_query_i("tblinvoices", "tblinvoices.*,(SELECT value FROM tblpaymentgateways WHERE gateway=tblinvoices.paymentmethod AND setting='name' LIMIT 1) AS gateway,IFNULL((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),0) as amountpaid", array("id" => $this->invoiceid));
+
+
         $data = mysqli_fetch_assoc($result);
+
 
         if (!$data['id']) {
             return false;
@@ -67,6 +72,7 @@ class RA_Invoice {
 
     public function getData($var = "") {
         $this->loadData(false);
+
         return isset($this->data[$var]) ? $this->data[$var] : $this->data;
     }
 
@@ -113,6 +119,7 @@ class RA_Invoice {
         }
 
         $clientsdetails = getClientsDetails($this->getData("userid"), "billing");
+
         $clientsdetails['country'] = $clientsdetails['countryname'];
         $this->output['clientsdetails'] = $clientsdetails;
         $customfields = array();
@@ -145,9 +152,11 @@ class RA_Invoice {
         $this->output['pagetitle'] = $ra->get_lang("invoicenumber") . $this->getData("invoicenum");
         $this->output['payto'] = nl2br($ra->get_config("InvoicePayTo"));
         $this->output['notes'] = nl2br($this->output['notes']);
+
         $this->output['subscrid'] = get_query_val("tblinvoiceitems", "tblcustomerservices.subscriptionid", "tblinvoiceitems.type='Hosting' AND tblinvoiceitems.invoiceid=" . $this->getData("id") . " AND tblcustomerservices.subscriptionid!=''", "tblhosting`.`id", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid");
-        $clienttotals = get_query_vals("tblinvoices", "SUM(credit),SUM(total)", array("userid" => $this->getData("userid"), "status" => "Unpaid"));
+        $clienttotals = get_query_vals("tblinvoices", "SUM(credit),SUM(total)", array("userid" => $this->getData("userid")));
         $alldueinvoicespayments = get_query_val("tblaccounts", "SUM(amountin-amountout)", "invoiceid IN (SELECT id FROM tblinvoices WHERE userid=" . (int) $this->getData("userid") . " AND status='Unpaid')");
+
         $this->output['clienttotaldue'] = formatCurrency($clienttotals[0] + $clienttotals[1]);
         $this->output['clientpreviousbalance'] = formatCurrency($clienttotals[1] - $this->getData("total"));
         $this->output['clientbalancedue'] = formatCurrency($clienttotals[1] - $alldueinvoicespayments);
@@ -157,7 +166,9 @@ class RA_Invoice {
     }
 
     public function getOutput($pdf = false) {
+
         $this->loadData(false);
+
         $this->formatForOutput();
 
         if ($pdf) {
@@ -305,16 +316,19 @@ class RA_Invoice {
         }
 
         $this->pdf->SetTitle($ra->get_lang("invoicenumber") . $this->getData("invoicenum"));
+
         $tplvars = $this->getOutput(true);
+
         $invoiceitems = $this->getLineItems(true);
         $tplvars['invoiceitems'] = $invoiceitems;
         $transactions = $this->getTransactions();
         $tplvars['transactions'] = $transactions;
         $this->pdfAddPage("invoicepdf.tpl", $tplvars);
+
         return true;
     }
 
-    public function pdfLateFee($latefeeid) {
+    public function pdfLateFee($latefeeid = "") {
         global $ra;
         global $currency;
 
@@ -333,7 +347,21 @@ class RA_Invoice {
         $tplvars['invoiceitems'] = $invoiceitems;
         $transactions = $this->getTransactions();
         $tplvars['transactions'] = $transactions;
-        $this->pdfAddPage("invoicepdf.tpl", $tplvars);
+        $this->pdfHtmlpage("latefeepdf.php", $tplvars);
+        return true;
+    }
+
+    public function pdfHtmlpage($tplfile, $tplvars) {
+        global $ra;
+        global $_LANG;
+
+        $this->pdf->AddPage();
+        $this->pdf->SetFont("freesans", "", 10);
+        $this->pdf->SetTextColor(0);
+        ob_start();
+        include ROOTDIR . "/templates/" . $ra->get_sys_tpl_name() . "/pdf/" . $tplfile;
+        $pdf = ob_get_clean();
+        $this->pdf->WriteHtml($pdf);
         return true;
     }
 

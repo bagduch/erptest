@@ -2,20 +2,17 @@
 
 define("ADMINAREA", true);
 require "../init.php";
-$adminfolder = $ra->get_admin_folder_name();
-
+require ROOTDIR . "/includes/smarty/Smarty.class.php";
+$smarty = new Smarty();
+$smarty->template_dir = ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/";
+$smarty->compile_dir = $templates_compiledir;
 if (!function_exists("curl_init")) {
     echo "<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>Critical Error</strong><br>CURL is not installed or is disabled on your server and it is required for ra to run</div>";
     exit();
 }
-
-
-
-
 if (isset($_SESSION['adminid']) && !isset($_SESSION['2fabackupcodenew'])) {
     redir("", "index.php");
 }
-
 
 if ($CONFIG['AdminForceSSL'] && $CONFIG['SystemSSLURL']) {
     if (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off") {
@@ -37,112 +34,7 @@ if ($action && $disableadminforgottenpw) {
     $action = "";
 }
 
-
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
-<head>
-<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
-<title>RA- Login</title>
-<link href=\"../includes/jscript/css/ui.all.css\" rel=\"stylesheet\" type=\"text/css\" />
-";
-echo "<s";
-echo "cript type=\"text/javascript\" src=\"../includes/jscript/jquery.js\"></script>
-";
-echo "<s";
-echo "cript type=\"text/javascript\" src=\"../includes/jscript/jqueryui.js\"></script>
-";
-echo "<s";
-echo "tyle type=\"text/css\">
-body {
-	margin: 0;
-    background-color: #F4F4F4;
-    background-image: url('images/loginbg.gif');
-    background-repeat: repeat-x;
-}
-body, td, th {
-	font-family: Tahoma, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #333;
-    
-}
-body{
-background:#1A4D80;
-}
-a, a:visited {
-	color: #000066;
-	text-decoration: underline;
-}
-a:hover {
-	text-decoration: none;
-}
-form {
-	margin: 0;
-	padding: 0;
-}
-input, sel";
-echo "ect {
-	font-family: Tahoma, Arial, Helvetica, sans-serif;
-	font-size: 16px;
-}
-.login_inputs {
-	padding: 3px;
-    border: 1px solid #ccc;
-    font-size: 12px;
-}
-#logo {
-	text-align: center;
-    width: 420px;
-	margin: 30px auto 10px auto;
-	padding: 15px;
-}
-#login_container {
-	color: #333;
-	background-color: #fff;
-	text-align: left;
-	width: 550px;
-	padding: 10px;
-	margin: 0 auto 10px auto;
-    -moz-b";
-echo "order-radius: 10px;
-    -webkit-border-radius: 10px;
-    -o-border-radius: 10px;
-    border-radius: 10px;
-}
-#login_container #login {
-	text-align: left;
-	margin: 0;
-	padding: 20px 10px 20px 10px;
-}
-#login_container #login_msg {
-    background-color: #FAF4B8;
-    text-align: center;
-    padding: 10px;
-    margin: 0 0 1px 0;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -o-borde";
-echo "r-radius: 10px;
-    border-radius: 10px;
-}
-#login_container #extRA_info {
-	background-color: #D3D3D3;
-	text-align: left;
-	padding: 10px;
-	margin: 1px 0 0 0;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -o-border-radius: 10px;
-    border-radius: 10px;
-}
-</style>
-</head>
-<body>
-<div id=\"logo\"></div>
-<div id";
-echo "=\"login_container\">
-";
 $msgtitle = $msg = $reset = "";
-
 if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp) && $verify) {
     $result = select_query_i("tbladmins", "", array("email" => $email, "disabled" => "0"));
     $data = mysqli_fetch_array($result);
@@ -187,25 +79,23 @@ You can change your password after login from the My Account section of the admi
         if ($CONFIG['MailType'] == "mail") {
             $mail->Mailer = "mail";
         } else {
-            if ($CONFIG['MailType'] == "smtp") {
-                $mail->IsSMTP();
-                $mail->Host = $CONFIG['SMTPHost'];
-                $mail->Port = $CONFIG['SMTPPort'];
-                $mail->Hostname = $_SERVER['SERVER_NAME'];
+            $mail->IsSMTP();
+            $mail->Host = $CONFIG['SMTPHost'];
+            $mail->Port = $CONFIG['SMTPPort'];
+            $mail->Hostname = $_SERVER['SERVER_NAME'];
 
-                if ($CONFIG['SMTPSSL']) {
-                    $mail->SMTPSecure = $CONFIG['SMTPSSL'];
-                }
-
-
-                if ($CONFIG['SMTPUsername']) {
-                    $mail->SMTPAuth = true;
-                    $mail->Username = $CONFIG['SMTPUsername'];
-                    $mail->Password = decrypt($CONFIG['SMTPPassword']);
-                }
-
-                $mail->Sender = $mail->From;
+            if ($CONFIG['SMTPSSL']) {
+                $mail->SMTPSecure = $CONFIG['SMTPSSL'];
             }
+
+
+            if ($CONFIG['SMTPUsername']) {
+                $mail->SMTPAuth = true;
+                $mail->Username = $CONFIG['SMTPUsername'];
+                $mail->Password = decrypt($CONFIG['SMTPPassword']);
+            }
+
+            $mail->Sender = $mail->From;
         }
 
 
@@ -216,6 +106,7 @@ You can change your password after login from the My Account section of the admi
         $mail->Body = $message;
         $mail->AddAddress($email);
 
+        echo pinrt_r($mail);
         if (!$mail->Send()) {
             $msg = "There was an error sending the email. Please try again.";
         } else {
@@ -262,245 +153,109 @@ if (!$action) {
         }
     }
 
-    echo "<div id=\"login_msg\"><span style=\"font-size:14px;\"><strong>" . $msgtitle . "</strong></span><br>" . $msg . "</div>";
 
     if (isset($_SESSION['2fabackupcodenew'])) {
         $twofa = new RA_2FA();
 
+
         if ($twofa->setAdminID($_SESSION['2faadminid'])) {
             $backupcode = $twofa->generateNewBackupCode();
-            echo "<div id=\"login\"><p align=\"center\">Your New Backup Code is:</p><div style=\"margin:20px auto;padding:10px;width:280px;background-color:#F2D4CE;border:1px dashed #AE432E;text-align:center;font-size:20px;\">" . $backupcode . "</div><p align=\"center\">Write this down on paper and keep it safe.<br />It will be needed if you ever lose your 2nd factor device or it is unavailable to you again in future.</p><form method=\"post\" action=\"dologin.php\"><p align=\"center\"><input type=\"submit\" value=\"Continue to Admin Area &raquo;\" /></p></form></div>";
         } else {
-            echo "<div id=\"login\">An error occurred. Please try again.</div>";
-        }
-    } else {
-        if (isset($_SESSION['2faverify'])) {
-            $twofa = new RA_2FA();
-
-            if ($twofa->setAdminID($_SESSION['2faadminid'])) {
-                if (!$twofa->isActiveAdmins() || !$twofa->isEnabled()) {
-                    RA_Session::destroy();
-                    redir();
-                }
-
-
-                if ($ra->get_req_var("backupcode")) {
-                    echo "<div id=\"login\"><form method=\"post\" action=\"dologin.php\"><input type=\"hidden\" name=\"backupcode\" value=\"1\" /><p align=\"center\"><input type=\"text\" name=\"code\" size=\"25\" /> <input type=\"submit\" value=\"Login &raquo;\" /></p><p align=\"center\">Enter Your Backup Code Above to Login</p></form></div>";
-                } else {
-                    $challenge = $twofa->moduleCall("challenge");
-
-                    if ($challenge) {
-                        echo "<div id=\"login\">" . $challenge . "<p align=\"center\">Can't Access Your 2nd Factor Device? <a href=\"login.php?backupcode=1\">Login using Backup Code</a></p></div>";
-                    } else {
-                        echo "<div id=\"login\">Bad 2 Factor Auth Module. Please contact support.</div>";
-                    }
-                }
-            } else {
-                echo "<div id=\"login\">An error occurred. Please try again.</div>";
-            }
-        } else {
-            echo "  <div id=\"login\">
-    <form action=\"dologin.php\" method=\"post\" name=\"frmlogin\" id=\"frmlogin\">
-      <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\">";
-            echo "<s";
-            echo "trong>Username</strong></td>
-          <td align=\"left\" valign=\"middle\"><input type=\"text\" name=\"username\" size=\"30\" class=\"login_inputs\" /></td>
-        </tr>
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\">";
-            echo "<s";
-            echo "trong>Password</strong></td>
-          <td align=\"left\" valign=\"middle\"><input type=\"password\" name=\"password\" size=\"30\" class=\"login_inputs\" /></td>
-        </tr>
-        <tr>
- <td colspan='2'>";
-            if (!$disableadminforgottenpw) {
-                if ($CONFIG['SystemSSLURL'] && !$CONFIG['AdminForceSSL']) {
-                    echo " | ";
-                }
-
-                echo "<a style='float:right' href=\"login.php?action=reset\">Forgot your password?</a>";
-            }
-
-
-            echo "
-</td>        
-</tr>
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\"><input type=\"checkbox\" name=\"rememberme\" id=\"rememberme\" /></td>
-          <td align=\"left\" valign=\"middle\"><label for=\"rememberme\" style=\"cursor:hand\">Remember me until I logout.";
-            echo "</label></td>
-        </tr>
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\">&nbsp;</td>
-          <td align=\"left\" valign=\"middle\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td><input type=\"submit\" value=\"Login\" class=\"button\" /></td><td align=\"right\">Language: ";
-            echo "<s";
-            echo "elect name=\"language\" class=\"login_inputs\"><option value=\"\">Default</option>";
-            $adminlangs = array();
-            $dh = opendir("lang/");
-
-            while (false !== $file = readdir($dh)) {
-                if (is_file("lang/" . $file)) {
-                    $adminlangs[] = substr($file, 0, 0 - 4);
-                }
-            }
-
-            sort($adminlangs);
-            foreach ($adminlangs as $temp) {
-                echo "<option value=\"" . $temp . "\">" . ucfirst($temp) . "</option>";
-            }
-
-            closedir($dh);
-            echo "</select></td></tr></table></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-";
+            $backupcode = "";
         }
     }
-} else {
-    if ($action == "reset" && !$disableadminforgottenpw) {
-        echo "<div id=\"login_msg\"><span style=\"font-size:14px;\"><strong>";
+} elseif ($action == "reset" && !$disableadminforgottenpw) {
 
-        if ($sub == "send") {
-            $result = select_query_i("tbladmins", "", array("email" => $email));
-            $data = mysqli_fetch_array($result);
-            $adminid = $data['id'];
-            $firstname = $data['firstname'];
-            $lastname = $data['lastname'];
-            $username = $data['username'];
-            $emailaddr = $data['email'];
-            $disabled = $data['disabled'];
+    if ($sub == "send") {
+        $result = select_query_i("tbladmins", "", array("email" => $email));
+        $data = mysqli_fetch_array($result);
+        $adminid = $data['id'];
+        $firstname = $data['firstname'];
+        $lastname = $data['lastname'];
+        $username = $data['username'];
+        $emailaddr = $data['email'];
+        $disabled = $data['disabled'];
 
-            if ($disabled == 1) {
-                echo "Administrator Disabled</strong></span><br>Your Administrative account has been disabled.<br />";
+        if ($disabled == 1) {
+            $msgtitle = "Administrator Disabled";
+            $msg = "Your Administrative account has been disabled.";
+        } else {
+            if (!$adminid) {
+                logActivity("Admin Password Reset Attempted for invalid Email: " . $email);
+                $msgtitle = "Email Address Not Found";
+                $msg = "Your IP has been logged and admins notified of this<br />failed reset attempt.";
             } else {
-                if (!$adminid) {
-                    logActivity("Admin Password Reset Attempted for invalid Email: " . $email);
-                    echo "Email Address Not Found</strong></span><br>Your IP has been logged and admins notified of this<br />failed reset attempt.";
-                } else {
-                    $timestamp = time();
-                    $hash = md5($email . $timestamp . $adminid . $cc_encryption_hash);
-                    $url = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
-                    $url .= "/" . $adminfolder . "/login.php?action=reset&email=" . $email . "&timestamp=" . $timestamp . "&verify=" . $hash;
-                    $message = ("Dear " . $firstname . ",
-
+                $timestamp = time();
+                $hash = md5($email . $timestamp . $adminid . $cc_encryption_hash);
+                $url = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+                $url .= "/" . $adminfolder . "/login.php?action=reset&email=" . $email . "&timestamp=" . $timestamp . "&verify=" . $hash;
+                $msg = ("Dear " . $firstname . ",
 A request was recently made to reset the password for admin username '" . $username . "'.
-
 To confirm the request and complete the reset process, simply visit the url below:
 " . $url . "\r\n") . "
 This link will only be valid for the next 30 minutes so if you didn't request this reset, you can simply ignore this email.
-
 " . $CONFIG['SystemURL'] . ("/" . $adminfolder . "/");
-                    $ra->load_class("phpmailer");
-                    $mail = new PHPMailer();
-                    $mail->From = $CONFIG['SystemEmailsFromEmail'];
-                    $mail->FromName = html_entity_decode($CONFIG['SystemEmailsFromName'], ENT_QUOTES);
-                    $mail->Subject = "Admin Password Reset Request";
-                    $mail->CharSet = $CONFIG['Charset'];
 
-                    if ($CONFIG['MailType'] == "mail") {
-                        $mail->Mailer = "mail";
-                    } else {
-                        if ($CONFIG['MailType'] == "smtp") {
-                            $mail->IsSMTP();
-                            $mail->Host = $CONFIG['SMTPHost'];
-                            $mail->Port = $CONFIG['SMTPPort'];
-                            $mail->Hostname = $_SERVER['SERVER_NAME'];
+                $ra->load_class("phpmailer");
+                $mail = new PHPMailer();
+                $mail->From = $CONFIG['SystemEmailsFromEmail'];
+                $mail->FromName = html_entity_decode($CONFIG['SystemEmailsFromName'], ENT_QUOTES);
+                $mail->Subject = "Admin Password Reset Request";
+                $mail->CharSet = $CONFIG['Charset'];
 
-                            if ($CONFIG['SMTPSSL']) {
-                                $mail->SMTPSecure = $CONFIG['SMTPSSL'];
-                            }
+                if ($CONFIG['MailType'] == "mail") {
+                    $mail->Mailer = "mail";
+                } else {
+                    if ($CONFIG['MailType'] == "smtp") {
+                        $mail->IsSMTP();
+                        $mail->Host = $CONFIG['SMTPHost'];
+                        $mail->Port = $CONFIG['SMTPPort'];
+                        $mail->Hostname = $_SERVER['SERVER_NAME'];
 
-
-                            if ($CONFIG['SMTPUsername']) {
-                                $mail->SMTPAuth = true;
-                                $mail->Username = $CONFIG['SMTPUsername'];
-                                $mail->Password = decrypt($CONFIG['SMTPPassword']);
-                            }
-
-                            $mail->Sender = $mail->From;
+                        if ($CONFIG['SMTPSSL']) {
+                            $mail->SMTPSecure = $CONFIG['SMTPSSL'];
                         }
+
+
+                        if ($CONFIG['SMTPUsername']) {
+                            $mail->SMTPAuth = true;
+                            $mail->Username = $CONFIG['SMTPUsername'];
+                            $mail->Password = decrypt($CONFIG['SMTPPassword']);
+                        }
+
+                        $mail->Sender = $mail->From;
                     }
-
-
-                    if ($smtp_debug) {
-                        $mail->SMTPDebug = true;
-                    }
-
-                    $mail->Body = $message;
-                    $mail->AddAddress($email);
-
-                    if (!$mail->Send()) {
-                        echo "Password Reset</strong></span><br />There was an error sending the email. Please try again.";
-                    } else {
-                        echo "Password Reset</strong></span><br />Success! Please check your email for the next step...";
-                        logActivity("Password Reset Initiated for Admin Username " . $username);
-                    }
-
-                    $mail->ClearAddresses();
                 }
-            }
-        } else {
-            echo "Password Reset</strong></span><br>Enter your email address below to begin the process";
-        }
 
-        echo "  </div>
-  <div id=\"login\">
-    <form action=\"login.php\" method=\"post\" name=\"frmlogin\" id=\"frmlogin\">
-    <input type=\"hidden\" name=\"action\" value=\"reset\" />
-    <input type=\"hidden\" name=\"sub\" value=\"send\" />
-      <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\">";
-        echo "<s";
-        echo "trong>Email</strong></td>
-          <td align=\"left\" valign=\"middle\"><input type=\"text\" name=\"email\" size=\"30\" /></td>
-        </tr>
-        <tr>
-          <td width=\"30%\" align=\"right\" valign=\"middle\"></td>
-          <td><input type=\"submit\" value=\"Reset Password\"/></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-";
+
+                if ($smtp_debug) {
+                    $mail->SMTPDebug = true;
+                }
+
+                $mail->Body = $message;
+                $mail->AddAddress($email);
+
+                if (!$mail->Send()) {
+                    $msgtitle = "Password Reset";
+                    $msg = "There was an error sending the email. Please try again.";
+                } else {
+                    $msgtitle = "Password Reset";
+                    $msg = "Success! Please check your email for the next step...";
+                    logActivity("Password Reset Initiated for Admin Username " . $username);
+                }
+
+                $mail->ClearAddresses();
+            }
+        }
+    } else {
+        $msgtitle = "Password Reset";
+        $msg = "Enter your email address below to begin the process";
     }
 }
-
-echo "  <div id=\"extRA_info\">
-    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">
-      <tr>
-        <td align=\"left\" valign=\"middle\">IP Logged: ";
-echo "<s";
-echo "trong>";
-echo $remote_ip;
-echo "</strong></td>
-        <td align=\"right\" valign=\"middle\">Powered by <a href=\"#\" target=\"_blank\">Robotic Accounting</a></td>
-      </tr>
-    </table>
-  </div>
-</div>
-<div align=\"center\">";
-
-if ($CONFIG['SystemSSLURL'] && !$CONFIG['AdminForceSSL']) {
-    echo "<a href=\"";
-    echo $CONFIG['SystemSSLURL'] . "/" . $adminfolder;
-    echo "\">Secure SSL Access</a>";
-}
-
-
-
-echo "</div>
-";
-echo "<s";
-echo "cript type=\"text/javascript\">
-$(\"form input:text:visible:first\").focus();
-</script>
-</body>
-</html>
-";
+$smarty->assign("msg", $msg);
+$smarty->assign("msgtitle", $msgtitle);
+$smarty->assign("backupcode", $backupcode);
+$smarty->assign("remote_ip", $remote_ip);
+$smarty->assign("action", $action); 
+$smarty->display(ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/ra_flat/login.tpl");
 ?>

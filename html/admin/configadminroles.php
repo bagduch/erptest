@@ -154,7 +154,7 @@ if (!$action) {
     $totalpermissionspercolumn = round($totalpermissions / 3);
     $rowcount = 0;
     $colcount = 0;
-    $permissionsfieldhtml = "<table width=\"100%\"><tr><td valign=\"top\" width=\"34%\">";
+    $permissionsfieldhtml = "<table class=\"borderless\" width=\"100%\"><tr><td valign=\"top\" width=\"34%\">";
     foreach ($adminpermsarray as $k => $v) {
         $permissionsfieldhtml.= ("<input type=\"checkbox\" name=\"adminperms[" . $k . "]") . "\" id=\"adminperms" . $k . "\"";
         $result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $id, "permid" => $k));

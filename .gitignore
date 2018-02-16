@@ -7,3 +7,4 @@ configuration.php
 .vagrant
 *.retry
 *.ignore
+html/nbproject

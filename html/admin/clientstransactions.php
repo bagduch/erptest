@@ -97,8 +97,8 @@ if ($action == "") {
     echo $infobox;
     $result = select_query_i("tblaccounts", "SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout)", array("userid" => $userid));
     $data = mysqli_fetch_array($result);
-    echo "
-<table width=90% cellspacing=1 cellpadding=5 bgcolor=\"#CCCCCC\" align=\"center\"><tr bgcolor=\"#f4f4f4\" style=\"text-align:center\"><td><a href=\"";
+    echo "<div class=\"card\"><div class=\"content\">
+<table width=90% cellspacing=1 cellpadding=5 bgcolor=\"#CCCCCC\" align=\"center\"><tr style=\"text-align:center\"><td><a href=\"";
     echo $PHP_SELF;
     echo "?userid=";
     echo $userid;
@@ -177,7 +177,7 @@ if ($action == "") {
     echo "?userid=";
     echo $userid;
     echo "&sub=add\" name=\"calendarfrm\">
-
+<div class=\"card\"><div class=\"content\">
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td width=\"15%\" class=\"fieldlabel\">";
     echo $aInt->lang("fields", "date");
@@ -212,9 +212,11 @@ if ($action == "") {
 
 <p align=\"center\"><input type=\"submit\" value=\"";
     echo $aInt->lang("transactions", "add");
-    echo "\" class=\"button\"></p>
+    echo "\" class=\"btn btn-success\"></p>
 
 </form>
+</div>
+</div>
 
 ";
 } else if ($action == "edit") {
@@ -285,9 +287,7 @@ if ($action == "") {
 <p align=\"center\"><input type=\"submit\" value=\"";
     echo $aInt->lang("global", "savechanges");
     echo "\" class=\"button\"></p>
-
-</form>
-
+</form></div></div>
 ";
 } else {
     

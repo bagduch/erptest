@@ -121,8 +121,8 @@ class RA_ListTable {
         $page = $this->getPageObj()->getPage();
         $pages = $this->getPageObj()->getTotalPages();
         $numResults = $this->getPageObj()->getNumResults();
-        $content = "<div class=\"box\"><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?filter=1\">
-            <div class=\"box-header\">
+        $content = "<div class=\"card\"><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?filter=1\">
+            <div class=\"header card-header-text\">
 <table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\"><tr>
 <td width=\"50%\" align=\"left\">" . $numResults . " " . $aInt->lang("global", "recordsfound") . ", " . $aInt->lang("global", "page") . " " . $page . " " . $aInt->lang("global", "of") . " " . $pages . "</td>
 <td width=\"50%\" align=\"right\">" . $aInt->lang("global", "jumppage") . ": <select name=\"page\" onchange=\"submit()\">";
@@ -140,7 +140,7 @@ class RA_ListTable {
         }
 
         $content .= "</select> <input type=\"submit\" value=\"" . $aInt->lang("global", "go") . "\" class=\"btn-small\" /></td>
-</tr></table></div>
+</tr></table>
 </form>
 ";
         $this->addOutput($content);
@@ -151,7 +151,7 @@ class RA_ListTable {
 
         $orderby = $this->getPageObj()->getOrderBy();
         $sortDirection = $this->getPageObj()->getSortDirection();
-        $content = "<div class=\"box-body\">";
+        $content = "<div class=\"content\">";
 
         if ($this->getMassActionURL()) {
             $content .= "<form method=\"post\" action=\"" . $this->getMassActionURL() . "\">";
@@ -268,8 +268,8 @@ $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",
 
     public function outputTablePagination() {
         global $aInt;
-
-        $content = "<p align=\"center\">";
+ 
+        $content = "<div class=\"card-footer text-center\">";
         $prevPage = $this->getPageObj()->getPrevPage();
         $nextPage = $this->getPageObj()->getNextPage();
 
@@ -291,7 +291,7 @@ $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",
             $content .= $aInt->lang("global", "nextpage");
         }
 
-        $content .= "</p>";
+        $content .= "</div></div>";
         $this->addOutput($content);
     }
 

@@ -1,9 +1,9 @@
 <?php
+
 /**
  *
  * @ RA
- **/
-
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Email Message Log");
@@ -48,7 +48,7 @@ if ($action == "delete") {
 }
 
 $aInt->valUserID($userid);
-ob_start();
+
 $jscode = "";
 
 if ($action == "send") {
@@ -76,10 +76,9 @@ while ($data = mysqli_fetch_array($result)) {
     $tabledata[] = array($date, "<a href=\"#\" onClick=\"window.open('clientsemails.php?&displaymessage=true&id=" . $id . "','','width=650,height=400,scrollbars=yes');return false\">" . $subject . "</a>", "<a href=\"sendmessage.php?resend=true&emailid=" . $id . "\"><img src=\"images/icons/resendemail.png\" border=\"0\" alt=\"" . $aInt->lang("emails", "resendemail") . "\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("global", "delete") . "\" /></a>");
 }
 
-echo $aInt->sortableTable(array(array("date", $aInt->lang("fields", "date")), array("subject", $aInt->lang("emails", "subject")), "", ""), $tabledata);
-$content = ob_get_contents();
-ob_end_clean();
-$aInt->content = $content;
+$table = $aInt->sortableTable(array(array("date", $aInt->lang("fields", "date")), array("subject", $aInt->lang("emails", "subject")), "", ""), $tabledata);
+$aInt->template = 'client/email';
+$aInt->assign('table',$table);
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
 $aInt->display();

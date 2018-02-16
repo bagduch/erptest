@@ -168,7 +168,7 @@ if ($action == "deactivate") {
     redir("deactivated=true");
     exit();
 }
-ob_start();
+
 if ($action == "") {
     if ($ra->get_req_var("saved")) {
         infoBox($aInt->lang("addonmodules", "changesuccess"), $aInt->lang("addonmodules", "changesuccessinfo"));
@@ -219,20 +219,20 @@ if ($action == "") {
         infoBox($title, $desc, $status);
     }
 
-    echo $infobox;
+//    echo $infobox;
     $aInt->deleteJSConfirm("deactivateMod", "addonmodules", "deactivatesure", $_SERVER['PHP_SELF'] . "?action=deactivate&module=");
     $jscode = "function showConfig(module) {
     $(\"#\"+module+\"config\").fadeToggle();
 }";
-    echo "<p>" . $aInt->lang("addonmodules", "description") . "</p>
-
-<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">
-<input type=\"hidden\" name=\"action\" value=\"save\" />
-
-<div class=\"tablebg\">
-<table class=\"datatable\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
-<tr><th>" . $aInt->lang("addonmodules", "module") . "</th><th width=\"100\">" . $aInt->lang("global", "version") . "</th><th width=\"100\">" . $aInt->lang("addonmodules", "author") . "</th><th width=\"350\"></th></tr>
-";
+//    echo "<p>" . $aInt->lang("addonmodules", "description") . "</p>
+//
+//<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">
+//<input type=\"hidden\" name=\"action\" value=\"save\" />
+//
+//<div class=\"tablebg\">
+//<table class=\"datatable\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
+//<tr><th>" . $aInt->lang("addonmodules", "module") . "</th><th width=\"100\">" . $aInt->lang("global", "version") . "</th><th width=\"100\">" . $aInt->lang("addonmodules", "author") . "</th><th width=\"350\"></th></tr>
+//";
     $modulevars = $addonmodulesperms = array();
     $result = select_query_i("tbladdonmodules", "", "");
 
@@ -240,107 +240,96 @@ if ($action == "") {
         $modulevars[$data['module']][$data['setting']] = $data['value'];
     }
 
+    $moduletable = array();
+    $adminrolelist = array();
     foreach ($addon_modules as $module => $vals) {
-        $bgcolor = (in_array($module, $activemodules) ? "FDF4E8" : "fff");
-        echo "<tr><td style=\"background-color:#" . $bgcolor . ";text-align:left;\"><a name=\"act" . $module . "\"></a><a name=\"" . $module . "\"></a>";
 
+
+        $bgcolor = (in_array($module, $activemodules) ? "FDF4E8" : "fff");
         if (array_key_exists("logo", $vals)) {
-            echo "<div style=\"float:left;padding:5px 15px;\"><img src=\"" . $vals['logo'] . "\" /></div><div style=\"float:left;\">";
+            $logo = $vals['logo'];
         }
 
-        echo "<b>&nbsp;&raquo; " . $vals['name'] . "</b>";
 
         if (array_key_exists("premium", $vals)) {
-            echo " <span class=\"label closed\">Premium</span>";
+            $premium = " <span class=\"label closed\">Premium</span>";
         }
 
 
         if ($vals['description']) {
-            echo "<br />" . $vals['description'];
+            $des = $vals['description'];
         }
-
-
-        if (array_key_exists("logo", $vals)) {
-            echo "</div>";
-        }
-
-        echo "</td><td style=\"background-color:#" . $bgcolor . ";text-align:center;\">" . $vals['version'] . "</td><td style=\"background-color:#" . $bgcolor . ";text-align:center;\">" . $vals['author'] . "</td><td style=\"background-color:#" . $bgcolor . ";text-align:center;\">";
 
         if (!in_array($module, $activemodules)) {
-            echo "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "activate") . "\" onclick=\"window.location='" . $_SERVER['PHP_SELF'] . "?action=activate&module=" . $module . generate_token("link") . "'\" class=\"btn-success\" /> ";
+            //    $active = "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "activate") . "\" onclick=\"window.location='" . $_SERVER['PHP_SELF'] . "?action=activate&module=" . $module . generate_token("link") . "'\" class=\"btn-success\" /> ";
+            $active = true;
         } else {
-            echo "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "activate") . "\" disabled=\"disabled\" class=\"btn disabled\" /> ";
+            //  $noactive = "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "activate") . "\" disabled=\"disabled\" class=\"btn disabled\" /> ";
+            $active = false;
         }
 
 
         if (in_array($module, $activemodules)) {
-            echo "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "deactivate") . "\" onclick=\"deactivateMod('" . $module . "');return false\" class=\"btn-danger\" /> ";
+            $deactive = true;
         } else {
-            echo "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "deactivate") . "\" disabled=\"disabled\" class=\"btn disabled\" /> ";
+            $deactive = false;
         }
 
-        echo "<input type=\"button\" value=\"" . $aInt->lang("addonmodules", "config") . "\" class=\"btn" . (in_array($module, $activemodules) ? "" : " disabled") . "\" onclick=\"showConfig('" . $module . "')\" />";
-        echo "</td></tr>";
-
-        if (in_array($module, $activemodules)) {
-            if (file_exists(ROOTDIR . ("/modules/addons/" . $module . "/hooks.php"))) {
-                $addonmodulehooks[] = $module;
-            }
-
-            echo "<tr><td id=\"" . $module . "config\" colspan=\"4\" style=\"display:none;padding:15px;\">";
-
-            if ($vals['version'] != $aInt->lang("addonmodules", "legacy") && $modulevars[$module]['version'] != $vals['version']) {
-                if (function_exists($module . "_upgrade")) {
-                    call_user_func($module . "_upgrade", $modulevars);
-                }
-
-                update_query("tbladdonmodules", array("value" => $vals['version']), array("module" => $module, "setting" => "version"));
-            }
-
-            echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
-            foreach ($vals['fields'] as $key => $values) {
-                $values['Name'] = "fields[" . $module . "][" . $key . "]";
-                $values['Value'] = $modulevars[$module][$key];
-                echo "<tr><td class=\"fieldlabel\">" . $values['FriendlyName'] . "</td><td class=\"fieldarea\">" . moduleConfigFieldOutput($values) . "</td></tr>";
-            }
-
-            echo "<tr><td width=\"20%\" class=\"fieldlabel\">" . $aInt->lang("addonmodules", "accesscontrol") . "</td><td class=\"fieldarea\">" . $aInt->lang("addonmodules", "rolechoose") . ":<br />";
-            $allowedroles = explode(",", $modulevars[$module]['access']);
-            $result = select_query_i("tbladminroles", "", "", "name", "ASC");
-
-            while ($data = mysqli_fetch_array($result)) {
-                $checked = "";
-
-                if (in_array($data['id'], $allowedroles)) {
-                    $addonmodulesperms[$data['id']][$module] = $vals['name'];
-                    $checked = " checked";
-                }
-
-                echo "<label><input type=\"checkbox\" name=\"access[" . $module . "][" . $data['id'] . "]\" value=\"1\"" . $checked . " /> " . $data['name'] . "</label> ";
-            }
-
-            echo "</td></tr>
-</table>
-<br />
-<div align=\"center\"><input type=\"submit\" name=\"msave_" . $module . "\" value=\"" . $aInt->lang("global", "savechanges") . "\" class=\"btn primary\" /></div>
-</td></tr>";
-            continue;
+        if (file_exists(ROOTDIR . ("/modules/addons/" . $module . "/hooks.php"))) {
+            $addonmodulehooks[] = $module;
         }
+        if ($vals['version'] != $aInt->lang("addonmodules", "legacy") && $modulevars[$module]['version'] != $vals['version']) {
+            if (function_exists($module . "_upgrade")) {
+                call_user_func($module . "_upgrade", $modulevars);
+            }
+            update_query("tbladdonmodules", array("value" => $vals['version']), array("module" => $module, "setting" => "version"));
+        }
+
+        foreach ($vals['fields'] as $key => $values) {
+            $values['Value'] = $modulevars[$module][$key];
+            $values['Name'] = "fields[" . $module . "][" . $key . "]";
+            $configvalues[$module][] = array(
+                'name' => "fields[" . $module . "][" . $key . "]",
+                'Value' => $modulevars[$module][$key],
+                'FriendlyName' => $values['FriendlyName'],
+                'fieldvalue' => moduleConfigFieldOutput($values),
+            );
+        }
+        $allowedroles = explode(",", $modulevars[$module]['access']);
+        $result = select_query_i("tbladminroles", "", "", "name", "ASC");
+
+        while ($data = mysqli_fetch_array($result)) {
+            $checked = "";
+
+            if (in_array($data['id'], $allowedroles)) {
+                $addonmodulesperms[$data['id']][$module] = $vals['name'];
+                $checked = " checked";
+            }
+//            $adminrolelist .= "<label><input type=\"checkbox\" name=\"access[" . $module . "][" . $data['id'] . "]\" value=\"1\"" . $checked . " /> " . $data['name'] . "</label> ";
+
+            $adminrolelist[$module][$data['id']] = $data;
+            $adminrolelist[$module][$data['id']]['check'] = $checked;
+        }
+
+        $moduletable[$module] = array(
+            'bgcolor' => $bgcolor,
+            'des' => $des,
+            'active' => $active,
+            'deactive' => $deactive,
+            'showconfig' => in_array($module, $activemodules) ? "" : " disabled",
+            'name' => $vals['name'],
+            'version' => $vals['version'],
+            'author' => $vals['author'],
+            'module' => $module,
+            'log' => $logo,
+        );
     }
+//   echo "<pre>", print_r($configvalues, 1), "</pre>";
+    $aInt->assign("adminrolelist", $adminrolelist);
+    $aInt->assign("configvalues", $configvalues);
+    $aInt->assign("token", generate_token("link"));
+    $aInt->assign("moduletable", $moduletable);
 
-    echo "
-</table>
-</div>
-
-</form>
-
-<script language=\"javascript\">
-$(document).ready(function(){
-    var modpass = window.location.hash;
-    if (modpass) $(modpass+\"config\").show();
-});
-</script>
-";
     update_query("tblconfiguration", array("value" => implode(",", $addonmodulehooks)), array("setting" => "AddonModulesHooks"));
     update_query("tblconfiguration", array("value" => serialize($addonmodulesperms)), array("setting" => "AddonModulesPerms"));
 }
@@ -350,8 +339,9 @@ if ($ra->get_req_var("savedref")) {
     redir("saved=true");
 }
 
-$content = ob_get_contents();
-ob_end_clean();
+
+$aInt->assign('infobox', $infobox);
+$aInt->template = "configaddonmods";
 $aInt->content = $content;
 $aInt->jscode = $jscode;
 $aInt->jquerycode .= $menuselect;
