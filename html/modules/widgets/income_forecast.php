@@ -42,7 +42,7 @@ function widget_income_forecast($vars) {
         foreach ($incomestats AS $currency => $data) {
             $currency = getCurrency("", $currency);
             $currencytotal = 0;
-            $content .= "<div style=\"float:left;margin:10px 0 10px 0;" . ((count($incomestats) > 1) ? 'width:50%;' : 'width:100%;') . "text-align:center;\"><span class=\"textred\"><b>{$currency['code']} " . $_ADMINLANG['currencies']['currency'] . "</b></span><br />
+            $content .= "<div style=\"text-align:center;\"><span class=\"textred\"><b>{$currency['code']} " . $_ADMINLANG['currencies']['currency'] . "</b></span><br />
     " . $_ADMINLANG['billingcycles']['monthly'] . ": " . ah_formatstat('Monthly', 'sum') . " (" . ah_formatstat('Monthly', 'count') . ")<br />
     " . $_ADMINLANG['billingcycles']['quarterly'] . ": " . ah_formatstat('Quarterly', 'sum') . " (" . ah_formatstat('Quarterly', 'count') . ")<br />
     " . $_ADMINLANG['billingcycles']['semiannually'] . ": " . ah_formatstat('Semi-Annually', 'sum') . " (" . ah_formatstat('Semi-Annually', 'count') . ")<br />

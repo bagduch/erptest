@@ -454,136 +454,133 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=deletegroup&id='+id+'" . ge
 }}";
 
 if ($action == "") {
-
     if ($deleted) {
         infoBox("Success", "The option group has been deleted successfully!");
     }
-
     if ($duplicated) {
         infoBox("Success", "The option group has been duplicated successfully!");
     }
 
-    echo $infobox;
     $aInt->sortableTableInit("nopagination");
     $result = select_query_i("tblcustomfieldsgroupnames", "", "", "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
+
         $id = $data['cfgid'];
         $name = $data['name'];
-        $tabledata[] = array($name, "<a href=\"" . $_SERVER['PHP_SELF'] . ("?action=managegroup&id=" . $id . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>"), "<a href=\"#\" onClick=\"doDelete('" . $id . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
+        $tabledata[] = array($id, $name);
     }
+
     $aInt->assign('tabledatas', $tabledata);
+    $aInt->assign("infobox", $infobox);
     $aInt->template = "customfieldgroup/configcustomfieldsgroup";
-} else {
-    if ($action == "managegroup") {
-        $productlinks = cfieldgroupToServices(null, $id);
-        $allservice = array();
-        $services = select_query_i('tblservices', "*");
-        while ($data = mysqli_fetch_array($services)) {
-            $allservice [$data['id']] = array(
-                'data' => $data,
-                'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
-            );
+} elseif ($action == "managegroup") {
+    $productlinks = cfieldgroupToServices(null, $id);
+    $allservice = array();
+    $services = select_query_i('tblservices', "*");
+    while ($data = mysqli_fetch_array($services)) {
+        $allservice [$data['id']] = array(
+            'data' => $data,
+            'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
+        );
+    }
+    $aInt->assign('productlinks', $allservice);
+    if ($id) {
+
+        if ($_GET['success']) {
+            infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
         }
-        $aInt->assign('productlinks', $allservice);
-        if ($id) {
-
-            if ($_GET['success']) {
-                infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
-            }
-            $action = "save";
-            $steptitle = "Manage Group";
-            $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ORDER BY tblcustomfields.sortorder";
-            $result = full_query_i($query);
-            $datas = array();
-            while ($data = mysqli_fetch_assoc($result)) {
-                $datas[$data['cfid']] = $data;
-            }
-            foreach ($datas as $cfid => $row) {
-                if (isset($datas[$row["parent_id"]])) {
-                    $datas[$row["parent_id"]]['children'][] = $row;
-                    unset($datas[$cfid]);
-                }
-            }
-            $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
-            $result = full_query_i($query);
-            $data2 = mysqli_fetch_assoc($result);
-            $name = $data2['name'];
-            $aInt->assign('datas', $datas);
-
-
-
-
-            $aInt->assign('name', $name);
-            $aInt->assign('id', $id);
-            $aInt->assign('infobox', $infobox);
-            $aInt->template = "customfieldgroup/managegroup";
-        } else {
-            $action = "savegroup";
-            checkPermission("Create New Products/Services");
-            $steptitle = "Create a New Group";
-            $id = "";
-           
-            $aInt->template = "customfieldgroup/creategroup";
+        $action = "save";
+        $steptitle = "Manage Group";
+        $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ORDER BY tblcustomfields.sortorder";
+        $result = full_query_i($query);
+        $datas = array();
+        while ($data = mysqli_fetch_assoc($result)) {
+            $datas[$data['cfid']] = $data;
         }
-
-        $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-
-        while ($data = mysqli_fetch_array($result)) {
-            $pid = $data['id'];
-            $groupname = $data['groupname'];
-            $name = $data['name'];
-            echo "<option value=\"" . $pid . "\"";
-
-            if (in_array($pid, $productlinks)) {
-                echo " selected";
+        foreach ($datas as $cfid => $row) {
+            if (isset($datas[$row["parent_id"]])) {
+                $datas[$row["parent_id"]]['children'][] = $row;
+                unset($datas[$cfid]);
             }
-
-            echo ">" . $groupname . " - " . $name . "</option>";
         }
+        $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
+        $result = full_query_i($query);
+        $data2 = mysqli_fetch_assoc($result);
+        $name = $data2['name'];
+        $aInt->assign('datas', $datas);
 
-        echo "</select></td></tr></table>";
+
+
+
+        $aInt->assign('name', $name);
+        $aInt->assign('id', $id);
+        $aInt->assign('infobox', $infobox);
+        $aInt->template = "customfieldgroup/managegroup";
     } else {
-        if ($action == "duplicategroup") {
-            checkPermission("Create New Products/Services");
-            echo "
+        $action = "savegroup";
+        checkPermission("Create New Products/Services");
+        $steptitle = "Create a New Group";
+        $id = "";
+
+        $aInt->template = "customfieldgroup/creategroup";
+    }
+
+    $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+
+    while ($data = mysqli_fetch_array($result)) {
+        $pid = $data['id'];
+        $groupname = $data['groupname'];
+        $name = $data['name'];
+        echo "<option value=\"" . $pid . "\"";
+
+        if (in_array($pid, $productlinks)) {
+            echo " selected";
+        }
+
+        echo ">" . $groupname . " - " . $name . "</option>";
+    }
+
+    echo "</select></td></tr></table>";
+} elseif ($action == "duplicategroup") {
+    checkPermission("Create New Products/Services");
+    echo "
 <p><b>Duplicate Group</b></p>
 
 <form method=\"post\" action=\"";
-            echo $PHP_SELF;
-            echo "?action=duplicate\">
+    echo $PHP_SELF;
+    echo "?action=duplicate\">
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td width=150 class=\"fieldlabel\">Existing Group</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"existinggroupid\">";
-            $result = select_query_i("tblcustomfieldsgroup", "", "", "id", "ASC");
+    echo "<s";
+    echo "elect name=\"existinggroupid\">";
+    $result = select_query_i("tblcustomfieldsgroup", "", "", "id", "ASC");
 
-            while ($data = mysqli_fetch_array($result)) {
-                $id = $data['id'];
-                $name = $data['name'];
+    while ($data = mysqli_fetch_array($result)) {
+        $id = $data['id'];
+        $name = $data['name'];
 
 
 
-                echo "<option value=\"" . $id . "\">" . $name . "</option>";
-            }
+        echo "<option value=\"" . $id . "\">" . $name . "</option>";
+    }
 
-            echo "</select></td></tr>
+    echo "</select></td></tr>
 <tr><td class=\"fieldlabel\">New Group Name</td><td class=\"fieldarea\"><input type=\"text\" name=\"newgroupname\" size=\"50\"></td></tr>
 </table>
 <P ALIGN=\"center\"><input type=\"submit\" value=\"Continue >>\" class=\"button\"></P>
 </form>
 
 ";
-        }
-    }
+} else {
+    
 }
 
-$content = ob_get_contents();
-ob_end_clean();
-$aInt->content = $content;
+
+
 $aInt->jquerycode = $jquerycode;
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 $aInt->jscode = $jscode;
-//$aInt->template = "customfieldgroup/creategroup";
+//$aInt->template = "customfieldgroup/view";
 $aInt->display();
 ?>

@@ -46,7 +46,7 @@ if ($intellisearch) {
     if (checkPermission("List Clients", true) || checkPermission("View Clients Summary", true)) {
         $query = "SELECT id,firstname,lastname,companyname,email,status FROM tblclients WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
 
-      
+
         if (is_numeric($value)) {
             $query .= " OR id='" . $value . "'";
         }
@@ -320,50 +320,30 @@ $searchin = "";
 if ($type == "clients") {
     if ($field == "ID" || $field == "Client ID") {
         $searchin = "userid";
+    } elseif (($field == "First Name" || $field == "Last Name") || $field == "Client Name") {
+        $searchin = "clientname";
+    } elseif ($field == "Company Name") {
+        $searchin = "companyname";
+    } elseif ($field == "Email Address") {
+        $searchin = "email";
+    } elseif ($field == "Address 1") {
+        $searchin = "address";
+    } elseif ($field == "Address 2") {
+        $searchin = "address";
+    } elseif ($field == "City") {
+        $searchin = "address";
+    } elseif ($field == "State") {
+        $searchin = "address";
+    } elseif ($field == "Postcode") {
+        $searchin = "address";
+    } elseif ($field == "Country") {
+        $searchin = "country";
+    } elseif ($field == "Phone Number") {
+        $searchin = "phonenumber";
+    } elseif ($field == "CC Last Four") {
+        $searchin = "cardlastfour";
     } else {
-        if (($field == "First Name" || $field == "Last Name") || $field == "Client Name") {
-            $searchin = "clientname";
-        } else {
-            if ($field == "Company Name") {
-                $searchin = "companyname";
-            } else {
-                if ($field == "Email Address") {
-                    $searchin = "email";
-                } else {
-                    if ($field == "Address 1") {
-                        $searchin = "address";
-                    } else {
-                        if ($field == "Address 2") {
-                            $searchin = "address";
-                        } else {
-                            if ($field == "City") {
-                                $searchin = "address";
-                            } else {
-                                if ($field == "State") {
-                                    $searchin = "address";
-                                } else {
-                                    if ($field == "Postcode") {
-                                        $searchin = "address";
-                                    } else {
-                                        if ($field == "Country") {
-                                            $searchin = "country";
-                                        } else {
-                                            if ($field == "Phone Number") {
-                                                $searchin = "phonenumber";
-                                            } else {
-                                                if ($field == "CC Last Four") {
-                                                    $searchin = "cardlastfour";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        
     }
 
     redir("" . $searchin . "=" . $q, "clients.php");

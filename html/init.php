@@ -4,6 +4,7 @@
 ini_set("log_errors", 1);
 ini_set("display_errors", 1);
 ini_set("display_startup_errors", 1);
+ini_set('memory_limit', '1024M');
 ini_set("error_log", "templates_c/php_errors.log");
 error_reporting(E_ALL);
 

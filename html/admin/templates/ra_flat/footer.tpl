@@ -77,6 +77,9 @@
 
 {literal}
     <script type="text/javascript">
+                function goBack() {
+                    window.history.back();
+                }
     {/literal} {$jscode}{$jquerycode}{literal}
 
                 $(document).ready(function () {
@@ -85,7 +88,7 @@
                     demo.initCirclePercentage();
 
                     $("#intellisearchval").keyup(function () {
-                         $(".resultbox").hide();
+                        $(".resultbox").hide();
                         var value = $(this).val();
                         if (value.length > 2)
                         {
@@ -104,6 +107,7 @@
                             });
                         }
                     });
+
 
                 });
     </script>

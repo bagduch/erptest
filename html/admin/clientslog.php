@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @ RA
@@ -8,83 +9,53 @@
  * 
  * 
  *
- **/
-
+ * */
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Activity Log");
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
-ob_start();
-echo "
-<form method=\"post\" action=\"clientslog.php?userid=";
-echo $userid;
-echo "\">
-<div style=\"width:100%;margin:0 auto;background-color:#f4f4f4;border:1px solid #ccc;text-align:center;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;border-radius: 5px;\"><table cellpadding=\"6\" cellspacing=\"0\" align=\"center\"><tr><td><b>";
-echo $aInt->lang("global", "searchfilter");
-echo "</b></td><td>";
-echo $aInt->lang("fields", "date");
-echo ": <input type=\"text\" name=\"date\" value=\"";
-echo $date;
-echo "\" class=\"datepick\"></td><td>";
-echo $aInt->lang("fields", "description");
-echo ": <input type=\"text\" name=\"description\" value=\"";
-echo $description;
-echo "\" size=\"30\"></td><td>";
-echo $aInt->lang("fields", "username");
-echo ": ";
-echo "<s";
-echo "elect name=\"username\"><option value=\"\">Any</option>";
+
 $result = select_query_i("tblactivitylog", "DISTINCT user", "", "user", "ASC");
 
+
+$useroption = "";
 while ($data = mysqli_fetch_array($result)) {
-	$user = $data['user'];
-	echo "<option";
+    $user = $data['user'];
+    $useroption .= "<option";
 
-	if ($user == $username) {
-		echo " selected";
-	}
+    if ($user == $username) {
+        $useroption .= " selected";
+    }
 
-	echo ">" . $user . "</option>";
+    $useroption .= ">" . $user . "</option>";
 }
 
-echo "</select></td><td>";
-echo $aInt->lang("fields", "ipaddress");
-echo ": <input type=\"text\" name=\"ipaddress\" value=\"";
-echo $ipaddress;
-echo "\" size=\"20\"></td><td><input type=\"submit\" value=\"";
-echo $aInt->lang("system", "filterlog");
-echo "\" /></td></tr></table></div>
-</form>
-
-<br />
-
-";
 $aInt->sortableTableInit("date");
-$where = "userid='" . (int)$userid . "' AND ";
+$where = "userid='" . (int) $userid . "' AND ";
 
 if ($date) {
-	$where .= "date>'" . toMySQLDate($date) . "' AND date<='" . toMySQLDate($date) . "235959' AND ";
+    $where .= "date>'" . toMySQLDate($date) . "' AND date<='" . toMySQLDate($date) . "235959' AND ";
 }
 
 
 if ($username) {
-	$where .= "user='" . db_escape_string($username) . "' AND ";
+    $where .= "user='" . db_escape_string($username) . "' AND ";
 }
 
 
 if ($description) {
-	$where .= "description LIKE '%" . db_escape_string($description) . "%' AND ";
+    $where .= "description LIKE '%" . db_escape_string($description) . "%' AND ";
 }
 
 
 if ($ipaddress) {
-	$where .= " ipaddr='" . db_escape_string($ipaddress) . "' AND ";
+    $where .= " ipaddr='" . db_escape_string($ipaddress) . "' AND ";
 }
 
 
 if ($where) {
-	$where = substr($where, 0, 0 - 5);
+    $where = substr($where, 0, 0 - 5);
 }
 
 $result = select_query_i("tblactivitylog", "COUNT(*)", $where, "id", "DESC");
@@ -107,20 +78,23 @@ $replacements[] = "<a href=\"transactions.php?action=edit&id=$1\">Transaction ID
 $result = select_query_i("tblactivitylog", "", $where, "id", "DESC", $page * $limit . ("," . $limit));
 
 while ($data = mysqli_fetch_array($result)) {
-	$id = $data['id'];
-	$description = $data['description'];
-	$username = $data['user'];
-	$date = $data['date'];
-	$ipaddr = $data['ipaddr'];
-	$description .= " ";
-	$description = RAHtmlspecialchars($description);
-	$description = preg_replace($patterns, $replacements, $description);
-	$tabledata[] = array(fromMySQLDate($date, "time"), "<div align=\"left\">" . $description . "</div>", $username, $ipaddr);
+    $id = $data['id'];
+    $description = $data['description'];
+    $username = $data['user'];
+    $date = $data['date'];
+    $ipaddr = $data['ipaddr'];
+    $description .= " ";
+    $description = RAHtmlspecialchars($description);
+    $description = preg_replace($patterns, $replacements, $description);
+    $tabledata[] = array(fromMySQLDate($date, "time"), "<div align=\"left\">" . $description . "</div>", $username, $ipaddr);
 }
 
-echo $aInt->sortableTable(array("Date", "Description", "User", "IP Address"), $tabledata);
+$table = $aInt->sortableTable(array("Date", "Description", "User", "IP Address"), $tabledata);
 $content = ob_get_contents();
-ob_end_clean();
+
+$aInt->assign("useroption", $useroption);
+$aInt->assign("table", $table);
+$aInt->template = "client/clientlog";
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;

@@ -3,7 +3,7 @@
 define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
-$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
+//$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
 if ($action == "view") {
     $reqperm = "View Order Details";
 } else {
@@ -328,24 +328,16 @@ if (!$action) {
 
             if ($error == "noinvoice") {
                 infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundnoinvoice"), "error");
+            } elseif ($error == "notpaid") {
+                infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundnotpaid"), "error");
+            } elseif ($error == "alreadyrefunded") {
+                infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundalready"), "error");
+            } elseif ($error == "refundfailed") {
+                infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundfailedmsg"), "error");
+            } elseif ($error == "manual") {
+                infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundnoauto"), "error");
             } else {
-                if ($error == "notpaid") {
-                    infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundnotpaid"), "error");
-                } else {
-                    if ($error == "alreadyrefunded") {
-                        infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundalready"), "error");
-                    } else {
-                        if ($error == "refundfailed") {
-                            infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundfailedmsg"), "error");
-                        } else {
-                            if ($error == "manual") {
-                                infoBox($aInt->lang("orders", "statusrefundfailed"), $aInt->lang("orders", "statusrefundnoauto"), "error");
-                            } else {
-                                infoBox($aInt->lang("orders", "statusrefundsuccess"), $aInt->lang("orders", "statusrefundsuccessmsg"), "success");
-                            }
-                        }
-                    }
-                }
+                infoBox($aInt->lang("orders", "statusrefundsuccess"), $aInt->lang("orders", "statusrefundsuccessmsg"), "success");
             }
         }
         if ($ra->get_req_var("updatenotes")) {
@@ -385,20 +377,14 @@ if (!$action) {
         // $orderdata = unserialize($orderdata);
         if ($orderdata['invoiceid'] == "0") {
             $paymentstatus = "<span class=\"textgreen\">" . $aInt->lang("orders", "noinvoicedue") . "</span>";
+        } elseif (!$orderdata['invoicestatus']) {
+            $paymentstatus = "<span class=\"textred\">Invoice Deleted</span>";
+        } elseif ($orderdata['invoicestatus'] == "Paid") {
+            $paymentstatus = "<span class=\"textgreen\">" . $aInt->lang("status", "complete") . "</span>";
+        } elseif ($orderdata['invoicestatus'] == "Unpaid") {
+            $paymentstatus = "<span class=\"textred\">" . $aInt->lang("status", "incomplete") . "</span>";
         } else {
-            if (!$orderdata['invoicestatus']) {
-                $paymentstatus = "<span class=\"textred\">Invoice Deleted</span>";
-            } else {
-                if ($orderdata['invoicestatus'] == "Paid") {
-                    $paymentstatus = "<span class=\"textgreen\">" . $aInt->lang("status", "complete") . "</span>";
-                } else {
-                    if ($orderdata['invoicestatus'] == "Unpaid") {
-                        $paymentstatus = "<span class=\"textred\">" . $aInt->lang("status", "incomplete") . "</span>";
-                    } else {
-                        $paymentstatus = getInvoiceStatusColour($orderdata['invoicestatus']);
-                    }
-                }
-            }
+            $paymentstatus = getInvoiceStatusColour($orderdata['invoicestatus']);
         }
         run_hook("ViewOrderDetailsPage", array("orderid" => $id, "ordernum" => $ordernum, "userid" => $userid, "amount" => $amount, "paymentmethod" => $paymentmethod, "invoiceid" => $invoiceid, "status" => $orderstatus));
         $clientnotes = array();
@@ -416,7 +402,7 @@ if (!$action) {
             $notes = "<div id=\"clientsimportantnotes\">
 ";
             foreach ($clientnotes as $note) {
-                $notes.= "<div class=\"ticketstaffnotes\">
+                $notes .= "<div class=\"ticketstaffnotes\">
     <table class=\"ticketstaffnotestable\">
         <tr>
             <td>" . $note['adminuser'] . "</td>
@@ -431,7 +417,7 @@ if (!$action) {
 ";
             }
 
-            $notes.= "</div>";
+            $notes .= "</div>";
         }
 
 
@@ -439,9 +425,9 @@ if (!$action) {
 
         if ($promocode) {
             if (strpos($promotype, "Percentage")) {
-                $promocodetext.= $promocode . " - " . $promovalue . "% " . str_replace("Percentage", "", $promotype);
+                $promocodetext .= $promocode . " - " . $promovalue . "% " . str_replace("Percentage", "", $promotype);
             } else {
-                $promocodetext.= $promocode . " - " . formatCurrency($promovalue) . " " . str_replace("Fixed Amount", "", $promotype);
+                $promocodetext .= $promocode . " - " . formatCurrency($promovalue) . " " . str_replace("Fixed Amount", "", $promotype);
             }
         } else {
             $promocodetext = "None";
@@ -771,6 +757,9 @@ where tbo.id=" . $id;
         }
         $tabledata[] = array($data['type'], $created, $note, $data['name'], $data['assignname'], $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>", $noteid);
     }
+    
+    
+    
     $aInt->assign("tabledata", $tabledata);
     $aInt->assign("jquerycode", "adc");
     $aInt->assign("notes", $notes);
@@ -791,6 +780,6 @@ $aInt->assign("token", get_token());
 $aInt->assign("filterdata", RA_Cookie::get("FD", true));
 $aInt->assign("clientdropdown", $clients);
 $aInt->assign('table', $table);
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>

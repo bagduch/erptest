@@ -1,116 +1,120 @@
-<div class="box-header with-border">
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_overview" data-toggle="tab">Overview</a></li>
-            <li><a href="#tab_order" data-toggle="tab">Order</a></li>
-            <li><a href="#tab_account" data-toggle="tab">Product/Serivce</a></li>
-        </ul>
+<div class="card">
+    <div class="content">
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="tab_overview">
-                <table class="datatable table">
-                    <tr>
-                        <th>Create Date</th>
-                        <th>Notes</th>
-                        <th>Create Admin</th>
-                        <th>Assign To</th>
-                        <th>Due Date</th>
-                        <th>Update Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    {foreach from=$tabledata item=row}
-                        <tr class="itemrow_{$row[10]}">
-                            <td>{$row[1]}</td>
-                            <td>{$row[2]}</td>
-                            <td>{$row[3]}</td>
-                            <td>{$row[4]}</td>
-                            <td>{$row[5]}</td>
-                            <td>{$row[6]}</td>
-                            <td>{$row[7]}</td>
-                            <td>{$row[8]}{$row[9]}</td>
-                        </tr>
-                    {/foreach}
-                </table>
-            </div>
-            <div class="tab-pane " id="tab_order">
-                <table class="datatable table">
-                    <tr>
-                        <th>Create Date</th>
-                        <th>Notes</th>
-                        <th>Create Admin</th>
-                        <th>Assign To</th>
-                        <th>Due Date</th>
-                        <th>Update Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    {foreach from=$tabledata item=row}
-                        {if $row[0] eq 'order'}
-                            <tr class="itemrow_{$row[10]}">
-                                <td>{$row[1]}</td>
-                                <td>{$row[2]}</td>
-                                <td>{$row[3]}</td>
-                                <td>{$row[4]}</td>
-                                <td>{$row[5]}</td>
-                                <td>{$row[6]}</td>
-                                <td>{$row[7]}</td>
-                                <td>{$row[8]}{$row[9]}</td>
-                            </tr>
-                        {/if}
-                    {/foreach}
-                </table>
-            </div>
-            <div class="tab-pane " id="tab_account">
-                <table class="datatable table">
-                    <tr>
-                        <th>Create Date</th>
-                        <th>Notes</th>
-                        <th>Create Admin</th>
-                        <th>Assign To</th>
-                        <th>Due Date</th>
-                        <th>Update Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    {foreach from=$tabledata item=row}
-                        {if $row[0] eq 'account'}
-                            <tr class="itemrow_{$row[10]}">
-                                <td>{$row[1]}</td>
-                                <td>{$row[2]}</td>
-                                <td>{$row[3]}</td>
-                                <td>{$row[4]}</td>
-                                <td>{$row[5]}</td>
-                                <td>{$row[6]}</td>
-                                <td>{$row[7]}</td>
-                                <td>{$row[8]}{$row[9]}</td>
-                            </tr>
-                        {/if}
-                    {/foreach}
-                </table>
-            </div>
+        <div class="box-header with-border">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_overview" data-toggle="tab">Overview</a></li>
+                    <li><a href="#tab_order" data-toggle="tab">Order</a></li>
+                    <li><a href="#tab_account" data-toggle="tab">Product/Serivce</a></li>
+                </ul>
 
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_overview">
+                        <table class="datatable table">
+                            <tr>
+                                <th>Create Date</th>
+                                <th>Notes</th>
+                                <th>Create Admin</th>
+                                <th>Assign To</th>
+                                <th>Due Date</th>
+                                <th>Update Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            {foreach from=$tabledata item=row}
+                                <tr class="itemrow_{$row[10]}">
+                                    <td>{$row[1]}</td>
+                                    <td>{$row[2]}</td>
+                                    <td>{$row[3]}</td>
+                                    <td>{$row[4]}</td>
+                                    <td>{$row[5]}</td>
+                                    <td>{$row[6]}</td>
+                                    <td>{$row[7]}</td>
+                                    <td>{$row[8]}{$row[9]}</td>
+                                </tr>
+                            {/foreach}
+                        </table>
+                    </div>
+                    <div class="tab-pane " id="tab_order">
+                        <table class="datatable table">
+                            <tr>
+                                <th>Create Date</th>
+                                <th>Notes</th>
+                                <th>Create Admin</th>
+                                <th>Assign To</th>
+                                <th>Due Date</th>
+                                <th>Update Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            {foreach from=$tabledata item=row}
+                                {if $row[0] eq 'order'}
+                                    <tr class="itemrow_{$row[10]}">
+                                        <td>{$row[1]}</td>
+                                        <td>{$row[2]}</td>
+                                        <td>{$row[3]}</td>
+                                        <td>{$row[4]}</td>
+                                        <td>{$row[5]}</td>
+                                        <td>{$row[6]}</td>
+                                        <td>{$row[7]}</td>
+                                        <td>{$row[8]}{$row[9]}</td>
+                                    </tr>
+                                {/if}
+                            {/foreach}
+                        </table>
+                    </div>
+                    <div class="tab-pane " id="tab_account">
+                        <table class="datatable table">
+                            <tr>
+                                <th>Create Date</th>
+                                <th>Notes</th>
+                                <th>Create Admin</th>
+                                <th>Assign To</th>
+                                <th>Due Date</th>
+                                <th>Update Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            {foreach from=$tabledata item=row}
+                                {if $row[0] eq 'account'}
+                                    <tr class="itemrow_{$row[10]}">
+                                        <td>{$row[1]}</td>
+                                        <td>{$row[2]}</td>
+                                        <td>{$row[3]}</td>
+                                        <td>{$row[4]}</td>
+                                        <td>{$row[5]}</td>
+                                        <td>{$row[6]}</td>
+                                        <td>{$row[7]}</td>
+                                        <td>{$row[8]}{$row[9]}</td>
+                                    </tr>
+                                {/if}
+                            {/foreach}
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            {if $id}
+                <form method="post" action="{$PHP_SELF}?userid={$userid}amp;sub=save&amp;id={$id}&quot;">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr><td class="fieldarea"><textarea class="form-control" name="note" rows="6">{$notesdata.note}</textarea></td></tr>
+                            <tr><td><input name="duetime" class="datepick form-control" type="text" value="{$notesdata.duedate}"></td></tr>
+                            <tr>
+                                <td>
+                                    {$select}
+                                </td>
+                            </tr>
+                            <tr><td width="60"><label>Task Done:<input type="checkbox" class="checkbox" name="sticky" value="{$notesdata.sticky}" {if $notesdata.sticky}checked{/if}></label></td></tr>
+                            <tr><td><input type="submit" value="Save" changes="" class="button"></td></tr>
+                        </tbody>
+                    </table>
+                </form>
+            {/if}
         </div>
     </div>
-    {if $id}
-        <form method="post" action="{$PHP_SELF}?userid={$userid}amp;sub=save&amp;id={$id}&quot;">
-            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                <tbody>
-                    <tr><td class="fieldarea"><textarea class="form-control" name="note" rows="6">{$notesdata.note}</textarea></td></tr>
-                    <tr><td><input name="duetime" class="datepick form-control" type="text" value="{$notesdata.duedate}"></td></tr>
-                    <tr>
-                        <td>
-                            {$select}
-                        </td>
-                    </tr>
-                    <tr><td width="60"><label>Task Done:<input type="checkbox" class="checkbox" name="sticky" value="{$notesdata.sticky}" {if $notesdata.sticky}checked{/if}></label></td></tr>
-                    <tr><td><input type="submit" value="Save" changes="" class="button"></td></tr>
-                </tbody>
-            </table>
-        </form>
-    {/if}
 </div>
-
 {literal}
     <script type="text/javascript">
         $(".editnotes").click(function (e) {

@@ -98,13 +98,13 @@ function getClientfieldshtml($relid2 = FALSE) {
                             $input .= "</select>";
                         } else {
                             if ($fieldtype == "tickbox") {
-                                $input = (("<input type=\"checkbox\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\"");
+                                $input = (("<label class=\"checkbox\"><input data-toggle=\"checkbox\" type=\"checkbox\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\"");
 
                                 if ($customfieldval == "on") {
                                     $input .= " checked";
                                 }
 
-                                $input .= " />";
+                                $input .= " /></label>";
                             }
                         }
                     }

@@ -24,7 +24,7 @@ while ($data = mysqli_fetch_assoc($result)) {
     $product_data[$data['id']] = $data;
 }
 if (count($product_data) < 1) {
-    $aInt->gracefulExit("<a href=\"ordersadd.php?userid=" . $userid . "\">Add a Product</a>");
+    $aInt->gracefulExit("<a class=\"btn btn-success\" href=\"ordersadd.php?userid=" . $userid . "\">Add a Product</a>");
 }
 
 if ($modop) {

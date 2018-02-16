@@ -21,7 +21,7 @@ $aInt->requiredFiles(
 
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
+//$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($return) {
     unset($_SESSION['uid']);
 }

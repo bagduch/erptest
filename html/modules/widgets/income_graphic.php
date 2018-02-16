@@ -1,5 +1,4 @@
 <?php
-
 if (!defined("RA"))
     die("This file cannot be accessed directly");
 
@@ -17,7 +16,7 @@ function createDateRangeArray($strDateFrom, $strDateTo) {
     if ($iDateTo >= $iDateFrom) {
         array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
         while ($iDateFrom < $iDateTo) {
-            $iDateFrom+=86400; // add 24 hours
+            $iDateFrom += 86400; // add 24 hours
             array_push($aryRange, date('Y-m-d', $iDateFrom));
         }
     }
@@ -65,44 +64,97 @@ function widget_income_left_overview($vars) {
         $orders[date("Y-m-d", strtotime($data['date']))]['total'] ++;
     }
 
-    $dataarray = array();
+
+
+
+    $actual = array();
+    $pending = array();
     foreach ($income as $date => $row) {
-        $dataarray[] = array(
-            'y' => $date,
-            'item1' => $row['pending'],
-            'item2' => $row['actual']
-        );
+        $actual[] = $row['actual'];
+        $pending[] = $row['pending'];
     }
-    $dataarray = json_encode($dataarray);
-    $content = <<<EOF
-                <div class="chart tab-pane active" id="sales-chart" style="position: relative; height: 300px;"></div>
-                <script type="text/javascript">
-               var sarea = new Morris.Area({
-                    element: 'sales-chart',
-                    resize: true,
-                    behaveLikeLine: true,
-                    data: 
-           
-$dataarray
-                        ,
-                        xkey: 'y',
-                                ykeys: ['item1', 'item2'],
-                        labels: ['Potential Income', 'Actual income'],
-                                lineColors: ['#f0f0f0', '#aded7a'],
-                        preUnits: "$",
-                                hideHover: 'auto'
-                    });
 
-                    $('.box ul.nav a').on('shown.bs.tab', function () {
-                        sarea.redraw();
-                    });
-             </script>
-EOF;
+    $datePeriod = json_encode($datePeriod);
+    $actual = json_encode($actual);
+    $pending = json_encode($pending);
 
 
+    ob_start();
+    ?>
 
+
+    <canvas id="incomeChart"></canvas>
+    <script type="text/javascript">
+        function incomejqueryLoaded() {
+            //do stuff
+
+            $(document).ready(function () {
+                var incomeChartData = {
+                    labels: <?= $datePeriod ?>,
+
+                    datasets: [{
+                            type: 'line',
+                            label: 'Active',
+                            borderColor: "#7AC29A",
+                            backgroundColor: "#7AC29A",
+                            borderWidth: 2,
+                            fill: false,
+                            data: <?= $actual ?>
+                        }, {
+                            type: 'line',
+                            label: 'Pending',
+                            borderColor: "#7AC29A",
+                            backgroundColor: "#7AC29A",
+                            borderWidth: 2,
+                            fill: false,
+                            data: <?= $pending ?>
+                        }]
+
+                };
+
+
+                var incomeconfig = {
+                    type: 'line',
+                    data: incomeChartData,
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Income'
+                        },
+                        scales: {
+                            yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                        }
+                    }
+                }
+
+                if ($('#incomeChart')[0]) {
+                    var incomeChartCanvas = $("#incomeChart").get(0).getContext("2d");
+                    var incomeChart = new Chart(incomeChartCanvas, incomeconfig);
+
+                }
+            });
+        }
+        function incomecheckJquery() {
+            if (window.jQuery && jQuery.ui) {
+                incomejqueryLoaded();
+            } else {
+                window.setTimeout(incomecheckJquery, 100);
+            }
+        }
+        incomecheckJquery();
+    </script>
+    <?php
+    $content = ob_get_contents();
+    ob_end_clean();
     return array('title' => $title, 'content' => $content);
 }
-
-add_hook("AdminHomeWidgets", 1, "widget_income_left_overview");
+add_hook("AdminHomeWidgets", 3, "widget_income_left_overview");
 ?>

@@ -1,0 +1,3 @@
+<?php
+
+$radius = new RADIUS();

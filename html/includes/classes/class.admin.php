@@ -729,7 +729,7 @@ class RA_Admin {
         echo $content;
 
         if ($this->inClientsProfile) {
-            echo "</div></div></div>";
+            echo "</div>";
         }
 
         $this->smarty->display($this->adminTemplate . "/footer.tpl");
@@ -967,7 +967,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
                 ++$i;
             }
 
-            $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn-small\" /></td>
+            $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn btn-small\" /></td>
 </tr></table>
 </form>
 ";
@@ -1083,7 +1083,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             $content .= "<div class=\"clearfix\"></div><div class=\"left\">" . $this->lang("global", "withselected") . ": " . $formbuttons . "\r\n</form></div>\r\n";
         }
         $content .= "<div class=\"right\">" . $this->lang("global", "jumppage");
-        $content .= ": <select name=\"page\" onchange=\"submit()\">";
+        $content .= ": <select style=\"width: 80px;display: inline;\" class=\"form-control\" name=\"page\" onchange=\"submit()\">";
 
 
         $i = 1;
@@ -1099,7 +1099,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             ++$i;
         }
 
-        $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn-small\" /></div><div class=\"clearfix\"></div>";
+        $content .= "</select> <input type=\"submit\" value=\"" . $this->lang("global", "go") . "\" class=\"btn btn-small\" /></div><div class=\"clearfix\"></div>";
 
         if ($this->tablePagination) {
             $content .= "<p align=\"center\">";
@@ -1203,9 +1203,8 @@ where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . "
         $selectcompanyname = $data['companyname'];
 
 
-#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] 
-        echo "<h1>#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . "</h1>";
-        echo "  <div class=\"nav-tabs-custom\"><ul class=\"nav nav-tabs\">";
+        echo "<div class=\"row\"><div class=\"card\"><div class=\"row\"><div class=\"col-md-12\"><div class=\"header card-header-icon\"><h3 class=\"title\">#" . $data['id'] . "-" . $data['firstname'] . " " . $data['lastname'] . "</h3></div></div></div></div>";
+        echo "<div class=\"card\"> <div class=\"nav-navigation\"><ul class=\"nav nav-tabs\">";
         foreach ($tabarray as $link => $name) {
             if ($link == $this->filename) {
                 $class = " class=\"active\"";
@@ -1216,12 +1215,12 @@ where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . "
             printf("<li %s><a href=\"%s.php?userid=%d\">%s</a></li>", $class, $link, (int) $_GET['userid'], $name
             );
         }
-        echo "</ul>";
-        echo "<div id=\"tab0box\" class=\"tab-content\">\r\n  <div id=\"tab0\" style=\"text-align:left;\">";
+        echo "</ul></div></div>";
+//        echo "<div id=\"tab0box\" class=\"tab-content\">\r\n  <div id=\"tab0\" style=\"text-align:left;\">";
     }
 
     public function gracefulExit($msg) {
-        $this->exitmsg = "<div class=\"gracefulexit\">" . $msg . "</div>";
+        $this->exitmsg = "<div class=\"card\"><div class=\"content\">" . $msg . "</div></div>";
         $this->display();
         exit();
     }
