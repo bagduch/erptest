@@ -14,13 +14,6 @@ if (isset($_SESSION['adminid']) && !isset($_SESSION['2fabackupcodenew'])) {
     redir("", "index.php");
 }
 
-if ($CONFIG['AdminForceSSL'] && $CONFIG['SystemSSLURL']) {
-    if (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off") {
-        header("Location: " . $CONFIG['SystemSSLURL'] . "/" . $adminfolder);
-        exit();
-    }
-}
-
 $disableadminforgottenpw = ($ra->get_config("DisableAdminPWReset") ? true : false);
 $action = $ra->get_req_var("action");
 $sub = $ra->get_req_var("sub");
