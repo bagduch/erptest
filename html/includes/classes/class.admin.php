@@ -43,24 +43,6 @@ class RA_Admin {
         global $infobox;
         global $ra;
         $infobox = "";
-        if ($CONFIG['AdminForceSSL'] && $CONFIG['SystemSSLURL']) {
-            if (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off") {
-                $requesturl = $_SERVER['PHP_SELF'] . "?";
-                foreach ($_REQUEST as $key => $value) {
-
-                    if (!is_array($value)) {
-                        $requesturl .= "" . $key . "=" . urlencode($value) . "&";
-                        continue;
-                    }
-                }
-
-                $requesturl = substr($requesturl, 0, 0 - 1);
-                $requesturl = substr($requesturl, strrpos($requesturl, "/"));
-                header("Location: " . $CONFIG['SystemSSLURL'] . "/" . $ra->get_admin_folder_name() . $requesturl);
-                exit();
-            }
-        }
-
 
         if ($reqpermission == "loginonly") {
             $this->loginRequired = true;

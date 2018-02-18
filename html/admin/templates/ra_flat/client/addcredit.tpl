@@ -2,7 +2,7 @@
 <div class="card">
     <div class="row">
         <div class="col-md-12">
-            <form method="post" action="/admin/clientscredits.php?userid={$userid}&amp;sub=add">
+            <form method="post" action="clientscredits.php?userid={$userid}&amp;sub=add">
                 <input type="hidden" name="token" value="{$token}">
                 <div class="header card-header-text">
                     <h4 class="title">
@@ -27,7 +27,7 @@
                 <div class="footer">
                     <p align="center"> 
                         <input type="submit" value="Save Changes" class="btn">
-                        <a href="/admin/clientscredits.php?userid={$userid}" class="btn btn-danger">Cancel</a>
+                        <a href="clientscredits.php?userid={$userid}" class="btn btn-danger">Cancel</a>
                     </p>
                 </div>
 

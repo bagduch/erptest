@@ -2,7 +2,7 @@
     <div class="card">
         <div class="row">
             <div class="col-md-12">
-                <form method="post" action="/admin/clientsprofile.php?save=true&amp;userid={$clientsdetails.userid}">
+                <form method="post" action="clientsprofile.php?save=true&amp;userid={$clientsdetails.userid}">
                     {$infobox}
                     <div class="content">
                     <div class="row">

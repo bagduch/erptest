@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <h2>Edit Product</h2>
-        <form method="post" action="/admin/configproducts.php?action=save&amp;id={$services.id}" name="packagefrm">
+        <form method="post" action="configproducts.php?action=save&amp;id={$services.id}" name="packagefrm">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
@@ -433,12 +433,12 @@
 
         function deletecustomfield(id) {
             if (confirm("Are you sure you want to delete this field and ALL DATA associated with it?")) {
-                window.location = '/admin/configproducts.php?action=edit&id=3&tab=3&sub=deletecustomfield&fid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
+                window.location = 'configproducts.php?action=edit&id=3&tab=3&sub=deletecustomfield&fid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
         function deleteoption(id) {
             if (confirm("Are you sure you want to delete this product configuration?")) {
-                window.location = '/admin/configproducts.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
+                window.location = 'configproducts.php?action=edit&id=3&tab=4&sub=deleteoption&confid=' + id + '&token=6ca3bb31e4fdac841bf9a61cb01482dce4be5502';
             }
         }
         function showDialog(name) {

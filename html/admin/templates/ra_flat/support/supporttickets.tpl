@@ -9,7 +9,7 @@
     </div>
     <div class="box-body">
         <div clas="row">
-            <form action="/admin/supporttickets.php" method="post">
+            <form action="supporttickets.php" method="post">
 
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>

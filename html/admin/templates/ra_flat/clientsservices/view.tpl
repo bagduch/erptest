@@ -420,7 +420,7 @@
                 var type = $("input[name='rel_type']").val();
                 var account = $("input[name='account']").val();
                 $.ajax({
-                    url: "/admin/clientsnotes.php?sub=add",
+                    url: "clientsnotes.php?sub=add",
                     method: "post",
                     data: {
                         "userid":{/literal}{$userid}{literal},
@@ -439,12 +439,12 @@
 
         function doDeleteAddon(id) {
             if (confirm("Are you sure you want to delete this addon?")) {
-                window.location = '/admin/clientsservices.php?userid={/literal}{$userid}{literal}&action=deladdon&aid=' + id + '&token={/literal}{$token}{literal}';
+                window.location = 'clientsservices.php?userid={/literal}{$userid}{literal}&action=deladdon&aid=' + id + '&token={/literal}{$token}{literal}';
             }
         }
         function deleteaccount(id) {
             if (confirm("Are you sure you want to delete this account?")) {
-                window.location = '/admin/clientsservices.php?userid={/literal}{$userid}{literal}&action=delete&id=' + id + '&token={/literal}{$token}{literal}';
+                window.location = 'clientsservices.php?userid={/literal}{$userid}{literal}&action=delete&id=' + id + '&token={/literal}{$token}{literal}';
             }
         }
 

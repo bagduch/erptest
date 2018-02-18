@@ -9,7 +9,7 @@
                 <!-- /.box-tools -->
             </div>
             <div class="box-body">
-                <form action="/admin/invoices.php" method="post">
+                <form action="invoices.php" method="post">
                     <table class="form table">
                         <tbody>
                             <tr>

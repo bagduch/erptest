@@ -3,7 +3,7 @@
 <div class="row">
     <h1>Services</h1>
     <p><b>Options:</b>
-        <a href="/admin/configservices.php?action=creategroup">Create a New Group</a> | <a href="/admin/configservices.php?action=create">Create a New Service</a> | <a href="/admin/configservices.php?action=duplicate">Duplicate Service</a>
+        <a href="configservices.php?action=creategroup">Create a New Group</a> | <a href="configservices.php?action=create">Create a New Service</a> | <a href="configservices.php?action=duplicate">Duplicate Service</a>
     </p>
     <form method="post" action="configpservices.php?action=updatesort">
         <input type="hidden" name="token" value="a77ffd97d8a752f1165226d85ae274ae6f19f719">
@@ -22,7 +22,7 @@
                     </tr>
                     <tr>
                         <td colspan="6" style="background-color:#ffffdd;"><div align="left"><b>Group Name:</b> Broadband </div></td>
-                        <td style="background-color:#ffffdd;" align="center"><a href="/admin/configservices.php?action=editgroup&amp;ids=1">
+                        <td style="background-color:#ffffdd;" align="center"><a href="configservices.php?action=editgroup&amp;ids=1">
                                 <img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td><td style="background-color:#ffffdd;" align="center">
                             <a href="#" onclick="alert('You cannot delete a service group that contains services.');
                                     return false">
@@ -37,7 +37,7 @@
                         <td>Recurring</td>
                         <td>-</td>
                         <td>Off</td>
-                        <td><a href="/admin/configservices.php?action=edit&amp;id=3"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+                        <td><a href="configservices.php?action=edit&amp;id=3"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
                         <td><a href="#" onclick="alert('You cannot delete a service that is in use.  To delete the service, you need to first re-assign or remove the services using it.');
                                 return false"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a>
                         </td>
@@ -49,7 +49,7 @@
                         <td>Free</td>
                         <td>-</td>
                         <td>Off</td>
-                        <td><a href="/admin/configservices.php?action=edit&amp;id=4"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+                        <td><a href="configservices.php?action=edit&amp;id=4"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
                         <td><a href="#" onclick="doDelete('4');
                                 return false"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a></td>
                     </tr>

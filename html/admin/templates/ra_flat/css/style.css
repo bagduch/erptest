@@ -176,7 +176,7 @@ body{
     width: 130vw;
     height: 150vh;
     margin: -20vmin;
-    background-image: url(/admin/images/bg.jpg);
+    background-image: url(images/bg.jpg);
     background-size: 100% 100%;
     filter: blur(30px);
 }

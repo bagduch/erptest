@@ -73,7 +73,7 @@
                             </table>
                         </div>
                         <div role="tabpanel" id="tab1box" class="tabbox tab-pane">
-                            <form method="post" action="/admin/invoices.php">
+                            <form method="post" action="invoices.php">
                                 <input type="hidden" name="action" value="edit">
                                 <input type="hidden" name="id" value="{$invoice.id}">
                                 <input type="hidden" name="sub" value="markpaid">
@@ -105,7 +105,7 @@
                             </form>
                         </div>
                         <div  role="tabpanel" id="tab2box" class="tabbox tab-pane">
-                            <form method="post" action="/admin/invoices.php">
+                            <form method="post" action="invoices.php">
                                 <input type="hidden" name="action" value="edit">
                                 <input type="hidden" name="saveoptions" value="true">
                                 <input type="hidden" name="id" value="{$invoice.id}">
@@ -156,7 +156,7 @@
                             </form>
                         </div>
                         <div  role="tabpanel" id="tab5box" class="tabbox tab-pane">
-                            <form method="post" action="/admin/invoices.php">
+                            <form method="post" action="invoices.php">
                                 <input type="hidden" name="action" value="edit">
                                 <input type="hidden" name="id" value="{$invoice.id}">
                                 <input type="hidden" name="sub" value="markpaid">
@@ -238,7 +238,7 @@
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <form method="post" action="/admin/invoices.php">
+                                            <form method="post" action="invoices.php">
                                                 <input type="hidden" name="action" value="edit">
                                                 <input type="hidden" name="id" value="{$invoice.id}">
                                                 <input type="text" class="form-control" name="addcredit" value="0.00" size="8" disabled=""> 
@@ -246,7 +246,7 @@
                                             </form>
                                         </td>
                                         <td align="center">
-                                            <form method="post" action="/admin/invoices.php">
+                                            <form method="post" action="invoices.php">
                                                 <input type="hidden" name="action" value="edit">
                                                 <input type="hidden" name="id" value="{$invoice.id}">
                                                 <input type="text" class="form-control" name="removecredit" value="0.00" size="8" disabled="">
@@ -259,7 +259,7 @@
 
                         </div>
                         <div role="tabpanel" id="tab4box" class="tabbox tab-pane">
-                            <form method="post" action="/admin/invoices.php">
+                            <form method="post" action="invoices.php">
                                 <input type="hidden" name="token" value="{$token}">
                                 <input type="hidden" name="action" value="edit">
                                 <input type="hidden" name="id" value="{$invoice.id}">
@@ -279,7 +279,7 @@
                         <div  role="tabpanel" id="tab5box" class="tabbox tab-pane">
 
 
-                            <form method="post" action="/admin/invoices.php?save=notes">
+                            <form method="post" action="invoices.php?save=notes">
                                 <input type="hidden" name="token" value="{$token}">
                                 <input type="hidden" name="action" value="edit">
                                 <input type="hidden" name="id" value="{$invoice.id}">
@@ -302,7 +302,7 @@
                 <h4 class="title">Invoice Items</h4>
             </div>
             <div class="content">
-                <form method="post" action="/admin/invoices.php">
+                <form method="post" action="invoices.php">
                     <input type="hidden" name="token" value="{$token}">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="id" value="{$invoice.id}">
@@ -449,30 +449,30 @@
         {
             if (confirm("Are you sure you want to cancel this invoice?"))
             {
-                window.location = "/admin/invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=statuscancelled&token={/literal}{$tokens}{literal}";
+                window.location = "invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=statuscancelled&token={/literal}{$tokens}{literal}";
             }
         }
         function markUnpaid()
         {
             if (confirm("Are you sure you want to mark unpaid this invoice?"))
             {
-                window.location = "/admin/invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=statusunpaid&token={/literal}{$tokens}{literal}";
+                window.location = "invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=statusunpaid&token={/literal}{$tokens}{literal}";
             }
 
         }
         function doDelete(id) {
             if (confirm("Are you sure you want to delete this invoice item?")) {
-                window.location = '/admin/invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=delete&token={/literal}{$tokens}{literal}&iid=' + id;
+                window.location = 'invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=delete&token={/literal}{$tokens}{literal}&iid=' + id;
             }
         }
         function doDeleteTransaction(id) {
             if (confirm("Are you sure you want to delete this transaction?")) {
-                window.location = '/admin/invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=deletetrans&token={/literal}{$tokens}{literal}&ide=' + id;
+                window.location = 'invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=deletetrans&token={/literal}{$tokens}{literal}&ide=' + id;
             }
         }
         function attemptpayment() {
             if (confirm("Are you sure you want to attempt payment for this invoice?")) {
-                window.location = '/admin/invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=attemptpayment&token={/literal}{$tokens}{literal}';
+                window.location = 'invoices.php?action=edit&id={/literal}{$invoice.id}{literal}&sub=attemptpayment&token={/literal}{$tokens}{literal}';
             }
         }
         function showrefundtransid() {

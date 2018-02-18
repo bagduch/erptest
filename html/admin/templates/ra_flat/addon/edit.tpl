@@ -1,6 +1,6 @@
 
 
-<form method="post" action="/admin/configaddons.php?action=save&amp;id=1">
+<form method="post" action="configaddons.php?action=save&amp;id=1">
     <input type="hidden" name="token" value="526b26301bb68fce470779db889e9f2dd30aede6">
     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
         <tbody>

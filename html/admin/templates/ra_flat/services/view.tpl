@@ -4,7 +4,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="header card-header">
-                <p><strong>Options:</strong> <a class="btn btn-default" href="/admin/configservices.php?action=creategroup">Create Group</a> <a class="btn btn-default" href="/admin/configservices.php?action=create">Create Service</a></p>
+                <p><strong>Options:</strong> <a class="btn btn-default" href="configservices.php?action=creategroup">Create Group</a> <a class="btn btn-default" href="configservices.php?action=create">Create Service</a></p>
             </div>
             <div class="box-body">
                 <form method="post" action="configservices.php?action=updatesort">
@@ -27,7 +27,7 @@
                                             <div align="left"><b>{$langs.groupname}:</b> {$servicesg.group.name} </div>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
-                                            <a href="/admin/configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                            <a href="configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
                                             <a href="#" onclick="{$servicesg.group.deletelink}">
@@ -43,7 +43,7 @@
                                             <td>{$servicedata.paytype}</td>
                                             <td>-</td>
                                             <td>{$service.autosetup}</td>
-                                            <td><a href="/admin/configservices.php?action=edit&amp;id={$sid}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                                            <td><a href="configservices.php?action=edit&amp;id={$sid}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
                                             <td><a href="#" onclick="{$servicedata.deletelink}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                     {/foreach}

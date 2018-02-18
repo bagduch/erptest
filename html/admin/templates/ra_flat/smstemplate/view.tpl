@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header">
-                <form method="post" action="/admin/configesmstemplates.php?action=new">
+                <form method="post" action="configesmstemplates.php?action=new">
                     <label>Group:</label>
                     <select name="smsgrp" class="form-control">
                         <option value=""></option>

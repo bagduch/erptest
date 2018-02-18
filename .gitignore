@@ -8,3 +8,5 @@ configuration.php
 *.retry
 *.ignore
 html/nbproject
+xdebug/
+html/.well-known/

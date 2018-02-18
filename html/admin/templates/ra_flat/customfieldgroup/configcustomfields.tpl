@@ -2,7 +2,7 @@
 
 
 <p>This is where you configure custom fields which appear in the clients profile.</p>
-<form method="post" action="/admin/configcustomfields.php?action=save">
+<form method="post" action="configcustomfields.php?action=save">
     <b>Add New Custom Field</b><br><br>
 
     {if $infobox}

@@ -2,7 +2,7 @@
     <h1></h1>
     <h2>Duplicate Service</h2>
 
-    <form method="post" action="/admin/configservices.php?action=duplicatenow">
+    <form method="post" action="configservices.php?action=duplicatenow">
         <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody>
                 <tr>

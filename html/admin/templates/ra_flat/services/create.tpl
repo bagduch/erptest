@@ -10,7 +10,7 @@
                 <div class="box-title">
                     <h2>Create Service</h2>
                 </div>
-                <form method="post" action="/admin/configservices.php?action=add" name="packagefrm">
+                <form method="post" action="configservices.php?action=add" name="packagefrm">
                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr>

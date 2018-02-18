@@ -22,7 +22,7 @@
                             {foreach from=$row key=accountid item=item}
                                 <tr>
                                     <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
-                                    <td><a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
+                                    <td><a href="clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
                                     <td>
@@ -33,7 +33,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a href="clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             {/foreach}
@@ -58,7 +58,7 @@
                             {foreach from=$row item=item}
                                 <tr>
                                     <td>{if $id eq $item.id}<i class="fa fa-fw fa-arrow-right"></i>{/if}</td>
-                                    <td><a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
+                                    <td><a href="clientproduct.php?userid={$userid}&id={$item.id}">{$item.id}</a></td>
                                     <td>{$item.name}</td>
                                     <td>{$item.description}</td>
                                     <td>
@@ -69,7 +69,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/admin/clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a href="clientproduct.php?userid={$userid}&id={$item.id}" class="btn btn-success tableitem"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             {/foreach}

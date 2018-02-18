@@ -10,7 +10,7 @@
 
 
                     <div class="collapse" id="collapseExample">
-                        <form action="/admin/clientsinvoices.php?userid={$userid}" method="post">
+                        <form action="clientsinvoices.php?userid={$userid}" method="post">
                             <table class="table borderless" width="100%" border="0" cellspacing="2" cellpadding="3">
                                 <tbody>
                                     <tr>
@@ -84,7 +84,7 @@
                     <div id="paymentadd{$data.id}" role="dialog" class="modal fade">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-                                <form method="post" action="/admin/clientsinvoices.php?userid={$userid}">
+                                <form method="post" action="clientsinvoices.php?userid={$userid}">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span></button>

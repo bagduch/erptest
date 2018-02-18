@@ -2,7 +2,7 @@
     <div class="col-lg-12">
         <div class="box">
             <div class="box-body">
-                <form method="post" action="/admin/configproducts.php?sub=savegroup&amp;ids={$groupdata.id}">
+                <form method="post" action="configproducts.php?sub=savegroup&amp;ids={$groupdata.id}">
                     <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr>

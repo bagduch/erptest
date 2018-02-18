@@ -1,6 +1,6 @@
 <section class="content">
     <p><strong>Duplicate Role Group</strong></p>
-    <form method="post" action="/admin/configadminroles.php?action=duplicaterole">
+    <form method="post" action="configadminroles.php?action=duplicaterole">
         <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
             <tbody>
                 <tr>
