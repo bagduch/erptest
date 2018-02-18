@@ -3,8 +3,8 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="header card-header">
-                <p><strong>Options:</strong> <a class="btn btn-default" href="/admin/configproducts.php?action=creategroup">Create Group</a>
-                    <a class="btn btn-default" href="/admin/configproducts.php?action=create">Create Product</a></p>
+                <p><strong>Options:</strong> <a class="btn btn-default" href="configproducts.php?action=creategroup">Create Group</a>
+                    <a class="btn btn-default" href="configproducts.php?action=create">Create Product</a></p>
             </div>
             <div class="box-body">
                 <form method="post" action="configservices.php?action=updatesort">
@@ -25,7 +25,7 @@
                                             <div align="left"><b>{$langs.groupname}:</b> {$servicesg.group.name} </div>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
-                                            <a href="/admin/configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
+                                            <a href="configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
                                             <a href="#" onclick="{$servicesg.group.deletelink}">
@@ -39,7 +39,7 @@
                                             <td>{$servicedata.cost}</td>
                                             <td>{$servicedata.price}</td>
                                             <td>{$servicedata.stock}</td>
-                                            <td><a href="/admin/configproducts.php?action=edit&amp;id={$sid}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+                                            <td><a href="configproducts.php?action=edit&amp;id={$sid}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
                                             <td><a href="#" onclick="{$servicedata.deletelink}"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a></td>
                                         </tr>
                                     {/foreach}

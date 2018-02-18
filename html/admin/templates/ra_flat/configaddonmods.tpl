@@ -9,7 +9,7 @@
 
                 <p>This is where you can activate and manage addon modules in your ra installation. Older legacy modules will still allow you to activate/deactivate and configure access rights, but will not be able to show any configuration options, version or author information.</p>
 
-                <form method="post" action="/admin/configaddonmods.php">
+                <form method="post" action="configaddonmods.php">
                     <input type="hidden" name="action" value="save">
                     <div class="tablebg">
                         <table class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">
@@ -28,7 +28,7 @@
                                         <td style="background-color:#{$row}};text-align:center;">{$row.author}</td>
                                         <td style="background-color:#{$row}};text-align:center;">
                                             {if $row.active}
-                                                <input type="button" value="Activate" onclick="window.location = '/admin/configaddonmods.php?action=activate&amp;module={$row.module}&amp;{$token}'" class ="btn btn-success"> 
+                                                <input type="button" value="Activate" onclick="window.location = 'configaddonmods.php?action=activate&amp;module={$row.module}&amp;{$token}'" class ="btn btn-success"> 
                                             {else}
                                                 <input type="button" value="Activate" disabled="disabled" class="btn disabled" /> 
                                             {/if}

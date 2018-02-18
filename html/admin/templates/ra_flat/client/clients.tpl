@@ -83,7 +83,7 @@
 
 
 
-        <form method="post" action="/admin/clients.php?filter=1">
+        <form method="post" action="clients.php?filter=1">
             <div class="content">
                 {if $table}
                     {$table}

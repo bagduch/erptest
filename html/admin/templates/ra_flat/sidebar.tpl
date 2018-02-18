@@ -1,6 +1,6 @@
 <ul class="nav">
     <li class="active">
-        <a href="/admin">
+        <a href="index.php">
             <i class="ti-panel"></i>
             <p>Dashboard</p>
         </a>

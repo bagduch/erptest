@@ -33,7 +33,7 @@
         <script type="text/javascript">
             function doDelete(id) {
                 if (confirm("Click OK if you are sure you want to delete this Client Group?")) {
-                    window.location = '/admin/configclientgroups.php?action=delete&id=' + id + '&token={/literal}{$token}{literal}';
+                    window.location = 'configclientgroups.php?action=delete&id=' + id + '&token={/literal}{$token}{literal}';
                 }
             }
         </script>

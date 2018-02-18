@@ -4,7 +4,7 @@
             <div class="box-header">
                 <h3 class="box-title">Product/Service Custom Fields</h3>
                 <p>Product/Service Custom Fields options allow you to customize the product/service field to enter customer details</p>
-                <b>Options:</b> <a href="/admin/configcustomfieldsgroup.php?action=managegroup">Create a Customer Field Group</a> | <a href="/admin/configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
+                <b>Options:</b> <a href="configcustomfieldsgroup.php?action=managegroup">Create a Customer Field Group</a> | <a href="configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
             </div>
             <div class="box-body">
                 <div class="tablebg">
@@ -17,7 +17,7 @@
                             </tr>
                             <tr>
                                 <td>Residential Broadband</td>
-                                <td><a href="/admin/configcustomfieldsgroup.php?action=managegroup&amp;id=4"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
+                                <td><a href="configcustomfieldsgroup.php?action=managegroup&amp;id=4"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
                                 <td><a href="#" onclick="doDelete('4');
                                         return false"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a></td>
                             </tr>

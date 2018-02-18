@@ -201,7 +201,7 @@
                                                                     $("#savenotesbtn").click(function () {
                                                                         console.log("ok");
                                                                         $.ajax({
-                                                                            url: "/admin/clientsnotes.php?sub=add",
+                                                                            url: "clientsnotes.php?sub=add",
                                                                             method: "post",
                                                                             data: {
                                                                                 account:{/literal}{$orderdata.id}{literal},

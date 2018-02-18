@@ -15,7 +15,7 @@
             </a>  
         </div>
         <div class="collapse" id="ui-elements" role="navigation" aria-expanded="false" style="height: 0px;">
-            <form action="/admin/orders.php" method="post">
+            <form action="orders.php" method="post">
                 <div class="row">
                     <div class="col-lg-6">
                         <table class="table" width="100%">

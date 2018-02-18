@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-body">
-        <form method="post" action="/admin/supporttickets.php?action=openticket" enctype="multipart/form-data">
+        <form method="post" action="supporttickets.php?action=openticket" enctype="multipart/form-data">
 
             <div class="col-lg-6">
                 <table class="form" width="100%"  border="0" cellspacing="2" cellpadding="3">

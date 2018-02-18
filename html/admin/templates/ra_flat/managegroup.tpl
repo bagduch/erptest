@@ -2,19 +2,19 @@
 <script type="text/javascript">
         var datepickerformat = "dd/mm/yy";
         function manageconfigoptions(id) {
-            window.open('/admin/configcustomfieldsgroup.php?manageoptions=true&cid=' + id, 'configoptions', 'width=900,height=500,scrollbars=yes');
+            window.open('configcustomfieldsgroup.php?manageoptions=true&cid=' + id, 'configoptions', 'width=900,height=500,scrollbars=yes');
         }
         function addconfigoption() {
-            window.open('/admin/configcustomfieldsgroup.php?manageoptions=true&gid=', 'configoptions', 'width=800,height=500,scrollbars=yes');
+            window.open('configcustomfieldsgroup.php?manageoptions=true&gid=', 'configoptions', 'width=800,height=500,scrollbars=yes');
         }
         function doDelete(id, opid) {
             if (confirm("Are you sure you want to delete this configurable option?")) {
-                window.location = '/admin/configcustomfieldsgroup.php?action=deleteoption&id=' + id + '&opid=' + opid + '&token=1ba6aebbf4014e5e7b53c3611ecb1c9d209df956';
+                window.location = 'configcustomfieldsgroup.php?action=deleteoption&id=' + id + '&opid=' + opid + '&token=1ba6aebbf4014e5e7b53c3611ecb1c9d209df956';
             }
         }
     </script> 
 {/literal}
-<form method="post" action="/admin/configcustomfieldsgroup.php?action=savegroup&amp;id={$id}" name="managefrm">
+<form method="post" action="configcustomfieldsgroup.php?action=savegroup&amp;id={$id}" name="managefrm">
   <p><b>Create a New Group</b></p>
   <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
     <tbody>

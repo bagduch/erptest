@@ -19,7 +19,7 @@
             </script>
         {/literal}
         <div class="card">
-            <form method="post" action="/admin/configadminroles.php?action=save&amp;id=2" name="frmperms">
+            <form method="post" action="configadminroles.php?action=save&amp;id=2" name="frmperms">
                 <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>
                         <tr>

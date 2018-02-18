@@ -276,7 +276,7 @@
                 var type = $("input[name='rel_type']").val();
                 var account = $("input[name='account']").val();
                 $.ajax({
-                    url: "/admin/clientsnotes.php?sub=add",
+                    url: "clientsnotes.php?sub=add",
                     method: "post",
                     data: {
                         "userid":{/literal}{$userid}{literal},

@@ -156,7 +156,7 @@
                     assignchange = $(this).closest('tr').find('select').val();
                     duechange = $(this).closest('tr').find('input[name="duedate"]').val();
                     $.ajax({
-                        url: "/admin/clientsnotes.php",
+                        url: "clientsnotes.php",
                         method: "post",
                         data: {
                             "update": 1,

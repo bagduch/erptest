@@ -2,7 +2,7 @@
 <section class="content">
     <div class="box">
         <div class="box-header">
-            <form method="post" action="/admin/supportcenter.php">
+            <form method="post" action="supportcenter.php">
                 <div style="padding:5px 15px;">Displaying Overview For:
                     <select name="period" onchange="submit()">
                         <option value="Today" {if $period eq "Today"}selected{/if}>Today</option>

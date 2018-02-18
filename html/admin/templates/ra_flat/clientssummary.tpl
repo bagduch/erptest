@@ -351,7 +351,7 @@
                         <div id="addnotes" class="modal fade">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <form method="post" action="/admin/clientsnotes.php?sub=add">
+                                    <form method="post" action="clientsnotes.php?sub=add">
                                         <input type="hidden" name="userid" value="{$clientsdetails.userid}">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -523,7 +523,7 @@
                                             <td>{$item.modified}</td>
                                             <td>{$item.sticky}</td>
                                             <td>
-                                                <a href="/admin/clientsnotes.php?userid=8019&amp;action=edit&amp;id={$item.id}" class="btn btn-success editnotes"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                <a href="clientsnotes.php?userid=8019&amp;action=edit&amp;id={$item.id}" class="btn btn-success editnotes"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                                 <a href="#" onclick="doDelete('{$item.id}');
                                                         return false" class="btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
                                             </td>
@@ -584,7 +584,7 @@
         <div id="addnotes" class="modal" tabindex="-1" role="dialog" >
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form method="post" action="/admin/clientsnotes.php?sub=add">
+                    <form method="post" action="clientsnotes.php?sub=add">
                         <input type="hidden" name="userid" value="{$clientsdetails.userid}">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -698,7 +698,7 @@
                     var duedate = $("input[name='duedate']").val();
                     var imports = $("input[name='import']").val();
                     $.ajax({
-                        url: "/admin/clientsnotes.php?sub=add",
+                        url: "clientsnotes.php?sub=add",
                         method: "post",
                         data: {
                             "userid": {/literal}{$clientsdetails.userid}{literal},

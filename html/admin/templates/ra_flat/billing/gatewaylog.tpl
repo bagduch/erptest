@@ -30,7 +30,7 @@
 
 <br>
 
-<form method="post" action="/admin/gatewaylog.php">
+<form method="post" action="gatewaylog.php">
     <input type="hidden" name="token" value="4a1e669a63d4e6eda227ccd49baae409420dcca8"><table width="100%" border="0" cellpadding="3" cellspacing="0"><tbody><tr><td width="50%">0 Records Found, Page 1 of 1</td><td width="50%" align="right">Jump to Page: <select name="page" onchange="submit()"><option value="0" selected="">1</option></select> <input type="submit" value="Go" class="btn-small"></td>
             </tr></tbody></table>
 </form>

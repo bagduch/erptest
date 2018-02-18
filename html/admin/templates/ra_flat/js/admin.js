@@ -48,7 +48,7 @@ $(document).ready(function () {
         }
         var id = $("input[name='noteid']").val();
         $.ajax({
-            url: "/admin/clientsnotes.php",
+            url: "clientsnotes.php",
             method: "post",
             data: {
                 "id": id,
