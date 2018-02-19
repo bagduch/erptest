@@ -1,9 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
             <title>RA- Login</title>
-            <link href="../includes/jscript/css/ui.all.css" rel="stylesheet" type="text/css">
-            <link href="..templates/ra_flat/css/style.css" rel="stylesheet" type="text/css">
-            <link href="..templates/ra_flat/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+            <link href="includes/jscript/css/ui.all.css" rel="stylesheet" type="text/css">
+            <link href="templates/ra_flat/css/style.css" rel="stylesheet" type="text/css">
+            <link href="templates/ra_flat/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
             <link href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
                 <script type="text/javascript" src="../includes/jscript/jquery.js"></script>
                 <script type="text/javascript" src="../includes/jscript/jqueryui.js"></script>
