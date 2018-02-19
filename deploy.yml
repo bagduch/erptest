@@ -140,6 +140,7 @@
       - 02_robotacct_data.sql
       - 901_datacleanup.sql
       - 951_tblclients.sql
+      - 952_tblconfiguration.sql
 
 
     - name: Create RA DB user
