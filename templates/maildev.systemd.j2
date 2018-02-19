@@ -1,0 +1,13 @@
+[Unit]
+Description=Maildev SMTP and web server
+Before=nginx.service
+
+[Service]
+ExecStart=/usr/bin/maildev --ip 127.0.0.1 --smtp 1025 --web 1080
+User=www-data
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target
+
