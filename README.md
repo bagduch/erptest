@@ -23,3 +23,7 @@ db/schema.*.json are for use with mockaroo.com sample data generator
 
 `vagrant provision --provision-with=shell`
 
+
+## Email
+
+maildev is running at http://localhost:7080/maildev/ and can be used to view outbound email (which is not actually sent)
