@@ -59,7 +59,11 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
 function updateInvoiceTotal($id) {
     global $CONFIG;
 
-    $result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id));
+    $result = select_query_i(
+	    "tblinvoiceitems", 
+	    "", 
+	    array("invoiceid" => $id)
+    );
 
     while ($data = mysqli_fetch_array($result)) {
         if ($data['taxed'] == "1") {
@@ -70,7 +74,11 @@ function updateInvoiceTotal($id) {
     }
 
     $subtotal = $total = $nontaxsubtotal + $taxsubtotal;
-    $result = select_query_i("tblinvoices", "userid,credit,taxrate,taxrate2", array("id" => $id));
+    $result = select_query_i(
+	    "tblinvoices", 
+	    "userid,credit,taxrate,taxrate2", 
+	    array("id" => $id)
+    );
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $credit = $data['credit'];

@@ -56,7 +56,13 @@ if ($action == "invtooltip") {
         echo "<tr bgcolor=\"#ffffff\"><td width=\"275\">" . nl2br($data['description']) . "</td><td width=\"100\" style=\"text-align:right;\">" . formatCurrency($data['amount']) . "</td></tr>";
     }
 
-    $data = get_query_vals("tblinvoices", "subtotal,credit,tax,tax2,taxrate,taxrate2,total", array("id" => $id), "id", "ASC");
+    $data = get_query_vals(
+        "tblinvoices", 
+        "subtotal,credit,tax,tax2,taxrate,taxrate2,total", 
+        array("id" => $id), 
+        "id", 
+        "ASC"
+    );
     echo "<tr bgcolor=\"#efefef\" style=\"text-align:right;font-weight:bold;\"><td>" . $aInt->lang("fields", "subtotal") . "&nbsp;</td><td>" . formatCurrency($data['subtotal']) . "</td></tr>";
 
     if ($CONFIG['TaxEnabled']) {
@@ -180,7 +186,24 @@ if ($ra->get_req_var("duplicateinvoice")) {
         $duedate = toMySQLDate($duedatefrom);
         $datepaidfrom = fromMySQLDate($data_duplicate['datepaid']);
         $datepaid = toMySQLDate($datepaidfrom);
-        insert_query("tblinvoices", array("userid" => $data_duplicate['userid'], "invoicenum" => $data_duplicate['invoicenum'], "date" => $date, "duedate" => $duedate, "datepaid" => $datepaid, "subtotal" => $data_duplicate['subtotal'], "credit" => $data_duplicate['credit'], "tax" => $data_duplicate['tax'], "tax2" => $data_duplicate['tax2'], "total" => $data_duplicate['total'], "taxrate2" => $data_duplicate['taxrate2'], "status" => $data_duplicate['status'], "paymentmethod" => $data_duplicate['paymentmethod'], "notes" => $data_duplicate['notes']), array("id" => $invid));
+        insert_query("tblinvoices", 
+            array(
+                "userid" => $data_duplicate['userid'], 
+                "invoicenum" => $data_duplicate['invoicenum'], 
+                "date" => $date, "duedate" => $duedate, 
+                "datepaid" => $datepaid, 
+                "subtotal" => $data_duplicate['subtotal'], 
+                "credit" => $data_duplicate['credit'], 
+                "tax" => $data_duplicate['tax'], 
+                "tax2" => $data_duplicate['tax2'], 
+                "total" => $data_duplicate['total'], 
+                "taxrate2" => $data_duplicate['taxrate2'], 
+                "status" => $data_duplicate['status'], 
+                "paymentmethod" => $data_duplicate['paymentmethod'], 
+                "notes" => $data_duplicate['notes']
+            ), 
+            array("id" => $invid)
+        );
         logActivity("Duplicated Invoice(s) - Invoice ID: " . $invid, $userid);
     }
 
@@ -298,13 +321,29 @@ if ($action == "") {
     }
 } else {
     if ($action == "edit") {
-        $result = select_query_i("tblinvoices", "userid,paymentmethod", array("id" => $id));
+        $result = select_query_i(
+            "tblinvoices", 
+            "userid,paymentmethod", 
+            array("id" => $id)
+        );
         $data = mysqli_fetch_array($result);
         $userid = $data[0];
         $oldpaymentmethod = $data[1];
         if ($saveoptions) {
             check_token("RA.admin.default");
-            update_query("tblinvoices", array("date" => toMySQLDate($invoicedate), "duedate" => toMySQLDate($datedue), "paymentmethod" => $paymentmethod, "invoicenum" => $invoicenum, "taxrate" => $taxrate, "taxrate2" => $taxrate2, "status" => $status), array("id" => $id));
+            update_query(
+                "tblinvoices", 
+                array(
+                    "date" => toMySQLDate($invoicedate), 
+                    "duedate" => toMySQLDate($datedue), 
+                    "paymentmethod" => $paymentmethod, 
+                    "invoicenum" => $invoicenum, 
+                    "taxrate" => $taxrate, 
+                    "taxrate2" => $taxrate2, 
+                    "status" => $status
+                ), 
+                array("id" => $id)
+            );
             updateInvoiceTotal($id);
 
             if ($oldpaymentmethod != $paymentmethod) {
