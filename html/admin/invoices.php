@@ -1,15 +1,6 @@
 <?php
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
@@ -107,7 +98,20 @@ if ($action == "createinvoice") {
     }
 
     $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['CreateInvoiceDaysBefore'], date("Y")));
-    $invoiceid = insert_query("tblinvoices", array("date" => "now()", "duedate" => $duedate, "userid" => $userid, "status" => "Draft", "paymentmethod" => $gateway, "taxrate" => $taxrate, "taxrate2" => $taxrate2));
+    $invoiceid = insert_query(
+	    "tblinvoices", 
+	    array(
+		    "date" => "now()", 
+		    "duedate" => $duedate, 
+		    "userid" => $userid, 
+		    "status" => "Draft", 
+		    "paymentmethod" => $gateway, 
+		    "taxrate" => $taxrate, 
+            "taxrate2" => $taxrate2,
+            "invoicenum" => sprintf("%s%05d",strftime("%Y%m%d"), 10),
+            "subtotal" => 0
+	    )
+	);
     logActivity("Created Manual Invoice - Invoice ID: " . $invoiceid, $userid);
 
     if (1 < $CONFIG['InvoiceIncrement']) {

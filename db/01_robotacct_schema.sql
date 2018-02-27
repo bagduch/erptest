@@ -939,7 +939,7 @@ CREATE TABLE `tblemails` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `tblemails_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1043,21 +1043,21 @@ CREATE TABLE `tblinvoices` (
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
   `datepaid` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `subtotal` decimal(10,2) NOT NULL,
-  `credit` decimal(10,2) NOT NULL,
-  `tax` decimal(10,2) NOT NULL,
-  `tax2` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `credit` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `tax` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `tax2` decimal(10,2) NOT NULL DEFAULT 0.00,
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `taxrate` decimal(10,2) NOT NULL,
   `taxrate2` decimal(10,2) NOT NULL,
   `status` enum('Draft','Unpaid','Overdue','Paid','Cancelled','Refunded','Collections') DEFAULT NULL,
   `paymentmethod` text NOT NULL,
-  `notes` text NOT NULL,
+  `notes` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   KEY `status` (`status`),
   CONSTRAINT `tblinvoices_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

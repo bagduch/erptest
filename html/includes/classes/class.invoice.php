@@ -1,24 +1,20 @@
 <?php
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 class RA_Invoice {
 
     public $pdf = "";
-    private $invoiceid = "";
+    private $invoiceid = ""; // assigned by autoincrement sql
+    private $invoicenum = "";
     private $data = array();
     private $output = array();
+    private $userid;
     private $totalbalance = 0;
 
-    public function __construct($invoiceid = "") {
+    // constructor for invoices
+    // if invoiceid is passed, we pull details from the database
+    // otherwise, create and write to DB a new invoice
+    public function __construct( $invoiceid = null ) {
 
         if ($invoiceid) {
             $this->setID($invoiceid);
@@ -46,7 +42,20 @@ class RA_Invoice {
             return false;
         }
 
-        $result = select_query_i("tblinvoices", "tblinvoices.*,(SELECT value FROM tblpaymentgateways WHERE gateway=tblinvoices.paymentmethod AND setting='name' LIMIT 1) AS gateway,IFNULL((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),0) as amountpaid", array("id" => $this->invoiceid));
+        $result = select_query_i(
+            "tblinvoices", 
+            "tblinvoices.*,
+            (
+                SELECT value 
+                FROM tblpaymentgateways 
+                WHERE gateway=tblinvoices.paymentmethod 
+                AND setting='name' LIMIT 1
+            ) AS gateway,
+            IFNULL(
+                (SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),
+                0
+            ) as amountpaid", 
+            array("id" => $this->invoiceid));
 
 
         $data = mysqli_fetch_assoc($result);

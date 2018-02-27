@@ -50,15 +50,6 @@ LOCK TABLES `tblaccounts` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tblactivitylog`
---
-
-LOCK TABLES `tblactivitylog` WRITE;
-/*!40000 ALTER TABLE `tblactivitylog` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblactivitylog` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tbladdonmodules`
 --
 
@@ -407,15 +398,6 @@ LOCK TABLES `tblinvoiceitems` WRITE;
 /*!40000 ALTER TABLE `tblinvoiceitems` DISABLE KEYS */;
 INSERT INTO `tblinvoiceitems` VALUES (76,152066,8021,238,'UFB 30/10 One Off Fee',49.00,0,'2017-07-12','banktransfer','','Service'),(77,152066,8021,238,'UFB 30/10 - UFB 30/10 (12/07/2017 - 11/08/2017)',65.00,0,'2017-07-12','banktransfer','','Item'),(78,152068,8022,240,'UFB 30/10 One Off Fee',49.00,0,'2017-07-13','banktransfer','','Service'),(79,152068,8022,240,'UFB 30/10 - UFB 30/10 (13/07/2017 - 12/08/2017)',65.00,0,'2017-07-13','banktransfer','','Item'),(89,152079,8019,241,'VDSL',114.00,0,'2017-08-16','banktransfer','',''),(90,152080,8019,252,'',0.00,0,'2017-08-16','banktransfer','',''),(91,152081,8024,253,'',0.00,0,'2017-08-21','banktransfer','','');
 /*!40000 ALTER TABLE `tblinvoiceitems` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tblinvoices`
---
-
-LOCK TABLES `tblinvoices` WRITE;
-/*!40000 ALTER TABLE `tblinvoices` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblinvoices` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
