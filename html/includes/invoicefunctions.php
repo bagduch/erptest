@@ -1,10 +1,6 @@
 <?php
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 
-/**
- *
- * @ RA
- *
- * */
 function getInvoiceStatusColour($status, $clientarea = true) {
     if (!$clientarea) {
         global $aInt;
@@ -56,21 +52,23 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
     run_hook("AddTransaction", $array);
 }
 
+// recalculate invoice details based on tblinvoiceitems and tbltransactions
 function updateInvoiceTotal($id) {
     global $CONFIG;
 
+    // fetch all line items for it
     $result = select_query_i(
 	    "tblinvoiceitems", 
-	    "", 
+	    "*", 
 	    array("invoiceid" => $id)
     );
 
     while ($data = mysqli_fetch_array($result)) {
-        if ($data['taxed'] == "1") {
+        if ($data['taxed']) {
             $taxsubtotal += $data['amount'];
-        }
-
-        $nontaxsubtotal += $data['amount'];
+        } else {
+            $nontaxsubtotal += $data['amount'];
+	}
     }
 
     $subtotal = $total = $nontaxsubtotal + $taxsubtotal;
@@ -93,7 +91,7 @@ function updateInvoiceTotal($id) {
     $tax = $tax2 = 0;
 
     if ($CONFIG['TaxEnabled'] == "on" && !$clientsdetails['taxexempt']) {
-        if ($taxrate != "0.00") {
+        if ($taxrate > 0) {
             if ($CONFIG['TaxType'] == "Inclusive") {
                 $taxrate = $taxrate / 100 + 1;
                 $calc1 = $taxsubtotal / $taxrate;
@@ -105,7 +103,7 @@ function updateInvoiceTotal($id) {
         }
 
 
-        if ($taxrate2 != "0.00") {
+        if ($taxrate2 > 0) {
             if ($CONFIG['TaxL2Compound']) {
                 $taxsubtotal += $tax;
             }
