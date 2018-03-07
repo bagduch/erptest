@@ -5,7 +5,7 @@
             <p>Dashboard</p>
         </a>
     </li>
-      <li><a href="addonmodules.php?module=radius"><i class="ti-dashboard"></i>Radius</a></li>
+    <li><a href="addonmodules.php?module=radius"><i class="ti-dashboard"></i>Radius</a></li>
     <li><a href="addonmodules.php?module=tolls"><i class="ti-headphone"></i>Tolls Phone</a></li>
     <li>
         <a data-toggle="collapse" href="#Customers" class="collapsed" aria-expanded="false">
@@ -75,10 +75,10 @@
         </a>
         <div class="collapse" id="Support" role="navigation" aria-expanded="false" style="height: 0px;">
             <ul class="nav">
-                <li><a href="supportcenter.php">Support Overview</a></li>
                 <li><a href="supporttickets.php?action=list">View Tickets</a></li>
                 <li><a href="supporttickets.php?action=open">Open Tickets</a></li>
                 <li><a href="supportticketpredefinedreplies.php">Predefined Replies</a></li>
+                <li><a href="supportcenter.php">Support Overview</a></li>
             </ul>
         </div>
     </li>
@@ -99,7 +99,7 @@
             </ul>
         </div>
     </li>
-  
+
     <li>
         <a data-toggle="collapse" href="#Reports" class="collapsed" aria-expanded="false">
             <i class="ti-stats-up"></i>

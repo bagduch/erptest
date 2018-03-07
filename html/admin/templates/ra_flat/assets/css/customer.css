@@ -663,3 +663,7 @@ body.nude{
 
 }
 
+.noborder
+{
+    border: none;
+}

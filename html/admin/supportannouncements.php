@@ -71,7 +71,7 @@ if ($action == "") {
     }
 
     echo $infobox;
-    echo "
+    echo "<div class=\"card\"><div class='content'>
 <form method=\"post\" action=\"";
     echo $PHP_SELF;
     echo "?action=manage\">
@@ -213,7 +213,8 @@ if ($action == "") {
         echo "\" class=\"button\" /></p>
 
 </form>
-
+</div>
+</div>
 ";
 
         if (!$noeditor) {

@@ -4,7 +4,6 @@ define("ADMINAREA", true);
 require "../init.php";
 $action = $ra->get_req_var("action");
 $deptid = $ra->get_req_var("deptid");
-$menuselect = "$('#menu').multilevelpushmenu('expand','Support');";
 $icon = "tickets";
 $departmentshtml = "";
 $departments = array();
@@ -16,7 +15,7 @@ while ($data = mysqli_fetch_array($result)) {
 
 $supporttickets = new RA_Support($id, $action);
 
-$aInt=$supporttickets->aInt;
+$aInt = $supporttickets->aInt;
 $filt = $supporttickets->filt;
 $smartyvalues = array();
 
@@ -311,380 +310,376 @@ if ($action == "gettags") {
     } else {
         redir("action=viewticket&id=" . $id);
     }
-} else {
-    if ($action == "mergeticket") {
-        check_token("RA.admin.default");
-        $result = select_query_i("tbltickets", "id", array("tid" => $mergetid));
-        $data = mysqli_fetch_array($result);
-        $mergeid = $data['id'];
+} elseif ($action == "mergeticket") {
+    check_token("RA.admin.default");
+    $result = select_query_i("tbltickets", "id", array("tid" => $mergetid));
+    $data = mysqli_fetch_array($result);
+    $mergeid = $data['id'];
 
-        if (!$mergeid) {
-            exit($aInt->lang("support", "mergeidnotfound"));
+    if (!$mergeid) {
+        exit($aInt->lang("support", "mergeidnotfound"));
+    }
+
+
+    if ($mergeid == $id) {
+        exit($aInt->lang("support", "mergeticketequal"));
+    }
+
+    $mastertid = $id;
+
+    if ($mergeid < $mastertid) {
+        $mastertid = $mergeid;
+        $mergeid = $id;
+    }
+
+    $adminname = getAdminName();
+    addTicketLog($mastertid, "Merged Ticket " . $mergeid);
+    $adminname = "";
+    $result = select_query_i("tbltickets", "title,userid", array("id" => $mastertid));
+    $data = mysqli_fetch_array($result);
+    $userid = $data['userid'];
+    getUsersLang($userid);
+    $merge = $_LANG['ticketmerge'];
+
+    if (!$merge) {
+        $merge = "MERGED";
+    }
+
+    $subject = (strpos($data[0], (" [" . $merge . "]")) === FALSE ? $data[0] . (" [" . $merge . "]") : $data[0]);
+    update_query("tbltickets", array("title" => $subject), array("id" => $mastertid));
+    update_query("tblticketnotes", array("ticketid" => $mastertid), array("ticketid" => $mergeid));
+    update_query("tblticketreplies", array("tid" => $mastertid), array("tid" => $mergeid));
+    $result = select_query_i("tbltickets", "", array("id" => $mergeid));
+    $data = mysqli_fetch_array($result);
+    $userid = $data['userid'];
+    $name = $data['name'];
+    $email = $data['email'];
+    $date = $data['date'];
+    $message = $data['message'];
+    $admin = $data['admin'];
+    $attachment = $data['attachment'];
+    insert_query(
+            "tblticketreplies", array(
+        "tid" => $mastertid,
+        "userid" => $userid,
+        "name" => $name,
+        "email" => $email,
+        "date" => $date,
+        "message" => $message,
+        "adminname" => $admin,
+        "attachment" => $attachment));
+    delete_query("tbltickets", array("id" => $mergeid));
+    redir("action=viewticket&id=" . $mastertid);
+    exit();
+} elseif ($action == "openticket") {
+    check_token("RA.admin.default");
+    $errormessage = "";
+
+    if (!trim($message)) {
+        $errormessage = $aInt->lang("support", "ticketmessageerror");
+    }
+
+
+    if (!trim($subject)) {
+        $errormessage = $aInt->lang("support", "ticketsubjecterror");
+    }
+
+    if (!$client) {
+        if (!preg_match('/^([a-zA-Z0-9])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
+            $errormessage = $aInt->lang("support", "ticketemailvalidationerror");
         }
 
 
-        if ($mergeid == $id) {
-            exit($aInt->lang("support", "mergeticketequal"));
+        if (!$email) {
+            $errormessage = $aInt->lang("support", "ticketemailerror");
         }
 
-        $mastertid = $id;
 
-        if ($mergeid < $mastertid) {
-            $mastertid = $mergeid;
-            $mergeid = $id;
-        }
-
-        $adminname = getAdminName();
-        addTicketLog($mastertid, "Merged Ticket " . $mergeid);
-        $adminname = "";
-        $result = select_query_i("tbltickets", "title,userid", array("id" => $mastertid));
-        $data = mysqli_fetch_array($result);
-        $userid = $data['userid'];
-        getUsersLang($userid);
-        $merge = $_LANG['ticketmerge'];
-
-        if (!$merge) {
-            $merge = "MERGED";
-        }
-
-        $subject = (strpos($data[0], (" [" . $merge . "]")) === FALSE ? $data[0] . (" [" . $merge . "]") : $data[0]);
-        update_query("tbltickets", array("title" => $subject), array("id" => $mastertid));
-        update_query("tblticketnotes", array("ticketid" => $mastertid), array("ticketid" => $mergeid));
-        update_query("tblticketreplies", array("tid" => $mastertid), array("tid" => $mergeid));
-        $result = select_query_i("tbltickets", "", array("id" => $mergeid));
-        $data = mysqli_fetch_array($result);
-        $userid = $data['userid'];
-        $name = $data['name'];
-        $email = $data['email'];
-        $date = $data['date'];
-        $message = $data['message'];
-        $admin = $data['admin'];
-        $attachment = $data['attachment'];
-        insert_query(
-                "tblticketreplies", array(
-            "tid" => $mastertid,
-            "userid" => $userid,
-            "name" => $name,
-            "email" => $email,
-            "date" => $date,
-            "message" => $message,
-            "adminname" => $admin,
-            "attachment" => $attachment));
-        delete_query("tbltickets", array("id" => $mergeid));
-        redir("action=viewticket&id=" . $mastertid);
-        exit();
-    } else {
-        if ($action == "openticket") {
-            check_token("RA.admin.default");
-            $errormessage = "";
-
-            if (!trim($message)) {
-                $errormessage = $aInt->lang("support", "ticketmessageerror");
-            }
-
-
-            if (!trim($subject)) {
-                $errormessage = $aInt->lang("support", "ticketsubjecterror");
-            }
-
-            if (!$client) {
-                if (!preg_match('/^([a-zA-Z0-9])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
-                    $errormessage = $aInt->lang("support", "ticketemailvalidationerror");
-                }
-
-
-                if (!$email) {
-                    $errormessage = $aInt->lang("support", "ticketemailerror");
-                }
-
-
-                if (!$name) {
-                    $errormessage = $aInt->lang("support", "ticketnameerror");
-                }
-            }
-
-            if (!$errormessage) {
-                $attachments = uploadTicketAttachments(true);
-                $client = (int) str_replace("UserID:", "", $client);
-                $ticketdata = openNewTicket(
-                        $client, $contactid, $deptid, $subject, $message, $priority, $attachments, array("name" => $name, "email" => $email), $relatedservice, $ccemail, ($sendemail ? false : true), true);
-                $id = $ticketdata['ID'];
-                redir("action=viewticket&id=" . $id);
-                exit();
-            } else {
-                $action = "open";
-            }
-        } else {
-            if ($action == "viewticket") {
-
-                $access = validateAdminTicketAccess($id);
-
-                if ($access == "invalidid") {
-                    $aInt->gracefulExit($aInt->lang("support", "ticketnotfound"));
-                }
-
-                if ($access == "deptblocked") {
-                    $aInt->gracefulExit($aInt->lang("support", "deptnoaccess"));
-                }
-
-                if ($access == "flagged") {
-                    $aInt->gracefulExit($aInt->lang("support", "flagnoaccess") . ": " . getAdminName($flag));
-                }
-
-                if ($access) {
-                    exit();
-                }
-
-                if ($postreply || $postaction) {
-                    check_token("RA.admin.default");
-
-                    if ($postaction == "note") {
-                        AddNote($id, $message);
-                    } else {
-                        $attachments = uploadTicketAttachments(true);
-
-                        if ($postaction == "close") {
-                            $newstatus = "Closed";
-                        } else {
-                            if (substr($postaction, 0, 9) == "setstatus") {
-                                $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
-                                $data = mysqli_fetch_array($result);
-                                $newstatus = $data[0];
-                            } else {
-                                if ($postaction == "onhold") {
-                                    $newstatus = "On Hold";
-                                } else {
-                                    if ($postaction == "inprogress") {
-                                        $newstatus = "In Progress";
-                                    } else {
-                                        $newstatus = "Answered";
-                                    }
-                                }
-                            }
-                        }
-
-                        AddReply($id, "NULL", "NULL", $message, true, $attachments, null, $newstatus);
-
-
-                        run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => $newstatus, "ticketid" => $id));
-
-                        if ($billingdescription && $billingdescription != $aInt->lang("support", "toinvoicedes")) {
-                            checkPermission("Create Invoice");
-                            $result = select_query_i("tbltickets", "", array("id" => $id));
-                            $data = mysqli_fetch_array($result);
-                            $userid = $data['userid'];
-                            $contactid = $data['contactid'];
-                            $invoicenow = false;
-
-                            if ($billingaction == "3") {
-                                $invoicenow = true;
-                                $billingaction = "1";
-                            }
-
-                            $billingamount = preg_replace("/[^0-9.]/", "", $billingamount);
-                            insert_query("tblbillableitems", array("userid" => $userid, "description" => $billingdescription, "amount" => $billingamount, "recur" => 0, "recurcycle" => 0, "recurfor" => 0, "invoiceaction" => $billingaction, "duedate" => "now()"));
-
-                            if ($invoicenow) {
-                                require ROOTDIR . "/includes/clientfunctions.php";
-                                require ROOTDIR . "/includes/processinvoices.php";
-                                require ROOTDIR . "/includes/invoicefunctions.php";
-                                createInvoices($userid);
-                            }
-                        }
-                    }
-
-                    update_query("tbltickets", array("replyingadmin" => "", "replyingtime" => ""), array("id" => $id));
-
-                    if ($postaction == "close") {
-                        closeTicket($id);
-                        $filt->redir();
-                    } else {
-                        if ($postaction == "return") {
-                            $filt->redir();
-                        } else {
-                            if ($postaction == "onhold") {
-                                update_query("tbltickets", array("status" => "On Hold"), array("id" => $id));
-                                run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "On Hold", "ticketid" => $id));
-                            } else {
-                                if ($postaction == "inprogress") {
-                                    update_query("tbltickets", array("status" => "In Progress"), array("id" => $id));
-                                    run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "In Progress", "ticketid" => $id));
-                                }
-                            }
-                        }
-                    }
-
-
-                    redir("action=viewticket&id=" . $id);
-                }
-
-                if ($deptid) {
-                    check_token("RA.admin.default");
-                    $adminname = getAdminName();
-                    $result = select_query_i("tbltickets", "", array("id" => $id));
-                    $data = mysqli_fetch_array($result);
-                    $orig_userid = $data['userid'];
-                    $orig_contactid = $data['contactid'];
-                    $orig_deptid = $data['did'];
-                    $orig_status = $data['status'];
-                    $orig_priority = $data['urgency'];
-                    $orig_flag = $data['flag'];
-                    $orig_cc = $data['cc'];
-
-                    if ($orig_userid != $userid) {
-                        addTicketLog($id, "Ticket Assigned to User ID " . $userid);
-                    }
-
-                    if ($orig_deptid != $deptid) {
-                        $ticket = new RA_Tickets();
-                        $ticket->setID($id);
-                        $ticket->changeDept($deptid);
-                    }
-
-                    if ($orig_status != $status) {
-                        if ($status == "Closed") {
-                            closeTicket($id);
-                        } else {
-                            addTicketLog($id, "Status changed to " . $status);
-                        }
-                    }
-
-                    if ($orig_priority != $priority) {
-                        addTicketLog($id, "Priority changed to " . $priority);
-                    }
-
-                    if ($orig_cc != $cc) {
-                        addTicketLog($id, "Modified CC Recipients");
-                    }
-
-                    if ($orig_flag != $flagto) {
-                        $ticket = new RA_Tickets();
-                        $ticket->setID($id);
-                        $ticket->setFlagTo($flagto);
-                    }
-
-                    $table = "tbltickets";
-                    $array = array("status" => $_POST['status'], "urgency" => $_POST['priority'], "title" => $_POST['subject'], "cc" => $_POST['cc']);
-                    $where = array("id" => $id);
-                    update_query($table, $array, $where);
-
-                    if ($orig_status != "Closed" && $status == "Closed") {
-                        run_hook("TicketClose", array("ticketid" => $id));
-                    }
-
-                    if ($mergetid) {
-                        redir("action=mergeticket&id=" . $id . "&mergetid=" . $mergetid . generate_token("link"));
-                        exit();
-                    }
-
-                    redir("action=viewticket&id=" . $id);
-                    exit();
-                }
-
-                if ($removeattachment) {
-                    check_token("RA.admin.default");
-
-                    if ($type == "r") {
-                        $result = select_query_i("tblticketreplies", "", array("id" => $idsd));
-                        $data = mysqli_fetch_array($result);
-                        $attachment = $data['attachment'];
-
-                        if (strpos($attachment, "|") !== FALSE) {
-                            $attachment = explode("|", $attachment);
-                            $count = 0;
-                            foreach ($attachment as $file) {
-
-                                if ($count != $filecount) {
-                                    $keepfile .= $file . "|";
-                                } else {
-                                    $filetoremove = $file;
-                                }
-
-                                ++$count;
-                            }
-
-                            $keepfile = substr($keepfile, 0, 0 - 1);
-                            deleteFile($attachments_dir, $filetoremove);
-                            update_query("tblticketreplies", array("attachment" => $keepfile), array("id" => $idsd));
-                        } else {
-                            deleteFile($attachments_dir, $attachment);
-                            update_query("tblticketreplies", array("attachment" => ""), array("id" => $idsd));
-                        }
-                    } else {
-                        $result = select_query_i("tbltickets", "", array("id" => $idsd));
-                        $data = mysqli_fetch_array($result);
-                        $attachment = $data['attachment'];
-
-                        if (strpos($attachment, "|") !== FALSE) {
-                            $attachment = explode("|", $attachment);
-                            $count = 0;
-                            foreach ($attachment as $file) {
-
-                                if ($count != $filecount) {
-                                    $keepfile .= $file . "|";
-                                } else {
-                                    $filetoremove = $file;
-                                }
-
-                                ++$count;
-                            }
-
-                            $keepfile = substr($keepfile, 0, 0 - 1);
-                            deleteFile($attachments_dir, $filetoremove);
-                            update_query("tbltickets", array("attachment" => $keepfile), array("id" => $idsd));
-                        } else {
-                            deleteFile($attachments_dir, $attachment);
-                            update_query("tbltickets", array("attachment" => ""), array("id" => $idsd));
-                        }
-                    }
-
-                    redir("action=viewticket&id=" . $id);
-                    exit();
-                }
-
-
-                if ($sub == "del") {
-                    check_token("RA.admin.default");
-                    checkPermission("Delete Ticket");
-                    deleteTicket($id, $idsd);
-                    redir("action=viewticket&id=" . $id);
-                    exit();
-                }
-
-
-
-                if ($sub == "delnote") {
-                    check_token("RA.admin.default");
-                    delete_query("tblticketnotes", array("id" => $idsd));
-                    addTicketLog($id, "Deleted Ticket Note ID " . $idsd);
-                    redir("action=viewticket&id=" . $id);
-                    exit();
-                }
-
-
-                if ($blocksender) {
-                    check_token("RA.admin.default");
-                    $result = select_query_i("tbltickets", "userid,email", array("id" => $id));
-                    $data = get_query_vals("tbltickets", "userid,email", array("id" => $id));
-                    $userid = $data['userid'];
-                    $email = $data['email'];
-
-                    if ($userid) {
-                        $email = get_query_val("tblclients", "email", array("id" => $userid));
-                    }
-
-                    $blockedalready = get_query_val("tblticketspamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
-
-                    if ($blockedalready) {
-                        infoBox($aInt->lang("support", "spamupdatefailed"), $aInt->lang("support", "spamupdatefailedinfo"));
-                    } else {
-                        insert_query("tblticketspamfilters", array("type" => "Sender", "content" => $email));
-                        infoBox($aInt->lang("support", "spamupdatesuccess"), $aInt->lang("support", "spamupdatesuccessinfo"));
-                    }
-                }
-            }
+        if (!$name) {
+            $errormessage = $aInt->lang("support", "ticketnameerror");
         }
     }
+
+    if (!$errormessage) {
+        $attachments = uploadTicketAttachments(true);
+        $client = (int) str_replace("UserID:", "", $client);
+        $ticketdata = openNewTicket(
+                $client, $contactid, $deptid, $subject, $message, $priority, $attachments, array("name" => $name, "email" => $email), $relatedservice, $ccemail, ($sendemail ? false : true), true);
+        $id = $ticketdata['ID'];
+        redir("action=viewticket&id=" . $id);
+        exit();
+    } else {
+        $action = "open";
+    }
+} elseif ($action == "viewticket") {
+
+    $access = validateAdminTicketAccess($id);
+
+    if ($access == "invalidid") {
+        $aInt->gracefulExit($aInt->lang("support", "ticketnotfound"));
+    }
+
+    if ($access == "deptblocked") {
+        $aInt->gracefulExit($aInt->lang("support", "deptnoaccess"));
+    }
+
+    if ($access == "flagged") {
+        $aInt->gracefulExit($aInt->lang("support", "flagnoaccess") . ": " . getAdminName($flag));
+    }
+
+    if ($access) {
+        exit();
+    }
+
+    if ($postreply || $postaction) {
+        check_token("RA.admin.default");
+
+        if ($postaction == "note") {
+            AddNote($id, $message);
+        } else {
+            $attachments = uploadTicketAttachments(true);
+
+            if ($postaction == "close") {
+                $newstatus = "Closed";
+            } else {
+                if (substr($postaction, 0, 9) == "setstatus") {
+                    $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
+                    $data = mysqli_fetch_array($result);
+                    $newstatus = $data[0];
+                } else {
+                    if ($postaction == "onhold") {
+                        $newstatus = "On Hold";
+                    } else {
+                        if ($postaction == "inprogress") {
+                            $newstatus = "In Progress";
+                        } else {
+                            $newstatus = "Answered";
+                        }
+                    }
+                }
+            }
+
+            AddReply($id, "NULL", "NULL", $message, true, $attachments, null, $newstatus);
+
+
+            run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => $newstatus, "ticketid" => $id));
+
+            if ($billingdescription && $billingdescription != $aInt->lang("support", "toinvoicedes")) {
+                checkPermission("Create Invoice");
+                $result = select_query_i("tbltickets", "", array("id" => $id));
+                $data = mysqli_fetch_array($result);
+                $userid = $data['userid'];
+                $contactid = $data['contactid'];
+                $invoicenow = false;
+
+                if ($billingaction == "3") {
+                    $invoicenow = true;
+                    $billingaction = "1";
+                }
+
+                $billingamount = preg_replace("/[^0-9.]/", "", $billingamount);
+                insert_query("tblbillableitems", array("userid" => $userid, "description" => $billingdescription, "amount" => $billingamount, "recur" => 0, "recurcycle" => 0, "recurfor" => 0, "invoiceaction" => $billingaction, "duedate" => "now()"));
+
+                if ($invoicenow) {
+                    require ROOTDIR . "/includes/clientfunctions.php";
+                    require ROOTDIR . "/includes/processinvoices.php";
+                    require ROOTDIR . "/includes/invoicefunctions.php";
+                    createInvoices($userid);
+                }
+            }
+        }
+
+        update_query("tbltickets", array("replyingadmin" => "", "replyingtime" => ""), array("id" => $id));
+
+        if ($postaction == "close") {
+            closeTicket($id);
+            $filt->redir();
+        } else {
+            if ($postaction == "return") {
+                $filt->redir();
+            } else {
+                if ($postaction == "onhold") {
+                    update_query("tbltickets", array("status" => "On Hold"), array("id" => $id));
+                    run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "On Hold", "ticketid" => $id));
+                } else {
+                    if ($postaction == "inprogress") {
+                        update_query("tbltickets", array("status" => "In Progress"), array("id" => $id));
+                        run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "In Progress", "ticketid" => $id));
+                    }
+                }
+            }
+        }
+
+
+        redir("action=viewticket&id=" . $id);
+    }
+
+    if ($deptid) {
+        check_token("RA.admin.default");
+        $adminname = getAdminName();
+        $result = select_query_i("tbltickets", "", array("id" => $id));
+        $data = mysqli_fetch_array($result);
+        $orig_userid = $data['userid'];
+        $orig_contactid = $data['contactid'];
+        $orig_deptid = $data['did'];
+        $orig_status = $data['status'];
+        $orig_priority = $data['urgency'];
+        $orig_flag = $data['flag'];
+        $orig_cc = $data['cc'];
+
+        if ($orig_userid != $userid) {
+            addTicketLog($id, "Ticket Assigned to User ID " . $userid);
+        }
+
+        if ($orig_deptid != $deptid) {
+            $ticket = new RA_Tickets();
+            $ticket->setID($id);
+            $ticket->changeDept($deptid);
+        }
+
+        if ($orig_status != $status) {
+            if ($status == "Closed") {
+                closeTicket($id);
+            } else {
+                addTicketLog($id, "Status changed to " . $status);
+            }
+        }
+
+        if ($orig_priority != $priority) {
+            addTicketLog($id, "Priority changed to " . $priority);
+        }
+
+        if ($orig_cc != $cc) {
+            addTicketLog($id, "Modified CC Recipients");
+        }
+
+        if ($orig_flag != $flagto) {
+            $ticket = new RA_Tickets();
+            $ticket->setID($id);
+            $ticket->setFlagTo($flagto);
+        }
+
+        $table = "tbltickets";
+        $array = array("status" => $_POST['status'], "urgency" => $_POST['priority'], "title" => $_POST['subject'], "cc" => $_POST['cc']);
+        $where = array("id" => $id);
+        update_query($table, $array, $where);
+
+        if ($orig_status != "Closed" && $status == "Closed") {
+            run_hook("TicketClose", array("ticketid" => $id));
+        }
+
+        if ($mergetid) {
+            redir("action=mergeticket&id=" . $id . "&mergetid=" . $mergetid . generate_token("link"));
+            exit();
+        }
+
+        redir("action=viewticket&id=" . $id);
+        exit();
+    }
+
+    if ($removeattachment) {
+        check_token("RA.admin.default");
+
+        if ($type == "r") {
+            $result = select_query_i("tblticketreplies", "", array("id" => $idsd));
+            $data = mysqli_fetch_array($result);
+            $attachment = $data['attachment'];
+
+            if (strpos($attachment, "|") !== FALSE) {
+                $attachment = explode("|", $attachment);
+                $count = 0;
+                foreach ($attachment as $file) {
+
+                    if ($count != $filecount) {
+                        $keepfile .= $file . "|";
+                    } else {
+                        $filetoremove = $file;
+                    }
+
+                    ++$count;
+                }
+
+                $keepfile = substr($keepfile, 0, 0 - 1);
+                deleteFile($attachments_dir, $filetoremove);
+                update_query("tblticketreplies", array("attachment" => $keepfile), array("id" => $idsd));
+            } else {
+                deleteFile($attachments_dir, $attachment);
+                update_query("tblticketreplies", array("attachment" => ""), array("id" => $idsd));
+            }
+        } else {
+            $result = select_query_i("tbltickets", "", array("id" => $idsd));
+            $data = mysqli_fetch_array($result);
+            $attachment = $data['attachment'];
+
+            if (strpos($attachment, "|") !== FALSE) {
+                $attachment = explode("|", $attachment);
+                $count = 0;
+                foreach ($attachment as $file) {
+
+                    if ($count != $filecount) {
+                        $keepfile .= $file . "|";
+                    } else {
+                        $filetoremove = $file;
+                    }
+
+                    ++$count;
+                }
+
+                $keepfile = substr($keepfile, 0, 0 - 1);
+                deleteFile($attachments_dir, $filetoremove);
+                update_query("tbltickets", array("attachment" => $keepfile), array("id" => $idsd));
+            } else {
+                deleteFile($attachments_dir, $attachment);
+                update_query("tbltickets", array("attachment" => ""), array("id" => $idsd));
+            }
+        }
+
+        redir("action=viewticket&id=" . $id);
+        exit();
+    }
+
+
+    if ($sub == "del") {
+        check_token("RA.admin.default");
+        checkPermission("Delete Ticket");
+        deleteTicket($id, $idsd);
+        redir("action=viewticket&id=" . $id);
+        exit();
+    }
+
+
+
+    if ($sub == "delnote") {
+        check_token("RA.admin.default");
+        delete_query("tblticketnotes", array("id" => $idsd));
+        addTicketLog($id, "Deleted Ticket Note ID " . $idsd);
+        redir("action=viewticket&id=" . $id);
+        exit();
+    }
+
+
+    if ($blocksender) {
+        check_token("RA.admin.default");
+        $result = select_query_i("tbltickets", "userid,email", array("id" => $id));
+        $data = get_query_vals("tbltickets", "userid,email", array("id" => $id));
+        $userid = $data['userid'];
+        $email = $data['email'];
+
+        if ($userid) {
+            $email = get_query_val("tblclients", "email", array("id" => $userid));
+        }
+
+        $blockedalready = get_query_val("tblticketspamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
+
+        if ($blockedalready) {
+            infoBox($aInt->lang("support", "spamupdatefailed"), $aInt->lang("support", "spamupdatefailedinfo"));
+        } else {
+            insert_query("tblticketspamfilters", array("type" => "Sender", "content" => $email));
+            infoBox($aInt->lang("support", "spamupdatesuccess"), $aInt->lang("support", "spamupdatesuccessinfo"));
+        }
+    }
+} else {
+    
 }
 
 if ($action == "updnote") {
@@ -1444,13 +1439,13 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
             $name = $data['name'];
 
             if (in_array($id, $supportdepts)) {
-                $depidoption.= "<option value=\"" . $id . "\"";
+                $depidoption .= "<option value=\"" . $id . "\"";
 
                 if ($id == $department) {
-                    $depidoption.= " selected";
+                    $depidoption .= " selected";
                 }
 
-                $depidoption.= ">" . $name . "</option>";
+                $depidoption .= ">" . $name . "</option>";
             }
         }
         $aInt->assign('depidoption', $depidoption);
