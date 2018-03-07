@@ -57,7 +57,6 @@
                                                     <option>Credit Card Payment Confirmation</option>
                                                     <option>Invoice Refund Confirmation</option>
                                                 </select> 
-                                                <br
                                                 <input class="btn btn-default" type="submit" value="Send Email">
                                             </form>
                                             <img src="images/spacer.gif" width="1" height="5"><br>
