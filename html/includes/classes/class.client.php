@@ -218,4 +218,23 @@ class RA_Client {
 	}
 }
 
+class RA_Client_Object extends RA_Client {
+    private $firstname;
+    private $lastname;
+    private $companyname;
+    private $email;
+    private $address1;
+    private $address2;
+    private $city;
+    private $state;
+    private $postcode;
+    private $country;
+    private $phonenumber;
+    private $passwordhash;
+    private $dateofbirth;
+    private $sendemail;
+    private $additionaldata;
+}
+
+
 ?>
