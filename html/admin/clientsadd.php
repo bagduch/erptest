@@ -44,7 +44,37 @@ if ($action == "add") {
             }
             if (!$infobox) {
                 $_SESSION['currency'] = $currency;
-                $userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans, $sendemail, array("notes" => $notes, "status" => $status, "credit" => $credit, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "language" => $language, "billingcid" => $billingcid, "lastlogin" => "00000000000000", "groupid" => $groupid, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "defaultgateway" => $paymentmethod));
+		$userid = addClient(
+			$firstname, 
+			$lastname, 
+			$companyname, 
+			$email, 
+			$address1, 
+			$address2, 
+			$city, 
+			$state, 
+			$postcode, 
+			$country, 
+			$phonenumber, 
+			$password, 
+			$dateofbirth,
+			$sendemail, 
+			array(
+				"notes" => $notes, 
+				"status" => $status, 
+				"credit" => $credit, 
+				"taxexempt" => $taxexempt, 
+				"latefeeoveride" => $latefeeoveride, 
+				"overideduenotices" => $overideduenotices, 
+				"language" => $language, 
+				"billingcid" => $billingcid, 
+				"lastlogin" => "00000000000000", 
+				"groupid" => $groupid, 
+				"separateinvoices" => $separateinvoices, 
+				"disableautocc" => $disableautocc, 
+				"defaultgateway" => $paymentmethod
+			)
+		);
                 unset($_SESSION['uid']);
                 unset($_SESSION['upw']);
                 redir("userid=" . $userid, "clientssummary.php");
@@ -56,18 +86,6 @@ if ($action == "add") {
 releaseSession();
 
 
-
-
-$questions = getSecurityQuestions("");
-foreach ($questions as $quest => $ions) {
-    $securityoption .= "<option value=" . $ions['id'] . "";
-
-    if ($ions['id'] == $securityqid) {
-        $securityoption.= " selected";
-    }
-
-    $securityoption.= ">" . $ions['question'] . "</option>";
-}
 
 
 include "../includes/countries.php";

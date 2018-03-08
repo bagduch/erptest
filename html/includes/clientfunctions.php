@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 function getClientsDetails($userid = "", $contactid = "") {
     global $encryption_key;
 
@@ -63,8 +53,6 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['defaultgateway'] = $data['defaultgateway'];
     $details['cctype'] = $data['cardtype'];
     $details['cclastfour'] = $data['cardlastfour'];
-    $details['securityqid'] = $data['securityqid'];
-    $details['securityqans'] = decrypt($data['securityqans']);
     $details['groupid'] = $data['groupid'];
     $details['status'] = $data['status'];
     $details['credit'] = $data['credit'];
@@ -79,30 +67,6 @@ function getClientsDetails($userid = "", $contactid = "") {
     $lastlogin = $data['lastlogin'];
     $ipaddr = $data['ip'];
     $host = $data['host'];
-
-    if ($details['country'] == "GB") {
-        $postcode = $origpostcode = $data['postcode'];
-        $postcode = strtoupper($postcode);
-        $postcode = preg_replace("/[^A-Z0-9]/", "", $postcode);
-
-        if (strlen($postcode) == 5) {
-            $postcode = substr($postcode, 0, 2) . " " . substr($postcode, 2);
-        } else {
-            if (strlen($postcode) == 6) {
-                $postcode = substr($postcode, 0, 3) . " " . substr($postcode, 3);
-            } else {
-                if (strlen($postcode) == 7) {
-                    $postcode = substr($postcode, 0, 4) . " " . substr($postcode, 4);
-                } else {
-                    $postcode = $origpostcode;
-                }
-            }
-        }
-
-        $postcode = trim($postcode);
-        $details['postcode'] = $postcode;
-    }
-
 
     if ($lastlogin == "0000-00-00 00:00:00") {
         $details['lastlogin'] = "No Login Logged";
@@ -348,11 +312,11 @@ function getClientNotes($userid, $limit = "", $table = true) {
         $limitquery = "";
     }
     $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
-INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
-LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
-where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC " . $limitquery;
+        INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
+        INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+        LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+        LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+        where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC " . $limitquery;
 
     $result = full_query_i($query);
     while ($data = mysqli_fetch_assoc($result)) {
@@ -424,12 +388,6 @@ function checkDetailsareValid($uid = "", $signup = false, $checkemail = true, $c
 
 
     if ($signup) {
-        $securityquestions = getSecurityQuestions();
-
-        if ($securityquestions) {
-            $validate->validate("required", "securityqans", "securityanswerrequired");
-        }
-
 
         if ($captcha) {
             $validate->validate("captcha", "code", "captchaverifyincorrect");
@@ -487,21 +445,41 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
     return $errormessage;
 }
 
-function addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $securityqid = "", $securityqans = "", $sendemail = "on", $additionaldata = "") {
+function addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
     global $ra;
     global $remote_ip;
 
-    if (!$country) {
-        $country = $ra->get_config("DefaultCountry");
-    }
+    error_log("Adding client: ".print_r(array($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = ""),1));
 
     $fullhost = gethostbyaddr($remote_ip);
     $currency = (is_array($_SESSION['currency']) ? $_SESSION['currency'] : getCurrency("", $_SESSION['currency']));
     $password_hash = generateClientPW($password);
     $table = "tblclients";
-    $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "password" => $password_hash, "dateofbirth" => $dob, "lastlogin" => "now()", "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "ip" => $remote_ip, "host" => $fullhost, "status" => "Active", "datecreated" => "now()", "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "", "currency" => $currency['id']);
+    $array = array(
+        "firstname" => $firstname, 
+        "lastname" => $lastname, 
+        "companyname" => $companyname, 
+        "email" => $email, 
+        "address1" => $address1, 
+        "address2" => $address2, 
+        "city" => $city, 
+        "state" => $state, 
+        "postcode" => $postcode, 
+        "country" => $country, 
+        "phonenumber" => $phonenumber, 
+        "password" => $password_hash, 
+        "dateofbirth" => $dob, 
+        "lastlogin" => "now()", 
+        "ip" => $remote_ip, 
+        "host" => $fullhost, 
+        "status" => "Active", 
+        "datecreated" => "now()", 
+        "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "en", 
+        "currency" => $currency['id']
+    );
 
     $uid = insert_query($table, $array);
+
     logActivity("Created Client " . $firstname . " " . $lastname . " - User ID: " . $uid);
 
     if ($additionaldata) {
@@ -603,22 +581,6 @@ function deleteClient($userid) {
     return true;
 }
 
-function getSecurityQuestions($questionid = "") {
-    if ($questionid) {
-        $query = select_query_i("tbladminsecurityquestions", "", array("question" => $questionid));
-    } else {
-        $query = select_query_i("tbladminsecurityquestions", "", "");
-    }
-
-    $results = array();
-
-    while ($data = mysqli_fetch_assoc($query)) {
-        $results[] = array("id" => $data['id'], "question" => decrypt($data['question']));
-    }
-
-    return $results;
-}
-
 function generateClientPW($plain, $salt = "", $ignoreconfig = false) {
     return password_hash(html_entity_decode($plain), PASSWORD_DEFAULT);
 }
@@ -670,7 +632,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
     global $ra;
 
     if ($username && (($password || $_SESSION['adminid']) || $twofadone)) {
-        
+
     } else {
         return false;
     }
@@ -982,10 +944,10 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 
 function getClientsServicesSummary($userid, $aInt) {
     $result = select_query_i(
-            "tblcustomerservices", // table
-            "tblcustomerservices.*,tblservices.name", // select fields
-            array("userid" => $userid), // where
-            "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid"
+        "tblcustomerservices", // table
+        "tblcustomerservices.*,tblservices.name", // select fields
+        array("userid" => $userid), // where
+        "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid"
     );
     while ($data = mysqli_fetch_array($result)) {
 
@@ -1123,18 +1085,15 @@ function recalcPromoAmount($pid, $userid, $serviceid, $billingcycle, $recurringa
 function doResetPWEmail($email, $answer = "") {
     global $CONFIG;
     global $_LANG;
-    global $securityquestion;
 
     if (!$email) {
         return $_LANG['pwresetemailrequired'];
     }
 
-    $result = select_query_i("tblclients", "id,password,securityqid,securityqans", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+    $result = select_query_i("tblclients", "id,password", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
     $data = mysqli_fetch_array($result);
     $userid = $data['id'];
     $password = $data['password'];
-    $securityqid = $data['securityqid'];
-    $securityqans = $data['securityqans'];
 
     if (!$userid) {
         $result = select_query_i("tblcontacts", "tblcontacts.id,tblcontacts.userid,tblcontacts.password", array("tblcontacts.email" => $email, "tblcontacts.subaccount" => "1", "tblclients.status" => array("sqltype" => "NEQ", "value" => "Closed")), "", "", "", "tblclients ON tblclients.id=tblcontacts.userid");
@@ -1149,35 +1108,20 @@ function doResetPWEmail($email, $answer = "") {
         return $_LANG['pwresetemailnotfound'];
     }
 
-
-    if ($securityqid) {
-        $result = select_query_i("tbladminsecurityquestions", "", array("id" => $securityqid));
-        $data = mysqli_fetch_array($result);
-        $securityquestion = decrypt($data['question']);
-
-        if (!$answer) {
-            return "";
-        }
-
-
-        if ($answer != decrypt($securityqans)) {
-            return $_LANG['pwresetsecurityquestionincorrect'];
-        }
-    }
-
-    $resetkey = md5($userid . rand(100000, 999999) . $password);
-
-    if ($contactid) {
-        update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
-    } else {
-        update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
-    }
-
-    $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
-    $reseturl .= "/pwreset.php?key=" . $resetkey;
-    sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
-    logActivity("Password Reset Requested", $userid);
 }
+
+$resetkey = md5($userid . rand(100000, 999999) . $password);
+
+if ($contactid) {
+    update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
+} else {
+    update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
+}
+
+$reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+$reseturl .= "/pwreset.php?key=" . $resetkey;
+sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
+logActivity("Password Reset Requested", $userid);
 
 function doResetPWKeyCheck($key) {
     global $_LANG;
@@ -1269,4 +1213,5 @@ function doResetPW($key, $newpw, $confirmpw) {
     return $validate->getHTMLErrorOutput();
 }
 
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 ?>

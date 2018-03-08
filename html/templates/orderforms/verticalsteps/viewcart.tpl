@@ -216,16 +216,8 @@ function enterNewCC() {
 
 {if !$loggedin}<p align="center"><script language="javascript">showStrengthBar();</script></p>{/if}
 
-{if !$loggedin && ($customfields || $securityquestions)}
+{if !$loggedin && ($customfields)}
 <table width="100%" cellpadding="2">
-{if $securityquestions && !$loggedin}
-<tr><td width="200">{$LANG.clientareasecurityquestion}</td><td><select name="securityqid">
-{foreach key=num item=question from=$securityquestions}
-	<option value={$question.id}>{$question.question}</option>
-{/foreach}
-</select></td></tr>
-<tr><td>{$LANG.clientareasecurityanswer}</td><td><input type="password" name="securityqans" size="30"></td></tr>
-{/if}
 {foreach key=num item=customfield from=$customfields}
 <tr><td width="200">{$customfield.name}</td><td>{$customfield.input} {$customfield.description}</td></tr>
 {/foreach}

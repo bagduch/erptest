@@ -473,57 +473,6 @@ if ($action == "") {
     }
 
     $smartyvalues['errormessage'] = $validate->getHTMLErrorOutput();
-} elseif ($action == "security") {
-    checkContactPermission("changesq");
-    $ca->setTemplate("clientareasecurity");
-    $ca->addToBreadCrumb("clientarea.php?action=details", $ra->get_lang("clientareanavdetails"));
-    $ca->addToBreadCrumb("clientarea.php?action=security", $ra->get_lang("clientareanavsecurity"));
-
-    if ($ra->get_req_var("successful")) {
-        $smartyvalues['successful'] = true;
-    }
-
-    $securityquestions = getSecurityQuestions("");
-    $smartyvalues['securityquestions'] = $securityquestions;
-    $smartyvalues['securityquestionsenabled'] = (count($securityquestions) ? true : false);
-    $clientsdetails = getClientsDetails($client->getID());
-
-    if ($clientsdetails['securityqid'] == 0) {
-        $smartyvalues['nocurrent'] = true;
-    } else {
-        foreach ($securityquestions as $values) {
-
-            if ($values['id'] == $clientsdetails['securityqid']) {
-                $smartyvalues['currentquestion'] = $values['question'];
-                continue;
-            }
-        }
-    }
-
-    if ($ra->get_req_var("submit")) {
-        check_token();
-
-        if ($clientsdetails['securityqid'] && $clientsdetails['securityqans'] != $currentsecurityqans) {
-            $errormessage .= "<li>" . $_LANG['securitycurrentincorrect'];
-        }
-
-        if (!$securityqans) {
-            $errormessage .= "<li>" . $_LANG['securityanswerrequired'];
-        }
-
-        if ($securityqans != $securityqans2) {
-            $errormessage .= "<li>" . $_LANG['securitybothnotmatch'];
-        }
-
-        if (!$errormessage) {
-            update_query("tblclients", array("securityqid" => $securityqid, "securityqans" => encrypt($securityqans)), array("id" => $client->getID()));
-            logActivity("Modified Security Question - User ID: " . $client->getID());
-            redir("action=changesq&successful=true");
-            exit();
-        }
-    }
-
-    $smartyvalues['errormessage'] = $errormessage;
 } elseif ($action == "product" || $action == "services") {
     checkContactPermission("products");
     if ($action == "product") {

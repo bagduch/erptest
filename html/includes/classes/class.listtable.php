@@ -163,7 +163,7 @@ class RA_ListTable {
 
         $content .= "
 <div class=\"tablebg\">
-<table id=\"sortabletbl" . $this->sortableTableCount . "\" class=\"datatable table \" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
+<table id=\"sortabletbl" . $this->sortableTableCount . "\" class=\"datatable table table-condensed table-sm\" width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"3\">
 <tr>";
         $columns = $this->getColumns();
         foreach ($columns as $column) {

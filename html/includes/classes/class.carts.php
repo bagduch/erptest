@@ -123,7 +123,6 @@ class RA_Carts {
         $errormessage = "";
         $gateways = new RA_Gateways();
         $availablegateways = getAvailableOrderPaymentGateways();
-        $securityquestions = getSecurityQuestions();
 
         if ($check) {
             $_SESSION['cart']['paymentmethod'] = $paymentmethod;
@@ -191,7 +190,7 @@ class RA_Carts {
 
             if (!$errormessage && !$_POST['updateonly']) {
                 if (!$_SESSION['uid']) {
-                    $userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans);
+                    $userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password);
                 }
 
 
@@ -394,7 +393,6 @@ class RA_Carts {
         $smartyvalues['password'] = $password;
         $smartyvalues['password2'] = $password2;
         $smartyvalues['customfields'] = $customfields;
-        $smartyvalues['securityquestions'] = $securityquestions;
         $smartyvalues['shownotesfield'] = $CONFIG['ShowNotesFieldonCheckout'];
 
         if (!$notes) {

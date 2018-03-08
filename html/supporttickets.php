@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * 
- *
- **/
 
 define("CLIENTAREA", true);
 require "init.php";
@@ -59,37 +49,15 @@ if (isset($_SESSION['uid'])) {
 		$smartyvalues['orderby'] = $orderby;
 		$smartyvalues['sort'] = strtolower($sort);
 
-		if ($orderby == "date") {
-			$orderby = "tbltickets.date";
-		}
-		else {
-			if ($orderby == "dept") {
-				$orderby = "did";
-			}
-			else {
-				if ($orderby == "subject") {
-					$orderby = "title";
-				}
-				else {
-					if ($orderby == "status") {
-						$orderby = "status";
-					}
-					else {
-						if ($orderby == "urgency") {
-							$orderby = "urgency";
-						}
-						else {
-							if ($orderby == "priority") {
-								$orderby = "urgency";
-							}
-							else {
-								$orderby = "lastreply";
-							}
-						}
-					}
-				}
-			}
-		}
+        switch($orderby) {
+            case "date":        $orderby = "tbltickets.date";   break;
+            case "dept":        $orderby = "did";               break;
+            case "subject":     $orderby = "title";             break;
+            case "status":      $orderby = "status";            break;
+            case "urgency":
+            case "priority":    $orderby = "urgency";           break;
+            default: $orderby = "lastreply";
+        }
 
 
 		if (!in_array($sort, array("ASC", "DESC"))) {
@@ -138,37 +106,15 @@ if (isset($_SESSION['uid'])) {
 		$smartyvalues['orderby'] = $orderby;
 		$smartyvalues['sort'] = strtolower($sort);
 
-		if ($orderby == "date") {
-			$orderby = "date";
-		}
-		else {
-			if ($orderby == "dept") {
-				$orderby = "deptname";
-			}
-			else {
-				if ($orderby == "subject") {
-					$orderby = "title";
-				}
-				else {
-					if ($orderby == "status") {
-						$orderby = "status";
-					}
-					else {
-						if ($orderby == "urgency") {
-							$orderby = "urgency";
-						}
-						else {
-							if ($orderby == "priority") {
-								$orderby = "urgency";
-							}
-							else {
-								$orderby = "lastreply";
-							}
-						}
-					}
-				}
-			}
-		}
+        switch($orderby) {
+            case "date":        $orderby = "date";      break;
+            case "dept":        $orderby = "deptname";  break;
+            case "subject":     $orderby = "title";     break;
+            case "status":      $orderby = "status";    break;
+            case "urgency":
+            case "priority":    $orderby = "urgency";   break;
+            default: $orderby = "lastreply";
+        }
 
 		$tickets = array();
         $result = select_query_i("tbltickets", 
@@ -212,4 +158,5 @@ else {
 }
 
 outputClientArea($templatefile);
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 ?>

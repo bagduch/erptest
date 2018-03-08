@@ -20,7 +20,6 @@ if (isset($_SESSION['uid'])) {
 }
 
 $capatacha = clientAreaInitCaptcha();
-$securityquestions = getSecurityQuestions();
 $firstname = $ra->get_req_var("firstname");
 $lastname = $ra->get_req_var("lastname");
 $companyname = $ra->get_req_var("companyname");
@@ -33,8 +32,6 @@ $postcode = $ra->get_req_var("postcode");
 $country = $ra->get_req_var("country");
 $phonenumber = $ra->get_req_var("phonenumber");
 $password = $ra->get_req_var("password");
-$securityqid = $ra->get_req_var("securityqid");
-$securityqans = $ra->get_req_var("securityqans");
 $customfield = $ra->get_req_var("customfield");
 $errormessage = "";
 
@@ -43,7 +40,7 @@ if ($ra->get_req_var("register")) {
 	$errormessage = checkDetailsareValid("", true);
 
 	if (!$errormessage) {
-		$userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $securityqid, $securityqans);
+		$userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password);
 		run_hook("ClientAreaRegister", array("userid" => $userid));
 		redir("", "clientarea.php");
 	}
@@ -73,7 +70,6 @@ $smarty->assign("clientstate", $state);
 $smarty->assign("clientpostcode", $postcode);
 $smarty->assign("clientcountriesdropdown", $countriesdropdown);
 $smarty->assign("clientphonenumber", $phonenumber);
-$smarty->assign("securityquestions", $securityquestions);
 $customfields = getCustomFields("client", "", "", "", "on", $customfield);
 $smarty->assign("customfields", $customfields);
 $smarty->assign("capatacha", $capatacha);

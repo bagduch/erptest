@@ -25,15 +25,7 @@
 <tr class="rowcolor1 signupfields"><td class="fieldlabel">{$LANG.clientareapassword}</td><td class="fieldarea"><input type="password" name="password" id="newpw" size="20" value="{$password}" /></td></tr>
 <tr class="rowcolor2 signupfields"><td class="fieldlabel">{$LANG.clientareaconfirmpassword}</td><td class="fieldarea"><input type="password" name="password2" size="20" value="{$password2}" /></td></tr>
 {/if}
-{if $customfields || $securityquestions}
-{if $securityquestions && !$loggedin}
-<tr class="rowcolor1 signupfields"><td class="fieldlabel">{$LANG.clientareasecurityquestion}</td><td class="fieldarea"><select name="securityqid">
-{foreach key=num item=question from=$securityquestions}
-	<option value={$question.id}>{$question.question}</option>
-{/foreach}
-</select></td></tr>
-<tr class="rowcolor2 signupfields"><td class="fieldlabel">{$LANG.clientareasecurityanswer}</td><td class="fieldarea"><input type="password" name="securityqans" size="30"></td></tr>
-{/if}
+{if $customfields)
 {foreach key=num item=customfield from=$customfields}
 <tr class="{cycle values="rowcolor1,rowcolor2"} signupfields"><td class="fieldlabel">{$customfield.name}</td><td class="fieldarea">{$customfield.input} {$customfield.description}</td></tr>
 {/foreach}

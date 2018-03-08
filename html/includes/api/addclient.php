@@ -51,7 +51,7 @@ if ($language) {
 	$_SESSION['Language'] = $language;
 }
 
-addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password2, $securityqid, $securityqans, $sendemail);
+addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password2, $sendemail);
 
 if ($_POST['cctype']) {
 	if (!function_exists("updateCCDetails")) {
