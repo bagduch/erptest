@@ -80,30 +80,6 @@ function getClientsDetails($userid = "", $contactid = "") {
     $ipaddr = $data['ip'];
     $host = $data['host'];
 
-    if ($details['country'] == "GB") {
-        $postcode = $origpostcode = $data['postcode'];
-        $postcode = strtoupper($postcode);
-        $postcode = preg_replace("/[^A-Z0-9]/", "", $postcode);
-
-        if (strlen($postcode) == 5) {
-            $postcode = substr($postcode, 0, 2) . " " . substr($postcode, 2);
-        } else {
-            if (strlen($postcode) == 6) {
-                $postcode = substr($postcode, 0, 3) . " " . substr($postcode, 3);
-            } else {
-                if (strlen($postcode) == 7) {
-                    $postcode = substr($postcode, 0, 4) . " " . substr($postcode, 4);
-                } else {
-                    $postcode = $origpostcode;
-                }
-            }
-        }
-
-        $postcode = trim($postcode);
-        $details['postcode'] = $postcode;
-    }
-
-
     if ($lastlogin == "0000-00-00 00:00:00") {
         $details['lastlogin'] = "No Login Logged";
     } else {
