@@ -334,7 +334,6 @@ class RA_ClientArea
 		global $ra;
 
 		$calinkupdatecc = (isset($_SESSION['calinkupdatecc']) ? $_SESSION['calinkupdatecc'] : CALinkUpdateCC());
-		$security = (isset($_SESSION['calinkupdatesq']) ? $_SESSION['calinkupdatesq'] : CALinkUpdateSQ());
 
 		if (!$security) {
 			$twofa = new RA_2FA();
@@ -344,7 +343,7 @@ class RA_ClientArea
 			}
 		}
 
-		return array("updatecc" => $calinkupdatecc, "updatesq" => $security, "security" => $security, "addfunds" => $ra->get_config("AddFundsEnabled"), "masspay" => $ra->get_config("EnableMassPay"), "affiliates" => $ra->get_config("AffiliateEnabled"), "domainreg" => $ra->get_config("AllowRegister"), "domaintrans" => $ra->get_config("AllowTransfer"), "domainown" => $ra->get_config("AllowOwnDomain"), "pmaddon" => get_query_val("tbladdonmodules", "value", array("module" => "project_management", "setting" => "clientenable")));
+		return array("updatecc" => $calinkupdatecc, "updatesq" => null, "security" => $security, "addfunds" => $ra->get_config("AddFundsEnabled"), "masspay" => $ra->get_config("EnableMassPay"), "affiliates" => $ra->get_config("AffiliateEnabled"), "domainreg" => $ra->get_config("AllowRegister"), "domaintrans" => $ra->get_config("AllowTransfer"), "domainown" => $ra->get_config("AllowOwnDomain"), "pmaddon" => get_query_val("tbladdonmodules", "value", array("module" => "project_management", "setting" => "clientenable")));
 	}
 
 	public function buildBreadCrumb() {

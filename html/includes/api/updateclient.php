@@ -79,7 +79,7 @@ if (isset($_POST['disableautocc'])) {
 }
 
 $updatequery = "";
-$fieldsarray = array("firstname", "lastname", "companyname", "email", "address1", "address2", "city", "state", "postcode", "country", "phonenumber", "credit", "taxexempt", "notes", "cardtype", "status", "language", "currency", "groupid", "taxexempt", "latefeeoveride", "overideduenotices", "billingcid", "separateinvoices", "disableautocc", "datecreated", "securityqid", "bankname", "banktype", "lastlogin", "ip", "host", "gatewayid");
+$fieldsarray = array("firstname", "lastname", "companyname", "email", "address1", "address2", "city", "state", "postcode", "country", "phonenumber", "credit", "taxexempt", "notes", "cardtype", "status", "language", "currency", "groupid", "taxexempt", "latefeeoveride", "overideduenotices", "billingcid", "separateinvoices", "disableautocc", "datecreated", "bankname", "banktype", "lastlogin", "ip", "host", "gatewayid");
 foreach ($fieldsarray as $fieldname) {
 
 	if (isset($_POST[$fieldname])) {
@@ -91,11 +91,6 @@ foreach ($fieldsarray as $fieldname) {
 
 if ($_POST['password2']) {
 	$updatequery .= "password='" . generateClientPW($_POST['password2']) . "',";
-}
-
-
-if ($_POST['securityqans']) {
-	$updatequery .= "securityqans='" . encrypt($_POST['securityqans']) . "',";
 }
 
 

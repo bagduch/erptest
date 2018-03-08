@@ -146,25 +146,6 @@
 	</div>
 {/foreach}
 
-{if $securityquestions}
-    <div class="form-group">
-	    <label class="control-label" for="securityqans">{$LANG.clientareasecurityquestion}</label>
-		<div class="controls">
-		    <select name="securityqid" id="securityqid">
-            {foreach key=num item=question from=$securityquestions}
-            	<option value={$question.id}>{$question.question}</option>
-            {/foreach}
-            </select>
-		</div>
-	</div>
-    <div class="form-group">
-	    <label class="control-label" for="securityqans">{$LANG.clientareasecurityanswer}</label>
-		<div class="controls">
-		    <input type="password" class="form-control" name="securityqans" id="securityqans" />
-		</div>
-	</div>
-{/if}
-
 	</div>
 	</div>
 	

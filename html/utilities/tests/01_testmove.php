@@ -106,8 +106,6 @@ foreach ($clientids as $clientid) {
             datecreated=>$client["datecreated"],
             notes => "TODO", // FIXME
             billingcid=>0,
-            securityqid=>NULL,
-            securityqans=>NULL,
             groupid=>0,
             lastlogin=>$client["lastlogin"],
             ip=>$client["ip"],

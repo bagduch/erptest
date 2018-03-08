@@ -1,14 +1,4 @@
 <?php
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * 
- *
- **/
 
 define("CLIENTAREA", true);
 require "init.php";
@@ -16,7 +6,6 @@ require "includes/clientfunctions.php";
 $pagetitle = $_LANG['pwreset'];
 $breadcrumbnav = "<a href=\"index.php\">" . $_LANG['globalsystemname'] . "</a> > <a href=\"clientarea.php\">" . $_LANG['clientareatitle'] . "</a> > <a href=\"pwreset.php\">" . $_LANG['pwreset'] . "</a>";
 initialiseClientArea($pagetitle, "", $breadcrumbnav);
-$securityquestion = "";
 $action = $ra->get_req_var("action");
 $email = $ra->get_req_var("email");
 $answer = $ra->get_req_var("answer");
@@ -32,18 +21,12 @@ if ($action == "reset") {
 	$templatefile = "pwreset";
 	$errormessage = doResetPWEmail($email, $answer);
 
-	if ($securityquestion) {
-		$smartyvalues['securityquestion'] = $securityquestion;
-	}
-
 
 	if ($errormessage) {
 		$smartyvalues['errormessage'] = $errormessage;
 	}
 	else {
-		if (!$securityquestion || ($securityquestion && $answer)) {
-			$smartyvalues['success'] = true;
-		}
+		$smartyvalues['success'] = true;
 	}
 }
 else {
@@ -74,4 +57,5 @@ else {
 }
 
 outputClientArea($templatefile);
+// vim: ai ts=4 sts=4 et sw=4 ft=php
 ?>

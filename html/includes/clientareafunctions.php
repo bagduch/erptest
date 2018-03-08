@@ -321,17 +321,6 @@ function CALinkUpdateCC() {
     return false;
 }
 
-function CALinkUpdateSQ() {
-    $get_sq_count = get_query_val("tbladminsecurityquestions", "COUNT(id)", "");
-
-    if (0 < $get_sq_count) {
-        $_SESSION['calinkupdatesq'] = 1;
-        return true;
-    }
-
-    $_SESSION['calinkupdatesq'] = 0;
-    return false;
-}
 
 function clientAreaTableInit($name, $defaultorderby, $defaultsort, $numitems) {
     global $ra;

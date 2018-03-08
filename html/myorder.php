@@ -287,7 +287,6 @@ if ($_SESSION['address']) {
     if ($step == "3") {
         $gateways = new RA_Gateways();
         $availablegateways = getAvailableOrderPaymentGateways();
-        $securityquestions = getSecurityQuestions();
 
         //   echo "<pre>", print_r($gateways->getCCDateMonths(), 1), "</pre>";
 

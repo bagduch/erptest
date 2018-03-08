@@ -33,7 +33,7 @@ if ($ra->get_req_var("save")) {
         $_SESSION['profilevalidationerror'] = $errormessage;
         $oldclientsdetails = getClientsDetails($userid);
         $table = "tblclients";
-        $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "securityqid" => $securityqid, "securityqans" => encrypt($securityqans), "groupid" => $groupid);
+        $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "groupid" => $groupid);
 
         if (!$twofaenabled) {
             $array['authmodule'] = "";
@@ -127,9 +127,6 @@ if ($CONFIG['NOMD5']) {
 } else {
     $password = $aInt->lang("fields", "entertochange");
 }
-
-$questions = getSecurityQuestions("");
-
 
 $result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
 

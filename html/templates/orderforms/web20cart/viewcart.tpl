@@ -384,27 +384,8 @@ function enterNewCC() {
 </div>
 <div class="clear"></div>
 
-{if $customfields || $securityquestions}
+{if $customfields)
 <div class="signupfieldsextra">
-{if $securityquestions && !$loggedin}
-    <div class="clearfix">
-	    <label for="securityqid">{$LANG.clientareasecurityquestion}</label>
-		<div class="input">
-            <select name="securityqid" id="securityqid">
-                {foreach key=num item=question from=$securityquestions}
-        	    <option value={$question.id}>{$question.question}</option>
-                {/foreach}
-            </select>
-		</div>
-	</div>
-
-    <div class="clearfix">
-	    <label for="securityqans">{$LANG.clientareasecurityanswer}</label>
-		<div class="input">
-            <input type="text" name="securityqans" id="securityqans" />
-		</div>
-	</div>
-{/if}
 {foreach key=num item=customfield from=$customfields}
     <div class="clearfix">
 	    <label for="customfield{$customfield.id}">{$customfield.name}</label>

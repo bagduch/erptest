@@ -10,28 +10,11 @@
       {if $errormessage}
       <p><small>{$LANG.pwresetdesc}</small></p>      
       <p class="text-danger bg-danger text-alert">{$errormessage}</p>
-      {elseif !$securityquestion}
+      {else}
       <p><small>{$LANG.pwresetdesc}</small></p>
       {/if}
       <form method="post" action="pwreset.php"  name="frmpwreset">
         <input type="hidden" name="action" value="reset" />
-        {if $securityquestion}
-        <input type="hidden" name="email" value="{$email}" />
-        <p><small>{$LANG.pwresetsecurityquestionrequired}</small></p> 
-        <div class="form-group">          
-          <div class="input-group input-group-lg">          
-            <span class="input-group-addon"><span aria-hidden="true" class="icon icon-question"></span></span>
-            <input class="form-control" name="answer" id="answer" type="text" value="{$answer}" placeholder="{$securityquestion}" />
-          </div>
-        </div>         
-        {else}
-        <div class="form-group">
-          <div class="input-group input-group-lg">
-            <span class="input-group-addon"><i class="fa fa-envelope fa-fw"></i></span>
-            <input class="form-control" name="email" id="email" type="email" placeholder="{$LANG.loginemail}" />
-          </div>
-        </div>    
-        {/if}          
         <div class="row">
          <div class="col-md-12">
           <p><input type="submit" class="btn btn-primary btn-lg btn-block" value="{$LANG.pwresetsubmit}" /></p>

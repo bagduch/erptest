@@ -191,18 +191,10 @@ function enterNewCC() {
 <tr><td class="fieldarea">{$LANG.clientareaphonenumber}</td><td>{if $loggedin}{$clientsdetails.phonenumber}{else}<input type="text" name="phonenumber" size="20" value="{$clientsdetails.phonenumber}" />{/if}</td></tr>
 </table>
 
-{if !$loggedin && ($customfields || $securityquestions)}
+{if !$loggedin && $customfields}
 </td></tr>
 <tr><td colspan="2">
 <table width="100%" cellpadding="2">
-{if $securityquestions && !$loggedin}
-<tr><td width="200" class="fieldarea">{$LANG.clientareasecurityquestion}</td><td><select name="securityqid">
-{foreach key=num item=question from=$securityquestions}
-	<option value={$question.id}>{$question.question}</option>
-{/foreach}
-</select></td></tr>
-<tr><td class="fieldarea">{$LANG.clientareasecurityanswer}</td><td><input type="password" name="securityqans" size="30"></td></tr>
-{/if}
 {foreach key=num item=customfield from=$customfields}
 <tr><td width="200" class="fieldarea">{$customfield.name}</td><td>{$customfield.input} {$customfield.description}</td></tr>
 {/foreach}

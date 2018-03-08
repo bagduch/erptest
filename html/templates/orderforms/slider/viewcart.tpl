@@ -162,15 +162,7 @@ function emptyCart(type,num) {
 <tr>{if !$loggedin}<td class="fieldlabel">{$LANG.clientareapassword}</td><td class="fieldarea"><input type="password" name="password" tabindex="5" id="newpw" size="20" value="{$password}" /></td>{else}<td class="fieldlabel"></td><td class="fieldarea"></td>{/if}<td class="fieldlabel">{$LANG.clientareapostcode}</td><td class="fieldarea">{if $loggedin}{$clientsdetails.postcode}{else}<input type="text" name="postcode" tabindex="11" size="15" value="{$clientsdetails.postcode}" />{/if}</td></tr>
 <tr>{if !$loggedin}<td class="fieldlabel">{$LANG.clientareaconfirmpassword}</td><td class="fieldarea"><input type="password" name="password2" tabindex="6" size="20" value="{$password2}" /></td>{else}<td class="fieldlabel"></td><td class="fieldarea"></td>{/if}<td class="fieldlabel">{$LANG.clientareacountry}</td><td class="fieldarea">{if $loggedin}{$clientsdetails.country}{else}{$clientcountrydropdown|replace:'<select':'<select tabindex="12"'}{/if}</td></tr>
 <tr><td colspan="2" class="fieldarea">{if !$loggedin}<script language="javascript">showStrengthBar();</script>{/if}</td><td class="fieldlabel">{$LANG.clientareaphonenumber}</td><td class="fieldarea">{if $loggedin}{$clientsdetails.phonenumber}{else}<input type="text" name="phonenumber" tabindex="13" size="20" value="{$clientsdetails.phonenumber}" />{/if}</td></tr>
-{if $customfields || $securityquestions}
-{if $securityquestions && !$loggedin}
-<tr><td class="fieldlabel">{$LANG.clientareasecurityquestion}</td><td class="fieldarea" colspan="3"><select name="securityqid" tabindex="14">
-{foreach key=num item=question from=$securityquestions}
-	<option value={$question.id}>{$question.question}</option>
-{/foreach}
-</select></td></tr>
-<tr><td class="fieldlabel">{$LANG.clientareasecurityanswer}</td><td class="fieldarea" colspan="3"><input type="password" name="securityqans" tabindex="15" size="30"></td></tr>
-{/if}
+{if $customfields)
 {foreach key=num item=customfield from=$customfields}
 <tr><td class="fieldlabel">{$customfield.name}</td><td class="fieldarea" colspan="3">{$customfield.input} {$customfield.description}</td></tr>
 {/foreach}

@@ -1093,7 +1093,6 @@ $_ADMINLANG['setup']['ticketstatuses'] = "Ticket Statuses";
 $_ADMINLANG['setup']['escalationrules'] = "Escalation Rules";
 $_ADMINLANG['setup']['spam'] = "Spam Control";
 $_ADMINLANG['setup']['other'] = "Other";
-$_ADMINLANG['setup']['securityqs'] = "Security Questions";
 $_ADMINLANG['setup']['addonmodules'] = "Addon Modules";
 $_ADMINLANG['setup']['bannedips'] = "Banned IPs";
 $_ADMINLANG['setup']['bannedemails'] = "Banned Emails";
@@ -1164,8 +1163,6 @@ $_ADMINLANG['fields']['emailnotifications'] = "Email Notifications";
 $_ADMINLANG['fields']['permissions'] = "Permissions";
 $_ADMINLANG['fields']['entertochange'] = "Enter to Change";
 $_ADMINLANG['fields']['type'] = "Type";
-$_ADMINLANG['fields']['securityquestion'] = "Security Question";
-$_ADMINLANG['fields']['securityanswer'] = "Security Answer";
 $_ADMINLANG['fields']['adminnotes'] = "Admin Notes";
 $_ADMINLANG['fields']['setupfee'] = "Setup Fee";
 $_ADMINLANG['fields']['hours'] = "Hours";
@@ -2773,21 +2770,6 @@ $_ADMINLANG['ticketstatusconfig']['includeinactivetickets'] = "Include in Active
 $_ADMINLANG['ticketstatusconfig']['includeinawaitingreply'] = "Include in Awaiting Reply";
 $_ADMINLANG['ticketstatusconfig']['autoclose'] = "Auto Close?";
 $_ADMINLANG['ticketstatusconfig']['statuscolor'] = "Status Color";
-
-# Config Security Questions
-$_ADMINLANG['securityquestionconfig']['add'] = "Add Security Question";
-$_ADMINLANG['securityquestionconfig']['edit'] = "Edit Security Question";
-$_ADMINLANG['securityquestionconfig']['question'] = "Question";
-$_ADMINLANG['securityquestionconfig']['questions'] = "Questions";
-$_ADMINLANG['securityquestionconfig']['uses'] = "Uses";
-$_ADMINLANG['securityquestionconfig']['delsuresecurityquestion'] = "Click OK if you are sure you want to delete this question?";
-$_ADMINLANG['securityquestionconfig']['changesuccess'] = "Question Edited Successfully!";
-$_ADMINLANG['securityquestionconfig']['changesuccessinfo'] = "The question has been saved successfully";
-$_ADMINLANG['securityquestionconfig']['addsuccess'] = "Question Added Successfully!";
-$_ADMINLANG['securityquestionconfig']['error'] = "An Error Occurred";
-$_ADMINLANG['securityquestionconfig']['errorinfo'] = "You cannot delete a Security Question while it is in use";
-$_ADMINLANG['securityquestionconfig']['delsuccess'] = "Question Deleted Successfully!";
-$_ADMINLANG['securityquestionconfig']['delsuccessinfo'] = "The selected Security Question has now been deleted.";
 
 # Gateway Log
 $_ADMINLANG['gatewaytranslog']['gatewaytranslogtitle'] = "Gateway Transaction Log";

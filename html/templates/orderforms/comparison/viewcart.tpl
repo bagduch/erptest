@@ -165,14 +165,6 @@ function emptyCart(type,num) {
 <tr><td>{$LANG.clientareapostcode}</td><td>{if $loggedin}{$clientsdetails.postcode}{else}<input type="text" name="postcode" size="15" value="{$clientsdetails.postcode}" />{/if}</td></tr>
 <tr><td>{$LANG.clientareacountry}</td><td>{if $loggedin}{$clientsdetails.country}{else}{$clientcountrydropdown}{/if}</td></tr>
 <tr><td>{$LANG.clientareaphonenumber}</td><td>{if $loggedin}{$clientsdetails.phonenumber}{else}<input type="text" name="phonenumber" size="20" value="{$clientsdetails.phonenumber}" />{/if}</td></tr>
-{if $securityquestions && !$loggedin}
-<tr><td>{$LANG.clientareasecurityquestion}</td><td><select name="securityqid">
-{foreach key=num item=question from=$securityquestions}
-	<option value={$question.id}>{$question.question}</option>
-{/foreach}
-</select></td></tr>
-<tr><td>{$LANG.clientareasecurityanswer}</td><td><input type="password" name="securityqans" size="30"></td></tr>
-{/if}
 {foreach key=num item=customfield from=$customfields}
 <tr><td>{$customfield.name}</td><td>{$customfield.input} {$customfield.description}</td></tr>
 {/foreach}
