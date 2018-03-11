@@ -447,7 +447,7 @@ if ($action == "") {
         $existingpwd = $data['password'];
         $salt = explode(":", $existingpwd);
         $salt = $salt[1];
-        $existingpw = generateClientPW($existingpw, $salt);
+        $existingpw = generateClientPW($existingpw);
 
         if ($validate->validate("match_value", "existingpwd", "existingpasswordincorrect", array($existingpw, $existingpwd))) {
             if ($validate->validate("required", "newpw", "ordererrorpassword")) {

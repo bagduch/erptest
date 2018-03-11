@@ -445,7 +445,22 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
     return $errormessage;
 }
 
-function addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
+function addClient(
+    $firstname, 
+    $lastname, 
+    $companyname, 
+    $email, 
+    $address1, 
+    $address2, 
+    $city, 
+    $state, 
+    $postcode, 
+    $country, 
+    $phonenumber, 
+    $password, 
+    $dob, 
+    $sendemail = "on", 
+    $additionaldata = "") {
     global $ra;
     global $remote_ip;
 
@@ -520,7 +535,27 @@ function addContact($userid, $firstname, $lastname, $companyname, $email, $addre
     }
 
     $table = "tblcontacts";
-    $array = array("userid" => $userid, "firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "subaccount" => $subaccount, "password" => generateClientPW($password), "permissions" => $permissions, "generalemails" => $generalemails, "productemails" => $productemails, "domainemails" => $domainemails, "invoiceemails" => $invoiceemails, "supportemails" => $supportemails);
+    $array = array(
+        "userid" => $userid, 
+        "firstname" => $firstname, 
+        "lastname" => $lastname, 
+        "companyname" => $companyname, 
+        "email" => $email, 
+        "address1" => $address1, 
+        "address2" => $address2, 
+        "city" => $city, 
+        "state" => $state, 
+        "postcode" => $postcode, 
+        "country" => $country, 
+        "phonenumber" => $phonenumber, 
+        "subaccount" => $subaccount, 
+        "password" => generateClientPW($password), 
+        "permissions" => $permissions, 
+        "generalemails" => $generalemails, 
+        "productemails" => $productemails, 
+        "domainemails" => $domainemails, 
+        "invoiceemails" => $invoiceemails, 
+        "supportemails" => $supportemails);
     $contactid = insert_query($table, $array);
     run_hook("ContactAdd", array_merge($array, array("contactid" => $contactid)));
     logActivity("Added Contact - Contact ID: " . $contactid . " - User ID: " . $userid, $userid);
@@ -581,7 +616,7 @@ function deleteClient($userid) {
     return true;
 }
 
-function generateClientPW($plain, $salt = "", $ignoreconfig = false) {
+function generateClientPW($plain) {
     return password_hash(html_entity_decode($plain), PASSWORD_DEFAULT);
 }
 
