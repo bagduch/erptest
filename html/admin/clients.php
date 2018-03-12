@@ -107,7 +107,7 @@ if ($filters->isActive() && $numresults == 1) {
                     sprintf("%s (%s)", $client['services'], $client['totalservices']),
                     sprintf("%s (%s)", $client['products'], $client['totalproducts']),
                     $client['datecreated'],
-                    "<span class=\"label " . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
+                    "<span class=\"" . strtolower($client['status']) . "\">" . $client['status'] . "</span>"));
     }
 
     $table = $tbl->output();

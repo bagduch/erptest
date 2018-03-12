@@ -1,17 +1,10 @@
 
-<div class="box box-warning collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"> 
-            <button style="font-size: 20px;color:blue" type="button" class="btn btn-box-tool" data-widget="collapse">Search/Filter
-            </button>
-        </h3>
-        <!-- /.box-tools -->
-    </div>
-    <div class="box-body">
+<div class="card">
+    <div class="content">
         <div clas="row">
             <form action="supporttickets.php" method="post">
 
-                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>
                         <tr>
                             <td width="15%" class="fieldlabel">Status</td>
@@ -70,7 +63,7 @@
 
                 <img src="images/spacer.gif" height="10" width="1"><br>
                 <div align="center">
-                    <input type="submit" value="Search/Filter" class="button">
+                    <input type="submit" value="Search/Filter" class="btn btn-default">
                 </div>
 
             </form>
@@ -78,46 +71,62 @@
     </div>
 </div>
 
+<div class="card">
 
-{if $smartyvalues.yourticket}
-    <div class="box">
-
-        <div class="box-header with-border">
-            <h3 class="box-title">Your Assigned Tickets</h3>
+    <div class="content">
+        <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+                <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                    <li class="active">
+                        <a href="#pill1" data-toggle="tab">Your Tickets</a>
+                    </li>
+                    <li>
+                        <a href="#pill2" data-toggle="tab">Assigned Tickets</a>
+                    </li>
+                    <li>
+                        <a href="#pill3" data-toggle="tab">Unassigned Tickets</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="box-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="pill1">
+               
+                    {if $smartyvalues.yourticket}
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Your Assigned Tickets</h3>
+                            </div>
+                            <div class="box-body">
+                                {$smartyvalues.yourticket}
+                            </div>
+                        </div>
+                    {/if}
+            </div>
+            <div class="tab-pane" id="pill2">
+               {if $table}
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Assigned Tickets</h3>
+                            </div>
+                            <div class="box-body">{$table}</div>
+                        </div>
+                    {/if}
+            </div>
+            <div class="tab-pane" id="pill3">
+              {if $smartyvalues.unsignedtable}
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Unassigned Tickets</h3>
+                            </div>
+                            <div class="box-body">
 
-            {$smartyvalues.yourticket}
+                                {$smartyvalues.unsignedtable}
 
+                            </div>
+                        </div>
+                    {/if}
+            </div>
         </div>
     </div>
-{/if}
-{if $table}
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title">Assigned Tickets</h3>
-        </div>
-        <div class="box-body">{$table}</div>
-    </div>
-{/if}
-{if $smartyvalues.unsignedtable}
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title">Unassigned Tickets</h3>
-        </div>
-        <div class="box-body">
-
-            {$smartyvalues.unsignedtable}
-
-        </div>
-    </div>
-{/if}
-
-
-{literal}
-
-    <script type="text/javascript">
-
-
-    </script>
-{/literal}
+</div>

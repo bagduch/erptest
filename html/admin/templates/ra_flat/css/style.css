@@ -341,3 +341,7 @@ div#extRA_info td, div#extRA_info td a {
     color: #1c2852;
     text-decoration: none;
 }
+.noborder
+{
+    border: none;
+}

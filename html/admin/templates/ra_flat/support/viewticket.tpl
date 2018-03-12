@@ -5,9 +5,9 @@
         });
     </script>
 {/literal}
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title">
+<div class="card">
+    <div class="card-header">
+        <h3 class="header card-header">
             <div class="form-inline">
                 # - {$smartyvalues.tid} {$smartyvalues.subject} 
                 <select class="form-control" name="ticketstatus" id="ticketstatus">
@@ -28,48 +28,62 @@
         </h3>
         <div class="ticketlastreply">Last Reply: {$smartyvalues.lastreply} </div>
     </div>
-    <div class="box-body">
-        <div class="col-md-8">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="#reply" aria-controls="reply" role="tab" data-toggle="tab">Add Reply</a></li>
-                    <li role="presentation"><a href="#tag" aria-controls="tag" role="tab" data-toggle="tab">Add Tag</a></li>
-                    <li role="presentation"><a href="#note" aria-controls="note" role="tab" data-toggle="tab">Add Note</a></li>
-                    <li role="presentation"><a href="#otickets" aria-controls="otickets" role="tab" data-toggle="tab">Other Tickets</a></li>
-                    <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a></li>
-                </ul>
+</div>
+<div class="card">
+    <div class="row">
+        <div class="content">
+            <div class="col-md-8">
+                <div class="nav-tabs-navigation">
+                    <div class="nav-tabs-wrapper">
+                        <ul class="nav nav-tabs">
+                            <li role="presentation" class="active"><a href="#reply" aria-controls="reply" role="tab" data-toggle="tab">Add Reply</a></li>
+                            <li role="presentation"><a href="#tag" aria-controls="tag" role="tab" data-toggle="tab">Add Tag</a></li>
+                            <li role="presentation"><a href="#note" aria-controls="note" role="tab" data-toggle="tab">Add Note</a></li>
+                            <li role="presentation"><a href="#otickets" aria-controls="otickets" role="tab" data-toggle="tab">Other Tickets</a></li>
+                            <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="reply">
                         <form id="replyform{$smartyvalues.ticketid}{$adminid}" method="post" action="{$PHP_SELF}?action=viewticket&amp;id={$smartyvalues.ticketid}" enctype="multipart/form-data" name="replyfrm" id="replyfrm">
                             <textarea class="form-control" name="message" id="replymessage" rows="14" style="width:100%;margin:0 0 10px 0;"></textarea>
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody><tr>
-                                        <td width="15%" class="fieldlabel">Tools</td>
-                                        <td class="fieldarea"><select name="postaction">
-                                                <option value="answered">Set to Answered &amp; Remain in Ticket View</option>
-                                                <option value="return">Set to Answered &amp; Return to Ticket List</option>
-                                                <option value="close">Close &amp; Return to Ticket List</option>
-                                            </select>
-                                            <input type="submit" value="Add Response »" name="postreply" class="btn-primary" id="postreplybutton">
-                                            <div style="float:right;">
-                                                <input type="button" value="Insert Predefined Reply" class="btn" id="insertpredef">
+                            <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Tools</td>
+                                        <td class="fieldarea">
+                                            <div class="col-md-8">
+                                                <select class="form-control" name="postaction">
+                                                    <option value="answered">Set to Answered &amp; Remain in Ticket View</option>
+                                                    <option value="return">Set to Answered &amp; Return to Ticket List</option>
+                                                    <option value="close">Close &amp; Return to Ticket List</option>
+                                                </select>
                                             </div>
+                                            <div class="col-md-2">
+                                                <input type="submit" value="Add Response »" name="postreply" class="btn btn-primary" id="postreplybutton">
+                                            </div>
+                                        </td>
+                                        <td>
                                             <div id="prerepliescontainer">
-                                                <div class="box">
-                                                    <div style="float:right;">
-                                                        <input type="text" id="predefq" size="25" value="Search" onfocus="this.value = (this.value == 'Search') ? '' : this.value;" onblur="this.value = (this.value == '') ? 'Search' : this.value;">
-                                                    </div>
-                                                    <div id="prerepliescontent"></div>
-                                                </div>
-                                            </div></td>
+                                                {*                                                        <input type="text" id="predefq" size="25" class="form-control" value="Search" onfocus="this.value = (this.value == 'Search') ? '' : this.value;" onblur="this.value = (this.value == '') ? 'Search' : this.value;">*}
+                                                <input type="button" value="Insert Predefined Reply" class="btn" id="insertpredef">
+                                                <div id="prerepliescontent"></div>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="fieldlabel">Attachments</td>
-                                        <td class="fieldarea"><input type="file" name="attachments[]" size="85">
-                                            <a href="#" id="addfileupload"><img src="images/icons/add.png" align="absmiddle" border="0"> Add More</a><br>
-                                            <div id="fileuploads"></div></td>
+                                        <td class="fieldarea">
+                                            <div id ="fileuploads" class="col-md-8">
+                                                <input type="file" class="form-control" name="attachments[]" size="50">
+                                            </div>
+                                            <div class="col-md-2"><button class="btn btn-default" id="addfileupload"><i class="fa fa-plus">Add More</i></button></div>
+                                        </td>
+                                        <td></td>
                                     </tr>
-                                </tbody></table>
+                                </tbody>
+                            </table>
                         </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tag">
@@ -117,60 +131,20 @@
                         <img src="images/loading.gif" align="top"> Loading... 
                     </div>  
                 </div>
-            </div>
-            <input type="hidden" name="id" value="">
-            <input type="hidden" name="action" value="split">
 
-            <p align="center"><a href="{$PHP_SELF}?id=" target="_blank">View Printable Version</a></p>
-            <input type="hidden" name="splitdeptid" id="splitdeptid">
-            <input type="hidden" name="splitsubject" id="splitsubject">
-            <input type="hidden" name="splitpriority" id="splitpriority">
-            <input type="hidden" name="splitnotifyclient" id="splitnotifyclient">
-            <div id="ticketreplies">
-                {foreach from=$smartyvalues.replies item=row}
-                    <div class="{if $row.admin != NULL}staff{/if}reply">
-                        <div class="leftcol">
-                            <div class="submitter">
-                                <div class="name">{$row.admin}{$row.clientname}</div>
-                                <div class="title">{if $row.admin != NULL}client{else}staff{/if}</div>
-                            </div>
-                            <div class="tools">
-                                <div class="editbtnsr{$row.id}">
-                                    <input type="button" value="Edit" onclick="editTicket('r{$row.id}')" class="btn btn-xs btn-small btn-default">
-                                    <input type="button" value="Delete" onclick="doDeleteReply('{$row.id}')" class="btn btn-xs btn-small btn-danger"></div>
-                                <div class="editbtnsr{$row.id}" style="display:none">
-                                    <input type="button" value="Save" onclick="editTicketSave('r{$row.id}')" class="btn btn-xs btn-small btn-success">
-                                    <input type="button" value="Cancel" onclick="editTicketCancel('r{$row.id}')" class="btn btn-xs btn-small btn-default">
-                                </div>
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="action" value="split">
+                <input type="hidden" name="splitdeptid" id="splitdeptid">
+                <input type="hidden" name="splitsubject" id="splitsubject">
+                <input type="hidden" name="splitpriority" id="splitpriority">
+                <input type="hidden" name="splitnotifyclient" id="splitnotifyclient">
 
-                            </div>
-                        </div>
-                        <div class="rightcol">
-                            <div class="quoteicon">
-                                <a href="#" onclick="quoteTicket('', '{$row.id}')"><i class="fa fa-comment-o" aria-hidden="true"></i></a> 
-                                <input type="checkbox" name="rids[]" value="{$row.id}">
-                            </div>
-                            <div class="postedon">Posted on {$row.friendlydate} {$row.friendlytime }</div>
-                            <div class="msgwrap" id="contentr{$row.id}">
-                                <div class="message">
-                                    {$row.message|strip_tags}
-                                </div>
-                                <div class="ticketattachmentcontainer">
-                                    {foreach from=$row.attachments item=item}
-                                        <a href="{$item.dllink}">{$item.filename}</a>
-                                    {/foreach}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                {/foreach} 
             </div>
         </div>
         <div class="col-md-4">
             <form class="right-form" method="post" action="{$PHP_SELF}?action=viewticket&amp;id={$smartyvalues.ticketid}">
-
-                <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <div>Option</div>
+                <table class="form table noborder" width="100%" border="0" cellspacing="2" cellpadding="3">
                     <tbody>
                         <tr>
                             <td width="15%" class="fieldlabel">Department</td>
@@ -228,85 +202,277 @@
 
                 <div class="clearfix"></div>
                 <div align="center">
-                    <input type="submit" value="Save Changes" class="button">
+                    <input type="submit" value="Save Changes" class="btn btn-success">
                 </div>
-                <div id="notes">
-                    <h3>Notes:</h3>
-                    {if $smartyvalues.notes}
-                        {foreach from=$smartyvalues.notes item=note}
-                            <div class="staffreply" id="not{$note.id}">
-                                <div class="leftcol">
-                                    <div class="submitter">
-                                        <div class="name">{$note.admin}</div>
-                                        <br>
-                                    </div>
-                                    {if $note.adminid eq $adminid}
-                                        <div class="tools">
-                                            <div class="editbtnotes{$note.id}">
-                                                <input type="button" value="Edit" onclick="editNotes({$note.id})" class="btn btn-xs btn-small btn-default">
-                                                <input type="button" value="Delete" onclick="deleteNotes({$note.id})" class="btn btn-xs btn-small btn-danger"></div>
-                                            <div class="editbtnotess{$note.id}" style="display:none">
-                                                <input type="button" value="Save" onclick="saveNotes({$note.id})" class="btn btn-xs btn-small btn-success">
-                                                <input type="button" value="Cancel" onclick="cancelNotes({$note.id})" class="btn btn-xs btn-small btn-default">
-                                            </div>
 
-                                        </div>
-                                    {/if}
-                                </div>
-                                <div class="rightcol">
-
-                                    <div class="postedon">Posted on {$note.date}</div>
-                                    <div class="msgwrap" id="notes{$note.id}">
-                                        <div class="message">{$note.message}</div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        {/foreach}
-                    {/if}
-                </div>
             </form>
 
         </div>
     </div>
-    {literal}
-        <script type="text/javascript">
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                // newly activated tab getticketlog
-                if (e.target.attributes[1].value == "clog")
-                {
-                    $.get("", {action: "getclientlog"}).done(function (data) {
-                        $("#clog").html(data);
-                    });
-                }
+</div>
 
-                if (e.target.attributes[1].value == "otickets")
-                {
-                    $.get("", {action: "gettickets"}).done(function (data) {
-                        $("#otickets").html(data);
-                    });
+<div class="card">
+    <div id="ticketreplies">
+        {foreach from=$smartyvalues.replies item=row}
+            <div class="{if $row.admin != NULL}staff{/if}reply">
+                <div class="leftcol">
+                    <div class="submitter">
+                        <div class="name">{$row.admin}{$row.clientname}</div>
+                        <div class="title">{if $row.admin != NULL}client{else}staff{/if}</div>
+                    </div>
+                    <div class="tools">
+                        <div class="editbtnsr{$row.id}">
+                            <input type="button" value="Edit" onclick="editTicket('r{$row.id}')" class="btn btn-xs btn-small btn-default">
+                            <input type="button" value="Delete" onclick="doDeleteReply('{$row.id}')" class="btn btn-xs btn-small btn-danger"></div>
+                        <div class="editbtnsr{$row.id}" style="display:none">
+                            <input type="button" value="Save" onclick="editTicketSave('r{$row.id}')" class="btn btn-xs btn-small btn-success">
+                            <input type="button" value="Cancel" onclick="editTicketCancel('r{$row.id}')" class="btn btn-xs btn-small btn-default">
+                        </div>
 
-                }
-                if (e.target.attributes[1].value == "log")
-                {
-                    $.get("", {action: "getticketlog"}).done(function (data) {
-                        $("#log").html(data);
+                    </div>
+                </div>
+                <div class="rightcol">
+                    <div class="quoteicon">
+                        <a href="#" onclick="quoteTicket('', '{$row.id}')"><i class="fa fa-comment-o" aria-hidden="true"></i></a> 
+                        <input type="checkbox" name="rids[]" value="{$row.id}">
+                    </div>
+                    <div class="postedon">Posted on {$row.friendlydate} {$row.friendlytime }</div>
+                    <div class="msgwrap" id="contentr{$row.id}">
+                        <div class="message">
+                            {$row.message|strip_tags}
+                        </div>
+                        <div class="ticketattachmentcontainer">
+                            {foreach from=$row.attachments item=item}
+                                <a href="{$item.dllink}">{$item.filename}</a>
+                            {/foreach}
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        {/foreach} 
+    </div>
+</div>
+<div id="notes">
+    <h3>Notes:</h3>
+    {if $smartyvalues.notes}
+        {foreach from=$smartyvalues.notes item=note}
+            <div class="staffreply" id="not{$note.id}">
+                <div class="leftcol">
+                    <div class="submitter">
+                        <div class="name">{$note.admin}</div>
+                        <br>
+                    </div>
+                    {if $note.adminid eq $adminid}
+                        <div class="tools">
+                            <div class="editbtnotes{$note.id}">
+                                <input type="button" value="Edit" onclick="editNotes({$note.id})" class="btn btn-xs btn-small btn-default">
+                                <input type="button" value="Delete" onclick="deleteNotes({$note.id})" class="btn btn-xs btn-small btn-danger"></div>
+                            <div class="editbtnotess{$note.id}" style="display:none">
+                                <input type="button" value="Save" onclick="saveNotes({$note.id})" class="btn btn-xs btn-small btn-success">
+                                <input type="button" value="Cancel" onclick="cancelNotes({$note.id})" class="btn btn-xs btn-small btn-default">
+                            </div>
+
+                        </div>
+                    {/if}
+                </div>
+                <div class="rightcol">
+
+                    <div class="postedon">Posted on {$note.date}</div>
+                    <div class="msgwrap" id="notes{$note.id}">
+                        <div class="message">{$note.message}</div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        {/foreach}
+    {/if}
+</div>
+
+{literal}
+    <script type="text/javascript">
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // newly activated tab getticketlog
+            if (e.target.attributes[1].value == "clog")
+            {
+                $.get("", {action: "getclientlog"}).done(function (data) {
+                    $("#clog").html(data);
+                });
+            }
+
+            if (e.target.attributes[1].value == "otickets")
+            {
+                $.get("", {action: "gettickets"}).done(function (data) {
+                    $("#otickets").html(data);
+                });
+
+            }
+            if (e.target.attributes[1].value == "log")
+            {
+                $.get("", {action: "getticketlog"}).done(function (data) {
+                    $("#log").html(data);
+                });
+            }
+            if (e.target.attributes[1].value == "note")
+            {
+                $.get("", {action: "getmsg"}).done(function (data) {
+                    $("#note").append(data);
+                });
+            }
+        });
+        $("#addfileupload").click(function (e) {
+            e.preventDefault();
+            $("#fileuploads").append("<br /><input type=\"file\" class=\"form-control\" name=\"attachments[]\" size=\"50\">");
+        });
+        function insertKBLink(url) {
+            $("#replymessage").addToReply(url);
+        }
+        function showDialog(name) {
+            $("#" + name).dialog('open');
+        }
+        function insertKBLink(url) {
+            $("#replymessage").addToReply(url);
+        }
+        function selectpredefcat(catid) {
+            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#prerepliescontent").html(data);
                     });
+        }
+        function loadpredef(catid) {
+            $("#prerepliescontainer").slideToggle();
+            $("#prerepliescontent").html('<img src="images/loading.gif" align="top" /> Loading...');
+            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#prerepliescontent").html(data);
+                    });
+        }
+        function selectpredefreply(artid) {
+            $.post("supporttickets.php", {action: "getpredefinedreply", id: artid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#replymessage").addToReply(data);
+                    });
+            $("#prerepliescontainer").slideToggle();
+        }
+        function searchselectclient(userid, name, email) {
+            $("#clientsearchval").val("");
+            $("#clientinput").val(userid);
+            $("#name").val(name);
+            $("#email").val(email);
+            $("#ticketclientsearchresults").slideUp("slow");
+            $("#clientsearchcancel").fadeOut();
+            $.post("supporttickets.php", {action: "getcontacts", userid: userid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        if (data) {
+                            $("#contacthtml").html(data);
+                            $("#contactrow").show();
+                        } else {
+                            $("#contactrow").hide();
+                        }
+                    });
+        }
+        (function () {
+            var fieldSelection = {
+                addToReply: function () {
+                    var e = this.jquery ? this[0] : this;
+                    var text = arguments[0] || '';
+                    return (
+                            ('selectionStart' in e && function () {
+                                if (e.value == "\n\n") {
+                                    e.selectionStart = 0;
+                                    e.selectionEnd = 0;
+                                }
+                                e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
+                                e.focus();
+                                return this;
+                            }) ||
+                            (document.selection && function () {
+                                e.focus();
+                                document.selection.createRange().text = text;
+                                return this;
+                            }) ||
+                            function () {
+                                e.value += text;
+                                return this;
+                            }
+                    )();
                 }
-                if (e.target.attributes[1].value == "note")
+            };
+            jQuery.each(fieldSelection, function (i) {
+                jQuery.fn[i] = this;
+            });
+        })();
+
+        $("#clientsearchval").keyup(function () {
+            var ticketuseridsearchlength = $("#clientsearchval").val().length;
+            if (ticketuseridsearchlength > 2) {
+                $.post("search.php", {ticketclientsearch: 1, value: $("#clientsearchval").val()},
+                        function (data) {
+                            if (data) {
+                                $("#ticketclientsearchresults").html(data);
+                                $("#ticketclientsearchresults").slideDown("slow");
+                                $("#clientsearchcancel").fadeIn();
+                            }
+                        });
+            }
+        });
+        $("#clientsearchcancel").click(function () {
+            $("#ticketclientsearchresults").slideUp("slow");
+            $("#clientsearchcancel").fadeOut();
+        });
+        $("#predefq").keyup(function () {
+            var intellisearchlength = $("#predefq").val().length;
+            if (intellisearchlength > 2) {
+                $.post("supporttickets.php", {action: "loadpredefinedreplies", predefq: $("#predefq").val(), token: "{/literal}{$csrfToken}{literal}"},
+                        function (data) {
+                            $("#prerepliescontent").html(data);
+                        });
+            }
+        });
+
+
+        function searchclose() {
+            $("#searchresults").slideUp();
+        }
+        $(document).ready(function () {
+
+
+            $("#intellisearchval").keyup(function () {
+                var value = $(this).val();
+                if (value.length > 2)
                 {
-                    $.get("", {action: "getmsg"}).done(function (data) {
-                        $("#note").append(data);
+                    $.ajax({
+                        url: "search.php",
+                        method: "POST",
+                        data: {"value": value, "intellisearch": 1, "token": "{/literal}{$csrfToken}{literal}"},
+                        success: function (data)
+                        {
+                            $("#searchresultsscroller").html(data);
+                            $("#searchresults").slideDown("slow", function () {
+
+                            });
+                        }
                     });
                 }
             });
 
-            function insertKBLink(url) {
-                $("#replymessage").addToReply(url);
-            }
-            function showDialog(name) {
-                $("#" + name).dialog('open');
-            }
-        </script>
-    {/literal}
+            //iCheck for checkbox and radio inputs
+            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue'
+            });
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass: 'iradio_flat-green'
+            });
+
+            $('.datepick').datepicker({
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+            });
+            $("[data-mask]").inputmask();
+
+        });
+    </script>
+{/literal}
 </div>

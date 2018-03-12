@@ -95,10 +95,9 @@
         </form>
     </div>
 </div>
-<script src="templates/{$template}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+
 {literal}
     <script type="text/javascript">
-                        $(".textarea").wysihtml5();
                         function insertKBLink(url) {
                             $("#replymessage").addToReply(url);
                         }
@@ -171,10 +170,7 @@
                                 jQuery.fn[i] = this;
                             });
                         })();
-                        $("#addfileupload").click(function () {
-                            $("#fileuploads").append("<input type=\"file\" name=\"attachments[]\" size=\"85\"><br />");
-                            return false;
-                        });
+             
                         $("#clientsearchval").keyup(function () {
                             var ticketuseridsearchlength = $("#clientsearchval").val().length;
                             if (ticketuseridsearchlength > 2) {
