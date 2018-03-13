@@ -40,7 +40,10 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "deploy.yml"
     ansible.verbose = "vvvv"
     ansible.extra_vars = {
-      vagrant: true
+      vagrant: true,
+      # recaptcha keys for localhost from guy.hd123@gmail.com account
+      recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
+      recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
     }
   end
   config.vm.provision "shell" do |shell|

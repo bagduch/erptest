@@ -158,6 +158,11 @@
         name: ra
         state: absent
 
+    - name: Template MySQL changes for deployment (recaptcha)
+      template:
+        src: templates/999_robotacct_template.sql.j2
+        dest: /tmp/ra_db/999_robotacct_template.sql
+
     - name: Add RA database
       action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}} 
       with_items:
@@ -165,6 +170,7 @@
       - 02_robotacct_data.sql
       - 951_tblclients.sql
       - 952_tblconfiguration.sql
+      - 999_robotacct_template.sql
 
 
     - name: Create RA DB user
