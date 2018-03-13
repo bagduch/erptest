@@ -128,7 +128,7 @@ class Smarty
      * @link http://www.foo.dom/index.php?SMARTY_DEBUG
      * @var string
      */
-    var $debugging_ctrl  =  'NONE';
+    var $debugging_ctrl  =  'URL';
 
     /**
      * This tells Smarty whether to check for recompiling or not. Recompiling

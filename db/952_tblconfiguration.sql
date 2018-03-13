@@ -19,6 +19,9 @@
 --
 
 LOCK TABLES `tblconfiguration` WRITE;
+
+TRUNCATE TABLE `tblconfiguration`;
+
 /*!40000 ALTER TABLE `tblconfiguration` DISABLE KEYS */;
 INSERT INTO `tblconfiguration` VALUES (1,'Language','en'),
 	(2,'CompanyName','Unlimited Internet'),
