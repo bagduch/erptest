@@ -97,6 +97,25 @@
         owner: 0
         group: 0
         delete: 1
+      when: not vagrant
+
+    - name: get rid of /var/www/html/ so we can symlink
+      file:
+        path: /var/www/html
+        state: absent
+
+    - name: symlink html/ to /var/www/html/ instead
+      file:
+        state: link
+        path: /var/www/html
+        src: /vagrant/html
+      when: vagrant
+
+    - name: Create templates_c tmpdir
+      file:
+        state: directory
+        path: /tmp/templates_c
+        mode: 0777
 
     - name: set mariadb root pass
       debconf:
@@ -132,6 +151,11 @@
       copy:
         src: db/
         dest: /tmp/ra_db/
+
+    - name: Purge RA database
+      mysql_db:
+        name: ra
+        state: absent
 
     - name: Add RA database
       action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}} 

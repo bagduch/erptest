@@ -39,6 +39,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "deploy.yml"
     ansible.verbose = "vvvv"
+    ansible.extra_vars = {
+      vagrant: true
+    }
   end
   config.vm.provision "shell" do |shell|
     shell.inline =  "rsync -av --delete --exclude=templates_c --exclude=configuration.php /vagrant/html/ /var/www/html/"
