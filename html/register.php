@@ -1,21 +1,11 @@
 <?php
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * 
- *
- **/
 
 define("CLIENTAREA", true);
 require "init.php";
 require "includes/clientfunctions.php";
 require "includes/customfieldfunctions.php";
 
-if (isset($_SESSION['uid'])) {
+if (isset($_SESSION['uid']) && ($_SESSION['uid'] > 0)) {
 	redir("", "clientarea.php");
 }
 
@@ -32,6 +22,11 @@ $postcode = $ra->get_req_var("postcode");
 $country = $ra->get_req_var("country");
 $phonenumber = $ra->get_req_var("phonenumber");
 $password = $ra->get_req_var("password");
+// handle mm/dd default parsing
+$dateofbirth=DateTime::createFromFormat('d/m/Y',$ra->get_req_var("dateofbirth"))->format("Y-m-d");
+$sendemail = "on";
+$additionaldata = "";
+
 $customfield = $ra->get_req_var("customfield");
 $errormessage = "";
 
@@ -40,7 +35,23 @@ if ($ra->get_req_var("register")) {
 	$errormessage = checkDetailsareValid("", true);
 
 	if (!$errormessage) {
-		$userid = addClient($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password);
+        $userid = addClient(
+            $firstname, 
+            $lastname, 
+            $companyname, 
+            $email, 
+            $address1, 
+            $address2, 
+            $city, 
+            $state, 
+            $postcode, 
+            $country, 
+            $phonenumber, 
+            $password,
+            $dateofbirth,
+            $sendemail,
+            $additionaldata
+        );
 		run_hook("ClientAreaRegister", array("userid" => $userid));
 		redir("", "clientarea.php");
 	}

@@ -22,7 +22,7 @@
         </div>        
      <div class="row">
          <div class="col-md-12">
-          <p><input style="float:left;" type="submit" name="submit" class="btn btn-primary btn-lg btn-block" value="{$LANG.loginbutton}"><input style="float:right;" type="button" onclick="location.href='https://unlimitedinternet.co.nz/unlimited-broadband/'" name="reg" class="btn btn-primary-outline btn-lg btn-block" value="{$LANG.signup}"></p>
+          <p><input style="float:left;" type="submit" name="submit" class="btn btn-primary btn-lg btn-block" value="{$LANG.loginbutton}"><input style="float:right;" type="button" onclick="location.href='register.php'" name="reg" class="btn btn-primary-outline btn-lg btn-block" value="{$LANG.signup}"></p>
         </div>
       </div>
     </form>

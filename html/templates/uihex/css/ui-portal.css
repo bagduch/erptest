@@ -783,7 +783,6 @@ p.tblnum {
     height: auto;
     line-height: 1em;
     border-radius: 0;
-    text-transform: capitalize;
     font-weight: 400;
     color: #1c2852;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
