@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 function load_admin_home_widgets() {
     global $aInt;
     global $hooks;

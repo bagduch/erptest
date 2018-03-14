@@ -88,6 +88,27 @@
         line: "session.save_path = localhost:11211"
       notify: restart php-fpm
 
+    - name: PHP display_errors
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "display_errors"
+        line: "display_errors = On"
+      notify: restart php-fpm
+
+    - name: PHP display_startup_errors
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "display_startup_errors"
+        line: "display_startup_errors = On"
+      notify: restart php-fpm
+
+    - name: PHP error_reporting
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "error_reporting"
+        line: "error_reporting = E_ALL"
+      notify: restart php-fpm
+
     - name: Disable sendfile in nginx (for Virtualbox compatibilty)
       lineinfile:
         path: /etc/nginx/nginx.conf

@@ -23,7 +23,11 @@ $country = $ra->get_req_var("country");
 $phonenumber = $ra->get_req_var("phonenumber");
 $password = $ra->get_req_var("password");
 // handle mm/dd default parsing
-$dateofbirth=DateTime::createFromFormat('d/m/Y',$ra->get_req_var("dateofbirth"))->format("Y-m-d");
+try {
+    $dateofbirth=DateTime::createFromFormat('d/m/Y',$ra->get_req_var("dateofbirth"))->format("Y-m-d");
+} catch() {
+    $dateofbirth="2016-01-01";
+ }
 $sendemail = "on";
 $additionaldata = "";
 
