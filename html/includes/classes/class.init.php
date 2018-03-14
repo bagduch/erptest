@@ -415,10 +415,8 @@ class RA_Init {
     }
 
     private function database_connect() {
-        //global $ramysql;
         global $ramysqli;
 
-        //$ramysql = @mysqli_connect($this->db_host, $this->db_username, $this->db_password);
         $ramysqli = @mysqli_connect("p:".$this->db_host, $this->db_username, $this->db_password,$this->db_name);
 
         
