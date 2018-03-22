@@ -13,7 +13,7 @@
                         <form action="clientsinvoices.php?userid={$userid}" method="post">
                             <table class="table borderless" width="100%" border="0" cellspacing="2" cellpadding="3">
                                 <tbody>
-                                    <tr>
+                                    <tr >
                                         <td width="15%" class="fieldlabel">Invoice #</td>
                                         <td class="fieldarea"><input class="form-control" type="text" name="invoicenum" size="25" value=""></td>
                                         <td width="15%" class="fieldlabel">Invoice Date</td>

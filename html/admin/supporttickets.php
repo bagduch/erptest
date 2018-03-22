@@ -31,6 +31,10 @@ if ($action == "gettags") {
     check_token("RA.admin.default");
     $supporttickets->savetags();
     exit();
+} elseif ($action == "deletetag") {
+    check_token("RA.admin.default");
+    echo $supporttickets->removetag();
+    exit();
 } elseif ($action == "checkstatus") {
     check_token("RA.admin.default");
     echo $supporttickets->checkstatus($ticketstatus);
@@ -681,7 +685,6 @@ if ($action == "gettags") {
 } else {
     
 }
-
 if ($action == "updnote") {
     check_token("RA.admin.default");
     update_query("tblticketnotes", array("message" => $_POST['msg'], "date" => date("Y-m-d H:i:s")), array("id" => $_POST['noteid']));
@@ -695,7 +698,6 @@ if ($action == "delnote") {
     addTicketLog($id, "Delete Ticket Note ID " . $_POST['noteid']);
     exit();
 }
-
 $supportdepts = getAdminDepartmentAssignments();
 $smartyvalues['ticketfilterdata'] = array("view" => $filt->getFromSession("view"), "deptid" => $filt->getFromSession("deptid"), "subject" => $filt->getFromSession("subject"), "email" => $filt->getFromSession("email"));
 
@@ -1040,7 +1042,7 @@ if ($action == "viewticket") {
 
     $tags = json_encode($tags);
     $csrfToken = generate_token("plain");
-    $jsheadoutput = "<script type=\"text/javascript\">
+    $jsheadrer = "<script type=\"text/javascript\">
 var ticketid = '" . $id . "';
 var userid = '" . $pauserid . "';
 var ticketTags = " . $tags . ";
@@ -1054,9 +1056,11 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 </script>
 <script type=\"text/javascript\" src=\"../includes/jscript/admintickets.js\"></script>
 <script type = \"text/javascript\" src=\"../includes/jscript/sisyphus.js\"></script>";
+
     $aInt->addHeadOutput($jsheadoutput);
     $smartyvalues['infobox'] = $infobox;
     $smartyvalues['ticketid'] = $id;
+    $smartyvalues['headeroutput'] = $jsheadrer;
     $smartyvalues['deptid'] = $deptid;
     $smartyvalues['tid'] = $tid;
     $smartyvalues['subject'] = $title;
@@ -1386,7 +1390,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     if ($CONFIG['SupportTicketOrder'] == "DESC") {
         krsort($replies);
     }
-    //echo "<pre>", print_r($replies, 1), "</pre>";
+//    echo "<pre>", print_r($replies, 1), "</pre>";
     $smartyvalues['replies'] = $replies;
     $smartyvalues['repliescount'] = count($replies);
     $smartyvalues['thumbnails'] = ($CONFIG['AttachmentThumbnails'] ? true : false);
@@ -1455,7 +1459,6 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 }
 $aInt->assign("replacemenu", "View Tickets");
 $aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
-$menuselect = "$('#menu').multilevelpushmenu('expand','View Tickets');";
 $result = select_query_i("tbltickettags", "", "", "id", "DESC");
 $tags = "";
 while ($data = mysqli_fetch_array($result)) {
