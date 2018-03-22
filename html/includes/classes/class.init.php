@@ -667,7 +667,6 @@ class RA_Init {
             if (!count($bannedips)) {
                 $bannedips = "NONE";
             }
-            var_dump($bannedips);
             $MEMCACHE->set("bannedips",$bannedips,0,30); // 30 second expiry
         }
 
