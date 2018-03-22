@@ -32,7 +32,7 @@ class RA_Admin {
     public $exitmsg = "";
     public $language = "chinese";
     public $extrajscode = array();
-    public $headOutput = array();
+    public $headOutput = "";
     public $chartFunctions = array();
     public $sortableTableCount = 0;
     public $smarty = "";
@@ -298,6 +298,25 @@ class RA_Admin {
             $jquerycode .= "\r\n" . $this->jquerycode;
         }
 
+        $hookvars = $this->templatevars;
+        unset($hookvars['_ADMINLANG']);
+        $hookres = run_hook("AdminAreaPage", $hookvars);
+        foreach ($hookres as $arr) {
+            foreach ($arr as $k => $v) {
+                $hookvars[$k] = $v;
+                $this->smarty->assign($k, $v);
+            }
+        }
+
+        $hookres = run_hook("AdminAreaHeadOutput", $hookvars);
+
+        $headoutput = (count($this->headOutput) ? implode("\r\n", $this->headOutput) : "");
+
+        if (count($hookres)) {
+            $headoutput .= "\r\n" . implode("\r\n", $hookres);
+        }
+
+        $this->smarty->assign("headoutput", $headoutput);
         $this->assign("charset", $CONFIG['Charset']);
         $this->assign("template", $this->adminTemplate);
         $this->assign("pagetemplate", $this->template);
@@ -662,24 +681,7 @@ class RA_Admin {
     public function output() {
         global $ra;
 
-        $hookvars = $this->templatevars;
-        unset($hookvars['_ADMINLANG']);
-        $hookres = run_hook("AdminAreaPage", $hookvars);
-        foreach ($hookres as $arr) {
-            foreach ($arr as $k => $v) {
-                $hookvars[$k] = $v;
-                $this->smarty->assign($k, $v);
-            }
-        }
 
-        $hookres = run_hook("AdminAreaHeadOutput", $hookvars);
-        $headoutput = (count($this->headOutput) ? implode("\r\n", $this->headOutput) : "");
-
-        if (count($hookres)) {
-            $headoutput .= "\r\n" . implode("\r\n", $hookres);
-        }
-
-        $this->smarty->assign("headoutput", $headoutput);
         $hookres = run_hook("AdminAreaHeaderOutput", $hookvars);
         $headeroutput = (count($hookres) ? implode("\r\n", $hookres) : "");
         $this->smarty->assign("headeroutput", $headeroutput);
@@ -1604,7 +1606,7 @@ function dialogChangeTab(id) {
     }
 
     public function addHeadOutput($output) {
-        $this->headOutput[] = $output;
+        $this->headOutput = $output;
         return true;
     }
 

@@ -90,7 +90,7 @@
                         <div class="tag-list">
                             {if $smartyvalues.tags}
                                 {foreach from=$smartyvalues.tags key=id item=tag}
-                                    <div class="btn-group">
+                                    <div class="btn-group" id="tag{$id}">
                                         <button disabled class="btn btn-info">{$tag}</button>
                                         <button onclick="deletetag({$id})" class="btn btn-info"><i class="fa fa-fw fa-close"></i></button>
                                     </div>
@@ -320,6 +320,17 @@
                 });
             }
         });
+        function deletetag(id)
+        {
+            $.post("supporttickets.php", {action: "deletetag", tagid: id, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        if (data)
+                        {
+                            $("#tag" + id).remove();
+                        }
+                    });
+        }
+
         $("#addfileupload").click(function (e) {
             e.preventDefault();
             $("#fileuploads").append("<br /><input type=\"file\" class=\"form-control\" name=\"attachments[]\" size=\"50\">");
@@ -457,14 +468,6 @@
             });
 
             //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
 
             $('.datepick').datepicker({
                 autoclose: true,

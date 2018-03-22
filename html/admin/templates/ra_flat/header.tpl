@@ -23,8 +23,11 @@
     <link href="templates/{$template}/assets/vendors/sweetalert/css/sweetalert2.min.css" rel="Stylesheet" >
     <script src="templates/{$template}/assets/vendors/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="templates/{$template}/assets/js/jquery.easy-autcomplete.min.js" type="text/javascript"></script>
+    {$smartyvalues.headeroutput}
+    {$headoutput}
 </head>
 <body>
+    {$headeroutput}
     <div class="wrapper">
         <div class="sidebar" data-background-color="brown" data-active-color="danger">
             <!--

@@ -117,7 +117,14 @@
 		<div class="controls">
 		    <input type="text" class="form-control" name="phonenumber" id="phonenumber" value="{$clientphonenumber}"{if in_array('phonenumber',$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
-	</div>
+    </div>
+
+    <div class="form-group">
+        <label class=control-label" for="dateofbirth">Date of Birth</label>
+        <div class="controls">
+            <input type="text" class="form-control" name="dateofbirth" id="dateofbirth" value="" data-provide="datepicker" data-date-formate="dd/mm/yyyy" data-date-language="en-NZ" data-date-end-date="0d" data-date-start-date="-123y" data-date-start-view=3 data-date-default-view-date="-50y" />
+        </div>
+    </div>
 
 			</div>
 		</div>

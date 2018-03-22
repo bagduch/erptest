@@ -74,8 +74,8 @@
 
 <script src="templates/{$template}/assets/js/charts/flot-charts.js"></script>
 <script src="templates/{$template}/assets/js/charts/chartjs-charts.js"></script>
-
 {literal}
+    
     <script type="text/javascript">
                 function goBack() {
                     window.history.back();

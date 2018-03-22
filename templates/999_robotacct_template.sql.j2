@@ -1,0 +1,2 @@
+DELETE FROM tblconfiguration WHERE setting IN ("ReCAPTCHAPublicKey","ReCAPTCHAPrivateKey");
+REPLACE INTO `tblconfiguration` (setting,value) VALUES ("ReCAPTCHAPublicKey","{{recaptcha_sitekey}}"),("ReCAPTCHAPrivateKey","{{recaptcha_secretkey}}");

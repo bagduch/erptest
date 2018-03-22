@@ -274,7 +274,7 @@ function insert_query($table, $array) {
 
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
-    if ($_SESSION['adminid'] == 3) {
+    if ($_SESSION['adminid'] == 1) {
         error_log(__METHOD__ . $query);
     }
     if (!$result && ($CONFIG['SQLErrorReporting'])) {
