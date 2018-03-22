@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
 define("RA", true);
 define("ROOTDIR", realpath(dirname(__FILE__) . "/../../"));
 include_once ROOTDIR . "/includes/dbfunctions_simple.php";
@@ -89,13 +79,18 @@ class RA_Init {
 
 
         if (!$this->database_connect()) {
-            exit("<div style=\"border: 1px dashed #cc0000;font-family:Tahoma;background-color:#FBEEEB;width:100%;padding:10px;color:#cc0000;\"><strong>Warning</strong><br>Database Error</div>");
+            exit("<div class=\"alert alert-danger\"><strong>Warning</strong><br>Database Error</div>");
+        }
+
+        if (!$this->memcached_connect()) {
+            exit("<div class=\"alert alert-danger\"><strong>Warning</strong><br>Memcached Error</div>");
         }
 
         $this->sanitize_db_vars();
         global $CONFIG;
         global $PHP_SELF;
         global $remote_ip;
+        global $MEMCACHE;
 
         $PHP_SELF = $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
         $remote_ip = $this->remote_ip = $this->get_user_ip();
@@ -363,7 +358,6 @@ class RA_Init {
             return false;
         }
 
-
         if (!$db_name) {
             return false;
         }
@@ -373,6 +367,8 @@ class RA_Init {
         $this->db_password = $db_password;
         $this->db_name = $db_name;
         $this->cc_hash = $cc_encryption_hash;
+
+        $this->memcacheservers = $memcacheservers;
 
         if ($mysqli_charset) {
             $this->db_sqlcharset = $mysqli_charset;
@@ -415,10 +411,8 @@ class RA_Init {
     }
 
     private function database_connect() {
-        //global $ramysql;
         global $ramysqli;
 
-        //$ramysql = @mysqli_connect($this->db_host, $this->db_username, $this->db_password);
         $ramysqli = @mysqli_connect("p:".$this->db_host, $this->db_username, $this->db_password,$this->db_name);
 
         
@@ -435,6 +429,16 @@ class RA_Init {
 
         return true;
     }
+
+    private function memcached_connect() {
+        global $MEMCACHE;
+        $MEMCACHE = new Memcached();
+        foreach ($this->memcacheservers as $ms) {
+            $MEMCACHE->addServer($ms["host"],$ms["port"]);
+        }
+        return true;
+    }
+
 
     private function check_ip($ip) {
         if ((!empty($ip) && ip2long($ip) != 0 - 1) && ip2long($ip) != false) {
@@ -574,37 +578,37 @@ class RA_Init {
     }
 
     private function load_config_vars() {
-        $CONFIG = array();
-        $result = select_query_i("tblconfiguration", "", "");
+        global $MEMCACHE;
 
-        while ($data = @mysqli_fetch_array($result)) {
-            $setting = $data['setting'];
-            $value = $data['value'];
-            $CONFIG[$setting] = $value;
-        }
+        // See if we can just pull it from memcache
+        $CONFIG = $MEMCACHE->get("CONFIG");
+        if ($CONFIG) {
+            error_log("Using configuration from memcached");
+        } else {
+            error_log("Could not load config from memcached");
 
+            $CONFIG = array();
 
-        if (isset($CONFIG['DisplayErrors']) && $CONFIG['DisplayErrors']) {
-            $this->display_errors();
-        }
+            $result = select_query_i("tblconfiguration", "", "");
 
+            while ($data = @mysqli_fetch_array($result)) {
+                $setting = $data['setting'];
+                $value = $data['value'];
+                $CONFIG[$setting] = $value;
+                $MEMCACHE->set("CONFIG",$CONFIG);
+            }
+        } 
+        $this->clientlang = $this->validateLanguage($CONFIG['Language']);
         header("Content-Type: text/html; charset=" . $CONFIG['Charset']);
-        foreach (array("SystemURL", "SystemSSLURL", "Domain") as $v) {
-            $CONFIG[$v] = (substr($CONFIG[$v], 0 - 1, 1) == "/" ? substr($CONFIG[$v], 0, 0 - 1) : $CONFIG[$v]);
-        }
-
-
-        if ($CONFIG['SystemURL'] == $CONFIG['SystemSSLURL'] || substr($CONFIG['SystemSSLURL'], 0, 5) != "https") {
-            $CONFIG['SystemSSLURL'] = "";
-        }
 
         $this->config = $CONFIG;
-        $this->clientlang = $this->validateLanguage($CONFIG['Language']);
         return $CONFIG;
     }
 
     public function set_config($k, $v) {
         global $CONFIG;
+        global $MEMCACHE;
+
 
         if (!isset($this->config[$k])) {
             insert_query("tblconfiguration", array("setting" => $k, "value" => trim($v)));
@@ -612,11 +616,12 @@ class RA_Init {
             update_query("tblconfiguration", array("value" => trim($v)), array("setting" => $k));
         }
 
-        $CONFIG[$k] = $this->config[$k] = $v;
+        $CONFIG[$k] = $this->config[$k] = trim($v);
+        $MEMCACHE->set("CONFIG",$CONFIG);
     }
 
     public function get_config($k) {
-        return isset($this->config[$k]) ? $this->config[$k] : "";
+        return isset($this->config[$k]) ? $this->config[trim($k)] : "";
     }
 
     public function get_template_compiledir_name() {
@@ -642,20 +647,31 @@ class RA_Init {
     }
 
     private function enforce_ip_bans() {
-        if (substr($_SERVER['PHP_SELF'], 0 - 10, 10) != "banned.php") {
-            $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
-            $bannedipcheck = explode(".", $this->remote_ip);
-            $remote_ip1 = $bannedipcheck[0] . "." . $bannedipcheck[1] . "." . $bannedipcheck[2] . ".*";
-            $remote_ip2 = $bannedipcheck[0] . "." . $bannedipcheck[1] . ".*.*";
-            $result = full_query_i("SELECT * FROM tblbannedips WHERE ip NOT LIKE '113.21.227.201' AND (ip='" . db_escape_string($this->remote_ip) . "' OR ip='" . db_escape_string($remote_ip1) . "' OR ip='" . db_escape_string($remote_ip2) . "') ORDER BY id DESC");
-            $data = @mysqli_fetch_array($result);
+        global $MEMCACHE;
 
-            if ($data['id']) {
-                return true;
-            }
+        // skip for banned page
+        if (substr($_SERVER['PHP_SELF'], 0 - 10, 10) == "banned.php") {
+            return false;
         }
 
-        return false;
+        $bannedips = $MEMCACHE->get("bannedips");
+        error_log("memcache says banned ips are ".print_r($bannedips,1));
+
+        if (!is_array($bannedips) && $bannedips != "NONE") {
+            $bannedips = [];
+            $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
+            $result = full_query_i("SELECT ip FROM tblbannedips");
+            while ($data = mysqli_fetch_assoc($result)) {
+                $bannedips[] = $data['ip'];
+            }
+            if (!count($bannedips)) {
+                $bannedips = "NONE";
+            }
+            var_dump($bannedips);
+            $MEMCACHE->set("bannedips",$bannedips,0,30); // 30 second expiry
+        }
+
+        return in_array($this->remote_ip,$bannedips);
     }
 
     public function get_filename() {
@@ -953,5 +969,4 @@ class RA_Init {
     }
 
 }
-
-?>
+// vim: ai ts=4 sts=4 et sw=4 ft=php

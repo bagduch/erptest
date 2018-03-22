@@ -61,7 +61,7 @@
         upgrade: yes
         update_cache: yes   
 
-    - name: Install PHP
+    - name: Install PHP, nginx, memcached
       action: apt pkg={{item}} state=installed
       with_items:
       - nginx
@@ -71,6 +71,43 @@
       - php7.0-simplexml
       - php7.0-curl
       - php7.0-zip
+      - php7.0-memcached
+      - memcached
+
+    - name: Have PHP use memcached for session storage
+      lineinfile:
+        path: /etc/php/7.0/fpm/php.ini
+        regexp: "session.save_handler"
+        line: "session.save_handler = memcached"
+      notify: restart php-fpm
+
+    - name: Use local memcached
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "session.save_path"
+        line: "session.save_path = localhost:11211"
+      notify: restart php-fpm
+
+    - name: PHP display_errors
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "display_errors"
+        line: "display_errors = On"
+      notify: restart php-fpm
+
+    - name: PHP display_startup_errors
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "display_startup_errors"
+        line: "display_startup_errors = On"
+      notify: restart php-fpm
+
+    - name: PHP error_reporting
+      lineinfile:
+        path: "/etc/php/7.0/fpm/php.ini"
+        regexp: "error_reporting"
+        line: "error_reporting = E_ALL"
+      notify: restart php-fpm
 
     - name: Disable sendfile in nginx (for Virtualbox compatibilty)
       lineinfile:

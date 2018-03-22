@@ -87,7 +87,7 @@ function currencyUpdatePricing($currencyid = "") {
 		$currencies[$data['id']] = $data['rate'];
 	}
 
-	$result = select_query_i("tblpricing", "", array("currency" => $defaultcurrencyid));
+	$result = select_query_i("tblpricing", "", array("currency" => $defaultcurrencyid, 1 => 1));
 
 	while ($data = mysqli_fetch_array($result)) {
 		$type = $data['type'];
