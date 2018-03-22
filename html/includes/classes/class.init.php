@@ -621,9 +621,6 @@ class RA_Init {
     }
 
     public function get_config($k) {
-        error_log("attempting to get ".trim($k));
-        error_log("value is ".$this->config[trim($k)]);
-        error_log(print_r($this->config,1));
         return isset($this->config[$k]) ? $this->config[trim($k)] : "";
     }
 
@@ -657,18 +654,24 @@ class RA_Init {
             return false;
         }
 
-        $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
-        $bannedipcheck = explode(".", $this->remote_ip);
-        $remote_ip1 = $bannedipcheck[0] . "." . $bannedipcheck[1] . "." . $bannedipcheck[2] . ".*";
-        $remote_ip2 = $bannedipcheck[0] . "." . $bannedipcheck[1] . ".*.*";
-        $result = full_query_i("SELECT * FROM tblbannedips WHERE ip NOT LIKE '113.21.227.201' AND (ip='" . db_escape_string($this->remote_ip) . "' OR ip='" . db_escape_string($remote_ip1) . "' OR ip='" . db_escape_string($remote_ip2) . "') ORDER BY id DESC");
-        $data = @mysqli_fetch_array($result);
+        $bannedips = $MEMCACHE->get("bannedips");
+        error_log("memcache says banned ips are ".print_r($bannedips,1));
 
-        if ($data['id']) {
-            return true;
+        if (!is_array($bannedips) && $bannedips != "NONE") {
+            $bannedips = [];
+            $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
+            $result = full_query_i("SELECT ip FROM tblbannedips");
+            while ($data = mysqli_fetch_assoc($result)) {
+                $bannedips[] = $data['ip'];
+            }
+            if (!count($bannedips)) {
+                $bannedips = "NONE";
+            }
+            var_dump($bannedips);
+            $MEMCACHE->set("bannedips",$bannedips,0,30); // 30 second expiry
         }
 
-        return false;
+        return in_array($this->remote_ip,$bannedips);
     }
 
     public function get_filename() {

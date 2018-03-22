@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
 
   #config.vm.provision "shell", path: "provision.sh"
   #config.vm.provision "shell", inline: $script
-  config.vm.provision "ansible" do |ansible|
+  config.vm.provision "guest_ansible" do |ansible|
     ansible.playbook = "deploy.yml"
     ansible.verbose = "vvvv"
     ansible.extra_vars = {
