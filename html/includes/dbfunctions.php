@@ -114,7 +114,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
     if ($_SESSION['adminid'] == 3) {
         error_log($query);
     }
- 
+
     $result = mysqli_query($ramysqli, $query);
 
 
@@ -205,20 +205,6 @@ function update_query($table, $array, $where) {
             $query .= " WHERE " . $where;
         }
     }
-
-    if ((int) $_SESSION['adminid'] == 3) {
-        error_log($query);
-    }
-
-
-    if ($_SESSION['adminid'] == 3) {
-        error_log($query);
-    }
-
-
-    if ($table == "tblinvoiceitems") {
-        error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
-    }
 // echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
@@ -275,7 +261,7 @@ function insert_query($table, $array) {
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
     if ($_SESSION['adminid'] == 1) {
-        error_log(__METHOD__ . $query);
+        //       error_log($query, 3, "/var/tmp/php-error.log.log");
     }
     if (!$result && ($CONFIG['SQLErrorReporting'])) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);

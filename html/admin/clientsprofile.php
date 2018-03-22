@@ -17,6 +17,7 @@ $aInt->requiredFiles(array("clientfunctions", "customfieldfunctions", "gatewayfu
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 
+
 if ($ra->get_req_var("save")) {
     check_token("RA.admin.default");
     $email = trim($email);

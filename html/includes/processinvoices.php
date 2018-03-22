@@ -570,7 +570,6 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
 
     if (!is_array($specificitems)) {
-        error_log(print_r("orhere", 1), 3, "/tmp/php_errors.log");
         $where = array();
         $where[] = "invoiceid=0";
 
