@@ -73,7 +73,6 @@ class RA_Clients extends RA_TableModel {
         }
 
 
-      //  error_log(print_r($clients), 3, "/tmp/php_errors.log");
         return $clients;
     }
 

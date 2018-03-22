@@ -663,26 +663,7 @@
                 }).then(function (data) {
                     $('.clientsinvoices').html(data);
                 });
-            {/literal}{if $servicessummary}{literal}
-                $("#servicetable").DataTable({
-                    "columns": [{
-                            "orderable": false
-                        },
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null, {
-                            "orderable": false
-                        }
-                    ]
-                });
-                {/literal} {/if} {
-                    literal
-                }
-
+           
                 $(".updatetime").click(function () {
                     $(this).closest('form').submit();
                 });

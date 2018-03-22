@@ -324,7 +324,7 @@
                 </div>
             </div>
 
-                            
+
             <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn">
             </div>
 
@@ -388,10 +388,9 @@
 {literal}
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".select2").select2();
-            $('.datecontroller').datepicker({
-                format: 'yyyy-mm-dd',
-                startDate: '+1d'
+
+            $(".nextduedate,.datepick").datetimepicker({
+                format: 'YYYY-MM-DD'
             });
             $(".addonaddbutton").click(function () {
                 $("#frm1").submit();

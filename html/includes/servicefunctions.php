@@ -3,7 +3,6 @@
 // return relevant info about a service
 // custom fields need to be queried separately for now
 function getServiceData($id = NULL) {
-    error_log("getting service data");
     $query = "
     SELECT
         tblcustomerservices.id,
@@ -49,7 +48,6 @@ function getServiceCustomFields($sid, $csid = null) {
 
     global $ramysqli;
     $sid = intval($sid);
-    error_log("calling getServiceCustomFields with sid " . $sid . " and csid " . $csid);
     if (!is_int($sid)) {
 
         return false;

@@ -101,7 +101,6 @@ class RA_Auth {
 
     public function processLogin() {
         global $ra;
-        error_log(print_r($this, 1));
         update_query("tbladminlog", array("logouttime" => "now()"), array("adminusername " => $this->getAdminUsername(), "logouttime" => "00000000000000"));
         insert_query("tbladminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
         update_query("tbladmins", array("loginattempts" => "0"), array("username" => $this->getAdminUsername()));

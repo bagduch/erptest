@@ -64,7 +64,7 @@ if ($sub == "add") {
         "note" => $_POST['notes'],
         "sticky" => $sticky));
     logActivity("Added Note - User ID: " . $userid);
-    redir("userid=" . $userid);
+   redir("userid=" . $userid);
     exit();
 } else {
     if ($sub == "save") {
