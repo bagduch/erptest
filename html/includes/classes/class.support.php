@@ -86,6 +86,12 @@ class RA_Support {
         return json_encode($array);
     }
 
+    public function removetag() {
+        $tagid = $_POST['tagid'];
+        $result = delete_query("tbltickettags", array("id" => $tagid));
+        return $result;
+    }
+
     public function savetags() {
         $this->accessCheck();
         $tags = json_decode(html_entity_decode($tags, ENT_QUOTES), true);
@@ -190,21 +196,21 @@ class RA_Support {
         $endnum = $numberdetail['endnum'];
         $html = "<div style=\"padding:0 0 5px 0;text-align:left;\">Showing <strong>" . ($offset + 1) . "</strong> to <strong>" . ($totaltickets < $endnum ? $totaltickets : $endnum) . "</strong> of <strong>" . $totaltickets . " total</strong></div>";
         $this->aInt->sortableTableInit("nopagination");
-        $html.=$this->aInt->sortableTable(array($this->aInt->lang("fields", "date"), $this->aInt->lang("permissions", "action")), $this->getticketlogDetail($offset));
+        $html .= $this->aInt->sortableTable(array($this->aInt->lang("fields", "date"), $this->aInt->lang("permissions", "action")), $this->getticketlogDetail($offset));
 
-        $html.= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
+        $html .= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
 
         if (0 < $offset) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'ticketlog'," . ($offset - $qlimit) . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'ticketlog'," . ($offset - $qlimit) . ");return false\">";
         }
 
-        $html.= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
+        $html .= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
 
         if ($endnum < $totaltickets) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'ticketlog'," . $endnum . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'ticketlog'," . $endnum . ");return false\">";
         }
 
-        $html.= "Next &raquo;</a></td></tr></table>";
+        $html .= "Next &raquo;</a></td></tr></table>";
         return $html;
     }
 
@@ -242,19 +248,19 @@ class RA_Support {
         $totaltickets = $this->getClientlogNumber();
         $html = "<div style=\"padding:0 0 5px 0;text-align:left;\">Showing <strong>" . ($offset + 1) . "</strong> to <strong>" . ($totaltickets < $endnum ? $totaltickets : $endnum) . "</strong> of <strong>" . $totaltickets . " total</strong></div>";
         $this->aInt->sortableTableInit("nopagination");
-        $html.= $this->aInt->sortableTable(array($this->aInt->lang("fields", "date"), $this->aInt->lang("permissions", "action"), $this->aInt->lang("support", "user"), $this->aInt->lang("fields", "ipaddress")), $this->getClientlogDetails($offset));
-        $html.= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
+        $html .= $this->aInt->sortableTable(array($this->aInt->lang("fields", "date"), $this->aInt->lang("permissions", "action"), $this->aInt->lang("support", "user"), $this->aInt->lang("fields", "ipaddress")), $this->getClientlogDetails($offset));
+        $html .= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
         if (0 < $offset) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'clientlog'," . ($offset - $this->qlimit) . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'clientlog'," . ($offset - $this->qlimit) . ");return false\">";
         }
 
-        $html.= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
+        $html .= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
 
         if ($endnum < $totaltickets) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'clientlog'," . $endnum . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'clientlog'," . $endnum . ");return false\">";
         }
 
-        $html.= "Next &raquo;</a></td></tr></table>";
+        $html .= "Next &raquo;</a></td></tr></table>";
         return $html;
     }
 
@@ -330,19 +336,19 @@ class RA_Support {
             $this->aInt->lang("support", "lastreply")), $tabledata
         );
 
-        $html.= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
+        $html .= "<table width=\"80%\" align=\"center\"><tr><td style=\"text-align:left;\">";
 
         if (0 < $offset) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'tickets'," . ($offset - $this->qlimit) . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'tickets'," . ($offset - $this->qlimit) . ");return false\">";
         }
 
-        $html.= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
+        $html .= "&laquo; Previous</a></td><td style=\"text-align:right;\">";
 
         if ($endnum < $totaltickets) {
-            $html.= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'tickets'," . $endnum . ");return false\">";
+            $html .= "<a href=\"#\" onclick=\"loadTab(" . $target . ",'tickets'," . $endnum . ");return false\">";
         }
 
-        $html.= "Next &raquo;</a></td></tr></table>";
+        $html .= "Next &raquo;</a></td></tr></table>";
         return $html;
     }
 
@@ -457,7 +463,7 @@ class RA_Support {
         return implode($output);
     }
 
-    public function updatereply($ref, $text,$id) {
+    public function updatereply($ref, $text, $id) {
 
         if (substr($ref, 0, 1) == "t") {
             update_query("tbltickets", array("message" => $text), array("id" => substr($ref, 1)));
@@ -496,7 +502,7 @@ class RA_Support {
         $status = $this->getTicketstatus();
 
         foreach ($status as $row) {
-            $statuseshtml.= "<option style=\"color:" . $row['color'] . "\" value=\"" . $row['title'] . "\"" . ($row['title'] == $view ? " selected" : "") . ">" . $row['title'] . "</option>";
+            $statuseshtml .= "<option style=\"color:" . $row['color'] . "\" value=\"" . $row['title'] . "\"" . ($row['title'] == $view ? " selected" : "") . ">" . $row['title'] . "</option>";
         }
 
         return $statuseshtml;

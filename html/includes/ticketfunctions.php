@@ -294,7 +294,7 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
         "message" => $message,
         "adminname" => $adminname,
         "attachment" => $attachfile,
-        "draft" => $draft
+        "draft" => isset($draft)?1:0
     );
     $ticketreplyid = insert_query($table, $array);
     $result = select_query_i("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));

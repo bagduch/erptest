@@ -47,9 +47,9 @@ $(document).ready(function () {
         });
     }
 
-    $(window).unload(function () {
-        $.post("supporttickets.php", {action: "endreply", id: ticketid, token: csrfToken});
-    });
+//    $(window).unload(function () {
+//        $.post("supporttickets.php", {action: "endreply", id: ticketid, token: csrfToken});
+//    });
     $("#insertpredef").click(function () {
         $("#prerepliescontainer").fadeToggle();
         return false;

@@ -1816,7 +1816,7 @@ CREATE TABLE `tblticketreplies` (
   `message` text NOT NULL,
   `adminname` varchar(32) DEFAULT NULL,
   `attachment` text NOT NULL,
-  `rating` int(5) NOT NULL,
+  `rating` int(5),
   PRIMARY KEY (`id`),
   KEY `tid_date` (`tid`,`date`),
   KEY `userid` (`userid`),
