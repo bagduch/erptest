@@ -32,20 +32,34 @@ Vagrant.configure(2) do |config|
   # config.vm.network "public_network"
   config.vm.network "forwarded_port", guest: 80, host: 7080
 
-  # config.vm.synced_folder "./", "/usr/share/nginx/"
 
-  #config.vm.provision "shell", path: "provision.sh"
-  #config.vm.provision "shell", inline: $script
-  config.vm.provision "guest_ansible" do |ansible|
-    ansible.playbook = "deploy.yml"
-    ansible.verbose = "vvvv"
-    ansible.extra_vars = {
-      vagrant: true,
-      # recaptcha keys for localhost from guy.hd123@gmail.com account
-      recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
-      recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
-    }
-  end
+	# Need to use https://github.com/ZoranPavlovic/vagrant-guest_ansible,
+	# which has been patched for the pip HTTP->HTTPS switch
+
+  if Vagrant::Util::Platform.windows?
+    config.vm.provision "guest_ansible" do |ansible|
+      ansible.playbook = "deploy.yml"
+      ansible.verbose = "vvvv"
+      ansible.extra_vars = {
+        vagrant: true,
+        # recaptcha keys for localhost from guy.hd123@gmail.com account
+        recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
+        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
+      }
+    end
+	else
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "deploy.yml"
+      ansible.verbose = "vvvv"
+      ansible.extra_vars = {
+        vagrant: true,
+        # recaptcha keys for localhost from guy.hd123@gmail.com account
+        recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
+        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
+      }
+    end
+	end
+
   config.vm.provision "shell" do |shell|
     shell.inline =  "rsync -av --delete --exclude=templates_c --exclude=configuration.php /vagrant/html/ /var/www/html/"
   end
