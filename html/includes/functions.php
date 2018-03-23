@@ -1026,7 +1026,7 @@ if (!function_exists("emailtpl_template")) {
                 insert_query("tblemails", array("userid" => $userid, "subject" => $subject, "message" => $message, "date" => "now()", "to" => $email, "cc" => $copyto, "bcc" => $CONFIG['BCCMessages']));
             }
 
-            logActivity("Email Sent to " . $firstname . " " . $lastname . " (" . $subject . ")");
+            logActivity("Email Sent to " . $firstname . " " . $lastname . " (" . $subject . ")", $userid ?? "");
             $mail->ClearAddresses();
         } catch (phpmailerException $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
