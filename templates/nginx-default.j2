@@ -1,8 +1,12 @@
 server {
   listen 80;
+  listen 443 ssl;
 
   root /var/www/html;
   index index.php index.html index.htm;
+
+  ssl_certificate /etc/nginx/selfsign_cert.pem;
+  ssl_certificate_key /etc/nginx/selfsign_key.pem;
 
   # Make site accessible from any domain
   server_name _;

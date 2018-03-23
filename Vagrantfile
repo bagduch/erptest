@@ -31,6 +31,7 @@ Vagrant.configure(2) do |config|
   # your network.
   # config.vm.network "public_network"
   config.vm.network "forwarded_port", guest: 80, host: 7080
+  config.vm.network "forwarded_port", guest: 443, host: 7081
 
 
 	# Need to use https://github.com/ZoranPavlovic/vagrant-guest_ansible,
