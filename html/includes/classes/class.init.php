@@ -37,6 +37,7 @@ class RA_Init {
     private $customadminpath = "";
     public $remote_ip = "";
     private $clientlang = "";
+    private $memcacheservers = [];
     private $protected_variables = array(0 => "RA", 1 => "smtp_debug", 2 => "attachments_dir", 3 => "downloads_dir", 4 => "customadminpath", 5 => "mysqli_charset", 6 => "overidephptimelimit", 7 => "orderform", 8 => "smartyvalues", 9 => "usingsupportmodule", 10 => "copyrighttext", 11 => "adminorder", 12 => "revokelocallicense", 13 => "allow_idn_domains", 14 => "templatefile", 15 => "_LANG", 16 => "_ADMINLANG", 17 => "display_errors", 18 => "debug_output", 19 => "mysqli_errors", 20 => "moduleparams", 21 => "errormessage");
     private $danger_vars = array(0 => "_GET", 1 => "_POST", 2 => "_REQUEST", 3 => "_SERVER", 4 => "_COOKIE", 5 => "_FILES", 6 => "_ENV", 7 => "GLOBALS");
 
