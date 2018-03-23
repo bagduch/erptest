@@ -22,6 +22,15 @@
     line: "session.save_handler = memcached"
   notify: restart php-fpm
 
+- name: Disable PHP file caching for development
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: "^realpath_cache_ttl.*"
+    insertafter: ".*realpath_cache_ttl.*"
+    line: "realpath_cache_ttl = 0"
+  notify: restart php-fpm
+  when: vagrant
+
 - name: Use local memcached
   lineinfile:
     path: "/etc/php/7.0/fpm/php.ini"

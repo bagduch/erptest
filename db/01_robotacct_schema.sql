@@ -104,11 +104,10 @@ DROP TABLE IF EXISTS `tblactivitylog`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblactivitylog` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   `description` text NOT NULL,
   `user` text NOT NULL,
   `userid` int(10) DEFAULT NULL,
-  `account_id` int(11) DEFAULT NULL,
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)

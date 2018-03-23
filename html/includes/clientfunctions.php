@@ -1143,20 +1143,20 @@ function doResetPWEmail($email, $answer = "") {
         return $_LANG['pwresetemailnotfound'];
     }
 
+
+    $resetkey = md5($userid . rand(100000, 999999) . $password);
+
+    if ($contactid) {
+        update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
+    } else {
+        update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
+    }
+
+    $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+    $reseturl .= "/pwreset.php?key=" . $resetkey;
+    sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
+    logActivity("Password Reset Requested", $userid);
 }
-
-$resetkey = md5($userid . rand(100000, 999999) . $password);
-
-if ($contactid) {
-    update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
-} else {
-    update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
-}
-
-$reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
-$reseturl .= "/pwreset.php?key=" . $resetkey;
-sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
-logActivity("Password Reset Requested", $userid);
 
 function doResetPWKeyCheck($key) {
     global $_LANG;

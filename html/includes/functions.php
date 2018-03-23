@@ -1643,7 +1643,8 @@ if (!function_exists("emailtpl_template")) {
         return $commission;
     }
 
-    function logActivity($description, $userid = "", $account_id = "") {
+    function logActivity($description, $userid = "") {
+        error_log(sprintf("Logging activity: %s for userid %d and account_id %d",$description,$userid,$account_id));
         global $remote_ip;
         static $username = null;
 
@@ -1651,17 +1652,15 @@ if (!function_exists("emailtpl_template")) {
             if (isset($_SESSION['adminid'])) {
                 $result = select_query_i("tbladmins", "username", array("id" => $_SESSION['adminid']));
                 $data = mysqli_fetch_array($result);
-                $username = $data['username'];
+                $username = sprintf("Admin: %s (%d)", $data['username'], $_SESSION['adminid']);
+            } elseif (isset($_SESSION['cid'])) {
+                $result = select_query_i("tblcontacts","email",array("id" => $_SESSION['cid']));
+                $data = mysqli_fetch_array(result);
+                $username = sprintf("Contact: %s (%d)",$result['email'], $_SESSION['cid']);
+            } elseif (isset($_SESSION['uid'])) {
+                $username = sprintf("Client (%d)",$_SESSION['uid']);
             } else {
-                if (isset($_SESSION['cid'])) {
-                    $username = "Sub-Account " . $_SESSION['cid'];
-                } else {
-                    if (isset($_SESSION['uid'])) {
-                        $username = "Client";
-                    } else {
-                        $username = "System";
-                    }
-                }
+                $username = "System";
             }
         }
 
@@ -1671,7 +1670,7 @@ if (!function_exists("emailtpl_template")) {
         }
 
         $description = html_entity_decode($description, ENT_QUOTES);
-        insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "account_id" => $account_id, "userid" => $userid, "ipaddr" => $remote_ip));
+        insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip));
         run_hook("LogActivity", array("description" => $description, "user" => $username, "userid" => $userid, "ipaddress" => $remote_ip));
     }
 
