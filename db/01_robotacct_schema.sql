@@ -550,7 +550,7 @@ CREATE TABLE `tblclients` (
   `pwresetkey` varchar(255) DEFAULT NULL,
   `pwresetexpiry` datetime DEFAULT NULL,
   `emailoptout` text NOT NULL,
-  `overrideautoclose` text NOT NULL,,
+  `overrideautoclose` text NOT NULL,
   `dateofbirth` date DEFAULT NULL,
   `email_notification` tinyint(1) DEFAULT 1,
   `txt_notification` tinyint(1) DEFAULT 1,
