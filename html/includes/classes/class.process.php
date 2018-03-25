@@ -231,7 +231,6 @@ class RA_Process {
 
             $result = select_query_i("tblinvoiceitems", "SUM(amount) as total", array("invoiceid" => $this->session['invoiceid']));
             $data = mysqli_fetch_assoc($result);
-            error_log(print_r($data, 1), 3, "/tmp/php_errors.log");
 
             update_query("tblinvoices", array('status' => 'Unpaid'), array("id" => $this->session['invoiceid']));
             update_query("tblorders", array('status' => 'Pending', 'amount' => $data['total'], 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));

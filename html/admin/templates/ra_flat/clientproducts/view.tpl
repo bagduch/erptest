@@ -1,7 +1,7 @@
 
 
 
-    {include file="$template/clientproducts/productview.tpl"}
+{include file="$template/clientproducts/productview.tpl"}
 
 
 <div class="card">
@@ -270,7 +270,9 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
+            $(".nextduedate,.datepick").datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();
