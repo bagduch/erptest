@@ -534,7 +534,7 @@ CREATE TABLE `tblclients` (
   `currency` int(10) DEFAULT 1,
   `defaultgateway` varchar(64) DEFAULT NULL,
   `credit` decimal(10,2) DEFAULT 0.00,
-  `taxexempt` text DEFAULT 1,
+  `taxexempt` text DEFAULT NULL,
   `latefeeoveride` text DEFAULT NULL,
   `overideduenotices` text DEFAULT NULL,
   `separateinvoices` text DEFAULT NULL,
