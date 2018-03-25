@@ -1146,10 +1146,25 @@ function doResetPWEmail($email, $answer = "") {
 
     $resetkey = md5($userid . rand(100000, 999999) . $password);
 
+    $expiry = new DateTime();
+    $expiry->add(new DateInterval("P2H"));
+
     if ($contactid) {
-        update_query("tblcontacts", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $contactid));
+        update_query(
+            "tblcontacts", 
+            array(
+                "pwresetkey" => $resetkey, 
+                "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"), 
+                array("id" => $contactid)
+            );
     } else {
-        update_query("tblclients", array("pwresetkey" => $resetkey, "pwresetexpiry" => time() + 2 * 60 * 60), array("id" => $userid));
+        update_query(
+            "tblclients", 
+            array(
+                "pwresetkey" => $resetkey, 
+                "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"),
+            array("id" => $userid)
+        );
     }
 
     $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
