@@ -1148,7 +1148,7 @@ function doResetPWEmail($email, $answer = "") {
 
     $expiry = new DateTime();
     $expiry->add(new DateInterval("P2H"));
-
+/*
     if ($contactid) {
         update_query(
             "tblcontacts", 
@@ -1166,7 +1166,7 @@ function doResetPWEmail($email, $answer = "") {
             array("id" => $userid)
         );
     }
-
+*/
     $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
     $reseturl .= "/pwreset.php?key=" . $resetkey;
     sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
