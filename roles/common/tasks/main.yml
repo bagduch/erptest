@@ -1,0 +1,5 @@
+---
+- include_tasks: repos_upgrades.yml
+- include_tasks: services.yml
+- include_tasks: maildev.yml
+  # vim: ai ts=2 sts=2 et sw=2

@@ -1,0 +1,10 @@
+---
+# Migrate to proper directory structure
+
+- name: Install base debian system
+  hosts: all
+  roles:
+    - common
+  become: yes
+  become_user: root
+# vim: ai ts=2 sts=2 et sw=2
