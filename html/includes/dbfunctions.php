@@ -205,7 +205,7 @@ function update_query($table, $array, $where) {
             $query .= " WHERE " . $where;
         }
     }
-// echo "<pre>",  print_r($query,1),"</pre>";
+//echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -260,6 +260,7 @@ function insert_query($table, $array) {
 
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
+    echo "<pre>", print_r($query, 1), "</pre>";
     if ($_SESSION['adminid'] == 1) {
         //       error_log($query, 3, "/var/tmp/php-error.log.log");
     }

@@ -41,6 +41,7 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['city'] = $data['city'];
     $details['state'] = $data['state'];
     $details['postcode'] = $data['postcode'];
+    $details['dateofbirth'] = $data['dateofbirth'];
     $details['country'] = $details['countrycode'] = $data['country'];
     $details['countryname'] = $countries[$data['country']];
     $details['phonecc'] = $countrycallingcodes[$data['country']];
@@ -117,7 +118,7 @@ function getClientsStats($userid) {
     $data = mysqli_fetch_array($result);
     $stats['numoverdueinvoices'] = $data[0];
     $stats['overdueinvoicesbalance'] = formatCurrency($data[1]);
-    $stats['overdueinvoicesbalancenumber'] = number_format(round($data[1], 2),2);
+    $stats['overdueinvoicesbalancenumber'] = number_format(round($data[1], 2), 2);
     $invoicestats = array();
     $result = select_query_i("tblinvoices", "status,COUNT(*),SUM(total)", "userid=" . (int) $userid . " GROUP BY status");
 
@@ -446,50 +447,36 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
 }
 
 function addClient(
-    $firstname, 
-    $lastname, 
-    $companyname, 
-    $email, 
-    $address1, 
-    $address2, 
-    $city, 
-    $state, 
-    $postcode, 
-    $country, 
-    $phonenumber, 
-    $password, 
-    $dob, 
-    $sendemail = "on", 
-    $additionaldata = "") {
+$firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
     global $ra;
     global $remote_ip;
 
-    error_log("Adding client: ".print_r(array($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = ""),1));
+    error_log("Adding client: " . print_r(array($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = ""), 1));
 
     $fullhost = gethostbyaddr($remote_ip);
     $currency = (is_array($_SESSION['currency']) ? $_SESSION['currency'] : getCurrency("", $_SESSION['currency']));
     $password_hash = generateClientPW($password);
     $table = "tblclients";
     $array = array(
-        "firstname" => $firstname, 
-        "lastname" => $lastname, 
-        "companyname" => $companyname, 
-        "email" => $email, 
-        "address1" => $address1, 
-        "address2" => $address2, 
-        "city" => $city, 
-        "state" => $state, 
-        "postcode" => $postcode, 
-        "country" => $country, 
-        "phonenumber" => $phonenumber, 
-        "password" => $password_hash, 
-        "dateofbirth" => $dob, 
-        "lastlogin" => "now()", 
-        "ip" => $remote_ip, 
-        "host" => $fullhost, 
-        "status" => "Active", 
-        "datecreated" => "now()", 
-        "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "en", 
+        "firstname" => $firstname,
+        "lastname" => $lastname,
+        "companyname" => $companyname,
+        "email" => $email,
+        "address1" => $address1,
+        "address2" => $address2,
+        "city" => $city,
+        "state" => $state,
+        "postcode" => $postcode,
+        "country" => $country,
+        "phonenumber" => $phonenumber,
+        "password" => $password_hash,
+        "dateofbirth" => $dob,
+        "lastlogin" => "now()",
+        "ip" => $remote_ip,
+        "host" => $fullhost,
+        "status" => "Active",
+        "datecreated" => "now()",
+        "language" => isset($_SESSION['Language']) ? $_SESSION['Language'] : "en",
         "currency" => $currency['id']
     );
 
@@ -536,26 +523,28 @@ function addContact($userid, $firstname, $lastname, $companyname, $email, $addre
 
     $table = "tblcontacts";
     $array = array(
-        "userid" => $userid, 
-        "firstname" => $firstname, 
-        "lastname" => $lastname, 
-        "companyname" => $companyname, 
-        "email" => $email, 
-        "address1" => $address1, 
-        "address2" => $address2, 
-        "city" => $city, 
-        "state" => $state, 
-        "postcode" => $postcode, 
-        "country" => $country, 
-        "phonenumber" => $phonenumber, 
-        "subaccount" => $subaccount, 
-        "password" => generateClientPW($password), 
-        "permissions" => $permissions, 
-        "generalemails" => $generalemails, 
-        "productemails" => $productemails, 
-        "domainemails" => $domainemails, 
-        "invoiceemails" => $invoiceemails, 
-        "supportemails" => $supportemails);
+        "userid" => $userid,
+        "firstname" => $firstname,
+        "lastname" => $lastname,
+        "companyname" => $companyname,
+        "email" => $email,
+        "address1" => $address1,
+        "address2" => $address2,
+        "city" => $city,
+        "state" => $state,
+        "postcode" => $postcode,
+        "country" => $country,
+        "phonenumber" => $phonenumber,
+        "subaccount" => $subaccount,
+        "password" => generateClientPW($password),
+        "permissions" => $permissions,
+        "generalemails" => $generalemails ? 0 : 1,
+        "productemails" => $productemails ? 0 : 1,
+        "domainemails" => $domainemails ? 0 : 1,
+        "invoiceemails" => $invoiceemails ? 0 : 1,
+        "supportemails" => $supportemails ? 0 : 1
+    );
+    echo "<pre>", print_r($array, 1), "</pre>";
     $contactid = insert_query($table, $array);
     run_hook("ContactAdd", array_merge($array, array("contactid" => $contactid)));
     logActivity("Added Contact - Contact ID: " . $contactid . " - User ID: " . $userid, $userid);
@@ -667,7 +656,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
     global $ra;
 
     if ($username && (($password || $_SESSION['adminid']) || $twofadone)) {
-
+        
     } else {
         return false;
     }
@@ -979,10 +968,10 @@ function recalcRecurringProductPrice($serviceid, $userid = "", $pid = "", $billi
 
 function getClientsServicesSummary($userid, $aInt) {
     $result = select_query_i(
-        "tblcustomerservices", // table
-        "tblcustomerservices.*,tblservices.name", // select fields
-        array("userid" => $userid), // where
-        "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid"
+            "tblcustomerservices", // table
+            "tblcustomerservices.*,tblservices.name", // select fields
+            array("userid" => $userid), // where
+            "tblcustomerservices`.`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid"
     );
     while ($data = mysqli_fetch_array($result)) {
 
@@ -1148,25 +1137,25 @@ function doResetPWEmail($email, $answer = "") {
 
     $expiry = new DateTime();
     $expiry->add(new DateInterval("P2H"));
-/*
-    if ($contactid) {
-        update_query(
-            "tblcontacts", 
-            array(
-                "pwresetkey" => $resetkey, 
-                "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"), 
-                array("id" => $contactid)
-            );
-    } else {
-        update_query(
-            "tblclients", 
-            array(
-                "pwresetkey" => $resetkey, 
-                "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"),
-            array("id" => $userid)
-        );
-    }
-*/
+    /*
+      if ($contactid) {
+      update_query(
+      "tblcontacts",
+      array(
+      "pwresetkey" => $resetkey,
+      "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"),
+      array("id" => $contactid)
+      );
+      } else {
+      update_query(
+      "tblclients",
+      array(
+      "pwresetkey" => $resetkey,
+      "pwresetexpiry" => $expiry->format("Y-m-d H:i:s"),
+      array("id" => $userid)
+      );
+      }
+     */
     $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
     $reseturl .= "/pwreset.php?key=" . $resetkey;
     sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));

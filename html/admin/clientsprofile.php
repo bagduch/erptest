@@ -34,7 +34,33 @@ if ($ra->get_req_var("save")) {
         $_SESSION['profilevalidationerror'] = $errormessage;
         $oldclientsdetails = getClientsDetails($userid);
         $table = "tblclients";
-        $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "currency" => $_POST['currency'], "notes" => $notes, "status" => $status, "taxexempt" => $taxexempt, "latefeeoveride" => $latefeeoveride, "overideduenotices" => $overideduenotices, "separateinvoices" => $separateinvoices, "disableautocc" => $disableautocc, "emailoptout" => $emailoptout, "overrideautoclose" => $overrideautoclose, "language" => $language, "billingcid" => $billingcid, "groupid" => $groupid);
+        $array = array(
+            "firstname" => $firstname,
+            "lastname" => $lastname,
+            "companyname" => $companyname,
+            "email" => $email,
+            "address1" => $address1,
+            "address2" => $address2,
+            "city" => $city,
+            "state" => $state,
+            "dateofbirth"=>$dateofbirth,
+            "postcode" => $postcode,
+            "country" => $country,
+            "phonenumber" => $phonenumber,
+            "currency" => $_POST['currency'],
+            "notes" => $notes,
+            "status" => $status,
+            "taxexempt" => $taxexempt,
+            "latefeeoveride" => $latefeeoveride,
+            "overideduenotices" => $overideduenotices,
+            "separateinvoices" => $separateinvoices,
+            "disableautocc" => $disableautocc,
+            "emailoptout" => $emailoptout,
+            "overrideautoclose" => $overrideautoclose,
+            "language" => $language!=""?$language:"en",
+            "billingcid" => $billingcid,
+            "groupid" => $groupid
+        );
 
         if (!$twofaenabled) {
             $array['authmodule'] = "";
@@ -91,10 +117,10 @@ if ($ra->get_req_var("save")) {
         }
 
         logActivity("Client Profile Modified - " . implode(", ", $changelist) . (" - User ID: " . $userid), $userid);
-        run_hook("AdminClientProfileTabFieldsSave", $_REQUEST);
-        run_hook("ClientEdit", array_merge(array("userid" => $userid, "olddata" => $oldclientsdetails), $array));
-        redir("userid=" . $userid . "&success=true");
-        exit();
+//        run_hook("AdminClientProfileTabFieldsSave", $_REQUEST);
+//        run_hook("ClientEdit", array_merge(array("userid" => $userid, "olddata" => $oldclientsdetails), $array));
+//        redir("userid=" . $userid . "&success=true");
+//        exit();
     }
 }
 

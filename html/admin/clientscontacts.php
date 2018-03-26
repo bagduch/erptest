@@ -43,6 +43,8 @@ if ($action == "save") {
 
     if ($generalemails) {
         $generalemails = 1;
+    }else{
+        
     }
 
 

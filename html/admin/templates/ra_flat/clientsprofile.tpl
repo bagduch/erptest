@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Date Of Birth</label>
                                     <div class="col-md-9">
-                                        <input class="form-control" type="text" size="20" name="dateofbirth" value="{$clientsdetails.dateofbirth}" tabindex="14">
+                                        <input class="datepick form-control" type="text" size="20" name="dateofbirth" value="{$clientsdetails.dateofbirth}" tabindex="14">
                                     </div>
                                 </div>
                                 <div class="form-group">
