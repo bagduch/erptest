@@ -271,7 +271,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Assign To</label>
-                                    <select class="form-control" name="flag">
+                                    <select class="form-control" name="assign">
                                         {foreach from=$adminlist item=row}
                                             <option value="{$row.id}">{$row.firstname} {$row.lastname}</option>
                                         {/foreach}
@@ -392,6 +392,9 @@
             $(".nextduedate,.datepick").datetimepicker({
                 format: 'YYYY-MM-DD'
             });
+            $("#regdate").datetimepicker({
+                format: 'YYYY-MM-DD hh:mm'
+            });
             $(".addonaddbutton").click(function () {
                 $("#frm1").submit();
             });
@@ -413,7 +416,7 @@
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();
-                var assign = $("select[name='flag']").val();
+                var assign = $("select[name='assign']").val();
                 var duedate = $("input[name='duedate']").val();
                 var imports = $("input[name='import']").val();
                 var type = $("input[name='rel_type']").val();
