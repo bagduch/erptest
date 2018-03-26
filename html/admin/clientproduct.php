@@ -90,7 +90,7 @@ if ($_POST['frm1']) {
             update_query("tblserviceaddons", $array, array("id" => $aid));
 
             if ($oldserviceid != $id) {
-                logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid,$id);
+                logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid, $id);
             } else {
                 logActivity("Modified Addon - Addon ID: " . $aid . " - Service ID: " . $id);
             }
@@ -209,6 +209,9 @@ if ($_POST['frm1']) {
             $newval = "0000-00-00";
         }
 
+        if ($fieldname == "overidesuspenduntil") {
+            $newval = "NULL";
+        }
         $updatearr[$fieldname] = $newval;
     }
 
@@ -257,7 +260,7 @@ if ($_POST['frm1']) {
     run_hook("AdminClientServicesTabFieldsSave", $_REQUEST);
     run_hook("AdminServiceEdit", array("userid" => $userid, "serviceid" => $id));
     run_hook("ServiceEdit", array("userid" => $userid, "serviceid" => $id));
-    redir("userid=" . $userid . "&id=" . $id . "&success=true");
+   redir("userid=" . $userid . "&id=" . $id . "&success=true");
 }
 
 if ($action == "delete") {
@@ -268,7 +271,7 @@ if ($action == "delete") {
     delete_query("tblserviceaddons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
     full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
-    logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid,$id);
+    logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid, $id);
     redir("userid=" . $userid);
 }
 
@@ -277,7 +280,7 @@ if ($action == "deladdon") {
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
     delete_query("tblserviceaddons", array("id" => $aid));
-    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid,$id);
+    logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 ob_start();
@@ -382,7 +385,6 @@ if ($ra->get_req_var("success")) {
 $regdate = fromMySQLDate($regdate);
 $nextduedate = fromMySQLDate($nextduedate);
 $overidesuspenduntil = fromMySQLDate($overidesuspenduntil);
-
 if ($disklimit == "0") {
     $disklimit = $aInt->lang("global", "unlimited");
 }
@@ -905,6 +907,6 @@ $aInt->assign("servicedrop", $aInt->productDropDown($product_data[$id]['packagei
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($product_data[$id]['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($product_data[$id]['paymentmethod']));
 $aInt->template = "clientproducts/view";
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>

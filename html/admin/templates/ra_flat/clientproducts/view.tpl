@@ -273,6 +273,9 @@
             $(".nextduedate,.datepick").datetimepicker({
                 format: 'YYYY-MM-DD'
             });
+            $("#regdate").datetimepicker({
+                format: 'YYYY-MM-DD hh:mm'
+            });
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();

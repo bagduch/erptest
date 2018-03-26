@@ -75,7 +75,7 @@
 <script src="templates/{$template}/assets/js/charts/flot-charts.js"></script>
 <script src="templates/{$template}/assets/js/charts/chartjs-charts.js"></script>
 {literal}
-    
+
     <script type="text/javascript">
                 function goBack() {
                     window.history.back();
@@ -87,6 +87,10 @@
                     demo.initVectorMap();
                     demo.initCirclePercentage();
 
+                    if ($('.datepick').length) {
+                        $('.datepick').datetimepicker({
+                            format: 'YYYY-MM-DD'});
+                    }
                     $("#intellisearchval").keyup(function () {
                         $(".resultbox").hide();
                         var value = $(this).val();

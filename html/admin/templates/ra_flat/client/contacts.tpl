@@ -55,8 +55,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Password</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" size="20" name="password" tabindex="6" value="Enter to Change" onfocus="if (this.value == 'Enter to Change')
-                                           {this.value=''}">
+                                    <input class="form-control" type="text" size="20" name="password" tabindex="6" value="Enter to Change" onfocus="if (this.value == 'Enter to Change')this.value=''">
                                     <a href="clientscontacts.php?userid={$userid}&amp;contactid={$contactid}&amp;resetpw=true&amp;token={$token}"><img src="images/icons/resetpw.png" border="0" align="absmiddle"> Reset &amp; Send Password</a>
                                 </div>
                             </div>

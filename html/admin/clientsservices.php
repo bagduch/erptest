@@ -15,7 +15,6 @@ $aInt->requiredFiles(
             "invoicefunctions",
             "processinvoices")
 );
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->inClientsProfile = true;
 $id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -56,7 +55,7 @@ if ($_POST['frm1']) {
     if ($_POST['addonid']) {
         $addonid = $clientdata->addaddon($_POST['addonid'], $_POST['paymentmethod']);
         logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid, $id);
-        // redir("userid=" . $userid);
+        redir("userid=" . $userid);
     }
     $logDetail = "";
     foreach ($servicefield as $key => $row) {
@@ -87,11 +86,11 @@ if ($_POST['frm1']) {
             "type" => $_POST['rel_type'],
             "created" => "now()",
             "duedate" => $_POST['duedate'],
-            "flag" => $_POST['imports'],
+            "flag" => $_POST['imports'] == "" ? 0 : 1,
             "assignto" => $_POST['assign'],
             "modified" => "now()",
             "note" => $_POST['notes'],
-            "sticky" => $sticky));
+            "sticky" => isset($sticky) ? 0 : 1));
     }
 }
 foreach ($data as $key => $row) {
@@ -103,7 +102,7 @@ foreach ($data as $key => $row) {
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
     logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
-    redir("userid=" . $userid . "&id=" . $id);
+//    redir("userid=" . $userid . "&id=" . $id);
 }
 
 
