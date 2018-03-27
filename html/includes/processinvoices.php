@@ -668,7 +668,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         }
     }
 
-    $invoicearray = array("date" => "now()", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => $invoicenotes);
+    $invoicearray = array("date" => "now()", "invoicenum" => "", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => $invoicenotes);
 
     $invoiceid = insert_query("tblinvoices", $invoicearray);
 
