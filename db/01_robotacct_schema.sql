@@ -720,7 +720,7 @@ DROP TABLE IF EXISTS `tblcustomerservices`;
 CREATE TABLE `tblcustomerservices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL COMMENT 'tblclients ID',
-  `assign_id` int(11) NOT NULL,
+  `assign_id` int(11) DEFAULT 0,
   `orderid` int(10) NOT NULL COMMENT 'tblorders ID',
   `packageid` int(10) NOT NULL,
   `parent` int(11) DEFAULT NULL,
@@ -1011,6 +1011,7 @@ CREATE TABLE `tblinvoiceitems` (
   `userid` int(10) NOT NULL,
   `relid` int(10) DEFAULT NULL,
   `description` text NOT NULL,
+  `paymentmethod` text DEFAULT 'banktransfer',
   `amount` decimal(10,2) NOT NULL DEFAULT 0.00,
   `taxed` int(1) NOT NULL,
   `duedate` date DEFAULT NULL,
@@ -1035,7 +1036,7 @@ DROP TABLE IF EXISTS `tblinvoices`;
 CREATE TABLE `tblinvoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
-  `invoicenum` text NOT NULL,
+  `invoicenum` text NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
   `datepaid` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

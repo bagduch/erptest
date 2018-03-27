@@ -10,7 +10,6 @@ $aInt->requiredFiles(array("orderfunctions", "servicefunctions", "whoisfunctions
 $action = $ra->get_req_var("action");
 $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
-$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
 
 if ($action == "createpromo") {
     check_token("RA.admin.default");
@@ -327,7 +326,7 @@ if ($ra->get_req_var("submitorder")) {
             }
         }
         getUsersLang(0);
-        redir("action=view&id=" . $_SESSION['orderdetails']['OrderID'], "orders.php");
+       redir("action=view&id=" . $_SESSION['orderdetails']['OrderID'], "orders.php");
         exit();
     }
 }

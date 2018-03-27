@@ -259,7 +259,7 @@ function insert_query($table, $array) {
 
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
-//    echo $query;
+    echo $query;
     if ($_SESSION['adminid'] == 1) {
         error_log($query, 3, "/var/tmp/php-error.log");
     }
