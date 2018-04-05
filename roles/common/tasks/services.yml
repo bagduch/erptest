@@ -232,8 +232,4 @@
     state: directory
     mode: 0777
 
-- name: restart php-fpm
-  service: name=php7.0-fpm state=restarted
-
-
 # vim: ai ts=2 sts=2 et sw=2
