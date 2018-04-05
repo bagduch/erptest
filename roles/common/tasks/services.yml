@@ -205,7 +205,6 @@
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
 
-
 - name: Create RA DB user
   mysql_user:
     name: "ra"
@@ -217,6 +216,15 @@
   template:
     src: templates/configuration.php.j2
     dest: /var/www/html/configuration.php
+
+- name: WHMCS cronjob
+  cron:
+    name: "WHMCS admin/cron.php"
+    minute: "*"
+    hour: "*"
+    job: "/usr/bin/php -f /var/www/html/admin/cron.php"
+    user: "www-data"
+  notify: restart cron
 
 - name: templates cache dir
   file:
