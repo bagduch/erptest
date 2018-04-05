@@ -19,7 +19,6 @@
     </form>
     <h1>Order Product</h1>
     <div class="products">
-        {debug}
         {foreach from=$services key=id item=row}
             <div class="product" id="product{$id}">
                 <table class="border">

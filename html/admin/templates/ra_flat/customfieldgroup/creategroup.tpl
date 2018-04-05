@@ -15,7 +15,6 @@
         }
     </script>
 {/literal}
-{debug}
 <div class="box">
     <div class="box-header">
         <h3 class="box-title">Create a New Group</h3>
