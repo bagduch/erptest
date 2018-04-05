@@ -6696,8 +6696,8 @@ star {
     display: flex;
     display: -webkit-flex; }
 .chat .avatar {
-    width: 40px;
-    height: 40px;
+    width: 100px;
+    height: 50px;
     position: relative;
     display: block;
     z-index: 2;
@@ -6791,8 +6791,8 @@ star {
     content: "";
     position: absolute;
     display: inline-block;
-    bottom: 19px;
-    right: 48px;
+    bottom: 37px;
+    right: 106px;
     width: 0px;
     height: 0px;
     border: 8px solid #d6c1ab;

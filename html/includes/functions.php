@@ -1644,7 +1644,7 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function logActivity($description, $userid = "") {
-        error_log(sprintf("Logging activity: %s for userid %d and account_id %d",$description,$userid,$account_id));
+        error_log(sprintf("Logging activity: %s for userid %d and account_id %d", $description, $userid, $account_id));
         global $remote_ip;
         static $username = null;
 
@@ -1654,11 +1654,11 @@ if (!function_exists("emailtpl_template")) {
                 $data = mysqli_fetch_array($result);
                 $username = sprintf("Admin: %s (%d)", $data['username'], $_SESSION['adminid']);
             } elseif (isset($_SESSION['cid'])) {
-                $result = select_query_i("tblcontacts","email",array("id" => $_SESSION['cid']));
+                $result = select_query_i("tblcontacts", "email", array("id" => $_SESSION['cid']));
                 $data = mysqli_fetch_array(result);
-                $username = sprintf("Contact: %s (%d)",$result['email'], $_SESSION['cid']);
+                $username = sprintf("Contact: %s (%d)", $result['email'], $_SESSION['cid']);
             } elseif (isset($_SESSION['uid'])) {
-                $username = sprintf("Client (%d)",$_SESSION['uid']);
+                $username = sprintf("Client (%d)", $_SESSION['uid']);
             } else {
                 $username = "System";
             }
@@ -1667,6 +1667,8 @@ if (!function_exists("emailtpl_template")) {
 
         if (!$userid && isset($_SESSION['uid'])) {
             $userid = $_SESSION['uid'];
+        } else {
+            $userid = 0;
         }
 
         $description = html_entity_decode($description, ENT_QUOTES);

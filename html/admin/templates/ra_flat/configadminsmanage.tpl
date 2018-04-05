@@ -5,8 +5,9 @@
                 <h4 class="title">Add New Admin</h4> 
             </div>
             <div class="content">
+                {$infobox}
                 <div class="container-fluid">
-                    <form method="post" action="configadmins.php?action=save&amp;id=">
+                    <form method="post" action="configadmins.php?action=save&amp;id={$id}">
                         <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                             <tbody><tr><td width="20%" class="fieldlabel">Administrator Role</td><td class="fieldarea"><select class="form-control" name="roleid">
                                             {$roleoption}

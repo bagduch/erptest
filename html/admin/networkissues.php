@@ -90,7 +90,7 @@ if ($action == "save") {
 			run_hook("NetworkIssueAdd", array_merge(array("id" => $nwid), $updatearray));
 		}
 
-		redir();
+//		redir();
 		exit();
 	}
 }
@@ -136,6 +136,7 @@ $p_result = full_query_i($p_query);
 if (0 < mysqli_num_rows($p_result)) {
 	$p_row = mysqli_fetch_row($p_result);
 	$priority_options = explode('\',\'', preg_replace( '/(enum|set)\(\'(.+?)\'\)/', '$1', $p_row[1]));
+        
 }
 
 $s_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'status'";
@@ -322,27 +323,7 @@ $(\"#enddate\").datetimepicker({showSecond:false,ampm:false,";
 		}
 
 		echo "</select></td></tr>
-<tr id=\"affectingserver\"";
 
-		if ($type != "Server") {
-			echo "style=\"display:none;\"";
-		}
-
-		echo "><td class=\"fieldlabel\">Server</td><td class=\"fieldarea\">";
-		echo "<s";
-		echo "elect name=\"server\">";
-
-		while ($server_options = mysqli_fetch_assoc($server_result)) {
-			echo "<option value=\"" . $server_options['id'] . "\"";
-
-			if ($server_options['id'] == $server) {
-				echo " selected";
-			}
-
-			echo ">" . $server_options['name'] . "</option>";
-		}
-
-		echo "</select></td></tr>
 <tr id=\"affectingother\"";
 
 		if ($type == "Server") {

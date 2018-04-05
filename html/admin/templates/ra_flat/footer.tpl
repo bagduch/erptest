@@ -91,6 +91,11 @@
                         $('.datepick').datetimepicker({
                             format: 'YYYY-MM-DD'});
                     }
+                    if ($('.datetimepick').length) {
+                        $('.datetimepick').datetimepicker({
+                            format: 'YYYY-MM-DD hh:mm'
+                        });
+                    }
                     $("#intellisearchval").keyup(function () {
                         $(".resultbox").hide();
                         var value = $(this).val();

@@ -109,7 +109,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
         $query .= " LIMIT " . $limit;
     }
-  
+
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
@@ -253,10 +253,7 @@ function insert_query($table, $array) {
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
     echo $query;
-    if ($_SESSION['adminid'] == 1) {
-        error_log($query, 3, "/var/tmp/php-error.log");
-    }
-    if (!$result && ($CONFIG['SQLErrorReporting'])) {
+    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
     ++$query_count;

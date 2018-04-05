@@ -719,7 +719,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbltickets` WRITE;
 /*!40000 ALTER TABLE `tbltickets` DISABLE KEYS */;
-INSERT INTO `tbltickets` VALUES (30,'745673',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','guy@hd.net.nz','WjEs0s0a','2016-06-17 15:34:47','guy@hd.net.nz','\r\n\r\nguy@hd.net.nz','Answered','Medium','Guy Lowe','','2017-02-21 16:34:56',2,1,',1',0,'2017-04-19 12:41:51',''),(31,'614919',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','','vssbJ3yg','2016-06-17 15:36:45','guy@hd.net.nz','\r\nguy@hd.net.nz','Answered','Medium','Guy Lowe','','2017-01-16 13:37:10',1,1,',1',0,'2017-02-22 12:40:40','');
+INSERT INTO `tbltickets` VALUES (30,'745673',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','guy@hd.net.nz','WjEs0s0a','2016-06-17 15:34:47','guy@hd.net.nz','\r\n\r\nguy@hd.net.nz','Answered','Medium',null,'','2017-02-21 16:34:56',2,1,',1',0,'2017-04-19 12:41:51',''),(31,'614919',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','','vssbJ3yg','2016-06-17 15:36:45','guy@hd.net.nz','\r\nguy@hd.net.nz','Answered','Medium',null,'','2017-01-16 13:37:10',1,1,',1',0,'2017-02-22 12:40:40','');
 /*!40000 ALTER TABLE `tbltickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
