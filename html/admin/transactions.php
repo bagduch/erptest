@@ -23,7 +23,6 @@ $aInt = new RA_Admin($reqperm);
 $aInt->title = $aInt->lang("transactions", "title");
 $aInt->sidebar = "billing";
 $aInt->icon = "transactions";
-$menuselect = "$('#menu').multilevelpushmenu('expand','Billing');";
 $aInt->requiredFiles(array("gatewayfunctions", "invoicefunctions"));
 
 if ($action == "add") {
@@ -34,7 +33,7 @@ if ($action == "add") {
         $currency = 0;
     }
 
-
+    
     if (!$invoiceids) {
         addTransaction($client, $currency, $description, $amountin, $fees, $amountout, $paymentmethod, $transid, $invoiceid, $date);
 
@@ -88,8 +87,8 @@ if ($action == "add") {
         }
     }
 
-    redir("added=true");
-    exit();
+//    redir("added=true");
+//    exit();
 }
 
 
@@ -147,68 +146,68 @@ if (!$action) {
     }
 
 
-    $showoption.= "<option value=\"\">";
-    $showoption.= $aInt->lang("transactions", "allactivity");
-    $showoption.= "</option><option value=\"received\"";
+    $showoption .= "<option value=\"\">";
+    $showoption .= $aInt->lang("transactions", "allactivity");
+    $showoption .= "</option><option value=\"received\"";
     if ($_REQUEST['show'] == "received") {
-        $showoption .=" SELECTED";
+        $showoption .= " SELECTED";
     }
 
-    $showoption.= ">";
-    $showoption.= $aInt->lang("transactions", "preceived");
-    $showoption.= "</option><option value=\"sent\"";
+    $showoption .= ">";
+    $showoption .= $aInt->lang("transactions", "preceived");
+    $showoption .= "</option><option value=\"sent\"";
     if ($_REQUEST['show'] == "sent") {
-        $showoption.= " SELECTED";
+        $showoption .= " SELECTED";
     }
 
-    $showoption.= ">";
-    $showoption.= $aInt->lang("transactions", "psent");
-    $showoption.= "</option>";
+    $showoption .= ">";
+    $showoption .= $aInt->lang("transactions", "psent");
+    $showoption .= "</option>";
 
-    $withinoption.= "</option><option value=\"week\"";
+    $withinoption .= "</option><option value=\"week\"";
 
     if ($within == "week") {
-        $withinoption.= " SELECTED";
+        $withinoption .= " SELECTED";
     }
 
-    $withinoption.= ">";
-    $withinoption.= $aInt->lang("transactions", "pastweek");
-    $withinoption.= "</option><option value=\"month\"";
+    $withinoption .= ">";
+    $withinoption .= $aInt->lang("transactions", "pastweek");
+    $withinoption .= "</option><option value=\"month\"";
 
     if ($within == "month") {
-        $withinoption.= " SELECTED";
+        $withinoption .= " SELECTED";
     }
 
-    $withinoption.= ">";
-    $withinoption.= $aInt->lang("transactions", "pastmonth");
-    $withinoption.= "</option><option value=\"year\"";
+    $withinoption .= ">";
+    $withinoption .= $aInt->lang("transactions", "pastmonth");
+    $withinoption .= "</option><option value=\"year\"";
 
     if ($within == "year") {
-        $withinoption.= " SELECTED";
+        $withinoption .= " SELECTED";
     }
 
-    $withinoption.= ">";
-    $withinoption.= $aInt->lang("transactions", "pastyear");
-    $withinoption.= "</option><option>";
+    $withinoption .= ">";
+    $withinoption .= $aInt->lang("transactions", "pastyear");
+    $withinoption .= "</option><option>";
 
     if ($startdate) {
-        $withinoption.= " SELECTED";
+        $withinoption .= " SELECTED";
     }
 
-    $withinoption.= ">Custom Date Range</option>";
+    $withinoption .= ">Custom Date Range</option>";
     $date2 = getTodaysDate();
 
     $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
 
 
     while ($data = mysqli_fetch_array($result)) {
-        $currencyoption.= "<option value=\"" . $data['id'] . "\"";
+        $currencyoption .= "<option value=\"" . $data['id'] . "\"";
 
         if ($data['default']) {
-            $currencyoption.= " selected";
+            $currencyoption .= " selected";
         }
 
-        $currencyoption.= ">" . $data['code'] . "</option>";
+        $currencyoption .= ">" . $data['code'] . "</option>";
     }
 
 
@@ -354,29 +353,29 @@ if (!$action) {
 
     $sumtable = "";
     if (checkPermission("View Income Totals", true)) {
-        $sumtable.= "
+        $sumtable .= "
 <table class=\"table\">
 <tr bgcolor=\"#f4f4f4\" style=\"text-align:center;font-weight:bold;\"><td></td><td>";
-        $sumtable.= $aInt->lang("transactions", "totalincome");
-        $sumtable.= "</td><td>";
-        $sumtable.= $aInt->lang("transactions", "totalfees");
-        $sumtable.= "</td><td>";
-        $sumtable.= $aInt->lang("transactions", "totalexpenditure");
-        $sumtable.= "</td><td>";
-        $sumtable.= $aInt->lang("transactions", "totalbalance");
-        $sumtable.= "</td></tr>
+        $sumtable .= $aInt->lang("transactions", "totalincome");
+        $sumtable .= "</td><td>";
+        $sumtable .= $aInt->lang("transactions", "totalfees");
+        $sumtable .= "</td><td>";
+        $sumtable .= $aInt->lang("transactions", "totalexpenditure");
+        $sumtable .= "</td><td>";
+        $sumtable .= $aInt->lang("transactions", "totalbalance");
+        $sumtable .= "</td></tr>
 ";
         foreach ($totals as $currency => $values) {
             $currency = getCurrency("", $currency);
-            $sumtable.= "<tr bgcolor=\"#ffffff\" style=\"text-align:center;\"><td bgcolor=\"#f4f4f4\"><b>" . $currency['code'] . "</b></td><td>" . formatCurrency($values['in']) . "</td><td>" . formatCurrency($values['fees']) . "</td><td>" . formatCurrency($values['out']) . "</td><td bgcolor=\"#f4f4f4\"><b>" . formatCurrency($values['total']) . "</b></td></tr>";
+            $sumtable .= "<tr bgcolor=\"#ffffff\" style=\"text-align:center;\"><td bgcolor=\"#f4f4f4\"><b>" . $currency['code'] . "</b></td><td>" . formatCurrency($values['in']) . "</td><td>" . formatCurrency($values['fees']) . "</td><td>" . formatCurrency($values['out']) . "</td><td bgcolor=\"#f4f4f4\"><b>" . formatCurrency($values['total']) . "</b></td></tr>";
         }
 
 
         if (!count($totals)) {
-            $sumtable.= "<tr bgcolor=\"#ffffff\" style=\"text-align:center;\"><td colspan=\"5\">" . $aInt->lang("transactions", "nototals") . "</td></tr>";
+            $sumtable .= "<tr bgcolor=\"#ffffff\" style=\"text-align:center;\"><td colspan=\"5\">" . $aInt->lang("transactions", "nototals") . "</td></tr>";
         }
 
-        $sumtable.= "</table>
+        $sumtable .= "</table>
 
 ";
     }
@@ -400,45 +399,42 @@ if (!$action) {
     $aInt->assign("PHP_SELF", $PHP_SELF);
     $template = "billing/view";
 } else {
-    if ($action == "edit") {
-        $result = select_query_i("tblaccounts", "", array("id" => $id));
-        $data = mysqli_fetch_array($result);
-        $id = $data['id'];
-        $userid = $data['userid'];
-        $date = $data['date'];
-        $date = fromMySQLDate($date);
-        $description = $data['description'];
-        $amountin = $data['amountin'];
-        $fees = $data['fees'];
-        $amountout = $data['amountout'];
-        $paymentmethod = $data['gateway'];
-        $transid = $data['transid'];
-        $invoiceid = $data['invoiceid'];
+    $result = select_query_i("tblaccounts", "", array("id" => $id));
+    $data = mysqli_fetch_array($result);
+    $id = $data['id'];
+    $userid = $data['userid'];
+    $date = $data['date'];
+    $date = fromMySQLDate($date);
+    $description = $data['description'];
+    $amountin = $data['amountin'];
+    $fees = $data['fees'];
+    $amountout = $data['amountout'];
+    $paymentmethod = $data['gateway'];
+    $transid = $data['transid'];
+    $invoiceid = $data['invoiceid'];
 
-        if (!$id) {
-            $aInt->gracefulExit($aInt->lang("transactions", "notfound"));
-        }
-
-        $client = $aInt->clientsDropDown($userid, "", "client", true);
-        $payment = paymentMethodsSelection($aInt->lang("global", "none"));
-        $aInt->assign("client", $client);
-        $aInt->assign("payment", $payment);
-        $aInt->assign("invoiceid", $invoiceid);
-        $aInt->assign("date", $date);
-        $aInt->assign("transid", $transid);
-        $aInt->assign("fees", $fees);
-        $aInt->assign("amountin", $amountin);
-        $aInt->assign("amountout", $amountout);
-        $aInt->assign("description", $description);
-        $aInt->assign("PHP_SELF", $PHP_SELF);
-        $template = "billing/edit";
+    if (!$id) {
+        $aInt->gracefulExit($aInt->lang("transactions", "notfound"));
     }
-}
 
+    $client = $aInt->clientsDropDown($userid, "", "client", true);
+    $payment = paymentMethodsSelection($aInt->lang("global", "none"));
+    $aInt->assign("client", $client);
+    $aInt->assign("payment", $payment);
+    $aInt->assign("invoiceid", $invoiceid);
+    $aInt->assign("date", $date);
+    $aInt->assign("transid", $transid);
+    $aInt->assign("fees", $fees);
+    $aInt->assign("amountin", $amountin);
+    $aInt->assign("amountout", $amountout);
+    $aInt->assign("description", $description);
+    $aInt->assign("PHP_SELF", $PHP_SELF);
+    $template = "billing/edit";
+}
 
 $aInt->jquerycode = $jquerycode;
 $aInt->jscode = $jscode;
 $aInt->template = $template;
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>

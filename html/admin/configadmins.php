@@ -23,7 +23,6 @@ if ($action == "save") {
     check_token("RA.admin.default");
     $auth = new RA_Auth();
     $auth->getInfobyID(RA_Session::get("adminid"));
-
     if (!$auth->comparePassword($ra->get_req_var("confirmpassword"))) {
         $_ADMINLANG['administrators']['confirmexistingpw'] = "You must confirm your existing administrator password";
         $validate->addError(array("administrators", "confirmexistingpw"));
@@ -34,7 +33,6 @@ if ($action == "save") {
             $validate->validate("email", "email", array("administrators", "emailinvalid"));
         }
 
-
         if ($validate->validate("required", "username", array("administrators", "usererror"))) {
             $existingid = get_query_val("tbladmins", "id", array("username" => $username));
 
@@ -43,14 +41,12 @@ if ($action == "save") {
             }
         }
 
-
         if (!$id) {
             if ($validate->validate("required", "password", array("administrators", "pwerror"))) {
                 $validate->validate("match_value", "password", array("administrators", "pwmatcherror"), "password2");
             }
         }
     }
-
 
     if ($validate->hasErrors()) {
         $action = "manage";
@@ -120,8 +116,6 @@ if ($action == "delete") {
     redir("deleted=true");
 }
 
-ob_start();
-
 if ($action == "") {
     if ($saved) {
         infoBox($aInt->lang("administrators", "changesuccess"), $aInt->lang("administrators", "changesuccessinfo"));
@@ -186,7 +180,6 @@ if ($action == "") {
         ""
             ), $tabledata
     );
-    echo "<h2>" . $aInt->lang("administrators", "inactive") . " </h2>";
     $tabledata = array();
     $result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
 
@@ -223,21 +216,17 @@ if ($action == "") {
         $ticketnotifications = $data['ticketnotifications'];
         $supportdepts = explode(",", $supportdepts);
         $ticketnotify = explode(",", $ticketnotifications);
-
-        if (!$validate->hasErrors()) {
-            $roleid = $data['roleid'];
-            $firstname = $data['firstname'];
-            $lastname = $data['lastname'];
-            $email = $data['email'];
-            $username = $data['username'];
-            $signature = $data['signature'];
-            $notes = $data['notes'];
-            $template = $data['template'];
-            $language = $data['language'];
-            $disabled = $data['disabled'];
-            $aInt->assign('data', $data);
-        }
-
+        $roleid = $data['roleid'];
+        $firstname = $data['firstname'];
+        $lastname = $data['lastname'];
+        $email = $data['email'];
+        $username = $data['username'];
+        $signature = $data['signature'];
+        $notes = $data['notes'];
+        $template = $data['template'];
+        $language = $data['language'];
+        $disabled = $data['disabled'];
+        $aInt->assign('data', $data);
         $numrows = get_query_vals("tbladmins", "COUNT(id)", array("roleid" => "1"));
         $onlyadmin = (($numrows == "1" && $roleid == "1") ? true : false);
         $managetitle = $aInt->lang("administrators", "editadmin");
@@ -250,7 +239,6 @@ if ($action == "") {
 
     if ($validate->hasErrors()) {
         infoBox($aInt->lang("global", "validationerror"), $validate->getHTMLErrorOutput(), "error");
-        echo $infobox;
     }
 
 
@@ -275,36 +263,8 @@ if ($action == "") {
 
 
 
-    if ($id) {
-        echo " (" . $aInt->lang("administrators", "entertochange") . ")";
-    }
-
     $nodepartments = true;
     $result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $deptid = $data['id'];
-        $deptname = $data['name'];
-        echo "<label><input type=\"checkbox\" name=\"deptids[]\" value=\"" . $deptid . "\"";
-
-        if (in_array($deptid, $supportdepts)) {
-            echo " checked";
-        }
-
-        echo "> " . $deptname . "</label> <label><input type=\"checkbox\" name=\"ticketnotify[]\" value=\"" . $deptid . "\"";
-
-        if (in_array($deptid, $ticketnotify)) {
-            echo " checked";
-        }
-
-        echo "> Enable Ticket Notifications</label><br />";
-        $nodepartments = false;
-    }
-
-
-    if ($nodepartments) {
-        echo $aInt->lang("administrators", "nosupportdepts");
-    }
 
     $templates = array();
     $dirpath = ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/";
@@ -341,18 +301,9 @@ if ($action == "") {
     }
 
 
-    if ($disabled == 1) {
-        echo " checked";
-    }
 
-
-    if ($onlyadmin || $id == $_SESSION['adminid']) {
-        echo " disabled";
-    }
-
-    echo $aInt->lang("administrators", "disableinfo");
-
-
+    $aInt->assign("id", $id);
+    $aInt->assign("infobox", $infobox);
     $aInt->assign("languageoption", $languageoption);
     $aInt->assign("templateoptions", $templateoptions);
     $aInt->assign("roleoption", $roleoption);
@@ -361,10 +312,8 @@ if ($action == "") {
     
 }
 
-$content = ob_get_contents();
-ob_end_clean();
 $aInt->template = $template;
-$aInt->content = $content;
+
 $aInt->jscode = $jscode;
 $aInt->jquerycode .= $menuselect;
 $aInt->display();

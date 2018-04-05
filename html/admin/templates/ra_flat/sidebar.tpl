@@ -124,7 +124,6 @@
         </a>
         <div class="collapse" id="utilities" role="navigation" aria-expanded="false" style="height: 0px;">
             <ul class="nav">
-                <li><a href="supportannouncements.php">Announcements</a></li>
                 <li><a href="supportkb.php">Knowledgebase</a></li>
                 <li><a href="networkissues.php">Network Notices</a></li>
                 <li><a href="systemactivitylog.php">Activity Log</a></li>

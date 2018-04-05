@@ -79,7 +79,7 @@ CREATE TABLE `tblaccounts` (
   `amountout` decimal(10,2) NOT NULL DEFAULT 0.00,
   `rate` decimal(10,5) NOT NULL DEFAULT 1.00000,
   `transid` varchar(64) NOT NULL,
-  `invoiceid` int(10) DEFAULT NULL,
+  `invoiceid` int(10) NOT NULL DEFAULT 0,
   `refundid` int(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `invoiceid` (`invoiceid`),
@@ -1790,7 +1790,7 @@ CREATE TABLE `tblticketpredefinedreplies` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `catid` int(10) NOT NULL,
   `name` text NOT NULL,
-  `reply` text NOT NULL,
+  `reply` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catid` (`catid`),
   CONSTRAINT `tblticketpredefinedreplies_ibfk_1` FOREIGN KEY (`catid`) REFERENCES `tblticketpredefinedcats` (`id`)

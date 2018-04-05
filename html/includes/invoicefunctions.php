@@ -26,7 +26,7 @@ function getInvoicePayUntilDate($nextduedate, $billingcycle, $fulldate = "") {
     return $invoicepayuntildate;
 }
 
-function addTransaction($userid, $currencyid, $description, $amountin, $fees, $amountout, $gateway = "", $transid = "", $invoiceid = "", $date = "", $refundid = "", $rate = "") {
+function addTransaction($userid, $currencyid, $description, $amountin, $fees, $amountout, $gateway = "", $transid = "", $invoiceid = "0", $date = "", $refundid = "0", $rate = "") {
     $date = ($date ? $date . date(" H:i:s") : "now()");
     if ($userid) {
         $currency = getCurrency($userid);
