@@ -220,7 +220,7 @@
 - name: WHMCS cronjob
   cron:
     name: "WHMCS admin/cron.php"
-    minute: "*"
+    minute: "*/5"
     hour: "*"
     job: "/usr/bin/php -f /var/www/html/admin/cron.php"
     user: "www-data"
