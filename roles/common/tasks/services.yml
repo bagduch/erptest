@@ -226,6 +226,15 @@
     user: "www-data"
   notify: restart cron
 
+- name: WHMCS mail to ticket import cronjob
+  cron:
+    name: "WHMCS mail to ticket import cronjob"
+    minute: "*"
+    hour: "*"
+    job: "/usr/bin/php -f /var/www/html/pipe/pop.php"
+    user: "www-data"
+  notify: restart cron
+
 - name: templates cache dir
   file:
     path: /var/www/html/templates_c
