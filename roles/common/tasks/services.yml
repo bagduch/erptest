@@ -145,6 +145,12 @@
     path: /tmp/templates_c
     mode: 0777
 
+- name: Set correct permissions on attachments directory
+  file:
+    state: directory
+    path: /var/www/html/attachments
+    mode: 0777
+
 - name: set mariadb root pass
   debconf:
     name: mariadb-server-10.2
