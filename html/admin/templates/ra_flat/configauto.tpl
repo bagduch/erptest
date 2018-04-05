@@ -5,7 +5,6 @@
                 <form method="post" action="{$PHP_SELF}?sub=save">
                     <p><b>Automatic Module Functions</b></p>
                     {$infobox}
-                    {debug}
                     <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr>
