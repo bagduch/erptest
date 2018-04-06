@@ -17,7 +17,6 @@ $aInt->title = "Network Issues";
 $aInt->sidebar = "support";
 $aInt->icon = "networkissues";
 $upd = fromMySQLDate(date("Y-m-d H:i:s"), true);
-$menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 if ($action == "save") {
     check_token("RA.admin.default");
 
@@ -268,16 +267,7 @@ if ($action == "") {
             }
         }
 
-        $jquerycode = "$(\"#affectingtype\").change(function() {
-    affectingtype = $(\"option:selected\", this).text();
-    if (affectingtype==\"Server\") {
-        $(\"#affectingserver\").css(\"display\",\"\");
-        $(\"#affectingother\").css(\"display\",\"none\");
-    } else {
-        $(\"#affectingserver\").css(\"display\",\"none\");
-        $(\"#affectingother\").css(\"display\",\"\");
-    }
-});
+        $jquerycode = "
 $(\"#startdate\").datetimepicker({showSecond:false,ampm:false,dateFormat: \"" . $localdateformat . "\", timeFormat: \"hh:mm\",";
 
         if ($startts) {

@@ -1149,9 +1149,9 @@ DROP TABLE IF EXISTS `tblnetworkissues`;
 CREATE TABLE `tblnetworkissues` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
+  `type` text NOT NULL,
   `description` text NOT NULL,
   `affecting` varchar(100) DEFAULT NULL,
-  `server` int(10) unsigned DEFAULT NULL,
   `priority` enum('Critical','Low','Medium','High') NOT NULL,
   `startdate` datetime NOT NULL,
   `enddate` datetime DEFAULT NULL,

@@ -24,7 +24,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
             $criteria = array();
             foreach ($where as $origkey => $value) {
                 $key = db_make_safe_field($origkey);
-
                 if (is_array($value)) {
                     if ($key == "default") {
                         $key = "`default`";
@@ -32,6 +31,10 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
                     if ($value['sqltype'] == "LIKE") {
                         $criteria[] = "" . $key . " LIKE '%" . db_escape_string($value['value']) . "%'";
+                        continue;
+                    }
+                    if ($value['sqltype'] == "NULL") {
+                        $criteria[] = "" . $key . " IS NULL";
                         continue;
                     }
 
@@ -250,7 +253,6 @@ function insert_query($table, $array) {
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
-
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }

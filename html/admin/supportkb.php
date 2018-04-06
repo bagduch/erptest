@@ -11,12 +11,15 @@ function kbGetCatIds($catid) {
 }
 
 function buildCategoriesList($level, $parentlevel, $exclude = "") {
+
     global $categorieslist;
     global $categories;
-
-    $result = select_query_i("tblknowledgebasecats", "", array("parentid" => $level, "catid" => 0), "name", "ASC");
-
+    if ($level == 0) {
+        $le['sqltype'] = "NULL";
+    }
+    $result = select_query_i("tblknowledgebasecats", "", array("parentid" => $le, "catid" => 0), "name", "ASC");
     while ($data = mysqli_fetch_array($result)) {
+
         $id = $data['id'];
         $parentid = $data['parentid'];
         $category = $data['name'];
@@ -59,7 +62,7 @@ if ($catid == 0) {
 
 if ($addarticle) {
     check_token("RA.admin.default");
-    $newarticleid = insert_query("tblknowledgebase", array("title" => $articlename));
+    $newarticleid = insert_query("tblknowledgebase", array("title" => $articlename, "article" => '', "private" => "", "order" => 0, "parentid" => "0", "language" => 'en'));
     insert_query("tblknowledgebaselinks", array("categoryid" => $catid, "articleid" => $newarticleid));
     logActivity("Added New Knowledgebase Article - " . $articlename);
     redir("action=edit&id=" . $newarticleid);
@@ -69,14 +72,10 @@ if ($addarticle) {
 
 if ($addcategory) {
     check_token("RA.admin.default");
-    $stmt = $ramysqli->prepare("INSERT INTO tblknowledgebasecats (name,description) VALUES (?,?)");
-    $stmt->bind_param($catname, $description);
-    error_log($ramysqli->error);
-    error_log(print_r($stmt, 1));
-    $stmt->execute();
-    error_log(print_r($stmt, 1));
-    error_log($ramysqli->error);
-//	$newcatid = insert_query("tblknowledgebasecats", array("parentid" => $catid, "name" => $catname, "description" => $description, "hidden" => $hidden));
+    if ($catid == "") {
+        $cid = "NULL";
+    }
+    $newcatid = insert_query("tblknowledgebasecats", array("parentid" => $cid, "name" => $catname, "catid" => 0, "description" => $description, "hidden" => $hidden, 'language' => 'en'));
     logActivity("Added New Knowledgebase Category - " . $catname);
     redir("catid=" . $newcatid);
     exit();
@@ -90,16 +89,6 @@ if ($action == "save") {
     foreach ($categories as $category) {
         insert_query("tblknowledgebaselinks", array("categoryid" => $category, "articleid" => $id));
     }
-
-    foreach ($multilang_title as $language => $title) {
-        delete_query("tblknowledgebase", array("parentid" => $id, "language" => $language));
-
-        if ($title) {
-            insert_query("tblknowledgebase", array("parentid" => $id, "title" => $title, "article" => html_entity_decode($multilang_article[$language]), "language" => $language, "order" => $order));
-            continue;
-        }
-    }
-
 
     if ($toggleeditor) {
         if ($editorstate) {
@@ -181,16 +170,18 @@ if ($action == "") {
         $catname = $data['name'];
         $catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $catid . "\">" . $catname . "</a>";
 
-        while ($catparentid != "0") {
-            $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
-            $data = mysqli_fetch_array($result);
-            $cattempid = $data['id'];
-            $catparentid = $data['parentid'];
-            $catname = $data['name'];
-            $catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $cattempid . "\">" . $catname . "</a>" . $catbreadcrumbnav;
-        }
+        if ($catparentid != NULL || $catparentid != "") {
+            while ($catparentid != "0") {
+                $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
+                $data = mysqli_fetch_array($result);
+                $cattempid = $data['id'];
+                $catparentid = $data['parentid'];
+                $catname = $data['name'];
+                $catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $cattempid . "\">" . $catname . "</a>" . $catbreadcrumbnav;
+            }
 
-        $breadcrumbnav .= $catbreadcrumbnav;
+            $breadcrumbnav .= $catbreadcrumbnav;
+        }
     }
 
     $aInt->deleteJSConfirm("doDelete", "support", "kbdelsure", $_SERVER['PHP_SELF'] . "?catid=" . $catid . "&action=delete&id=");
@@ -367,227 +358,228 @@ if ($action == "") {
     } else {
         echo "<p><b>" . $aInt->lang("support", "noarticlesfound") . "</b></p>";
     }
-} else {
-    if ($action == "edit") {
-        $result = select_query_i("tblknowledgebase", "", array("id" => $id));
-        $data = mysqli_fetch_array($result);
-        $title = $data['title'];
-        $article = $data['article'];
-        $views = $data['views'];
-        $useful = $data['useful'];
-        $votes = $data['votes'];
-        $private = $data['private'];
-        $order = $data['order'];
-        $multilang_title = array();
-        $multilang_article = array();
-        $result = select_query_i("tblknowledgebase", "", array("parentid" => $id));
+} elseif ($action == "edit") {
 
-        while ($data = mysqli_fetch_array($result)) {
-            $language = $data['language'];
-            $multilang_title[$language] = $data['title'];
-            $multilang_article[$language] = $data['article'];
-        }
+    $result = select_query_i("tblknowledgebase", "", array("id" => $id));
+    $data = mysqli_fetch_array($result);
+    $title = $data['title'];
+    $article = $data['article'];
+    $views = $data['views'];
+    $useful = $data['useful'];
+    $votes = $data['votes'];
+    $private = $data['private'];
+    $order = $data['order'];
+    $multilang_title = array();
+    $multilang_article = array();
+    $result = select_query_i("tblknowledgebase", "", array("parentid" => $id));
 
-        $categories = array();
-        $result = select_query_i("tblknowledgebaselinks", "", array("articleid" => $id));
+    while ($data = mysqli_fetch_array($result)) {
+        $language = $data['language'];
+        $multilang_title[$language] = $data['title'];
+        $multilang_article[$language] = $data['article'];
+    }
 
-        while ($data = mysqli_fetch_array($result)) {
-            $categories[] = $data['categoryid'];
-        }
+    $categories = array();
+    $result = select_query_i("tblknowledgebaselinks", "", array("articleid" => $id));
 
-        $jscode = "function showtranslation(language) {
+    while ($data = mysqli_fetch_array($result)) {
+        $categories[] = $data['categoryid'];
+    }
+
+    $jscode = "function showtranslation(language) {
     $(\"#translation_\"+language).slideToggle();
 }";
-        echo "
+    echo "
 <form method=\"post\" action=\"";
-        echo $PHP_SELF;
-        echo "?catid=";
-        echo $category;
-        echo "&action=save&id=";
-        echo $id;
-        echo "\">
+    echo $PHP_SELF;
+    echo "?catid=";
+    echo $category;
+    echo "&action=save&id=";
+    echo $id;
+    echo "\">
 <input type=\"hidden\" name=\"editorstate\" value=\"";
-        echo $noeditor;
-        echo "\" />
+    echo $noeditor;
+    echo "\" />
 
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td width=\"15%\" class=\"fieldlabel\">";
-        echo $aInt->lang("support", "categories");
-        echo "</td><td class=\"fieldarea\">";
-        echo "<s";
-        echo "elect name=\"categories[]\" size=\"8\" multiple style=\"width:80%;\">";
-        buildCategoriesList(0, 0);
-        echo $categorieslist;
-        echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("fields", "title");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"title\" value=\"";
-        echo $title;
-        echo "\" size=\"70\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "views");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"views\" value=\"";
-        echo $views;
-        echo "\" size=\"10\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "votes");
-        echo "</td><td class=\"fieldarea\">For <input type=\"text\" name=\"useful\" value=\"";
-        echo $useful;
-        echo "\" size=\"10\"> Total <input type=\"text\" name=\"votes\" value=\"";
-        echo $votes;
-        echo "\" size=\"10\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("support", "private");
-        echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"private\"";
+    echo $aInt->lang("support", "categories");
+    echo "</td><td class=\"fieldarea\">";
 
-        if ($private == "on") {
-            echo " checked";
-        }
-
-        echo "> ";
-        echo $aInt->lang("support", "privateinfo");
-        echo "</td></tr>
+    echo "<s";
+    echo "elect name=\"categories[]\" size=\"8\" multiple style=\"width:80%;\">";
+    buildCategoriesList(0, 0);
+    echo $categorieslist;
+    echo "</select></td></tr>
 <tr><td class=\"fieldlabel\">";
-        echo $aInt->lang("customfields", "order");
-        echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"order\" value=\"";
-        echo $order;
-        echo "\" size=\"10\"></td></tr>
+    echo $aInt->lang("fields", "title");
+    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"title\" value=\"";
+    echo $title;
+    echo "\" size=\"70\"></td></tr>
+<tr><td class=\"fieldlabel\">";
+    echo $aInt->lang("support", "views");
+    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"views\" value=\"";
+    echo $views;
+    echo "\" size=\"10\"></td></tr>
+<tr><td class=\"fieldlabel\">";
+    echo $aInt->lang("support", "votes");
+    echo "</td><td class=\"fieldarea\">For <input type=\"text\" name=\"useful\" value=\"";
+    echo $useful;
+    echo "\" size=\"10\"> Total <input type=\"text\" name=\"votes\" value=\"";
+    echo $votes;
+    echo "\" size=\"10\"></td></tr>
+<tr><td class=\"fieldlabel\">";
+    echo $aInt->lang("support", "private");
+    echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"private\"";
+
+    if ($private == "on") {
+        echo " checked";
+    }
+
+    echo "> ";
+    echo $aInt->lang("support", "privateinfo");
+    echo "</td></tr>
+<tr><td class=\"fieldlabel\">";
+    echo $aInt->lang("customfields", "order");
+    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"order\" value=\"";
+    echo $order;
+    echo "\" size=\"10\"></td></tr>
 </table>
 
 <br />
 
 <textarea name=\"article\" rows=\"20\" style=\"width:100%\" class=\"tinymce\">";
-        echo $article;
-        echo "</textarea>
+    echo $article;
+    echo "</textarea>
 
 <p align=\"center\"><input type=\"submit\" name=\"toggleeditor\" value=\"";
-        echo $aInt->lang("emailtpls", "rteditor");
-        echo "\" class=\"btn\" /> <input type=\"submit\" value=\"";
-        echo $aInt->lang("global", "savechanges");
-        echo "\" class=\"btn\" /></p>
+    echo $aInt->lang("emailtpls", "rteditor");
+    echo "\" class=\"btn\" /> <input type=\"submit\" value=\"";
+    echo $aInt->lang("global", "savechanges");
+    echo "\" class=\"btn\" /></p>
 
 <h2>";
-        echo $aInt->lang("support", "announcemultiling");
-        echo "</h2>
+    echo $aInt->lang("support", "announcemultiling");
+    echo "</h2>
 
 ";
-        foreach ($ra->getValidLanguages() as $language) {
+    foreach ($ra->getValidLanguages() as $language) {
 
-            if ($language != $CONFIG['Language']) {
-                echo "<p><b><a href=\"#\" onClick=\"showtranslation('" . $language . "');return false;\">" . ucfirst($language) . "</a></b></p>
+        if ($language != $CONFIG['Language']) {
+            echo "<p><b><a href=\"#\" onClick=\"showtranslation('" . $language . "');return false;\">" . ucfirst($language) . "</a></b></p>
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\" id=\"translation_" . $language . "\"";
 
-                if (!$multilang_title[$language]) {
-                    echo " style=\"display:none;\"";
-                }
+            if (!$multilang_title[$language]) {
+                echo " style=\"display:none;\"";
+            }
 
-                echo ">
+            echo ">
 <tr><td width=\"15%\" class=\"fieldlabel\">" . $aInt->lang("fields", "title") . "</td><td class=\"fieldarea\"><input type=\"text\" name=\"multilang_title[" . $language . "]\" value=\"" . $multilang_title[$language] . "\" size=\"70\"></td></tr>
 <tr><td class=\"fieldlabel\">" . $aInt->lang("support", "article") . "</td><td class=\"fieldarea\"><textarea name=\"multilang_article[" . $language . "]\" rows=\"20\" style=\"width:100%\" class=\"tinymce\">" . $multilang_article[$language] . "</textarea></td></tr>
 </table>";
-                continue;
-            }
+            continue;
         }
+    }
 
-        closedir($dh);
-        echo "
+    closedir($dh);
+    echo "
 <p align=\"center\"><input type=\"submit\" value=\"";
-        echo $aInt->lang("global", "savechanges");
-        echo "\" class=\"btn\" /></p>
+    echo $aInt->lang("global", "savechanges");
+    echo "\" class=\"btn\" /></p>
 
 </form>
 
 ";
 
-        if (!$noeditor) {
-            $aInt->richTextEditor();
-        }
-    } else {
-        if ($action == "editcat") {
-            $result = select_query_i("tblknowledgebasecats", "", array("id" => $id));
-            $data = mysqli_fetch_array($result);
-            $parentid = $data['parentid'];
-            $name = $data['name'];
-            $description = $data['description'];
-            $hidden = $data['hidden'];
-            $categories = array();
-            $categories[] = $parentid;
-            $multilang_name = array();
-            $multilang_desc = array();
-            $result = select_query_i("tblknowledgebasecats", "", array("catid" => $id));
+    if (!$noeditor) {
+        $aInt->richTextEditor();
+    }
+} elseif ($action == "editcat") {
+    $result = select_query_i("tblknowledgebasecats", "", array("id" => $id));
+    $data = mysqli_fetch_array($result);
+    $parentid = $data['parentid'];
+    $name = $data['name'];
+    $description = $data['description'];
+    $hidden = $data['hidden'];
+    $categories = array();
+    $categories[] = $parentid;
+    $multilang_name = array();
+    $multilang_desc = array();
+    $result = select_query_i("tblknowledgebasecats", "", array("catid" => $id));
 
-            while ($data = mysqli_fetch_array($result)) {
-                $language = $data['language'];
-                $multilang_name[$language] = $data['name'];
-                $multilang_desc[$language] = $data['description'];
-            }
+    while ($data = mysqli_fetch_array($result)) {
+        $language = $data['language'];
+        $multilang_name[$language] = $data['name'];
+        $multilang_desc[$language] = $data['description'];
+    }
 
-            echo "
+    echo "
 <form method=\"post\" action=\"";
-            echo $PHP_SELF;
-            echo "?action=savecat&id=";
-            echo $id;
-            echo "\">
+    echo $PHP_SELF;
+    echo "?action=savecat&id=";
+    echo $id;
+    echo "\">
 
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td width=\"15%\" class=\"fieldlabel\">";
-            echo $aInt->lang("support", "parentcat");
-            echo "</td><td class=\"fieldarea\">";
-            echo "<s";
-            echo "elect name=\"parentcategory\">
+    echo $aInt->lang("support", "parentcat");
+    echo "</td><td class=\"fieldarea\">";
+    echo "<s";
+    echo "elect name=\"parentcategory\">
 <option value=\"\">";
-            echo $aInt->lang("support", "toplevel");
-            echo "</option>
+    echo $aInt->lang("support", "toplevel");
+    echo "</option>
 ";
-            buildCategoriesList(0, 0, $id);
-            echo $categorieslist;
-            echo "?></select></td></tr>
+    buildCategoriesList(0, 0, $id);
+    echo $categorieslist;
+    echo "?></select></td></tr>
 <tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("support", "catname");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"name\" value=\"";
-            echo $name;
-            echo "\" size=\"40\"></td></tr>
+    echo $aInt->lang("support", "catname");
+    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"name\" value=\"";
+    echo $name;
+    echo "\" size=\"40\"></td></tr>
 <tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("fields", "description");
-            echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"description\" value=\"";
-            echo $description;
-            echo "\" size=\"100\"></td></tr>
+    echo $aInt->lang("fields", "description");
+    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"description\" value=\"";
+    echo $description;
+    echo "\" size=\"100\"></td></tr>
 <tr><td class=\"fieldlabel\">";
-            echo $aInt->lang("fields", "hidden");
-            echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"hidden\"";
+    echo $aInt->lang("fields", "hidden");
+    echo "</td><td class=\"fieldarea\"><input type=\"checkbox\" name=\"hidden\"";
 
-            if ($hidden == "on") {
-                echo " checked";
-            }
+    if ($hidden == "on") {
+        echo " checked";
+    }
 
-            echo "> ";
-            echo $aInt->lang("fields", "hiddeninfo");
-            echo "</td></tr>
+    echo "> ";
+    echo $aInt->lang("fields", "hiddeninfo");
+    echo "</td></tr>
 </table>
 
 <h2>";
-            echo $aInt->lang("support", "announcemultiling");
-            echo "</h2>
+    echo $aInt->lang("support", "announcemultiling");
+    echo "</h2>
 
 <table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 ";
-            foreach ($ra->getValidLanguages() as $language) {
-                echo "<tr><td width=\"15%\" class=\"fieldlabel\">" . ucfirst($language) . "</td><td class=\"fieldarea\">" . $aInt->lang("fields", "name") . ": <input type=\"text\" name=\"multilang_name[" . $language . "]\" value=\"" . $multilang_name[$language] . "\" size=\"40\"> " . $aInt->lang("fields", "description") . ": <input type=\"text\" name=\"multilang_desc[" . $language . "]\" value=\"" . $multilang_desc[$language] . "\" size=\"60\"></td></tr>
+    foreach ($ra->getValidLanguages() as $language) {
+        echo "<tr><td width=\"15%\" class=\"fieldlabel\">" . ucfirst($language) . "</td><td class=\"fieldarea\">" . $aInt->lang("fields", "name") . ": <input type=\"text\" name=\"multilang_name[" . $language . "]\" value=\"" . $multilang_name[$language] . "\" size=\"40\"> " . $aInt->lang("fields", "description") . ": <input type=\"text\" name=\"multilang_desc[" . $language . "]\" value=\"" . $multilang_desc[$language] . "\" size=\"60\"></td></tr>
 ";
-            }
+    }
 
-            echo "</table>
+    echo "</table>
 
 <p align=\"center\"><input type=\"submit\" value=\"";
-            echo $aInt->lang("global", "savechanges");
-            echo "\" class=\"btn\" /></p>
+    echo $aInt->lang("global", "savechanges");
+    echo "\" class=\"btn\" /></p>
 
 </form>
 
 ";
-        }
-    }
+} else {
+    
 }
+
 
 $content = ob_get_contents();
 ob_end_clean();
