@@ -109,7 +109,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
         $query .= " LIMIT " . $limit;
     }
-
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
@@ -249,10 +248,9 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
-    echo $query;
+
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
