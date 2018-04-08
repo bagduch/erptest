@@ -21,6 +21,7 @@
     <link href="templates/{$template}/assets/css/themify-icons.css" rel="stylesheet">
 
     <link href="templates/{$template}/assets/vendors/sweetalert/css/sweetalert2.min.css" rel="Stylesheet" >
+    <link href="templates/{$template}/assets/css/component.css" rel="stylesheet">
     <script src="templates/{$template}/assets/vendors/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="templates/{$template}/assets/js/jquery.easy-autcomplete.min.js" type="text/javascript"></script>
     {$smartyvalues.headeroutput}
@@ -28,6 +29,16 @@
 </head>
 <body>
     {$headeroutput}
+    <div id="morphsearch" class="morphsearch">
+        <form class="morphsearch-form">
+            <input class="morphsearch-input" type="search" placeholder="Search..."/>
+            <button class="morphsearch-submit" type="submit">Search</button>
+        </form>
+        <div class="morphsearch-content">
+
+        </div>
+        <span class="morphsearch-close"></span>
+    </div>
     <div class="wrapper">
         <div class="sidebar" data-background-color="brown" data-active-color="danger">
             <!--
@@ -68,76 +79,10 @@
                         <a class="navbar-brand" href="#"> { $pagetitle } </a>
 
                     </div>
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="ti-bell"></i>
-                                    <span class="notification">6</span>
-                                    <p class="hidden-lg hidden-md">
-                                        Notifications
-                                        <b class="caret"></b>
-                                    </p>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">{$sidebarstats.orders.pending+$sidebarstats.tickets.awaitingreply+$sidebarstats.invoices.overdue} New Notices</a>
-                                    </li>
-                                    <li><!-- start message -->
-                                    <li>
-                                        <a href="orders.php?status=Pending"> 
-                                            <span class="avatar"><i class="fa fa-bell"></i></span> <span class="message">{$sidebarstats.orders.pending} New Orders</span> </a> 
-                                    </li>
-                                    <li>
-                                        <a href="invoices.php?status=Overdue"> <span class="avatar"><i class="fa fa-bell"></i></span> <span class="message">{$sidebarstats.invoices.overdue} Invoices Overdue</span> </a> 
-                                    </li>
-                            </li>
-                        </ul>
-                        </li>
-                        <li>
-                            <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="ti-layout-grid3-alt"></i>
-                                <p class="hidden-lg hidden-md">Apps</p>
-                                <ul class="dropdown-menu">
-                                    <li>here</li>
 
-                                </ul>
-                            </a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="ti-user"></i>
-                                <p class="hidden-lg hidden-md">Profile</p>
-                                <ul class="dropdown-menu">
-                                    <li><a href="myaccount.php"><i class="fa fa-user"></i> Admin Profile</a></li>
-                                    <li><a href="#notes"><i class="fa fa-gear"></i> My Notes</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="/"><i class="fa fa-gear"></i> Client Area</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
-
-                                </ul>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="ti-settings"></i>
-                                <p class="hidden-lg hidden-md">Front Portal</p>
-                            </a>
-                        </li>
-                        <li class="separator hidden-lg hidden-md"></li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
             <div class="content">
-                <div class="searchbox">
-                    <input type="text" name="value" autocomplete="off" class="form-control" id="intellisearchval" placeholder="Search...">
-                    <div id="searchresults">
-                        <div class="resultbox">
-                            <div id="searchresultsscroller"></div>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="container-fluid">
 

@@ -47,7 +47,7 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Date Of Birth</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="dateofbirth" value="{$data.dateofbirth}" tabindex="14"></td>
+                                <td class="fieldarea"><input class="datepick form-control" type="text" size="20" name="dateofbirth" value="{$data.dateofbirth}" tabindex="14"></td>
                                 <td class="fieldlabel">Language</td>
                                 <td class="fieldarea"><select  class="form-control"  name="language" tabindex="23"><option value="">Default</option><option value="en">En</option></select></td>
                             </tr>

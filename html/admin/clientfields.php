@@ -14,7 +14,6 @@ $aInt->title = "Client Custom Fields";
 $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
-$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 if ($action == "") {
     $result = select_query_i("tblclientfields", "");
@@ -80,6 +79,5 @@ if ($action == "save") {
 
 
 $aInt->template = "client/clientfields";
-$aInt->jquerycode .=$menuselect;
 $aInt->display();
 ?>

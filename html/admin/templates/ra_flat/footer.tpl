@@ -71,12 +71,84 @@
 <script src="templates/{$template}/assets/js/amaze.js"></script>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="templates/{$template}/assets/js/demo.js"></script>
-
+<script src="templates/{$template}/assets/js/classie.js"></script>
 <script src="templates/{$template}/assets/js/charts/flot-charts.js"></script>
 <script src="templates/{$template}/assets/js/charts/chartjs-charts.js"></script>
 {literal}
 
     <script type="text/javascript">
+
+
+                (function () {
+                    var morphSearch = document.getElementById('morphsearch'),
+                            input = morphSearch.querySelector('input.morphsearch-input'),
+                            ctrlClose = morphSearch.querySelector('span.morphsearch-close'),
+                            isOpen = isAnimating = false,
+                            // show/hide search area
+                            toggleSearch = function (evt) {
+                                // return if open and the input gets focused
+                                if (evt.type.toLowerCase() === 'focus' && isOpen)
+                                    return false;
+
+                                var offsets = morphsearch.getBoundingClientRect();
+                                if (isOpen) {
+                                    classie.remove(morphSearch, 'open');
+
+                                    // trick to hide input text once the search overlay closes 
+                                    // todo: hardcoded times, should be done after transition ends
+                                    if (input.value !== '') {
+                                        setTimeout(function () {
+                                            classie.add(morphSearch, 'hideInput');
+                                            setTimeout(function () {
+                                                classie.remove(morphSearch, 'hideInput');
+                                                input.value = '';
+                                            }, 300);
+                                        }, 500);
+                                    }
+
+                                    input.blur();
+                                } else {
+                                    classie.add(morphSearch, 'open');
+                                }
+                                isOpen = !isOpen;
+                            };
+
+                    // events
+                    input.addEventListener('focus', toggleSearch);
+                    ctrlClose.addEventListener('click', toggleSearch);
+                    // esc key closes search overlay
+                    // keyboard navigation events
+                    document.addEventListener('keydown', function (ev) {
+                        var keyCode = ev.keyCode || ev.which;
+                        if (keyCode === 27 && isOpen) {
+                            toggleSearch(ev);
+                        }
+                    });
+
+
+                    /***** for demo purposes only: don't allow to submit the form *****/
+                    morphSearch.querySelector('button[type="submit"]').addEventListener('click', function (ev) {
+                        ev.preventDefault();
+                    });
+                })();
+                $(".morphsearch-input").keyup(function () {
+                    var value = $(this).val();
+
+                    if (value.length > 2)
+                    {
+                        $.ajax({
+                            //url: root + '/api/search',
+                            url: "search.php",
+                            method: "POST",
+                            data: {"value": value, "intellisearch": 1, "token": "{/literal}{$csrfToken}{literal}"},
+
+                            success: function (data) {
+                                $(".morphsearch-content").empty();
+                                $(".morphsearch-content").prepend(data);
+                            }
+                        });
+                    }
+                });
                 function goBack() {
                     window.history.back();
                 }
