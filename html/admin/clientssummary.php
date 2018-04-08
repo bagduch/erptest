@@ -477,14 +477,14 @@ if ($action == "addfunds") {
 }
 
 
-//if ($generateinvoices) {
-//	check_token("RA.admin.default");
-//	checkPermission("Generate Due Invoices");
-//	$invoiceid = createInvoices($userid, $noemails);
-//	$_SESSION['adminclientgeninvoicescount'] = $invoicecount;
-//	redir("userid=" . $userid . "&geninvoices=true");
-//	exit();
-//}
+if ($generateinvoices) {
+	check_token("RA.admin.default");
+	checkPermission("Generate Due Invoices");
+	$invoiceid = createInvoices($userid, $noemails);
+	$_SESSION['adminclientgeninvoicescount'] = $invoicecount;
+	redir("userid=" . $userid . "&geninvoices=true");
+	exit();
+}
 
 
 if ($activateaffiliate) {
@@ -781,7 +781,7 @@ ob_end_clean();
 
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
-$aInt->jquerycode .=$menuselect;
+
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

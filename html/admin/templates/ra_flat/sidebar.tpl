@@ -1,3 +1,21 @@
+
+
+<div class="admin-login">
+    <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="ti-user"></i><p>{$admin_username}</p>
+        <p class="hidden-lg hidden-md">Profile</p>
+        <ul class="dropdown-menu">
+            <li><a href="myaccount.php"><i class="fa fa-user"></i> Admin Profile</a></li>
+            <li><a href="#notes"><i class="fa fa-gear"></i> My Notes</a></li>
+            <li class="divider"></li>
+            <li><a href="/"><i class="fa fa-gear"></i> Client Area</a></li>
+            <li class="divider"></li>
+            <li><a href="logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
+
+        </ul>
+    </a>
+</div>
+
 <ul class="nav">
     <li class="active">
         <a href="index.php">

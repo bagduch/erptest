@@ -11206,3 +11206,13 @@ be a descendant of the grid when it is being dragged.
 {
     display: inline;
 }
+.admin-login{
+    position: relative;
+    margin-top: 30px;
+    padding-left: 30px;
+}
+.admin-login p{
+    display: inline;
+    margin-left: 25px;
+
+}

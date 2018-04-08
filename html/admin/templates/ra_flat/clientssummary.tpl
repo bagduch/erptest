@@ -2,7 +2,7 @@
     <div class="card">
         <div class="row">
             <div class="col-md-12">
-
+<button class="btn btn-primary btn-fill" onclick="demo.showSwal('warning-message-and-confirmation')">Try me!</button>
                 <div class="callout pull-right">
                     <div class="row">
                         <div id="exemptccetc">
