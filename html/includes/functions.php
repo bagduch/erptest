@@ -172,6 +172,7 @@ if (!function_exists("emailtpl_template")) {
                     $deptid = $data['did'];
                     $tid = $data['tid'];
                     $ticketcc = $data['cc'];
+                    $email = $data['email'];
                     $c = $data['c'];
                     $userid = $data['userid'];
                     $date = $data['date'];
@@ -702,7 +703,6 @@ if (!function_exists("emailtpl_template")) {
             }
         }
 
-
         if (!$email) {
             return false;
         }
@@ -843,33 +843,31 @@ if (!function_exists("emailtpl_template")) {
         try {
             $mail->From = $fromemail;
             $mail->FromName = html_entity_decode($fromname, ENT_QUOTES);
-
             if ($CONFIG['MailType'] == "mail") {
                 $mail->Mailer = "mail";
-            } else {
-                if ($CONFIG['MailType'] == "smtp") {
-                    $mail->IsSMTP();
-                    $mail->Host = $CONFIG['SMTPHost'];
-                    $mail->Port = $CONFIG['SMTPPort'];
-                    $mail->Hostname = $_SERVER['SERVER_NAME'];
+            } elseif ($CONFIG['MailType'] == "smtp") {
+                $mail->IsSMTP();
+                $mail->Host = $CONFIG['SMTPHost'];
+                $mail->Port = $CONFIG['SMTPPort'];
+                $mail->Hostname = $_SERVER['SERVER_NAME'];
 
-                    if ($CONFIG['SMTPSSL']) {
-                        $mail->SMTPSecure = $CONFIG['SMTPSSL'];
-                    }
-
-
-                    if ($CONFIG['SMTPUsername']) {
-                        $mail->SMTPAuth = true;
-                        $mail->Username = $CONFIG['SMTPUsername'];
-                        $mail->Password = decrypt($CONFIG['SMTPPassword']);
-                    }
-
-                    $mail->Sender = $mail->From;
-
-                    if ($fromemail != $CONFIG['SMTPUsername']) {
-                        $mail->AddReplyTo($fromemail, html_entity_decode($fromname, ENT_QUOTES));
-                    }
+                if ($CONFIG['SMTPSSL']) {
+                    $mail->SMTPSecure = $CONFIG['SMTPSSL'];
                 }
+
+
+                if ($CONFIG['SMTPUsername']) {
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $CONFIG['SMTPUsername'];
+                    $mail->Password = decrypt($CONFIG['SMTPPassword']);
+                }
+
+                $mail->Sender = $mail->From;
+                if ($fromemail != $CONFIG['SMTPUsername']) {
+                    $mail->AddReplyTo($fromemail, html_entity_decode($fromname, ENT_QUOTES));
+                }           
+            } else {
+                
             }
 
             $mail->XMailer = $ra->get_config("CompanyName");
@@ -1026,7 +1024,7 @@ if (!function_exists("emailtpl_template")) {
                 insert_query("tblemails", array("userid" => $userid, "subject" => $subject, "message" => $message, "date" => "now()", "to" => $email, "cc" => $copyto, "bcc" => $CONFIG['BCCMessages']));
             }
 
-            logActivity("Email Sent to " . $firstname . " " . $lastname . " (" . $subject . ")", $userid ?? "");
+            logActivity("Email Sent to " . $firstname . " " . $lastname . " (" . $subject . ")", $userid ? $userid : "");
             $mail->ClearAddresses();
         } catch (phpmailerException $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
@@ -1087,6 +1085,7 @@ if (!function_exists("emailtpl_template")) {
             $mail->Mailer = "mail";
         } else {
             if ($CONFIG['MailType'] == "smtp") {
+            
                 $mail->IsSMTP();
                 $mail->Host = $CONFIG['SMTPHost'];
                 $mail->Port = $CONFIG['SMTPPort'];

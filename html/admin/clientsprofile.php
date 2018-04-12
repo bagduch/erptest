@@ -43,10 +43,11 @@ if ($ra->get_req_var("save")) {
             "address2" => $address2,
             "city" => $city,
             "state" => $state,
-            "dateofbirth"=>$dateofbirth,
+            "dateofbirth" => toMySQLDate($dateofbirth),
             "postcode" => $postcode,
             "country" => $country,
             "phonenumber" => $phonenumber,
+            "mobilenumber" => $mobilenumber,
             "currency" => $_POST['currency'],
             "notes" => $notes,
             "status" => $status,
@@ -57,7 +58,7 @@ if ($ra->get_req_var("save")) {
             "disableautocc" => $disableautocc,
             "emailoptout" => $emailoptout,
             "overrideautoclose" => $overrideautoclose,
-            "language" => $language!=""?$language:"en",
+            "language" => $language != "" ? $language : "en",
             "billingcid" => $billingcid,
             "groupid" => $groupid
         );
@@ -117,10 +118,10 @@ if ($ra->get_req_var("save")) {
         }
 
         logActivity("Client Profile Modified - " . implode(", ", $changelist) . (" - User ID: " . $userid), $userid);
-//        run_hook("AdminClientProfileTabFieldsSave", $_REQUEST);
-//        run_hook("ClientEdit", array_merge(array("userid" => $userid, "olddata" => $oldclientsdetails), $array));
-//        redir("userid=" . $userid . "&success=true");
-//        exit();
+        run_hook("AdminClientProfileTabFieldsSave", $_REQUEST);
+        run_hook("ClientEdit", array_merge(array("userid" => $userid, "olddata" => $oldclientsdetails), $array));
+        redir("userid=" . $userid . "&success=true");
+        exit();
     }
 }
 

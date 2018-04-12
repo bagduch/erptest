@@ -161,11 +161,11 @@
 
                     if ($('.datepick').length) {
                         $('.datepick').datetimepicker({
-                            format: 'YYYY-MM-DD'});
+                            format: '{/literal}{$datepickerformat}{literal}'});
                     }
                     if ($('.datetimepick').length) {
                         $('.datetimepick').datetimepicker({
-                            format: 'YYYY-MM-DD hh:mm'
+                            format: '{/literal}{$datepickerformat}{literal} hh:mm'
                         });
                     }
                     $("#intellisearchval").keyup(function () {

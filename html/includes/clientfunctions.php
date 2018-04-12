@@ -41,7 +41,7 @@ function getClientsDetails($userid = "", $contactid = "") {
     $details['city'] = $data['city'];
     $details['state'] = $data['state'];
     $details['postcode'] = $data['postcode'];
-    $details['dateofbirth'] = $data['dateofbirth'];
+    $details['dateofbirth'] = fromMySQLDate($data['dateofbirth']);
     $details['country'] = $details['countrycode'] = $data['country'];
     $details['countryname'] = $countries[$data['country']];
     $details['phonecc'] = $countrycallingcodes[$data['country']];
@@ -447,11 +447,9 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
 }
 
 function addClient(
-$firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
+$firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber,$mobilenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
     global $ra;
     global $remote_ip;
-
-    error_log("Adding client: " . print_r(array($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $password, $dob, $sendemail = "on", $additionaldata = ""), 1));
 
     $fullhost = gethostbyaddr($remote_ip);
     $currency = (is_array($_SESSION['currency']) ? $_SESSION['currency'] : getCurrency("", $_SESSION['currency']));
@@ -469,8 +467,9 @@ $firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state
         "postcode" => $postcode,
         "country" => $country,
         "phonenumber" => $phonenumber,
+        "mobilenumber"=>$mobilenumber,
         "password" => $password_hash,
-        "dateofbirth" => $dob,
+        "dateofbirth" => toMySQLDate($dob),
         "lastlogin" => "now()",
         "ip" => $remote_ip,
         "host" => $fullhost,

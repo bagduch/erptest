@@ -361,7 +361,7 @@ class RA_Admin {
         $this->assign("_ADMINLANG", $_ADMINLANG);
         $this->assign("csrfToken", generate_token("plain"));
         $addonmodulesperms = unserialize($CONFIG['AddonModulesPerms']);
-        $this->assign("datepickerformat", str_replace(array("DD", "MM", "YYYY"), array("dd", "mm", "yy"), $CONFIG['DateFormat']));
+        $this->assign("datepickerformat", $CONFIG['DateFormat']);
 
         if (isset($_SESSION['adminid'])) {
             $result = select_query_i("tbladmins", "firstname,lastname,notes,supportdepts,roleid", array("id" => $_SESSION['adminid']));

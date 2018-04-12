@@ -2,7 +2,6 @@
     <div class="card">
         <div class="row">
             <div class="col-md-12">
-<button class="btn btn-primary btn-fill" onclick="demo.showSwal('warning-message-and-confirmation')">Try me!</button>
                 <div class="callout pull-right">
                     <div class="row">
                         <div id="exemptccetc">
@@ -193,12 +192,11 @@
                                 <ul>
                                     <li>
                                         <a href="invoices.php?action=createinvoice&userid={$clientsdetails.userid}&token={$csrfToken}"><img src="images/icons/invoicesedit.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.create}</a>
-                                    <li>
+                                 {*   <li>
                                         <a href="#" onClick="showDialog('addfunds');
                                                 return false"><img src="images/icons/addfunds.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.createaddfunds}</a>
                                     <li>
-                                        <a href="#" onClick="showDialog('geninvoices');
-                                                return false"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>
+                                        <a href="#" onclick="demo.showSwal('generate-invoice')"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>*}
                                     <li>
                                         <a href="#" onClick="openCCDetails();
                                                 return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>

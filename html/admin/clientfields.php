@@ -1,4 +1,5 @@
 <?php
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,6 +22,13 @@ if ($action == "") {
         $clientfields[$data['cfid']] = $data;
     }
     $aInt->assign('datas', $clientfields);
+}
+
+if ($action = "deletefield") {
+    if (isset($_POST['deletefieldid'])) {
+        delete_query("tblclientfields", array('cfid' => $_POST['deletefieldid']));
+        logActivity($_SESSION['admin_id'] . " removed customer fields" . $_POST['deletefieldid']);
+    }
 }
 if ($action == "save") {
     if (isset($_POST['fieldname'])) {

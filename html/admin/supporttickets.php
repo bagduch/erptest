@@ -18,8 +18,6 @@ $supporttickets = new RA_Support($id, $action);
 $aInt = $supporttickets->aInt;
 $filt = $supporttickets->filt;
 $smartyvalues = array();
-
-
 if ($ra->get_req_var("ticketid")) {
     $action = "search";
 }
@@ -515,7 +513,7 @@ if ($action == "gettags") {
         }
 
 
-        redir("action=viewticket&id=" . $id);
+//        redir("action=viewticket&id=" . $id);
     }
 
     if ($deptid) {
@@ -1414,10 +1412,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
             $client = $data['id'];
 
             if ($client) {
-                $name = $data['firstname'] . " " . $data['lastname'];
+                $clientname = $data['firstname'] . " " . $data['lastname'];
 
                 if ($data['companyname']) {
-                    $name .= " (" . $data['companyname'] . ")";
+                    $clientname .= " (" . $data['companyname'] . ")";
                 }
 
                 $email = $data['email'];
@@ -1457,6 +1455,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $template = "support/supportopen";
     }
 }
+$result = select_query_i("tblticketstatuses", "", "");
+while ($data = mysqli_fetch_array($result)) {
+    $statuseshtml.= "<option value=\"".$data['id']."\">".$data['title']."</option>";
+}
 $aInt->assign("replacemenu", "View Tickets");
 $aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
 $result = select_query_i("tbltickettags", "", "", "id", "DESC");
@@ -1468,6 +1470,8 @@ $tagcontainer = "$('div#tickets').append('<div class=\"tag-list\"><h3>Tags:</h3>
 
 $aInt->jquerycode .= $menuselect;
 $aInt->jquerycode .= $tagcontainer;
+$aInt->assign("clientname", $clientname);
+$aInt->assign("email", $email);
 $aInt->assign("addto", "Support");
 $aInt->assign("smartyvalues", $smartyvalues);
 $aInt->assign("table", $table);
