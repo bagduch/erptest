@@ -1,4 +1,5 @@
 <?php
+
 // vim: ai ts=4 sts=4 et sw=4 ft=php
 
 define("ADMINAREA", true);
@@ -57,11 +58,7 @@ if ($action == "invtooltip") {
     }
 
     $data = get_query_vals(
-        "tblinvoices", 
-        "subtotal,credit,tax,tax2,taxrate,taxrate2,total", 
-        array("id" => $id), 
-        "id", 
-        "ASC"
+            "tblinvoices", "subtotal,credit,tax,tax2,taxrate,taxrate2,total", array("id" => $id), "id", "ASC"
     );
     echo "<tr bgcolor=\"#efefef\" style=\"text-align:right;font-weight:bold;\"><td>" . $aInt->lang("fields", "subtotal") . "&nbsp;</td><td>" . formatCurrency($data['subtotal']) . "</td></tr>";
 
@@ -105,19 +102,18 @@ if ($action == "createinvoice") {
 
     $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['CreateInvoiceDaysBefore'], date("Y")));
     $invoiceid = insert_query(
-	    "tblinvoices", 
-	    array(
-		    "date" => "now()", 
-		    "duedate" => $duedate, 
-		    "userid" => $userid, 
-		    "status" => "Draft", 
-		    "paymentmethod" => $gateway, 
-		    "taxrate" => $taxrate, 
-            "taxrate2" => $taxrate2,
-            "invoicenum" => sprintf("%s%05d",strftime("%Y%m%d"), 10),
-            "subtotal" => 0
-	    )
-	);
+            "tblinvoices", array(
+        "date" => "now()",
+        "duedate" => $duedate,
+        "userid" => $userid,
+        "status" => "Draft",
+        "paymentmethod" => $gateway,
+        "taxrate" => $taxrate,
+        "taxrate2" => $taxrate2,
+        "invoicenum" => sprintf("%s%05d", strftime("%Y%m%d"), 10),
+        "subtotal" => 0
+            )
+    );
     logActivity("Created Manual Invoice - Invoice ID: " . $invoiceid, $userid);
 
     if (1 < $CONFIG['InvoiceIncrement']) {
@@ -186,23 +182,21 @@ if ($ra->get_req_var("duplicateinvoice")) {
         $duedate = toMySQLDate($duedatefrom);
         $datepaidfrom = fromMySQLDate($data_duplicate['datepaid']);
         $datepaid = toMySQLDate($datepaidfrom);
-        insert_query("tblinvoices", 
-            array(
-                "userid" => $data_duplicate['userid'], 
-                "invoicenum" => $data_duplicate['invoicenum'], 
-                "date" => $date, "duedate" => $duedate, 
-                "datepaid" => $datepaid, 
-                "subtotal" => $data_duplicate['subtotal'], 
-                "credit" => $data_duplicate['credit'], 
-                "tax" => $data_duplicate['tax'], 
-                "tax2" => $data_duplicate['tax2'], 
-                "total" => $data_duplicate['total'], 
-                "taxrate2" => $data_duplicate['taxrate2'], 
-                "status" => $data_duplicate['status'], 
-                "paymentmethod" => $data_duplicate['paymentmethod'], 
-                "notes" => $data_duplicate['notes']
-            ), 
-            array("id" => $invid)
+        insert_query("tblinvoices", array(
+            "userid" => $data_duplicate['userid'],
+            "invoicenum" => $data_duplicate['invoicenum'],
+            "date" => $date, "duedate" => $duedate,
+            "datepaid" => $datepaid,
+            "subtotal" => $data_duplicate['subtotal'],
+            "credit" => $data_duplicate['credit'],
+            "tax" => $data_duplicate['tax'],
+            "tax2" => $data_duplicate['tax2'],
+            "total" => $data_duplicate['total'],
+            "taxrate2" => $data_duplicate['taxrate2'],
+            "status" => $data_duplicate['status'],
+            "paymentmethod" => $data_duplicate['paymentmethod'],
+            "notes" => $data_duplicate['notes']
+                ), array("id" => $invid)
         );
         logActivity("Duplicated Invoice(s) - Invoice ID: " . $invid, $userid);
     }
@@ -266,14 +260,14 @@ if ($action == "") {
         if (count($invoicetotals)) {
             $topwrap = "<div class=\"contentbox\" style=\"font-size:18px;\">";
             foreach ($invoicetotals as $vals) {
-                $topwrap.= "<b>" . $vals['currencycode'] . "</b> "
+                $topwrap .= "<b>" . $vals['currencycode'] . "</b> "
                         . $aInt->lang("status", "draft") . ": <span class=\"textgreen\"><b>" . $vals['draft'] . "</b></span> "
                         . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> "
                         . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> "
                         . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
             }
 
-            $topwrap.= "</div><br />";
+            $topwrap .= "</div><br />";
         }
     }
 
@@ -322,9 +316,7 @@ if ($action == "") {
 } else {
     if ($action == "edit") {
         $result = select_query_i(
-            "tblinvoices", 
-            "userid,paymentmethod", 
-            array("id" => $id)
+                "tblinvoices", "userid,paymentmethod", array("id" => $id)
         );
         $data = mysqli_fetch_array($result);
         $userid = $data[0];
@@ -332,17 +324,15 @@ if ($action == "") {
         if ($saveoptions) {
             check_token("RA.admin.default");
             update_query(
-                "tblinvoices", 
-                array(
-                    "date" => toMySQLDate($invoicedate), 
-                    "duedate" => toMySQLDate($datedue), 
-                    "paymentmethod" => $paymentmethod, 
-                    "invoicenum" => $invoicenum, 
-                    "taxrate" => $taxrate, 
-                    "taxrate2" => $taxrate2, 
-                    "status" => $status
-                ), 
-                array("id" => $id)
+                    "tblinvoices", array(
+                "date" => toMySQLDate($invoicedate),
+                "duedate" => toMySQLDate($datedue),
+                "paymentmethod" => $paymentmethod,
+                "invoicenum" => $invoicenum,
+                "taxrate" => $taxrate,
+                "taxrate2" => $taxrate2,
+                "status" => $status
+                    ), array("id" => $id)
             );
             updateInvoiceTotal($id);
 
@@ -397,7 +387,7 @@ if ($action == "") {
 
             if ($description) {
                 foreach ($description as $lineid => $desc) {
-                    update_query("tblinvoiceitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => $taxed[$lineid]), array("id" => $lineid));
+                    update_query("tblinvoiceitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => isset($taxed[$lineid]) ? 1 : 0), array("id" => $lineid));
                 }
             }
 
@@ -408,7 +398,7 @@ if ($action == "") {
                     "userid" => $userid,
                     "description" => $adddescription,
                     "amount" => $addamount,
-                    "taxed" => $addtaxed
+                    "taxed" => isset($addtaxed) ? $addtaxed : 0
                         )
                 );
             }
@@ -465,8 +455,8 @@ if ($action == "") {
             $data = mysqli_fetch_array($result);
             $userid = $data[0];
             logActivity("Modified Invoice - Invoice ID: " . $id, $userid);
-            redir("action=edit&id=" . $id);
-            exit();
+//            redir("action=edit&id=" . $id);
+//            exit();
         }
         if ($addcredit != "0.00" && $addcredit) {
             check_token("RA.admin.default");
@@ -659,7 +649,7 @@ if ($action == "") {
 }
 
 
-$aInt->jquerycode.=$menuselect;
+$aInt->jquerycode .= $menuselect;
 
 $aInt->display();
 ?>
