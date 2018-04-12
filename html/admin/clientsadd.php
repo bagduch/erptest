@@ -5,6 +5,12 @@
  * @ RA
  *
  * */
+function random_password($length = 8) {
+    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+    $password = substr(str_shuffle($chars), 0, $length);
+    return $password;
+}
+
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("Add New Client", false);
@@ -20,65 +26,53 @@ if ($action == "add") {
 
     if ($data[0]) {
         infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
-    } else {
-        if (!trim($email) && !$cccheck) {
+    } elseif (!trim($email) && !$cccheck) {
+        infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
+    } elseif (!$cccheck && trim($email)) {
+        $emaildomain = explode("@", $email, 2);
+        $emaildomain = $emaildomain[1];
+
+        if (!preg_match('/^([a-zA-Z0-9&\'.])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
+            $errormessage .= "<li>" . $_LANG['clientareaerroremailinvalid'];
             infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
         } else {
-            if (!$cccheck && trim($email)) {
-                $emaildomain = explode("@", $email, 2);
-                $emaildomain = $emaildomain[1];
+            $query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
+            $result = select_query_i("tblcontacts", "COUNT(*)", $query);
+            $data = mysqli_fetch_array($result);
 
-                if (!preg_match('/^([a-zA-Z0-9&\'.])+([\.a-zA-Z0-9+_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/', $email)) {
-                    $errormessage .= "<li>" . $_LANG['clientareaerroremailinvalid'];
-                    infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
-                } else {
-                    $query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
-                    $result = select_query_i("tblcontacts", "COUNT(*)", $query);
-                    $data = mysqli_fetch_array($result);
-
-                    if ($data[0]) {
-                        infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
-                    }
-                }
-            }
-            if (!$infobox) {
-                $_SESSION['currency'] = $currency;
-		$userid = addClient(
-			$firstname, 
-			$lastname, 
-			$companyname, 
-			$email, 
-			$address1, 
-			$address2, 
-			$city, 
-			$state, 
-			$postcode, 
-			$country, 
-			$phonenumber, 
-			$password, 
-			$dateofbirth,
-			$sendemail, 
-			array(
-				"notes" => $notes, 
-				"status" => $status, 
-				"credit" => $credit, 
-				"taxexempt" => $taxexempt, 
-				"latefeeoveride" => $latefeeoveride, 
-				"overideduenotices" => $overideduenotices, 
-				"language" => $language, 
-				"billingcid" => $billingcid, 
-				"lastlogin" => "00000000000000", 
-				"groupid" => $groupid, 
-				"separateinvoices" => $separateinvoices, 
-				"disableautocc" => $disableautocc, 
-				"defaultgateway" => $paymentmethod
-			)
-		);
-                unset($_SESSION['uid']);
-                unset($_SESSION['upw']);
-                redir("userid=" . $userid, "clientssummary.php");
+            if ($data[0]) {
+                infoBox($aInt->lang("clients", "duplicateemail"), $aInt->lang("clients", "duplicateemailexp"), "error");
             }
         }
+    } else {
+        
+    }
+    if (!$infobox) {
+        $_SESSION['currency'] = $currency;
+        $userid = addClient(
+                $firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $mobilenumber, $password, $dateofbirth, $sendemail, array(
+            "notes" => $notes,
+            "status" => $status,
+            "credit" => $credit,
+            "taxexempt" => $taxexempt,
+            "latefeeoveride" => $latefeeoveride,
+            "overideduenotices" => $overideduenotices,
+            "language" => "en",
+            "billingcid" => $billingcid,
+            "lastlogin" => "00000000000000",
+            "groupid" => $groupid,
+            "separateinvoices" => $separateinvoices,
+            "disableautocc" => $disableautocc,
+            "defaultgateway" => $paymentmethod
+                )
+        );
+        unset($_SESSION['uid']);
+        unset($_SESSION['upw']);
+        echo json_encode(array("success" => true, "userid" => $userid));
+        exit();
+    } else {
+        echo json_encode(array("success" => false, "error" => $infobox));
+        exit();
     }
 }
 
@@ -92,7 +86,7 @@ $countrydrop = getCountriesDropDown("New Zealand", "", 13);
 
 $langoption = "";
 foreach ($ra->getValidLanguages() as $lang) {
-    $langoption .= "<option value=\"" . $lang . "\">" . ucfirst($lang) . "</option>";
+    $langoption .= "<option value = \"" . $lang . "\">" . ucfirst($lang) . "</option>";
 }
 
 
@@ -120,56 +114,26 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 
-if ($taxexempt == "on") {
-    // echo " checked";
-}
-
-foreach ($ra->getValidLanguages() as $lang) {
-    //echo "<option value=\"" . $lang . "\">" . ucfirst($lang) . "</option>";
-}
-
-if ($separateinvoices == "on") {
-    // echo " checked";
-}
-
-
-if ($status == "Active") {
-    //  echo " selected";
-}
-
-if ($status == "Inactive") {
-    //   echo " selected";
-}
-
-
-if ($status == "Closed") {
-    //  echo " selected";
-}
-
-if ($disableautocc == "on") {
-    //  echo " checked";
-}
-
 $result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
-    $currencyoption.= "<option value=\"" . $data['id'] . "\"";
+    $currencyoption .= "<option value=\"" . $data['id'] . "\"";
 
     if (($currency && $data['id'] == $currency) || (!$currency && $data['default'])) {
-        $currencyoption.= " selected";
+        $currencyoption .= " selected";
     }
 
-    $currencyoption.= ">" . $data['code'] . "</option>";
+    $currencyoption .= ">" . $data['code'] . "</option>";
 }
 
 $result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
 while ($data = mysqli_fetch_assoc($result)) {
     $groupoption .= "<option style='background-color:" . $data['groupcolour'] . "' value='" . $data['id'] . "'";
     if ($data['id'] == $groupid) {
-        $groupoption.= " selected";
+        $groupoption .= " selected";
     }
 
-    $groupoption.=">" . $data['groupname'] . "</option>";
+    $groupoption .= ">" . $data['groupname'] . "</option>";
 }
 
 $taxindex = 27;
@@ -201,7 +165,7 @@ include "../includes/countries.php";
 $status = array("Active", "Inactive", "Closed");
 
 
-
+$aInt->assign("password", random_password(10));
 $aInt->assign("clientfields", $clientfieldshtml);
 $aInt->assign("status", $status);
 $aInt->assign("infobox", $infobox);

@@ -646,7 +646,8 @@ class PHPMailer {
    * @access protected
    */
   protected function AddAnAddress($kind, $address, $name = '') {
-    if (!preg_match('/^(to|cc|bcc|Reply-To)$/', $kind)) {
+
+    if (!preg_match('/^(to|cc|bcc|Reply-To)/', $kind)) {
       $this->SetError($this->Lang('Invalid recipient array').': '.$kind);
       if ($this->exceptions) {
         throw new phpmailerException('Invalid recipient array: ' . $kind);
@@ -967,16 +968,16 @@ class PHPMailer {
   protected function SmtpSend($header, $body) {
     require_once $this->PluginDir . 'class.smtp.php';
     $bad_rcpt = array();
-
     if(!$this->SmtpConnect()) {
       throw new phpmailerException($this->Lang('smtp_connect_failed'), self::STOP_CRITICAL);
     }
     $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
     if(!$this->smtp->Mail($smtp_from)) {
+  
       $this->SetError($this->Lang('from_failed') . $smtp_from . " : " . implode(",",$this->smtp->getError())) ;
       throw new phpmailerException($this->ErrorInfo, self::STOP_CRITICAL);
     }
-
+ 
     // Attempt to send attach all recipients
     foreach($this->to as $to) {
       if (!$this->smtp->Recipient($to[0])) {
@@ -1066,6 +1067,7 @@ class PHPMailer {
         $tls = ($this->SMTPSecure == 'tls');
         $ssl = ($this->SMTPSecure == 'ssl');
 
+    
         if ($this->smtp->Connect(($ssl ? 'ssl://':'').$host, $port, $this->Timeout)) {
 
           $hello = ($this->Helo != '' ? $this->Helo : $this->ServerHostname());
@@ -1089,11 +1091,13 @@ class PHPMailer {
           }
         }
         $index++;
+
       if (!$connection) {
         throw new phpmailerException($this->Lang('connect_host'));
       }
       }
     } catch (phpmailerException $e) {
+        echo "<pre>", print_r($e, 1), "</pre>";
       $this->smtp->Reset();
       if ($this->exceptions) {
         throw $e;

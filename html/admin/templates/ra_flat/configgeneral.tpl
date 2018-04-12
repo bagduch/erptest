@@ -248,7 +248,6 @@
                             <!-- Mail -->
                             <div role="tabpanel" id="tab4" class="tab-pane">
 
-
                                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                                     <tbody><tr><td class="fieldlabel">Mail Type</td><td class="fieldarea">
                                                 <select class="form-control"name="mailtype">
@@ -258,11 +257,11 @@
                                         <tr><td class="fieldlabel">SMTP Port</td>
                                             <td class="fieldarea"><input type="text" class="form-control" name="smtpport" size="5" value="{$CONFIG.SMTPPort}"> The port your mail server uses</td></tr>
                                         <tr><td class="fieldlabel">SMTP Host</td>
-                                            <td class="fieldarea"><input type="text" class="form-control" name="smtphost" size="40" value="{$CONFIG.smtphost}"></td></tr>
+                                            <td class="fieldarea"><input type="text" class="form-control" name="smtphost" size="40" value="{$CONFIG.SMTPHost}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP Username</td>
                                             <td class="fieldarea"><input type="text" class="form-control" name="smtpusername" size="35" value="{$CONFIG.SMTPUsername}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP Password</td>
-                                            <td class="fieldarea"><input  type="password" class="form-control" name="smtppassword" size="20" value="{$CONFIG.smtppassword}"></td></tr>
+                                            <td class="fieldarea"><input  type="password" class="form-control" name="smtppassword" size="20" value="{$CONFIG.SMTPPassword}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP SSL Type</td>
                                             <td class="fieldarea">
                                                 <label><input type="radio" class="flat-red" name="smtpssl" value="" {if $CONFIG.SMTPSSL eq ""}checked{/if}> None</label>

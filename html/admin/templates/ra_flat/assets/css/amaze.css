@@ -11216,3 +11216,12 @@ be a descendant of the grid when it is being dragged.
     margin-left: 25px;
 
 }
+#ticketclientsearchresults
+{
+    position: absolute;
+    background: beige;
+    padding: 20px;
+    z-index: 999;
+    top: 40px;
+    font-size: 12px;
+}

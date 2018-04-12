@@ -1,18 +1,18 @@
-<div class="box">
-    <div class="box-body">
+<div class="card">
+    <div class="content">
         <form method="post" action="supporttickets.php?action=openticket" enctype="multipart/form-data">
 
             <div class="col-lg-6">
                 <table class="form" width="100%"  border="0" cellspacing="2" cellpadding="3">
                     <tr>
                         <td width="200" class="fieldlabel">To:</td>
-                        <td class="fieldarea">   <input type="hidden" name="client" id="clientinput" value=""> <input class="form-control" type="text" name="name" id="name" size="40" value=""></td>
+                        <td class="fieldarea">   <input type="hidden" name="client" id="clientinput" value=""> <input class="form-control" type="text" name="name" id="name" size="40" value="{$clientname}"></td>
                     </tr>
                     <tr>
                         <td class="fieldlabel">Email Address</td>
                         <td class="fieldarea">
                             <div style="padding-left: 0px" class="col-xs-12 col-md-8">
-                                <input class="form-control" type="text" name="email" id="email" size="50" value=""> 
+                                <input class="form-control" type="text" name="email" id="email" size="50" value="{$email}"> 
                             </div>
                             <div class="col-xs-6 col-md-4">
                                 <label style="margin-top: 5px;"><input class="flat-red" type="checkbox" name="sendemail" checked=""> Send Email</label>
@@ -38,7 +38,9 @@
                 <table class="form" width="100%"  border="0" cellspacing="2" cellpadding="3">
                     <tr>
                         <td width="200" class="fieldlabel">Client Search:</td>
-                        <td class="fieldarea"><input class="form-control" type="text" id="clientsearchval" size="15"> <img src="images/icons/delete.png" alt="Cancel" class="absmiddle" id="clientsearchcancel" height="16" width="16"></td>
+                        <td class="fieldarea"><input class="form-control" type="text" id="clientsearchval" size="15"> 
+                            <div id="ticketclientsearchresults"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td class="fieldlabel">CC Recipients</td>

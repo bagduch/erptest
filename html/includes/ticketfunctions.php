@@ -567,7 +567,6 @@ function processPipedTicket($to, $name, $email, $subject, $message, $attachment)
 
 function uploadTicketAttachments($admin = false) {
     global $attachments_dir;
-    echo "here" . $attachments_dir;
     $attachments = "";
 
     if ($_FILES['attachments']) {

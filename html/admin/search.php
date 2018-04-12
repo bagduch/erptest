@@ -186,7 +186,7 @@ if ($intellisearch) {
         if (checkPermission("View Orders", true) || checkPermission("Create Upgrade/Downgrade Orders", true)) {
             $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblorders.id,tblorders.userid,tblorders.status FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.id LIKE '" . $value . "%' LIMIT 5";
             $result = full_query_i($query);
-            $colstart = "<div class=\"dummy-column\"><h2>Support Tickets</h2>";
+            $ocolstart = "<div class=\"dummy-column\"><h2>Orders</h2>";
             while ($data = mysqli_fetch_array($result)) {
                 $orderid = $data['id'];
                 $userid = $data['userid'];
@@ -209,7 +209,7 @@ if ($intellisearch) {
     if (checkPermission("List Support Tickets", true) || checkPermission("View Support Ticket", true)) {
         $query = "SELECT id,tid,title FROM tbltickets WHERE tbltickets.tid='" . $value . "' OR tbltickets.title LIKE '%" . $value . "%' ORDER BY lastreply DESC LIMIT 0,10";
         $result = full_query_i($query);
-        $colstart = "<div class=\"dummy-column\"><h2>Orders</h2>";
+        $tcolstart = "<div class=\"dummy-column\"><h2>Support Tickets</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $ticketid = $data['id'];
             $tid = $data['tid'];
@@ -222,7 +222,7 @@ if ($intellisearch) {
     if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
         $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.invoicenum='" . $value . "'";
         $result = full_query_i($query);
-        $colstart = "<div class=\"dummy-column\"><h2>Invoices</h2>";
+        $icolstart = "<div class=\"dummy-column\"><h2>Invoices</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $invoiceid = $data['id'];
             $userid = $data['userid'];
@@ -242,14 +242,14 @@ if ($intellisearch) {
 
 
     if ($invoicematches) {
-        $matches .= $colstart . $invoicematches . "</div>";
+        $matches .= $icolstart . $invoicematches . "</div>";
     }
     if ($ordermatches) {
-        $matches .= $colstart . $ordermatches . "</div>";
+        $matches .= $ocolstart . $ordermatches . "</div>";
     }
 
     if ($ticketmatches) {
-        $matches .= $colstart . $ticketmatches . "</div>";
+        $matches .= $tcolstart . $ticketmatches . "</div>";
     }
 
 
@@ -298,7 +298,7 @@ if ($clientsearch || $ticketclientsearch) {
             $companyname = " (" . $companyname . ")";
         }
 
-        $tempmatches .= "<div class=\"dummy-column\"><a href=\"#\" onclick=\"searchselectclient('" . $userid . "','" . addslashes($firstname . " " . $lastname . $companyname) . "','" . addslashes($email) . ("');return false\"><h3>" . $firstname . " " . $lastname . $companyname . "</h3> #" . $userid . "<br /><span class=\"desc\">" . $email . "</span></a></div>");
+        $tempmatches .= "<div <a href=\"#\" onclick=\"searchselectclient('" . $userid . "','" . addslashes($firstname . " " . $lastname . $companyname) . "','" . addslashes($email) . ("');return false\"><h3>" . $firstname . " " . $lastname . $companyname . "</h3> #" . $userid . "<br /><span class=\"desc\">" . $email . "</span></a></div>");
     }
 
 

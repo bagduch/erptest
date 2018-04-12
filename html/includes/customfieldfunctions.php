@@ -55,7 +55,7 @@ function getClientfieldshtml($relid2 = FALSE) {
             } else {
 
                 if ($fieldtype == "date") {
-                    $input = ("<input type=\"password\" class=\"form-control datepick\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
+                    $input = ("<input type=\"text\" class=\"form-control datepick\" name=\"customfield[" . $id . "]") . "\" id=\"customfield" . $id . "\" value=\"" . $customfieldval . "\" size=\"30\" />";
                 }
 
                 if ($fieldtype == "password") {

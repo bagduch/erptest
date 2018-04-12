@@ -138,7 +138,15 @@ if ($action == "save") {
             "RegistrarAdminEmailAddress" => $domemail,
             "RegistrarAdminAddress1" => $domaddress1, 
             "RegistrarAdminAddress2" => $domaddress2,
-            "RegistrarAdminCity" => $domcity, "RegistrarAdminStateProvince" => $domstate, "RegistrarAdminPostalCode" => $dompostcode, "RegistrarAdminCountry" => $domcountry, "RegistrarAdminPhone" => $domphone, "RegistrarAdminUseClientDetails" => $domuseclientsdetails, "SMTPHost" => $smtphost, "SMTPUsername" => $smtpusername, "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
+            "RegistrarAdminCity" => $domcity, 
+            "RegistrarAdminStateProvince" => $domstate,
+            "RegistrarAdminPostalCode" => $dompostcode, 
+            "RegistrarAdminCountry" => $domcountry, 
+            "RegistrarAdminPhone" => $domphone, 
+            "RegistrarAdminUseClientDetails" => $domuseclientsdetails, 
+            "SMTPHost" => $smtphost,
+            "SMTPUsername" => $smtpusername,
+            "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
             "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, 
             "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting, "gst" => $gst,
             "invphone" => $invphone,
@@ -251,8 +259,8 @@ if ($action == "save") {
     global $ra;
     $token_manager = &getTokenManager();
     $token_manager->processAdminHTMLSave($ra);
-    redir("success=true");
-    exit();
+   redir("success=true");
+   exit();
 } // end of action==save
 releaseSession();
 

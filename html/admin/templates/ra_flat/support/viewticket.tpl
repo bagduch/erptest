@@ -263,7 +263,7 @@
             <div class="content">
                 <ol class="chat">
                     {foreach from=$smartyvalues.replies item=row}
-                        <li class="{if $row.admin != NULL}other{else}self{/if}">
+                        <li class="{if $row.admin == NULL}other{else}self{/if}">
                             <div class="avatar">
                                 {$row.admin}{$row.clientname}
                                 {if $row.admin != NULL}

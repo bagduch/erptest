@@ -643,7 +643,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketdepartments` WRITE;
 /*!40000 ALTER TABLE `tblticketdepartments` DISABLE KEYS */;
-INSERT INTO `tblticketdepartments` VALUES (1,'Provisioning','','provisioningtest','','','','',1,'','110','','fZjPBXW3a+6AgoUdYX0mFLhL8/g=');
+INSERT INTO `tblticketdepartments` VALUES (1,'Provisioning','','support@ra.net.nz','','','','',1,'','110','','fZjPBXW3a+6AgoUdYX0mFLhL8/g=');
 /*!40000 ALTER TABLE `tblticketdepartments` ENABLE KEYS */;
 UNLOCK TABLES;
 

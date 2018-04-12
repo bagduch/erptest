@@ -24,6 +24,8 @@
     <link href="templates/{$template}/assets/css/component.css" rel="stylesheet">
     <script src="templates/{$template}/assets/vendors/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="templates/{$template}/assets/js/jquery.easy-autcomplete.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
+
     {$smartyvalues.headeroutput}
     {$headoutput}
 </head>
