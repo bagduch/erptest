@@ -71,14 +71,14 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Active Clients</p>
-                    {if $sidebarstats.orders.active}{$sidebarstats.orders.active}{else}0{/if}
+                    {if $sidebarstats.clients.active}{$sidebarstats.clients.active}{else}0{/if}
                 </div>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <div class="stats">
-            <a href="orders.php?status=Cancelled">
+            <a href="clients.php?status=active">
                 <i class="ti-reload"></i> >More info
             </a>
         </div>
@@ -97,14 +97,14 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Unpaid Invoice</p>
-                    {if $sidebarstats.orders.unpaid}{$sidebarstats.orders.unpaid}{else}0{/if}
+                    {if $sidebarstats.invoices.unpaid}{$sidebarstats.invoices.unpaid}{else}0{/if}
                 </div>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <div class="stats">
-            <a href="#" class="small-box-footer">
+            <a href="invoices.php?status=unpaid" class="small-box-footer">
                 <i class="ti-reload"></i> >More info
             </a>
         </div>

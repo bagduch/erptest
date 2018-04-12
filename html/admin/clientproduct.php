@@ -9,7 +9,6 @@ require "../init.php";
 $aInt = new RA_Admin("View Clients Products/Services");
 $aInt->requiredFiles(array("clientfunctions", "gatewayfunctions", "servicefunctions", "modulefunctions", "customfieldfunctions", "configoptionsfunctions", "invoicefunctions", "processinvoices"));
 $aInt->inClientsProfile = true;
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $id = (int) $ra->get_req_var("id");
 $hostingid = (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -907,6 +906,5 @@ $aInt->assign("servicedrop", $aInt->productDropDown($product_data[$id]['packagei
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($product_data[$id]['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($product_data[$id]['paymentmethod']));
 $aInt->template = "clientproducts/view";
-$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>
