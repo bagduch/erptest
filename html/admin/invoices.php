@@ -108,8 +108,8 @@ if ($action == "createinvoice") {
         "userid" => $userid,
         "status" => "Draft",
         "paymentmethod" => $gateway,
-        "taxrate" => $taxrate,
-        "taxrate2" => $taxrate2,
+        "taxrate" => $taxrate != "" ? $taxrate : 0,
+        "taxrate2" => $taxrate2 != "" ? $taxrate : 0,
         "invoicenum" => sprintf("%s%05d", strftime("%Y%m%d"), 10),
         "subtotal" => 0
             )
@@ -128,7 +128,7 @@ if ($action == "createinvoice") {
     }
 
     run_hook("InvoiceCreationAdminArea", array("invoiceid" => $invoiceid));
-    redir("action=edit&id=" . $invoiceid);
+   redir("action=edit&id=" . $invoiceid);
     exit();
 }
 $filters = new RA_Filter();

@@ -330,6 +330,7 @@ function getClientNotes($userid, $limit = "", $table = true) {
             } else {
                 $data['color'] = "success";
             }
+            $data['duedate'] = fromMySQLDate($data['duedate']);
             $data['created'] = fromMySQLDate($data['created'], 1);
             $data['modified'] = fromMySQLDate($data['modified'], 1);
             $data['note'] = autoHyperLink(nl2br($data['note']));
@@ -447,7 +448,7 @@ function checkContactDetails($cid = "", $reqpw = false, $prefix = "") {
 }
 
 function addClient(
-$firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber,$mobilenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
+$firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $mobilenumber, $password, $dob, $sendemail = "on", $additionaldata = "") {
     global $ra;
     global $remote_ip;
 
@@ -467,7 +468,7 @@ $firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state
         "postcode" => $postcode,
         "country" => $country,
         "phonenumber" => $phonenumber,
-        "mobilenumber"=>$mobilenumber,
+        "mobilenumber" => $mobilenumber,
         "password" => $password_hash,
         "dateofbirth" => toMySQLDate($dob),
         "lastlogin" => "now()",

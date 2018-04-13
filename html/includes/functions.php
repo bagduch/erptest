@@ -1455,6 +1455,7 @@ if (!function_exists("emailtpl_template")) {
             }
         } else {
             $date = $CONFIG['DateFormat'];
+ 
             $date = str_replace("YYYY", $year, $date);
             $date = str_replace("MM", $month, $date);
             $date = str_replace("DD", $day, $date);
