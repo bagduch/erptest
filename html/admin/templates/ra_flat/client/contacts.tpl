@@ -18,6 +18,7 @@
                 </div>
             </div>
             <div class="content">
+                {$infobox}
                 <form method="post" action="{$PHP_SELF}?action=save&amp;userid={$userid}">
                     <input type="hidden" value="{$contactid}" name="contactid">
                     <div class="col-md-6">
@@ -91,7 +92,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Address 2</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" size="30" name="address2" tabindex="7" value="{$cdata.address2}">
+                                    <input class="form-control" type="text" size="30" name="address2" tabindex="8" value="{$cdata.address2}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -103,7 +104,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Postcode</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" tabindex="11" size="14" name="postcode" value="{$cdata.postcode}">
+                                    <input class="form-control" type="text" tabindex="10" size="14" name="postcode" value="{$cdata.postcode}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -121,7 +122,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Phone Number</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" size="20" name="phonenumber" tabindex="13" value="{$cdata.phonenumber}">
+                                    <input class="form-control" type="text" size="20" name="phonenumber" tabindex="12" value="{$cdata.phonenumber}">
                                 </div>
                             </div>
                             <div class="form-group">

@@ -185,7 +185,7 @@
                             </div>
                         </div>  
                     </div>
-                    <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary" tabindex="1"> <input type="reset" value="Cancel Changes" class="btn btn-danger" tabindex="2"></div>
+                    <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> </div>
                     <img src="images/spacer.gif" height="10" width="1"><br>
                 </form>
             </div>

@@ -71,10 +71,10 @@ if ($_POST['frm1']) {
         "packageid" => $_POST['packageid'],
         "description" => $_POST['description'],
         "servicestatus" => $_POST['status'],
-        "regdate" => $_POST['regdate'],
+        "regdate" => toMySQLDate($_POST['regdate']),
         "amount" => $_POST['amount'],
         "firstpaymentamount" => $_POST['firstpaymentamount'],
-        "nextduedate" => $_POST['nextduedate'],
+        "nextduedate" => toMySQLDate($_POST['nextduedate']),
         "billingcycle" => $_POST['billingcycle'],
         "paymentmethod" => $_POST['paymentmethod'],
         "lastupdate" => "now()"
@@ -102,7 +102,7 @@ foreach ($data as $key => $row) {
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
     logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
-//    redir("userid=" . $userid . "&id=" . $id);
+   redir("userid=" . $userid . "&id=" . $id);
 }
 
 

@@ -157,7 +157,7 @@ if ($resetpw) {
     check_token("RA.admin.default");
     sendMessage("Automated Password Reset", $userid, array("contactid" => $contactid));
     infoBox($aInt->lang("clients", "resetsendpassword"), $aInt->lang("clients", "passwordsuccess"));
-    echo $infobox;
+    
 }
 
 
