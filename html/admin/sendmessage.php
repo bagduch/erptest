@@ -594,7 +594,7 @@ if ($showform) {
 		}
 	}
 
-	echo "
+	echo "<div class=\"card\"><div class=\"content\">
 <form method=\"post\" action=\"";
 	echo $PHP_SELF;
 	echo "\" name=\"frmmessage\"
@@ -792,7 +792,7 @@ frmmessage.subject.select();
             value=\"";
 	echo $aInt->lang("global", "sendmessage");
 	echo " &raquo;\"
-            class=\"btn-primary\" />
+            class=\"btn btn-primary\" />
     </p>
 
 </form>
@@ -884,6 +884,8 @@ frmmessage.subject.select();
 	echo "\">
     </div>
 </form>
+</div>
+</div>
 
 ";
 	echo $aInt->jqueryDialog("previewwnd", $aInt->lang("sendmessage", "preview"), "<div id=\"previewwndcontent\">" . $aInt->lang("global", "loading") . "</div>", array($aInt->lang("global", "ok") => ""), "450", "700", "");

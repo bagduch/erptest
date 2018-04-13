@@ -21,14 +21,14 @@ $aInt->requiredFiles(
 
 $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
-//$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
+
 if ($return) {
     unset($_SESSION['uid']);
 }
 
 if (isset($_POST['noteid'])) {
     $array = array(
-        "duedate" => $_POST['updatetime'],
+        "duedate" => toMySQLDate($_POST['updatetime']),
         //   "modified" => "now()",
         "note" => $_POST['notesdata'],
         "sticky" => $_POST['done'],
@@ -408,11 +408,11 @@ if ($action == "uploadfile") {
     mt_srand(time());
     $rand = mt_rand(100000, 999999);
     $filename = "file" . $rand . "_" . $filename;
-    run_hook("AdminClientFileUpload", array("userid" => $userid, "title" => $title, "filename" => $filename, "origfilename" => $origfilename, "adminonly" => $adminonly));
+    run_hook("AdminClientFileUpload", array("userid" => $userid, "title" => $title, "filename" => $filename, "origfilename" => $origfilename, "adminonly" => isset($adminonly) ? $adminonly : 0));
     move_uploaded_file($_FILES['uploadfile']['tmp_name'], $attachments_dir . $filename);
-    insert_query("tblclientsfiles", array("userid" => $userid, "title" => $title, "filename" => $filename, "adminonly" => $adminonly, "dateadded" => "now()"));
+    insert_query("tblclientsfiles", array("userid" => $userid, "title" => $title, "filename" => $filename, "adminonly" => isset($adminonly) ? $adminonly : 0, "dateadded" => "now()"));
     logActivity("Added Client File - Title: " . $title . " - User ID: " . $userid, $userid);
-    redir("userid=" . $userid);
+   redir("userid=" . $userid);
 }
 
 
@@ -470,7 +470,7 @@ if ($action == "addfunds") {
         insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $addfundsamt, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
 
         $invoiceid = createInvoices($userid, "", true);
-//        redir("userid=" . $userid . "&addfunds=true&invoiceid=" . $invoiceid);
+        redir("userid=" . $userid . "&addfunds=true&invoiceid=" . $invoiceid);
     } else {
         redir("userid=" . $userid);
     }
@@ -478,12 +478,12 @@ if ($action == "addfunds") {
 
 
 if ($generateinvoices) {
-	check_token("RA.admin.default");
-	checkPermission("Generate Due Invoices");
-	$invoiceid = createInvoices($userid, $noemails);
-	$_SESSION['adminclientgeninvoicescount'] = $invoicecount;
-	redir("userid=" . $userid . "&geninvoices=true");
-	exit();
+    check_token("RA.admin.default");
+    checkPermission("Generate Due Invoices");
+    $invoiceid = createInvoices($userid, $noemails);
+    $_SESSION['adminclientgeninvoicescount'] = $invoicecount;
+    redir("userid=" . $userid . "&geninvoices=true");
+    exit();
 }
 
 
@@ -781,7 +781,6 @@ ob_end_clean();
 
 $aInt->content = $content;
 $aInt->jquerycode = $jquerycode;
-
 $aInt->jscode = $jscode;
 $aInt->display();
 ?>

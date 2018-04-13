@@ -64,7 +64,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspa="2">
-                                                    <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                                                    <input class="datepick form-control" name="updatetime" style="color:black;display: inline-block" type="text" value="{$data.duedate}">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -98,6 +98,7 @@
             {/foreach}
             <div class="row">
                 <div class="col-md-12">
+                    {$infobox}
                     <div id="clientsinformation" class="col-lg-3 col-sm-6">
                         <div class="panel panel-primary">
                             <div class="panel-heading panel-title">
@@ -291,23 +292,22 @@
                                         {/foreach}
                                     </table>
                                     <ul>
-                                        <li>
-                                            <a href="#" id="addfile"><img src="images/icons/add.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.fileadd}</a>
+                                        
                                     </ul>
-                                    <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile">
+                                    <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile" enctype="multipart/form-data">
                                         <table>
                                             <tr>
                                                 <td>{$_ADMINLANG.clientsummary.filetitle}</td>
-                                                <td><input type="text" name="title" style="width:90%" /></td>
+                                                <td><input class="form-control" type="text" name="title" style="width:90%" /></td>
                                             </tr>
                                             <tr>
                                                 <td>{$_ADMINLANG.clientsummary.filename}</td>
-                                                <td><input type="file" name="uploadfile" style="width:90%" /></td>
+                                                <td><input class="form-control" type="file" name="uploadfile" style="width:90%" /></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td><input type="checkbox" name="adminonly" value="1" /> {$_ADMINLANG.clientsummary.fileadminonly} &nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <input type="submit" value="{$_ADMINLANG.global.submit}" /></td>
+                                                    <input class="btn btn-default" type="submit" value="{$_ADMINLANG.global.submit}" /></td>
                                             </tr>
                                         </table>
                                     </form>
@@ -627,23 +627,7 @@
             <script type="text/javascript">
 
                 $(document).ready(function () {
-
-                    $('.datepick').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                        icons: {
-                            time: "fa fa-clock-o",
-                            date: "fa fa-calendar",
-                            up: "fa fa-chevron-up",
-                            down: "fa fa-chevron-down",
-                            previous: 'fa fa-chevron-left',
-                            next: 'fa fa-chevron-right',
-                            today: 'fa fa-screenshot',
-                            clear: 'fa fa-trash',
-                            close: 'fa fa-remove',
-                            inline: true
-                        }
-                    });
-
+              
                     $("#prodsall").click(function () {
                         $(".checkprods").attr("checked", this.checked);
                     });

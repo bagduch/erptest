@@ -57,7 +57,7 @@ if ($sub == "add") {
         "adminid" => $_SESSION['adminid'],
         "type" => $_POST['rel_type'],
         "created" => "now()",
-        "duedate" => $duedate,
+        "duedate" => toMySQLDate($duedate),
         "flag" => $_POST['imports'],
         "assignto" => $_POST['assign'],
         "modified" => "now()",
