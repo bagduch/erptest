@@ -34,7 +34,8 @@ function getServiceData($id = NULL) {
 
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    // echo "<pre>".print_r($service_data, 1)."</pre>";
+    $service_data['regdate'] = fromMySQLDate($service_data['regdate']);
+    $service_data['nextduedate'] = fromMySQLDate($service_data['nextduedate']);
     return $service_data;
 }
 
@@ -72,19 +73,15 @@ function getServiceCustomFields($sid, $csid = null) {
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
     if (isset($csid)) {
         $query_selectvals .= ", tblcustomfieldsvalues.value ";
-        $query_tables .=
-                " LEFT JOIN tblcustomfieldsvalues
+        $query_tables .= " LEFT JOIN tblcustomfieldsvalues
             ON (tblcustomfieldsvalues.cfid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . (int) $csid . ") ";
     }
     $query_where = " WHERE tblservices.id=" . (int) $sid;
     $query = $query_selectvals . $query_tables . $query_where;
-    $query .=" order by tblcustomfields.sortorder";
+    $query .= " order by tblcustomfields.sortorder";
 
-    //mail("peter@hd.net.nz", "query", $query);
     $result = full_query_i($query);
-    //  error_log(print_r($result), 3, "/tmp/php_errors.log");
     $returnvals = array();
-    //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $returnvals[$row['cfid']] = $row;
@@ -101,7 +98,6 @@ function getServiceCustomFields($sid, $csid = null) {
             unset($returnvals[$cfid]);
         }
     }
-    //  echo "<pre>",  print_r($returnvals,1),"</pre>";
 
     return $returnvals;
 }

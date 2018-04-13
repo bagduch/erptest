@@ -117,7 +117,7 @@
                                                 {elseif $fieldsnd.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datecontroller" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
                                                     </tr>
                                                 {elseif $fieldsnd.fieldtype eq "more"}
                                                     {foreach from=$fieldsnd.children item=childrenfield}
@@ -143,7 +143,7 @@
                                                 {elseif $fields.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control datecontroller" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
                                                     </tr>
                                                 {elseif $fields.fieldtype eq "more"}
                                                     {foreach from=$fields.children item=childrenfield}

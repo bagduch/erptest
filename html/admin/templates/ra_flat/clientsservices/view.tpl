@@ -76,7 +76,7 @@
                                     <table class="datatable table borderless">
                                         <tr>
                                             <td width="50%"><label for="#regdate">Registration Date</label></td>
-                                            <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$services.regdate}"></td>
+                                            <td><input id="regdate" name="regdate" type="text" class="form-control datetimepick" value="{$services.regdate}"></td>
                                         </tr>
                                         <tr>
                                             <td><label for="#firstpaymentamount">First Payment Amount</label></td>
@@ -88,7 +88,7 @@
                                         </tr>
                                         <tr>
                                             <td><label for="#nextduedate">Next Due Date</label></td>
-                                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control nextduedate" value="{$services.nextduedate}"></td>
+                                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control datepick" value="{$services.nextduedate}"></td>
 
                                         </tr>
                                         <tr>
@@ -118,7 +118,7 @@
                                                 {elseif $fieldsnd.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datecontroller" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
                                                     </tr>
                                                 {elseif $fieldsnd.fieldtype eq "more"}
                                                     {foreach from=$fieldsnd.children item=childrenfield}
@@ -144,7 +144,7 @@
                                                 {elseif $fields.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control datecontroller" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
                                                     </tr>
                                                 {elseif $fields.fieldtype eq "more"}
                                                     {foreach from=$fields.children item=childrenfield}
@@ -389,12 +389,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $(".nextduedate,.datepick").datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-            $("#regdate").datetimepicker({
-                format: 'YYYY-MM-DD hh:mm'
-            });
             $(".addonaddbutton").click(function () {
                 $("#frm1").submit();
             });
