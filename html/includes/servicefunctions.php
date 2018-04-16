@@ -219,16 +219,12 @@ function getServiceAndProductdata($type, $userid) {
         }
         if ($servicelist_status == "Pending") {
             $color = "#ffffcc";
+        } else if ($servicelist_status == "Suspended") {
+            $color = "#ccff99";
+        } elseif (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
+            $color = "#ff9999";
         } else {
-            if ($servicelist_status == "Suspended") {
-                $color = "#ccff99";
-            } else {
-                if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
-                    $color = "#ff9999";
-                } else {
-                    $color = "#fff";
-                }
-            }
+            $color = "#fff";
         }
 
 

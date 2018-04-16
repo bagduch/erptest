@@ -102,7 +102,7 @@ foreach ($data as $key => $row) {
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
     logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
-   redir("userid=" . $userid . "&id=" . $id);
+    redir("userid=" . $userid . "&id=" . $id);
 }
 
 
@@ -278,7 +278,7 @@ $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblno
 INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
 LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
-where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
+where tbn.rel_id = " . $id . " ORDER BY tbn.flag DESC";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
     $noteid = $data['id'];

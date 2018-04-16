@@ -75,7 +75,7 @@
                                     <table class="datatable table">
                                         <tr>
                                             <td width="50%"><label for="#regdate">Registration Date</label></td>
-                                            <td><input id="regdate" name="regdate" type="text" class="form-control" value="{$products[$id].regdate}"></td>
+                                            <td><input id="regdate" name="regdate" type="text" class="form-control datetimepick" value="{$products[$id].regdate}"></td>
                                         </tr>
                                         <tr>
                                             <td><label for="#firstpaymentamount">First Payment Amount</label></td>
@@ -87,7 +87,7 @@
                                         </tr>
                                         <tr>
                                             <td><label for="#nextduedate">Next Due Date</label></td>
-                                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control nextduedate" value="{$products[$id].nextduedate}"></td>
+                                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control datepick" value="{$products[$id].nextduedate}"></td>
 
                                         </tr>
                                         <tr>
@@ -102,6 +102,7 @@
                                     </table>
                                 </div>
                             </div>
+                            <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
                         </div>
                         {if $servicefield}
                             <div class="tab-pane" id="tab_customer">
@@ -191,12 +192,35 @@
 
                         </div>
                         <div class="tab-pane" id="tab_notes">
+                            <table class="datatable table">
+                                <tr>
+                                    <th>Create Date</th>
+                                    <th>Notes</th>
+                                    <th>Create Admin</th>
+                                    <th>Assign To</th>
+                                    <th>Due Date</th>
+                                    <th>Update Time</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                {foreach from=$tabledata item=row}
+                                    {if $row[0] eq 'account'}
+                                        <tr class="itemrow_{$row[10]}">
+                                            <td>{$row[1]}</td>
+                                            <td>{$row[2]}</td>
+                                            <td>{$row[3]}</td>
+                                            <td>{$row[4]}</td>
+                                            <td>{$row[5]}</td>
+                                            <td>{$row[6]}</td>
+                                            <td>{$row[7]}</td>
+                                        </tr>
+                                    {/if}
+                                {/foreach}
+                            </table>
                             <input type="hidden" name="userid" value="{$userid}">
                             <input type="hidden" name="account" value="{$id}">
                             <input type="hidden" name="rel_type" value="account">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span></button>
                                 <h4 class="modal-title">Add Notes</h4>
                             </div>
                             <div class="modal-body">
@@ -228,40 +252,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Addons</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="#addonname">Addon Names</label>
-                                <select class='form-control' id='addonname' name='addonid'>
-                                    <option value="0">Please Choose Addons</option>
-                                    {foreach from=$alladdons item=item}
-                                        <option value="{$item.id}">{$item.name}</option>
-                                    {/foreach}
-                                </select>
-
-                            </div>
-                            <div class="form-group">
-                                <label for="payment">Payment Method</label>
-                                {$paymentmethod}
-                            </div>
-                            <input type="checkbox">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary addonaddbutton">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div align="center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn">
-            </div>
 
         </form>
     </div>
@@ -270,12 +260,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            $(".nextduedate,.datepick").datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-            $("#regdate").datetimepicker({
-                format: 'YYYY-MM-DD hh:mm'
-            });
             $(".addnotes").click(function () {
                 var token = $("input[name='token']").val();
                 var notes = $("textarea[name='notes']").val();

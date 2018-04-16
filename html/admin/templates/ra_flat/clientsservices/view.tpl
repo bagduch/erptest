@@ -103,6 +103,7 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
                         </div>
                         {if $servicefield}
                             <div class="tab-pane" id="tab_customer">
@@ -159,6 +160,7 @@
                                         </table>  
                                     </div>
                                 </div>
+                                <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
                             </div>
                         {/if}
                         <div class="tab-pane" id="tab_addon">
@@ -239,7 +241,6 @@
                                     <th>Due Date</th>
                                     <th>Update Time</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                                 </tr>
                                 {foreach from=$tabledata item=row}
                                     {if $row[0] eq 'account'}
@@ -251,7 +252,6 @@
                                             <td>{$row[5]}</td>
                                             <td>{$row[6]}</td>
                                             <td>{$row[7]}</td>
-                                            <td>{$row[8]}{$row[9]}</td>
                                         </tr>
                                     {/if}
                                 {/foreach}
@@ -260,8 +260,6 @@
                             <input type="hidden" name="account" value="{$id}">
                             <input type="hidden" name="rel_type" value="account">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span></button>
                                 <h4 class="modal-title">Add Notes</h4>
                             </div>
                             <div class="modal-body">
@@ -292,41 +290,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Addons</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="#addonname">Addon Names</label>
-                                <select class='form-control' id='addonname' name='addonid'>
-                                    <option value="0">Please Choose Addons</option>
-                                    {foreach from=$alladdons item=item}
-                                        <option value="{$item.id}">{$item.name}</option>
-                                    {/foreach}
-                                </select>
-
-                            </div>
-                            <div class="form-group">
-                                <label for="payment">Payment Method</label>
-                                {$paymentmethod}
-                            </div>
-                            <input type="checkbox">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary addonaddbutton">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
-            <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn">
-            </div>
 
         </form>
     </div>
