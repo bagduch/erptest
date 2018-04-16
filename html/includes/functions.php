@@ -865,7 +865,7 @@ if (!function_exists("emailtpl_template")) {
                 $mail->Sender = $mail->From;
                 if ($fromemail != $CONFIG['SMTPUsername']) {
                     $mail->AddReplyTo($fromemail, html_entity_decode($fromname, ENT_QUOTES));
-                }           
+                }
             } else {
                 
             }
@@ -1085,7 +1085,7 @@ if (!function_exists("emailtpl_template")) {
             $mail->Mailer = "mail";
         } else {
             if ($CONFIG['MailType'] == "smtp") {
-            
+
                 $mail->IsSMTP();
                 $mail->Host = $CONFIG['SMTPHost'];
                 $mail->Port = $CONFIG['SMTPPort'];
@@ -1455,7 +1455,7 @@ if (!function_exists("emailtpl_template")) {
             }
         } else {
             $date = $CONFIG['DateFormat'];
- 
+
             $date = str_replace("YYYY", $year, $date);
             $date = str_replace("MM", $month, $date);
             $date = str_replace("DD", $day, $date);
@@ -1643,7 +1643,7 @@ if (!function_exists("emailtpl_template")) {
         return $commission;
     }
 
-    function logActivity($description, $userid = "") {
+    function logActivity($description, $userid = "", $account_id = "") {
         error_log(sprintf("Logging activity: %s for userid %d and account_id %d", $description, $userid, $account_id));
         global $remote_ip;
         static $username = null;
@@ -1672,8 +1672,8 @@ if (!function_exists("emailtpl_template")) {
         }
 
         $description = html_entity_decode($description, ENT_QUOTES);
-        insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip));
-        run_hook("LogActivity", array("description" => $description, "user" => $username, "userid" => $userid, "ipaddress" => $remote_ip));
+        insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip, "account_id" => $account_id));
+        run_hook("LogActivity", array("description" => $description, "user" => $username, "userid" => $userid, "ipaddress" => $remote_ip, "account_id" => $account_id));
     }
 
     function addToDoItem($title, $description, $duedate = "", $status = "", $admin = "") {

@@ -108,6 +108,7 @@ CREATE TABLE `tblactivitylog` (
   `description` text NOT NULL,
   `user` text NOT NULL,
   `userid` int(10) DEFAULT NULL,
+  `account_id` int(10) DEFAULT NULL,
   `ipaddr` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`)

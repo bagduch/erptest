@@ -21,6 +21,8 @@ $product_data = array();
 
 while ($data = mysqli_fetch_assoc($result)) {
     $product_data[$data['id']] = $data;
+    $product_data[$data['id']]['regdate'] = fromMySQLDate($data['regdate']);
+    $product_data[$data['id']]['nextduedate'] = fromMySQLDate($data['nextduedate']);
 }
 if (count($product_data) < 1) {
     $aInt->gracefulExit("<a class=\"btn btn-success\" href=\"ordersadd.php?userid=" . $userid . "\">Add a Product</a>");
@@ -96,24 +98,16 @@ if ($_POST['frm1']) {
 
             if ($oldstatus != "Active" && $status == "Active") {
                 run_hook("AddonActivated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Suspended" && $status == "Suspended") {
+                run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Terminated" && $status == "Terminated") {
+                run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Cancelled" && $status == "Cancelled") {
+                run_hook("AddonCancelled", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
+            } elseif ($oldstatus != "Fraud" && $status == "Fraud") {
+                run_hook("AddonFraud", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             } else {
-                if ($oldstatus != "Suspended" && $status == "Suspended") {
-                    run_hook("AddonSuspended", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                } else {
-                    if ($oldstatus != "Terminated" && $status == "Terminated") {
-                        run_hook("AddonTerminated", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                    } else {
-                        if ($oldstatus != "Cancelled" && $status == "Cancelled") {
-                            run_hook("AddonCancelled", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                        } else {
-                            if ($oldstatus != "Fraud" && $status == "Fraud") {
-                                run_hook("AddonFraud", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                            } else {
-                                run_hook("AddonEdit", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
-                            }
-                        }
-                    }
-                }
+                run_hook("AddonEdit", array("id" => $aid, "userid" => $userid, "serviceid" => $id, "addonid" => $addonid));
             }
         } else {
             checkPermission("Add New Order");
@@ -203,6 +197,12 @@ if ($_POST['frm1']) {
         if ($fieldname == "servicestatus") {
             $newval = $status;
         }
+        if ($fieldname == "regdate") {
+            $newval = toMySQLDate($newval);
+        } if ($fieldname == "nextduedate") {
+            $newval = toMySQLDate($newval);
+        }
+
 
         if ($fieldname == "nextduedate" && $ra->get_req_var("billingcycle") == "Free Account") {
             $newval = "0000-00-00";
@@ -259,7 +259,7 @@ if ($_POST['frm1']) {
     run_hook("AdminClientServicesTabFieldsSave", $_REQUEST);
     run_hook("AdminServiceEdit", array("userid" => $userid, "serviceid" => $id));
     run_hook("ServiceEdit", array("userid" => $userid, "serviceid" => $id));
-   redir("userid=" . $userid . "&id=" . $id . "&success=true");
+    redir("userid=" . $userid . "&id=" . $id . "&success=true");
 }
 
 if ($action == "delete") {
@@ -893,8 +893,41 @@ while ($data = mysqli_fetch_array($resutlt)) {
 
     $accountlog[] = $data;
 }
+$result = select_query_i("tbladmins", "");
+while ($data = mysqli_fetch_assoc($result)) {
+    $adminlist[] = $data;
+}
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
+LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
+where tbn.rel_id = " . $id . " ORDER BY tbn.flag DESC";
+$result = full_query_i($query);
+while ($data = mysqli_fetch_array($result)) {
+    $noteid = $data['id'];
+    $duedate = $data['duedate'];
+    $created = $data['created'];
+    $modified = $data['modified'];
+    $note = $data['note'];
+    $admin = $data['name'];
+    $assigned = $data['assignee'];
 
+    $note = nl2br($note);
+    $note = autoHyperLink($note);
+    $created = fromMySQLDate($created, "time");
+    $modified = fromMySQLDate($modified, "time");
+    if ($data['flag']) {
+        $importantnote = "<img src=\"images/highpriority.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $aInt->lang("clientsummary", "importantnote") . "\">";
+    } else {
+        $importantnote = "<img src=\"images/success.png\" width=\"16\" />";
+    }
+
+    $tabledata[] = array($data['type'], $created, $note, $admin, $assigned, $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>",
+        $noteid);
+}
+$aInt->assign("tabledata", $tabledata);
 $aInt->assign("id", $id);
+$aInt->assign("adminlist", $adminlist);
 $aInt->assign("products", $product_data);
 $aInt->assign("userid", $userid);
 $aInt->assign("accountlog", $accountlog);
