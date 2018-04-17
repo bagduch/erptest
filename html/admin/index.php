@@ -103,6 +103,22 @@ if ($ra->get_req_var("saveorder")) {
     update_query("tbladmins", array("homewidgets" => $widgetdata), array("id" => $_SESSION['adminid']));
     exit();
 }
+if (isset($_POST['noteid'])) {
+    $array = array(
+        "duedate" => toMySQLDate($_POST['updatetime']),
+        //   "modified" => "now()",
+        "note" => $_POST['notesdata'],
+        "sticky" => $_POST['done'],
+    );
+
+    update_query("tblnotes", $array, array("id" => $_POST['noteid']));
+    if ($_POST['done']) {
+        logActivity("Notes Update match as done - User ID: " . $userid, $userid);
+    } else {
+        logActivity("Notes Update new Due Date " . $_POST['updatetime'] . " - User ID: " . $userid, $userid);
+    }
+}
+
 if ($ra->get_req_var("dismissgs")) {
     $roleid = get_query_val("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
     $result = select_query_i("tbladminroles", "widgets", array("id" => $roleid));
@@ -297,7 +313,7 @@ $orders = array();
 $templatevars['notes'] = array();
 
 $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) where tbn.assignto='" . $_SESSION['adminid'] . "'";
+INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) where tbn.sticky=0 and tbn.assignto='" . $_SESSION['adminid'] . "'";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_assoc($result)) {
     if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {
@@ -307,6 +323,7 @@ while ($data = mysqli_fetch_assoc($result)) {
     } else {
         $data['color'] = "success";
     }
+    $data['duedate'] = fromMySQLDate($data['duedate']);
     $data['assignto'] = $data['assignto'];
     $data['type'] = $data['type'] == 'client' ? 'clientssummary.php?userid=' . $data['rel_id'] : "clientsservices.php?id=" . $data['rel_id'];
     $data['created'] = fromMySQLDate($data['created'], 1);

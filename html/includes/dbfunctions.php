@@ -279,20 +279,14 @@ function delete_query($table, $where) {
         $query .= $where;
     }
 
-    if ($_SESSION['adminid'] == 3) {
-        error_log("__FUNCTION__" . $query);
-    }
-
-    // mail("waikatozhang@gmail.com", "delete", $query);
-    //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
-    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+    if (mysqli_error($ramysqli) !== NULL) {
+        echo "<pre>", print_r(mysqli_error($ramysqli), 1), "</pre>";
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     } else {
         return true;
     }
-
     ++$query_count;
 }
 

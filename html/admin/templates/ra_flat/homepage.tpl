@@ -140,7 +140,7 @@
                                 <td colspan="2">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="finishtask" value='0'>
+                                            <input type="checkbox" name="done" value='0'>
                                             done
                                         </label>
                                     </div>
@@ -198,3 +198,13 @@
         {/foreach}
     </section>
 </div>
+{literal}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".notesdone").click(function (e) {
+                $("input[name='done']").val(1);
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
+{/literal}
