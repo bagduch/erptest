@@ -45,6 +45,7 @@ $status = $ra->get_req_var("status");
   $status = "";
   } */
 
+echo $userid;
 
 if ($action == "invtooltip") {
     check_token("RA.admin.default");
@@ -128,7 +129,7 @@ if ($action == "createinvoice") {
     }
 
     run_hook("InvoiceCreationAdminArea", array("invoiceid" => $invoiceid));
-   redir("action=edit&id=" . $invoiceid);
+//   redir("action=edit&id=" . $invoiceid);
     exit();
 }
 $filters = new RA_Filter();
