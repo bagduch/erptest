@@ -17,7 +17,7 @@ if ($_POST['update']) {
         "note" => $_POST['notes'],
         "assignto" => $_POST['assign'],
         "modified" => "now()",
-        "duedate" => $_POST['duedate'],
+        "duedate" => toMySQLDate($_POST['duedate']),
         "sticky" => $_POST['done'] ? 1 : 0
     );
     update_query("tblnotes", $array, array("id" => $_POST['id']));
@@ -110,7 +110,7 @@ where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $user
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
     $noteid = $data['id'];
-    $duedate = $data['duedate'];
+    $duedate =fromMySQLDate($data['duedate']);
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
