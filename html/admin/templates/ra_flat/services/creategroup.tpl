@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
-        <div class="box">
-            <div class="box-body">
+        <div class="card">
+            <div class="content">
                 <form method="post" action="configservices.php?sub=savegroup&amp;ids={$groupdata.id}">
                     <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
@@ -27,7 +27,7 @@
                                 <td class="fieldarea">
                                     <select class="form-control" name="customefield[]" multiple="">
                                         {foreach from = $cdata item=customerf}
-                                            <option {if $customerf.check}Selected{/if} value='{$customerf.cfgid}'>{$customerf.name}</option>
+                                            <option {if $customerf.check}Selected{/if} value="{$customerf.cfgid}">{$customerf.name}</option>
                                         {/foreach}
                                     </select>
                                 </td>

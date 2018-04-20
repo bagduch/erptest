@@ -1,5 +1,5 @@
 <?php
-ini_set("error_log","/tmp/guydev.utilities.log");
+
 ini_set("display_errors",0);
 ini_set("log_errors",1);
 
@@ -210,10 +210,7 @@ $result=select_query_i("tblclients","",array(id=>8017));
 while ($clientres = $result->fetch_assoc()) {
 }
 
-/* foreach ($hbaccounts['accounts'] as $hbaccount) {
-    error_log(print_r($hbaccount,1));
-    error_log(print_r(HBWrapper::singleton()->getAccountDetails($hbaccount)),1);
-} */
+
 
 echo "</pre>";
 ?>

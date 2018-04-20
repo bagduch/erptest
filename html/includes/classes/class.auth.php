@@ -271,8 +271,7 @@ class RA_Auth {
 
     public function updateAdminLog() {
         global $ra;
-        error_log(print_r($this, 1));
-
+     
         if (!$this->isLoggedIn()) {
             return false;
         }

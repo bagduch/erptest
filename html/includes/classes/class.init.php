@@ -523,9 +523,9 @@ class RA_Init {
         // See if we can just pull it from memcache
         $CONFIG = $MEMCACHE->get("CONFIG");
         if ($CONFIG) {
-            error_log("Using configuration from memcached");
+//            error_log("Using configuration from memcached");
         } else {
-            error_log("Could not load config from memcached");
+//            error_log("Could not load config from memcached");
 
             $CONFIG = array();
 
@@ -595,7 +595,7 @@ class RA_Init {
         }
 
         $bannedips = $MEMCACHE->get("bannedips");
-        error_log("memcache says banned ips are ".print_r($bannedips,1));
+//        error_log("memcache says banned ips are ".print_r($bannedips,1));
 
         if (!is_array($bannedips) && $bannedips != "NONE") {
             $bannedips = [];

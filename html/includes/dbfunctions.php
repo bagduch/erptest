@@ -253,6 +253,7 @@ function insert_query($table, $array) {
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
+ 
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
@@ -282,7 +283,6 @@ function delete_query($table, $where) {
     $result = mysqli_query($ramysqli, $query);
 
     if (mysqli_error($ramysqli) !== NULL) {
-        echo "<pre>", print_r(mysqli_error($ramysqli), 1), "</pre>";
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     } else {
         return true;

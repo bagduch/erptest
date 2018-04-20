@@ -1644,7 +1644,6 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function logActivity($description, $userid = "", $account_id = "NULL") {
-        error_log(sprintf("Logging activity: %s for userid %d and account_id %d", $description, $userid, $account_id));
         global $remote_ip;
         static $username = null;
 
@@ -1665,12 +1664,13 @@ if (!function_exists("emailtpl_template")) {
         }
 
 
-        if (!$userid && isset($_SESSION['uid'])) {
-            $userid = $_SESSION['uid'];
-        } else {
-            $userid = 0;
+        if ($userid == "") {
+            if (isset($_SESSION['uid'])) {
+                $userid = $_SESSION['uid'];
+            } else {
+                $userid = 0;
+            }
         }
-
         $description = html_entity_decode($description, ENT_QUOTES);
         insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip, "account_id" => $account_id));
         run_hook("LogActivity", array("description" => $description, "user" => $username, "userid" => $userid, "ipaddress" => $remote_ip, "account_id" => $account_id));

@@ -32,13 +32,13 @@
                                     <td class="fieldarea">
                                         <select class="form-control" name="status">
                                             <option value="">- Any -</option>
-                                            <option value="Unpaid" {if $filter.clientsinvoices.status ="Unpaid"}SELECT{/if}>Unpaid</option>
-                                            <option value="Overdue" {if $filter.clientsinvoices.status ="Overdue"}SELECT{/if}>Overdue</option>
-                                            <option value="Paid" {if $filter.clientsinvoices.status ="Paid"}SELECT{/if}>Paid</option>
-                                            <option value="Cancelled" {if $filter.clientsinvoices.status ="Cancelled"}SELECT{/if}>Cancelled</option>
-                                            <option value="Refunded" {if $filter.clientsinvoices.status ="Refunded"}SELECT{/if}>Refunded</option>
-                                            <option value="Draft" {if $filter.clientsinvoices.status ="Draft"}SELECT{/if}>Draft</option>
-                                            <option value="Collections" {if $filter.clientsinvoices.status ="Collections"}SELECT{/if}>Collections</option>
+                                            <option value="Unpaid" {if $filter.clientsinvoices.status eq "Unpaid"}SELECT{/if}>Unpaid</option>
+                                            <option value="Overdue" {if $filter.clientsinvoices.status  eq "Overdue"}SELECT{/if}>Overdue</option>
+                                            <option value="Paid" {if $filter.clientsinvoices.status eq "Paid"}SELECT{/if}>Paid</option>
+                                            <option value="Cancelled" {if $filter.clientsinvoices.status eq "Cancelled"}SELECT{/if}>Cancelled</option>
+                                            <option value="Refunded" {if $filter.clientsinvoices.status eq "Refunded"}SELECT{/if}>Refunded</option>
+                                            <option value="Draft" {if $filter.clientsinvoices.status eq  "Draft"}SELECT{/if}>Draft</option>
+                                            <option value="Collections" {if $filter.clientsinvoices.status eq "Collections"}SELECT{/if}>Collections</option>
                                         </select>
                                     </td>
                                     <td class="fieldlabel">Total Due</td>

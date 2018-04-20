@@ -786,7 +786,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                     }
 
                     $productdetails = getInvoiceProductDetails($serviceid, $pid, date("Y-m-d"), $hostingquerydates, $databasecycle, $description);
-                    error_log(print_r($productdetails, 1));
+//                    error_log(print_r($productdetails, 1));
                     $invoice_description = $productdetails['description'];
                     $invoice_tax = $productdetails['tax'];
 

@@ -98,7 +98,7 @@ function updateInvoiceTotal($id) {
                 $taxrate = $taxrate / 100;
                 $tax = $taxsubtotal * $taxrate;
             }
-            echo "xxxxxxxxxxxxxxx" . $tax . "xxxxxxxxxx";
+             error_log("xxxx".$taxsubtotal);
         }
 
 
