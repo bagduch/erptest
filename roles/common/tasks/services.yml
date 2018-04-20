@@ -124,7 +124,7 @@
     owner: 0
     group: 0
     delete: 1
-  when: not vagrant and ansible_inventory_hostname != "localhost";
+  when: not vagrant and ansible_inventory_hostname != "localhost"
 
 - name: get rid of /var/www/html/ so we can symlink
   file:
