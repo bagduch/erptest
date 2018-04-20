@@ -1644,7 +1644,6 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function logActivity($description, $userid = "", $account_id = "NULL") {
-        error_log(sprintf("Logging activity: %s for userid %d and account_id %d", $description, $userid, $account_id));
         global $remote_ip;
         static $username = null;
 

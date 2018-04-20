@@ -40,13 +40,13 @@
                                         <tr>
                                             <td class="fieldlabel">Supply Codes</td>
                                             <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                                <input class="form-control" type="text" size="40" name="scode" value="{$services.scode}">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Supply Revenue</td>
                                             <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                                <input class="form-control" type="text" size="40" name="srev" value="{$services.srev}">
                                             </td>
                                         </tr>
                                         <tr>

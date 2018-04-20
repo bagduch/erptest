@@ -101,7 +101,7 @@
                                 </tr>
                                 <tr>
                                     <td class="fieldlabel">Description</td>
-                                    <td class="fieldarea"><input class="form-control" value="{$description}" type="text" name="description" size="50"></td>
+                                    <td class="fieldarea"><input class="form-control" value="" type="text" name="description" size="50"></td>
 
                                 </tr>
                                 <tr>
