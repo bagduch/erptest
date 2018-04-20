@@ -144,7 +144,7 @@
     state: link
     path: /var/www/html
     src: /var/ra/html
-    when: ansible_inventory_hostname == "localhost"
+  when: ansible_inventory_hostname == "localhost"
 
 - name: Create templates_c tmpdir
   file:
