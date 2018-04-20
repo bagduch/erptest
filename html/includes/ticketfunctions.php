@@ -125,59 +125,43 @@ function getDepartmentName($deptid) {
     return $department;
 }
 
-function openNewTicket($datas = array(), $noemail = "", $admin = "") {
-
-
+function openNewTicket($userid, $contactid, $deptid, $tickettitle, $message, $urgency, $attachedfile = "", $from = "", $relatedservice = "", $ccemail = "", $noemail = "", $admin = "") {
     global $CONFIG;
-
-    $result = select_query_i("tblticketdepartments", "", array("id" => $datas['deptid']));
+    $result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
     $data = mysqli_fetch_array($result);
-    $datas['deptid'] = (int) $data['id'];
+
+    $deptid = $data['id'];
     $noautoresponder = $data['noautoresponder'];
 
-    if (!$datas['deptid']) {
-        exit("Department Not Found. Exiting.");
-    }
 
-    if ($datas['cid'] == '') {
-        $datas['cid'] = "NULL";
-    }
+    $ccemail = trim($ccemail);
 
-    $datas['cc'] = trim($datas['cc']);
-
-
-    if (($datas['uid'] == '') || ($datas['uid'] == 0) || (userid == '0')) {
-        $datas['uid'] = "NULL";
-    } elseif ($datas['uid']) {
+    if ($userid) {
         $name = $email = "";
 
-        if (0 < $datas['cid']) {
-            $data = get_query_vals(
-                    "tblcontacts", "firstname,lastname,email", array("id" => $datas['cid'], "userid" => $datas['uid'])
-            );
-            $datas['cc'] .= ( $datas['cc'] ? "," . $data['email'] : $data['email']);
+        if (0 < $contactid) {
+            $data = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
+            $ccemail .= ($ccemail ? "," . $data['email'] : $data['email']);
         } else {
-            $data = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $datas['uid']));
-            $datas['from']['name'] = $data['firstname'] . " " . $data['lastname'];
-            $datas['from']['email'] = $data['email'];
+            $data = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
         }
 
 
         if ($admin) {
-            $datas['message'] = str_replace("[NAME]", $data['firstname'] . " " . $data['lastname'], $datas['message']);
-            $datas['message'] = str_replace("[FIRSTNAME]", $data['firstname'], $datas['message']);
-            $datas['message'] = str_replace("[EMAIL]", $data['email'], $datas['message']);
+            $message = str_replace("[NAME]", $data['firstname'] . " " . $data['lastname'], $message);
+            $message = str_replace("[FIRSTNAME]", $data['firstname'], $message);
+            $message = str_replace("[EMAIL]", $data['email'], $message);
         }
 
         $clientname = $data['firstname'] . " " . $data['lastname'];
     } else {
         if ($admin) {
-            $datas['message'] = str_replace("[NAME]", $datas['from']['name'], $datas['message']);
-            $datas['message'] = str_replace("[FIRSTNAME]", current(explode(" ", $datas['from']['name'])), $datas['message']);
-            $datas['message'] = str_replace("[EMAIL]", $datas['from']['email'], $datas['message']);
+            $message = str_replace("[NAME]", $from['name'], $message);
+            $message = str_replace("[FIRSTNAME]", current(explode(" ", $from['name'])), $message);
+            $message = str_replace("[EMAIL]", $from['email'], $message);
         }
 
-        $clientname = $datas['from']['name'];
+        $clientname = $from['name'];
     }
 
     $length = 8;
@@ -193,35 +177,15 @@ function openNewTicket($datas = array(), $noemail = "", $admin = "") {
 
     $tid = genTicketMask();
 
-    if (!in_array($datas['urgency'], array("High", "Medium", "Low"))) {
-        $datas['urgency'] = "Medium";
+    if (!in_array($urgency, array("High", "Medium", "Low"))) {
+        $urgency = "Medium";
     }
 
     $table = "tbltickets";
-    $array = array(
-        "tid" => $tid,
-        "userid" => $datas['uid'],
-        "contactid" => $datas['cid'],
-        "did" => $datas['deptid'],
-        "date" => "now()",
-        "title" => $datas['subject'],
-        "message" => $datas['message'],
-        "urgency" => $datas['urgency'],
-        "status" => "Open",
-        "attachment" => $datas['attachments'],
-        "lastreply" => "now()",
-        "name" => $datas['from']['name'],
-        "email" => $datas['from']['email'],
-        "c" => $c,
-        "clientunread" => "1",
-        "adminunread" => "0",
-        "service" => $datas['relatedservice'],
-        "cc" => empty($datas['cc']) ? "" : $datas['cc']
-    );
-
+    $array = array("tid" => $tid, "userid" => $userid, "contactid" => $contactid != "" ? $contactid : "NULL", "did" => $deptid!= "" ? $deptid : "NULL", "date" => "now()", "title" => $tickettitle, "message" => $message, "urgency" => $urgency, "status" => "Open", "attachment" => $attachedfile, "lastreply" => "now()", "name" => $from['name'], "email" => $from['email'], "c" => $c, "clientunread" => "1", "replyingadmin" => 0, "adminunread" => "", "flag" => "0", "service" => $relatedservice, "cc" => $ccemail);
 
     if ($admin) {
-        $array['adminname'] = getAdminName();
+        $array['admin'] = getAdminName();
     }
 
     $id = insert_query($table, $array);
@@ -238,10 +202,10 @@ function openNewTicket($datas = array(), $noemail = "", $admin = "") {
         }
     }
 
-    $deptname = getDepartmentName($datas['deptid']);
+    $deptname = getDepartmentName($deptid);
 
     if (!$noemail) {
-        sendAdminMessage("Support Ticket Created", array("ticket_id" => $id, "ticket_tid" => $tid, "client_id" => $datas['uid'], "client_name" => $clientname, "ticket_department" => $deptname, "ticket_subject" => $tickettitle, "ticket_priority" => $datas['urgency'], "ticket_message" => ticketMessageFormat($datas['message'])), "support", $deptid, "", true);
+        sendAdminMessage("Support Ticket Created", array("ticket_id" => $id, "ticket_tid" => $tid, "client_id" => $userid, "client_name" => $clientname, "ticket_department" => $deptname, "ticket_subject" => $tickettitle, "ticket_priority" => $urgency, "ticket_message" => ticketMessageFormat($message)), "support", $deptid, "", true);
     }
 
 
@@ -251,8 +215,8 @@ function openNewTicket($datas = array(), $noemail = "", $admin = "") {
         addTicketLog($id, "New Support Ticket Opened");
     }
 
-    run_hook("TicketOpen" . ($admin ? "Admin" : ""), array("ticketid" => $id, "userid" => $datas['uid'], "deptid" => $datas['deptid'], "deptname" => $deptname, "subject" => $tickettitle, "message" => $datas['message'], "priority" => $datas['urgency']));
-    return array("ID" => $id, "TID" => $tid, "C" => $c, "Subject" => $datas['subject']);
+    run_hook("TicketOpen" . ($admin ? "Admin" : ""), array("ticketid" => $id, "userid" => $userid, "deptid" => $deptid, "deptname" => $deptname, "subject" => $tickettitle, "message" => $message, "priority" => $urgency));
+    return array("ID" => $id, "TID" => $tid, "C" => $c, "Subject" => $tickettitle);
 }
 
 function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile = "", $from = "", $status = "", $noemail = "", $api = false) {
@@ -294,7 +258,7 @@ function AddReply($ticketid, $userid, $contactid, $message, $admin, $attachfile 
         "message" => $message,
         "adminname" => $adminname,
         "attachment" => $attachfile,
-        "draft" => isset($draft)?1:0
+        "draft" => isset($draft) ? 1 : 0
     );
     $ticketreplyid = insert_query($table, $array);
     $result = select_query_i("tbltickets", "tid,did,title,urgency,flag", array("id" => $ticketid));
@@ -1082,7 +1046,7 @@ function buildAdminTicketListArray($result) {
         while ($tag = mysqli_fetch_array($result2)) {
 
             if (isset($tag['tag'])) {
-                $tags.= "<span style=\"margin-right:3px\" class=\"label label-info\">" . $tag['tag'] . "</span>";
+                $tags .= "<span style=\"margin-right:3px\" class=\"label label-info\">" . $tag['tag'] . "</span>";
             }
         }
 
@@ -1144,7 +1108,6 @@ function buildAdminTicketListArray($result) {
         $clientinfo = ($puserid != "" ? $aInt->outputClientLink($puserid, $firstname, $lastname, $companyname, $groupid) : $name);
         $ticketlink = ("<a href=\"?action=viewticket&id=" . $id . "\"") . ($alttitle ? " title=\"" . $alttitle . "\"" : "") . "" . $ainject . ">";
         $tabledata[] = array("<input type=\"checkbox\" name=\"selectedtickets[]\" value=\"" . $id . "\" class=\"checkall\">", "<img src=\"images/" . strtolower($priority) . ("priority.gif\" width=\"16\" height=\"16\" alt=\"" . $priority . "\" class=\"absmiddle\" />"), "<div style=\"text-align:left;\">" . $ticketlink . $title . "</a></div>", $clientinfo, $department, $tags, $flaggedto, $tstatus, $lastreplier, $lastreply);
- 
     }
 }
 

@@ -30,7 +30,7 @@ class RA_Admin {
     public $inClientsProfile = false;
     public $adminTemplate = "blend";
     public $exitmsg = "";
-    public $language = "chinese";
+    public $language = "en";
     public $extrajscode = array();
     public $headOutput = "";
     public $chartFunctions = array();

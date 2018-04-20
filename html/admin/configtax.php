@@ -90,6 +90,7 @@ if ($saved) {
 	infoBox($aInt->lang("global", "changesuccess"), $aInt->lang("global", "changesuccessdesc"));
 }
 
+echo "<div class=\"card\"><div class=\"content\">";
 echo $infobox;
 $aInt->deleteJSConfirm("doDelete", "taxconfig", "delsuretaxrule", "?action=delete&id=");
 echo "
@@ -336,7 +337,8 @@ echo $aInt->lang("taxconfig", "addrule");
 echo "\" class=\"button\"></div>
 
 </form>
-
+/div>
+</div>
   </div>
 </div>
 

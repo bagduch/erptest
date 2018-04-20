@@ -267,7 +267,7 @@
                                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
                                         <tr><td class="fieldlabel">Amount</td><td class="fieldarea"><input class="form-control" type="text" name="amount" size="15"> Leave blank for full refund</td></tr>
                                         <tr><td class="fieldlabel">Refund Type</td><td class="fieldarea"><select class="form-control" name="refundtype" id="refundtype" onchange="showrefundtransid();
-                                            return false"><option value="sendtogateway">Refund through Gateway (If supported by module)</option><option value="" type="">Manual Refund Processed Externally</option><option value="addascredit">Add to Client's Credit Balance</option></select></td></tr>
+                                                return false"><option value="sendtogateway">Refund through Gateway (If supported by module)</option><option value="" type="">Manual Refund Processed Externally</option><option value="addascredit">Add to Client's Credit Balance</option></select></td></tr>
                                         <tr id="refundtransid" style="display:none;"><td class="fieldlabel">Transaction ID</td><td class="fieldarea"><input type="text" name="refundtransid" size="25"></td></tr>
                                         <tr><td class="fieldlabel">Send Email</td><td class="fieldarea"><input type="checkbox" name="sendemail" checked=""> Tick to Send Confirmation Email</td></tr>
                                     </tbody></table>
@@ -355,6 +355,13 @@
                                         <div style="width:25%;float:right;line-height:35px;"><strong>Sub Total:</strong>&nbsp;</div>
                                     </td>
                                     <td width="90" style="background-color:#efefef;"><strong>{$invoice.subtotalcurrency}</strong></td>
+                                    <td style="background-color:#efefef;">&nbsp;</td>
+                                    <td style="background-color:#efefef;">&nbsp;</td>
+                                </tr>
+                         
+                                <tr>
+                                    <td colspan="2" style="text-align:right;background-color:#efefef;">GST:&nbsp;</td>
+                                    <td width="90" style="background-color:#efefef;">${$invoice.tax}</td>
                                     <td style="background-color:#efefef;">&nbsp;</td>
                                     <td style="background-color:#efefef;">&nbsp;</td>
                                 </tr>

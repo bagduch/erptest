@@ -46,6 +46,7 @@ $status = $ra->get_req_var("status");
   } */
 
 
+
 if ($action == "invtooltip") {
     check_token("RA.admin.default");
     echo "<table bgcolor=\"#cccccc\" cellspacing=\"1\" cellpadding=\"3\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $aInt->lang("fields", "description") . "</td><td>" . $aInt->lang("fields", "amount") . "</td></tr>";
@@ -128,7 +129,7 @@ if ($action == "createinvoice") {
     }
 
     run_hook("InvoiceCreationAdminArea", array("invoiceid" => $invoiceid));
-   redir("action=edit&id=" . $invoiceid);
+    redir("action=edit&id=" . $invoiceid);
     exit();
 }
 $filters = new RA_Filter();
@@ -229,6 +230,7 @@ if ($ra->get_req_var("delete")) {
     logActivity("Deleted Invoice - Invoice ID: " . $invoiceid);
     $filters->redir();
 }
+
 
 if ($action == "") {
     $aInt->deleteJSConfirm("doDelete", "invoices", "delete", $_SERVER['PHP_SELF'] . "?status=" . $status . "&delete=true&invoiceid=");
@@ -455,8 +457,8 @@ if ($action == "") {
             $data = mysqli_fetch_array($result);
             $userid = $data[0];
             logActivity("Modified Invoice - Invoice ID: " . $id, $userid);
-//            redir("action=edit&id=" . $id);
-//            exit();
+            redir("action=edit&id=" . $id);
+            exit();
         }
         if ($addcredit != "0.00" && $addcredit) {
             check_token("RA.admin.default");
