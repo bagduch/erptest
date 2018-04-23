@@ -155,6 +155,26 @@
     {/literal} {$jscode}{$jquerycode}{literal}
 
                 $(document).ready(function () {
+                    function getRegion(country)
+                    {
+                        $.ajax({
+                            //url: root + '/api/search',
+                            url: "region.php",
+                            method: "POST",
+                            data: {"region": country},
+                            success: function (data) {
+                                $(".state").replaceWith(data);
+                            }
+                        });
+                    }
+                    if ($(".country").length && $(".state").length)
+                    {
+                        country = $(".country").val();
+                        getRegion(country);
+                        $(".country").change(function () {
+                            getRegion($(this).val());
+                        });
+                    }
                     //demo.initStatsDashboard();
                     demo.initVectorMap();
                     demo.initCirclePercentage();

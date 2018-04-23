@@ -41,7 +41,7 @@ $region = array(
 
 if (isset($_POST['region'])) {
     if (isset($region[$_POST['region']])) {
-        $html = "<select name='state' class='form-control'>";
+        $html = "<select name='state' class='form-control state'>";
         foreach ($region[$_POST['region']] as $row) {
             if (isset($_POST['state']) && $_POST['state'] == $row) {
                 $select = "Selected";
@@ -53,6 +53,6 @@ if (isset($_POST['region'])) {
         $html .="</select>";
         echo $html;
     } else {
-        echo FALSE;
+       echo "<input class='form-control state' type='text'>";
     }
 }
