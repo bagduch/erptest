@@ -59,7 +59,7 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-    echo "<pre>", print_r($_POST, 1), "</pre>";
+//    echo "<pre>", print_r($_POST, 1), "</pre>";
     if ($tax == "on") {
         $tax = "1";
     }
@@ -91,7 +91,7 @@ if ($action == "save") {
         "affiliatepaytype" => $_POST['affiliatepaytype'],
         "affiliatepayamount" => $_POST['affiliatepayamount'],
     );
-    echo "<pre>", print_r($array, 1), "</pre>";
+//    echo "<pre>", print_r($array, 1), "</pre>";
 
     update_query("tblservices", $array, array("id" => $id));
 
