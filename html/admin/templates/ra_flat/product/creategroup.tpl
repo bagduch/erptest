@@ -22,7 +22,7 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">
-                                    <label>Customer Fields Group<br></label>
+                                    <label>Custom Fields Group<br></label>
                                 </td>
                                 <td class="fieldarea">
                                     <select class="form-control" name="customefield[]" multiple="">

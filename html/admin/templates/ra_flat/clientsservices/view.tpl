@@ -14,7 +14,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_account" data-toggle="tab">Account Details</a></li>
                             {if $servicefield}
-                            <li><a href="#tab_customer" data-toggle="tab">Customer Field</a></li>
+                            <li><a href="#tab_customer" data-toggle="tab">Custom Field</a></li>
                             {/if}
                         <li><a href="#tab_addon" data-toggle="tab">Addons</a></li>
                         <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>

@@ -7,7 +7,7 @@
     </div>
     <div class="content">
         <p>Product/Service Custom Fields options allow you to customize the product/service field to enter customer details</p>
-        <p> <b>Options:</b> <a class="btn btn-default" href="configcustomfieldsgroup.php?action=managegroup">Create a Customer Field Group</a> | <a class="btn btn-default" href="configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
+        <p> <b>Options:</b> <a class="btn btn-default" href="configcustomfieldsgroup.php?action=managegroup">Create a Custom Field Group</a> | <a class="btn btn-default" href="configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
         </p>
         <div class="tablebg">
             <table id="sortabletbl1" class="datatable table" width="100%" border="0" cellspacing="1" cellpadding="3">

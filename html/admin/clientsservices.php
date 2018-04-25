@@ -62,7 +62,7 @@ if ($_POST['frm1']) {
         if ($_POST['customefield'][$key] != $row['value']) {
             delete_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $id));
             insert_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key], "cfid" => $key, "relid" => $id));
-            $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
+            $logDetail .= "Custom Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
         }
     }
 

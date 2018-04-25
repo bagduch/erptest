@@ -4,7 +4,7 @@
             <div class="box-header">
                 <h3 class="box-title">Product/Service Custom Fields</h3>
                 <p>Product/Service Custom Fields options allow you to customize the product/service field to enter customer details</p>
-                <b>Options:</b> <a href="configcustomfieldsgroup.php?action=managegroup">Create a Customer Field Group</a> | <a href="configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
+                <b>Options:</b> <a href="configcustomfieldsgroup.php?action=managegroup">Create a Custom Field Group</a> | <a href="configcustomfieldsgroup.php?action=duplicategroup">Duplicate a Group</a>
             </div>
             <div class="box-body">
                 <div class="tablebg">
