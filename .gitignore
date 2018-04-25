@@ -10,3 +10,4 @@ configuration.php
 html/nbproject
 xdebug/
 html/.well-known/
+npm-debug.log
