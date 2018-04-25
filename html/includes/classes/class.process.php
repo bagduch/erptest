@@ -5,7 +5,7 @@ class RA_Process {
     public $productdata = array();
     public $addondata = array();
     public $orderdata = array();
-    public $customefield = array();
+    public $customfield = array();
     public $session;
     public $infobox;
     public $currecy;
@@ -107,7 +107,7 @@ class RA_Process {
 
                 $this->productdata["data"] = $data;
                 $this->productdata["avalialeaddons"] = isset($this->session['avalialeaddons']) ? $this->session['avalialeaddons'] : $this->getAsscoiateService($data['id']);
-                $this->productdata["customefield"] = getServiceCustomFields($data['id']);
+                $this->productdata["customfield"] = getServiceCustomFields($data['id']);
                 $this->productdata["pricing"] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
 
                 //  echo "<pre>", print_r($this->productdata["avalialeaddons"], 1), "</pre>";
@@ -130,7 +130,7 @@ class RA_Process {
         while ($data = mysqli_fetch_assoc($result)) {
             $addons[$data['id']] = $data;
             $addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
-            $addons[$data['id']]['customefield'] = getServiceCustomFields($data['id']);
+            $addons[$data['id']]['customfield'] = getServiceCustomFields($data['id']);
             $addons[$data['id']]['checkbox'] = "<button class=\"btn btn-default btn-circle\" id=\"a" . $data['id'] . "\" data-addon=\"" . $data['id'] . "\"> <i class=\"\"></i></button>";
             $addons[$data['id']]['select'] = 0;
         }

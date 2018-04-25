@@ -215,7 +215,7 @@
 
 
                                     <div class="intalldate">
-                                        {include file='orderforms/modern/customefield.tpl'}
+                                        {include file='orderforms/modern/customfield.tpl'}
                                     </div>
                                     {if $addons}
                                         <div class="addons">
@@ -252,9 +252,9 @@
                                                             <div id="collapse{$cid}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                                 <div class="panel-body">
                                                                     {$addon.description}
-                                                                    {if $addon.customefield}
-                                                                        {foreach from=$addon.customefield item=customefield}
-                                                                            {include file='orderforms/modern/customefield.tpl'}
+                                                                    {if $addon.customfield}
+                                                                        {foreach from=$addon.customfield item=customfield}
+                                                                            {include file='orderforms/modern/customfield.tpl'}
                                                                         {/foreach}
                                                                     {/if}
                                                                 </div>

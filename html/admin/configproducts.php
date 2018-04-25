@@ -258,15 +258,15 @@ if ($sub == "savegroup") {
         delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
 
 
-        if ($customefield) {
-            foreach ($customefield as $row) {
+        if ($customfield) {
+            foreach ($customfield as $row) {
 
                 insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
             }
         }
     } else {
         $id = insert_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
-        foreach ($customefield as $row) {
+        foreach ($customfield as $row) {
             insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }
     }

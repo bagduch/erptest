@@ -153,7 +153,7 @@ function addServiceCustomFieldVlues($csid, $valarray) {
     }
 }
 
-// from customefield to services 
+// from customfield to services 
 function cfieldgroupToServices($cfid = null, $cfgid = null) {
 
     $data = array();
