@@ -6,16 +6,14 @@
 
 <div class="card">
     <div class="content">
-        <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
+        <form method="post" class="form-horizontal" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
 
             <input type="hidden" name="frm1" value="1">
             <div class="box-header with-border">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_account" data-toggle="tab">Account Details</a></li>
-                            {if $servicefield}
-                            <li><a href="#tab_customer" data-toggle="tab">Custom Field</a></li>
-                            {/if}
+                        <li><a href="#tab_customfields" data-toggle="tab">Custom Fields</a></li>
                         <li><a href="#tab_addon" data-toggle="tab">Addons</a></li>
                         <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>
                         <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
@@ -105,64 +103,65 @@
                             </div>
                             <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
                         </div>
-                        {if $servicefield}
-                            <div class="tab-pane" id="tab_customer">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <table class="table">
-                                            {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
-                                                {if $fieldsnd.fieldtype eq "text"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "date"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "more"}
-                                                    {foreach from=$fieldsnd.children item=childrenfield}
-                                                        <tr>
-                                                            <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                {else}
-                                                {/if}
-                                            {/foreach}
-                                        </table>  
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <table class="table">
 
-                                            {foreach from=$servicefield key=fieldid item=fields}
-                                                {if $fields.fieldtype eq "text"}
+                        {* customfields *}
+                        <div class="tab-pane" id="tab_customfields">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <table class="table">
+                                        {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
+                                            {if $fieldsnd.fieldtype eq "text"}
+                                                <tr>
+                                                    <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
+                                                    <td><input class="form-control" id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                </tr>
+                                            {elseif $fieldsnd.fieldtype eq "date"}
+                                                <tr>
+                                                    <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
+                                                    <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                </tr>
+                                            {elseif $fieldsnd.fieldtype eq "more"}
+                                                {foreach from=$fieldsnd.children item=childrenfield}
                                                     <tr>
-                                                        <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                        <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
+                                                        <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
                                                     </tr>
-                                                {elseif $fields.fieldtype eq "date"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
-                                                    </tr>
-                                                {elseif $fields.fieldtype eq "more"}
-                                                    {foreach from=$fields.children item=childrenfield}
-                                                        <tr>
-                                                            <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                {else}
-                                                {/if}
-                                            {/foreach}
-                                        </table>  
-                                    </div>
+                                                {/foreach}
+                                            {else}
+                                            {/if}
+                                        {/foreach}
+                                    </table>  
                                 </div>
-                                <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
+                                <div class="col-xs-6">
+                                    <table class="table">
+
+                                        {foreach from=$servicefield key=fieldid item=fields}
+                                            {if $fields.fieldtype eq "text"}
+                                                <tr>
+                                                    <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                    <td><input class="form-control" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                </tr>
+                                            {elseif $fields.fieldtype eq "date"}
+                                                <tr>
+                                                    <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
+                                                    <td><input class="form-control datepick" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                </tr>
+                                            {elseif $fields.fieldtype eq "more"}
+                                                {foreach from=$fields.children item=childrenfield}
+                                                    <tr>
+                                                        <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
+                                                        <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
+                                                    </tr>
+                                                {/foreach}
+                                            {else}
+                                            {/if}
+                                        {/foreach}
+                                    </table>  
+                                </div>
                             </div>
-                        {/if}
+                            <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
+                        </div> {* end customfields handling *}
+
                         <div class="tab-pane" id="tab_addon">
                             {if isset($services.addon)}
                                 <table class="datatable table" style="width:100%">

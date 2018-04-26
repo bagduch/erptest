@@ -301,7 +301,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblcustomfieldsgrouplinks` WRITE;
 /*!40000 ALTER TABLE `tblcustomfieldsgrouplinks` DISABLE KEYS */;
-INSERT INTO `tblcustomfieldsgrouplinks` VALUES (44,4,48,NULL);
+INSERT INTO `tblcustomfieldsgrouplinks` VALUES (44,4,48);
 /*!40000 ALTER TABLE `tblcustomfieldsgrouplinks` ENABLE KEYS */;
 UNLOCK TABLES;
 
