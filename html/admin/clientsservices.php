@@ -72,8 +72,8 @@ if ($_POST['frm1']) {
         "description" => $_POST['description'],
         "servicestatus" => $_POST['status'],
         "regdate" => toMySQLDate($_POST['regdate']),
-        "amount" => $_POST['amount'],
-        "firstpaymentamount" => $_POST['firstpaymentamount'],
+        "amount" => (float)$_POST['amount'],
+        "firstpaymentamount" => (float)$_POST['firstpaymentamount'],
         "nextduedate" => toMySQLDate($_POST['nextduedate']),
         "billingcycle" => $_POST['billingcycle'],
         "paymentmethod" => $_POST['paymentmethod'],
@@ -228,6 +228,10 @@ while ($data = mysqli_fetch_assoc($result)) {
     $data['note'] = autoHyperLink(nl2br($data['note']));
     $clientnotes[] = $data;
 }
+
+// populate customfields
+
+
 $aInt->assign('id', $id);
 $aInt->assign('servicesarr', $servicesarr);
 if ($cancelid) {
