@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.13-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.13-MariaDB-10.2.13+maria~stretch-log
+-- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -242,7 +242,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblcontacts` WRITE;
 /*!40000 ALTER TABLE `tblcontacts` DISABLE KEYS */;
-INSERT INTO `tblcontacts` VALUES (1,3,'TESTFIRST','TESTLAST','','guy@te','','','','','','NZ','phone','mobile',0,'217e08456aa692ed020e10ae50d4a2e4:)wuXf','',0,0,0,0,0,0,'',0),(2,12442,'test searcher','','dsadsa','','','','','','','NZ','','',0,'$2y$10$8l60udoKW0Iw0OZxRwYQceC6wIkWSaWE8WMdH1Le8eCouIXWJbw4q','',0,0,0,0,0,0,'',0),(3,8017,'yue','zhang','HD','waikatozhang@gmail.com','280 queen','','Auckland','','321321','NZ','212220588','',1,'$2y$10$TUH7dOCVxadKvccqLmthT.j6GQYAftMKWldxx8YCPXchJmGm434..','profile,contacts,products,invoices,tickets,affiliates',0,1,0,1,0,0,'',0);
+INSERT INTO `tblcontacts` VALUES (1,3,'TESTFIRST','TESTLAST','','guy@te','','','','','','NZ','phone','mobile',0,'217e08456aa692ed020e10ae50d4a2e4:)wuXf','',0,0,0,0,0,'0','',0),(2,12442,'test searcher','','dsadsa','','','','','','','NZ','','',0,'$2y$10$8l60udoKW0Iw0OZxRwYQceC6wIkWSaWE8WMdH1Le8eCouIXWJbw4q','',0,0,0,0,0,'0','',0),(3,8017,'yue','zhang','HD','waikatozhang@gmail.com','280 queen','','Auckland','','321321','NZ','212220588','',1,'$2y$10$TUH7dOCVxadKvccqLmthT.j6GQYAftMKWldxx8YCPXchJmGm434..','profile,contacts,products,invoices,tickets,affiliates',0,1,0,1,0,'0','',0);
 /*!40000 ALTER TABLE `tblcontacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -301,7 +301,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblcustomfieldsgrouplinks` WRITE;
 /*!40000 ALTER TABLE `tblcustomfieldsgrouplinks` DISABLE KEYS */;
-INSERT INTO `tblcustomfieldsgrouplinks` VALUES (43,4,48,NULL);
+INSERT INTO `tblcustomfieldsgrouplinks` VALUES (44,4,48,NULL);
 /*!40000 ALTER TABLE `tblcustomfieldsgrouplinks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +405,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblknowledgebasecats` WRITE;
 /*!40000 ALTER TABLE `tblknowledgebasecats` DISABLE KEYS */;
-INSERT INTO `tblknowledgebasecats` VALUES (11,NULL,'test','test','0',0,''),(12,11,'test child','test child','',0,'');
+INSERT INTO `tblknowledgebasecats` VALUES (11,NULL,'test','test',0,'0',''),(12,11,'test child','test child',0,'0','');
 /*!40000 ALTER TABLE `tblknowledgebasecats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -593,7 +593,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblservices` WRITE;
 /*!40000 ALTER TABLE `tblservices` DISABLE KEYS */;
-INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,1,'','',0.00,0,0),(49,'other',10,1,0,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0);
+INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
 /*!40000 ALTER TABLE `tblservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,7 +719,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbltickets` WRITE;
 /*!40000 ALTER TABLE `tbltickets` DISABLE KEYS */;
-INSERT INTO `tbltickets` VALUES (30,'745673',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','guy@hd.net.nz','WjEs0s0a','2016-06-17 15:34:47','guy@hd.net.nz','\r\n\r\nguy@hd.net.nz','Answered','Medium',null,'','2017-02-21 16:34:56',2,1,',1',0,'2017-04-19 12:41:51',''),(31,'614919',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','','vssbJ3yg','2016-06-17 15:36:45','guy@hd.net.nz','\r\nguy@hd.net.nz','Answered','Medium',null,'','2017-01-16 13:37:10',1,1,',1',0,'2017-02-22 12:40:40','');
+INSERT INTO `tbltickets` VALUES (30,'745673',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','guy@hd.net.nz','WjEs0s0a','2016-06-17 15:34:47','guy@hd.net.nz','\r\n\r\nguy@hd.net.nz','Answered','Medium',NULL,'','2017-02-21 16:34:56',2,1,',1',0,'2017-04-19 12:41:51',''),(31,'614919',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','','vssbJ3yg','2016-06-17 15:36:45','guy@hd.net.nz','\r\nguy@hd.net.nz','Answered','Medium',NULL,'','2017-01-16 13:37:10',1,1,',1',0,'2017-02-22 12:40:40','');
 /*!40000 ALTER TABLE `tbltickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
