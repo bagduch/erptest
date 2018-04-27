@@ -95,13 +95,13 @@ if ($_POST['frm1']) {
 }
 foreach ($data as $key => $row) {
     if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
-        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
+        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' \n";
     }
 }
 
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
-    logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
+    logActivity($logDetail, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 

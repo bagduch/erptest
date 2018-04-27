@@ -365,7 +365,7 @@
                                             {foreach from=$accountlog item=data}
                                                 <tr>
                                                     <td>{$data.date}</td>
-                                                    <td>{$data.description}</td>
+                                                    <td>{$data.description|nl2br}</td>
                                                     <td>{$data.user}</td>
                                                     <td>{$data.ipaddr}</td>
                                                 </tr>
