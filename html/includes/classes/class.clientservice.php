@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 class RA_ClientService {
@@ -21,6 +21,12 @@ class RA_ClientService {
     public $id;
 
     public function __construct($userid, $id) {
+      /**
+      * Instantiates client service class
+      *
+      * @param user ID according to tblclients
+      * @param id ID according to tblcustomerservices
+      */
 
         $this->currency = getCurrency();
         $this->userid = $userid;
