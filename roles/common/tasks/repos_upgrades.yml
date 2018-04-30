@@ -1,5 +1,9 @@
 ---
 
+- name: set timezone
+  timezone:
+    name: "Pacific/Auckland"
+
 - name: remove default apt repo
   apt_repository:
     repo: deb http://httpredir.debian.org/debian stretch main

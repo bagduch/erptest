@@ -61,13 +61,12 @@ function getServiceCustomFields($sid, $csid = null) {
             ON (tblservices.gid=tblservicegroups.id)
         LEFT JOIN tblcustomfieldsgrouplinks
             ON (tblcustomfieldsgrouplinks.serviceid=tblservices.id)
-            OR (tblcustomfieldsgrouplinks.servicegid=tblservicegroups.id)
         LEFT JOIN tblcustomfieldsgroupnames
             ON (tblcustomfieldsgrouplinks.cfgid=tblcustomfieldsgroupnames.cfgid)
         LEFT JOIN tblcustomfieldsgroupmembers
             ON (tblcustomfieldsgroupmembers.cfgid=tblcustomfieldsgroupnames.cfgid)
         LEFT JOIN tblcustomfieldslinks
-            ON (tblservices.id=tblcustomfieldslinks.serviceid) OR (tblservicegroups.id=tblcustomfieldslinks.servicegid)
+            ON (tblservices.id=tblcustomfieldslinks.serviceid)
         LEFT JOIN tblcustomfields 
             ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
@@ -153,7 +152,7 @@ function addServiceCustomFieldVlues($csid, $valarray) {
     }
 }
 
-// from customefield to services 
+// from customfield to services 
 function cfieldgroupToServices($cfid = null, $cfgid = null) {
 
     $data = array();

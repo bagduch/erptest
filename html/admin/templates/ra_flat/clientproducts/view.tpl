@@ -14,7 +14,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_account" data-toggle="tab">Account Details</a></li>
                             {if $servicefield}
-                            <li><a href="#tab_customer" data-toggle="tab">Customer Field</a></li>
+                            <li><a href="#tab_customer" data-toggle="tab">Custom Field</a></li>
                             {/if}
                         <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>
                         <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
@@ -113,18 +113,18 @@
                                                 {if $fieldsnd.fieldtype eq "text"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}"  name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                        <td><input class="form-control" id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
                                                     </tr>
                                                 {elseif $fieldsnd.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
                                                     </tr>
                                                 {elseif $fieldsnd.fieldtype eq "more"}
                                                     {foreach from=$fieldsnd.children item=childrenfield}
                                                         <tr>
                                                             <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
+                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
                                                         </tr>
                                                     {/foreach}
                                                 {else}
@@ -139,18 +139,18 @@
                                                 {if $fields.fieldtype eq "text"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                        <td><input class="form-control" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
                                                     </tr>
                                                 {elseif $fields.fieldtype eq "date"}
                                                     <tr>
                                                         <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
+                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"></td>
                                                     </tr>
                                                 {elseif $fields.fieldtype eq "more"}
                                                     {foreach from=$fields.children item=childrenfield}
                                                         <tr>
                                                             <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
+                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
                                                         </tr>
                                                     {/foreach}
                                                 {else}

@@ -280,7 +280,7 @@ if ($_SESSION['address']) {
             $smartyvalues['addons'] = $process->productdata['avalialeaddons'];
             $smartyvalues['pricing'] = $process->productdata['pricing'];
             $smartyvalues['product'] = $process->productdata['data'];
-            $smartyvalues['customefield'] = $process->productdata['customefield'];
+            $smartyvalues['customfield'] = $process->productdata['customfield'];
         }
         $smartyvalues['contractnotsign'] = $contractnotsign;
     }

@@ -1,4 +1,12 @@
 ---
+
+- name: Preconfigure postfix
+  debconf:
+    name: postfix
+    question: postfix/relayhost
+    value: localhost:1025
+    vtype: string
+
 - name: clone MailDev git repo
   git:
     repo: https://github.com/djfarrelly/MailDev
@@ -15,10 +23,12 @@
     repo: deb https://deb.nodesource.com/node_6.x stretch main
     state: present
 
-- name: Install nodejs
+- name: Install required packages
   action: apt pkg={{item}} state=installed
   with_items:
   - nodejs
+  - postfix
+
 
 - name: Install maildev via npm
   npm:

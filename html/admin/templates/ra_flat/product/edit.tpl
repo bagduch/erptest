@@ -1,133 +1,133 @@
 <div class="card">
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>Edit Product</h2>
-            <form method="post" action="configproducts.php?action=save&amp;id={$services.id}" name="packagefrm">
-                <div class="nav-tabs-custom">
-                    <ul class="nav nav-tabs">
-                        <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
-                        <li role="presentation" class=""><a href="#pricing" aria-controls="pricing" role="tab" data-toggle="tab">Pricing</a></li>
-                        <li role="presentation" class=""><a href="#configurable" aria-controls="configurable" role="tab" data-toggle="tab">Configurable Options</a></li>
-                        <li role="presentation" class=""><a href="#addons" aria-controls="addons" role="tab" data-toggle="tab">Addons</a></li>
-                        <li role="presentation" class=""><a href="#other" aria-controls="other" role="tab" data-toggle="tab">Other</a></li>
-                        <li role="presentation" class=""><a href="#links" aria-controls="links" role="tab" data-toggle="tab">Links</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="details">
-                            <div class="panel-body">
-                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                    <tbody>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.fields}</td>
-                                            <td class="fieldarea">
-                                                <select class="form-control" name="type" onchange="doFieldUpdate()">
-                                                    <option value="addon" {if $services.type eq "addon"}Selected{/if}>Addon</option>
-                                                    <option value="individual" {if $services.type eq "individual"}Selected{/if}>Individual</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.servicegroup}</td>
-                                            <td class="fieldarea">
-                                                <select class="form-control" name="gid">
+  <div class="row">
+    <div class="col-lg-12">
+        <h2>Edit Product</h2>
+        <form method="post" action="configproducts.php?action=save&amp;id={$services.id}" name="packagefrm">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                    <li role="presentation" class=""><a href="#pricing" aria-controls="pricing" role="tab" data-toggle="tab">Pricing</a></li>
+                    <li role="presentation" class=""><a href="#configurable" aria-controls="configurable" role="tab" data-toggle="tab">Configurable Options</a></li>
+                    <li role="presentation" class=""><a href="#addons" aria-controls="addons" role="tab" data-toggle="tab">Addons</a></li>
+                    <li role="presentation" class=""><a href="#other" aria-controls="other" role="tab" data-toggle="tab">Other</a></li>
+                    <li role="presentation" class=""><a href="#links" aria-controls="links" role="tab" data-toggle="tab">Links</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="details">
+                        <div class="panel-body">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.fields}</td>
+                                        <td class="fieldarea">
+                                            <select class="form-control" name="type">
+                                                <option value="addon" {if $services.type eq "addon"}Selected{/if}>Addon</option>
+                                                <option value="individual" {if $services.type eq "individual"}Selected{/if}>Individual</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.servicegroup}</td>
+                                        <td class="fieldarea">
+                                            <select class="form-control" name="gid">
 
-                                                    {foreach from=$servicegroups item=row key=gid}
-                                                        <option value="{$gid}" {if $gid eq $services.gid}selected{/if}>{$row}</option>
-                                                    {/foreach}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">Revenue Codes</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">Supply Codes</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">Supply Revenue</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
-                                                <input type="hidden" name="isale" value='on'/> 
-                                            </td>
-                                        </tr>
+                                                {foreach from=$servicegroups item=row key=gid}
+                                                    <option value="{$gid}" {if $gid eq $services.gid}selected{/if}>{$row}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Revenue Codes</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Supply Codes</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Supply Revenue</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                            <input type="hidden" name="isale" value='on'/>
+                                        </td>
+                                    </tr>
 
-                                        <tr>
-                                            <td class="fieldlabel">Cost</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="cost" value="{$services.cost}">
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Cost</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="cost" value="{$services.cost}">
+                                        </td>
+                                    </tr>
 
-                                        <tr>
-                                            <td class="fieldlabel">Stock</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="stock" value="{$services.stock}">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">Stock Alert</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="stockalert" value="{$services.stockalert}">
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Stock</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="stock" value="{$services.stock}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Stock Alert</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="stockalert" value="{$services.stockalert}">
+                                        </td>
+                                    </tr>
 
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.servicename}</td>
-                                            <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="name" value="{$services.name}">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.servicedesc}</td>
-                                            <td class="fieldarea">
-                                                <table cellsapcing="0" cellpadding="0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <textarea class="form-control" name="description" cols="60" rows="5">{$services.description}</textarea>
-                                                            </td>
-                                                            <td>
-                                                                {$langs.htmlallowed}
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.welcomeemail}</td>
-                                            <td class="fieldarea">
-                                                <select class="form-control" name="welcomeemail">
-                                                    {foreach from = $autoemail item=row key=id}
-                                                        <option value="{$id}" {$row.select}>{$row.name}</option>
-                                                    {/foreach}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.applytax}</td>
-                                            <td class="fieldarea"><label><input type="checkbox" name="tax" {if $services.tax}checked{/if}> {$lang.applytaxdesc}</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.hidden}</td><td class="fieldarea"><label><input type="checkbox" name="hidden" {if $services.hidden}checked{/if}> {$langs.hiddendesc}</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fieldlabel">{$langs.retired}</td>
-                                            <td class="fieldarea"><label><input type="checkbox" name="retired" {if $services.retired}checked{/if}> {$langs.retireddesc}</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td class="fieldarea">
-                                                <div style="display: none" id="contractop" class="form-inline">
-                                                    <input style="width:40px" class="form-control" type="text" name="etf" value="{$services.etf}"> <label>{$langs.etf}</label>
-                                                    <input style="width:40px" class="form-control" type="text" name="term" value="{$services.term}"> <label>{$langs.term}</label>
-                                                </div>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.servicename}</td>
+                                        <td class="fieldarea">
+                                            <input class="form-control" type="text" size="40" name="name" value="{$services.name}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.servicedesc}</td>
+                                        <td class="fieldarea">
+                                            <table cellsapcing="0" cellpadding="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea class="form-control" name="description" cols="60" rows="5">{$services.description}</textarea>
+                                                        </td>
+                                                        <td>
+                                                            {$langs.htmlallowed}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.welcomeemail}</td>
+                                        <td class="fieldarea">
+                                            <select class="form-control" name="welcomeemail">
+                                                {foreach from = $autoemail item=row key=id}
+                                                    <option value="{$id}" {$row.select}>{$row.name}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.applytax}</td>
+                                        <td class="fieldarea"><label><input type="checkbox" name="tax" {if $services.tax}checked{/if}> {$lang.applytaxdesc}</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.hidden}</td><td class="fieldarea"><label><input type="checkbox" name="hidden" {if $services.hidden}checked{/if}> {$langs.hiddendesc}</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">{$langs.retired}</td>
+                                        <td class="fieldarea"><label><input type="checkbox" name="retired" {if $services.retired}checked{/if}> {$langs.retireddesc}</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="fieldarea">
+                                            <div style="display: none" id="contractop" class="form-inline">
+                                                <input style="width:40px" class="form-control" type="text" name="etf" value="{$services.etf}"> <label>{$langs.etf}</label>
+                                                <input style="width:40px" class="form-control" type="text" name="term" value="{$services.term}"> <label>{$langs.term}</label>
+                                            </div>
 
                                             </td>
                                         </tr>
@@ -260,7 +260,7 @@
                                                     <div class="panel-body">
                                                         <ul class="list-group">
                                                             {foreach from=$addons item=service}
-                                                                <li class="list-group-item"> 
+                                                                <li class="list-group-item">
                                                                     <label>
                                                                         <input class="childrenserivce" {$service.check} type="checkbox" name="linkasscoiateservice[{$service.id}]"/> {$service.name}
                                                                     </label>
@@ -283,16 +283,16 @@
                                         <tr>
                                             <td class="fieldlabel">Custom Affiliate Payout</td>
                                             <td class="fieldarea">
-                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq ''}checked{/if} value=""> Use Default 
-                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage 
-                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount 
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq ''}checked{/if} value=""> Use Default
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount
                                                 <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'none'}checked{/if} value="none"> No Commission
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Affiliate Pay Amount</td>
                                             <td class="fieldarea">
-                                                <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$services.affiliatepayamount}" size="10"> 
+                                                <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$services.affiliatepayamount}" size="10">
                                                 <input type="checkbox" name="affiliateonetime" {if $services.affiliateonetime eq 'on'}checked{/if}> One Time Payout (Default is Recurring)
                                             </td>
                                         </tr>
@@ -332,7 +332,7 @@
 
 
                 <p align="center">
-                    <input type="submit" value="Save Changes" class="button"> 
+                    <input type="submit" value="Save Changes" class="button">
                     <input type="button" value="Back to Service List" onclick="window.location = 'configproducts.php'" class="button">
                 </p>
 
