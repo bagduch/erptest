@@ -3,19 +3,16 @@
 
 {include file="$template/clientsservices/serviceview.tpl"}
 
-
 <div class="card">
     <div class="content">
-        <form method="post" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
+        <form method="post" class="form-horizontal" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
 
             <input type="hidden" name="frm1" value="1">
             <div class="box-header with-border">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_account" data-toggle="tab">Account Details</a></li>
-                            {if $servicefield}
-                            <li><a href="#tab_customer" data-toggle="tab">Customer Field</a></li>
-                            {/if}
+                        <li><a href="#tab_customfields" data-toggle="tab">Custom Fields</a></li>
                         <li><a href="#tab_addon" data-toggle="tab">Addons</a></li>
                         <li><a href="#tab_invoice" data-toggle="tab">Account Invoices</a></li>
                         <li><a href="#tab_log" data-toggle="tab">Account Log</a></li>
@@ -29,140 +26,289 @@
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_account">
+
+                            {* Account Details *}
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <table class="datatable table borderless">
-                                        <tr>
-                                            <td width="50%"><label for="orderid">Order #</label></td>
-                                            <td>{$services.orderid}- <a href="orders.php?action=view&id={$services.orderid}" class="btn btn-primary">View Order</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="orderid">Service</label></td>
-                                            <td>
-                                                <select name="packageid" class="form-control">
-                                                    {$servicedrop}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#description">Description (Address)</label></td>
-                                            <td><input id="description" name="description" type="text" class="form-control" value="{$services.description}"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#status">Order Status</label></td>
-                                            <td>{$status}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#promocode">Promotion Code</label></td>
-                                            <td>
-                                                <select class="form-control" id="promocode" name="promocode">
-
-                                                    <option value="">None</option>
-                                                    {if $promo}
-                                                        {foreach from=$promo key=promoid item=row}
-                                                            <option value="{$promoid}">{$row}</option>
-                                                        {/foreach}
-                                                    {/if}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#firstpaymentamount">Subscription ID</label></td>
-                                            <td><input class="form-control"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-xs-6">
-                                    <table class="datatable table borderless">
-                                        <tr>
-                                            <td width="50%"><label for="#regdate">Registration Date</label></td>
-                                            <td><input id="regdate" name="regdate" type="text" class="form-control datetimepick" value="{$services.regdate}"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#firstpaymentamount">First Payment Amount</label></td>
-                                            <td><input id="firstpaymentamount" name="firstpaymentamount" type="text" class="form-control" value="{$services.firstpaymentamount}"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#firstpaymentamount">Recurring Amount</label></td>
-                                            <td><input id="amount" name="amount" type="text" class="form-control" value="{$services.amount}"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#nextduedate">Next Due Date</label></td>
-                                            <td><input id="nextduedate" name="nextduedate" type="text" class="form-control datepick" value="{$services.nextduedate}"></td>
-
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#amount">Billing Cycle</label></td>
-                                            <td>{$billingcycle}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="#paymentmethod">Payment Method</label></td>
-                                            <td>{$paymentmethod}</td>
-                                        </tr>
-
-                                    </table>
-                                </div>
+                                <h3>Account Details</h3>
                             </div>
-                            <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
-                        </div>
-                        {if $servicefield}
-                            <div class="tab-pane" id="tab_customer">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <table class="table">
-                                            {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
-                                                {if $fieldsnd.fieldtype eq "text"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}"  name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "date"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customefield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "more"}
-                                                    {foreach from=$fieldsnd.children item=childrenfield}
-                                                        <tr>
-                                                            <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                {else}
-                                                {/if}
-                                            {/foreach}
-                                        </table>  
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <table class="table">
+                            <div class="row"> {*Order/Account stuff*}
 
-                                            {foreach from=$servicefield key=fieldid item=fields}
-                                                {if $fields.fieldtype eq "text"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
-                                                    </tr>
-                                                {elseif $fields.fieldtype eq "date"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldid}">{$fields.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldid}" name="customefield[{$fields.cfid}]" value="{$fields.value}"></td>
-                                                    </tr>
-                                                {elseif $fields.fieldtype eq "more"}
-                                                    {foreach from=$fields.children item=childrenfield}
-                                                        <tr>
-                                                            <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customefield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                {else}
-                                                {/if}
-                                            {/foreach}
-                                        </table>  
+                                {* Order Number *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="orderid">Order #</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="orders.php?action=view&id={$services.orderid}">
+                                                <input 
+                                                    id="orderid" name="orderid" type="text" readonly 
+                                                    class="form-control" value="{$services.orderid}" 
+                                                />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="text-center"><input type="submit" value="Save Changes" class="btn btn-primary"> <input type="reset" value="Cancel Changes" class="btn"></div>
+
+                                {* Service *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="packageid">Service</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select name="packageid" id="packageid" class="form-control">
+                                                {$servicedrop}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Description *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="description">Description (Address)</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input name="description" id="description" type="text"  class="form-control" value={$services.description} />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                {* Order Status *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="status">Order Status</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {$status}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Promo Code *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="promocode">Promo Code</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" id="promocode" name="promocode">
+                                                <option value="">None</option>
+                                                {if $promo}
+                                                    {foreach from=$promo key=promoid item=row}
+                                                        <option value="{$promoid}">{$row}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Registration Date *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="regdate">Registration Date</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input id="regdate" name="regdate" type="text" readonly class="form-control" value="{$services.regdate}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* First Payment Amount*}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="firstpaymentamount">First Payment Amount</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input id="firstpaymentamount" name="firstpaymentamount" 
+                                                type="text" class="form-control" value="{$services.firstpaymentamount}" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Recurring Amount*}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="recurringamount">Recurring Amount</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input id="recurringamount" name="recurringamount" 
+                                                type="text" class="form-control" value="{$services.amount}" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Next Due Date*}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="nextduedate">Next Due Date</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input id="nextduedate" name="nextduedate" 
+                                                type="text" class="form-control datepick" value="{$services.nextduedate}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Billing Cycle *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="billingcycle">Billing Cycle</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {$billingcycle}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {* Payment Method *}
+                                <div class="col-md-6">
+                                    <div class="row form-group">
+                                        <div class="col-md-6">
+                                            <label for="paymentmethod">Payment Method</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {$paymentmethod}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> {* end overflowed row *}
+
+                            {* Buttons *}
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <input type="submit" value="Save Changes" class="btn btn-primary" />
+                                    <input type="reset" value="Cancel Changes" class="btn" />
+                                </div>
                             </div>
-                        {/if}
+
+
+                            
+                        </div> {* End tab_account div *}
+
+
+                        {* customfields *}
+                        <div class="tab-pane" id="tab_customfields">
+                            {* Account Details *}
+                            <div class="row">
+                                <h3>Custom Fields</h3>
+                            </div>
+                            <div class="row">
+                                {* loop through servicefieldnd *}
+                                {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
+                                    {if $fieldsnd.fieldtype eq "text"}
+                                    <div class="col-md-6">
+                                        <div class="row form-group">
+                                            <div class="col-md-6">
+                                                <label for="#custome{$fieldidnd}">
+                                                    {$fieldsnd.fieldname}
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" 
+                                                    id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}" 
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {elseif $fieldsnd.fieldtype eq "date"}
+                                    <div class="col-md-6">
+                                        <div class="row form-group">
+                                            <div class="col-md-6">
+                                                <label for="#custome{$fieldidnd}">
+                                                    {$fieldsnd.fieldname}
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control datepick" id="custome{$fieldidnd}" 
+                                                    name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {elseif $fieldsnd.fieldtype eq "more"}
+                                        {foreach from=$fieldsnd.children item=childrenfield}
+                                        <div class="col-md-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-6">
+                                                    <label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" id="custome{$childrenfield.cfid}" 
+                                                        name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/foreach}
+                                    {/if}
+                                {/foreach} {* end servicefieldnd loop*}
+                                {foreach from=$servicefield key=fieldid item=fields}
+                                    {if $fields.fieldtype eq "text"}
+                                    <div class="col-md-6">
+                                        <div class="row form-group">
+                                            <div class="col-md-6">
+                                                <label for="#custome{$fieldid}">{$fields.fieldname}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" 
+                                                    id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {elseif $fields.fieldtype eq "date"}
+                                    <div class="col-md-6">
+                                        <div class="row form-group">
+                                            <div class="col-md-6">
+                                                <label for="#custome{$fieldid}">{$fields.fieldname}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control datepick" 
+                                                    id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {elseif $fields.fieldtype eq "more"}
+                                        {foreach from=$fields.children item=childrenfield}
+                                        <div class="col-md-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-6">
+                                                    <label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" id="custome{$childrenfield.cfid}" 
+                                                        name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/foreach}
+                                    {/if}
+                                {/foreach} {* end servicefield loop *}
+                            </div> {*end overflowed CF row *}
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <input type="submit" value="Save Changes" class="btn btn-primary" />
+                                    <input type="reset" value="Cancel Changes" class="btn" />
+                                </div>
+                            </div>
+                        </div> {* end customfields handling *}
+
                         <div class="tab-pane" id="tab_addon">
                             {if isset($services.addon)}
                                 <table class="datatable table" style="width:100%">
@@ -219,7 +365,7 @@
                                             {foreach from=$accountlog item=data}
                                                 <tr>
                                                     <td>{$data.date}</td>
-                                                    <td>{$data.description}</td>
+                                                    <td>{$data.description|nl2br}</td>
                                                     <td>{$data.user}</td>
                                                     <td>{$data.ipaddr}</td>
                                                 </tr>

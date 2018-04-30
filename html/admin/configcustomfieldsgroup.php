@@ -40,7 +40,7 @@ if ($manageoptions) {
     $name = $data['name'];
     ob_start();
     echo "";
-    echo "<script langauge=\"JavaScript\">
+    echo "<script language=\"JavaScript\">
 function deletegroupoption(id) {
 	if (confirm(\"Are you sure you want to delete this product configuration option?\")) {
 		window.location='";

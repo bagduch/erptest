@@ -19,7 +19,7 @@
                                     <tr>
                                         <td class="fieldlabel">{$langs.fields}</td>
                                         <td class="fieldarea">
-                                            <select class="form-control" name="type" onchange="doFieldUpdate()">
+                                            <select class="form-control" name="type">
                                                 <option value="addon" {if $services.type eq "addon"}Selected{/if}>Addon</option>
                                                 <option value="individual" {if $services.type eq "individual"}Selected{/if}>Individual</option>
                                             </select>

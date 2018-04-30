@@ -16,7 +16,7 @@
                             <tr>
                                 <td width="150" class="fieldlabel">Product Type</td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="type" onchange="doFieldUpdate()">
+                                    <select class="form-control" name="type">
                                         <option value="residential" {if $data.type eq 'residential'}selected{/if}>Residential</option>
                                         <option value="business" {if $data.type eq 'business'}selected{/if}>Business</option>
                                     </select>

@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.13-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.13-MariaDB-10.2.13+maria~stretch-log
+-- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `tblactivitylog`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblactivitylog` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
   `description` text NOT NULL,
   `user` text NOT NULL,
   `userid` int(10) DEFAULT NULL,
@@ -534,11 +534,11 @@ CREATE TABLE `tblclients` (
   `currency` int(10) DEFAULT 1,
   `defaultgateway` varchar(64) DEFAULT NULL,
   `credit` decimal(10,2) DEFAULT 0.00,
-  `taxexempt` text NOT NULL default "",
+  `taxexempt` text NOT NULL DEFAULT '',
   `latefeeoveride` text DEFAULT NULL,
   `overideduenotices` text DEFAULT NULL,
-  `separateinvoices` text NOT NULL default "",
-  `disableautocc` text NOT NULL default "",
+  `separateinvoices` text NOT NULL DEFAULT '',
+  `disableautocc` text NOT NULL DEFAULT '',
   `datecreated` date NOT NULL,
   `notes` text DEFAULT NULL,
   `billingcid` int(10) DEFAULT NULL,
@@ -550,8 +550,8 @@ CREATE TABLE `tblclients` (
   `language` enum('en') DEFAULT 'en',
   `pwresetkey` varchar(255) DEFAULT NULL,
   `pwresetexpiry` datetime DEFAULT NULL,
-  `emailoptout` text NOT NULL default "",
-  `overrideautoclose` text NOT NULL default "",
+  `emailoptout` text NOT NULL DEFAULT '',
+  `overrideautoclose` text NOT NULL DEFAULT '',
   `dateofbirth` date DEFAULT NULL,
   `email_notification` text DEFAULT NULL,
   `txt_notification` text DEFAULT NULL,
@@ -790,15 +790,12 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `cfgid` int(10) NOT NULL,
   `serviceid` int(10) DEFAULT NULL,
-  `servicegid` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cfgid` (`cfgid`),
-  KEY `servicegid` (`servicegid`),
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
-  CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_4` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -843,15 +840,12 @@ CREATE TABLE `tblcustomfieldslinks` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'link identifier',
   `cfid` int(10) DEFAULT NULL COMMENT 'tblcustomfields id',
   `serviceid` int(10) DEFAULT NULL COMMENT 'tblservices id',
-  `servicegid` int(10) DEFAULT NULL COMMENT 'tblservicegroups id',
   PRIMARY KEY (`id`),
   KEY `cfid` (`cfid`),
   KEY `serviceid` (`serviceid`),
-  KEY `servicegid` (`servicegid`),
   CONSTRAINT `tblcustomfieldslinks_ibfk_1` FOREIGN KEY (`cfid`) REFERENCES `tblcustomfields` (`cfid`),
-  CONSTRAINT `tblcustomfieldslinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`),
-  CONSTRAINT `tblcustomfieldslinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='link customfields to services and servicegroups';
+  CONSTRAINT `tblcustomfieldslinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='link customfields to services and servicegroups';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1175,8 +1169,8 @@ CREATE TABLE `tblnotes` (
   `rel_id` int(10) NOT NULL,
   `adminid` int(10) DEFAULT NULL,
   `assignto` int(11) NOT NULL,
-  `duedate` date,
-  `donetime` date,
+  `duedate` date DEFAULT NULL,
+  `donetime` date DEFAULT NULL,
   `note` text NOT NULL,
   `sticky` int(1) NOT NULL DEFAULT 1,
   `flag` int(11) NOT NULL,
@@ -1186,7 +1180,7 @@ CREATE TABLE `tblnotes` (
   KEY `userid` (`rel_id`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tblnotes_ibfk_2` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1297,18 +1291,18 @@ CREATE TABLE `tblpricing` (
   `type` enum('product','addon','configoptions','domainregister','domaintransfer','domainrenew','domainaddons') NOT NULL,
   `currency` int(10) NOT NULL,
   `relid` int(10) NOT NULL,
-  `msetupfee` decimal(10,2) default 0,
-  `qsetupfee` decimal(10,2) default 0,
-  `ssetupfee` decimal(10,2) default 0,
-  `asetupfee` decimal(10,2) default 0,
-  `bsetupfee` decimal(10,2) default 0,
-  `tsetupfee` decimal(10,2) default 0,
-  `monthly` decimal(10,2) default 0,
-  `quarterly` decimal(10,2) default 0,
-  `semiannually` decimal(10,2) default 0,
-  `annually` decimal(10,2) default 0,
-  `biennially` decimal(10,2) default 0,
-  `triennially` decimal(10,2) default 0,
+  `msetupfee` decimal(10,2) DEFAULT 0.00,
+  `qsetupfee` decimal(10,2) DEFAULT 0.00,
+  `ssetupfee` decimal(10,2) DEFAULT 0.00,
+  `asetupfee` decimal(10,2) DEFAULT 0.00,
+  `bsetupfee` decimal(10,2) DEFAULT 0.00,
+  `tsetupfee` decimal(10,2) DEFAULT 0.00,
+  `monthly` decimal(10,2) DEFAULT 0.00,
+  `quarterly` decimal(10,2) DEFAULT 0.00,
+  `semiannually` decimal(10,2) DEFAULT 0.00,
+  `annually` decimal(10,2) DEFAULT 0.00,
+  `biennially` decimal(10,2) DEFAULT 0.00,
+  `triennially` decimal(10,2) DEFAULT 0.00,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1551,36 +1545,36 @@ CREATE TABLE `tblservices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` text NOT NULL,
   `gid` int(10) NOT NULL,
-  `individual` int(11) default NULL,
-  `contract` int(11) default NULL,
-  `etf` double default NULL,
-  `term` int(11) default 0,
+  `individual` int(11) DEFAULT NULL,
+  `contract` int(11) DEFAULT NULL,
+  `etf` double DEFAULT NULL,
+  `term` int(11) DEFAULT 0,
   `name` text NOT NULL,
-  `stock` int(11) default 0,
-  `stockalert` int(11) default 0,
-  `cost` float default NULL,
-  `description` text default NULL,
+  `stock` int(11) DEFAULT 0,
+  `stockalert` int(11) DEFAULT 0,
+  `cost` float DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `revenuecode` varchar(10) DEFAULT NULL,
-  `hidden` text default null,
-  `welcomeemail` int(10) DEFAULT null,
-  `proratabilling` text default NULL,
-  `proratadate` int(2) default 0,
-  `proratachargenextmonth` int(2) default 0,
-  `paytype` text default NULL,
-  `autosetup` text default NULL,
-  `servertype` text default NULL,
-  `servergroup` int(10) default NULL,
-  `recurringcycles` int(2) default 0,
-  `autoterminatedays` int(4) default 0,
-  `autoterminateemail` text default NULL,
-  `configoptionsupgrade` text default NULL,
-  `upgradechargefullcycle` int(1) default NULL,
-  `tax` int(1) default 0,
-  `affiliateonetime` varchar(20) default NULL,
-  `affiliatepaytype` text default NULL,
-  `affiliatepayamount` decimal(10,2) default 0,
-  `order` int(1) default 0,
-  `retired` int(1) default 0,
+  `hidden` text DEFAULT NULL,
+  `welcomeemail` int(10) DEFAULT NULL,
+  `proratabilling` text DEFAULT NULL,
+  `proratadate` int(2) DEFAULT 0,
+  `proratachargenextmonth` int(2) DEFAULT 0,
+  `paytype` text DEFAULT NULL,
+  `autosetup` text DEFAULT NULL,
+  `servertype` text DEFAULT NULL,
+  `servergroup` int(10) DEFAULT NULL,
+  `recurringcycles` int(2) DEFAULT 0,
+  `autoterminatedays` int(4) DEFAULT 0,
+  `autoterminateemail` text DEFAULT NULL,
+  `configoptionsupgrade` text DEFAULT NULL,
+  `upgradechargefullcycle` int(1) DEFAULT NULL,
+  `tax` int(1) DEFAULT 0,
+  `affiliateonetime` varchar(20) DEFAULT NULL,
+  `affiliatepaytype` text DEFAULT NULL,
+  `affiliatepayamount` decimal(10,2) DEFAULT 0.00,
+  `order` int(1) DEFAULT 0,
+  `retired` int(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `gid` (`gid`),
   KEY `name` (`name`(64)),
@@ -1816,7 +1810,7 @@ CREATE TABLE `tblticketreplies` (
   `message` text NOT NULL,
   `adminname` varchar(32) DEFAULT NULL,
   `attachment` text NOT NULL,
-  `rating` int(5),
+  `rating` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `tid_date` (`tid`,`date`),
   KEY `userid` (`userid`),
