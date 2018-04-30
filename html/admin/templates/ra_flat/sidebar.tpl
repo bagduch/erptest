@@ -81,6 +81,7 @@
                 <li><a href="invoices.php?status=Overdue">Overdue</a></li>
                 <li><a href="invoices.php?status=Refunded">Refunded</a></li>
                 <li><a href="invoices.php?status=Collections">Collections</a></li>
+                <li><a href="invoicepaymentmonitor.php">Invoice Payment Monitor</a></li>
             </ul>
         </div>
     </li>

@@ -29,7 +29,7 @@ if ($action == "createpromo") {
     $promoid = insert_query("tblpromotions", array(
         "code" => $code,
         "type" => $type,
-        "recurring" => isset($recurring)?1:0,
+        "recurring" => isset($recurring) ? 1 : 0,
         "value" => $pvalue,
         "recurfor" => $recurfor,
         "startdate" => "now()",
@@ -52,7 +52,6 @@ if ($action == "createpromo") {
     exit();
 }
 if ($action == "getconfigoptions") {
-    $pid = 48;
     $configoptions = getCartConfigOptions($pid, "", $cycle);
     if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
@@ -73,33 +72,30 @@ if ($action == "getconfigoptions") {
                 }
 
                 $options .= "</select>";
-            } else {
-                if ($configoption['optiontype'] == "2") {
-                    foreach ($configoption['options'] as $optiondata) {
-                        $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
+            } else if ($configoption['optiontype'] == "2") {
+                foreach ($configoption['options'] as $optiondata) {
+                    $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
 
-                        if ($optiondata['id'] == $configoption['selectedvalue']) {
-                            $options .= " checked=\"checked\"";
-                        }
-
-                        $options .= "> " . $optiondata['name'] . "<br />";
+                    if ($optiondata['id'] == $configoption['selectedvalue']) {
+                        $options .= " checked=\"checked\"";
                     }
-                } else {
-                    if ($configoption['optiontype'] == "3") {
-                        $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
 
-                        if ($configoption['selectedqty']) {
-                            $options .= " checked=\"checked\"";
-                        }
-
-                        $options .= "> " . $configoption['options'][0]['name'];
-                    } else {
-                        if ($configoption['optiontype'] == "4") {
-                            $options .= "<input class=\"form-control\" type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
-                        }
-                    }
+                    $options .= "> " . $optiondata['name'] . "<br />";
                 }
+            } elseif ($configoption['optiontype'] == "3") {
+                $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
+
+                if ($configoption['selectedqty']) {
+                    $options .= " checked=\"checked\"";
+                }
+
+                $options .= "> " . $configoption['options'][0]['name'];
+            } elseif ($configoption['optiontype'] == "4") {
+                $options .= "<input class=\"form-control\" type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
+            } else {
+                
             }
+
 
             $options .= "</td></tr>";
         }
@@ -109,8 +105,8 @@ if ($action == "getconfigoptions") {
     $customfields = getCustomFields("", $pid, "", "", "on");
 // echo "<pre>", print_r($customfields, 1), "</pre>";
     if (count($customfields)) {
-        $options .= "<div class=\"box\"><div class='box-header'>
-                                <h3 class='box-title'>" . $aInt->lang("setup", "customfields") . "</h3>
+        $options .= "<div class=\"card\"><div class='header'>
+                                <h3 class='title'>" . $aInt->lang("setup", "customfields") . "</h3>
                             </div>
 <table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
 

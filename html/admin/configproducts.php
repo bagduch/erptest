@@ -13,7 +13,6 @@ $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
-$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
@@ -771,7 +770,7 @@ if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-$aInt->jquerycode .=$menuselect;
+
 
 $aInt->display();
 ?>
