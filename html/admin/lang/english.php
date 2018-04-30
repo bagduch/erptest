@@ -1294,6 +1294,8 @@ $_ADMINLANG['status']['low'] = "Low";
 $_ADMINLANG['status']['onetime'] = "One Time";
 
 # Permissions
+$_ADMINLANG['permissions']['130'] = "View Invoice Payment Monitor";
+$_ADMINLANG['permissions']['131'] = "Edit Invoice Payment Monitor";
 $_ADMINLANG['permissions']['accessdenied'] = "Access Denied";
 $_ADMINLANG['permissions']['nopermission'] = "You do not have the required permission to perform the selected operation!";
 $_ADMINLANG['permissions']['action'] = "Action";

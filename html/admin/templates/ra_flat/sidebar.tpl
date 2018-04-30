@@ -48,15 +48,23 @@
         </ul>
     </li>
     <li>
-        <a data-toggle="collapse" href="#Billing" class="collapsed" aria-expanded="false"><i class="ti-clipboard"></i>Billing<b class="caret"></b></a>
-        <ul class="nav collapse" id="Billing" role="navigation" aria-expanded="false">
-            <li><a href="transactions.php">Transactions</a></li>
-            <li><a href="gatewaylog.php">Gateway Logs</a></li>
-            <li><a href="invoices.php">All Invoices</a></li>
-            <li><a href="invoices.php?status=Overdue">Overdue</a></li>
-            <li><a href="invoices.php?status=Refunded">Refunded</a></li>
-            <li><a href="invoices.php?status=Collections">Collections</a></li>
-        </ul>
+        <a data-toggle="collapse" href="#Billing" class="collapsed" aria-expanded="false">
+            <i class="ti-clipboard"></i>
+            <p>Billing
+                <b class="caret"></b>
+            </p>
+        </a>
+        <div class="collapse" id="Billing" role="navigation" aria-expanded="false">
+            <ul class="nav collapse" id="Billing" role="navigation" aria-expanded="false">
+                <li><a href="transactions.php">Transactions</a></li>
+                <li><a href="gatewaylog.php">Gateway Logs</a></li>
+                <li><a href="invoices.php">All Invoices</a></li>
+                <li><a href="invoices.php?status=Overdue">Overdue</a></li>
+                <li><a href="invoices.php?status=Refunded">Refunded</a></li>
+                <li><a href="invoices.php?status=Collections">Collections</a></li>
+                <li><a href="invoicepaymentmonitor.php">Invoice Payment Monitor</a></li>
+            </ul>
+        </div>
     </li>
     <li>
         <a data-toggle="collapse" href="#Support" class="collapsed" aria-expanded="false"><i class="ti-view-list-alt"></i>Support<b class="caret"></b></a>

@@ -195,7 +195,7 @@ if ($errormessage) {
 }
 
 echo $infobox;
-echo "
+echo "<div class=\"card\"><div class=\"content\">
 <form method=\"post\" action=\"";
 echo $PHP_SELF;
 echo "?action=save\">
@@ -259,49 +259,8 @@ echo $aInt->lang("global", "mynotes");
 echo "</td><td class=\"fieldarea\"><textarea name=\"notes\" cols=80 rows=4>";
 echo $notes;
 echo "</textarea></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "template");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"template\">";
-$templates = array();
-$dh = opendir("templates/");
-
-while (false !== $folder = readdir($dh)) {
-    if (is_file("templates/" . $folder . "/header.tpl")) {
-        $templates[] = $folder;
-    }
-}
-
-sort($templates);
-foreach ($templates as $temp) {
-    echo "<option value=\"" . $temp . "\"";
-
-    if ($temp == $template) {
-        echo " selected";
-    }
-
-    echo ">" . ucfirst($temp) . "</option>";
-}
-
-closedir($dh);
-echo "</select></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("global", "language");
-echo "</td><td class=\"fieldarea\">";
-echo "<s";
-echo "elect name=\"language\">";
-foreach ($ra->getValidLanguages(true) as $lang) {
-    echo "<option value=\"" . $lang . "\"";
-
-    if ($lang == $language) {
-        echo " selected=\"selected\"";
-    }
-
-    echo ">" . ucfirst($lang) . "</option>";
-}
-
-echo "</select></td></tr>
+<tr><td class=\"fieldarea\">";
+echo "<input type=\"hidden\" name=\"template\" value=\"ra_flat\"><input type=\"hidden\" name=\"language\" value=\"english\"></td></tr>
 ";
 
 if ($twofa->isActiveAdmins()) {
@@ -332,7 +291,7 @@ echo "</td><td class=\"fieldarea\"><input type=\"password\" name=\"password2\" s
 echo $aInt->lang("global", "savechanges");
 echo "\" class=\"button\"></p>
 
-</form>
+</form></div></div>
 
 ";
 
