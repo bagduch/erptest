@@ -8,5 +8,9 @@
             "email": "guy@hd.net.nz"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": { 
+        "ra": {"": "html/includes/classes/"}
+    }
+
 }
