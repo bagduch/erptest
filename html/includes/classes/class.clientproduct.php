@@ -17,13 +17,13 @@ class RA_ClientProduct {
     public $userid;
     public $product_data = array();
     public $addons;
-    public $currecy;
+    public $currency;
     public $id;
 
     public function __construct($userid, $id) {
 
         $this->getAllproducts();
-        $this->currecy = getCurrency();
+        $this->currency = getCurrency();
         $this->userid = $userid;
         if (!$id || $id == 0) {
             $this->getFirstProduct();

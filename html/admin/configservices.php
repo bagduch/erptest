@@ -470,7 +470,7 @@ if ($action == "") {
 
     if ($action == "edit") {
         // get all service data
-        $currecy = getCurrency();
+        $currency = getCurrency();
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
