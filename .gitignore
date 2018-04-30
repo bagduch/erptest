@@ -12,3 +12,5 @@ xdebug/
 html/.well-known/
 npm-debug.log
 html/modules/service/hdradius
+
+/vendor/

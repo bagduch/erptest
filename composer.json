@@ -1,0 +1,12 @@
+{
+    "name": "hdnetnz/ra",
+    "description": "Robot \bic Accounting",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Guy Lowe",
+            "email": "guy@hd.net.nz"
+        }
+    ],
+    "require": {}
+}
