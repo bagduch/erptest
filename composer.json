@@ -9,8 +9,10 @@
         }
     ],
     "require": {},
-    "autoload": { 
-        "ra": {"": "html/includes/classes/"}
+    "autoload": {
+        "ra": {
+          "": "html/includes/"
+        }
     }
 
 }

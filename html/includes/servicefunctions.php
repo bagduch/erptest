@@ -24,12 +24,12 @@ function getServiceData($id = NULL) {
         tblcustomerservices.lastupdate,
         tblcustomerservices.notes,
         tblservices.servertype,
-        tblservices.type 
-    FROM tblcustomerservices 
-    LEFT JOIN tblservices 
-        ON tblservices.id=tblcustomerservices.packageid 
-    LEFT JOIN tblservicegroups 
-        ON (tblservices.gid=tblservicegroups.id ) 
+        tblservices.type
+    FROM tblcustomerservices
+    LEFT JOIN tblservices
+        ON tblservices.id=tblcustomerservices.packageid
+    LEFT JOIN tblservicegroups
+        ON (tblservices.gid=tblservicegroups.id )
     WHERE tblcustomerservices.id=" . (int) $id;
 
     $result = full_query_i($query);
@@ -39,7 +39,7 @@ function getServiceData($id = NULL) {
     return $service_data;
 }
 
-// return all custom fields and values for product, 
+// return all custom fields and values for product,
 // even if value not populated (return null)
 // if id is supplied but not gid, determine gid
 // sid is the id from tblservices
@@ -67,7 +67,7 @@ function getServiceCustomFields($sid, $csid = null) {
             ON (tblcustomfieldsgroupmembers.cfgid=tblcustomfieldsgroupnames.cfgid)
         LEFT JOIN tblcustomfieldslinks
             ON (tblservices.id=tblcustomfieldslinks.serviceid)
-        LEFT JOIN tblcustomfields 
+        LEFT JOIN tblcustomfields
             ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
     if (isset($csid)) {
@@ -152,25 +152,39 @@ function addServiceCustomFieldVlues($csid, $valarray) {
     }
 }
 
-// from customfield to services 
+// from customfield to services, return the services which have that custom
+// field applied to it
+/**
+ * Given the ID of a customfield or customfieldgroup, return the services which
+ * have that customfield applied to it.
+ * @param  int $cfid ID of the customfield (per tblcustomfields)
+ * @param  int $cfgid ID of the customfield group
+ *   ( per tblcustomfieldsgroupnames, tblcustomfieldsgrouplinks,
+ *   tblcustomfieldsgroupmembers)
+ * @return array|bool array of serviceid=>servicedetails (tblservices) or null.
+ */
 function cfieldgroupToServices($cfid = null, $cfgid = null) {
 
     $data = array();
     if (isset($cfid) || isset($cfgid)) {
         if (is_int($cfgid)) {
             $query = "select ts.* from tblservices as ts
-           INNER JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid";
+                INNER JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid";
+            $result = full_query_i($query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                $data[$row['id']] = $row;
+            }
         }
         if (is_int($cfid)) {
             $query = "select ts.* from tblservices as ts
-            LEFT JOIN tblcustomfieldslinks as tcfl on tcfl.serviceid = ts.id
-            LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid 
-            LEFT JOIN tblcustomfieldsgroupmembers as tcgm on tcgm.cfgid=tcfgl.cfgid
-            INNER JOIN tblcustomfields as tcf on (tcfl.cfid=tcf.cfid or tcgm.cfid=tcf.cfid) where tcf.cfid=" . $cfid;
-        }
-        $result = full_query_i($query);
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[$row['id']] = $row;
+                LEFT JOIN tblcustomfieldslinks as tcfl on tcfl.serviceid = ts.id
+                LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid
+                LEFT JOIN tblcustomfieldsgroupmembers as tcgm on tcgm.cfgid=tcfgl.cfgid
+                INNER JOIN tblcustomfields as tcf on (tcfl.cfid=tcf.cfid or tcgm.cfid=tcf.cfid) where tcf.cfid=" . $cfid;
+            $result = full_query_i($query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                $data[$row['id']] = $row;
+            }
         }
     } else {
         return false;
@@ -190,7 +204,7 @@ function updateServiceCustomFieldValues($relid, $valarray = array()) {
             if ($validate->validateCustomFields("", $cfid)) {
                 //update_query('tblcustomfieldsvalues', array('value' => $value), array('cfid' => $cfid, 'relid' => $relid));
 
-                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE 
+                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE
                      value=VALUES(value), cfid=VALUES(cfid),relid=VALUES(relid)";
                 mysqli_query($ramysqli, $query);
                 $query_count++;

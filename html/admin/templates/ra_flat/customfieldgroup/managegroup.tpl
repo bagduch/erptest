@@ -20,7 +20,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="header card-header">
-                <h4 class="title">Create a New Group</h4>
+                <h4 class="title">Create a New Custom Field Group</h4>
             </div>
             <div class="content">
                 <form id="managefrm" method="post" action="configcustomfieldsgroup.php?action=save&amp;id={$id}" name="managefrm">
@@ -37,9 +37,9 @@
                             <tr>
                                 <td class="fieldlabel">Assigned Products</td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="productlinks[]" size="8" style="width:90%" multiple="">
-                                        {foreach from=$productlinks item=row key=productid}
-                                            <option value="{$productid}"{$row.check}>{$row.data.name}</option>
+                                    <select class="form-control" name="productlinks[]" size="8" style="width:90%" multiple>
+                                        {foreach from=$productlinks key=productid item=row}
+                                            <option value="{$row.data.id}">{$row.data.name}</option>
                                         {/foreach}
                                     </select>
                                 </td>
