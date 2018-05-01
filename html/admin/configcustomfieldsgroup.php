@@ -12,7 +12,7 @@ $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
 $menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
-//$aInt->template= "configcustomfieldsgroup"; 
+//$aInt->template= "configcustomfieldsgroup";
 $action = $ra->get_req_var("action");
 $id = $ra->get_req_var("id");
 if ($manageoptions) {
@@ -438,9 +438,8 @@ if ($action == "deletegroup") {
 
     check_token("RA.admin.default");
     checkPermission("Delete Products/Services");
-    delete_query("tblservicetogroup", array("gid" => $id));
-    delete_query("tblcustomfieldsgroup", array("id" => $id));
-    delete_query("tblcustomfields", array("gid" => $id));
+    delete_query("tblcustomfieldsgroupnames", array("cfgid" => $id));
+    delete_query("tblcustomfieldsgroupmembers", array("cfgid" => $id));
 
 
     redir("deleted=true");
@@ -573,7 +572,7 @@ if ($action == "") {
 
 ";
 } else {
-    
+
 }
 
 
