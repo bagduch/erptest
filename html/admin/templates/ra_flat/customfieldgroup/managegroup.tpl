@@ -120,7 +120,7 @@
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                    <input type="submit" value="Save Changes" class="button btn-info updatebutton"> 
+                                                                    <input type="submit" value="Save Changes" class="button btn-info updatebutton">
                                                                 </div>
                                                             </div><!-- /.modal-content -->
                                                         </div><!-- /.modal-dialog -->
@@ -151,9 +151,9 @@
                                 <tr>
                                     <td class="fieldlabel"></td>
                                     <td class="fieldarea">
-                                        <input type="checkbox" name="adminonly[{$num}]" {if $data.adminonly}checked{/if}> Admin Only 
-                                        <input type="checkbox" name="required[{$num}]" {if $data.required}checked{/if}> Required Field 
-                                        <input type="checkbox" name="showorder[{$num}]" {if $data.showorder}checked{/if}> Show on Order Form 
+                                        <input type="checkbox" name="adminonly[{$num}]" {if $data.adminonly}checked{/if}> Admin Only
+                                        <input type="checkbox" name="required[{$num}]" {if $data.required}checked{/if}> Required Field
+                                        <input type="checkbox" name="showorder[{$num}]" {if $data.showorder}checked{/if}> Show on Order Form
                                         <input type="checkbox" name="showinvoice[{$num}]" {if $data.showinvoice}checked{/if}> Show on Invoice
                                         <div class="btn btn-danger" data-toggle="modal" data-target="#myModal" class="deletefield">Delete</div>
                                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -161,7 +161,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Are you sure you want delete this custome field</h4>
+                                                        <h4 class="modal-title" id="myModalLabel">Are you sure you want delete this custom field</h4>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <input type="hidden" value="{$num}" name="deletefieldid">
@@ -244,12 +244,12 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <input type="submit" value="Save Changes" class="button btn-info submitbutton"> 
+                                    <input type="submit" value="Save Changes" class="button btn-info submitbutton">
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
-                    <p style="clear:both" align="center"><input type="submit" value="Save Changes" class="btn btn-success"> 
+                    <p style="clear:both" align="center"><input type="submit" value="Save Changes" class="btn btn-success">
                         <input type="button" value="Back to Groups List" onclick="window.location = 'configproductoptions.php'" class="btn btn-danger">
                     </p>
                 </form>
