@@ -312,7 +312,7 @@
             $(".deletethatfield").click(function () {
                 id = $(this).parent().find("input").val();
                 $(this).parent().append("<input type=hidden value='" + id + "' name='deletefield'>");
-                // $("#managefrm").submit();
+                $("#managefrm").submit();
             });
         });
     </script>
