@@ -807,7 +807,7 @@ DROP TABLE IF EXISTS `tblcustomfieldsgroupmembers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcustomfieldsgroupmembers` (
   `cfgid` int(10) NOT NULL COMMENT 'customfield group id',
-  `cfid` int(10) NOT NULL COMMENT 'tblcustomfields id',
+  `cfid` int(10) NOT NULL COMMENT 'tblcustomfields cfid',
   PRIMARY KEY (`cfgid`,`cfid`),
   KEY `cfid` (`cfid`),
   CONSTRAINT `tblcustomfieldsgroupmembers_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
@@ -838,7 +838,7 @@ DROP TABLE IF EXISTS `tblcustomfieldslinks`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcustomfieldslinks` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'link identifier',
-  `cfid` int(10) DEFAULT NULL COMMENT 'tblcustomfields id',
+  `cfid` int(10) DEFAULT NULL COMMENT 'tblcustomfields cfid',
   `serviceid` int(10) DEFAULT NULL COMMENT 'tblservices id',
   PRIMARY KEY (`id`),
   KEY `cfid` (`cfid`),

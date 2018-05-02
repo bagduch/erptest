@@ -123,14 +123,6 @@
 </p>
 {/if}
 
-{if $additionaldomainfields}
-<table>
-{foreach key=domainfieldname item=domainfield from=$additionaldomainfields}
-<tr><td nowrap>{$domainfieldname}</td><td>{$domainfield}</td></tr>
-{/foreach}
-</table>
-{/if}
-
 {/if}
 
 <p align="center">{if $firstconfig}<input type="submit" value="{$LANG.addtocart}" />{else}<input type="submit" value="{$LANG.updatecart}" />{/if}</p>

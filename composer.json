@@ -1,6 +1,6 @@
 {
     "name": "hdnetnz/ra",
-    "description": "Robot \bic Accounting",
+    "description": "Robotic Accounting",
     "type": "project",
     "authors": [
         {
@@ -9,8 +9,10 @@
         }
     ],
     "require": {},
-    "autoload": { 
-        "ra": {"": "html/includes/classes/"}
+    "autoload": {
+        "ra": {
+          "": "html/includes/"
+        }
     }
 
 }

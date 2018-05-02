@@ -43,18 +43,18 @@ class RA_Invoice {
         }
 
         $result = select_query_i(
-            "tblinvoices", 
+            "tblinvoices",
             "tblinvoices.*,
             (
-                SELECT value 
-                FROM tblpaymentgateways 
-                WHERE gateway=tblinvoices.paymentmethod 
+                SELECT value
+                FROM tblpaymentgateways
+                WHERE gateway=tblinvoices.paymentmethod
                 AND setting='name' LIMIT 1
             ) AS gateway,
             IFNULL(
                 (SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),
                 0
-            ) as amountpaid", 
+            ) as amountpaid",
             array("id" => $this->invoiceid));
 
 
@@ -132,7 +132,7 @@ class RA_Invoice {
         $clientsdetails['country'] = $clientsdetails['countryname'];
         $this->output['clientsdetails'] = $clientsdetails;
         $customfields = array();
-        $result = select_query_i("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.id AND tblcustomfieldsvalues.relid=" . (int) $this->getData("userid") . ") AS value", array("type" => "client", "showinvoice" => "on"));
+        $result = select_query_i("tblcustomfields", "tblcustomfields.cfid,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . (int) $this->getData("userid") . ") AS value", array("type" => "client", "showinvoice" => "on"));
 
         while ($data = mysqli_fetch_assoc($result)) {
             if ($data['value']) {

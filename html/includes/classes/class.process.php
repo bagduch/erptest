@@ -8,7 +8,7 @@ class RA_Process {
     public $customfield = array();
     public $session;
     public $infobox;
-    public $currecy;
+    public $currency;
     public $firstpayment = 0;
     public $oneoff = 0;
     public $recurring = 0;
@@ -23,7 +23,7 @@ class RA_Process {
         if (isset($session['address']) && isset($session['fpid'])) {
             $this->session = $session;
             $this->config = $CONFIG;
-            $this->currecy = getCurrency();
+            $this->currency = getCurrency();
             $this->clientsdetails = getClientsDetails($this->session['uid']);
             $this->gateway = getClientsPaymentMethod($this->session['uid']);
             $this->getProductDetail();
@@ -108,11 +108,11 @@ class RA_Process {
                 $this->productdata["data"] = $data;
                 $this->productdata["avalialeaddons"] = isset($this->session['avalialeaddons']) ? $this->session['avalialeaddons'] : $this->getAsscoiateService($data['id']);
                 $this->productdata["customfield"] = getServiceCustomFields($data['id']);
-                $this->productdata["pricing"] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
+                $this->productdata["pricing"] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currency);
 
                 //  echo "<pre>", print_r($this->productdata["avalialeaddons"], 1), "</pre>";
                 // $_SESSION['avalialeaddons'] = $this->productdata["avalialeaddons"];
-                // $currecy = getCurrency();
+                // $currency = getCurrency();
             }
         } else {
             $this->infobox['icon'] = "warning";
@@ -129,7 +129,7 @@ class RA_Process {
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
             $addons[$data['id']] = $data;
-            $addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
+            $addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currency);
             $addons[$data['id']]['customfield'] = getServiceCustomFields($data['id']);
             $addons[$data['id']]['checkbox'] = "<button class=\"btn btn-default btn-circle\" id=\"a" . $data['id'] . "\" data-addon=\"" . $data['id'] . "\"> <i class=\"\"></i></button>";
             $addons[$data['id']]['select'] = 0;

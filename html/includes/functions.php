@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 if (!function_exists("emailtpl_template")) {
@@ -26,7 +26,7 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function emailtpl_trusted($tpl_name, &$smarty_obj) {
-        
+
     }
 
     function sendMessage($func_messagename, $func_id, $extra = "", $displayresult = "", $attachments = "") {
@@ -867,7 +867,7 @@ if (!function_exists("emailtpl_template")) {
                     $mail->AddReplyTo($fromemail, html_entity_decode($fromname, ENT_QUOTES));
                 }
             } else {
-                
+
             }
 
             $mail->XMailer = $ra->get_config("CompanyName");
@@ -2107,7 +2107,7 @@ if (!function_exists("emailtpl_template")) {
             } elseif ((is_array($currency) && isset($currency['id'])) && is_numeric($currency['id'])) {
                 $currencyType = $currency['id'];
             } else {
-                
+
             }
         }
 
@@ -2399,6 +2399,13 @@ if (!function_exists("emailtpl_template")) {
         session_write_close();
     }
 
+    /**
+     * Redirect session to a new page
+     * @param  string  $vars            querystring of variables to pass
+     * @param  string  $file            file to redirect to (optional)
+     * @param  boolean $prefixSystemURL System URL (optional)
+     * @return boolean
+     */
     function redir($vars = "", $file = "", $prefixSystemURL = false) {
         if (!$file) {
             $file = $_SERVER['SCRIPT_NAME'];

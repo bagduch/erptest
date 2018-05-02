@@ -3,14 +3,14 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  **/
 
-class RA_Service 
+class RA_Service
 {
 	private $id = "";
 	private $userid = "";
@@ -222,7 +222,7 @@ class RA_Service
 		$result = select_query_i("tblserviceaddons", "", array("serviceid" => $this->id), "id", "DESC");
 
 		while ($data = mysqli_fetch_array($result)) {
-                     
+
 			$addon_id = $data['id'];
 			$addon_addonid = $data['addonid'];
 			$addon_regdate = $data['regdate'];
@@ -493,7 +493,7 @@ class RA_Service
 		}
 
 		$customfields = array();
-		$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid='" . (int)$this->getData("id") . "' AND tblcustomfields.relid='" . (int)$this->getData("pid") . "'");
+		$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.cfid=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid='" . (int)$this->getData("id") . "' AND tblcustomfields.relid='" . (int)$this->getData("pid") . "'");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$customfieldname = $data[0];
