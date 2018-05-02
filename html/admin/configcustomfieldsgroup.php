@@ -218,23 +218,48 @@ if ($action == "savegroup") {
         }
     }
 
-//mail('peter@hd.net.nz','hello',print_r($fieldname));
-//echo print_r($value);
-
 
     if ($fieldname) {
         foreach ($fieldname as $fid => $value) {
 
-            update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $fieldtype[$fid], "description" => $description[$fid], "fieldoptions" => $fieldoptions[$fid], "regexpr" => html_entity_decode($regexpr[$fid]), "adminonly" => $adminonly[$fid], "required" => $required[$fid], "showorder" => $showorder[$fid], "showinvoice" => $showinvoice[$fid], "sortorder" => $sortorder[$fid]), array("id" => $fid));
+            update_query("tblcustomfields",
+              array(
+                "fieldname" => $value,
+                "fieldtype" => $fieldtype[$fid],
+                "description" => $description[$fid],
+                "fieldoptions" => $fieldoptions[$fid],
+                "regexpr" => html_entity_decode($regexpr[$fid]),
+                "adminonly" => $adminonly[$fid] == "on",
+                "required" => $required[$fid],
+                "showorder" => $showorder[$fid],
+                "showinvoice" => $showinvoice[$fid],
+                "sortorder" => $sortorder[$fid]
+              ),
+              array("id" => $fid)
+            );
+
         }
     }
 
     if ($addfieldname) {
-        insert_query("tblcustomfields", array("gid" => $id, "type" => "product", "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $adddescription, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "showinvoice" => $addshowinvoice, "sortorder" => $addsortorder));
+        insert_query(
+          "tblcustomfields",
+          array(
+            "gid" => $id,
+            "type" => "product",
+            "fieldname" => $addfieldname,
+            "fieldtype" => $addfieldtype,
+            "description" => $adddescription,
+            "fieldoptions" => $addfieldoptions,
+            "regexpr" => html_entity_decode($addregexpr),
+            "adminonly" => $addadminonly,
+            "required" => $addrequired,
+            "showorder" => $addshoworder,
+            "showinvoice" => $addshowinvoice,
+            "sortorder" => $addsortorder
+          )
+        );
     }
-
-
-
 
     redir("action=managegroup&id=" . $id);
     exit();
@@ -350,9 +375,9 @@ if ($action == 'save') {
                     "description" => $_POST['description'][$fid],
                     "fieldoptions" => $_POST['fieldoptions'][$fid],
                     "regexpr" => html_entity_decode($_POST['regexpr'][$fid]),
-                    "adminonly" => $_POST['adminonly'][$fid == "on" ? 1 : 0],
+                    "adminonly" => $_POST['adminonly'][$fid] == "on" ? 1 : 0,
                     "required" => $_POST['required'][$fid] == "on" ? 1 : 0,
-                    "showorder" => $_POST['showorder'][$fid == "on" ? 1 : 0],
+                    "showorder" => $_POST['showorder'][$fid] == "on" ? 1 : 0,
                     "showinvoice" => $_POST['showinvoice'][$fid] == "on" ? 1 : 0,
                     "sortorder" => $_POST['sortorder'][$fid]
                 );

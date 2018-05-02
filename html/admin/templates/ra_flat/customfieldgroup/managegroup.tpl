@@ -140,7 +140,7 @@
                                 <tr>
                                     <td class="fieldlabel">Validation</td>
                                     <td class="fieldarea">
-                                        <input class="form-control" type="text" name="regexpr[{$num}]" size="60" value='{$data.description}'> Regular Expression Validation String
+                                        <input class="form-control" type="text" name="regexpr[{$num}]" size="60" value='{$data.regexpr}'> Regular Expression Validation String
                                     </td>
                                 </tr>
                                 <tr>
