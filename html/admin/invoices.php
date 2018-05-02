@@ -379,7 +379,7 @@ if ($action == "") {
                 $sendconfirmation = "on";
             }
 
-            addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, $_POST['date']);
+            addInvoicePayment($id, $transid, $amount, $fees, $paymentmethod, $sendconfirmation, toMySQLDate($_POST['date']));
 
             redir("action=edit&id=" . $id);
             exit();

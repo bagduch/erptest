@@ -98,7 +98,7 @@ function updateInvoiceTotal($id) {
                 $taxrate = $taxrate / 100;
                 $tax = $taxsubtotal * $taxrate;
             }
-             error_log("xxxx".$taxsubtotal);
+            error_log("xxxx" . $taxsubtotal);
         }
 
 
@@ -993,6 +993,48 @@ function getBillingCycleMonths($billingcycle) {
     }
 
     return $months;
+}
+
+function getAllInvoicePaymentplans() {
+    $paymentplan = array();
+    $query = "select ti.total,tc.firstname,tc.lastname,tc.companyname,tc.email,tc.mobilenumber,tipm.invoice_id,ti.notes,tipm.suspension,tipm.date,tipm.duedate,tipm.period from tblinvoicepaymentmonitor as tipm"
+            . " INNER JOIN tblinvoices as ti on tipm.invoice_id = ti.id "
+            . " INNER JOIN tblclients as tc on tc.id = ti.userid"
+            . " Order by tipm.date DESC";
+    $result = full_query_i($query);
+
+    while ($data = mysqli_fetch_assoc($result)) {
+        $paymentplan[$data['invoice_id']] = $data;
+        $paymentplan[$data['invoice_id']]['days'] = (strtotime($data['duedate']) - strtotime($data['date'])) / (60 * 60 * 24);
+        $paymenttimes = intdiv($paymentplan[$data['invoice_id']]['days'], $data['period']);
+        $paymentplan[$data['invoice_id']]['amount'] = floor(100 * $data['total'] / $paymenttimes + 0.99) / 100;
+        $balanace = $data['total'];
+        $query2 = select_query_i("tblaccounts", "amountin,date", array("invoiceid" => $data['invoice_id']));
+        if ($query2->num_rows != 0) {
+            while ($trans = mysqli_fetch_assoc($query2)) {
+                $paymentplan[$data['invoice_id']]['transections'][] = array(
+                    "date" => date('d/m/Y', strtotime($trans['date'])),
+                    'amount' => $trans['amountin']
+                );
+                $balanace = $balanace - $trans['amountin'];
+            }
+        } else {
+            $paymentplan[$data['invoice_id']]['transections'] = array();
+        }
+        $paymentplan[$data['invoice_id']]['balance'] = formatCurrency($balanace);
+    }
+    return $paymentplan;
+}
+
+function cronJobForPaymentPlan() {
+
+    $invoiceNumber = array();
+    $result = select_query_i("tblinvoicepaymentmonitor", "", "");
+    if ($result->num_rows != 0) {
+        while ($data = mysqli_fetch_assoc($result)) {
+            $invoiceNumber[] = $data['invoice_id'];
+        }
+    }
 }
 
 ?>

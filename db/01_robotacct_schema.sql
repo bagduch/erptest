@@ -1070,6 +1070,7 @@ CREATE TABLE `tblinvoicepaymentmonitor` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
+  `nextduedate` date DEFAULT NULL,
   `suspension` text DEFAULT NULL,
   `period` int(10) DEFAULT NULL,
   `invoice_id` int(10) NOT NULL UNIQUE,

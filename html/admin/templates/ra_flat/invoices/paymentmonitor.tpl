@@ -38,7 +38,6 @@
                         <th>The Agreement</th>
                         <th>Suspend</th>
                         <th></th>
-                        <th></th>
                     </tr>
 
                     {foreach from=$paymentplan item=data}
@@ -53,13 +52,8 @@
                     <td>{$data.days}d to pay (amount {$data.amount})<br></td>
                     <td>{$data.suspension}hs to Suspend</td>
                     <td>
-                        <a href="configservices.php?action=editgroup&amp;ids=9"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a href="invoices.php?action=edit&id={$data.invoice_id}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 
-                    </td>
-                    <td>
-                        <a href="#" onclick="alert('You cannot delete a service group that contains services.')">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
                     </td>
                     </tr>
                 {/foreach}
