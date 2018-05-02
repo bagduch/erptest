@@ -332,10 +332,11 @@ if ($action == 'save') {
         $optionname = array();
     }
 
-// mail('peter@hd.net.nz', "hello", print_r($_POST, 1));
-
-
-
+    // update $groupname
+    if (isset($_POST['name']))
+    {
+      update_query("tblcustomfieldsgroupnames", array("name" => db_escape_string($_POST['name']), "cfgid" => $id));
+    }
     if (isset($_POST['deletefield'])) {
         delete_query("tblcustomfieldsgroupmembers", array("cfid" => $_POST['deletefield'], "cfgid" => $id));
         delete_query("tblcustomfields", array("cfid" => $_POST['deletefield']));
@@ -473,6 +474,13 @@ if ($action == "") {
     $aInt->assign('tabledatas', $tabledata);
     $aInt->assign("infobox", $infobox);
     $aInt->template = "customfieldgroup/configcustomfieldsgroup";
+
+// action=managegroup
+// Usually POST - actions:
+// * Modify name in tblcustomfieldsgroupnames
+// * Change assigned products in tblcustomfieldsgrouplinks
+// * Define new custom field as a member of the group (tblcustomfields)
+// * Change existing customfield attributes (tblcustomfields)
 } elseif ($action == "managegroup") {
     $productlinks = cfieldgroupToServices(null, $id);
     $allservice = array();
