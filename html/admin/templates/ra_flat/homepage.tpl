@@ -1,5 +1,5 @@
 <!-- BEGIN WHMCS -->
-{if $maintenancemode}
+{if isset($maintenancemode) && $maintenancemode}
     <div class="errorbox" style="font-size:14px;"> {$_ADMINLANG.home.maintenancemode} </div>
     <br />
 {/if}
@@ -45,7 +45,7 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Cancel Orders</p>
-                    {if $sidebarstats.orders.cancelled}{$sidebarstats.orders.cancelled}{else}0{/if}
+                    {if isset($sidebarstats.orders.cancelled)}{$sidebarstats.orders.cancelled}{else}0{/if}
                 </div>
             </div>
         </div>
