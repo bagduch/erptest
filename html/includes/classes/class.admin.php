@@ -78,7 +78,7 @@ class RA_Admin {
           }
       }
 
-      require ROOTDIR . "/includes/smarty/Smarty.class.php";
+      require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
 
       if ($this->loginRequired) {
           $auth = new RA_Auth();

@@ -8,11 +8,16 @@
             "email": "guy@hd.net.nz"
         }
     ],
-    "require": {},
+    "require": {
+        "smarty/smarty": "~2.6"
+    },
     "autoload": {
         "ra": {
           "": "html/includes/"
         }
+    },
+    "config": {
+        "vendor-dir": "html/vendor"
     }
 
 }

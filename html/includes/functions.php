@@ -815,7 +815,7 @@ if (!function_exists("emailtpl_template")) {
         global $templates_compiledir;
 
         if (!class_exists("Smarty")) {
-            require ROOTDIR . "/includes/smarty/Smarty.class.php";
+            require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
         }
 
         $smarty = new Smarty();
@@ -1202,7 +1202,7 @@ if (!function_exists("emailtpl_template")) {
         $adminurl .= "/" . $ra->get_admin_folder_name() . "/";
         $email_merge_fields['RA_admin_url'] = $adminurl;
         $email_merge_fields['RA_admin_link'] = "<a href=\"" . $adminurl . "\">" . $adminurl . "</a>";
-        include_once ROOTDIR . "/includes/smarty/Smarty.class.php";
+        include_once ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
         $smarty = new Smarty();
         $smarty->caching = 0;
         $smarty->compile_dir = $templates_compiledir;
