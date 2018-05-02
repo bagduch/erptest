@@ -39,7 +39,7 @@
                                 <td class="fieldarea">
                                     <select class="form-control" name="productlinks[]" size="8" style="width:90%" multiple>
                                         {foreach from=$productlinks key=productid item=row}
-                                            <option value="{$row.data.id}">{$row.data.name}</option>
+                                            <option value="{$row.data.id}" {$row.check}>{$row.data.name}</option>
                                         {/foreach}
                                     </select>
                                 </td>

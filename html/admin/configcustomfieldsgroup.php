@@ -210,13 +210,10 @@ if ($action == "savegroup") {
         $response = "added";
     }
 
-    update_query("tblservices", array("cpid" => 0), array("gid" => $id));
-
-    if ($productlinks) {
-        foreach ($productlinks as $pid) {
-            update_query("tblservices", array("cpid" => $id), array("id" => $pid));
-        }
-    }
+    delete_query("tblcustomfieldsgrouplinks","");
+      foreach ($productlinks as $pid) {
+          update_query("tblservices", array("cpid" => $id), array("id" => $pid));
+      }
 
 
     if ($fieldname) {
@@ -357,15 +354,22 @@ if ($action == 'save') {
         $optionname = array();
     }
 
-    // update $groupname
-    if (isset($_POST['name']))
-    {
-      update_query("tblcustomfieldsgroupnames", array("name" => db_escape_string($_POST['name']), "cfgid" => $id));
-    }
-    if (isset($_POST['deletefield'])) {
+    if (isset($_POST['deletefield'])) { // if deleting a field, nothing else is changed
         delete_query("tblcustomfieldsgroupmembers", array("cfid" => $_POST['deletefield'], "cfgid" => $id));
         delete_query("tblcustomfields", array("cfid" => $_POST['deletefield']));
-    } else {
+    } else { // otherwise we go ahead and reapply all of the form data
+        // update $groupname
+        if (isset($_POST['name']))
+        {
+          update_query("tblcustomfieldsgroupnames", array("name" => db_escape_string($_POST['name']), "cfgid" => $id));
+        }
+
+        delete_query("tblcustomfieldsgrouplinks", array("cfgid"=>$id));
+        if (isset($_POST["productlinks"])) {
+          foreach ($_POST["productlinks"] as $productlink) {
+            insert_query("tblcustomfieldsgrouplinks",array("cfgid"=>$id,"serviceid"=>$productlink));
+          }
+        }
 
         if (isset($_POST['fieldname'])) {
             foreach ($_POST['fieldname'] as $fid => $value) {
@@ -507,15 +511,22 @@ if ($action == "") {
 // * Define new custom field as a member of the group (tblcustomfields)
 // * Change existing customfield attributes (tblcustomfields)
 } elseif ($action == "managegroup") {
-    $productlinks = cfieldgroupToServices(null, $id);
     $allservice = array();
-    $services = select_query_i('tblservices', "*");
+    $services = select_query_i('tblservices', "id,type,name");
+    // populate $allservice with [id,type,name]
     while ($data = mysqli_fetch_array($services)) {
         $allservice [$data['id']] = array(
             'data' => $data,
-            'check' => array_key_exists($data['id'], $productlinks) ? "selected" : ""
+//            'check' => in_array($data['id'], $linkedproducts) ? "selected" : ""
+           'check' => ""
         );
     }
+    // populate $allservice['id'] with " selected" for html decoration if in  tblcustomfieldsgroupmembers
+    $linkedproducts = select_query_i("tblcustomfieldsgrouplinks","serviceid",array(cfgid=>$id));
+    while ($data = mysqli_fetch_array($linkedproducts)) {
+      $allservice[$data['serviceid']]['check'] = " selected";
+    }
+
     $aInt->assign('productlinks', $allservice);
     if ($id) {
 
@@ -558,20 +569,7 @@ if ($action == "") {
         $aInt->template = "customfieldgroup/creategroup";
     }
 
-    $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", 'cpid=0', "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-
-    while ($data = mysqli_fetch_array($result)) {
-        $pid = $data['id'];
-        $groupname = $data['groupname'];
-        $name = $data['name'];
-        echo "<option value=\"" . $pid . "\"";
-
-        if (in_array($pid, $productlinks)) {
-            echo " selected";
-        }
-
-        echo ">" . $groupname . " - " . $name . "</option>";
-    }
+    $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
 
     echo "</select></td></tr></table>";
 } elseif ($action == "duplicategroup") {
