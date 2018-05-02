@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "smarty/smarty": "~2.6"
+        "smarty/smarty": "~2.6",
+        "tinymce/tinymce": "~4.7"
     },
     "autoload": {
         "ra": {
