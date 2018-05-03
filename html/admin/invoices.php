@@ -4,8 +4,8 @@
 
 define("ADMINAREA", true);
 require "../init.php";
+
 $action = $ra->get_req_var("action");
-$menuselect = "$('#menu').multilevelpushmenu('expand','Billing');";
 if ($action == "edit" || $action == "invtooltip") {
     $reqperm = "Manage Invoice";
 } else {
@@ -615,6 +615,8 @@ if ($action == "") {
             $amountpaid = $accounts[1];
             $balance = $invoices['total'] - $amountpaid;
             $balance = $rawbalance = sprintf("%01.2f", $balance);
+            $invoices['date'] = fromMySQLDate($invoices['date']);
+            $invoices['duedate'] = fromMySQLDate($invoices['duedate']);
             $invoices['totalcurrency'] = formatCurrency($invoices['total']);
             $invoices['subtotalcurrency'] = formatCurrency($invoices['subtotal']);
             $invoices['creditcurrency'] = formatCurrency($invoices['credit']);
@@ -637,7 +639,19 @@ if ($action == "") {
             if (empty($transactions)) {
                 $transactions = 0;
             }
-
+            $paymentplan = array();
+            $result = select_query_i("tblinvoicepaymentmonitor", "", array("invoice_id" => $id));
+            if ($result->num_rows !== 0) {
+                while ($data = mysqli_fetch_array($result)) {
+                    $paymentplan['days'] = (strtotime($data['duedate']) - strtotime($data['date'])) / (60 * 60 * 24);
+                    $paymentplan['period'] = $data['period'];
+                    $paymentplan['suspension'] = $data['suspension'];
+                }
+                $aInt->assign("paymentplan", $paymentplan);
+                $aInt->assign("newpaymentplan", 0);
+            } else {
+                $aInt->assign("newpaymentplan", 1);
+            }
             $aInt->assign("paymentmethod", paymentMethodsSelection());
             $aInt->assign("transactions", $transactions);
             $aInt->assign("details", $details);

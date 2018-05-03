@@ -1,4 +1,5 @@
-<div class="row">
+<div class="card">
+  <div class="row">
     <div class="col-lg-12">
         <h2>Edit Product</h2>
         <form method="post" action="configproducts.php?action=save&amp;id={$services.id}" name="packagefrm">
@@ -52,7 +53,7 @@
                                         <td class="fieldlabel">Supply Revenue</td>
                                         <td class="fieldarea">
                                             <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
-                                            <input type="hidden" name="isale" value='on'/> 
+                                            <input type="hidden" name="isale" value='on'/>
                                         </td>
                                     </tr>
 
@@ -128,224 +129,223 @@
                                                 <input style="width:40px" class="form-control" type="text" name="term" value="{$services.term}"> <label>{$langs.term}</label>
                                             </div>
 
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
                         </div>
-
-
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="pricing">
-                        <div class="panel-body">
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody>
-                                    <tr>
-                                        <td class="fieldlabel">Payment Type</td>
-                                        <td class="fieldarea">
-                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'free'}checked{/if} value="free"> Free</label>
-                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'onetime'}checked{/if} value="onetime"> One Time</label>
-                                            <label><input type="radio" name="paytype" {if $services.paytype eq 'recurring'}checked{/if} value="recurring"> Recurring</label>
-                                        </td>
-                                    </tr>
-                                    <tr class="tableprice">
-                                        <td colspan="2" align="center"><br>
-                                            <table cellspacing="1" bgcolor="#cccccc">
-                                                <tbody>
-                                                    <tr bgcolor="#efefef" style="text-align:center;font-weight:bold">
-                                                        <td class="onetime" width="80">Currency</td>
-                                                        <td class="onetime" width="80"></td>
-                                                        <td class="onetime" width="120">One Time/Monthly</td>
-                                                        <td width="90">Quarterly</td>
-                                                        <td width="100">Semi-Annually</td>
-                                                        <td width="90">Annually</td>
-                                                        <td width="90">Biennially</td>
-                                                        <td width="90">Triennially</td>
-                                                    </tr>
-                                                    {foreach from=$tabledata item=tdata key=currency_id}
-                                                        <tr bgcolor="#ffffff" style="text-align:center">
-                                                            <td class="onetime" rowspan="2" bgcolor="#efefef"><b>{$tdata.code}</b></td>
-                                                            <td class="onetime">{$langs.setupfee}</td>
-                                                            <td class="onetime"><input class="form-control" type="text" name="currency[{$currency_id}][msetupfee]" size="10" value="{$tdata.msetupfee}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][qsetupfee]" size="10" value="{$tdata.qsetupfee}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][ssetupfee]" size="10" value="{$tdata.ssetupfee}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][asetupfee]" size="10" value="{$tdata.asetupfee}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][bsetupfee]" size="10" value="{$tdata.bsetupfee}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][tsetupfee]" size="10" value="{$tdata.tsetupfee}"></td>
+                        <div role="tabpanel" class="tab-pane" id="pricing">
+                            <div class="panel-body">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fieldlabel">Payment Type</td>
+                                            <td class="fieldarea">
+                                                <label><input type="radio" name="paytype" {if $services.paytype eq 'free'}checked{/if} value="free"> Free</label>
+                                                <label><input type="radio" name="paytype" {if $services.paytype eq 'onetime'}checked{/if} value="onetime"> One Time</label>
+                                                <label><input type="radio" name="paytype" {if $services.paytype eq 'recurring'}checked{/if} value="recurring"> Recurring</label>
+                                            </td>
+                                        </tr>
+                                        <tr class="tableprice">
+                                            <td colspan="2" align="center"><br>
+                                                <table cellspacing="1" bgcolor="#cccccc">
+                                                    <tbody>
+                                                        <tr bgcolor="#efefef" style="text-align:center;font-weight:bold">
+                                                            <td class="onetime" width="80">Currency</td>
+                                                            <td class="onetime" width="80"></td>
+                                                            <td class="onetime" width="120">One Time/Monthly</td>
+                                                            <td width="90">Quarterly</td>
+                                                            <td width="100">Semi-Annually</td>
+                                                            <td width="90">Annually</td>
+                                                            <td width="90">Biennially</td>
+                                                            <td width="90">Triennially</td>
                                                         </tr>
-                                                        <tr bgcolor="#ffffff" style="text-align:center">
-                                                            <td class="onetime">Price</td>
-                                                            <td class="onetime"><input class="form-control" type="text" name="currency[{$currency_id}][monthly]" size="10" value="{$tdata.monthly}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][quarterly]" size="10" value="{$tdata.quarterly}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][semiannually]" size="10" value="{$tdata.semiannually}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][annually]" size="10" value="{$tdata.annually}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][biennially]" size="10" value="{$tdata.biennially}"></td>
-                                                            <td><input class="form-control" type="text" name="currency[{$currency_id}][triennially]" size="10" value="{$tdata.triennially}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                </tbody>
-                                            </table>
-                                            <br>
-                                            (Set Price to -1.00 to disable any of the payment term options - leave Setup Fee at zero)<br><br>
-                                        </td>
-                                    </tr>
-                                    <tr><td class="fieldlabel">Allow Multiple Quantities</td><td class="fieldarea"><input type="checkbox" name="allowqty" {if $services.allowqty}checked{/if}> Tick this box to allow customers to specify if they want more than 1 of this item when ordering (must not require separate config)</td></tr>
-                                    <tr><td class="fieldlabel">Recurring Cycles Limit</td>
-                                        <td class="fieldarea">
-                                            <div class="form-inline">
-                                                <input style="width:50px" class="form-control" type="text" name="recurringcycles" value="{$services.recurringcycles}" size="7">
-                                                To limit this service to only recur a fixed number of times, enter the total number of times to invoice (0 = Unlimited)
-                                            </div>
-                                        </td></tr>
-                                    <tr><td class="fieldlabel">Auto Terminate/Fixed Term</td><td class="fieldarea">
-                                            <div class="form-inline">
-                                                <input style="width:50px" class="form-control" type="text" name="autoterminatedays" value="{$services.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
-                                    <tr><td class="fieldlabel">Termination Email</td><td class="fieldarea">
-                                            <div class="form-inline">
-                                                <select class="form-control" name="autoterminateemail">
-                                                    <option value="0">None</option>
-                                                    {foreach from = $autoemail item=evalue key=eid}
-                                                        <option {$evalue.termninate} value="{$eid}">{$evalue.name}</option>
-                                                    {/foreach}
-
-                                                </select> Choose the email template to send when the fixed term comes to an end</div></td></tr>
-                                </tbody></table>
-                        </div>
-
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="module">
-                        <div class="panel-body">
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody><tr><td class="fieldlabel" width="150">Module Name</td><td class="fieldarea">
-                                            <select class="form-control" name="servertype" onchange="submit()">
-                                                <option value="">None</option>
-                                                {foreach from=$modulesarray item=module}
-                                                    <option value="{$module.name}" {$module.select}>{$module.name}</option>
-                                                {/foreach}
-                                            </select></td></tr>
-                                </tbody></table>
-                        </div>
-
-                        <br>
-
-
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="configurable">
-                        <div class="panel-body">
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody>
-                                    <tr>
-                                        <td width="150" class="fieldlabel">Assigned Option Groups</td>
-                                        <td class="fieldarea">
-                                            <select class="form-control" name="configoptionlinks[]" size="8" style="width:90%" multiple="">
-                                                {foreach from=$configservice item=servicegroup}
-                                                    <option {$servicegroup.current} value="{$servicegroup.cfgid}">{$servicegroup.name}</option>
-                                                {/foreach}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="addons">
-                        <div class="panel-body">
-                            {if $asscoproduct}
-                                <div clas="row">
-                                    {foreach from=$asscoproduct key=groupname item=addons}
-                                        <div class="col-xs-6 col-md-4">
-                                            <div class="panel panel-primary">
-                                                <div class="panel-heading"> <label><input type="checkbox" class="groupcheck">{$groupname}</label></div>
-                                                <div class="panel-body">
-                                                    <ul class="list-group">
-                                                        {foreach from=$addons item=service}
-                                                            <li class="list-group-item"> 
-                                                                <label>
-                                                                    <input class="childrenserivce" {$service.check} type="checkbox" name="linkasscoiateservice[{$service.id}]"/> {$service.name}
-                                                                </label>
-                                                            </li>
+                                                        {foreach from=$tabledata item=tdata key=currency_id}
+                                                            <tr bgcolor="#ffffff" style="text-align:center">
+                                                                <td class="onetime" rowspan="2" bgcolor="#efefef"><b>{$tdata.code}</b></td>
+                                                                <td class="onetime">{$langs.setupfee}</td>
+                                                                <td class="onetime"><input class="form-control" type="text" name="currency[{$currency_id}][msetupfee]" size="10" value="{$tdata.msetupfee}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][qsetupfee]" size="10" value="{$tdata.qsetupfee}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][ssetupfee]" size="10" value="{$tdata.ssetupfee}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][asetupfee]" size="10" value="{$tdata.asetupfee}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][bsetupfee]" size="10" value="{$tdata.bsetupfee}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][tsetupfee]" size="10" value="{$tdata.tsetupfee}"></td>
+                                                            </tr>
+                                                            <tr bgcolor="#ffffff" style="text-align:center">
+                                                                <td class="onetime">Price</td>
+                                                                <td class="onetime"><input class="form-control" type="text" name="currency[{$currency_id}][monthly]" size="10" value="{$tdata.monthly}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][quarterly]" size="10" value="{$tdata.quarterly}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][semiannually]" size="10" value="{$tdata.semiannually}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][annually]" size="10" value="{$tdata.annually}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][biennially]" size="10" value="{$tdata.biennially}"></td>
+                                                                <td><input class="form-control" type="text" name="currency[{$currency_id}][triennially]" size="10" value="{$tdata.triennially}"></td>
+                                                            </tr>
                                                         {/foreach}
-                                                    </ul>
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                (Set Price to -1.00 to disable any of the payment term options - leave Setup Fee at zero)<br><br>
+                                            </td>
+                                        </tr>
+                                        <tr><td class="fieldlabel">Allow Multiple Quantities</td><td class="fieldarea"><input type="checkbox" name="allowqty" {if $services.allowqty}checked{/if}> Tick this box to allow customers to specify if they want more than 1 of this item when ordering (must not require separate config)</td></tr>
+                                        <tr><td class="fieldlabel">Recurring Cycles Limit</td>
+                                            <td class="fieldarea">
+                                                <div class="form-inline">
+                                                    <input style="width:50px" class="form-control" type="text" name="recurringcycles" value="{$services.recurringcycles}" size="7">
+                                                    To limit this service to only recur a fixed number of times, enter the total number of times to invoice (0 = Unlimited)
+                                                </div>
+                                            </td></tr>
+                                        <tr><td class="fieldlabel">Auto Terminate/Fixed Term</td><td class="fieldarea">
+                                                <div class="form-inline">
+                                                    <input style="width:50px" class="form-control" type="text" name="autoterminatedays" value="{$services.autoterminatedays}" size="7"> Enter the number of days after activation to automatically terminate (eg. free trials, time limited services, etc...)</div></td></tr>
+                                        <tr><td class="fieldlabel">Termination Email</td><td class="fieldarea">
+                                                <div class="form-inline">
+                                                    <select class="form-control" name="autoterminateemail">
+                                                        <option value="0">None</option>
+                                                        {foreach from = $autoemail item=evalue key=eid}
+                                                            <option {$evalue.termninate} value="{$eid}">{$evalue.name}</option>
+                                                        {/foreach}
+
+                                                    </select> Choose the email template to send when the fixed term comes to an end</div></td></tr>
+                                    </tbody></table>
+                            </div>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="module">
+                            <div class="panel-body">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody><tr><td class="fieldlabel" width="150">Module Name</td><td class="fieldarea">
+                                                <select class="form-control" name="servertype" onchange="submit()">
+                                                    <option value="">None</option>
+                                                    {foreach from=$modulesarray item=module}
+                                                        <option value="{$module.name}" {$module.select}>{$module.name}</option>
+                                                    {/foreach}
+                                                </select></td></tr>
+                                    </tbody></table>
+                            </div>
+
+                            <br>
+
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="configurable">
+                            <div class="panel-body">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150" class="fieldlabel">Assigned Option Groups</td>
+                                            <td class="fieldarea">
+                                                <select class="form-control" name="configoptionlinks[]" size="8" style="width:90%" multiple="">
+                                                    {foreach from=$configservice item=servicegroup}
+                                                        <option {$servicegroup.current} value="{$servicegroup.cfgid}">{$servicegroup.name}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="addons">
+                            <div class="panel-body">
+                                {if $asscoproduct}
+                                    <div clas="row">
+                                        {foreach from=$asscoproduct key=groupname item=addons}
+                                            <div class="col-xs-6 col-md-4">
+                                                <div class="panel panel-primary">
+                                                    <div class="panel-heading"> <label><input type="checkbox" class="groupcheck">{$groupname}</label></div>
+                                                    <div class="panel-body">
+                                                        <ul class="list-group">
+                                                            {foreach from=$addons item=service}
+                                                                <li class="list-group-item">
+                                                                    <label>
+                                                                        <input class="childrenserivce" {$service.check} type="checkbox" name="linkasscoiateservice[{$service.id}]"/> {$service.name}
+                                                                    </label>
+                                                                </li>
+                                                            {/foreach}
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    {/foreach}
-                                </div>
-                            {/if}
+                                        {/foreach}
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="other">
+                            <div class="panel-body">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fieldlabel">Custom Affiliate Payout</td>
+                                            <td class="fieldarea">
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq ''}checked{/if} value=""> Use Default
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount
+                                                <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'none'}checked{/if} value="none"> No Commission
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Affiliate Pay Amount</td>
+                                            <td class="fieldarea">
+                                                <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$services.affiliatepayamount}" size="10">
+                                                <input type="checkbox" name="affiliateonetime" {if $services.affiliateonetime eq 'on'}checked{/if}> One Time Payout (Default is Recurring)
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody></table>
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="links">
+                            <div class="panel-body">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fieldlabel">Direct Shopping Cart Link</td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}" readonly=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;carttpl=cart" readonly=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Direct Shopping Cart Link Including Domain</td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Service Group Cart Link</td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?gid={$services.gid}" readonly=""></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-
-                    <div role="tabpanel" class="tab-pane" id="other">
-                        <div class="panel-body">
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody>
-                                    <tr>
-                                        <td class="fieldlabel">Custom Affiliate Payout</td>
-                                        <td class="fieldarea">
-                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq ''}checked{/if} value=""> Use Default 
-                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'percentage'}checked{/if} value="percentage"> Percentage 
-                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'fixed'}checked{/if} value="fixed"> Fixed Amount 
-                                            <input type="radio" name="affiliatepaytype" {if $services.affiliatepaytype eq 'none'}checked{/if} value="none"> No Commission
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fieldlabel">Affiliate Pay Amount</td>
-                                        <td class="fieldarea">
-                                            <input style="width:60px" class="form-control" type="text" name="affiliatepayamount" value="{$services.affiliatepayamount}" size="10"> 
-                                            <input type="checkbox" name="affiliateonetime" {if $services.affiliateonetime eq 'on'}checked{/if}> One Time Payout (Default is Recurring)
-                                        </td>
-                                    </tr>
-
-
-                                </tbody></table>
-                        </div>
-                    </div>
-
-                    <div role="tabpanel" class="tab-pane" id="links">
-                        <div class="panel-body">
-                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
-                                <tbody>
-                                    <tr>
-                                        <td class="fieldlabel">Direct Shopping Cart Link</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}" readonly=""></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;carttpl=cart" readonly=""></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fieldlabel">Direct Shopping Cart Link Including Domain</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fieldlabel">Service Group Cart Link</td>
-                                        <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?gid={$services.gid}" readonly=""></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <!-- /.tab-content -->
                 </div>
-                <!-- /.tab-content -->
-            </div>
 
 
-            <p align="center">
-                <input type="submit" value="Save Changes" class="button"> 
-                <input type="button" value="Back to Service List" onclick="window.location = 'configproducts.php'" class="button">
-            </p>
+                <p align="center">
+                    <input type="submit" value="Save Changes" class="button">
+                    <input type="button" value="Back to Service List" onclick="window.location = 'configproducts.php'" class="button">
+                </p>
 
-            <input type="hidden" name="tab" id="tab" value="">
+                <input type="hidden" name="tab" id="tab" value="">
 
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {literal}
     <script type="text/javascript">
         var datepickerformat = "dd/mm/yy";
         $(document).ready(function () {
-
-
 
             function checkgroup()
             {
@@ -379,12 +379,10 @@
                 {
                     $(".tableprice").find("table tr td").hide();
                     $(".tableprice").find(".onetime").show();
-                }
-                else if (value == 'free')
+                } else if (value == 'free')
                 {
                     $(".tableprice").hide();
-                }
-                else
+                } else
                 {
                     $(".tableprice").find("table tr td").show();
                     $(".tableprice").show();

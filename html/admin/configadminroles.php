@@ -19,7 +19,6 @@ $aInt->icon = "adminroles";
 $aInt->helplink = "Administrator Roles";
 $aInt->requiredFiles(array("reportfunctions"));
 $chart = new RAChart();
-$menuselect = "$('#menu').multilevelpushmenu('expand','Staff Management');";
 if ($action == "addrole") {
     check_token("RA.admin.default");
     $adminrole = insert_query("tbladminroles", array("name" => $name));
@@ -280,6 +279,5 @@ if (!$action) {
 }
 
 $aInt->jscode = $jscode;
-$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>
