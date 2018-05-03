@@ -59,6 +59,13 @@
     line: "error_reporting = E_ALL"
   notify: restart php-fpm
 
+- name: PHP error_log
+  lineinfile:
+    path: "/etc/php/7.0/fpm/php.ini"
+    regexp: "error_log"
+    line: "error_log = /tmp/php-error.log"
+  notify: restart php-fpm
+
 - name: Generate dhparams
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
   args:

@@ -38,7 +38,6 @@ if (!function_exists("emailtpl_template")) {
         global $downloads_dir;
         global $fromname;
         global $fromemail;
-        global $ra;
 
         $sysurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
         $nosavemaillog = false;
@@ -62,7 +61,7 @@ if (!function_exists("emailtpl_template")) {
             $userid = $func_id;
         }
 
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename, "language" => ""));
+        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
         $emailtplid = $data['id'];
         $type = $data['type'];
@@ -766,7 +765,7 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields['signature'] = nl2br(html_entity_decode($CONFIG['Signature'], ENT_QUOTES));
         $email_merge_fields['date'] = date("l, jS F Y");
         $email_merge_fields['time'] = date("g:ia");
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename, "language" => $language));
+        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
 
         if (substr($subject, 0, 10) != "[Ticket ID" && $data['subject']) {
@@ -776,18 +775,6 @@ if (!function_exists("emailtpl_template")) {
 
         if ($data['message']) {
             $message = $data['message'];
-        }
-
-        $emailglobalheader = html_entity_decode($CONFIG['EmailGlobalHeader'], ENT_QUOTES);
-        $emailglobalfooter = html_entity_decode($CONFIG['EmailGlobalFooter'], ENT_QUOTES);
-
-        if ($emailglobalheader) {
-            $message = $emailglobalheader . "\r\n" . $message;
-        }
-
-
-        if ($emailglobalfooter) {
-            $message = $message . "\r\n" . $emailglobalfooter;
         }
 
         $hookresults = run_hook("EmailPreSend", array("messagename" => $func_messagename, "relid" => $func_id));
@@ -837,7 +824,7 @@ if (!function_exists("emailtpl_template")) {
             return false;
         }
 
-        $ra->load_class("phpmailer");
+        require_once(__DIR__."/../vendor/phpmailer/phpmailer/PHPMailerAutoload.php");
         $mail = new PHPMailer(true);
 
         try {
