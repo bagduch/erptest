@@ -13,7 +13,7 @@
                             <tbody>
                                 <tr>
                                     <th style="text-align: center">{$langs.servicename}</th>
-                                      <th style="text-align: center">Cost</th>
+                                    <th style="text-align: center">Cost</th>
                                     <th style="text-align: center">{$langs.price}</th>
                                     <th style="text-align: center">Quantity</th>
                                     <th style="text-align: center" width="20"></th>
@@ -25,11 +25,13 @@
                                             <div align="left"><b>{$langs.groupname}:</b> {$servicesg.group.name} </div>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
-                                            <a href="configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
+                                            <a href="configservices.php?action=editgroup&amp;ids={$servicesg.group.id}"> 
+                                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            </a>
                                         </td>
                                         <td style="background-color:#ffffdd;" align="center">
                                             <a href="#" onclick="{$servicesg.group.deletelink}">
-                                                <img src="images/delete.gif" width="16" height="16" border="0" alt="Delete">
+                                               <i class="fa fa-trash" aria-hidden="true"></i>
                                             </a>
                                         </td 
                                     </tr>
@@ -39,8 +41,11 @@
                                             <td>{$servicedata.cost}</td>
                                             <td>{$servicedata.price}</td>
                                             <td>{$servicedata.stock}</td>
-                                            <td><a href="configproducts.php?action=edit&amp;id={$sid}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a></td>
-                                            <td><a href="#" onclick="{$servicedata.deletelink}"><img src="images/delete.gif" width="16" height="16" border="0" alt="Delete"></a></td>
+                                            <td><a href="configproducts.php?action=edit&amp;id={$sid}">
+                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                </a></td>
+                                            <td><a href="#" onclick="{$servicedata.deletelink}">
+                                                <i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                     {/foreach}
                                 {/foreach}
@@ -48,8 +53,6 @@
                                     <td></td>
                                     <td></td>
                                     <td><div align="center"><input type="submit" value="Update Sorting" style="font-size:10px;"></div></td>
-                                    <td></td>
-                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

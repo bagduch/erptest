@@ -1042,7 +1042,7 @@ CREATE TABLE `tblinvoices` (
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `taxrate` decimal(10,2) NOT NULL,
   `taxrate2` decimal(10,2) NOT NULL,
-  `status` enum('Draft','Unpaid','Overdue','Paid','Cancelled','Refunded','Collections') DEFAULT NULL,
+  `status` enum('Draft','Unpaid','Overdue','Paid','Cancelled','Refunded','Collections','Payment Plan') DEFAULT NULL,
   `paymentmethod` text NOT NULL,
   `notes` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
@@ -1055,6 +1055,22 @@ CREATE TABLE `tblinvoices` (
 --
 -- Table structure for table `tblknowledgebase`
 --
+
+
+DROP TABLE IF EXISTS `tblinvoicepaymentmonitor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblinvoicepaymentmonitor` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `duedate` date DEFAULT NULL,
+  `suspension` text DEFAULT NULL,
+  `period` int(10) DEFAULT NULL,
+  `invoice_id` int(10) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 DROP TABLE IF EXISTS `tblknowledgebase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
