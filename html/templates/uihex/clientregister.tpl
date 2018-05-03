@@ -1,8 +1,8 @@
 <script type="text/javascript" src="includes/jscript/statesdropdown.js"></script>
-
+{debug}
 {include file="$template/pageheader.tpl" title=$LANG.clientregistertitle desc=$LANG.registerintro}
 
-{if $noregistration}
+{if isset($noregistration) && $noregistration}
 
     <div class="alert alert-danger">
         <p>{$LANG.registerdisablednotice}</p>
@@ -29,28 +29,28 @@
     <div class="form-group">
 	    <label class="control-label" for="firstname">{$LANG.clientareafirstname}</label>
 		<div class="controls">
-		    <input type="text" class="form-control" name="firstname" id="firstname" value="{$clientfirstname}"{if in_array('firstname',$uneditablefields)} disabled="" class="disabled"{/if} />
+		    <input type="text" class="form-control" name="firstname" id="firstname" value="{$clientfirstname}"{if @in_array('firstname',@$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
 
     <div class="form-group">
 	    <label class="control-label" for="lastname">{$LANG.clientarealastname}</label>
 		<div class="controls">
-		    <input type="text" class="form-control" name="lastname" id="lastname" value="{$clientlastname}"{if in_array('lastname',$uneditablefields)} disabled="" class="disabled"{/if} />
+		    <input type="text" class="form-control" name="lastname" id="lastname" value="{$clientlastname}"{if @in_array('lastname',@$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
 
     <div class="form-group">
 	    <label class="control-label" for="companyname">{$LANG.clientareacompanyname}</label>
 		<div class="controls">
-		    <input type="text" class="form-control" name="companyname" id="companyname" value="{$clientcompanyname}"{if in_array('companyname',$uneditablefields)} disabled="" class="disabled"{/if} />
+		    <input type="text" class="form-control" name="companyname" id="companyname" value="{$clientcompanyname}"{if @in_array('companyname',@$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
 
     <div class="form-group">
 	    <label class="control-label" for="email">{$LANG.clientareaemail}</label>
 		<div class="controls">
-		    <input type="text" class="form-control" name="email" id="email" value="{$clientemail}"{if in_array('email',$uneditablefields)} disabled="" class="disabled"{/if} />
+		    <input type="text" class="form-control" name="email" id="email" value="{$clientemail}"{if @in_array('email',@$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
 
@@ -97,7 +97,7 @@
 		    <input type="text" name="state" id="state" value="{$clientstate}"{if in_array('state',$uneditablefields)} disabled="" class="disabled"{/if} />
 		</div>
 	</div>
-	
+
     <div class="form-group">
 	    <label class="control-label" for="postcode">{$LANG.clientareapostcode}</label>
 		<div class="controls">
@@ -155,7 +155,7 @@
 
 	</div>
 	</div>
-	
+
 	{if $capatacha}
 	<div class="row">
 		<div class="col-lg-12">
@@ -164,13 +164,13 @@
 					<h4>{$LANG.captchatitle}</h4><small>{$LANG.captchaverify}</small>
 				</div>
 				<div class="panel-body">
-                                  
+
 					{if $capatacha eq "recaptcha"}
-                                         
+
 					<div align="center">{$recapatchahtml}</div>
 					{else}
 					<div class="col-lg-2">
-						<img src="includes/verifyimage.php" /> 
+						<img src="includes/verifyimage.php" />
 					</div>
 					<div class="col-lg-3">
 						<input type="text" class="form-control input-sm" name="code" maxlength="5" />
