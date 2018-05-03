@@ -984,9 +984,7 @@ if (!function_exists("emailtpl_template")) {
             global $email_debug;
             global $email_preview;
 
-            if ($smtp_debug) {
-                $mail->SMTPDebug = true;
-            }
+            $mail->SMTPDebug = true;
 
 
             if ($email_debug) {
@@ -1015,12 +1013,14 @@ if (!function_exists("emailtpl_template")) {
             $mail->ClearAddresses();
         } catch (phpmailerException $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
+            error_log("Email Sending Failed - " . $e->getMessage());
 
             if ($displayresult) {
                 echo "<p>Email Sending Failed - " . $e->errorMessage() . "</p>";
             }
         } catch (Exception $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
+            error_log("Email Sending Failed - " . $e->getMessage());
 
             if ($displayresult) {
                 echo "<p>Email Sending Failed - " . $e->getMessage() . "</p>";
