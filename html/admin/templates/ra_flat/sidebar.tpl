@@ -18,8 +18,6 @@
 
 <ul class="nav">
     <li class="active"><a href="index.php"><i class="ti-panel"></i>Dashboard</a></li>
-    <li><a href="addonmodules.php?module=radius"><i class="ti-dashboard"></i>Radius</a></li>
-    <li><a href="addonmodules.php?module=tolls"><i class="ti-headphone"></i>Tolls Phone</a></li>
     <li>
         <a data-toggle="collapse" href="#Customers" class="collapsed" aria-expanded="false"><i class="ti-bar-chart-alt"></i>Customers<b class="caret"></b></a>
         <ul class="nav collapse" id="Customers" role="navigation" aria-expanded="false">

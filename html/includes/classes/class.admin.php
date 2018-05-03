@@ -1,128 +1,152 @@
 <?php
 
 /**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
+ * Abstract representation of an administrator login session
+ * Not really persistent between requests
  * */
 class RA_Admin {
+  /**
+  * @property loginRequired whether logging in is sufficient to access the page
+  * @property requiredPermission whether additional permissions are required to access page
+  * @property title Title of the current page
+  * @property sidebar FIXME
+  * @property icon FIXME
+  * @property helplink FIXME - possibly a link to a help page?
+  * @property jscode FIXME
+  * @property internaljquerycode FIXME
+  * @property template Smarty template to use from admin/templates/<templatename>/
+  * @property content FIXME
+  * @property templatevars Variables to pass to the Smarty templates
+  * @property filename FIXME
+  * @property rowLimit number of rows to show for FIXME - I assume this applies to datatables
+  * @property tablePagination whether to split list of results into multiple pages??
+  * @property inClientsProfile whether we're currently logged in as a client
+  * @property adminTemplate which admin template we're currently using
+  * @property exitmsg FIXME
+  * @property language two-digit language code to use
+  * @property extrajscode FIXME
+  * @property headOutput FIXME
+  * @property chartFunctions FIXME
+  * @property sortableTableCount FIXME
+  * @property smarty FIXME
+  */
 
-    public $loginRequired = true;
-    public $requiredPermission = "";
-    public $title = "";
-    public $sidebar = "";
-    public $icon = "";
-    public $helplink = "";
-    public $jscode = "";
-    public $internaljquerycode = array();
-    public $jquerycode = "";
-    public $template = "";
-    public $content = "";
-    public $templatevars = array();
-    public $filename = "";
-    public $rowLimit = 50;
-    public $tablePagination = true;
-    public $inClientsProfile = false;
-    public $adminTemplate = "blend";
-    public $exitmsg = "";
-    public $language = "en";
-    public $extrajscode = array();
-    public $headOutput = "";
-    public $chartFunctions = array();
-    public $sortableTableCount = 0;
-    public $smarty = "";
+  public $loginRequired = true;
+  public $requiredPermission = "";
+  public $title = "";
+  public $sidebar = "";
+  public $icon = "";
+  public $helplink = "";
+  public $jscode = "";
+  public $internaljquerycode = array();
+  public $jquerycode = "";
+  public $template = "";
+  public $content = "";
+  public $templatevars = array();
+  public $filename = "";
+  public $rowLimit = 50;
+  public $tablePagination = true;
+  public $inClientsProfile = false;
+  public $adminTemplate = "blend";
+  public $exitmsg = "";
+  public $language = "en";
+  public $extrajscode = array();
+  public $headOutput = "";
+  public $chartFunctions = array();
+  public $sortableTableCount = 0;
+  public $smarty = "";
 
-    public function __construct($reqpermission, $releaseSession = true) {
-        global $CONFIG;
-        global $_ADMINLANG;
-        global $infobox;
-        global $ra;
-        $infobox = "";
+  /**
+   * [__construct description]
+   * @param string  $reqpermission  string describing required permissions FIXME: list options
+   * @param boolean $releaseSession FIXME ???
+   */
+  public function __construct($reqpermission, $releaseSession = true) {
+      global $CONFIG;
+      global $_ADMINLANG;
+      global $infobox;
+      global $ra;
+      $infobox = "";
 
-        if ($reqpermission == "loginonly") {
-            $this->loginRequired = true;
-        } else {
-            if ($reqpermission) {
-                $this->requiredPermission = $reqpermission;
-            } else {
-                $this->loginRequired = false;
-            }
-        }
+      if ($reqpermission == "loginonly") {
+          $this->loginRequired = true;
+      } else {
+          if ($reqpermission) {
+              $this->requiredPermission = $reqpermission;
+          } else {
+              $this->loginRequired = false;
+          }
+      }
 
-        require ROOTDIR . "/includes/smarty/Smarty.class.php";
+      require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
 
-        if ($this->loginRequired) {
-            $auth = new RA_Auth();
+      if ($this->loginRequired) {
+          $auth = new RA_Auth();
 
-            if (!$auth->isLoggedIn()) {
-                $_SESSION['admloginurlredirect'] = html_entity_decode($_SERVER['REQUEST_URI']);
-                redir("", "login.php");
-            }
+          if (!$auth->isLoggedIn()) {
+              $_SESSION['admloginurlredirect'] = html_entity_decode($_SERVER['REQUEST_URI']);
+              redir("", "login.php");
+          }
 
-            $auth->getInfobyID($_SESSION['adminid']);
+          $auth->getInfobyID($_SESSION['adminid']);
 
-            if ($auth->isSessionPWHashValid()) {
-                $auth->updateAdminLog();
-                $this->adminTemplate = $auth->getAdminTemplate();
+          if ($auth->isSessionPWHashValid()) {
+              $auth->updateAdminLog();
+              $this->adminTemplate = $auth->getAdminTemplate();
 
-                if ($auth->getAdminLanguage()) {
-                    $this->language = $auth->getAdminLanguage();
-                }
-            } else {
-                $auth->destroySession();
-                redir("", "login.php");
-            }
-        }
-
-
-        if ($releaseSession) {
-            releaseSession();
-        }
+              if ($auth->getAdminLanguage()) {
+                  $this->language = $auth->getAdminLanguage();
+              }
+          } else {
+              $auth->destroySession();
+              redir("", "login.php");
+          }
+      }
 
 
-        if ($this->requiredPermission) {
-            $permid = array_search($this->requiredPermission, getAdminPermsArray());
-            $result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
-            $data = mysqli_fetch_array($result);
-            $roleid = $data['roleid'];
-            $result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
-            $data = mysqli_fetch_array($result);
-            $match = $data[0];
+      if ($releaseSession) {
+          releaseSession();
+      }
 
-            if (!$match) {
-                redir("permid=" . $permid, "accessdenied.php");
-                exit();
-            }
-        }
 
-        $filename = $_SERVER['PHP_SELF'];
-        $filename = substr($filename, strrpos($filename, "/"));
-        $filename = str_replace(array("/", ".php"), "", $filename);
+      if ($this->requiredPermission) {
+          $permid = array_search($this->requiredPermission, getAdminPermsArray());
+          $result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+          $data = mysqli_fetch_array($result);
+          $roleid = $data['roleid'];
+          $result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
+          $data = mysqli_fetch_array($result);
+          $match = $data[0];
 
-        if (isset($_SESSION['adminid'])) {
-            $twofa = new RA_2FA();
-            $twofa->setAdminID($_SESSION['adminid']);
+          if (!$match) {
+              redir("permid=" . $permid, "accessdenied.php");
+              exit();
+          }
+      }
 
-            if ((($filename != "myaccount" && $twofa->isForced()) && !$twofa->isEnabled()) && $twofa->isActiveAdmins()) {
-                redir("2faenforce=1", "myaccount.php");
-            }
-        }
+      $filename = $_SERVER['PHP_SELF'];
+      $filename = substr($filename, strrpos($filename, "/"));
+      $filename = str_replace(array("/", ".php"), "", $filename);
 
-        $this->filename = $filename;
-        $this->rowLimit = $CONFIG['NumRecordstoDisplay'];
+      if (isset($_SESSION['adminid'])) {
+          $twofa = new RA_2FA();
+          $twofa->setAdminID($_SESSION['adminid']);
 
-        if (isset($_SESSION['adminlang']) && $_SESSION['adminlang']) {
-            $this->language = $_SESSION['adminlang'];
-        }
+          if ((($filename != "myaccount" && $twofa->isForced()) && !$twofa->isEnabled()) && $twofa->isActiveAdmins()) {
+              redir("2faenforce=1", "myaccount.php");
+          }
+      }
 
-        $this->language = $ra->validateLanguage($this->language, true);
-        $ra->loadLanguage($this->language, true);
-    }
+      $this->filename = $filename;
+      $this->rowLimit = $CONFIG['NumRecordstoDisplay'];
+
+      if (isset($_SESSION['adminlang']) && $_SESSION['adminlang']) {
+          $this->language = $_SESSION['adminlang'];
+      }
+
+      $this->language = $ra->validateLanguage($this->language, true);
+      $ra->loadLanguage($this->language, true);
+  } // end __construct()
 
     public function requiredFiles($reqfiles) {
         if (is_array($reqfiles)) {
@@ -892,7 +916,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $numrows;
         global $page;
 
-        $pages = max(ceil($numrows / $this->rowLimit), 1);
+        $pages = max((int)ceil($numrows / $this->rowLimit), 1);
 
         $content = "";
 
@@ -929,7 +953,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
             $content .= $varsrecall; // token
             $content .= "<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
             $content .= "<tr>";
-            //$printing .= sprintf("<td width=\"50%\" align=\"left\">" 
+            //$printing .= sprintf("<td width=\"50%\" align=\"left\">"
             $content .= sprintf("<td width=\"50%%\" >%d %s", $numrows, $this->lang("global", "recordsfound")
             );
             $content .= ", " . $this->lang("global", "page") . " ";
@@ -1165,7 +1189,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $tabarray['clientscredits'] = $this->lang("clientsummary", "credits");
         $tabarray['clientstransactions'] = $this->lang("clientsummary", "transactions");
         $tabarray['clientsemails'] = $this->lang("clientsummary", "emails");
-        $query = "select count(tbn.id) as total from tblnotes as tbn 
+        $query = "select count(tbn.id) as total from tblnotes as tbn
 INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
 LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
@@ -1466,24 +1490,14 @@ window.location='" . $url . "'+id+'" . generate_token("link") . "';
     }
 
     public function richTextEditor() {
-        echo "<script type=\"text/javascript\" src=\"../includes/jscript/tiny_mce/jquery.tinymce.js\"></script>
+        echo "<script type=\"text/javascript\" src=\"../vendor/tinymce/tinymce/jquery.tinymce.min.js\"></script>
 <script type=\"text/javascript\">
     $().ready(function() {
         $(\"textarea.tinymce\").tinymce({
             // Location of TinyMCE script
-            script_url : \"../includes/jscript/tiny_mce/tiny_mce.js\",
+            script_url : \"../vendor/tinymce/tinymce/tinymce.min.js\",
 
-            // General options
-            theme : \"advanced\",
-            plugins : \"autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,advlist\",
-
-            // Theme options
-            theme_advanced_buttons1 : \"fontselect,fontsizeselect,forecolor,backcolor,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code\",
-            theme_advanced_buttons2 : \"cut,copy,paste,pastetext,pasteword,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen\",
-            theme_advanced_toolbar_location : \"top\",
-            theme_advanced_toolbar_align : \"left\",
-            theme_advanced_statusbar_location : \"bottom\",
-            theme_advanced_resizing : true,
+            plugins : \"autolink lists pagebreak table save insertdatetime preview media searchreplace print contextmenu paste directionality fullscreen noneditable visualchars nonbreaking\",
             convert_urls : false,
             relative_urls : false,
             forced_root_block : false

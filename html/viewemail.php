@@ -6,7 +6,7 @@
  * @ Version  : 5.2.15
  * @ Author   : MTIMER
  * @ Release on : 2013-12-24
- * 
+ *
  *
  **/
 
@@ -14,7 +14,7 @@ define("CLIENTAREA", true);
 require "init.php";
 
 if (isset($_SESSION['uid'])) {
-	require "includes/smarty/Smarty.class.php";
+	require "/vendor/smarty/smarty/libs/Smarty.class.php";
 	$smarty = new Smarty();
 	$smarty->template_dir = "templates/" . $ra->get_sys_tpl_name() . "/";
 	$smarty->compile_dir = $templates_compiledir;

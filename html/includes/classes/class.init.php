@@ -7,6 +7,7 @@ include_once ROOTDIR . "/includes/dbfunctions.php";
 
 include_once ROOTDIR . "/includes/functions.php";
 
+require ROOTDIR . "/vendor/autoload.php";
 if (!defined("WHMCSDBCONNECT")) {
     if (defined("CLIENTAREA")) {
         include_once ROOTDIR . "/includes/clientareafunctions.php";
@@ -522,8 +523,8 @@ class RA_Init {
 
         // See if we can just pull it from memcache
         $CONFIG = $MEMCACHE->get("CONFIG");
-        if ($CONFIG) {
-//            error_log("Using configuration from memcached");
+        if (false) {
+            error_log("Using configuration from memcached");
         } else {
 //            error_log("Could not load config from memcached");
 

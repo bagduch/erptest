@@ -3,10 +3,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  **/
 
@@ -129,7 +129,7 @@ if ($customfieldvalue) {
 		$query .= "AND tblcustomerservices.id IN (SELECT relid FROM tblcustomfieldsvalues WHERE fieldid=" . (int)$customfield . " AND value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 	else {
-		$query .= "AND tblcustomerservices.id IN (SELECT tblcustomfieldsvalues.relid FROM tblcustomfieldsvalues INNER JOIN tblcustomfields ON tblcustomfieldsvalues.fieldid=tblcustomfields.id WHERE tblcustomfields.type='product' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
+		$query .= "AND tblcustomerservices.id IN (SELECT tblcustomfieldsvalues.relid FROM tblcustomfieldsvalues INNER JOIN tblcustomfields ON tblcustomfieldsvalues.fieldid=tblcustomfields.cfid WHERE tblcustomfields.type='product' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 }
 
@@ -259,7 +259,7 @@ echo "<s";
 echo "elect name=\"customfield\" style=\"width:200px;\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
-$result2 = select_query_i("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,tblservices.name", array("tblcustomfields.type" => "product"), "", "", "", "tblservices ON tblservices.id=tblcustomfields.relid");
+$result2 = select_query_i("tblcustomfields", "tblcustomfields.cfid,tblcustomfields.fieldname,tblservices.name", array("tblcustomfields.type" => "product"), "", "", "", "tblservices ON tblservices.id=tblcustomfields.relid");
 
 while ($data = mysqli_fetch_array($result2)) {
 	$fieldid = $data['id'];

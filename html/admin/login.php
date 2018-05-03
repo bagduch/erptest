@@ -2,7 +2,7 @@
 
 define("ADMINAREA", true);
 require "../init.php";
-require ROOTDIR . "/includes/smarty/Smarty.class.php";
+require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
 $smarty = new Smarty();
 $smarty->template_dir = ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/";
 $smarty->compile_dir = $templates_compiledir;
@@ -137,7 +137,7 @@ if (!$action) {
                 $msg = "You have been successfully logged out.";
             } else {
                 if ($reset) {
-                    
+
                 } else {
                     $msgtitle = "Welcome Back";
                     $msg = "Please enter your login details below to authenticate.";
@@ -249,6 +249,6 @@ $smarty->assign("msg", $msg);
 $smarty->assign("msgtitle", $msgtitle);
 $smarty->assign("backupcode", $backupcode);
 $smarty->assign("remote_ip", $remote_ip);
-$smarty->assign("action", $action); 
+$smarty->assign("action", $action);
 $smarty->display(ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/ra_flat/login.tpl");
 ?>

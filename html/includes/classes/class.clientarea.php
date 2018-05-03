@@ -3,14 +3,14 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  **/
 
-class RA_ClientArea 
+class RA_ClientArea
 {
 	private $pagetitle = "";
     private $breadcrumb = array( );
@@ -150,7 +150,7 @@ class RA_ClientArea
 		global $ra;
 		global $smarty;
 
-		require ROOTDIR . "/includes/smarty/Smarty.class.php";
+		require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
 
 		if (!$smarty) {
 			$smarty = new Smarty();

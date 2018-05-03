@@ -12,6 +12,7 @@
     - php7.0-curl
     - php7.0-zip
     - php7.0-memcached
+    - php7.0-gd
     - memcached
     - python-openssl
 
@@ -57,6 +58,13 @@
     path: "/etc/php/7.0/fpm/php.ini"
     regexp: "error_reporting"
     line: "error_reporting = E_ALL"
+  notify: restart php-fpm
+
+- name: PHP error_log
+  lineinfile:
+    path: "/etc/php/7.0/fpm/php.ini"
+    regexp: "error_log"
+    line: "error_log = /tmp/php-error.log"
   notify: restart php-fpm
 
 - name: Generate dhparams

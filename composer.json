@@ -1,16 +1,30 @@
 {
     "name": "hdnetnz/ra",
-    "description": "Robot \bic Accounting",
+    "description": "Robotic Accounting",
     "type": "project",
     "authors": [
         {
             "name": "Guy Lowe",
             "email": "guy@hd.net.nz"
+        },
+        {
+            "name": "Peter Zhang",
+            "email": "peter@hd.net.nz"
         }
     ],
-    "require": {},
-    "autoload": { 
-        "ra": {"": "html/includes/classes/"}
+    "require": {
+        "smarty/smarty": "~2.6",
+        "tinymce/tinymce": "~4.7",
+        "phpmailer/phpmailer": "~5.2",
+        "tecnickcom/tcpdf": "~6.2"
+    },
+    "autoload": {
+        "ra": {
+          "": "html/includes/"
+        }
+    },
+    "config": {
+        "vendor-dir": "html/vendor"
     }
 
 }

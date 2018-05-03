@@ -22,7 +22,7 @@
                             <tr>
                                 <td>{$tabledata[1]}</td>
                                 <td><a class="btn btn-default" href="?action=managegroup&id={$tabledata[0]}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
-                                <td> <a class="btn btn-danger" href="doDelete({$tabledata[0]})"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                <td> <a class="btn btn-danger" onclick="doDelete({$tabledata[0]})"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                             </tr>
                         {/foreach}
                     {else}
@@ -36,8 +36,3 @@
     </div>
 
 </div>
-
-
-
-
-

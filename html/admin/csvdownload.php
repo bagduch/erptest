@@ -137,7 +137,6 @@ if ($type == "pdfbatch") {
 	require ROOTDIR . "/includes/countries.php";
 	require ROOTDIR . "/includes/clientfunctions.php";
 	require ROOTDIR . "/includes/invoicefunctions.php";
-	$ra->load_class("tcpdf");
 	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {

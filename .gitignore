@@ -12,5 +12,7 @@ xdebug/
 html/.well-known/
 npm-debug.log
 html/modules/service/hdradius
-
-/vendor/
+.tags*
+vendor/
+html/vendor
+composer.lock

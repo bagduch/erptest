@@ -68,10 +68,10 @@ $filterdata = array(
 );
 
 
-$result = select_query_i("tblcustomfields", "id,fieldname", array("type" => "client"));
+$result = select_query_i("tblcustomfields", "cfid,fieldname", array("type" => "client"));
 
 while ($data = mysqli_fetch_array($result)) {
-    $fieldid = $data['id'];
+    $fieldid = $data['cfid'];
     $fieldname = $data['fieldname'];
     echo "<tr><td class=\"fieldlabel\">" . $fieldname . "</td><td class=\"fieldarea\" colspan=\"3\"><input type=\"text\" name=\"customfields[" . $fieldid . "]\" size=\"30\" value=\"" . $customfields[$fieldid] . "\" /></td></tr>";
 }
