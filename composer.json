@@ -16,7 +16,8 @@
         "smarty/smarty": "~2.6",
         "tinymce/tinymce": "~4.7",
         "phpmailer/phpmailer": "~5.2",
-        "tecnickcom/tcpdf": "~6.2"
+        "tecnickcom/tcpdf": "~6.2",
+        "google/recaptcha": "~1.1"
     },
     "autoload": {
         "ra": {
