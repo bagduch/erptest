@@ -761,8 +761,8 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields['company_name'] = $CONFIG['CompanyName'];
         $email_merge_fields['company_domain'] = $CONFIG['Domain'];
         $email_merge_fields['company_logo_url'] = $CONFIG['LogoURL'];
-        $email_merge_fields['RA_url'] = $CONFIG['SystemURL'];
-        $email_merge_fields['RA_link'] = "<a href=\"" . $CONFIG['SystemURL'] . "\">" . $CONFIG['SystemURL'] . "</a>";
+        $email_merge_fields['ra_url'] = $CONFIG['SystemURL'];
+        $email_merge_fields['ra_link'] = "<a href=\"" . $CONFIG['SystemURL'] . "\">" . $CONFIG['SystemURL'] . "</a>";
         $email_merge_fields['signature'] = nl2br(html_entity_decode($CONFIG['Signature'], ENT_QUOTES));
         $email_merge_fields['date'] = date("l, jS F Y");
         $email_merge_fields['time'] = date("g:ia");

@@ -916,7 +916,7 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         global $numrows;
         global $page;
 
-        $pages = max(ceil($numrows / $this->rowLimit), 1);
+        $pages = max((int)ceil($numrows / $this->rowLimit), 1);
 
         $content = "";
 

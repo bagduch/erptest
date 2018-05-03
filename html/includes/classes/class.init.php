@@ -522,8 +522,8 @@ class RA_Init {
 
         // See if we can just pull it from memcache
         $CONFIG = $MEMCACHE->get("CONFIG");
-        if ($CONFIG) {
-//            error_log("Using configuration from memcached");
+        if (false) {
+            error_log("Using configuration from memcached");
         } else {
 //            error_log("Could not load config from memcached");
 

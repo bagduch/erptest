@@ -61,8 +61,7 @@ $aInt->sortableTableInit("date", "DESC");
 $result = select_query_i("tblemails", "COUNT(*)", array("userid" => $userid));
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblemails", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
-
+$result = select_query_i("tblemails", "", array("userid" => $userid), $orderby, $order);
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
     $date = $data['date'];
