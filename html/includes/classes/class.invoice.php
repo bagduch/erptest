@@ -268,7 +268,6 @@ class RA_Invoice {
         $l['a_meta_language'] = "en";
         $l['w_page'] = "page";
         $unicode = (strtolower(substr($ra->get_config("Charset"), 0, 3)) == "iso" ? false : true);
-        $ra->load_class("tcpdf");
         $this->pdf = new TCPDF("P", "mm", "A4", $unicode, $ra->get_config("Charset"), false);
         $this->pdf->SetCreator("ra V" . $ra->get_config("Version"));
         $this->pdf->SetAuthor($ra->get_config("CompanyName"));

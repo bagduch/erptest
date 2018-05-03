@@ -12,6 +12,7 @@
     - php7.0-curl
     - php7.0-zip
     - php7.0-memcached
+    - php7.0-gd
     - memcached
     - python-openssl
 
