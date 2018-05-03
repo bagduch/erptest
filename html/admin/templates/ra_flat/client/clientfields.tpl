@@ -50,7 +50,7 @@
                                     <option {if $data.fieldtype eq 'tickbox'}selected{/if} value="tickbox">Tick Box</option>
                                     <option {if $data.fieldtype eq 'textarea'}selected{/if} value="textarea">Text Area</option>
                                 </select>
-                                {if $data.children }
+                                {if isset($data.children) }
                                     {foreach from=$data.children item=childrendata}
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#linkfield{$childrendata.cfid}">{$childrendata.fieldname}</button>
