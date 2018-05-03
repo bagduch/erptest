@@ -8,3 +8,8 @@
   composer:
     command: install
     working_dir: /vagrant/
+
+- name: composer deps per composer.json (update)
+  composer:
+    command: update
+    working_dir: /vagrant/
