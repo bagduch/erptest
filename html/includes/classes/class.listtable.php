@@ -117,32 +117,34 @@ class RA_ListTable {
 
     public function outputTableHeader() {
         global $aInt;
+        $pageObj = $this->getPageObj();
+        $page = $pageObj->getPage();
+        $pages = $pageObj->getTotalPages();
+        $numResults = $pageObj->getNumResults();
 
-        $page = $this->getPageObj()->getPage();
-        $pages = $this->getPageObj()->getTotalPages();
-        $numResults = $this->getPageObj()->getNumResults();
-        $content = "<div class=\"card\"><form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?filter=1\">
-            <div class=\"header card-header-text\">
-<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\"><tr>
-<td width=\"50%\" align=\"left\">" . $numResults . " " . $aInt->lang("global", "recordsfound") . ", " . $aInt->lang("global", "page") . " " . $page . " " . $aInt->lang("global", "of") . " " . $pages . "</td>
-<td width=\"50%\" align=\"right\">" . $aInt->lang("global", "jumppage") . ": <select name=\"page\" onchange=\"submit()\">";
-        $newpage = 1;
+        $content  = "<div class=\"card\">";
+        $content .= "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?filter=1\"";
+        $content .= "<div class=\"header card-header-text\">";
+        $content .= "<table width=\"100%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\"><tr>";
+        $content .= "<td width=\"50%\" align=\"left\">";
+        $content .= $numResults . " " . $aInt->lang("global", "recordsfound") . ", ";
+        $content .= $aInt->lang("global", "page") . " " . $page . " " . $aInt->lang("global", "of") . " " . $pages;
+        $content .= "</td>";
+        $content .= "<td width=\"50%\" align=\"right\">" . $aInt->lang("global", "jumppage");
+        $content .= ": <select name=\"page\" onchange=\"submit()\">";
 
-        while ($newpage <= $pages) {
+        for ($newpage = 1;$newpage < $pages;++$newpage) {
             $content .= "<option value=\"" . $newpage . "\"";
-
-            if ($page == $newpage) {
-                $content .= " selected";
-            }
-
+             if ($page == $newpage) {
+                 $content .= " selected";
+             }
             $content .= ">" . $newpage . "</option>";
-            ++$newpage;
         }
 
-        $content .= "</select> <input type=\"submit\" value=\"" . $aInt->lang("global", "go") . "\" class=\"btn-small\" /></td>
-</tr></table>
-</form>
-";
+        $content .= "</select>";
+        $content .= "<input type=\"submit\" value=\"" . $aInt->lang("global", "go") . "\" class=\"btn-small\" />";
+        $content .= "</td></tr></table></form>";
+
         $this->addOutput($content);
     }
 
@@ -230,8 +232,7 @@ $(\"#sortabletbl" . $this->sortableTableCount . " .checkall\").prop(\"checked\",
             $content .= "</th>";
         }
 
-        $content .= "</tr>
-";
+        $content .= "</tr>";
         $totalcols = count($columns);
         $rows = $this->getRows();
 

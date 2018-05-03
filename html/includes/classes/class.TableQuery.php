@@ -24,7 +24,9 @@ class RA_TableQuery {
 	}
 
 	public function setRecordLimit($limit) {
-		$this->recordLimit = $limit;
+		if (is_int($limit) && ($limit > 0)) {
+			$this->recordLimit = $limit;
+		}
 		return $this;
 	}
 
