@@ -101,24 +101,6 @@ if (defined("CLIENTAREA") && $CONFIG['SystemSSLURL']) {
     $ssldomain = $CONFIG['SystemSSLURL'];
     $nonssldomain = $CONFIG['SystemURL'];
 
-    if ($_SESSION['FORCESSL'] && $filename == "index.php") {
-        define("FORCESSL", true);
-    }
-
-
-    if (in_array($filename, $files) || defined("FORCESSL")) {
-        if (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off") {
-            redir($_REQUEST, $ssldomain . "/" . $filename);
-        }
-
-        $in_ssl = true;
-    } else {
-        if (in_array($filename, $nonsslfiles)) {
-            if ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") {
-                redir($_REQUEST, $nonssldomain . "/" . $filename);
-            }
-        }
-    }
 }
 
 ob_start();
