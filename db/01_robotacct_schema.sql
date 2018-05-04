@@ -1031,6 +1031,7 @@ DROP TABLE IF EXISTS `tblinvoices`;
 CREATE TABLE `tblinvoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
+  `latefeeid` int(10) DEFAULT 0,
   `invoicenum` text NOT NULL,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
@@ -1064,8 +1065,10 @@ CREATE TABLE `tblinvoicepaymentmonitor` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
+  `nextduedate` date DEFAULT NULL,
   `suspension` text DEFAULT NULL,
   `period` int(10) DEFAULT NULL,
+  `status` enum('paid','unpaid','suspend','overpaid') NOT NULL,
   `invoice_id` int(10) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
