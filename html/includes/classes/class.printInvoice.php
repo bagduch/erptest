@@ -55,7 +55,7 @@ class PrintInvoice {
         $this->head($pdfdata, $viewpdf);
     }
 
-    public function printLateFeePdf() {
+    public function printLateFeePdf($viewpdf) {
         $this->invoice->pdfCreate();
         $this->invoice->pdfLateFee($this->invoiceid);
         $pdfdata = $this->invoice->pdfOutput();

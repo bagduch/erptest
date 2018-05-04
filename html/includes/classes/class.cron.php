@@ -47,7 +47,12 @@ class RA_Cron {
     }
 
     public function getValidActions() {
-        $validactions = array("updaterates" => "Updating Currency Exchange Rates", "updatepricing" => "Updating Product Pricing for Current Exchange Rates", "invoices" => "Generating Invoices", "latefees" => "Applying Late Fees", "ccprocessing" => "Processing Credit Card Charges", "invoicereminders" => "Processing Invoice Reminder Notices", "domainrenewalnotices" => "Processing Domain Renewal Notices", "suspensions" => "Processing Overdue Suspensions", "terminations" => "Processing Overdue Terminations", "fixedtermterminations" => "Performing Automated Fixed Term Service Terminations", "cancelrequests" => "Processing Cancellation Requests", "closetickets" => "Auto Closing Inactive Tickets", "affcommissions" => "Processing Delayed Affiliate Commissions", "affreports" => "Sending Affiliate Reports", "emailmarketing" => "Processing Email Marketer Rules", "ccexpirynotices" => "Sending Credit Card Expiry Reminders", "usagestats" => "Updating Disk & Bandwidth Usage Stats", "overagesbilling" => "Processing Overage Billing Charges", "clientstatussync" => "Performing Client Status Sync", "backups" => "Database Backup");
+        $validactions = array(
+            "updaterates" => "Updating Currency Exchange Rates",
+            "updatepricing" => "Updating Product Pricing for Current Exchange Rates", 
+            "invoices" => "Generating Invoices",
+            "latefees" => "Applying Late Fees", 
+            "ccprocessing" => "Processing Credit Card Charges", "invoicereminders" => "Processing Invoice Reminder Notices", "domainrenewalnotices" => "Processing Domain Renewal Notices", "suspensions" => "Processing Overdue Suspensions", "terminations" => "Processing Overdue Terminations", "fixedtermterminations" => "Performing Automated Fixed Term Service Terminations", "cancelrequests" => "Processing Cancellation Requests", "closetickets" => "Auto Closing Inactive Tickets", "affcommissions" => "Processing Delayed Affiliate Commissions", "affreports" => "Sending Affiliate Reports", "emailmarketing" => "Processing Email Marketer Rules", "ccexpirynotices" => "Sending Credit Card Expiry Reminders", "usagestats" => "Updating Disk & Bandwidth Usage Stats", "overagesbilling" => "Processing Overage Billing Charges", "clientstatussync" => "Performing Client Status Sync", "backups" => "Database Backup");
         return $validactions;
     }
 

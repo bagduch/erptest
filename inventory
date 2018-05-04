@@ -1,0 +1,1 @@
+localhost ansible_connection=local vagrant=false recaptcha_sitekey="6Le4aVQUAAAAAKPWTdB3TX9vo6SXrpx4jt-IbCuC" recaptcha_secretkey="6Le4aVQUAAAAAPJ7Lke84YjJzwHQ5TnAoCDQUC5G" repo_basepath="/var/ra/"
