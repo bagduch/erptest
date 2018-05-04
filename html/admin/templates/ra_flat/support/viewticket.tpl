@@ -65,9 +65,13 @@
                                             </div>
                                         </td>
                                         <td>
+                                            <input type="button" onclick="loadpredef(0);return false" value="Insert Predefined Reply" class="btn" id="insertpredef">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
                                             <div id="prerepliescontainer">
                                                 {*                                                        <input type="text" id="predefq" size="25" class="form-control" value="Search" onfocus="this.value = (this.value == 'Search') ? '' : this.value;" onblur="this.value = (this.value == '') ? 'Search' : this.value;">*}
-                                                <input type="button" value="Insert Predefined Reply" class="btn" id="insertpredef">
                                                 <div id="prerepliescontent"></div>
                                             </div>
                                         </td>
@@ -206,87 +210,88 @@
                 </div>
 
             </form>
-
+            <br>             
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div id="ticketreplies">
-        {foreach from=$smartyvalues.replies item=row}
-            <div class="{if $row.admin != NULL}staff{/if}reply">
-                <div class="leftcol">
-                    <div class="submitter">
-                        <div class="name">{$row.admin}{$row.clientname}</div>
-                        <div class="title">{if $row.admin != NULL}client{else}staff{/if}</div>
-                    </div>
-                    <div class="tools">
-                        <div class="editbtnsr{$row.id}">
-                            <input type="button" value="Edit" onclick="editTicket('r{$row.id}')" class="btn btn-xs btn-small btn-default">
-                            <input type="button" value="Delete" onclick="doDeleteReply('{$row.id}')" class="btn btn-xs btn-small btn-danger"></div>
-                        <div class="editbtnsr{$row.id}" style="display:none">
-                            <input type="button" value="Save" onclick="editTicketSave('r{$row.id}')" class="btn btn-xs btn-small btn-success">
-                            <input type="button" value="Cancel" onclick="editTicketCancel('r{$row.id}')" class="btn btn-xs btn-small btn-default">
-                        </div>
-
-                    </div>
-                </div>
-                <div class="rightcol">
-                    <div class="quoteicon">
-                        <a href="#" onclick="quoteTicket('', '{$row.id}')"><i class="fa fa-comment-o" aria-hidden="true"></i></a> 
-                        <input type="checkbox" name="rids[]" value="{$row.id}">
-                    </div>
-                    <div class="postedon">Posted on {$row.friendlydate} {$row.friendlytime }</div>
-                    <div class="msgwrap" id="contentr{$row.id}">
-                        <div class="message">
-                            {$row.message|strip_tags}
-                        </div>
-                        <div class="ticketattachmentcontainer">
-                            {foreach from=$row.attachments item=item}
-                                <a href="{$item.dllink}">{$item.filename}</a>
-                            {/foreach}
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        {/foreach} 
-    </div>
-</div>
-<div id="notes">
-    <h3>Notes:</h3>
-    {if $smartyvalues.notes}
-        {foreach from=$smartyvalues.notes item=note}
-            <div class="staffreply" id="not{$note.id}">
-                <div class="leftcol">
-                    <div class="submitter">
-                        <div class="name">{$note.admin}</div>
-                        <br>
-                    </div>
-                    {if $note.adminid eq $adminid}
-                        <div class="tools">
-                            <div class="editbtnotes{$note.id}">
-                                <input type="button" value="Edit" onclick="editNotes({$note.id})" class="btn btn-xs btn-small btn-default">
-                                <input type="button" value="Delete" onclick="deleteNotes({$note.id})" class="btn btn-xs btn-small btn-danger"></div>
-                            <div class="editbtnotess{$note.id}" style="display:none">
-                                <input type="button" value="Save" onclick="saveNotes({$note.id})" class="btn btn-xs btn-small btn-success">
-                                <input type="button" value="Cancel" onclick="cancelNotes({$note.id})" class="btn btn-xs btn-small btn-default">
+<div class="row">
+    <div class="col-md-12">
+        <div id="notes" class="card">
+            <h3>Notes:</h3>
+            {if $smartyvalues.notes}
+                {foreach from=$smartyvalues.notes item=note}
+                    <div class="staffreply" id="not{$note.id}">
+                        <div class="leftcol">
+                            <div class="submitter">
+                                <div class="name">{$note.admin}</div>
+                                <br>
                             </div>
+                            {if $note.adminid eq $adminid}
+                                <div class="tools">
+                                    <div class="editbtnotes{$note.id}">
+                                        <input type="button" value="Edit" onclick="editNotes({$note.id})" class="btn btn-xs btn-small btn-default">
+                                        <input type="button" value="Delete" onclick="deleteNotes({$note.id})" class="btn btn-xs btn-small btn-danger"></div>
+                                    <div class="editbtnotess{$note.id}" style="display:none">
+                                        <input type="button" value="Save" onclick="saveNotes({$note.id})" class="btn btn-xs btn-small btn-success">
+                                        <input type="button" value="Cancel" onclick="cancelNotes({$note.id})" class="btn btn-xs btn-small btn-default">
+                                    </div>
 
+                                </div>
+                            {/if}
                         </div>
-                    {/if}
-                </div>
-                <div class="rightcol">
+                        <div class="rightcol">
 
-                    <div class="postedon">Posted on {$note.date}</div>
-                    <div class="msgwrap" id="notes{$note.id}">
-                        <div class="message">{$note.message}</div>
+                            <div class="postedon">Posted on {$note.date}</div>
+                            <div class="msgwrap" id="notes{$note.id}">
+                                <div class="message">{$note.message}</div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
-                </div>
-                <div class="clearfix"></div>
+                {/foreach}
+            {/if}
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card card-chat">
+            <div class="header">
+                <h4 class="title">public tickets</h4>
+                <p class="category">{$tickets[$smartyvalues.ticketid].name}</p>
             </div>
-        {/foreach}
-    {/if}
+            <div class="content">
+                <ol class="chat">
+                    {foreach from=$smartyvalues.replies item=row}
+                        <li class="{if $row.admin == NULL}other{else}self{/if}">
+                            <div class="avatar">
+                                {$row.admin}{$row.clientname}
+                                {if $row.admin != NULL}
+                                    <div class="editbtnsr{$row.id}">
+                                        <input type="button" value="Edit" onclick="editTicket('r{$row.id}')" class="btn btn-xs btn-small btn-default">
+                                        <input type="button" value="Delete" onclick="doDeleteReply('{$row.id}')" class="btn btn-xs btn-small btn-danger"></div>
+                                    <div class="editbtnsr{$row.id}" style="display:none">
+                                        <input type="button" value="Save" onclick="editTicketSave('r{$row.id}')" class="btn btn-xs btn-small btn-success">
+                                        <input type="button" value="Cancel" onclick="editTicketCancel('r{$row.id}')" class="btn btn-xs btn-small btn-default">
+                                    </div>
+                                {/if}
+                            </div>
+                            <div class="msg" id="contentr{$row.id}" style="min-width: 200px;">
+                                <div class="message">
+                                    {$row.message|strip_tags}
+                                </div>
+                                <div class="card-footer">
+                                    <h6>{$row.friendlydate} {$row.friendlytime }</h6>
+
+
+                                </div>
+                            </div>
+                        </li>
+                    {/foreach}
+                </ol>
+            </div>
+        </div>
+    </div>
 </div>
 
 {literal}

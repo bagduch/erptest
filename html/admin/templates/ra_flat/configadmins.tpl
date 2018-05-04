@@ -7,7 +7,7 @@
                 <p><b>Options:</b> <a class="btn btn-success" href="configadmins.php?action=manage">Add New Administrator</a></p>
             </div>
             <div class="content">
-
+                {$infobox}
                 <h4>Active Administrators </h4>
                 {$tableactive}
                 <h4>Inactive Administrators </h4>

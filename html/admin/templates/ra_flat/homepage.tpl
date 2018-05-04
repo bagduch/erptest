@@ -1,5 +1,5 @@
 <!-- BEGIN WHMCS -->
-{if $maintenancemode}
+{if isset($maintenancemode) && $maintenancemode}
     <div class="errorbox" style="font-size:14px;"> {$_ADMINLANG.home.maintenancemode} </div>
     <br />
 {/if}
@@ -45,7 +45,7 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Cancel Orders</p>
-                    {if $sidebarstats.orders.cancelled}{$sidebarstats.orders.cancelled}{else}0{/if}
+                    {if isset($sidebarstats.orders.cancelled)}{$sidebarstats.orders.cancelled}{else}0{/if}
                 </div>
             </div>
         </div>
@@ -71,14 +71,14 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Active Clients</p>
-                    {if $sidebarstats.orders.active}{$sidebarstats.orders.active}{else}0{/if}
+                    {if $sidebarstats.clients.active}{$sidebarstats.clients.active}{else}0{/if}
                 </div>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <div class="stats">
-            <a href="orders.php?status=Cancelled">
+            <a href="clients.php?status=active">
                 <i class="ti-reload"></i> >More info
             </a>
         </div>
@@ -97,14 +97,14 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Unpaid Invoice</p>
-                    {if $sidebarstats.orders.unpaid}{$sidebarstats.orders.unpaid}{else}0{/if}
+                    {if $sidebarstats.invoices.unpaid}{$sidebarstats.invoices.unpaid}{else}0{/if}
                 </div>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <div class="stats">
-            <a href="#" class="small-box-footer">
+            <a href="invoices.php?status=unpaid" class="small-box-footer">
                 <i class="ti-reload"></i> >More info
             </a>
         </div>
@@ -115,7 +115,7 @@
 
 <div class="row">
     {foreach from=$notes item=data}
-        {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+        {if $data.flag eq '1' && $adminid eq $data.assignto && $data.sticky eq '0'}
             <div class="col-lg-3 col-xs-6">
                 <div class="alert alert-{$data.color} alert-dismissible">
                     <form class="notesupdate{$data.id}" method="post" action="">
@@ -140,7 +140,7 @@
                                 <td colspan="2">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="finishtask" value='0'>
+                                            <input type="checkbox" name="done" value='0'>
                                             done
                                         </label>
                                     </div>
@@ -198,3 +198,13 @@
         {/foreach}
     </section>
 </div>
+{literal}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".notesdone").click(function (e) {
+                $("input[name='done']").val(1);
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
+{/literal}

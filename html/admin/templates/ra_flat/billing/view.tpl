@@ -1,12 +1,8 @@
-
 <div class="card">
     <div class="header">
         <h3 class="title">Transaction Summary</h3>
     </div>
-    <div class="content">
-        {$sumtable}
-    </div>
-
+    {$infobox}
 
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" role="tablist">
@@ -65,11 +61,11 @@
                                 </tr>
                                 <tr>
                                     <td class="fieldlabel">Start Date</td>
-                                    <td class="fieldarea"><input class="form-control" type="text" name="startdate" size="20" value="{$startdate}" class="datepick"></td>
+                                    <td class="fieldarea"><input class="datepick form-control" type="text" name="startdate" size="20" value="{$startdate}"></td>
                                 </tr>
                                 <tr>
                                     <td class="fieldlabel">To Date</td>
-                                    <td class="fieldarea"><input class="form-control" type="text" name="enddate" size="20" value="{$enddate}" class="datepick"></td>
+                                    <td class="fieldarea"><input class="datepick form-control" type="text" name="enddate" size="20" value="{$enddate}"></td>
                                 </tr>
                                 <tr>
                                     <td class="fieldlabel">Amount</td>
@@ -93,7 +89,7 @@
                             <tbody>
                                 <tr>
                                     <td width="15%" class="fieldlabel">Date</td>
-                                    <td class="fieldarea"><input class="form-control" type="text" size="20" name="date" value="16/11/2016" class="datepick form-control"></td>
+                                    <td class="fieldarea"><input class="datetimepick form-control" type="text" size="20" name="date" value=""></td>
 
                                 </tr>
                                 <tr>
@@ -105,7 +101,7 @@
                                 </tr>
                                 <tr>
                                     <td class="fieldlabel">Description</td>
-                                    <td class="fieldarea"><input class="form-control" value="{$description}" type="text" name="description" size="50"></td>
+                                    <td class="fieldarea"><input class="form-control" value="" type="text" name="description" size="50"></td>
 
                                 </tr>
                                 <tr>
@@ -161,7 +157,7 @@
                             </tbody>
                         </table>
                     </div>
-               
+
                     <div align="center"><input type="submit" value="Add Transaction" class="btn btn-default"></div>
                 </form>
 

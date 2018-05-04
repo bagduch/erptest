@@ -27,9 +27,10 @@ if ($action == "") {
 
 
     if ($sub == "remove") {
+        $credit = 0 - $amount;
         checkPermission("Manage Credits");
         check_token("RA.admin.default");
-        insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => 0 - $amount));
+        insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $credit));
         update_query("tblclients", array("credit" => "-=" . $amount), array("id" => (int) $userid));
         logActivity("Removed Credit - User ID: " . $userid . " - Amount: " . formatCurrency($amount), $userid);
         redir("userid=" . $userid);
@@ -149,54 +150,6 @@ window.location='";
     $result = select_query_i("tblclients", "", array("id" => $userid));
     $data = mysqli_fetch_array($result);
     $creditbalance = formatCurrency($data['credit']);
-    echo "
-<form method=\"post\" action=\"";
-    echo $PHP_SELF;
-    echo "?userid=";
-    echo $userid;
-    echo "&sub=";
-    echo $action;
-    echo "\">
-
-<p>";
-    echo $aInt->lang("fields", "client");
-    echo ": <B>";
-    echo $name;
-    echo "</B> (";
-    echo $aInt->lang("fields", "balance");
-    echo ": ";
-    echo $creditbalance;
-    echo ")</p>
-
-<p><b>";
-    echo $title;
-    echo "</b></p>
-
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
-<tr><td width=\"15%\" class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "date");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"date\" size=\"12\" value=\"";
-    echo $date;
-    echo "\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "description");
-    echo "</td><td class=\"fieldarea\"><textarea name=\"description\" cols=\"75\" rows=\"4\">";
-    echo $description;
-    echo "</textarea></td></tr>
-<tr><td class=\"fieldlabel\">";
-    echo $aInt->lang("fields", "amount");
-    echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"amount\" size=\"15\" value=\"";
-    echo $amount;
-    echo "\"></td></tr>
-</table>
-
-<p align=center><input type=\"submit\" value=\"";
-    echo $aInt->lang("global", "savechanges");
-    echo "\" class=\"button\"></p>
-
-</form>
-
-";
     $template = 'client/addcredit';
 } elseif ($action == "edit") {
     checkPermission("Manage Credits");
@@ -253,6 +206,9 @@ window.location='";
 
 $content = ob_get_contents();
 ob_end_clean();
+$today = fromMySQLDate(date('Y-m-d'));
+$aInt->assign("action", $action);
+$aInt->assign("today", $today);
 $aInt->assign("creditbalance", $creditbalance);
 $aInt->assign("name", $name);
 $aInt->assign("userid", $userid);

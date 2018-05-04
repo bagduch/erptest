@@ -1,9 +1,9 @@
 
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title">Edit Transaction</h3>
+<div class="card">
+    <div class="header">
+        <h3 class="title">Edit Transaction</h3>
     </div>
-    <div class="box-body">
+    <div class="content">
         <form method="post" action="{$PHP_SELF}?action=save&amp;id=14" name="calendarfrm">
 
             <div class="col-lg-6">

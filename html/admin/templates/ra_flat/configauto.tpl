@@ -4,6 +4,7 @@
             <div class="content">
                 <form method="post" action="{$PHP_SELF}?sub=save">
                     <p><b>Automatic Module Functions</b></p>
+                    {$infobox}
                     <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr>
@@ -21,7 +22,7 @@
                             <tr>
                                 <td class="fieldlabel">Enable Unsuspension</td>
                                 <td class="fieldarea">
-                                    <label><input type="checkbox" name="autounsuspend" {if $CONFIG.Autounsuspend eq 'on'}checked{/if}> Tick this box to enable automatic unsuspension on payment</label>
+                                    <label><input type="checkbox" name="autounsuspend" {if $CONFIG.AutoSuspension eq 'on'}checked{/if}> Tick this box to enable automatic unsuspension on payment</label>
                                 </td>
                             </tr>
                             <tr>

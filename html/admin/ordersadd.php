@@ -10,7 +10,6 @@ $aInt->requiredFiles(array("orderfunctions", "servicefunctions", "whoisfunctions
 $action = $ra->get_req_var("action");
 $userid = $ra->get_req_var("userid");
 $currency = getCurrency($userid);
-$menuselect = "$('#menu').multilevelpushmenu('expand','Orders');";
 
 if ($action == "createpromo") {
     check_token("RA.admin.default");
@@ -22,6 +21,7 @@ if ($action == "createpromo") {
     }
     $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
     $data = mysqli_fetch_array($result);
+    echo "<pre>", print_r($data, 1), "</pre>";
     $duplicates = $data[0];
     if ($duplicates) {
         exit("Promotion Code already exists. Please try another.");
@@ -29,10 +29,10 @@ if ($action == "createpromo") {
     $promoid = insert_query("tblpromotions", array(
         "code" => $code,
         "type" => $type,
-        "recurring" => $recurring,
+        "recurring" => isset($recurring) ? 1 : 0,
         "value" => $pvalue,
-        "maxuses" => "1",
         "recurfor" => $recurfor,
+        "startdate" => "now()",
         "expirationdate" => "0000-00-00",
         "notes" => "Order Process One Off Custom Promo"
             )
@@ -52,7 +52,6 @@ if ($action == "createpromo") {
     exit();
 }
 if ($action == "getconfigoptions") {
-    $pid = 48;
     $configoptions = getCartConfigOptions($pid, "", $cycle);
     if (count($configoptions) > 0) {
         $options .= "<p><b>" . $aInt->lang("setup", "configoptions") . "</b></p>
@@ -73,33 +72,30 @@ if ($action == "getconfigoptions") {
                 }
 
                 $options .= "</select>";
-            } else {
-                if ($configoption['optiontype'] == "2") {
-                    foreach ($configoption['options'] as $optiondata) {
-                        $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
+            } else if ($configoption['optiontype'] == "2") {
+                foreach ($configoption['options'] as $optiondata) {
+                    $options .= "<input type=\"radio\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $optiondata['id'] . "\"";
 
-                        if ($optiondata['id'] == $configoption['selectedvalue']) {
-                            $options .= " checked=\"checked\"";
-                        }
-
-                        $options .= "> " . $optiondata['name'] . "<br />";
+                    if ($optiondata['id'] == $configoption['selectedvalue']) {
+                        $options .= " checked=\"checked\"";
                     }
-                } else {
-                    if ($configoption['optiontype'] == "3") {
-                        $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
 
-                        if ($configoption['selectedqty']) {
-                            $options .= " checked=\"checked\"";
-                        }
-
-                        $options .= "> " . $configoption['options'][0]['name'];
-                    } else {
-                        if ($configoption['optiontype'] == "4") {
-                            $options .= "<input class=\"form-control\" type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
-                        }
-                    }
+                    $options .= "> " . $optiondata['name'] . "<br />";
                 }
+            } elseif ($configoption['optiontype'] == "3") {
+                $options .= "<input type=\"checkbox\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"1\"";
+
+                if ($configoption['selectedqty']) {
+                    $options .= " checked=\"checked\"";
+                }
+
+                $options .= "> " . $configoption['options'][0]['name'];
+            } elseif ($configoption['optiontype'] == "4") {
+                $options .= "<input class=\"form-control\" type=\"text\" onclick=\"updatesummary()\" name=\"configoption[" . $orderid . "][" . $configoption['id'] . "]\" value=\"" . $configoption['selectedqty'] . "\" size=\"5\"> x " . $configoption['options'][0]['name'];
+            } else {
+                
             }
+
 
             $options .= "</td></tr>";
         }
@@ -109,8 +105,8 @@ if ($action == "getconfigoptions") {
     $customfields = getCustomFields("", $pid, "", "", "on");
 // echo "<pre>", print_r($customfields, 1), "</pre>";
     if (count($customfields)) {
-        $options .="<div class=\"box\"><div class='box-header'>
-                                <h3 class='box-title'>" . $aInt->lang("setup", "customfields") . "</h3>
+        $options .= "<div class=\"card\"><div class='header'>
+                                <h3 class='title'>" . $aInt->lang("setup", "customfields") . "</h3>
                             </div>
 <table class=\"table\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
 
@@ -137,7 +133,7 @@ if ($action == "getconfigoptions") {
             $addonshtml .= "</label><br />";
         }
     }
-    $options.= "<script type='text/javascript'> 
+    $options .= "<script type='text/javascript'> 
         $('.datepick').datepicker({
                     autoclose: true,
                     format: 'yyyy-mm-dd',
@@ -174,7 +170,7 @@ if ($ra->get_req_var("submitorder")) {
                     "configoptions" => $configoption[$k],
                     "customfields" => $customfield[$k],
                     "addons" => $addons[$k]
-                ); 
+                );
 
                 if (strlen($_POST['priceoverride'][$k])) {
                     $productarray['priceoverride'] = $_POST['priceoverride'][$k];
@@ -416,7 +412,7 @@ function updatesummary() {
     });
 }
 ";
-ob_start();
+
 if (!checkActiveGateway()) {
     $aInt->gracefulExit($aInt->lang("gateways", "nonesetup"));
 }
@@ -450,7 +446,7 @@ while ($data = mysqli_fetch_array($result)) {
     if ($promo_type == "Free Setup") {
         $promo_recurring = "";
     }
-    $activepromotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $activepromotion .= "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 $result = select_query_i("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
 while ($data = mysqli_fetch_array($result)) {
@@ -474,47 +470,46 @@ while ($data = mysqli_fetch_array($result)) {
     if ($promo_type == "Free Setup") {
         $promo_recurring = "";
     }
-    $expireprmotion = "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
+    $expireprmotion .= "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
 //tEPJADs9nmInC107
 if (!$billingcycle) {
     $billingcycle = "Monthly";
 }
-echo $aInt->cyclesDropDown($billingcycle, "", "", "billingcycle[]", "updatesummary()");
-echo "</td></tr>
-<tr id=\"addonsrow0\" style=\"display:none;\"><td class=\"fieldlabel\">";
-echo $aInt->lang("addons", "title");
-echo "</td><td class=\"fieldarea\" id=\"addonscont0\"></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "quantity");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"qty[]\" value=\"1\" size=\"5\" onkeyup=\"updatesummary()\" /></td></tr>
-<tr><td class=\"fieldlabel\">";
-echo $aInt->lang("fields", "priceoverride");
-echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"priceoverride[]\" size=\"10\" onkeyup=\"updatesummary()\" /> ";
-echo $aInt->lang("orders", "priceoverridedesc");
-echo "</td></tr>
-</table>
+//echo $aInt->cyclesDropDown($billingcycle, "", "", "billingcycle[]", "updatesummary()");
+//echo "</td></tr>
+//<tr id=\"addonsrow0\" style=\"display:none;\"><td class=\"fieldlabel\">";
+//echo $aInt->lang("addons", "title");
+//echo "</td><td class=\"fieldarea\" id=\"addonscont0\"></td></tr>
+//<tr><td class=\"fieldlabel\">";
+//echo $aInt->lang("fields", "quantity");
+//echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"qty[]\" value=\"1\" size=\"5\" onkeyup=\"updatesummary()\" /></td></tr>
+//<tr><td class=\"fieldlabel\">";
+//echo $aInt->lang("fields", "priceoverride");
+//echo "</td><td class=\"fieldarea\"><input type=\"text\" name=\"priceoverride[]\" size=\"10\" onkeyup=\"updatesummary()\" /> ";
+//echo $aInt->lang("orders", "priceoverridedesc");
+//echo "</td></tr>
+//</table>
+//
+//<div id=\"productconfigoptions0\"></div>
+//
+//</div>
+//</div>
+//
+//<p style=\"padding-left:20px;\"><a href=\"#\" class=\"addproduct\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
+//echo $aInt->lang("orders", "anotherproduct");
+//echo "</a></p>
+//
+//</td><td valign=\"top\">
+//
+//<div id=\"ordersumm\" style=\"padding:15px;\"></div>
+//
+//<div class=\"ordersummarytitle\"><input type=\"submit\" value=\"";
+//echo $aInt->lang("orders", "submit");
+//echo " &raquo;\" class=\"btn-primary\" style=\"font-size:20px;padding:12px 30px ;\" /></div></td></tr></table></form>";
+//echo "<script> updatesummary(); </script>";
 
-<div id=\"productconfigoptions0\"></div>
 
-</div>
-</div>
-
-<p style=\"padding-left:20px;\"><a href=\"#\" class=\"addproduct\"><img src=\"images/icons/add.png\" border=\"0\" align=\"absmiddle\" /> ";
-echo $aInt->lang("orders", "anotherproduct");
-echo "</a></p>
-
-</td><td valign=\"top\">
-
-<div id=\"ordersumm\" style=\"padding:15px;\"></div>
-
-<div class=\"ordersummarytitle\"><input type=\"submit\" value=\"";
-echo $aInt->lang("orders", "submit");
-echo " &raquo;\" class=\"btn-primary\" style=\"font-size:20px;padding:12px 30px ;\" /></div></td></tr></table></form>";
-echo "<script> updatesummary(); </script>";
-
-$content = ob_get_contents();
-ob_end_clean();
 $aInt->content = $content;
 $aInt->assign("token", generate_token("plain"));
 
@@ -531,7 +526,7 @@ $aInt->assign("productdrop", $aInt->productDropDown(0, true));
 $aInt->assign("paymentdrop", paymentMethodsSelection());
 $aInt->template = "order/add";
 $aInt->jquerycode = $jquerycode;
-$aInt->jquerycode .=$menuselect;
+$aInt->jquerycode .= $menuselect;
 //$aInt->jscode = $jscode;
 $aInt->display();
 ?>

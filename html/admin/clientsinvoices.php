@@ -200,7 +200,7 @@ if ($delete) {
         $userid .= "&page=" . $page;
     }
 
-    redir("userid=" . $userid . "&filter=1");
+//    redir("userid=" . $userid . "&filter=1");
 }
 
 $aInt->deleteJSConfirm("doDelete", "invoices", "delete", "clientsinvoices.php?userid=" . $userid . "&delete=true&invoiceid=");
@@ -226,7 +226,7 @@ if ($addpayment) {
     }
 
 
-    addInvoicePayment($_POST['id'], $_POST['transid'], $_POST['amount'], $_POST['fees'], $_POST['paymentmethod'], $_POST['sendconfirmation'], $_POST['date']);
+    addInvoicePayment($_POST['id'], $_POST['transid'], $_POST['amount'], isset($_POST['fees']) ? $_POST['fees'] : 0, $_POST['paymentmethod'], $_POST['sendconfirmation'], $_POST['date']);
 }
 
 if ($masspayid) {
@@ -239,7 +239,6 @@ $filterops = array("serviceid", "addonid", "domainid", "clientname", "invoicenum
 $filt->setAllowedVars($filterops);
 $filters = array();
 $filters[] = "userid='" . (int) $userid . "'";
-
 
 if ($serviceid = $filt->get("serviceid")) {
 
@@ -259,9 +258,8 @@ if ($clientname = $filt->get("clientname")) {
 
 
 if ($invoicenum = $filt->get("invoicenum")) {
-    $filters[] = "(tblinvoices.id='" . db_escape_string($invoicenumber) . "' OR tblinvoices.invoicenum='" . db_escape_string($invoicenumber) . "')";
+    $filters[] = "(tblinvoices.id='" . db_escape_string($invoicenum) . "' OR tblinvoices.invoicenum='" . db_escape_string($invoicenum) . "')";
 }
-
 
 if ($lineitem = $filt->get("lineitem")) {
     $filters[] = "tblinvoices.id IN (SELECT invoiceid FROM tblinvoiceitems WHERE userid=" . (int) $userid . " AND description LIKE '%" . db_escape_string($lineitem) . "%')";
@@ -387,6 +385,7 @@ if ($_POST['ajax']) {
 
 $paymentdropdown = paymentMethodsSelection();
 
+$aInt->assign("filter", RA_Cookie::get("FD", 1));
 $aInt->assign("userid", $userid);
 $aInt->assign("token", generate_token("link"));
 $aInt->assign("paymentdropdown", $paymentdropdown);

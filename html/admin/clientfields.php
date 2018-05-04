@@ -1,4 +1,5 @@
 <?php
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,7 +15,6 @@ $aInt->title = "Client Custom Fields";
 $aInt->sidebar = "config";
 $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
-$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 if ($action == "") {
     $result = select_query_i("tblclientfields", "");
@@ -22,6 +22,13 @@ if ($action == "") {
         $clientfields[$data['cfid']] = $data;
     }
     $aInt->assign('datas', $clientfields);
+}
+
+if ($action = "deletefield") {
+    if (isset($_POST['deletefieldid'])) {
+        delete_query("tblclientfields", array('cfid' => $_POST['deletefieldid']));
+        logActivity($_SESSION['admin_id'] . " removed customer fields" . $_POST['deletefieldid']);
+    }
 }
 if ($action == "save") {
     if (isset($_POST['fieldname'])) {
@@ -80,6 +87,5 @@ if ($action == "save") {
 
 
 $aInt->template = "client/clientfields";
-$aInt->jquerycode .=$menuselect;
 $aInt->display();
 ?>

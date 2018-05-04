@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-md-12">
         <h3 class="page-header"><span aria-hidden="true" class="icon icon-home"></span> {$LANG.clientareanavhome} <i class="fa fa-info-circle animated bounce show-info"></i>
-            {if $showqsl} 
+            {if isset($showqsl) && $showqsl}
                 <span class="pull-right qsl"><a href="#" data-original-title="Quick Server Logins"><span aria-hidden="true" class="icon icon-settings settings-toggle"></span></a></span>
                     {/if}
-        </h3>  
-        <h2>Welcome Back {$name}</h2>	
-        <br />   
+        </h3>
+        <h2>Welcome Back {$name}</h2>
+        <br />
     </div>
 </div>
 <div class="row">

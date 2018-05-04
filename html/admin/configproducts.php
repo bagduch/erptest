@@ -13,7 +13,6 @@ $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
-$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
@@ -258,15 +257,15 @@ if ($sub == "savegroup") {
         delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
 
 
-        if ($customefield) {
-            foreach ($customefield as $row) {
+        if ($customfield) {
+            foreach ($customfield as $row) {
 
                 insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
             }
         }
     } else {
         $id = insert_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
-        foreach ($customefield as $row) {
+        foreach ($customfield as $row) {
             insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }
     }
@@ -469,7 +468,7 @@ if ($action == "") {
     $groupsid = $groups['id'];
     if ($action == "edit") {
         // get all service data
-        $currecy = getCurrency();
+        $currency = getCurrency();
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
@@ -771,7 +770,7 @@ if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-$aInt->jquerycode .=$menuselect;
+
 
 $aInt->display();
 ?>

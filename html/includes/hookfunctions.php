@@ -37,7 +37,7 @@ function run_hook($hook_name, $args) {
 			}
 		}
 	}
-
+ 
 	return $results;
 }
 

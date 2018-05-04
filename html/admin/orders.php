@@ -79,11 +79,11 @@ if ($action == "addnotes") {
         "type" => $_POST['rel_type'],
         "created" => "now()",
         "duedate" => $duedate,
-        "flag" => $_POST['imports'],
-        "assignto" => $_POST['assign'],
+        "flag" => isset($_POST['imports']) ? 1 : 0,
+        "assignto" => $_SESSION['adminid'],
         "modified" => "now()",
         "note" => $_POST['notes'],
-        "sticky" => $sticky));
+        "sticky" => isset($sticky) ? 1 : 0));
 
     logActivity("Add Note - Order ID: " . $account);
     redir("action=view&id=$account");
@@ -757,9 +757,9 @@ where tbo.id=" . $id;
         }
         $tabledata[] = array($data['type'], $created, $note, $data['name'], $data['assignname'], $duedate, $modified, $importantnote, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $noteid . "\"class=\"btn btn-success editnotes\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>", "<a href=\"#\" onClick=\"doDelete('" . $noteid . "');return false\" class=\"btn btn-danger\"><i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i></a>", $noteid);
     }
-    
-    
-    
+
+
+
     $aInt->assign("tabledata", $tabledata);
     $aInt->assign("jquerycode", "adc");
     $aInt->assign("notes", $notes);

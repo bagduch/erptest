@@ -6,8 +6,8 @@
             </div>
             <div class="content">
                 <br>
-                <form method="post" action="{$PHP_SELF}?action=add&amp;userid={$data.userid}">
-                    {$infobox}
+                <form id="addclient" method="post" action="{$PHP_SELF}?action=add&amp;userid={$data.userid}">
+
                     <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody><tr><td width="15%" class="fieldlabel">First Name</td>
                                 <td class="fieldarea"><input class="form-control"  type="text" size="30" name="firstname" tabindex="1"></td>
@@ -28,7 +28,7 @@
                                     <font color="#cccccc"><small>(Optional)</small></font>
                                 </td>
                                 <td class="fieldlabel">Region</td>
-                                <td class="fieldarea region"><input class="form-control"  type="text" size="25" name="state"  tabindex="11"></td>
+                                <td class="fieldarea region"><input class="form-control state"  type="text" size="25" name="state"  tabindex="11"></td>
 
                             </tr>
                             <tr>
@@ -39,19 +39,19 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Password</td>
-                                <td class="fieldarea"><input class="form-control"  type="text" size="20" name="password"  tabindex="5"></td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="password"  tabindex="5"></td>
                                 <td class="fieldlabel">Country</td>
                                 <td class="fieldarea">
-                                        {$countrydrop}
+                                    {$countrydrop}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Date Of Birth</td>
-                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="dateofbirth" value="{$data.dateofbirth}" tabindex="14"></td>
-                                <td class="fieldlabel">Language</td>
-                                <td class="fieldarea"><select  class="form-control"  name="language" tabindex="23"><option value="">Default</option><option value="en">En</option></select></td>
+                                <td class="fieldarea"><input class="datepick form-control" type="text" size="20" name="dateofbirth" value="{$data.dateofbirth}" tabindex="14"></td>
+                                <td class="fieldlabel">Mobile Number</td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="mobilenumber" value="{$data.mobilenumber}" tabindex="14"></td>
                             </tr>
-                            <tr>    
+                            <tr>
                                 <td class="fieldlabel">Status</td>
                                 <td class="fieldarea">
                                     <select class="form-control"  name="status" tabindex="24">
@@ -63,7 +63,7 @@
                                 <td class="fieldlabel">Phone Number</td>
                                 <td class="fieldarea"><input class="form-control" type="text" size="20" name="phonenumber" value="{$data.phonenumber}" tabindex="14"></td>
                             </tr>
-                          
+
                             <tr>
                                 <td class="fieldlabel">Late Fees</td>
                                 <td class="fieldarea"><input type="checkbox" name="latefeeoveride" tabindex="15" {if $data.latefeeoveride}checked{/if}> Don't Apply Late Fees</td>
@@ -119,3 +119,23 @@
         </div>
     </div>
 </div>
+{literal}
+    <script type="text/javascript">
+
+        $('#addclient').ajaxForm({
+            url: '{/literal}{$PHP_SELF}?action=add&amp;userid={$data.userid}{literal}', // or whatever
+                    type: 'post',
+                    success: function (response) {
+                        response = JSON.parse(response);
+                        if (response.success)
+                        {
+                            window.location = "clientssummary.php?userid=" + response.userid;
+                        } else {
+                            $("#addclient").prepend(response.error);
+                        }
+                    }
+                });
+
+    </script>
+
+{/literal}

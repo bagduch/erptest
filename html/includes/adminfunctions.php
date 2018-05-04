@@ -34,7 +34,10 @@ function getAdminPermsArray() {
         99 => "Create Upgrade/Downgrade Orders",
         13 => "Delete Clients Products/Services",
         14 => "Perform Server Operations", 15 => "View Clients Domains", 16 => "Edit Clients Domains", 17 => "Delete Clients Domains", 98 => "Perform Registrar Operations", 95 => "Manage Clients Files", 18 => "View Clients Notes", 19 => "Add/Edit Client Notes", 97 => "Delete Client Notes", 20 => "Delete Client", 21 => "Mass Mail", 22 => "View Cancellation Requests", 23 => "Manage Affiliates", 24 => "View Orders", 25 => "Delete Order", 26 => "View Order Details", 27 => "Add New Order", 28 => "List Transactions", 94 => "View Income Totals", 29 => "Add Transaction", 30 => "Edit Transaction", 31 => "Delete Transaction", 33 => "List Invoices", 34 => "Create Invoice", 124 => "Generate Due Invoices", 35 => "Manage Invoice", 36 => "Delete Invoice", 92 => "Refund Invoice Payments", 89 => "View Billable Items", 90 => "Manage Billable Items", 37 => "Offline Credit Card Processing", 32 => "View Gateway Log", 85 => "Manage Quotes", 38 => "Support Center Overview", 39 => "Manage Announcements", 40 => "Manage Knowledgebase", 41 => "Manage Downloads", 84 => "Manage Network Issues", 42 => "List Support Tickets", 105 => "View Support Ticket",
-        121 => "Access All Tickets Directly", 82 => "View Flagged Tickets", 43 => "Open New Ticket", 93 => "Delete Ticket", 125 => "Create Predefined Replies", 44 => "Manage Predefined Replies", 126 => "Delete Predefined Replies", 45 => "View Reports", 88 => "CSV Downloads", 46 => "Addon Modules", 101 => "Email Marketer", 47 => "Link Tracking", 48 => "Browser", 49 => "Calendar", 50 => "To-Do List", 51 => "WHOIS Lookups", 52 => "Domain Resolver Checker", 53 => "View Integration Code", 54 => "WHM Import Script", 55 => "Database Status", 56 => "System Cleanup Operations", 57 => "View PHP Info", 58 => "View Activity Log", 59 => "View Admin Log", 60 => "View Email Message Log", 61 => "View Ticket Mail Import Log", 62 => "View WHOIS Lookup Log", 103 => "View Module Debug Log", 63 => "Configure General Settings", 64 => "Configure Administrators", 65 => "Configure Admin Roles", 127 => "Configure Two-Factor Authentication", 100 => "Configure Addon Modules", 91 => "Configure Client Groups", 66 => "Configure Servers", 67 => "Configure Automation Settings", 86 => "Configure Currencies", 68 => "Configure Payment Gateways", 69 => "Configure Tax Setup", 70 => "View Email Templates",150=>'View TXT Templates', 113 => "Create/Edit Email Templates", 114 => "Delete Email Templates", 115 => "Manage Email Template Languages", 71 => "View Products/Services", 119 => "Manage Product Groups", 116 => "Create New Products/Services", 117 => "Edit Products/Services", 118 => "Delete Products/Services", 72 => "Configure Product Addons", 102 => "Configure Product Bundles", 73 => "View Promotions", 108 => "Create/Edit Promotions", 109 => "Delete Promotions", 74 => "Configure Domain Pricing", 75 => "Configure Support Departments", 96 => "Configure Ticket Statuses", 122 => "Configure Order Statuses", 76 => "Configure Spam Control", 110 => "View Banned IPs", 111 => "Add Banned IP", 112 => "Unban Banned IP", 77 => "Configure Banned Emails", 78 => "Configure Domain Registrars", 79 => "Configure Fraud Protection", 80 => "Configure Custom Client Fields", 87 => "Configure Security Questions", 83 => "Configure Database Backups", 81 => "API Access");
+        121 => "Access All Tickets Directly", 82 => "View Flagged Tickets", 43 => "Open New Ticket", 93 => "Delete Ticket", 125 => "Create Predefined Replies", 44 => "Manage Predefined Replies", 126 => "Delete Predefined Replies", 45 => "View Reports", 88 => "CSV Downloads", 46 => "Addon Modules", 101 => "Email Marketer", 47 => "Link Tracking", 48 => "Browser", 49 => "Calendar", 50 => "To-Do List", 51 => "WHOIS Lookups", 52 => "Domain Resolver Checker", 53 => "View Integration Code", 54 => "WHM Import Script", 55 => "Database Status", 56 => "System Cleanup Operations", 57 => "View PHP Info", 58 => "View Activity Log", 59 => "View Admin Log", 60 => "View Email Message Log", 61 => "View Ticket Mail Import Log", 62 => "View WHOIS Lookup Log", 103 => "View Module Debug Log", 63 => "Configure General Settings", 64 => "Configure Administrators", 65 => "Configure Admin Roles", 127 => "Configure Two-Factor Authentication", 100 => "Configure Addon Modules", 91 => "Configure Client Groups", 66 => "Configure Servers", 67 => "Configure Automation Settings", 86 => "Configure Currencies", 68 => "Configure Payment Gateways", 69 => "Configure Tax Setup", 70 => "View Email Templates", 150 => 'View TXT Templates', 113 => "Create/Edit Email Templates", 114 => "Delete Email Templates", 115 => "Manage Email Template Languages", 71 => "View Products/Services", 119 => "Manage Product Groups", 116 => "Create New Products/Services", 117 => "Edit Products/Services", 118 => "Delete Products/Services", 72 => "Configure Product Addons", 102 => "Configure Product Bundles", 73 => "View Promotions", 108 => "Create/Edit Promotions", 109 => "Delete Promotions", 74 => "Configure Domain Pricing", 75 => "Configure Support Departments", 96 => "Configure Ticket Statuses", 122 => "Configure Order Statuses", 76 => "Configure Spam Control", 110 => "View Banned IPs", 111 => "Add Banned IP", 112 => "Unban Banned IP", 77 => "Configure Banned Emails", 78 => "Configure Domain Registrars", 79 => "Configure Fraud Protection", 80 => "Configure Custom Client Fields", 87 => "Configure Security Questions", 83 => "Configure Database Backups",
+        81 => "API Access",
+        130=>"View Invoice Payment Monitor",
+        131=>"Edit Invoice Payment Monitor");
     return $adminpermsarray;
 }
 
@@ -44,7 +47,7 @@ function checkPermission($action, $noredirect = "") {
 
     $permid = array_search($action, getAdminPermsArray());
 
-   
+
     if (isset($_SESSION['adminid'])) {
 
         if ($AdminRoleID == 0) {
@@ -84,10 +87,10 @@ function checkPermission($action, $noredirect = "") {
 function infoBox($title, $description, $status = "") {
     global $infobox;
 
-    $infobox = "<div class=\"";
+    $infobox = "<div class=\"alert alert-";
 
     if ($status == "error") {
-        $infobox .= "error";
+        $infobox .= "danger";
     } else {
         if ($status == "success") {
             $infobox .= "success";
@@ -96,7 +99,7 @@ function infoBox($title, $description, $status = "") {
         }
     }
 
-    $infobox .= "box\"><strong><span class=\"title\">" . $title . "</span></strong><br />" . $description . "</div>";
+    $infobox .= "\"><button type=\"button\" aria-hidden=\"true\" class=\"close\">x</button><span><b>" . $title . "</b><br />" . $description . "</span></div>";
 }
 
 function getAdminName($adminid = "") {

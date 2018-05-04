@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 function initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav) {
@@ -20,7 +20,7 @@ function initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav) {
     global $smarty;
     global $smartyvalues;
 
-    include_once ROOTDIR . "/includes/smarty/Smarty.class.php";
+    include_once ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
     $smarty = new Smarty();
     $smarty->caching = 0;
     $smarty->template_dir = ROOTDIR . "/templates/";

@@ -18,8 +18,6 @@ $supporttickets = new RA_Support($id, $action);
 $aInt = $supporttickets->aInt;
 $filt = $supporttickets->filt;
 $smartyvalues = array();
-
-
 if ($ra->get_req_var("ticketid")) {
     $action = "search";
 }
@@ -406,7 +404,7 @@ if ($action == "gettags") {
 
     if (!$errormessage) {
         $attachments = uploadTicketAttachments(true);
-        $client = (int) str_replace("UserID:", "", $client);
+        echo $client;
         $ticketdata = openNewTicket(
                 $client, $contactid, $deptid, $subject, $message, $priority, $attachments, array("name" => $name, "email" => $email), $relatedservice, $ccemail, ($sendemail ? false : true), true);
         $id = $ticketdata['ID'];
@@ -445,23 +443,18 @@ if ($action == "gettags") {
 
             if ($postaction == "close") {
                 $newstatus = "Closed";
+            } elseif (substr($postaction, 0, 9) == "setstatus") {
+                $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
+                $data = mysqli_fetch_array($result);
+                $newstatus = $data[0];
+            } elseif ($postaction == "onhold") {
+                $newstatus = "On Hold";
+            } elseif ($postaction == "inprogress") {
+                $newstatus = "In Progress";
             } else {
-                if (substr($postaction, 0, 9) == "setstatus") {
-                    $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
-                    $data = mysqli_fetch_array($result);
-                    $newstatus = $data[0];
-                } else {
-                    if ($postaction == "onhold") {
-                        $newstatus = "On Hold";
-                    } else {
-                        if ($postaction == "inprogress") {
-                            $newstatus = "In Progress";
-                        } else {
-                            $newstatus = "Answered";
-                        }
-                    }
-                }
+                $newstatus = "Answered";
             }
+
 
             AddReply($id, "NULL", "NULL", $message, true, $attachments, null, $newstatus);
 
@@ -515,7 +508,7 @@ if ($action == "gettags") {
         }
 
 
-        redir("action=viewticket&id=" . $id);
+//        redir("action=viewticket&id=" . $id);
     }
 
     if ($deptid) {
@@ -1414,10 +1407,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
             $client = $data['id'];
 
             if ($client) {
-                $name = $data['firstname'] . " " . $data['lastname'];
+                $clientname = $data['firstname'] . " " . $data['lastname'];
 
                 if ($data['companyname']) {
-                    $name .= " (" . $data['companyname'] . ")";
+                    $clientname .= " (" . $data['companyname'] . ")";
                 }
 
                 $email = $data['email'];
@@ -1457,6 +1450,10 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $template = "support/supportopen";
     }
 }
+$result = select_query_i("tblticketstatuses", "", "");
+while ($data = mysqli_fetch_array($result)) {
+    $statuseshtml .= "<option value=\"" . $data['id'] . "\">" . $data['title'] . "</option>";
+}
 $aInt->assign("replacemenu", "View Tickets");
 $aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
 $result = select_query_i("tbltickettags", "", "", "id", "DESC");
@@ -1468,6 +1465,8 @@ $tagcontainer = "$('div#tickets').append('<div class=\"tag-list\"><h3>Tags:</h3>
 
 $aInt->jquerycode .= $menuselect;
 $aInt->jquerycode .= $tagcontainer;
+$aInt->assign("clientname", $clientname);
+$aInt->assign("email", $email);
 $aInt->assign("addto", "Support");
 $aInt->assign("smartyvalues", $smartyvalues);
 $aInt->assign("table", $table);

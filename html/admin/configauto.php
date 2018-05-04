@@ -16,7 +16,6 @@ $aInt = new RA_Admin("Configure Automation Settings");
 $aInt->title = $aInt->lang("automation", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "autosettings";
-$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 if ($sub == "save") {
     check_token("RA.admin.default");
     update_query("tblconfiguration", array("value" => $autosuspend), array("setting" => "AutoSuspension"));
@@ -29,7 +28,6 @@ if ($sub == "save") {
     update_query("tblconfiguration", array("value" => $closeinactivetickets), array("setting" => "CloseInactiveTickets"));
     update_query("tblconfiguration", array("value" => $autotermination), array("setting" => "AutoTermination"));
     update_query("tblconfiguration", array("value" => $autoterminationdays), array("setting" => "AutoTerminationDays"));
-    update_query("tblconfiguration", array("value" => $autounsuspend), array("setting" => "AutoUnsuspend"));
     update_query("tblconfiguration", array("value" => $addlatefeedays), array("setting" => "AddLateFeeDays"));
     update_query("tblconfiguration", array("value" => $invoicefirstoverduereminder), array("setting" => "SendFirstOverdueInvoiceReminder"));
     update_query("tblconfiguration", array("value" => $invoicesecondoverduereminder), array("setting" => "SendSecondOverdueInvoiceReminder"));
@@ -64,15 +62,19 @@ if ($sub == "save") {
 
 if ($success) {
     infoBox($aInt->lang("automation", "changesuccess"), $aInt->lang("automation", "changesuccessinfo"));
-    echo $infobox;
 }
 
+$result = select_query_i("tblconfiguration", "", "");
+while ($data = mysqli_fetch_array($result)) {
+    $setting = $data['setting'];
+    $value = $data['value'];
+    $CONFIG[$setting] = $value;
+}
 
-
+$aInt->assign('infobox', $infobox);
 $aInt->assign('CONFIG', $CONFIG);
 $aInt->assign('PHP_SELF', $PHP_SELF);
 $aInt->template = "configauto";
 $aInt->jscode = $jscode;
-$aInt->jquerycode .= $menuselect;
 $aInt->display();
 ?>

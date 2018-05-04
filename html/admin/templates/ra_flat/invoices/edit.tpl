@@ -9,6 +9,7 @@
                         <li role="presentation" class=""><a href="#tab2box" aria-controls="tab2box" role="tab" data-toggle="tab">Options</a></li>
                         <li role="presentation" class=""><a href="#tab3box" aria-controls="tab3box" role="tab" data-toggle="tab">Credit</a></li>
                         <li role="presentation" class=""><a href="#tab4box" aria-controls="tab4box" role="tab" data-toggle="tab">Refund</a></li>
+                        <li role="presentation" class=""><a href="#tab6box" aria-controls="tab5box" role="tab" data-toggle="tab">Payment Plan</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab0box" class="tab-pane active">
@@ -57,6 +58,7 @@
                                                     <option>Credit Card Payment Confirmation</option>
                                                     <option>Invoice Refund Confirmation</option>
                                                 </select> 
+                                                <img src="images/spacer.gif" width="1" height="5"><br>
                                                 <input class="btn btn-default" type="submit" value="Send Email">
                                             </form>
                                             <img src="images/spacer.gif" width="1" height="5"><br>
@@ -267,7 +269,7 @@
                                     <tbody><tr><td width="20%" class="fieldlabel">Transactions</td><td class="fieldarea"><select class="form-control" name="transid"><option value="">No Transactions Applied To This Invoice Yet</option></select></td></tr>
                                         <tr><td class="fieldlabel">Amount</td><td class="fieldarea"><input class="form-control" type="text" name="amount" size="15"> Leave blank for full refund</td></tr>
                                         <tr><td class="fieldlabel">Refund Type</td><td class="fieldarea"><select class="form-control" name="refundtype" id="refundtype" onchange="showrefundtransid();
-                                            return false"><option value="sendtogateway">Refund through Gateway (If supported by module)</option><option value="" type="">Manual Refund Processed Externally</option><option value="addascredit">Add to Client's Credit Balance</option></select></td></tr>
+                                                return false"><option value="sendtogateway">Refund through Gateway (If supported by module)</option><option value="" type="">Manual Refund Processed Externally</option><option value="addascredit">Add to Client's Credit Balance</option></select></td></tr>
                                         <tr id="refundtransid" style="display:none;"><td class="fieldlabel">Transaction ID</td><td class="fieldarea"><input type="text" name="refundtransid" size="25"></td></tr>
                                         <tr><td class="fieldlabel">Send Email</td><td class="fieldarea"><input type="checkbox" name="sendemail" checked=""> Tick to Send Confirmation Email</td></tr>
                                     </tbody></table>
@@ -275,9 +277,7 @@
                                 <div align="center"><input type="submit" value="Refund" class="btn" disabled=""></div>
                             </form>
                         </div>
-                        <div  role="tabpanel" id="tab5box" class="tabbox tab-pane">
-
-
+                        <div role="tabpanel" id="tab5box" class="tabbox tab-pane">
                             <form method="post" action="invoices.php?save=notes">
                                 <input type="hidden" name="token" value="{$token}">
                                 <input type="hidden" name="action" value="edit">
@@ -286,9 +286,41 @@
                                 <img src="images/spacer.gif" width="1" height="5"><br>
                                 <div align="center"><input type="submit" value="Save Changes" class="button"></div>
                             </form>
-
-
                         </div>
+                        <div role="tabpanel" id="tab6box" class="tabbox tab-pane">
+                            <form method="post" action="invoicepaymentmonitor.php">
+                                <input type="hidden" name="token" value="{$token}">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="newpaymentplan" value="{$newpaymentplan}">
+                                <input type="hidden" name="id" value="{$invoice.id}">
+                                <input type="hidden" name="date" value="{$invoice.date}">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>Days to Pay</label>
+                                        <input id="daystopay" name="daystopay" type="text" class="form-control" value="{$paymentplan.days}">
+                                        <label>Payment Type</label>
+                                        <select id="paymenttype" name="paymenttype" class="form-control">
+                                            <option {if $paymentplan.period eq 30}SELECTED{/if} value="monthly">Monthly</option>
+                                            <option {if $paymentplan.period eq 7}SELECTED{/if}  value="weekly">Weekly</option>
+                                            <option {if $paymentplan.period eq 14}SELECTED{/if}  value="fornightly">Fornightly</option>
+                                        </select>
+                                        <label>Suspension</label>
+                                        <select name="suspension" class="form-control">
+                                            <option {if $paymentplan.suspension eq 24}SELECTED{/if} value="24">24 Hour Suspend</option>
+                                            <option {if $paymentplan.suspension eq 72}SELECTED{/if} value="72">72 Hour Suspend</option>
+                                        </select>
+                                        <br>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Amount to Pay</label>
+                                        <input type="text" class="form-control" id="amounttopay" disabled>
+                                        <label>First Payment Date</label>
+                                        <input type="text" class="form-control" id="fday" disabled>
+                                    </div>
+                                </div>
+                                <div align="center"><input type="submit" value="Apply" class="btn btn-default"></div>
+                            </form>
+                        </div>    
                     </div>
                 </div>
             </div>
@@ -358,6 +390,13 @@
                                     <td style="background-color:#efefef;">&nbsp;</td>
                                     <td style="background-color:#efefef;">&nbsp;</td>
                                 </tr>
+
+                                <tr>
+                                    <td colspan="2" style="text-align:right;background-color:#efefef;">GST:&nbsp;</td>
+                                    <td width="90" style="background-color:#efefef;">${$invoice.tax}</td>
+                                    <td style="background-color:#efefef;">&nbsp;</td>
+                                    <td style="background-color:#efefef;">&nbsp;</td>
+                                </tr>
                                 <tr>
                                     <td colspan="2" style="text-align:right;background-color:#efefef;">Credit:&nbsp;</td>
                                     <td width="90" style="background-color:#efefef;">{$invoice.creditcurrency}</td>
@@ -422,10 +461,28 @@
 {literal}
     <script type="text/javascript">
 
-        $('.datepick').datepicker({
-            format: 'yyyy-mm-dd',
-        });
+        $("#daystopay").keyup(caculatePayment);
+        $("#paymenttype").change(caculatePayment);
+        function caculatePayment()
+        {
+            paymenttype = $("#paymenttype").val();
+            days = $("#daystopay").val();
+            $.ajax({
+                url: "invoicepaymentmonitor.php",
+                method: "post",
+                data: {
+                    "action": "getpaymentplan",
+                    "days": days,
+                    "start": "{/literal}{$invoice.date}{literal}",
+                    "balance":{/literal}{$balance}{literal},
+                    "paymenttype": paymenttype
+                }
+            }).done(function (data) {
+                $("#amounttopay").val(data.amount);
+                $("#fday").val(data.start);
+            });
 
+        }
         function printVersion()
         {
             window.open('../viewinvoice.php?id={/literal}{$invoice.id}{literal}', 'windowfrm', 'menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes,width=750,height=600')

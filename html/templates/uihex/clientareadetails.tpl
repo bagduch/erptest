@@ -11,16 +11,16 @@
 
 <div class="titleline"></div>
     <form method="post" action="{$smarty.server.PHP_SELF}?action=details">
-        
+
         <div class="row details">
             <!--<h3 class="page-header"><span aria-hidden="true" class="icon icon-user"></span> {$LANG.clientareanavdetails}</h3>-->
-                {if $successful}
+                {if isset($successful) && $successful}
                     <div class="alert alert-success">
                         <p>{$LANG.changessavedsuccessfully}</p>
                     </div>
                 {/if}
 
-                {if $errormessage}
+                {if isset($errormessage)}
                     <div class="alert alert-danger">
                         <p class="bold">{$LANG.clientareaerrors}</p>
                         <ul>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    
+
                     <div class="form-group">
                         <label  for="lastname">{$LANG.clientarealastname}</label>
                         <input type="text" name="lastname" id="lastname" value="{$clientlastname}"{if in_array('lastname',$uneditablefields)} disabled="" class="form-control disabled" {else} class="form-control" {/if} />
@@ -72,7 +72,7 @@
                         <div class="state">
                             <input type="text" name="state" id="state" value="{$clientstate}"{if in_array('state',$uneditablefields)} disabled="" class="form-control disabled" {else} class="form-control" {/if} />
                         </div>
-                    </div>            
+                    </div>
 
 
 

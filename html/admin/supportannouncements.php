@@ -58,7 +58,7 @@ if ($sub == "save") {
         }
     }
 
-    redir("success=1");
+//    redir("success=1");
 }
 
 ob_start();

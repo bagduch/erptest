@@ -13,7 +13,6 @@ $aInt = new RA_Admin("View Products/Services");
 $aInt->sidebar = "config";
 $aInt->icon = "configservices";
 $aInt->requiredFiles(array("modulefunctions", "gatewayfunctions"));
-$menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 
 if ($action == "getdownloads") {
     check_token("RA.admin.default");
@@ -60,6 +59,7 @@ if ($action == "add") {
 if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
+//    echo "<pre>", print_r($_POST, 1), "</pre>";
     if ($tax == "on") {
         $tax = "1";
     }
@@ -73,9 +73,10 @@ if ($action == "save") {
         "type" => $_POST['type'],
         "gid" => $_POST['gid'],
         "name" => $_POST['name'],
+        "revenuecode" => $_POST['rcode'],
         'contract' => $_POST['contract'] == "on" ? 1 : 0,
         'individual' => $_POST['isale'] == "on" ? 1 : 0,
-        'etf' => $_POST['etf'],
+        'etf' => floatval($_POST['etf']),
         'term' => $_POST['term'],
         "description" => html_entity_decode($_POST['description']),
         "hidden" => $_POST['hidden'],
@@ -85,15 +86,15 @@ if ($action == "save") {
         "recurringcycles" => $_POST['recurringcycles'],
         "autoterminatedays" => $_POST['autoterminatedays'],
         "autoterminateemail" => $_POST['autoterminateemail'],
-        "tax" => $tax,
-        "revenuecode" => $_POST['rcode'],
+        "tax" => $tax == "on" ? 1 : 0,
         'affiliateonetime' => $_POST['affiliateonetime'],
         "affiliatepaytype" => $_POST['affiliatepaytype'],
         "affiliatepayamount" => $_POST['affiliatepayamount'],
     );
+//    echo "<pre>", print_r($array, 1), "</pre>";
 
     update_query("tblservices", $array, array("id" => $id));
-   
+
 
     foreach ($_POST['currency'] as $currency_id => $pricing) {
         update_query("tblpricing", $pricing, array("currency" => $currency_id, "relid" => $id));
@@ -145,7 +146,7 @@ if ($action == "save") {
     //RebuildModuleHookCache();
     //  run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
     // run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
-    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
+    //redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
 if ($sub == "deletecustomfield") {
@@ -254,20 +255,20 @@ if ($sub == "savegroup") {
         delete_query("tblcustomfieldsgrouplinks", array('servicegid' => $ids));
 
 
-        if ($customefield) {
-            foreach ($customefield as $row) {
+        if ($customfield) {
+            foreach ($customfield as $row) {
 
                 insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
             }
         }
     } else {
         $id = insert_query("tblservicegroups", array("name" => $name, "type" => $type, "orderfrmtpl" => $orderfrmtpl, "disabledgateways" => implode(",", $disabledgateways), "hidden" => $hidden, "order" => get_query_val("tblservicegroups", "`order`", "", "order", "DESC") + 1));
-        foreach ($customefield as $row) {
+        foreach ($customfield as $row) {
             insert_query("tblcustomfieldsgrouplinks", array('cfgid' => $row, 'serviceid' => "NULL", 'servicegid' => $ids));
         }
     }
 
-    redir();
+//    redir();
 }
 
 
@@ -469,7 +470,7 @@ if ($action == "") {
 
     if ($action == "edit") {
         // get all service data
-        $currecy = getCurrency();
+        $currency = getCurrency();
         $result = select_query_i("tblservices", "", array("id" => $id));
         $data = mysqli_fetch_assoc($result);
         $id = $data['id'];
@@ -689,7 +690,12 @@ if ($action == "") {
         $disabledgateways = $groupdata['disabledgateways'];
         $hidden = $groupdata['hidden'];
         $disabledgateways = explode(",", $disabledgateways);
-        $queryone = "SELECT * FROM tblcustomfieldsgroupnames as tcgn LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on (tcgn.cfgid=tcfgl.cfgid AND tcfgl.servicegid=" . $ids . ")";
+        if ($ids) {
+            $queryone = "SELECT tcgn.*,tcfgl.id FROM tblcustomfieldsgroupnames as tcgn LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on (tcgn.cfgid=tcfgl.cfgid AND tcfgl.servicegid=" . $ids . ")";
+        } else {
+            $queryone = "SELECT * FROM tblcustomfieldsgroupnames";
+        }
+
         $result = full_query_i($queryone);
         $option = mysqli_fetch_array($query);
         $cdata = array();
@@ -759,7 +765,6 @@ if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }
 
-$aInt->jquerycode .= $menuselect;
 
 $aInt->display();
 ?>

@@ -24,7 +24,7 @@
                                         <tr>
                                             <td class="fieldlabel">{$langs.fields}</td>
                                             <td class="fieldarea">
-                                                <select class="form-control" name="type" onchange="doFieldUpdate()">
+                                                <select class="form-control" name="type">
                                                     <option value="residential" {if $services.type eq 'residential'}selected{/if}>Residential</option>
                                                     <option value="business" {if $services.type eq 'business'}selected{/if}>Business</option>
                                                 </select>
@@ -40,13 +40,13 @@
                                         <tr>
                                             <td class="fieldlabel">Supply Codes</td>
                                             <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                                <input class="form-control" type="text" size="40" name="scode" value="{$services.scode}">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Supply Revenue</td>
                                             <td class="fieldarea">
-                                                <input class="form-control" type="text" size="40" name="rcode" value="{$services.revenuecode}">
+                                                <input class="form-control" type="text" size="40" name="srev" value="{$services.srev}">
                                             </td>
                                         </tr>
                                         <tr>
@@ -201,7 +201,7 @@
                             <div class="panel-body">
                                 <table class="table" width="100%" border="0" cellspacing="2" cellpadding="3">
                                     <tbody><tr><td class="fieldlabel" width="150">Module Name</td><td class="fieldarea">
-                                                <select class="form-control" name="servertype" onchange="submit()">
+                                                <select class="form-control" name="servertype">
                                                     <option value="">None</option>
                                                     {foreach from=$modulesarray item=module}
                                                         <option value="{$module.name}" {$module.select}>{$module.name}</option>

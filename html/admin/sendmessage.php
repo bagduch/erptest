@@ -94,7 +94,20 @@ if ($action == "send") {
 
 
 		if ($save == "on") {
-			insert_query("tblemailtemplates", array("type" => $type, "name" => $savename, "subject" => html_entity_decode($subject), "message" => html_entity_decode($message), "fromname" => html_entity_decode($fromname), "fromemail" => $fromemail, "copyto" => $cc, "custom" => "1"));
+			error_log("saving");
+			insert_query(
+				"tblemailtemplates",
+				array(
+					"type" => $type,
+					"name" => $savename,
+					"subject" => html_entity_decode($subject),
+					"message" => html_entity_decode($message),
+					"fromname" => html_entity_decode($fromname),
+					"fromemail" => $fromemail,
+					"copyto" => $cc,
+					"custom" => "1"
+				)
+			);
 			echo "<p>" . $aInt->lang("sendmessage", "msgsavedsuccess") . "</p>";
 		}
 
@@ -406,42 +419,6 @@ if ($showform) {
 						}
 					}
 				}
-				else {
-					if ($emailtype == "Domain") {
-						$type = "domain";
-						$query = "SELECT tbldomains.id,tbldomains.userid,tbldomains.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id!=''";
-
-						if ($servicestatus) {
-							$query .= " AND tbldomains.status IN (" . $servicestatus . ")";
-						}
-
-
-						if ($clientstatus) {
-							$query .= " AND tblclients.status IN (" . $clientstatus . ")";
-						}
-
-
-						if ($clientgroup) {
-							$query .= " AND tblclients.groupid IN (" . $clientgroup . ")";
-						}
-
-
-						if ($clientlanguage) {
-							$query .= " AND tblclients.language IN (" . $clientlanguage . ")";
-						}
-
-
-						if (is_array($customfield)) {
-							foreach ($customfield as $k => $v) {
-
-								if ($v) {
-									$query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
-									continue;
-								}
-							}
-						}
-					}
-				}
 			}
 		}
 
@@ -478,8 +455,7 @@ if ($showform) {
 				$useridsdone[] = $data['userid'];
 			}
 		}
-	}
-	else {
+	} else {
 		if ($multiple) {
 			if ($type == "general") {
 				foreach ($selectedclients as $id) {
@@ -487,36 +463,26 @@ if ($showform) {
 					$data = mysqli_fetch_array($result);
 					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
 				}
-			}
-			else {
-				if ($type == "product") {
-					foreach ($selectedclients as $id) {
-						$result = select_query_i("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
-						$data = mysqli_fetch_array($result);
-						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
-					}
+			}	elseif ($type == "product") {
+				foreach ($selectedclients as $id) {
+					$result = select_query_i("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+					$data = mysqli_fetch_array($result);
+					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 				}
-				else {
-					if ($type == "domain") {
-						foreach ($selectedclients as $id) {
-							$result = select_query_i("tbldomains", "tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
-							$data = mysqli_fetch_array($result);
-							$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
-						}
-					}
-					else {
-						if ($type == "affiliate") {
-							foreach ($selectedclients as $id) {
-								$result = select_query_i("tblaffiliates", "tblclients.firstname,tblclients.lastname,tblclients.email", array("tblaffiliates.id" => $id), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
-								$data = mysqli_fetch_array($result);
-								$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
-							}
-						}
-					}
+			} elseif ($type == "domain") {
+				foreach ($selectedclients as $id) {
+					$result = select_query_i("tbldomains", "tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
+					$data = mysqli_fetch_array($result);
+					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
+				}
+			} elseif ($type == "affiliate") {
+				foreach ($selectedclients as $id) {
+					$result = select_query_i("tblaffiliates", "tblclients.firstname,tblclients.lastname,tblclients.email", array("tblaffiliates.id" => $id), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+					$data = mysqli_fetch_array($result);
+					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 				}
 			}
-		}
-		else {
+		} else { // not multiple
 			if ($resend) {
 				$result = select_query_i("tblemails", "", array("id" => $emailid));
 				$data = mysqli_fetch_array($result);
@@ -540,9 +506,7 @@ if ($showform) {
 				if ($data['email']) {
 					$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
 				}
-			}
-			else {
-				if ($type == "product") {
+			} elseif ($type == "product") {
 					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysqli_real_escape_string($id) . "'";
 					$result = full_query_i($query);
 					$data = mysqli_fetch_array($result);
@@ -550,18 +514,14 @@ if ($showform) {
 					if ($data['email']) {
 						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 					}
-				}
-				else {
-					if ($type == "domain") {
-						$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id='" . mysqli_real_escape_string($id) . "'";
-						$result = full_query_i($query);
-						$data = mysqli_fetch_array($result);
+		  } elseif ($type == "domain") {
+					$query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id='" . mysqli_real_escape_string($id) . "'";
+					$result = full_query_i($query);
+					$data = mysqli_fetch_array($result);
 
-						if ($data['email']) {
-							$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
-						}
+					if ($data['email']) {
+						$todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
 					}
-				}
 			}
 		}
 	}
@@ -594,16 +554,12 @@ if ($showform) {
 		}
 	}
 
-	echo "
-<form method=\"post\" action=\"";
-	echo $PHP_SELF;
-	echo "\" name=\"frmmessage\"
-    id=\"sendmsgfrm\" enctype=\"multipart/form-data\">
-    <input type=\"hidden\" name=\"action\" value=\"send\" /> <input type=\"hidden\"
-        name=\"type\" value=\"";
-	echo $type;
-	echo "\" />
-";
+	echo "<div class=\"card\">";
+	echo "<div class=\"content\">";
+  printf("<form method=\"post\" action=\"%s\" name=\"frmmessage\"",$PHP_SELF);
+  echo "id=\"sendmsgfrm\" enctype=\"multipart/form-data\">";
+  echo "<input type=\"hidden\" name=\"action\" value=\"send\" />";
+	printf("<input type=\"hidden\" name=\"type\" value=\"%s\" />",$type);
 	$token = $queryMgr->generateToken();
 	$queryMgr->setQuery($token, "");
 	$_SESSION['massmail']['sentids'] = array();
@@ -612,36 +568,29 @@ if ($showform) {
 	if ($massmailquery) {
 		if ($queryMgr->isValidTokenFormat($massmailquery)) {
 			$queryToStore = $queryMgr->getQuery($massmailquery);
-		}
-		else {
+		} else {
 			$queryToStore = $massmailquery;
 		}
 
 		$queryMgr->setQuery($token, $queryToStore);
 		echo "<input type=\"hidden\" name=\"massmail\" value=\"true\" /><input type=\"hidden\" name=\"sendforeach\" value=\"" . $sendforeach . "\" />";
-	}
-	else {
+	} else {
 		if ($multiple) {
 			echo "<input type=\"hidden\" name=\"multiple\" value=\"true\" />";
 			foreach ($selectedclients as $selectedclient) {
 				echo "<input type=\"hidden\" name=\"selectedclients[]\" value=\"" . $selectedclient . "\" />";
 			}
-		}
-		else {
+		}	else {
+			error_log("is not multiple");
 			echo "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />";
 		}
 	}
 
-	echo "
-<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\"
-        cellpadding=\"3\">
-        <tr>
-            <td width=\"140\" class=\"fieldlabel\">";
-	echo $aInt->lang("emails", "from");
-	echo "</td>
-            <td class=\"fieldarea\"><input type=\"text\" name=\"fromname\" size=\"25\"
-                value=\"";
-
+	echo "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">";
+	echo "<tr>";
+  printf("<td width=\"140\" class=\"fieldlabel\">%s</td>",$aInt->lang("emails", "from"));
+  echo "<td class=\"fieldarea\"><input type=\"text\" name=\"fromname\" size=\"25\" value=\"";
+	error_log("CONFIG IS ".print_r($CONFIG,1));
 	if (!$fromname) {
 		echo $CONFIG['CompanyName'];
 	}
@@ -792,7 +741,7 @@ frmmessage.subject.select();
             value=\"";
 	echo $aInt->lang("global", "sendmessage");
 	echo " &raquo;\"
-            class=\"btn-primary\" />
+            class=\"btn btn-primary\" />
     </p>
 
 </form>
@@ -884,6 +833,8 @@ frmmessage.subject.select();
 	echo "\">
     </div>
 </form>
+</div>
+</div>
 
 ";
 	echo $aInt->jqueryDialog("previewwnd", $aInt->lang("sendmessage", "preview"), "<div id=\"previewwndcontent\">" . $aInt->lang("global", "loading") . "</div>", array($aInt->lang("global", "ok") => ""), "450", "700", "");

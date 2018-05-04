@@ -215,7 +215,7 @@
 
 
                                     <div class="intalldate">
-                                        {include file='orderforms/modern/customefield.tpl'}
+                                        {include file='orderforms/modern/customfield.tpl'}
                                     </div>
                                     {if $addons}
                                         <div class="addons">
@@ -252,9 +252,9 @@
                                                             <div id="collapse{$cid}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                                 <div class="panel-body">
                                                                     {$addon.description}
-                                                                    {if $addon.customefield}
-                                                                        {foreach from=$addon.customefield item=customefield}
-                                                                            {include file='orderforms/modern/customefield.tpl'}
+                                                                    {if $addon.customfield}
+                                                                        {foreach from=$addon.customfield item=customfield}
+                                                                            {include file='orderforms/modern/customfield.tpl'}
                                                                         {/foreach}
                                                                     {/if}
                                                                 </div>
@@ -303,7 +303,7 @@
                                                     <h4 class="panel-title">
                                                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                                             <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                                            Setup Fees:{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currecy.code}
+                                                            Setup Fees:{$currency.prefix}{$pricing.rawpricing.msetupfee|number_format:2} {$currency.code}
                                                             <input type="hidden" class="setupprice" value="{$pricing.rawpricing.msetupfee}">
                                                         </a>
                                                     </h4>
@@ -320,9 +320,9 @@
                                                     <h3 class="cart-sumary-title">TOTAL</h3>
 
 
-                                                    <div class="monthly">Monthly payments: <span class="right">{$currecy.prefix}{$pricing.rawpricing.monthly|number_format:2}</span></div>
-                                                    <div class="oneoff">Total one-off payment:<span class="right">{$currecy.prefix}{$pricing.rawpricing.msetupfee|number_format:2}</span></div>
-                                                    <div class="firstpayment">First payment: <span class="right">{$currecy.prefix}{$total|number_format:2}</span></div>
+                                                    <div class="monthly">Monthly payments: <span class="right">{$currency.prefix}{$pricing.rawpricing.monthly|number_format:2}</span></div>
+                                                    <div class="oneoff">Total one-off payment:<span class="right">{$currency.prefix}{$pricing.rawpricing.msetupfee|number_format:2}</span></div>
+                                                    <div class="firstpayment">First payment: <span class="right">{$currency.prefix}{$total|number_format:2}</span></div>
 
                                                     <input type="hidden" name="firstpaymentamount" value="{$total|number_format:2}">
                                                 </div>

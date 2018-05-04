@@ -7,6 +7,7 @@ include_once ROOTDIR . "/includes/dbfunctions.php";
 
 include_once ROOTDIR . "/includes/functions.php";
 
+require ROOTDIR . "/vendor/autoload.php";
 if (!defined("WHMCSDBCONNECT")) {
     if (defined("CLIENTAREA")) {
         include_once ROOTDIR . "/includes/clientareafunctions.php";
@@ -37,6 +38,7 @@ class RA_Init {
     private $customadminpath = "";
     public $remote_ip = "";
     private $clientlang = "";
+    private $memcacheservers = [];
     private $protected_variables = array(0 => "RA", 1 => "smtp_debug", 2 => "attachments_dir", 3 => "downloads_dir", 4 => "customadminpath", 5 => "mysqli_charset", 6 => "overidephptimelimit", 7 => "orderform", 8 => "smartyvalues", 9 => "usingsupportmodule", 10 => "copyrighttext", 11 => "adminorder", 12 => "revokelocallicense", 13 => "allow_idn_domains", 14 => "templatefile", 15 => "_LANG", 16 => "_ADMINLANG", 17 => "display_errors", 18 => "debug_output", 19 => "mysqli_errors", 20 => "moduleparams", 21 => "errormessage");
     private $danger_vars = array(0 => "_GET", 1 => "_POST", 2 => "_REQUEST", 3 => "_SERVER", 4 => "_COOKIE", 5 => "_FILES", 6 => "_ENV", 7 => "GLOBALS");
 
@@ -460,70 +462,9 @@ class RA_Init {
     }
 
     public function get_user_ip() {
-        $ip_result = "";
-
-        if (function_exists("apache_request_headers")) {
-            $headers = apache_request_headers();
-
-            if (array_key_exists("X-Forwarded-For", $headers)) {
-                $userip = explode(",", $headers['X-Forwarded-For']);
-                $ip = trim($userip[0]);
-
-                if ($this->check_ip($ip)) {
-                    $ip_result = $ip;
-                }
-            }
-        }
-
-
-        if (!$ip_result) {
-            if (isset($_SERVER['HTTP_CLIENT_IP']) && $this->check_ip($_SERVER['HTTP_CLIENT_IP'])) {
-                $ip_result = $_SERVER['HTTP_CLIENT_IP'];
-            } else {
-                $ip_array = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']) : array());
-
-                if (count($ip_array)) {
-                    $ip = trim($ip_array[count($ip_array) - 1]);
-
-                    if ($this->check_ip($ip)) {
-                        $ip_result = $ip;
-                    }
-                }
-            }
-        }
-
-
-        if (!$ip_result) {
-            if (isset($_SERVER['HTTP_X_FORWARDED']) && $this->check_ip($_SERVER['HTTP_X_FORWARDED'])) {
-                $ip_result = $_SERVER['HTTP_X_FORWARDED'];
-            } else {
-                if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && $this->check_ip($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
-                    $ip_result = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-                } else {
-                    if (isset($_SERVER['HTTP_FORWARDED_FOR']) && $this->check_ip($_SERVER['HTTP_FORWARDED_FOR'])) {
-                        $ip_result = $_SERVER['HTTP_FORWARDED_FOR'];
-                    } else {
-                        if (isset($_SERVER['HTTP_FORWARDED']) && $this->check_ip($_SERVER['HTTP_FORWARDED'])) {
-                            $ip_result = $_SERVER['HTTP_FORWARDED'];
-                        } else {
-                            if (isset($_SERVER['REMOTE_ADDR'])) {
-                                $ip = $_SERVER['REMOTE_ADDR'];
-
-                                if (ip2long($ip) != false && ip2long($ip) != 0 - 1) {
-                                    $ip_result = $ip;
-                                } else {
-                                    if ($this->isIPv6($ip)) {
-                                        $ip_result = $ip;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $ip_result;
+        // Anything more complicated than this should be handled by the webserver.
+        // ref mod_cloudflare, ngx_http_realip_module etc
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     public function isIPv6($ip) {
@@ -582,10 +523,10 @@ class RA_Init {
 
         // See if we can just pull it from memcache
         $CONFIG = $MEMCACHE->get("CONFIG");
-        if ($CONFIG) {
+        if (false) {
             error_log("Using configuration from memcached");
         } else {
-            error_log("Could not load config from memcached");
+//            error_log("Could not load config from memcached");
 
             $CONFIG = array();
 
@@ -655,7 +596,7 @@ class RA_Init {
         }
 
         $bannedips = $MEMCACHE->get("bannedips");
-        error_log("memcache says banned ips are ".print_r($bannedips,1));
+//        error_log("memcache says banned ips are ".print_r($bannedips,1));
 
         if (!is_array($bannedips) && $bannedips != "NONE") {
             $bannedips = [];
@@ -667,7 +608,6 @@ class RA_Init {
             if (!count($bannedips)) {
                 $bannedips = "NONE";
             }
-            var_dump($bannedips);
             $MEMCACHE->set("bannedips",$bannedips,0,30); // 30 second expiry
         }
 

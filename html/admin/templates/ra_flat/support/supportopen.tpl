@@ -1,18 +1,18 @@
-<div class="box">
-    <div class="box-body">
+<div class="card">
+    <div class="content">
         <form method="post" action="supporttickets.php?action=openticket" enctype="multipart/form-data">
 
             <div class="col-lg-6">
                 <table class="form" width="100%"  border="0" cellspacing="2" cellpadding="3">
                     <tr>
                         <td width="200" class="fieldlabel">To:</td>
-                        <td class="fieldarea">   <input type="hidden" name="client" id="clientinput" value=""> <input class="form-control" type="text" name="name" id="name" size="40" value=""></td>
+                        <td class="fieldarea">   <input type="hidden" name="client" id="clientinput" value=""> <input class="form-control" type="text" name="name" id="name" size="40" value="{$clientname}"></td>
                     </tr>
                     <tr>
                         <td class="fieldlabel">Email Address</td>
                         <td class="fieldarea">
                             <div style="padding-left: 0px" class="col-xs-12 col-md-8">
-                                <input class="form-control" type="text" name="email" id="email" size="50" value=""> 
+                                <input class="form-control" type="text" name="email" id="email" size="50" value="{$email}"> 
                             </div>
                             <div class="col-xs-6 col-md-4">
                                 <label style="margin-top: 5px;"><input class="flat-red" type="checkbox" name="sendemail" checked=""> Send Email</label>
@@ -38,7 +38,9 @@
                 <table class="form" width="100%"  border="0" cellspacing="2" cellpadding="3">
                     <tr>
                         <td width="200" class="fieldlabel">Client Search:</td>
-                        <td class="fieldarea"><input class="form-control" type="text" id="clientsearchval" size="15"> <img src="images/icons/delete.png" alt="Cancel" class="absmiddle" id="clientsearchcancel" height="16" width="16"></td>
+                        <td class="fieldarea"><input class="form-control" type="text" id="clientsearchval" size="15"> 
+                            <div id="ticketclientsearchresults"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td class="fieldlabel">CC Recipients</td>
@@ -90,156 +92,130 @@
                     <div id="prerepliescontent"></div>
                 </div>
             </div>
-            <img src="images/spacer.gif" height="8" width="1"><br>
-            <div align="center"><input type="submit" value="Open Ticket" class="button"></div>
+            <div align="center"><input type="submit" value="Open Ticket" id="addtickets" class="btn btn-default"></div>
         </form>
     </div>
 </div>
 
 {literal}
     <script type="text/javascript">
-                        function insertKBLink(url) {
-                            $("#replymessage").addToReply(url);
+
+
+
+        function insertKBLink(url) {
+            $("#replymessage").addToReply(url);
+        }
+        function selectpredefcat(catid) {
+            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#prerepliescontent").html(data);
+                    });
+        }
+        function loadpredef(catid) {
+            $("#prerepliescontainer").slideToggle();
+            $("#prerepliescontent").html('<img src="images/loading.gif" align="top" /> Loading...');
+            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#prerepliescontent").html(data);
+                    });
+        }
+        function selectpredefreply(artid) {
+            $.post("supporttickets.php", {action: "getpredefinedreply", id: artid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        $("#replymessage").addToReply(data);
+                    });
+            $("#prerepliescontainer").slideToggle();
+        }
+        function searchselectclient(userid, name, email) {
+            $("#clientsearchval").val("");
+            $("#clientinput").val(userid);
+            $("#name").val(name);
+            $("#email").val(email);
+            $("#ticketclientsearchresults").slideUp("slow");
+            $("#clientsearchcancel").fadeOut();
+            $.post("supporttickets.php", {action: "getcontacts", userid: userid, token: "{/literal}{$csrfToken}{literal}"},
+                    function (data) {
+                        if (data) {
+                            $("#contacthtml").html(data);
+                            $("#contactrow").show();
+                        } else {
+                            $("#contactrow").hide();
                         }
-                        function selectpredefcat(catid) {
-                            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
-                            function (data) {
-                                $("#prerepliescontent").html(data);
-                            });
-                        }
-                        function loadpredef(catid) {
-                            $("#prerepliescontainer").slideToggle();
-                            $("#prerepliescontent").html('<img src="images/loading.gif" align="top" /> Loading...');
-                            $.post("supporttickets.php", {action: "loadpredefinedreplies", cat: catid, token: "{/literal}{$csrfToken}{literal}"},
-                            function (data) {
-                                $("#prerepliescontent").html(data);
-                            });
-                        }
-                        function selectpredefreply(artid) {
-                            $.post("supporttickets.php", {action: "getpredefinedreply", id: artid, token: "{/literal}{$csrfToken}{literal}"},
-                            function (data) {
-                                $("#replymessage").addToReply(data);
-                            });
-                            $("#prerepliescontainer").slideToggle();
-                        }
-                        function searchselectclient(userid, name, email) {
-                            $("#clientsearchval").val("");
-                            $("#clientinput").val(userid);
-                            $("#name").val(name);
-                            $("#email").val(email);
-                            $("#ticketclientsearchresults").slideUp("slow");
-                            $("#clientsearchcancel").fadeOut();
-                            $.post("supporttickets.php", {action: "getcontacts", userid: userid, token: "{/literal}{$csrfToken}{literal}"},
-                            function (data) {
-                                if (data) {
-                                    $("#contacthtml").html(data);
-                                    $("#contactrow").show();
-                                } else {
-                                    $("#contactrow").hide();
+                    });
+        }
+        (function () {
+            var fieldSelection = {
+                addToReply: function () {
+                    var e = this.jquery ? this[0] : this;
+                    var text = arguments[0] || '';
+                    return (
+                            ('selectionStart' in e && function () {
+                                if (e.value == "\n\n") {
+                                    e.selectionStart = 0;
+                                    e.selectionEnd = 0;
                                 }
-                            });
-                        }
-                        (function () {
-                            var fieldSelection = {
-                                addToReply: function () {
-                                    var e = this.jquery ? this[0] : this;
-                                    var text = arguments[0] || '';
-                                    return (
-                                            ('selectionStart' in e && function () {
-                                                if (e.value == "\n\n") {
-                                                    e.selectionStart = 0;
-                                                    e.selectionEnd = 0;
-                                                }
-                                                e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
-                                                e.focus();
-                                                return this;
-                                            }) ||
-                                            (document.selection && function () {
-                                                e.focus();
-                                                document.selection.createRange().text = text;
-                                                return this;
-                                            }) ||
-                                            function () {
-                                                e.value += text;
-                                                return this;
-                                            }
-                                    )();
-                                }
-                            };
-                            jQuery.each(fieldSelection, function (i) {
-                                jQuery.fn[i] = this;
-                            });
-                        })();
-             
-                        $("#clientsearchval").keyup(function () {
-                            var ticketuseridsearchlength = $("#clientsearchval").val().length;
-                            if (ticketuseridsearchlength > 2) {
-                                $.post("search.php", {ticketclientsearch: 1, value: $("#clientsearchval").val()},
-                                function (data) {
-                                    if (data) {
-                                        $("#ticketclientsearchresults").html(data);
-                                        $("#ticketclientsearchresults").slideDown("slow");
-                                        $("#clientsearchcancel").fadeIn();
-                                    }
-                                });
+                                e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
+                                e.focus();
+                                return this;
+                            }) ||
+                            (document.selection && function () {
+                                e.focus();
+                                document.selection.createRange().text = text;
+                                return this;
+                            }) ||
+                            function () {
+                                e.value += text;
+                                return this;
+                            }
+                    )();
+                }
+            };
+            jQuery.each(fieldSelection, function (i) {
+                jQuery.fn[i] = this;
+            });
+        })();
+
+        $("#clientsearchval").keyup(function () {
+            var ticketuseridsearchlength = $("#clientsearchval").val().length;
+            if (ticketuseridsearchlength > 2) {
+                $.post("search.php", {ticketclientsearch: 1, value: $("#clientsearchval").val()},
+                        function (data) {
+                            if (data) {
+                                console.log(data);
+                                $("#ticketclientsearchresults").html(data);
+                                $("#ticketclientsearchresults").slideDown("slow");
+                                $("#clientsearchcancel").fadeIn();
                             }
                         });
-                        $("#clientsearchcancel").click(function () {
-                            $("#ticketclientsearchresults").slideUp("slow");
-                            $("#clientsearchcancel").fadeOut();
+            }
+        });
+        $("#clientsearchcancel").click(function () {
+            $("#ticketclientsearchresults").slideUp("slow");
+            $("#clientsearchcancel").fadeOut();
+        });
+        $("#predefq").keyup(function () {
+            var intellisearchlength = $("#predefq").val().length;
+            if (intellisearchlength > 2) {
+                $.post("supporttickets.php", {action: "loadpredefinedreplies", predefq: $("#predefq").val(), token: "{/literal}{$csrfToken}{literal}"},
+                        function (data) {
+                            $("#prerepliescontent").html(data);
                         });
-                        $("#predefq").keyup(function () {
-                            var intellisearchlength = $("#predefq").val().length;
-                            if (intellisearchlength > 2) {
-                                $.post("supporttickets.php", {action: "loadpredefinedreplies", predefq: $("#predefq").val(), token: "{/literal}{$csrfToken}{literal}"},
-                                function (data) {
-                                    $("#prerepliescontent").html(data);
-                                });
-                            }
-                        });
+            }
+        });
 
+        $('#addtickets').ajaxForm({
+            url: '?action=openticket', // or whatever
+            type: 'post',
+            success: function (response) {
+                console.log("oki");
+                response = JSON.parse(response);
+                console.log(response);
+            }
+        });
 
-                        function searchclose() {
-                            $("#searchresults").slideUp();
-                        }
-                        $(document).ready(function () {
+        function searchclose() {
+            $("#searchresults").slideUp();
+        }
 
-
-                            $("#intellisearchval").keyup(function () {
-                                var value = $(this).val();
-                                if (value.length > 2)
-                                {
-                                    $.ajax({
-                                        url: "search.php",
-                                        method: "POST",
-                                        data: {"value": value, "intellisearch": 1, "token": "{/literal}{$csrfToken}{literal}"},
-                                        success: function (data)
-                                        {
-                                            $("#searchresultsscroller").html(data);
-                                            $("#searchresults").slideDown("slow", function () {
-
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-
-                            //iCheck for checkbox and radio inputs
-                            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                                checkboxClass: 'icheckbox_minimal-blue',
-                                radioClass: 'iradio_minimal-blue'
-                            });
-                            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                                checkboxClass: 'icheckbox_flat-green',
-                                radioClass: 'iradio_flat-green'
-                            });
-
-                            $('.datepick').datepicker({
-                                autoclose: true,
-                                format: 'dd/mm/yyyy',
-                            });
-                            $("[data-mask]").inputmask();
-
-                        });
     </script>
 {/literal}

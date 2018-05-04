@@ -24,7 +24,6 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
             $criteria = array();
             foreach ($where as $origkey => $value) {
                 $key = db_make_safe_field($origkey);
-
                 if (is_array($value)) {
                     if ($key == "default") {
                         $key = "`default`";
@@ -32,6 +31,10 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
                     if ($value['sqltype'] == "LIKE") {
                         $criteria[] = "" . $key . " LIKE '%" . db_escape_string($value['value']) . "%'";
+                        continue;
+                    }
+                    if ($value['sqltype'] == "NULL") {
+                        $criteria[] = "" . $key . " IS NULL";
                         continue;
                     }
 
@@ -109,15 +112,7 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
 
         $query .= " LIMIT " . $limit;
     }
-
-    // GUYGUYGUY logging
-    if ($_SESSION['adminid'] == 3) {
-        error_log($query);
-    }
-
     $result = mysqli_query($ramysqli, $query);
-
-
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
@@ -205,7 +200,6 @@ function update_query($table, $array, $where) {
             $query .= " WHERE " . $where;
         }
     }
-// echo "<pre>",  print_r($query,1),"</pre>";
     $result = mysqli_query($ramysqli, $query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
@@ -257,13 +251,10 @@ function insert_query($table, $array) {
     $fieldnamelist = substr($fieldnamelist, 0, 0 - 1);
     $fieldvaluelist = substr($fieldvaluelist, 0, 0 - 1);
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
-
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
-    if ($_SESSION['adminid'] == 1) {
-        //       error_log($query, 3, "/var/tmp/php-error.log.log");
-    }
-    if (!$result && ($CONFIG['SQLErrorReporting'])) {
+ 
+    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }
     ++$query_count;
@@ -289,20 +280,13 @@ function delete_query($table, $where) {
         $query .= $where;
     }
 
-    if ($_SESSION['adminid'] == 3) {
-        error_log("__FUNCTION__" . $query);
-    }
-
-    // mail("waikatozhang@gmail.com", "delete", $query);
-    //error_log(print_r($query, 1), 3, "/tmp/php_errors.log");
     $result = mysqli_query($ramysqli, $query);
 
-    if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
+    if (mysqli_error($ramysqli) !== NULL) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     } else {
         return true;
     }
-
     ++$query_count;
 }
 

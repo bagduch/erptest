@@ -61,6 +61,7 @@ if ($intellisearch) {
         $query .= " LIMIT 0,10";
         $result = full_query_i($query);
 
+        $colstart = "<div class=\"dummy-column\"><h2>Clients</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $userid = $data['id'];
             $firstname = $data['firstname'];
@@ -73,12 +74,12 @@ if ($intellisearch) {
                 $companyname = " (" . $companyname . ")";
             }
 
-            $tempmatches .= "<div class=\"searchresult\"><a href=\"clientssummary.php?userid=" . $userid . "\"><strong>" . $firstname . " " . $lastname . $companyname . "</strong> #" . $userid . " <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br /><span class=\"desc\">" . $email . "</span></a></div>");
+            $tempmatches .= "<a class=\"dummy-media-object\" href=\"clientssummary.php?userid=" . $userid . "\"><h3>" . $firstname . " " . $lastname . $companyname . "</h3> #" . $userid . " <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br /><span class=\"desc\">" . $email . "</span></a>");
         }
 
 
         if ($tempmatches) {
-            $matches .= "<div class=\"searchresultheader\">Clients</div>" . $tempmatches;
+            $matches .= $colstart . $tempmatches . "</div>";
         }
 
         $tempmatches = "";
@@ -92,7 +93,7 @@ if ($intellisearch) {
 
         $query .= " LIMIT 0,10";
         $result = full_query_i($query);
-
+        $colstart = "<div class=\"dummy-column\"><h2>Contacts</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $contactid = $data['id'];
             $userid = $data['userid'];
@@ -105,12 +106,12 @@ if ($intellisearch) {
                 $companyname = " (" . $companyname . ")";
             }
 
-            $tempmatches .= "<div class=\"searchresult\"><a href=\"clientscontacts.php?userid=" . $userid . "&contactid=" . $contactid . "\"><strong>" . $firstname . " " . $lastname . $companyname . "</strong> #" . $contactid . "<br /><span class=\"desc\">" . $email . "</span></a></div>";
+            $tempmatches .= "<a class=\"dummy-media-object\" href=\"clientscontacts.php?userid=" . $userid . "&contactid=" . $contactid . "\"><h3>" . $firstname . " " . $lastname . $companyname . "</h3> #" . $contactid . "<br /><span class=\"desc\">" . $email . "</span></a>";
         }
 
 
         if ($tempmatches) {
-            $matches .= "<div class=\"searchresultheader\">Contacts</div>" . $tempmatches;
+            $matches .= $colstart . $tempmatches . "</div>";
         }
     }
 
@@ -127,7 +128,7 @@ if ($intellisearch) {
         $query .= " LIMIT 0,10";
 
         $result = full_query_i($query);
-
+        $colstart = "<div class=\"dummy-column\"><h2>Services/Products</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $productid = $data['id'];
             $userid = $data['userid'];
@@ -147,12 +148,12 @@ if ($intellisearch) {
             }
 
             $status = $data['servicestatus'];
-            $tempmatches .= "<div class=\"searchresult\"><a href=\"clientshosting.php?userid=" . $userid . "&id=" . $productid . "\"><strong>" . $productname . " - " . $description . "</strong> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br /><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a></div>");
+            $tempmatches .= "<a class=\"dummy-media-object\" href=\"clientshosting.php?userid=" . $userid . "&id=" . $productid . "\"><h3>" . $productname . " - " . $description . "</h3> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br /><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a>");
         }
 
 
         if ($tempmatches) {
-            $matches .= "<div class=\"searchresultheader\">Products/Services</div>" . $tempmatches;
+            $matches .= $colstart . $tempmatches . "</div>";
         }
     }
 
@@ -165,7 +166,7 @@ if ($intellisearch) {
         if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
             $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.id like '" . $value . "%' LIMIT 5";
             $result = full_query_i($query);
-
+            $colstart = "<div class=\"dummy-column\"><h2>Invoice/Products</h2>";
             while ($data = mysqli_fetch_array($result)) {
                 $invoiceid = $data['id'];
                 $userid = $data['userid'];
@@ -179,13 +180,13 @@ if ($intellisearch) {
                 }
 
                 $id = $data['id'];
-                $invoicematches .= "<div class=\"searchresult\"><a href=\"invoices.php?action=edit&id=" . $invoiceid . "\"><strong>Invoice #" . $id . "</strong> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a></div>");
+                $invoicematches .= "<a href=\"invoices.php?action=edit&id=" . $invoiceid . "\"><h3>Invoice #" . $id . "</h3> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a>");
             }
         }
         if (checkPermission("View Orders", true) || checkPermission("Create Upgrade/Downgrade Orders", true)) {
             $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblorders.id,tblorders.userid,tblorders.status FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.id LIKE '" . $value . "%' LIMIT 5";
             $result = full_query_i($query);
-
+            $ocolstart = "<div class=\"dummy-column\"><h2>Orders</h2>";
             while ($data = mysqli_fetch_array($result)) {
                 $orderid = $data['id'];
                 $userid = $data['userid'];
@@ -199,7 +200,7 @@ if ($intellisearch) {
                 }
 
                 $id = $data['id'];
-                $ordermatches .= "<div class=\"searchresult\"><a href=\"orders.php?action=view&id=" . $orderid . "\"><strong>Order #" . $id . "</strong> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a></div>");
+                $ordermatches .= "<a class=\"dummy-media-object\" href=\"orders.php?action=view&id=" . $orderid . "\"><h3>Order #" . $id . "</h3> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a>");
             }
         }
     }
@@ -208,12 +209,12 @@ if ($intellisearch) {
     if (checkPermission("List Support Tickets", true) || checkPermission("View Support Ticket", true)) {
         $query = "SELECT id,tid,title FROM tbltickets WHERE tbltickets.tid='" . $value . "' OR tbltickets.title LIKE '%" . $value . "%' ORDER BY lastreply DESC LIMIT 0,10";
         $result = full_query_i($query);
-
+        $tcolstart = "<div class=\"dummy-column\"><h2>Support Tickets</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $ticketid = $data['id'];
             $tid = $data['tid'];
             $title = $data['title'];
-            $ticketmatches .= "<div class=\"searchresult\"><a href=\"supporttickets.php?action=viewticket&id=" . $ticketid . "\"><strong>Ticket #" . $tid . "</strong><br /><span class=\"desc\">" . $title . "</span></a></div>";
+            $ticketmatches .= "<a class=\"dummy-media-object\" href=\"supporttickets.php?action=viewticket&id=" . $ticketid . "\"><h3>Ticket #" . $tid . "</h3><br /><span class=\"desc\">" . $title . "</span></a>";
         }
     }
 
@@ -221,7 +222,7 @@ if ($intellisearch) {
     if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
         $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.invoicenum='" . $value . "'";
         $result = full_query_i($query);
-
+        $icolstart = "<div class=\"dummy-column\"><h2>Invoices</h2>";
         while ($data = mysqli_fetch_array($result)) {
             $invoiceid = $data['id'];
             $userid = $data['userid'];
@@ -235,25 +236,25 @@ if ($intellisearch) {
             }
 
             $id = $data['id'];
-            $invoicematches .= "<div class=\"searchresult\"><a href=\"invoices.php?action=edit&id=" . $invoiceid . "\"><strong>Invoice #" . $id . "</strong> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a></div>");
+            $invoicematches .= "<a class=\"dummy-media-object\" href=\"invoices.php?action=edit&id=" . $invoiceid . "\"><h3>Invoice #" . $id . "</h3> <span class=\"label " . strtolower($status) . ("\">" . $status . "</span><br><span class=\"desc\">" . $firstname . " " . $lastname . $companyname . " #" . $userid . "</span></a>");
         }
     }
 
 
     if ($invoicematches) {
-        $matches .= "<div class=\"searchresultheader\">Invoices</div>" . $invoicematches;
+        $matches .= $icolstart . $invoicematches . "</div>";
     }
     if ($ordermatches) {
-        $matches .= "<div class=\"searchresultheader\">Orders</div>" . $ordermatches;
+        $matches .= $ocolstart . $ordermatches . "</div>";
     }
 
     if ($ticketmatches) {
-        $matches .= "<div class=\"searchresultheader\">Support Tickets</div>" . $ticketmatches;
+        $matches .= $tcolstart . $ticketmatches . "</div>";
     }
 
 
     if (!$matches) {
-        $matches = "<div class=\"searchresultheader\">No Matches Found!</div>";
+        $matches = "<h2>No Matches Found!</h2>";
     }
 
     echo $matches;
@@ -297,7 +298,7 @@ if ($clientsearch || $ticketclientsearch) {
             $companyname = " (" . $companyname . ")";
         }
 
-        $tempmatches .= "<div class=\"searchresult\"><a href=\"#\" onclick=\"searchselectclient('" . $userid . "','" . addslashes($firstname . " " . $lastname . $companyname) . "','" . addslashes($email) . ("');return false\"><strong>" . $firstname . " " . $lastname . $companyname . "</strong> #" . $userid . "<br /><span class=\"desc\">" . $email . "</span></a></div>");
+        $tempmatches .= "<div <a href=\"#\" onclick=\"searchselectclient('" . $userid . "','" . addslashes($firstname . " " . $lastname . $companyname) . "','" . addslashes($email) . ("');return false\"><h3>" . $firstname . " " . $lastname . $companyname . "</h3> #" . $userid . "<br /><span class=\"desc\">" . $email . "</span></a></div>");
     }
 
 

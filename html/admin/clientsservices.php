@@ -15,7 +15,6 @@ $aInt->requiredFiles(
             "invoicefunctions",
             "processinvoices")
 );
-$menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 $aInt->inClientsProfile = true;
 $id = (int) $ra->get_req_var("id") ?: (int) $ra->get_req_var("hostingid");
 $userid = (int) $ra->get_req_var("userid");
@@ -56,14 +55,14 @@ if ($_POST['frm1']) {
     if ($_POST['addonid']) {
         $addonid = $clientdata->addaddon($_POST['addonid'], $_POST['paymentmethod']);
         logActivity("Add Addon - User ID: " . $userid . " - Addon ID: " . $addonid, $userid, $id);
-        // redir("userid=" . $userid);
+        redir("userid=" . $userid);
     }
     $logDetail = "";
     foreach ($servicefield as $key => $row) {
-        if ($_POST['customefield'][$key] != $row['value']) {
+        if ($_POST['customfield'][$key] != $row['value']) {
             delete_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $id));
-            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key], "cfid" => $key, "relid" => $id));
-            $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
+            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customfield'][$key], "cfid" => $key, "relid" => $id));
+            $logDetail .= "Custom Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customfield'][$key] . "' ";
         }
     }
 
@@ -72,10 +71,10 @@ if ($_POST['frm1']) {
         "packageid" => $_POST['packageid'],
         "description" => $_POST['description'],
         "servicestatus" => $_POST['status'],
-        "regdate" => $_POST['regdate'],
-        "amount" => $_POST['amount'],
-        "firstpaymentamount" => $_POST['firstpaymentamount'],
-        "nextduedate" => $_POST['nextduedate'],
+        "regdate" => toMySQLDate($_POST['regdate']),
+        "amount" => (float)$_POST['amount'],
+        "firstpaymentamount" => (float)$_POST['firstpaymentamount'],
+        "nextduedate" => toMySQLDate($_POST['nextduedate']),
         "billingcycle" => $_POST['billingcycle'],
         "paymentmethod" => $_POST['paymentmethod'],
         "lastupdate" => "now()"
@@ -87,22 +86,22 @@ if ($_POST['frm1']) {
             "type" => $_POST['rel_type'],
             "created" => "now()",
             "duedate" => $_POST['duedate'],
-            "flag" => $_POST['imports'],
+            "flag" => $_POST['imports'] == "" ? 0 : 1,
             "assignto" => $_POST['assign'],
             "modified" => "now()",
             "note" => $_POST['notes'],
-            "sticky" => $sticky));
+            "sticky" => isset($sticky) ? 0 : 1));
     }
 }
 foreach ($data as $key => $row) {
     if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
-        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
+        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' \n";
     }
 }
 
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
-    logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
+    logActivity($logDetail, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 
@@ -229,6 +228,10 @@ while ($data = mysqli_fetch_assoc($result)) {
     $data['note'] = autoHyperLink(nl2br($data['note']));
     $clientnotes[] = $data;
 }
+
+// populate customfields
+
+
 $aInt->assign('id', $id);
 $aInt->assign('servicesarr', $servicesarr);
 if ($cancelid) {
@@ -279,7 +282,7 @@ $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblno
 INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
 LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
-where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
+where tbn.rel_id = " . $id . " ORDER BY tbn.flag DESC";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
     $noteid = $data['id'];

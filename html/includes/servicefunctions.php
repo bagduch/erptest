@@ -24,21 +24,22 @@ function getServiceData($id = NULL) {
         tblcustomerservices.lastupdate,
         tblcustomerservices.notes,
         tblservices.servertype,
-        tblservices.type 
-    FROM tblcustomerservices 
-    LEFT JOIN tblservices 
-        ON tblservices.id=tblcustomerservices.packageid 
-    LEFT JOIN tblservicegroups 
-        ON (tblservices.gid=tblservicegroups.id ) 
+        tblservices.type
+    FROM tblcustomerservices
+    LEFT JOIN tblservices
+        ON tblservices.id=tblcustomerservices.packageid
+    LEFT JOIN tblservicegroups
+        ON (tblservices.gid=tblservicegroups.id )
     WHERE tblcustomerservices.id=" . (int) $id;
 
     $result = full_query_i($query);
     $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    // echo "<pre>".print_r($service_data, 1)."</pre>";
+    $service_data['regdate'] = fromMySQLDate($service_data['regdate']);
+    $service_data['nextduedate'] = fromMySQLDate($service_data['nextduedate']);
     return $service_data;
 }
 
-// return all custom fields and values for product, 
+// return all custom fields and values for product,
 // even if value not populated (return null)
 // if id is supplied but not gid, determine gid
 // sid is the id from tblservices
@@ -60,31 +61,26 @@ function getServiceCustomFields($sid, $csid = null) {
             ON (tblservices.gid=tblservicegroups.id)
         LEFT JOIN tblcustomfieldsgrouplinks
             ON (tblcustomfieldsgrouplinks.serviceid=tblservices.id)
-            OR (tblcustomfieldsgrouplinks.servicegid=tblservicegroups.id)
         LEFT JOIN tblcustomfieldsgroupnames
             ON (tblcustomfieldsgrouplinks.cfgid=tblcustomfieldsgroupnames.cfgid)
         LEFT JOIN tblcustomfieldsgroupmembers
             ON (tblcustomfieldsgroupmembers.cfgid=tblcustomfieldsgroupnames.cfgid)
         LEFT JOIN tblcustomfieldslinks
-            ON (tblservices.id=tblcustomfieldslinks.serviceid) OR (tblservicegroups.id=tblcustomfieldslinks.servicegid)
-        LEFT JOIN tblcustomfields 
+            ON (tblservices.id=tblcustomfieldslinks.serviceid)
+        LEFT JOIN tblcustomfields
             ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
             OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
     if (isset($csid)) {
         $query_selectvals .= ", tblcustomfieldsvalues.value ";
-        $query_tables .=
-                " LEFT JOIN tblcustomfieldsvalues
+        $query_tables .= " LEFT JOIN tblcustomfieldsvalues
             ON (tblcustomfieldsvalues.cfid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . (int) $csid . ") ";
     }
     $query_where = " WHERE tblservices.id=" . (int) $sid;
     $query = $query_selectvals . $query_tables . $query_where;
-    $query .=" order by tblcustomfields.sortorder";
+    $query .= " order by tblcustomfields.sortorder";
 
-    //mail("peter@hd.net.nz", "query", $query);
     $result = full_query_i($query);
-    //  error_log(print_r($result), 3, "/tmp/php_errors.log");
     $returnvals = array();
-    //  $service_data = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $returnvals[$row['cfid']] = $row;
@@ -101,7 +97,6 @@ function getServiceCustomFields($sid, $csid = null) {
             unset($returnvals[$cfid]);
         }
     }
-    //  echo "<pre>",  print_r($returnvals,1),"</pre>";
 
     return $returnvals;
 }
@@ -157,31 +152,6 @@ function addServiceCustomFieldVlues($csid, $valarray) {
     }
 }
 
-// from customefield to services 
-function cfieldgroupToServices($cfid = null, $cfgid = null) {
-
-    $data = array();
-    if (isset($cfid) || isset($cfgid)) {
-        if (is_int($cfgid)) {
-            $query = "select ts.* from tblservices as ts
-           INNER JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid";
-        }
-        if (is_int($cfid)) {
-            $query = "select ts.* from tblservices as ts
-            LEFT JOIN tblcustomfieldslinks as tcfl on tcfl.serviceid = ts.id
-            LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on ts.id=tcfgl.serviceid 
-            LEFT JOIN tblcustomfieldsgroupmembers as tcgm on tcgm.cfgid=tcfgl.cfgid
-            INNER JOIN tblcustomfields as tcf on (tcfl.cfid=tcf.cfid or tcgm.cfid=tcf.cfid) where tcf.cfid=" . $cfid;
-        }
-        $result = full_query_i($query);
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[$row['id']] = $row;
-        }
-    } else {
-        return false;
-    }
-    return $data;
-}
 
 // takes csid per above, and an array of fieldname->values
 function updateServiceCustomFieldValues($relid, $valarray = array()) {
@@ -195,7 +165,7 @@ function updateServiceCustomFieldValues($relid, $valarray = array()) {
             if ($validate->validateCustomFields("", $cfid)) {
                 //update_query('tblcustomfieldsvalues', array('value' => $value), array('cfid' => $cfid, 'relid' => $relid));
 
-                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE 
+                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE
                      value=VALUES(value), cfid=VALUES(cfid),relid=VALUES(relid)";
                 mysqli_query($ramysqli, $query);
                 $query_count++;
@@ -223,16 +193,12 @@ function getServiceAndProductdata($type, $userid) {
         }
         if ($servicelist_status == "Pending") {
             $color = "#ffffcc";
+        } else if ($servicelist_status == "Suspended") {
+            $color = "#ccff99";
+        } elseif (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
+            $color = "#ff9999";
         } else {
-            if ($servicelist_status == "Suspended") {
-                $color = "#ccff99";
-            } else {
-                if (in_array($servicelist_status, array("Terminated", "Cancelled", "Fraud"))) {
-                    $color = "#ff9999";
-                } else {
-                    $color = "#fff";
-                }
-            }
+            $color = "#fff";
         }
 
 

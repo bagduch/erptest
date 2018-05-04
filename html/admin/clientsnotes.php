@@ -17,7 +17,7 @@ if ($_POST['update']) {
         "note" => $_POST['notes'],
         "assignto" => $_POST['assign'],
         "modified" => "now()",
-        "duedate" => $_POST['duedate'],
+        "duedate" => toMySQLDate($_POST['duedate']),
         "sticky" => $_POST['done'] ? 1 : 0
     );
     update_query("tblnotes", $array, array("id" => $_POST['id']));
@@ -57,14 +57,14 @@ if ($sub == "add") {
         "adminid" => $_SESSION['adminid'],
         "type" => $_POST['rel_type'],
         "created" => "now()",
-        "duedate" => $duedate,
+        "duedate" => toMySQLDate($duedate),
         "flag" => $_POST['imports'],
         "assignto" => $_POST['assign'],
         "modified" => "now()",
         "note" => $_POST['notes'],
         "sticky" => $sticky));
-    logActivity("Added Note - User ID: " . $userid);
-   redir("userid=" . $userid);
+    logActivity("Added Note - User ID: " . $userid,$userid,$account);
+    redir("userid=" . $userid);
     exit();
 } else {
     if ($sub == "save") {
@@ -110,7 +110,7 @@ where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $user
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
     $noteid = $data['id'];
-    $duedate = $data['duedate'];
+    $duedate =fromMySQLDate($data['duedate']);
     $created = $data['created'];
     $modified = $data['modified'];
     $note = $data['note'];
@@ -143,9 +143,9 @@ if ($action == "edit") {
             $current = "";
         }
 
-        $select.= "<option value='" . $data['id'] . "' " . $current . ">" . $data['firstname'] . " " . $data['lastname'] . "</option>";
+        $select .= "<option value='" . $data['id'] . "' " . $current . ">" . $data['firstname'] . " " . $data['lastname'] . "</option>";
     }
-    $select .="</select>";
+    $select .= "</select>";
 
 
     $aInt->assign("notesdata", $notesdata);
@@ -155,12 +155,12 @@ if ($action == "edit") {
     $aInt->assign("select", $select);
 } else {
     sprintf("<form method=\"post\" action=\"%s?userid=%s&sub=add\">", $PHP_SELF, $userid);
-    $form.= "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
+    $form .= "<table class=\"form\" width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 <tr><td class=\"fieldarea\"><textarea name=\"note\" rows=\"6\"></textarea></td><td align=\"center\" width=\"60\"><input type=\"submit\" value=\"";
-    $form.= $aInt->lang("global", "addnew");
-    $form.= "\" class=\"button\" /><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\" /> ";
-    $form.= $aInt->lang("clientsummary", "stickynotescheck");
-    $form.= "</label></td></tr>
+    $form .= $aInt->lang("global", "addnew");
+    $form .= "\" class=\"button\" /><br /><label><input type=\"checkbox\" class=\"checkbox\" name=\"sticky\" value=\"1\" /> ";
+    $form .= $aInt->lang("clientsummary", "stickynotescheck");
+    $form .= "</label></td></tr>
 </table>
 </form>
 ";

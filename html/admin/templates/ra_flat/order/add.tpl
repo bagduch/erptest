@@ -215,7 +215,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button onclick="savePromo()" class="btn btn-primary">Save changes</button>
                 </div>
             </form>
         </div>
@@ -229,79 +229,80 @@
 {literal}
     <script type="text/javascript">
 
-            function loadproductoptions(piddd) {
-                var ord = piddd.id.substring(3);
-                var pid = piddd.value;
-                var billingcycle = $("#billingcycle option:selected").val();
-                if (pid == 0) {
-                    $("#productconfigoptions" + ord).html("");
-                    $("#addonsrow" + ord).hide();
+        function loadproductoptions(piddd) {
+            console.log(piddd);
+            var ord = piddd.id.substring(3);
+            var pid = piddd.value;
+            var billingcycle = $("#billingcycle option:selected").val();
+            if (pid == 0) {
+                $("#productconfigoptions" + ord).html("");
+                $("#addonsrow" + ord).hide();
+                updatesummary();
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "ordersadd.php",
+                    dataType: "json",
+                    data: {action: "getconfigoptions", pid: pid, cycle: billingcycle, orderid: ord, token: "{/literal}{$token}{literal}"},
+                }).done(function (data) {
+
+                    console.log(data);
+                    if (data.addons) {
+                        $("#addonsrow" + ord).show();
+                        $("#addonscont" + ord).html(data.addons);
+                    } else {
+                        $("#addonsrow" + ord).hide();
+                    }
+                    $("#productconfigoptions" + ord).html(data.options);
                     updatesummary();
-                } else {
-                    $("#productconfigoptions" + ord).html("<p align=\"center\">Loading...<br><img src=\"../images/loading.gif\"></p>");
-                    $.ajax({
-                        type: "POST",
-                        url: "ordersadd.php",
-                        dataType: "json",
-                        data: {action: "getconfigoptions", pid: pid, cycle: billingcycle, orderid: ord, token: "{/literal}{$token}{literal}"},
-                    }).done(function (data) {
 
-                        if (data.addons) {
-                            $("#addonsrow" + ord).show();
-                            $("#addonscont" + ord).html(data.addons);
-                        } else {
-                            $("#addonsrow" + ord).hide();
-                        }
-                        $("#productconfigoptions" + ord).html(data.options);
-                        updatesummary();
+                });
+            }
+        }
+        function loaddomainoptions(domrd, type) {
+            var ord = domrd.id.substring(6);
+            if (type == 1) {
+                $("#domrowdn" + ord).css("display", "");
+                $("#domrowrp" + ord).css("display", "");
+                $("#domrowep" + ord).css("display", "none");
+                $("#domrowad" + ord).css("display", "");
+            } else if (type == 2) {
+                $("#domrowdn" + ord).css("display", "");
+                $("#domrowrp" + ord).css("display", "");
+                $("#domrowep" + ord).css("display", "");
+                $("#domrowad" + ord).css("display", "");
+            } else {
+                $("#domrowdn" + ord).css("display", "none");
+                $("#domrowrp" + ord).css("display", "none");
+                $("#domrowep" + ord).css("display", "none");
+                $("#domrowad" + ord).css("display", "none");
+            }
+        }
 
+        $("#domain0").keyup(function () {
+
+        });
+        function updatesummary() {
+            jQuery.post("ordersadd.php", "submitorder=1&calconly=1&" + jQuery("#orderfrm").serialize(),
+                    function (data) {
+                        jQuery("#ordersumm").html(data);
                     });
-                }
-            }
-            function loaddomainoptions(domrd, type) {
-                var ord = domrd.id.substring(6);
-                if (type == 1) {
-                    $("#domrowdn" + ord).css("display", "");
-                    $("#domrowrp" + ord).css("display", "");
-                    $("#domrowep" + ord).css("display", "none");
-                    $("#domrowad" + ord).css("display", "");
-                } else if (type == 2) {
-                    $("#domrowdn" + ord).css("display", "");
-                    $("#domrowrp" + ord).css("display", "");
-                    $("#domrowep" + ord).css("display", "");
-                    $("#domrowad" + ord).css("display", "");
-                } else {
-                    $("#domrowdn" + ord).css("display", "none");
-                    $("#domrowrp" + ord).css("display", "none");
-                    $("#domrowep" + ord).css("display", "none");
-                    $("#domrowad" + ord).css("display", "none");
-                }
-            }
+        }
+        function savePromo() {
+            jQuery.post("ordersadd.php", "action=createpromo&" + jQuery("#createpromofrm").serialize(),
+                    function (data) {
 
-            $("#domain0").keyup(function () {
-
-            });
-            function updatesummary() {
-                jQuery.post("ordersadd.php", "submitorder=1&calconly=1&" + jQuery("#orderfrm").serialize(),
-                        function (data) {
-                            jQuery("#ordersumm").html(data);
-                        });
-            }
-            function savePromo() {
-                jQuery.post("ordersadd.php", "action=createpromo&" + jQuery("#createpromofrm").serialize(),
-                        function (data) {
-
-                            if (data.substr(0, 1) == "<") {
-                                $("#promodd").append(data);
-                                $("#promodd").val($("#promocode").val());
-                                $("#createpromo").dialog("close");
-                            } else {
-                                alert(data);
-                            }
-                        });
-            }
+                        if (data.substr(0, 1) == "<") {
+                            $("#promodd").append(data);
+                            $("#promodd").val($("#promocode").val());
+                            $("#createpromo").dialog("close");
+                        } else {
+                            alert(data);
+                        }
+                    });
+        }
 
 
-      
+
     </script>
 {/literal}

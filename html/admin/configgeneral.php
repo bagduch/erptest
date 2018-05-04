@@ -109,8 +109,46 @@ if ($action == "save") {
         if (current(parse_url(cleanSystemURL($systemurl))) == current(parse_url(cleanSystemURL($systemsslurl)))) {
             $systemsslurl = "";
         }
-        $save_arr = array("CompanyName" => html_entity_decode($companyname), "Email" => $email, "Domain" => $domain, "LogoURL" => $logourl, "SystemURL" => $systemurl, "SystemSSLURL" => $systemsslurl, "Template" => $template, "MaintenanceModeURL" => $maintenancemodeurl, "ClientDateFormat" => $clientdateformat, "FreeDomainAutoRenewRequiresProduct" => $freedomainautorenewrequiresproduct, "DomainToDoListEntries" => $domaintodolistentries, "AllowIDNDomains" => $allowidndomains, "BulkCheckTLDs" => $bulkchecktldsstring, "DomainSyncEnabled" => $domainsyncenabled, "DomainSyncNextDueDate" => $domainsyncnextduedate, "DomainSyncNextDueDateDays" => $domainsyncnextduedatedays, "DomainSyncNotifyOnly" => $domainsyncnotifyonly, "DefaultNameserver1" => $ns1, "DefaultNameserver2" => $ns2, "DefaultNameserver3" => $ns3, "DefaultNameserver4" => $ns4, "DefaultNameserver5" => $ns5, "RegistrarAdminFirstName" => $domfirstname, "RegistrarAdminLastName" => $domlastname, "RegistrarAdminCompanyName" => $domcompanyname, "RegistrarAdminEmailAddress" => $domemail, "RegistrarAdminAddress1" => $domaddress1, "RegistrarAdminAddress2" => $domaddress2, "RegistrarAdminCity" => $domcity, "RegistrarAdminStateProvince" => $domstate, "RegistrarAdminPostalCode" => $dompostcode, "RegistrarAdminCountry" => $domcountry, "RegistrarAdminPhone" => $domphone, "RegistrarAdminUseClientDetails" => $domuseclientsdetails, "SMTPHost" => $smtphost, "SMTPUsername" => $smtpusername, "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
-            "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting, "gst" => $gst,
+        $save_arr = array(
+            "CompanyName" => html_entity_decode($companyname), 
+            "Email" => $email, 
+            "Domain" => $domain, 
+            "LogoURL" => $logourl,
+            "SystemURL" => $systemurl,
+            "SystemSSLURL" => $systemsslurl, 
+            "Template" => $template, 
+            "MaintenanceModeURL" => $maintenancemodeurl,
+            "ClientDateFormat" => $clientdateformat, 
+            "FreeDomainAutoRenewRequiresProduct" => $freedomainautorenewrequiresproduct, 
+            "DomainToDoListEntries" => $domaintodolistentries, 
+            "AllowIDNDomains" => $allowidndomains, 
+            "BulkCheckTLDs" => $bulkchecktldsstring,
+            "DomainSyncEnabled" => $domainsyncenabled, 
+            "DomainSyncNextDueDate" => $domainsyncnextduedate,
+            "DomainSyncNextDueDateDays" => $domainsyncnextduedatedays, 
+            "DomainSyncNotifyOnly" => $domainsyncnotifyonly, 
+            "DefaultNameserver1" => $ns1, 
+            "DefaultNameserver2" => $ns2, 
+            "DefaultNameserver3" => $ns3, 
+            "DefaultNameserver4" => $ns4, 
+            "DefaultNameserver5" => $ns5, 
+            "RegistrarAdminFirstName" => $domfirstname, 
+            "RegistrarAdminLastName" => $domlastname,
+            "RegistrarAdminCompanyName" => $domcompanyname, 
+            "RegistrarAdminEmailAddress" => $domemail,
+            "RegistrarAdminAddress1" => $domaddress1, 
+            "RegistrarAdminAddress2" => $domaddress2,
+            "RegistrarAdminCity" => $domcity, 
+            "RegistrarAdminStateProvince" => $domstate,
+            "RegistrarAdminPostalCode" => $dompostcode, 
+            "RegistrarAdminCountry" => $domcountry, 
+            "RegistrarAdminPhone" => $domphone, 
+            "RegistrarAdminUseClientDetails" => $domuseclientsdetails, 
+            "SMTPHost" => $smtphost,
+            "SMTPUsername" => $smtpusername,
+            "SMTPPassword" => encrypt(html_entity_decode($smtppassword)),
+            "SMTPPort" => $smtpport, "SMTPSSL" => $smtpssl, 
+            "EmailGlobalHeader" => $emailglobalheader, "EmailGlobalFooter" => $emailglobalfooter, "BCCMessages" => $bccmessages, "ContactFormTo" => $contactformto, "ShowClientOnlyDepts" => $showclientonlydepts, "TicketFeedback" => $ticketfeedback, "TicketMask" => $ticketmask, "AttachmentThumbnails" => $attachmentthumbnails, "DownloadsIncludeProductLinked" => $dlinclproductdl, "CancelInvoiceOnCancellation" => $cancelinvoiceoncancel, "TCPDFFont" => $tcpdffont, "AddFundsEnabled" => $addfundsenabled, "AddFundsMinimum" => $addfundsminimum, "AddFundsMaximum" => $addfundsmaximum, "AddFundsMaximumBalance" => $addfundsmaximumbalance, "LateFeeMinimum" => $latefeeminimum, "AffiliateEnabled" => $affiliateenabled, "AffiliateEarningPercent" => $affiliateearningpercent, "AffiliateDepartment" => $affiliatedepartment, "AffiliateBonusDeposit" => $affiliatebonusdeposit, "AffiliatePayout" => $affiliatepayout, "AffiliatesDelayCommission" => $affiliatesdelaycommission, "AffiliateLinks" => $affiliatelinks, "CaptchaType" => $captchatype, "ReCAPTCHAPrivateKey" => $recaptchaprivatekey, "ReCAPTCHAPublicKey" => $recaptchapublickey, "DisableAdminPWReset" => $disableadminpwreset, "CCNeverStore" => $ccneverstore, "TwitterUsername" => $twitterusername, "AnnouncementsTweet" => $announcementstweet, "AnnouncementsFBRecommend" => $announcementsfbrecommend, "AnnouncementsFBComments" => $announcementsfbcomments, "GooglePlus1" => $googleplus1, "ClientsProfileOptionalFields" => $clientsprofoptional, "ClientsProfileUneditableFields" => $clientsprofuneditable, "DefaultToClientArea" => $defaulttoclientarea, "AllowClientsEmailOptOut" => $allowclientsemailoptout, "BannedSubdomainPrefixes" => $bannedsubdomainprefixes, "DisplayErrors" => $displayerrors, "SQLErrorReporting" => $sqlerrorreporting, "gst" => $gst,
             "invphone" => $invphone,
             "invfax" => $invfax,
             "invwebsite" => $invwebsite,
@@ -221,8 +259,8 @@ if ($action == "save") {
     global $ra;
     $token_manager = &getTokenManager();
     $token_manager->processAdminHTMLSave($ra);
-    redir("success=true");
-    exit();
+   redir("success=true");
+   exit();
 } // end of action==save
 releaseSession();
 

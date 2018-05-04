@@ -71,7 +71,7 @@
                                             <td class="fieldarea">
                                                 <select class="form-control"name="template">
                                                     {$templatearray}
-                                                </select> 
+                                                </select>
                                                 The template you want ra to use</td>
                                         </tr>
                                         <tr>
@@ -248,21 +248,20 @@
                             <!-- Mail -->
                             <div role="tabpanel" id="tab4" class="tab-pane">
 
-
                                 <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                                     <tbody><tr><td class="fieldlabel">Mail Type</td><td class="fieldarea">
                                                 <select class="form-control"name="mailtype">
-                                                    <option value="mail" {if $CONFIG['MailType'] eq "mail"}selected{/if}>PHP Mail()</option>
-                                                    <option value="smtp" {if $CONFIG['MailType'] eq "smtp"}selected{/if}>SMTP</option>
+                                                    <option value="mail" {if $CONFIG.MailType eq "mail"}selected{/if}>PHP Mail()</option>
+                                                    <option value="smtp" {if $CONFIG.MailType eq "smtp"}selected{/if}>SMTP</option>
                                                 </select></td></tr>
                                         <tr><td class="fieldlabel">SMTP Port</td>
                                             <td class="fieldarea"><input type="text" class="form-control" name="smtpport" size="5" value="{$CONFIG.SMTPPort}"> The port your mail server uses</td></tr>
                                         <tr><td class="fieldlabel">SMTP Host</td>
-                                            <td class="fieldarea"><input type="text" class="form-control" name="smtphost" size="40" value="{$CONFIG.smtphost}"></td></tr>
+                                            <td class="fieldarea"><input type="text" class="form-control" name="smtphost" size="40" value="{$CONFIG.SMTPHost}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP Username</td>
                                             <td class="fieldarea"><input type="text" class="form-control" name="smtpusername" size="35" value="{$CONFIG.SMTPUsername}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP Password</td>
-                                            <td class="fieldarea"><input  type="password" class="form-control" name="smtppassword" size="20" value="{$CONFIG.smtppassword}"></td></tr>
+                                            <td class="fieldarea"><input  type="password" class="form-control" name="smtppassword" size="20" value="{$CONFIG.SMTPPassword}"></td></tr>
                                         <tr><td class="fieldlabel">SMTP SSL Type</td>
                                             <td class="fieldarea">
                                                 <label><input type="radio" class="flat-red" name="smtpssl" value="" {if $CONFIG.SMTPSSL eq ""}checked{/if}> None</label>
@@ -354,7 +353,7 @@
                                         <tr><td class="fieldlabel">Sequential Paid Invoice Numbering</td><td class="fieldarea"><label>
                                                     <input type="checkbox" class="flat-red" name="sequentialinvoicenumbering" {if $CONFIG.SequentialInvoiceNumbering eq "on"}checked{/if}> Tick this box to enable automatic sequential numbering of paid invoices</label></td></tr>
                                         <tr><td class="fieldlabel">Sequential Invoice Number Format</td><td class="fieldarea">
-                                                <input type="text" class="form-control" name="sequentialinvoicenumberformat" value="{$SequentialInvoiceNumberFormat}" size="25"> Enter the format for the paid invoice numbers eg. RA2007-{NUMBER}</td></tr>
+                                                <input type="text" class="form-control" name="sequentialinvoicenumberformat" value="{$SequentialInvoiceNumberFormat}" size="25"> Enter the format for the paid invoice numbers eg. {literal}RA2007-{NUMBER}{/literal}</td></tr>
                                         <tr><td class="fieldlabel">Next Paid Invoice Number</td><td class="fieldarea">
                                                 <input type="text" class="form-control" name="sequentialinvoicenumbervalue" value="{$SequentialInvoiceNumberValue}" size="5"> Only change this if you need to regenerate an invoice number</td></tr>
                                         <tr><td class="fieldlabel">Late Fee Type</td><td class="fieldarea"><label>

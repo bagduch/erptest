@@ -33,7 +33,7 @@
                                             <a href="#" onclick="{$servicesg.group.deletelink}">
                                                <i class="fa fa-trash" aria-hidden="true"></i>
                                             </a>
-                                        </td 
+                                        </td
                                     </tr>
                                     {foreach from=$servicesg.service item=servicedata key=sid}
                                         <tr style="text-align:center;">
@@ -42,7 +42,7 @@
                                             <td><input type="text" name="so[{$sid}]" value="{$servicedata.order}" size="5" style="font-size:10px;"></td>
                                             <td>{$servicedata.paytype}</td>
                                             <td>-</td>
-                                            <td>{$service.autosetup}</td>
+                                            <td>{$servicedata.autosetup}</td>
                                             <td><a href="configservices.php?action=edit&amp;id={$sid}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
                                             <td><a href="#" onclick="{$servicedata.deletelink}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>

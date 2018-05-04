@@ -43,7 +43,7 @@ if ($action == "send") {
 		}
 
 		$sendmessage .= "<font style=\"font-family:Verdana;font-size:11px\"><p>" . nl2br($message) . "</p>";
-		$ra->load_class("phpmailer");
+		require_once("vendor/phpmailer/phpmailer/PHPMailerAutoload.php");
 		$mail = new PHPMailer();
 		$mail->From = $email;
 		$mail->FromName = html_entity_decode($name, ENT_QUOTES);

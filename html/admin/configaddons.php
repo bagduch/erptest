@@ -137,7 +137,7 @@ if (!$action) {
 } else {
     if ($action == "manage") {
         if ($id) {
-            $currecy = getCurrency();
+            $currency = getCurrency();
             $managetitle = $aInt->lang("addons", "editaddon");
             $result = select_query_i("tbladdons", "*", array("id" => $id));
             $addondetail = mysqli_fetch_assoc($result);
@@ -156,7 +156,7 @@ if (!$action) {
                 }
             }
 
-            $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currecy['id'], "relid" => $id));
+            $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $id));
             $price = array();
             while ($data = mysqli_fetch_assoc($result2)) {
                 $price[$data['currency']] = $data;

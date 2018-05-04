@@ -668,7 +668,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         }
     }
 
-    $invoicearray = array("date" => "now()", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => $invoicenotes);
+    $invoicearray = array("date" => "now()", "invoicenum" => "", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => $invoicenotes);
 
     $invoiceid = insert_query("tblinvoices", $invoicearray);
 
@@ -957,7 +957,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
         $description .= ("\r\n") . $confoption . ": " . $optionname;
     }
 
-    $result = select_query_i("tblcustomfields", "tblcustomfields.id,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.id AND tblcustomfieldsvalues.relid=" . $id . " LIMIT 1) AS value", array("type" => "product", "relid" => $pid, "showinvoice" => "on"));
+    $result = select_query_i("tblcustomfields", "tblcustomfields.cfid,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . $id . " LIMIT 1) AS value", array("type" => "product", "relid" => $pid, "showinvoice" => "on"));
 
     while ($data = mysqli_fetch_assoc($result)) {
         if ($data['value']) {

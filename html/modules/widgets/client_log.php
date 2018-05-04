@@ -7,19 +7,19 @@ function widget_client_log($vars) {
     global $_ADMINLANG;
     $title = "Client Log Overview";
 
-    $clientlogquery = "select firstname,lastname,ip,lastlogin from tblclients order by lastlogin DESC LIMIT 4";
+    $clientlogquery = "select id,firstname,lastname,ip,lastlogin from tblclients where lastlogin between Now() AND Now()-Interval 30 minute order by lastlogin DESC LIMIT 4";
     $result = full_query_i($clientlogquery);
-    $clientlog = array();
 
-    while ($data = mysqli_fetch_array($result)) {
-        $table .= "<tr>
-             <td>" . $data['firstname'] . " " . $data['lastname'] . "</td>
+    if ($result->num_rows > 0) {
+        while ($data = mysqli_fetch_array($result)) {
+            $table .= "<tr>
+             <td><a href='clientssummary.php?userid=" . $data['id'] . "'" . $data['firstname'] . " " . $data['lastname'] . "</a></td>
              <td>" . $data['ip'] . "</td>
              <td>" . $data['lastlogin'] . "</td>
                   </tr>";
-    }
+        }
 
-    $content = <<<EOF
+        $content = <<<EOF
                 <table class="table table-bordered widgethm">
                     <tbody>
                         <tr>
@@ -31,7 +31,9 @@ function widget_client_log($vars) {
                     </tbody>
                 </table>
 EOF;
-
+    } else {
+        $content = "Online Customers: 0";
+    }
     return array('title' => $title, 'content' => $content);
 }
 

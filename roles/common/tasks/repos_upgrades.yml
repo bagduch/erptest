@@ -1,0 +1,64 @@
+---
+
+- name: set timezone
+  timezone:
+    name: "Pacific/Auckland"
+
+- name: remove default apt repo
+  apt_repository:
+    repo: deb http://httpredir.debian.org/debian stretch main
+    state: absent
+
+- name: add mirror.hd.net.nz/debian repo
+  apt_repository: 
+    repo: deb http://mirror.hd.net.nz/debian stretch main contrib non-free
+    state: present
+
+- name: add cdn-fastly.deb.debian.org/debian-security repo
+  apt_repository: 
+    repo: deb http://cdn-fastly.deb.debian.org/debian-security stretch/updates main
+    state: present
+
+- name: Install Base Required Packages
+  action: apt pkg={{item}} state=installed
+  with_items:
+    - vim
+    - curl
+    - rsync
+    - apt-transport-https
+    - lsb-release
+    - ca-certificates
+
+- name: add mariadb apt repo keys
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: "F1656F24C74CD1D8"
+
+    # https://downloads.mariadb.org/mariadb/repositories/#mirror=aarnet_pty_ltd&distro=Debian&distro_release=stretch--stretch&version=10.2
+- name: add mariadb repo
+  apt_repository: 
+    repo: deb http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.2/debian stretch main
+    state: present
+
+
+- name: add sury PHP7 apt repo key
+  get_url:
+    url: https://packages.sury.org/php/apt.gpg
+    dest: /etc/apt/trusted.gpg.d/php.gpg
+
+- name: add sury PHP7 apt repo
+  apt_repository:
+    repo: deb https://packages.sury.org/php/ stretch main
+    state: present
+
+- name: install aptitude
+  apt: 
+    name: aptitude
+    state: present
+
+- name: Upgrade to latest debian packages
+  apt:
+    upgrade: yes
+    update_cache: yes   
+
+# vim: ai ts=2 sts=2 et sw=2

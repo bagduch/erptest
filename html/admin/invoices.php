@@ -1,10 +1,11 @@
 <?php
+
 // vim: ai ts=4 sts=4 et sw=4 ft=php
 
 define("ADMINAREA", true);
 require "../init.php";
+
 $action = $ra->get_req_var("action");
-$menuselect = "$('#menu').multilevelpushmenu('expand','Billing');";
 if ($action == "edit" || $action == "invtooltip") {
     $reqperm = "Manage Invoice";
 } else {
@@ -45,6 +46,7 @@ $status = $ra->get_req_var("status");
   } */
 
 
+
 if ($action == "invtooltip") {
     check_token("RA.admin.default");
     echo "<table bgcolor=\"#cccccc\" cellspacing=\"1\" cellpadding=\"3\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $aInt->lang("fields", "description") . "</td><td>" . $aInt->lang("fields", "amount") . "</td></tr>";
@@ -57,11 +59,7 @@ if ($action == "invtooltip") {
     }
 
     $data = get_query_vals(
-        "tblinvoices", 
-        "subtotal,credit,tax,tax2,taxrate,taxrate2,total", 
-        array("id" => $id), 
-        "id", 
-        "ASC"
+            "tblinvoices", "subtotal,credit,tax,tax2,taxrate,taxrate2,total", array("id" => $id), "id", "ASC"
     );
     echo "<tr bgcolor=\"#efefef\" style=\"text-align:right;font-weight:bold;\"><td>" . $aInt->lang("fields", "subtotal") . "&nbsp;</td><td>" . formatCurrency($data['subtotal']) . "</td></tr>";
 
@@ -105,19 +103,18 @@ if ($action == "createinvoice") {
 
     $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['CreateInvoiceDaysBefore'], date("Y")));
     $invoiceid = insert_query(
-	    "tblinvoices", 
-	    array(
-		    "date" => "now()", 
-		    "duedate" => $duedate, 
-		    "userid" => $userid, 
-		    "status" => "Draft", 
-		    "paymentmethod" => $gateway, 
-		    "taxrate" => $taxrate, 
-            "taxrate2" => $taxrate2,
-            "invoicenum" => sprintf("%s%05d",strftime("%Y%m%d"), 10),
-            "subtotal" => 0
-	    )
-	);
+            "tblinvoices", array(
+        "date" => "now()",
+        "duedate" => $duedate,
+        "userid" => $userid,
+        "status" => "Draft",
+        "paymentmethod" => $gateway,
+        "taxrate" => $taxrate != "" ? $taxrate : 0,
+        "taxrate2" => $taxrate2 != "" ? $taxrate : 0,
+        "invoicenum" => sprintf("%s%05d", strftime("%Y%m%d"), 10),
+        "subtotal" => 0
+            )
+    );
     logActivity("Created Manual Invoice - Invoice ID: " . $invoiceid, $userid);
 
     if (1 < $CONFIG['InvoiceIncrement']) {
@@ -186,23 +183,21 @@ if ($ra->get_req_var("duplicateinvoice")) {
         $duedate = toMySQLDate($duedatefrom);
         $datepaidfrom = fromMySQLDate($data_duplicate['datepaid']);
         $datepaid = toMySQLDate($datepaidfrom);
-        insert_query("tblinvoices", 
-            array(
-                "userid" => $data_duplicate['userid'], 
-                "invoicenum" => $data_duplicate['invoicenum'], 
-                "date" => $date, "duedate" => $duedate, 
-                "datepaid" => $datepaid, 
-                "subtotal" => $data_duplicate['subtotal'], 
-                "credit" => $data_duplicate['credit'], 
-                "tax" => $data_duplicate['tax'], 
-                "tax2" => $data_duplicate['tax2'], 
-                "total" => $data_duplicate['total'], 
-                "taxrate2" => $data_duplicate['taxrate2'], 
-                "status" => $data_duplicate['status'], 
-                "paymentmethod" => $data_duplicate['paymentmethod'], 
-                "notes" => $data_duplicate['notes']
-            ), 
-            array("id" => $invid)
+        insert_query("tblinvoices", array(
+            "userid" => $data_duplicate['userid'],
+            "invoicenum" => $data_duplicate['invoicenum'],
+            "date" => $date, "duedate" => $duedate,
+            "datepaid" => $datepaid,
+            "subtotal" => $data_duplicate['subtotal'],
+            "credit" => $data_duplicate['credit'],
+            "tax" => $data_duplicate['tax'],
+            "tax2" => $data_duplicate['tax2'],
+            "total" => $data_duplicate['total'],
+            "taxrate2" => $data_duplicate['taxrate2'],
+            "status" => $data_duplicate['status'],
+            "paymentmethod" => $data_duplicate['paymentmethod'],
+            "notes" => $data_duplicate['notes']
+                ), array("id" => $invid)
         );
         logActivity("Duplicated Invoice(s) - Invoice ID: " . $invid, $userid);
     }
@@ -236,6 +231,7 @@ if ($ra->get_req_var("delete")) {
     $filters->redir();
 }
 
+
 if ($action == "") {
     $aInt->deleteJSConfirm("doDelete", "invoices", "delete", $_SERVER['PHP_SELF'] . "?status=" . $status . "&delete=true&invoiceid=");
     $name = "invoices";
@@ -266,14 +262,14 @@ if ($action == "") {
         if (count($invoicetotals)) {
             $topwrap = "<div class=\"contentbox\" style=\"font-size:18px;\">";
             foreach ($invoicetotals as $vals) {
-                $topwrap.= "<b>" . $vals['currencycode'] . "</b> "
+                $topwrap .= "<b>" . $vals['currencycode'] . "</b> "
                         . $aInt->lang("status", "draft") . ": <span class=\"textgreen\"><b>" . $vals['draft'] . "</b></span> "
                         . $aInt->lang("status", "paid") . ": <span class=\"textgreen\"><b>" . $vals['paid'] . "</b></span> "
                         . $aInt->lang("status", "unpaid") . ": <span class=\"textred\"><b>" . $vals['unpaid'] . "</b></span> "
                         . $aInt->lang("status", "overdue") . ": <span class=\"textblack\"><b>" . $vals['overdue'] . "</b></span><br />";
             }
 
-            $topwrap.= "</div><br />";
+            $topwrap .= "</div><br />";
         }
     }
 
@@ -322,9 +318,7 @@ if ($action == "") {
 } else {
     if ($action == "edit") {
         $result = select_query_i(
-            "tblinvoices", 
-            "userid,paymentmethod", 
-            array("id" => $id)
+                "tblinvoices", "userid,paymentmethod", array("id" => $id)
         );
         $data = mysqli_fetch_array($result);
         $userid = $data[0];
@@ -332,17 +326,15 @@ if ($action == "") {
         if ($saveoptions) {
             check_token("RA.admin.default");
             update_query(
-                "tblinvoices", 
-                array(
-                    "date" => toMySQLDate($invoicedate), 
-                    "duedate" => toMySQLDate($datedue), 
-                    "paymentmethod" => $paymentmethod, 
-                    "invoicenum" => $invoicenum, 
-                    "taxrate" => $taxrate, 
-                    "taxrate2" => $taxrate2, 
-                    "status" => $status
-                ), 
-                array("id" => $id)
+                    "tblinvoices", array(
+                "date" => toMySQLDate($invoicedate),
+                "duedate" => toMySQLDate($datedue),
+                "paymentmethod" => $paymentmethod,
+                "invoicenum" => $invoicenum,
+                "taxrate" => $taxrate,
+                "taxrate2" => $taxrate2,
+                "status" => $status
+                    ), array("id" => $id)
             );
             updateInvoiceTotal($id);
 
@@ -397,7 +389,7 @@ if ($action == "") {
 
             if ($description) {
                 foreach ($description as $lineid => $desc) {
-                    update_query("tblinvoiceitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => $taxed[$lineid]), array("id" => $lineid));
+                    update_query("tblinvoiceitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => isset($taxed[$lineid]) ? 1 : 0), array("id" => $lineid));
                 }
             }
 
@@ -408,7 +400,7 @@ if ($action == "") {
                     "userid" => $userid,
                     "description" => $adddescription,
                     "amount" => $addamount,
-                    "taxed" => $addtaxed
+                    "taxed" => isset($addtaxed) ? $addtaxed : 0
                         )
                 );
             }
@@ -623,6 +615,8 @@ if ($action == "") {
             $amountpaid = $accounts[1];
             $balance = $invoices['total'] - $amountpaid;
             $balance = $rawbalance = sprintf("%01.2f", $balance);
+            $invoices['date'] = fromMySQLDate($invoices['date']);
+            $invoices['duedate'] = fromMySQLDate($invoices['duedate']);
             $invoices['totalcurrency'] = formatCurrency($invoices['total']);
             $invoices['subtotalcurrency'] = formatCurrency($invoices['subtotal']);
             $invoices['creditcurrency'] = formatCurrency($invoices['credit']);
@@ -645,7 +639,19 @@ if ($action == "") {
             if (empty($transactions)) {
                 $transactions = 0;
             }
-
+            $paymentplan = array();
+            $result = select_query_i("tblinvoicepaymentmonitor", "", array("invoice_id" => $id));
+            if ($result->num_rows !== 0) {
+                while ($data = mysqli_fetch_array($result)) {
+                    $paymentplan['days'] = (strtotime($data['duedate']) - strtotime($data['date'])) / (60 * 60 * 24);
+                    $paymentplan['period'] = $data['period'];
+                    $paymentplan['suspension'] = $data['suspension'];
+                }
+                $aInt->assign("paymentplan", $paymentplan);
+                $aInt->assign("newpaymentplan", 0);
+            } else {
+                $aInt->assign("newpaymentplan", 1);
+            }
             $aInt->assign("paymentmethod", paymentMethodsSelection());
             $aInt->assign("transactions", $transactions);
             $aInt->assign("details", $details);
@@ -659,7 +665,7 @@ if ($action == "") {
 }
 
 
-$aInt->jquerycode.=$menuselect;
+$aInt->jquerycode .= $menuselect;
 
 $aInt->display();
 ?>

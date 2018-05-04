@@ -1,4 +1,5 @@
 <?php
+
 // vim: ai ts=4 sts=4 et sw=4 ft=php
 
 function getInvoiceStatusColour($status, $clientarea = true) {
@@ -26,7 +27,7 @@ function getInvoicePayUntilDate($nextduedate, $billingcycle, $fulldate = "") {
     return $invoicepayuntildate;
 }
 
-function addTransaction($userid, $currencyid, $description, $amountin, $fees, $amountout, $gateway = "", $transid = "", $invoiceid = "", $date = "", $refundid = "", $rate = "") {
+function addTransaction($userid, $currencyid, $description, $amountin, $fees, $amountout, $gateway = "", $transid = "", $invoiceid = "0", $date = "", $refundid = "0", $rate = "") {
     $date = ($date ? $date . date(" H:i:s") : "now()");
     if ($userid) {
         $currency = getCurrency($userid);
@@ -58,9 +59,7 @@ function updateInvoiceTotal($id) {
 
     // fetch all line items for it
     $result = select_query_i(
-	    "tblinvoiceitems", 
-	    "*", 
-	    array("invoiceid" => $id)
+            "tblinvoiceitems", "*", array("invoiceid" => $id)
     );
 
     while ($data = mysqli_fetch_array($result)) {
@@ -68,14 +67,12 @@ function updateInvoiceTotal($id) {
             $taxsubtotal += $data['amount'];
         } else {
             $nontaxsubtotal += $data['amount'];
-	}
+        }
     }
 
     $subtotal = $total = $nontaxsubtotal + $taxsubtotal;
     $result = select_query_i(
-	    "tblinvoices", 
-	    "userid,credit,taxrate,taxrate2", 
-	    array("id" => $id)
+            "tblinvoices", "userid,credit,taxrate,taxrate2", array("id" => $id)
     );
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
@@ -90,7 +87,8 @@ function updateInvoiceTotal($id) {
     $clientsdetails = getClientsDetails($userid);
     $tax = $tax2 = 0;
 
-    if ($CONFIG['TaxEnabled'] == "on" && !$clientsdetails['taxexempt']) {
+
+    if ($CONFIG['TaxEnabled'] == "on" && $clientsdetails['taxexempt'] != "on") {
         if ($taxrate > 0) {
             if ($CONFIG['TaxType'] == "Inclusive") {
                 $taxrate = $taxrate / 100 + 1;
@@ -100,6 +98,7 @@ function updateInvoiceTotal($id) {
                 $taxrate = $taxrate / 100;
                 $tax = $taxsubtotal * $taxrate;
             }
+             error_log("xxxx".$taxsubtotal);
         }
 
 

@@ -100,7 +100,7 @@
                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
                             <tr><td class="fieldarea"><textarea class="form-control" name="note" rows="6">{$notesdata.note}</textarea></td></tr>
-                            <tr><td><input name="duetime" class="datepick form-control" type="text" value="{$notesdata.duedate}"></td></tr>
+                            <tr><td><input name="duetime" class="form-control datepick" type="text" value="{$notesdata.duedate}"></td></tr>
                             <tr>
                                 <td>
                                     {$select}
@@ -144,12 +144,10 @@
                 });
                 assignselect += "</select>";
                 duedate = "<input type='text' class='datepick form-control' name='duedate' value='" + due + "'>";
-                $("<tr class='edit" + $tr.attr('class') + "'><td><input type='hidden' value='" + id[1] + "' name='id'></td><td><textarea class='form-control' name='notes'>" + notes + "</textarea></td><td></td><td>" + assignselect + "</td><td>" + duedate + "</td><td></td><td></td><td><button class='updatedetail'>Update</button></td></tr>").insertAfter($tr);
+                $("<tr class='edit" + $tr.attr('class') + "'><td><input type='hidden' value='" + id[1] + "' name='id'></td><td><textarea class='form-control' name='notes'>" + notes + "</textarea></td><td></td><td>" + assignselect + "</td><td>" + duedate + "</td><td></td><td></td><td><button class='btn btn-default updatedetail'>Update</button></td></tr>").insertAfter($tr);
                 $(this).addClass("edit");
-                $('.datepick').datepicker({
-                    autoclose: true,
-                    format: 'yyyy-mm-dd',
-                });
+                $('.datepick').datetimepicker({
+                    format: '{/literal}{$datepickerformat}{literal}'});
                 $(".updatedetail").click(function () {
                     id = $(this).closest('tr').find('input[name="id"]').val();
                     noteschange = $(this).closest('tr').find('textarea').val();

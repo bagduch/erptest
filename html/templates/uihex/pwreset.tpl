@@ -15,6 +15,7 @@
       {/if}
       <form method="post" action="pwreset.php"  name="frmpwreset">
         <input type="hidden" name="action" value="reset" />
+        <input name="email" class="form-control" placeholder="Email Address" type="text" />
         <div class="row">
          <div class="col-md-12">
           <p><input type="submit" class="btn btn-primary btn-lg btn-block" value="{$LANG.pwresetsubmit}" /></p>

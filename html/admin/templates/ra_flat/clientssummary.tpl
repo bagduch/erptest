@@ -2,7 +2,6 @@
     <div class="card">
         <div class="row">
             <div class="col-md-12">
-
                 <div class="callout pull-right">
                     <div class="row">
                         <div id="exemptccetc">
@@ -65,7 +64,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspa="2">
-                                                    <input class="datepick form-control" name="updatetime" style="color:black;width: 100px;display: inline-block" type="text" value="{$data.duedate}">
+                                                    <input class="datepick form-control" name="updatetime" style="color:black;display: inline-block" type="text" value="{$data.duedate}">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -99,6 +98,7 @@
             {/foreach}
             <div class="row">
                 <div class="col-md-12">
+                    {$infobox}
                     <div id="clientsinformation" class="col-lg-3 col-sm-6">
                         <div class="panel panel-primary">
                             <div class="panel-heading panel-title">
@@ -193,12 +193,11 @@
                                 <ul>
                                     <li>
                                         <a href="invoices.php?action=createinvoice&userid={$clientsdetails.userid}&token={$csrfToken}"><img src="images/icons/invoicesedit.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.create}</a>
-                                    <li>
+                                 {*   <li>
                                         <a href="#" onClick="showDialog('addfunds');
                                                 return false"><img src="images/icons/addfunds.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.createaddfunds}</a>
                                     <li>
-                                        <a href="#" onClick="showDialog('geninvoices');
-                                                return false"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>
+                                        <a href="#" onclick="demo.showSwal('generate-invoice')"><img src="images/icons/ticketspredefined.png" border="0" align="absmiddle" /> {$_ADMINLANG.invoices.geninvoices}</a>*}
                                     <li>
                                         <a href="#" onClick="openCCDetails();
                                                 return false"><img src="images/icons/offlinecc.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.ccinfo}</a>
@@ -293,23 +292,22 @@
                                         {/foreach}
                                     </table>
                                     <ul>
-                                        <li>
-                                            <a href="#" id="addfile"><img src="images/icons/add.png" border="0" align="absmiddle" /> {$_ADMINLANG.clientsummary.fileadd}</a>
+                                        
                                     </ul>
-                                    <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile">
+                                    <form method="post" action="clientssummary.php?userid={$clientsdetails.userid}&action=uploadfile" enctype="multipart/form-data">
                                         <table>
                                             <tr>
                                                 <td>{$_ADMINLANG.clientsummary.filetitle}</td>
-                                                <td><input type="text" name="title" style="width:90%" /></td>
+                                                <td><input class="form-control" type="text" name="title" style="width:90%" /></td>
                                             </tr>
                                             <tr>
                                                 <td>{$_ADMINLANG.clientsummary.filename}</td>
-                                                <td><input type="file" name="uploadfile" style="width:90%" /></td>
+                                                <td><input class="form-control" type="file" name="uploadfile" style="width:90%" /></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td><input type="checkbox" name="adminonly" value="1" /> {$_ADMINLANG.clientsummary.fileadminonly} &nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <input type="submit" value="{$_ADMINLANG.global.submit}" /></td>
+                                                    <input class="btn btn-default" type="submit" value="{$_ADMINLANG.global.submit}" /></td>
                                             </tr>
                                         </table>
                                     </form>
@@ -554,25 +552,27 @@
                                     <th width="20"></th>
                                 </tr>
                                 </thrad>
-                                {foreach key=num from=$productssummary item=addon}
-                                    <tr>
-                                        <td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
-                                        <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td>
-                                        <td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br> {$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td>
-                                        <td>{$addon.amount}</td>
-                                        <td>{$addon.dbillingcycle}</td>
-                                        <td>{$addon.regdate}</td>
-                                        <td>{$addon.nextduedate}</td>
-                                        <td>{$addon.status}</td>
-                                        <td>
-                                            <a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
-                                        </td>
-                                    </tr>
-                                {foreachelse}
-                                    <tr>
-                                        <td colspan="9">{$_ADMINLANG.global.norecordsfound}</td>
-                                    </tr>
-                                {/foreach}
+                                {if isset($productssummary)}
+                                  {foreach key=num from=$productssummary item=addon}
+                                      <tr>
+                                          <td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
+                                          <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td>
+                                          <td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br> {$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td>
+                                          <td>{$addon.amount}</td>
+                                          <td>{$addon.dbillingcycle}</td>
+                                          <td>{$addon.regdate}</td>
+                                          <td>{$addon.nextduedate}</td>
+                                          <td>{$addon.status}</td>
+                                          <td>
+                                              <a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
+                                          </td>
+                                      </tr>
+                                  {foreachelse}
+                                      <tr>
+                                          <td colspan="9">{$_ADMINLANG.global.norecordsfound}</td>
+                                      </tr>
+                                  {/foreach}
+                                {/if}
                         </table>
                     </div>
                 </div>
@@ -629,23 +629,7 @@
             <script type="text/javascript">
 
                 $(document).ready(function () {
-
-                    $('.datepick').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                        icons: {
-                            time: "fa fa-clock-o",
-                            date: "fa fa-calendar",
-                            up: "fa fa-chevron-up",
-                            down: "fa fa-chevron-down",
-                            previous: 'fa fa-chevron-left',
-                            next: 'fa fa-chevron-right',
-                            today: 'fa fa-screenshot',
-                            clear: 'fa fa-trash',
-                            close: 'fa fa-remove',
-                            inline: true
-                        }
-                    });
-
+              
                     $("#prodsall").click(function () {
                         $(".checkprods").attr("checked", this.checked);
                     });

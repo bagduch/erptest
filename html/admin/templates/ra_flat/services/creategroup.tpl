@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
-        <div class="box">
-            <div class="box-body">
+        <div class="card">
+            <div class="content">
                 <form method="post" action="configservices.php?sub=savegroup&amp;ids={$groupdata.id}">
                     <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                         <tbody>
@@ -22,38 +22,16 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">
-                                    <label>Customer Fields Group<br></label>
+                                    <label>Custom Fields Group<br></label>
                                 </td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="customefield[]" multiple="">
+                                    <select class="form-control" name="customfield[]" multiple="">
                                         {foreach from = $cdata item=customerf}
-                                            <option {if $customerf.check}Selected{/if} value='{$customerf.cfgid}'>{$customerf.name}</option>
+                                            <option {if $customerf.check}Selected{/if} value="{$customerf.cfgid}">{$customerf.name}</option>
                                         {/foreach}
                                     </select>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="fieldlabel">Order Form Template</td>
-                                <td class="fieldarea">
-                                    <div>
-                                        <label><input  type="radio" name="orderfrmtpl" value="" checked=""> Use Default</label>
-                                    </div>
-                                    <div class="clear"></div>
-
-                                    {foreach from=$ordertemplates item=tvalue}
-                                        <div style="float:left;padding:10px;text-align:center;">
-                                            <label>
-                                                <img src="{$tvalue.thumb}" width="165" height="90" style="border:5px solid #fff;">
-                                                <br>
-                                                <input type="radio" name="orderfrmtpl" value="{$tvalue.template}" {if $groupdata.orderfrmtpl eq $tvalue.template}checked{/if}> {$tvalue.template}</label>
-                                        </div>
-                                    {/foreach}
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fieldlabel"><br></td>
-                                <td class="fieldarea"></td></tr>
                             <tr>
                                 <td class="fieldlabel">Available Payment Gateways</td>
                                 <td class="fieldarea">
