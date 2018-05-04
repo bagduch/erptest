@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 class RA_Validate {
@@ -18,7 +18,7 @@ class RA_Validate {
     protected $errors_msgs = array();
 
     public function __construct() {
-        
+
     }
 
     /**
@@ -297,19 +297,14 @@ class RA_Validate {
         $captchatype = $ra->get_config("CaptchaType");
 
         if ($captchatype == "recaptcha") {
-//            if (!function_exists("recaptcha_check_answer")) {
-//                require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
-//            }
-       //     echo "<pre>", print_r($ra->get_req_var(), 1), "</pre>";
-            require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
-            $recaptcha = new ReCaptcha($ra->get_config("ReCAPTCHAPrivateKey"));
+            $recaptcha = new \ReCaptcha\ReCaptcha($ra->get_config("ReCAPTCHAPrivateKey"));
             $resp = $recaptcha->verify($ra->get_req_var("g-recaptcha-response"), $ra->get_user_ip());
             // $resp = recaptcha_check_answer($ra->get_config("ReCAPTCHAPrivateKey"), $ra->get_user_ip(), $ra->get_req_var("recaptcha_challenge_field"), $ra->get_req_var("recaptcha_response_field"));
 
 
 
             if ($resp->isSuccess()) {
-                
+
             } else {
                 $errors = $resp->getErrorCodes();
                 return false;
