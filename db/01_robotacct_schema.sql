@@ -502,7 +502,7 @@ CREATE TABLE `tblclientgroups` (
   `groupcolour` varchar(45) DEFAULT NULL,
   `discountpercent` decimal(10,2) unsigned DEFAULT 0.00,
   `susptermexempt` text DEFAULT NULL,
-  `separateinvoices` text NOT NULL,
+  `separateinvoices` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
