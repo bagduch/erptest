@@ -4,11 +4,12 @@
   action: apt pkg={{item}} state=installed
   with_items:
     - composer
-
 - name: composer deps per composer.json
   composer:
     command: install
+    working_dir: /{{repo_basepath}}/
 
 - name: composer deps per composer.json (update)
   composer:
     command: update
+    working_dir: /{{repo_basepath}}/
