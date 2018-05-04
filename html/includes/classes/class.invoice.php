@@ -1,4 +1,5 @@
 <?php
+
 // vim: ai ts=4 sts=4 et sw=4 ft=php
 
 class RA_Invoice {
@@ -14,7 +15,7 @@ class RA_Invoice {
     // constructor for invoices
     // if invoiceid is passed, we pull details from the database
     // otherwise, create and write to DB a new invoice
-    public function __construct( $invoiceid = null ) {
+    public function __construct($invoiceid = null) {
 
         if ($invoiceid) {
             $this->setID($invoiceid);
@@ -43,8 +44,7 @@ class RA_Invoice {
         }
 
         $result = select_query_i(
-            "tblinvoices", 
-            "tblinvoices.*,
+                "tblinvoices", "tblinvoices.*,
             (
                 SELECT value 
                 FROM tblpaymentgateways 
@@ -54,8 +54,7 @@ class RA_Invoice {
             IFNULL(
                 (SELECT SUM(amountin-amountout) FROM tblaccounts WHERE invoiceid=tblinvoices.id),
                 0
-            ) as amountpaid", 
-            array("id" => $this->invoiceid));
+            ) as amountpaid", array("id" => $this->invoiceid));
 
 
         $data = mysqli_fetch_assoc($result);
@@ -342,7 +341,11 @@ class RA_Invoice {
         global $currency;
 
         if ($invoiceid) {
-            $this->setID($invoiceid);
+
+            $latefeeid = get_query_val("tblinvoice", "latefeeid", array("id" => $invoiceid));
+            if (isset($latefeeid)) {
+                $this->setID($latefeeid);
+            }
             $invoiceexists = $this->loadData();
 
             if (!$invoiceexists) {
@@ -356,7 +359,8 @@ class RA_Invoice {
         $tplvars['invoiceitems'] = $invoiceitems;
         $transactions = $this->getTransactions();
         $tplvars['transactions'] = $transactions;
-        $this->pdfHtmlpage("latefeepdf.php", $tplvars);
+        $this->pdfAddPage("invoicepdf.tpl", $tplvars);
+
         return true;
     }
 
