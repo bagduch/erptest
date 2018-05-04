@@ -1,5 +1,5 @@
 <!-- BEGIN WHMCS -->
-{if $maintenancemode}
+{if isset($maintenancemode) && $maintenancemode}
     <div class="errorbox" style="font-size:14px;"> {$_ADMINLANG.home.maintenancemode} </div>
     <br />
 {/if}
@@ -45,7 +45,7 @@
                 <div class="col-xs-7">
                     <div class="numbers">
                         <p>Cancel Orders</p>
-                    {if $sidebarstats.orders.cancelled}{$sidebarstats.orders.cancelled}{else}0{/if}
+                    {if isset($sidebarstats.orders.cancelled)}{$sidebarstats.orders.cancelled}{else}0{/if}
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@
 
 <div class="row">
     {foreach from=$notes item=data}
-        {if $data.flag && $adminid = $data.assignto && $data.sticky eq '0'}
+        {if $data.flag eq '1' && $adminid eq $data.assignto && $data.sticky eq '0'}
             <div class="col-lg-3 col-xs-6">
                 <div class="alert alert-{$data.color} alert-dismissible">
                     <form class="notesupdate{$data.id}" method="post" action="">

@@ -75,7 +75,6 @@ class RA_Pagination extends RA_TableQuery
 			$this->setPage($page);
 		}
 
-		$this->setRecordLimit($ra->get_config("NumRecordstoDisplay"));
 	}
 
 	public function setPage($page) {

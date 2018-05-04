@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 if (!function_exists("emailtpl_template")) {
@@ -26,7 +26,7 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function emailtpl_trusted($tpl_name, &$smarty_obj) {
-        
+
     }
 
     function sendMessage($func_messagename, $func_id, $extra = "", $displayresult = "", $attachments = "") {
@@ -38,7 +38,6 @@ if (!function_exists("emailtpl_template")) {
         global $downloads_dir;
         global $fromname;
         global $fromemail;
-        global $ra;
 
         $sysurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
         $nosavemaillog = false;
@@ -62,7 +61,7 @@ if (!function_exists("emailtpl_template")) {
             $userid = $func_id;
         }
 
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename, "language" => ""));
+        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
         $emailtplid = $data['id'];
         $type = $data['type'];
@@ -761,12 +760,12 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields['company_name'] = $CONFIG['CompanyName'];
         $email_merge_fields['company_domain'] = $CONFIG['Domain'];
         $email_merge_fields['company_logo_url'] = $CONFIG['LogoURL'];
-        $email_merge_fields['RA_url'] = $CONFIG['SystemURL'];
-        $email_merge_fields['RA_link'] = "<a href=\"" . $CONFIG['SystemURL'] . "\">" . $CONFIG['SystemURL'] . "</a>";
+        $email_merge_fields['ra_url'] = $CONFIG['SystemURL'];
+        $email_merge_fields['ra_link'] = "<a href=\"" . $CONFIG['SystemURL'] . "\">" . $CONFIG['SystemURL'] . "</a>";
         $email_merge_fields['signature'] = nl2br(html_entity_decode($CONFIG['Signature'], ENT_QUOTES));
         $email_merge_fields['date'] = date("l, jS F Y");
         $email_merge_fields['time'] = date("g:ia");
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename, "language" => $language));
+        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
 
         if (substr($subject, 0, 10) != "[Ticket ID" && $data['subject']) {
@@ -776,18 +775,6 @@ if (!function_exists("emailtpl_template")) {
 
         if ($data['message']) {
             $message = $data['message'];
-        }
-
-        $emailglobalheader = html_entity_decode($CONFIG['EmailGlobalHeader'], ENT_QUOTES);
-        $emailglobalfooter = html_entity_decode($CONFIG['EmailGlobalFooter'], ENT_QUOTES);
-
-        if ($emailglobalheader) {
-            $message = $emailglobalheader . "\r\n" . $message;
-        }
-
-
-        if ($emailglobalfooter) {
-            $message = $message . "\r\n" . $emailglobalfooter;
         }
 
         $hookresults = run_hook("EmailPreSend", array("messagename" => $func_messagename, "relid" => $func_id));
@@ -815,7 +802,7 @@ if (!function_exists("emailtpl_template")) {
         global $templates_compiledir;
 
         if (!class_exists("Smarty")) {
-            require ROOTDIR . "/includes/smarty/Smarty.class.php";
+            require ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
         }
 
         $smarty = new Smarty();
@@ -837,7 +824,7 @@ if (!function_exists("emailtpl_template")) {
             return false;
         }
 
-        $ra->load_class("phpmailer");
+        require_once(__DIR__."/../vendor/phpmailer/phpmailer/PHPMailerAutoload.php");
         $mail = new PHPMailer(true);
 
         try {
@@ -867,7 +854,7 @@ if (!function_exists("emailtpl_template")) {
                     $mail->AddReplyTo($fromemail, html_entity_decode($fromname, ENT_QUOTES));
                 }
             } else {
-                
+
             }
 
             $mail->XMailer = $ra->get_config("CompanyName");
@@ -997,9 +984,7 @@ if (!function_exists("emailtpl_template")) {
             global $email_debug;
             global $email_preview;
 
-            if ($smtp_debug) {
-                $mail->SMTPDebug = true;
-            }
+            $mail->SMTPDebug = true;
 
 
             if ($email_debug) {
@@ -1028,12 +1013,14 @@ if (!function_exists("emailtpl_template")) {
             $mail->ClearAddresses();
         } catch (phpmailerException $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
+            error_log("Email Sending Failed - " . $e->getMessage());
 
             if ($displayresult) {
                 echo "<p>Email Sending Failed - " . $e->errorMessage() . "</p>";
             }
         } catch (Exception $e) {
             logActivity("Email Sending Failed - " . $e->getMessage() . (" (User ID: " . $userid . " - Subject: " . $subject . ")"), "none");
+            error_log("Email Sending Failed - " . $e->getMessage());
 
             if ($displayresult) {
                 echo "<p>Email Sending Failed - " . $e->getMessage() . "</p>";
@@ -1202,7 +1189,7 @@ if (!function_exists("emailtpl_template")) {
         $adminurl .= "/" . $ra->get_admin_folder_name() . "/";
         $email_merge_fields['RA_admin_url'] = $adminurl;
         $email_merge_fields['RA_admin_link'] = "<a href=\"" . $adminurl . "\">" . $adminurl . "</a>";
-        include_once ROOTDIR . "/includes/smarty/Smarty.class.php";
+        include_once ROOTDIR . "/vendor/smarty/smarty/libs/Smarty.class.php";
         $smarty = new Smarty();
         $smarty->caching = 0;
         $smarty->compile_dir = $templates_compiledir;
@@ -2107,7 +2094,7 @@ if (!function_exists("emailtpl_template")) {
             } elseif ((is_array($currency) && isset($currency['id'])) && is_numeric($currency['id'])) {
                 $currencyType = $currency['id'];
             } else {
-                
+
             }
         }
 
@@ -2399,6 +2386,13 @@ if (!function_exists("emailtpl_template")) {
         session_write_close();
     }
 
+    /**
+     * Redirect session to a new page
+     * @param  string  $vars            querystring of variables to pass
+     * @param  string  $file            file to redirect to (optional)
+     * @param  boolean $prefixSystemURL System URL (optional)
+     * @return boolean
+     */
     function redir($vars = "", $file = "", $prefixSystemURL = false) {
         if (!$file) {
             $file = $_SERVER['SCRIPT_NAME'];

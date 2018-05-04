@@ -2,7 +2,8 @@
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.14-MariaDB-10.2.14+maria~stretch
+-- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -502,7 +503,7 @@ CREATE TABLE `tblclientgroups` (
   `groupcolour` varchar(45) DEFAULT NULL,
   `discountpercent` decimal(10,2) unsigned DEFAULT 0.00,
   `susptermexempt` text DEFAULT NULL,
-  `separateinvoices` text NOT NULL,
+  `separateinvoices` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -790,15 +791,12 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `cfgid` int(10) NOT NULL,
   `serviceid` int(10) DEFAULT NULL,
-  `servicegid` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cfgid` (`cfgid`),
-  KEY `servicegid` (`servicegid`),
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
-  CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_4` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -810,7 +808,7 @@ DROP TABLE IF EXISTS `tblcustomfieldsgroupmembers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcustomfieldsgroupmembers` (
   `cfgid` int(10) NOT NULL COMMENT 'customfield group id',
-  `cfid` int(10) NOT NULL COMMENT 'tblcustomfields id',
+  `cfid` int(10) NOT NULL COMMENT 'tblcustomfields cfid',
   PRIMARY KEY (`cfgid`,`cfid`),
   KEY `cfid` (`cfid`),
   CONSTRAINT `tblcustomfieldsgroupmembers_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
@@ -841,17 +839,14 @@ DROP TABLE IF EXISTS `tblcustomfieldslinks`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcustomfieldslinks` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'link identifier',
-  `cfid` int(10) DEFAULT NULL COMMENT 'tblcustomfields id',
+  `cfid` int(10) DEFAULT NULL COMMENT 'tblcustomfields cfid',
   `serviceid` int(10) DEFAULT NULL COMMENT 'tblservices id',
-  `servicegid` int(10) DEFAULT NULL COMMENT 'tblservicegroups id',
   PRIMARY KEY (`id`),
   KEY `cfid` (`cfid`),
   KEY `serviceid` (`serviceid`),
-  KEY `servicegid` (`servicegid`),
   CONSTRAINT `tblcustomfieldslinks_ibfk_1` FOREIGN KEY (`cfid`) REFERENCES `tblcustomfields` (`cfid`),
-  CONSTRAINT `tblcustomfieldslinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`),
-  CONSTRAINT `tblcustomfieldslinks_ibfk_3` FOREIGN KEY (`servicegid`) REFERENCES `tblservicegroups` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='link customfields to services and servicegroups';
+  CONSTRAINT `tblcustomfieldslinks_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='link customfields to services and servicegroups';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1208,7 +1203,7 @@ CREATE TABLE `tblnotes` (
   KEY `userid` (`rel_id`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tblnotes_ibfk_2` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

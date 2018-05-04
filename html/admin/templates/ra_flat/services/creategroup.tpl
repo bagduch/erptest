@@ -22,10 +22,10 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">
-                                    <label>Customer Fields Group<br></label>
+                                    <label>Custom Fields Group<br></label>
                                 </td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="customefield[]" multiple="">
+                                    <select class="form-control" name="customfield[]" multiple="">
                                         {foreach from = $cdata item=customerf}
                                             <option {if $customerf.check}Selected{/if} value="{$customerf.cfgid}">{$customerf.name}</option>
                                         {/foreach}

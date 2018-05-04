@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {if $meta}{$meta}{/if}
+    {if isset($meta)}{$meta}{/if}
     <title>{$pagetitle}</title>
 
     <!-- Bootstrap core CSS     -->
@@ -26,7 +26,7 @@
     <script src="templates/{$template}/assets/js/jquery.easy-autcomplete.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
 
-    {$smartyvalues.headeroutput}
+    {if isset($smartyvalues.headeroutput)}{$smartyvalues.headeroutput}{/if}
     {$headoutput}
 </head>
 <body>

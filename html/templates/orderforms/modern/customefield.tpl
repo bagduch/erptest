@@ -1,5 +1,5 @@
-{if $customefield}
-    {foreach from=$customefield item=fields}
+{if $customfield}
+    {foreach from=$customfield item=fields}
         {if !$fields.adminonly}
             {if $fields.fieldtype eq "text"}
                 {if $fields.fieldname eq "address"}

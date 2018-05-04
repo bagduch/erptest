@@ -16,7 +16,7 @@
                             <tr>
                                 <td width="150" class="fieldlabel">Product Type</td>
                                 <td class="fieldarea">
-                                    <select class="form-control" name="type" onchange="doFieldUpdate()">
+                                    <select class="form-control" name="type">
                                         <option value="addon" {if $data.type eq "addon"}Selected{/if}>Addon</option>
                                         <option  value="individual" {if $data.type eq "individual"}Selected{/if}>Individual</option>
                                         {*          <option value="wholesell" {if $data.type eq 'wholesell'}selected{/if}>Whole Sell</option>

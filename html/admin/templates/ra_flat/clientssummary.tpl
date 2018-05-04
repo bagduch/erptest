@@ -552,25 +552,27 @@
                                     <th width="20"></th>
                                 </tr>
                                 </thrad>
-                                {foreach key=num from=$productssummary item=addon}
-                                    <tr>
-                                        <td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
-                                        <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td>
-                                        <td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br> {$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td>
-                                        <td>{$addon.amount}</td>
-                                        <td>{$addon.dbillingcycle}</td>
-                                        <td>{$addon.regdate}</td>
-                                        <td>{$addon.nextduedate}</td>
-                                        <td>{$addon.status}</td>
-                                        <td>
-                                            <a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
-                                        </td>
-                                    </tr>
-                                {foreachelse}
-                                    <tr>
-                                        <td colspan="9">{$_ADMINLANG.global.norecordsfound}</td>
-                                    </tr>
-                                {/foreach}
+                                {if isset($productssummary)}
+                                  {foreach key=num from=$productssummary item=addon}
+                                      <tr>
+                                          <td><input type="checkbox" name="seladdons[]" value="{$addon.id}" class="checkaddons" /></td>
+                                          <td><a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}">{$addon.idshort}</a></td>
+                                          <td style="padding-left:5px;padding-right:5px">{$addon.addonname}<br> {$addon.dpackage} - <a href="http://{$addon.domain}" target="_blank">{$addon.domain}</a></td>
+                                          <td>{$addon.amount}</td>
+                                          <td>{$addon.dbillingcycle}</td>
+                                          <td>{$addon.regdate}</td>
+                                          <td>{$addon.nextduedate}</td>
+                                          <td>{$addon.status}</td>
+                                          <td>
+                                              <a href="clientsservices.php?userid={$clientsdetails.userid}&id={$addon.serviceid}&aid={$addon.id}"><img src="images/edit.gif" width="16" height="16" border="0" alt="Edit"></a>
+                                          </td>
+                                      </tr>
+                                  {foreachelse}
+                                      <tr>
+                                          <td colspan="9">{$_ADMINLANG.global.norecordsfound}</td>
+                                      </tr>
+                                  {/foreach}
+                                {/if}
                         </table>
                     </div>
                 </div>

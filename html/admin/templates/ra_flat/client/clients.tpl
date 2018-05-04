@@ -44,9 +44,11 @@
                                         <td class="fieldarea">
                                             <select class="form-control" name="clientgroup">
                                                 <option value="">- Any -</option>
-                                                {foreach item=clientgroup num=id from=$clientgroups}
-                                                    <option {if $filterdata.clientgroup eq $id}selected{/if} value="{$id}">{$clientgroup}</option>
-                                                {/foreach}
+                                                  {if isset($id)}
+                                                    {foreach item=clientgroup from=$clientgroups}
+                                                        <option {if $filterdata.clientgroup eq $id}selected{/if} value="{$id}">{$clientgroup}</option>
+                                                    {/foreach}
+                                                  {/if}
                                             </select>
                                         </td>
                                         <td class="fieldlabel">{$lang.phonenumberlang}</td>
@@ -59,8 +61,10 @@
                                         <td class="fieldarea">
                                             <select class="form-control" name="currency">
                                                 <option value="">- Any -</option>
-                                                {foreach item=currency num=id from=$currencys}
+                                                {foreach item=currency from=$currencys}
+                                                  {if isset($id)}
                                                     <option {if $filterdata.currency eq $id}selected{/if} value="{$id}">{$currency}</option>
+                                                  {/if}
                                                 {/foreach}
                                             </select>
                                         </td>
@@ -85,7 +89,7 @@
 
         <form method="post" action="clients.php?filter=1">
             <div class="content">
-                {if $table}
+                {if isset($table)}
                     {$table}
                 {/if}
             </div>

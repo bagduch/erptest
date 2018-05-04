@@ -105,11 +105,6 @@
 <tr class="orderrow{if $num % 2}2{else}1{/if}"><td class="leftcol">{$LANG.orderdomain} {$num+1}</td><td>{$domain.domain}{if $domain.regperiod} ({$domain.regperiod} {$LANG.orderyears}){/if}</td></tr>
 {/foreach}
 {/if}
-{if $additionaldomainfields}
-{foreach key=domainfieldname item=domainfield from=$additionaldomainfields}
-<tr class="orderrow{if $num % 2}2{else}1{/if}"><td class="leftcol">{$domainfieldname}</td><td>{$domainfield}</td></tr>
-{/foreach}
-{/if}
 <tr class="orderheadingrow"><td colspan="2"></td></tr>
 <tr><td height="10"></td></tr>
 {/if}

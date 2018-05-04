@@ -276,11 +276,11 @@ if ($_SESSION['address']) {
             $smartyvalues['today'] = $today;
             $smartyvalues['address'] = $process->session['address'];
             $smartyvalues['total'] = $process->firstpayment;
-            $smartyvalues['currecy'] = $process->currecy;
+            $smartyvalues['currency'] = $process->currency;
             $smartyvalues['addons'] = $process->productdata['avalialeaddons'];
             $smartyvalues['pricing'] = $process->productdata['pricing'];
             $smartyvalues['product'] = $process->productdata['data'];
-            $smartyvalues['customefield'] = $process->productdata['customefield'];
+            $smartyvalues['customfield'] = $process->productdata['customfield'];
         }
         $smartyvalues['contractnotsign'] = $contractnotsign;
     }

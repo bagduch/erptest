@@ -15,6 +15,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provider "libvirt" do |v, override|
+    v.memory = 1024 # composer + mariadb at the same time was OOMing
   end
 
   # Create a forwarded port mapping which allows access to a specific port

@@ -22,7 +22,6 @@
     </div>
     <div class="box-body">
         <form method="post" action="configcustomfieldsgroup.php?action=savegroup" name="managefrm">
-
             <table class="form table" width="100%" border="0" cellspacing="2" cellpadding="3">
                 <tbody>
                     <tr>
@@ -35,12 +34,16 @@
                     <tr>
                         <td class="fieldlabel">Assigned Products</td>
                         <td class="fieldarea">
+                          <select multiple>
                             {foreach from=$productlinks item=row}
-                                <label name="productlinks[{$row.id}]"><input class="flat-red" type="checkbox">{$row.data.name}</label>
-                                {/foreach}
+                                <option value="productlinks[{$row.id}]">{$row.data.name}</option>
+                            {/foreach}
                         </td>
                     </tr>
                 </tbody>
+                <tr>
+                  <td>
+                    <input class="button" type="submit" />
             </table>
 
 

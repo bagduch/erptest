@@ -59,10 +59,10 @@ if ($_POST['frm1']) {
     }
     $logDetail = "";
     foreach ($servicefield as $key => $row) {
-        if ($_POST['customefield'][$key] != $row['value']) {
+        if ($_POST['customfield'][$key] != $row['value']) {
             delete_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $id));
-            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customefield'][$key], "cfid" => $key, "relid" => $id));
-            $logDetail .= "Customer Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customefield'][$key] . "' ";
+            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customfield'][$key], "cfid" => $key, "relid" => $id));
+            $logDetail .= "Custom Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customfield'][$key] . "' ";
         }
     }
 
@@ -72,8 +72,8 @@ if ($_POST['frm1']) {
         "description" => $_POST['description'],
         "servicestatus" => $_POST['status'],
         "regdate" => toMySQLDate($_POST['regdate']),
-        "amount" => $_POST['amount'],
-        "firstpaymentamount" => $_POST['firstpaymentamount'],
+        "amount" => (float)$_POST['amount'],
+        "firstpaymentamount" => (float)$_POST['firstpaymentamount'],
         "nextduedate" => toMySQLDate($_POST['nextduedate']),
         "billingcycle" => $_POST['billingcycle'],
         "paymentmethod" => $_POST['paymentmethod'],
@@ -95,13 +95,13 @@ if ($_POST['frm1']) {
 }
 foreach ($data as $key => $row) {
     if ($clientdata->servicedata[$key] != $row && $key != "lastupdate") {
-        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' ";
+        $logDetail .= "Field '" . $key . "' update value from '" . $clientdata->servicedata[$key] . "' to '" . $row . "' \n";
     }
 }
 
 if ($logDetail != "") {
     $clientdata->updateService($data, $id);
-    logActivity("Account Update - User ID: " . $userid . " - Update Account ID: " . $id . " " . $logDetail, $userid, $id);
+    logActivity($logDetail, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
 
@@ -228,6 +228,10 @@ while ($data = mysqli_fetch_assoc($result)) {
     $data['note'] = autoHyperLink(nl2br($data['note']));
     $clientnotes[] = $data;
 }
+
+// populate customfields
+
+
 $aInt->assign('id', $id);
 $aInt->assign('servicesarr', $servicesarr);
 if ($cancelid) {

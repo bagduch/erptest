@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 class RA_ClientService {
@@ -17,12 +17,18 @@ class RA_ClientService {
     public $userid;
     public $servicefirstid;
     public $addons;
-    public $currecy;
+    public $currency;
     public $id;
 
     public function __construct($userid, $id) {
+      /**
+      * Instantiates client service class
+      *
+      * @param user ID according to tblclients
+      * @param id ID according to tblcustomerservices
+      */
 
-        $this->currecy = getCurrency();
+        $this->currency = getCurrency();
         $this->userid = $userid;
         if (!$id || $id == 0) {
             $this->getFirstServiceId();
@@ -136,7 +142,7 @@ class RA_ClientService {
             if ($result->num_rows > 0) {
                 while ($data = mysqli_fetch_assoc($result)) {
                     $this->addons[$data['id']] = $data;
-                    $this->addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currecy);
+                    $this->addons[$data['id']]['price'] = getPricingInfo($data['id'], $inclconfigops = false, $upgrade = false, $this->currency);
                     if (!empty(getServiceCustomFields($data['id']))) {
                         $this->addons[$data['id']]['customfield'][] = getServiceCustomFields($data['id']);
                     } else {

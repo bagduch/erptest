@@ -39,7 +39,7 @@
                             </tr>
                             <tr>
                                 <td class="fieldlabel">Password</td>
-                                <td class="fieldarea"><input class="form-control" value="{$password}" type="text" size="20" name="password"  tabindex="5"></td>
+                                <td class="fieldarea"><input class="form-control" type="text" size="20" name="password"  tabindex="5"></td>
                                 <td class="fieldlabel">Country</td>
                                 <td class="fieldarea">
                                     {$countrydrop}
@@ -51,7 +51,7 @@
                                 <td class="fieldlabel">Mobile Number</td>
                                 <td class="fieldarea"><input class="form-control" type="text" size="20" name="mobilenumber" value="{$data.mobilenumber}" tabindex="14"></td>
                             </tr>
-                            <tr>    
+                            <tr>
                                 <td class="fieldlabel">Status</td>
                                 <td class="fieldarea">
                                     <select class="form-control"  name="status" tabindex="24">
