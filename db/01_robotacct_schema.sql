@@ -4,6 +4,7 @@
 -- ------------------------------------------------------
 -- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -931,7 +932,7 @@ CREATE TABLE `tblemails` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `tblemails_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1018,7 +1019,28 @@ CREATE TABLE `tblinvoiceitems` (
   KEY `relid` (`relid`),
   CONSTRAINT `tblinvoiceitems_ibfk_4` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblinvoiceitems_ibfk_5` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblinvoicepaymentmonitor`
+--
+
+DROP TABLE IF EXISTS `tblinvoicepaymentmonitor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblinvoicepaymentmonitor` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `duedate` date DEFAULT NULL,
+  `nextduedate` date DEFAULT NULL,
+  `suspension` text DEFAULT NULL,
+  `period` int(10) DEFAULT NULL,
+  `status` enum('paid','unpaid','suspend','overpaid') NOT NULL,
+  `invoice_id` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `invoice_id` (`invoice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1050,30 +1072,12 @@ CREATE TABLE `tblinvoices` (
   KEY `userid` (`userid`),
   KEY `status` (`status`),
   CONSTRAINT `tblinvoices_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `tblknowledgebase`
 --
-
-
-DROP TABLE IF EXISTS `tblinvoicepaymentmonitor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblinvoicepaymentmonitor` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `date` date DEFAULT NULL,
-  `duedate` date DEFAULT NULL,
-  `nextduedate` date DEFAULT NULL,
-  `suspension` text DEFAULT NULL,
-  `period` int(10) DEFAULT NULL,
-  `status` enum('paid','unpaid','suspend','overpaid') NOT NULL,
-  `invoice_id` int(10) NOT NULL UNIQUE,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 
 DROP TABLE IF EXISTS `tblknowledgebase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
