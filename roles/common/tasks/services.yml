@@ -144,15 +144,8 @@
   file:
     state: link
     path: /var/www/html
-    src: /vagrant/html
-  when: vagrant
-
-- name: symlink html/ to /var/ra/html/
-  file:
-    state: link
-    path: /var/www/html
-    src: /var/ra/html
-  when: inventory_hostname == "localhost"
+    src: /{{repo_basepath}}/html
+  when: vagrant or inventory_hostname == "localhost"
 
 - name: Create templates_c tmpdir
   file:
