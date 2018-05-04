@@ -498,7 +498,7 @@
         }
         function downloadLate()
         {
-            window.location = "../dl.php?type=l&id={/literal}{$invoice.id}{literal}";
+            window.location = "../dl.php?type=l&id={/literal}{$invoice.latefeeid}{literal}";
 
         }
         function markCancelled()

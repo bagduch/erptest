@@ -1026,6 +1026,18 @@ function getAllInvoicePaymentplans() {
     return $paymentplan;
 }
 
+function CheckPayment($invoice_id, $paymentdue) {
+
+    $query2 = select_query_i("tblaccounts", "sum(amountin) as paid", array("invoiceid" => $invoice_id));
+    $trans = mysqli_fetch_assoc($query2);
+    $amountin = $trans['paid'];
+
+    if ($paymentdue < $amountin) {
+
+        update_query("tblinvoicepaymentmonitor", array("status" => "unpaid"), array("invoice_id" => $invoice_id));
+    }
+}
+
 function cronJobForPaymentPlan() {
 
     $invoiceNumber = array();
@@ -1033,6 +1045,29 @@ function cronJobForPaymentPlan() {
     if ($result->num_rows != 0) {
         while ($data = mysqli_fetch_assoc($result)) {
             $invoiceNumber[] = $data['invoice_id'];
+        }
+    }
+}
+
+function cronJobUpdateDuedate() {
+    $query = "select tipm.period,tipm.period,tipm.duedate,tipm.date,tipm.invoice_id,ti.total from tblinvoicepaymentmonitor as tipm inner join tblinvoices as ti on tipm.invoice_id = ti.id";
+    $result = full_query_i($query);
+    if ($result->num_rows != 0) {
+        while ($data = mysqli_fetch_assoc($result)) {
+            $nextduedate = strtotime($data['nextduedate']);
+            $now = strtotime();
+            if ($nextduedate <= $now) {
+                $nextduedate = strtotime($data['nextduedate'] . "+" . $data['period'] . " days");
+                if ($nextduedate > strtotime($data['duedate'])) {
+                    $nextduedate = $data['duedate'];
+                }
+                update_query("tblinvoicepaymentmonitor", array("nextduedate" => toMySQLDate($duedate)), array("invoice_id" => $data['invoice_id']));
+            }
+            $startdate = strtotime($data['date']);
+            $currentpayment = intdiv(($now - $startdate) / (60 * 60 * 24), $data['period']);
+            $totelpayment = intdiv((strtotime($date['duedate']) - $startdate) / (60 * 60 * 24), $data['period']);
+            $paymentRequire = floor(100 * $data['total'] / $totelpayment * $currentpayment + 0.99) / 100;
+            CheckPayment($data['invoice_id'], $paymentRequire);
         }
     }
 }
