@@ -22,12 +22,24 @@ $postcode = $ra->get_req_var("postcode");
 $country = $ra->get_req_var("country");
 $phonenumber = $ra->get_req_var("phonenumber");
 $password = $ra->get_req_var("password");
-// handle mm/dd default parsing
-try {
-    $dateofbirth=DateTime::createFromFormat('d/m/Y',$ra->get_req_var("dateofbirth"))->format("Y-m-d");
-} catch() {
-    $dateofbirth="2016-01-01";
- }
+
+// Parse birthdate from little endian to big endian
+$dtformats = [
+		"d/m/Y", // 25/12/1902
+		"Y-m-d", // 1902-12-25
+		"d M Y", // 25 Dec 1902 or 25 December, 1902
+		"d M, Y" // 25 Dec, 1902 or 25 December, 1902
+];
+
+foreach ($dtformats as $dtformat)
+{
+	$dateofbirth = DateTime::createFromFormat($dtformat,$ra->get_req_var("dateofbirth"));
+	if ($dateofbirth) {
+		$dateofbirth = $dob->format("Y-m-d");
+		break;
+	}
+}
+
 $sendemail = "on";
 $additionaldata = "";
 
@@ -40,17 +52,17 @@ if ($ra->get_req_var("register")) {
 
 	if (!$errormessage) {
         $userid = addClient(
-            $firstname, 
-            $lastname, 
-            $companyname, 
-            $email, 
-            $address1, 
-            $address2, 
-            $city, 
-            $state, 
-            $postcode, 
-            $country, 
-            $phonenumber, 
+            $firstname,
+            $lastname,
+            $companyname,
+            $email,
+            $address1,
+            $address2,
+            $city,
+            $state,
+            $postcode,
+            $country,
+            $phonenumber,
             $password,
             $dateofbirth,
             $sendemail,

@@ -130,10 +130,10 @@
                                         <tr><td class="fieldlabel">Client Date Format</td>
                                             <td class="fieldarea">
                                                 <select class="form-control"name="clientdateformat">
-                                                    <option value="" {if $CONFIG.clientdateformat eq ''}selected{/if}>Same as Admin (Above)</option>
-                                                    <option value="full" {if $CONFIG.clientdateformat eq 'full'}selected{/if}>1st January 2000</option>
-                                                    <option value="shortmonth" {if $CONFIG.clientdateformat eq 'shortmonth'}selected{/if}>1st Jan 2000</option>
-                                                    <option value="fullday" {if $CONFIG.clientdateformat eq 'fullday'}selected{/if}>Monday, January 1st, 2000</option>
+                                                    <option value="" {if @$CONFIG.clientdateformat eq ''}selected{/if}>Same as Admin (Above)</option>
+                                                    <option value="full" {if @$CONFIG.clientdateformat eq 'full'}selected{/if}>1st January 2000</option>
+                                                    <option value="shortmonth" {if @$CONFIG.clientdateformat eq 'shortmonth'}selected{/if}>1st Jan 2000</option>
+                                                    <option value="fullday" {if @$CONFIG.clientdateformat eq 'fullday'}selected{/if}>Monday, January 1st, 2000</option>
                                                 </select> Choose Display Style you want to use for clients</td></tr>
                                         <tr><td class="fieldlabel">Default Country</td>
                                             <td class="fieldarea">
