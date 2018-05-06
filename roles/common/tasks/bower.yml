@@ -1,0 +1,15 @@
+---
+
+- name: Install bower
+  npm:
+    name: bower
+    global: yes
+  become: no
+
+- name: Install jquery
+  npm:
+    name: "{{item}}"
+    path: "{{repo_basepath}}/html/assets"
+  become: no
+  with_items:
+    - jquery

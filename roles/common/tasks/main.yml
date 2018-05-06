@@ -3,4 +3,5 @@
 - include_tasks: services.yml
 - include_tasks: maildev.yml
 - include_tasks: composer.yml
+- include_tasks: bower.yml
   # vim: ai ts=2 sts=2 et sw=2

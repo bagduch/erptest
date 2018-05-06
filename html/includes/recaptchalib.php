@@ -158,7 +158,7 @@ function recaptcha_check_answer($privkey, $remoteip, $challenge, $response, $ext
 
     //discard spam submissions
     if ($challenge == null || strlen($challenge) == 0 || $response == null || strlen($response) == 0) {
-        $recaptcha_response = new ReCaptchaResponse();
+        $recaptcha_response = new \ReCaptcha\ReCaptchaResponse();
         $recaptcha_response->is_valid = false;
         $recaptcha_response->error = 'incorrect-captcha-sol';
         return $recaptcha_response;
@@ -173,7 +173,7 @@ function recaptcha_check_answer($privkey, $remoteip, $challenge, $response, $ext
     );
 
     $answers = explode("\n", $response [1]);
-    $recaptcha_response = new ReCaptchaResponse();
+    $recaptcha_response = new \ReCaptcha\ReCaptchaResponse();
 
     if (trim($answers [0]) == 'true') {
         $recaptcha_response->is_valid = true;

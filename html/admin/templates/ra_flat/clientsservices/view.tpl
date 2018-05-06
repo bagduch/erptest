@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="content">
-        <form method="post" class="form-horizontal" action="?userid={$userid}&amp;id={$id}{if $aid}&aid={$aid}{/if}" id="frm1">
+        <form method="post" class="form-horizontal" action="?userid={$userid}&amp;id={$id}{if isset($aid)}&aid={$aid}{/if}" id="frm1">
 
             <input type="hidden" name="frm1" value="1">
             <div class="box-header with-border">
@@ -41,9 +41,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <a href="orders.php?action=view&id={$services.orderid}">
-                                                <input 
-                                                    id="orderid" name="orderid" type="text" readonly 
-                                                    class="form-control" value="{$services.orderid}" 
+                                                <input
+                                                    id="orderid" name="orderid" type="text" readonly
+                                                    class="form-control" value="{$services.orderid}"
                                                 />
                                             </a>
                                         </div>
@@ -127,8 +127,8 @@
                                             <label for="firstpaymentamount">First Payment Amount</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <input id="firstpaymentamount" name="firstpaymentamount" 
-                                                type="text" class="form-control" value="{$services.firstpaymentamount}" 
+                                            <input id="firstpaymentamount" name="firstpaymentamount"
+                                                type="text" class="form-control" value="{$services.firstpaymentamount}"
                                             />
                                         </div>
                                     </div>
@@ -141,8 +141,8 @@
                                             <label for="recurringamount">Recurring Amount</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <input id="recurringamount" name="recurringamount" 
-                                                type="text" class="form-control" value="{$services.amount}" 
+                                            <input id="recurringamount" name="recurringamount"
+                                                type="text" class="form-control" value="{$services.amount}"
                                             />
                                         </div>
                                     </div>
@@ -155,7 +155,7 @@
                                             <label for="nextduedate">Next Due Date</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <input id="nextduedate" name="nextduedate" 
+                                            <input id="nextduedate" name="nextduedate"
                                                 type="text" class="form-control datepick" value="{$services.nextduedate}"
                                             />
                                         </div>
@@ -196,7 +196,7 @@
                             </div>
 
 
-                            
+
                         </div> {* End tab_account div *}
 
 
@@ -218,8 +218,8 @@
                                                 </label>
                                             </div>
                                             <div class="col-md-6">
-                                                <input class="form-control" 
-                                                    id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}" 
+                                                <input class="form-control"
+                                                    id="custome{$fieldidnd}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"
                                                 />
                                             </div>
                                         </div>
@@ -233,7 +233,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-md-6">
-                                                <input class="form-control datepick" id="custome{$fieldidnd}" 
+                                                <input class="form-control datepick" id="custome{$fieldidnd}"
                                                     name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"
                                                 />
                                             </div>
@@ -247,7 +247,7 @@
                                                     <label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input class="form-control" id="custome{$childrenfield.cfid}" 
+                                                    <input class="form-control" id="custome{$childrenfield.cfid}"
                                                         name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"
                                                     />
                                                 </div>
@@ -264,7 +264,7 @@
                                                 <label for="#custome{$fieldid}">{$fields.fieldname}</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <input class="form-control" 
+                                                <input class="form-control"
                                                     id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"
                                                 />
                                             </div>
@@ -277,7 +277,7 @@
                                                 <label for="#custome{$fieldid}">{$fields.fieldname}</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <input class="form-control datepick" 
+                                                <input class="form-control datepick"
                                                     id="custome{$fieldid}" name="customfield[{$fields.cfid}]" value="{$fields.value}"
                                                 />
                                             </div>
@@ -291,7 +291,7 @@
                                                     <label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input class="form-control" id="custome{$childrenfield.cfid}" 
+                                                    <input class="form-control" id="custome{$childrenfield.cfid}"
                                                         name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"
                                                     />
                                                 </div>
@@ -353,7 +353,7 @@
                         <div class="tab-pane" id ="tab_log">
                             {if $accountlog}
                                 <div class="tablebg">
-                                    <table class="datatable table"> 
+                                    <table class="datatable table">
                                         <tbody>
                                             <tr>
                                                 <th>Date</th>
@@ -371,7 +371,7 @@
                                                 </tr>
                                             {/foreach}
                                         </tbody>
-                                    </table>   
+                                    </table>
                                 </div>
                             {/if}
                         </div>
@@ -486,10 +486,6 @@
     </div>
 </div>
 
-{foreach from=$test item=row}
-    {$row}
-{/foreach}
-
 </div>
 
 </div>
@@ -583,5 +579,3 @@
         }
     </script>
 {/literal}
-
-
