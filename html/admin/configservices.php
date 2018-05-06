@@ -144,9 +144,9 @@ if ($action == "save") {
     }
 
     //RebuildModuleHookCache();
-    //  run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
-    // run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
-    //redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
+//    run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
+//    run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
+    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
 if ($sub == "deletecustomfield") {

@@ -122,7 +122,7 @@ function getCustomeFieldGroup($sid) {
     $data = array();
     if (isset($sid)) {
         $query = "select tcfgn.*,tcfgl.serviceid from tblcustomfieldsgroupnames as tcfgn
-                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid where tcfgl.servicegid is null
+                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid where tcfgl.serviceid is null
                 ";
         $result = full_query_i($query);
         while ($row = mysqli_fetch_assoc($result)) {
