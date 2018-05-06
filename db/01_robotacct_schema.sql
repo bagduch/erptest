@@ -1053,7 +1053,7 @@ DROP TABLE IF EXISTS `tblinvoices`;
 CREATE TABLE `tblinvoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
-  `latefeeid` int(10) DEFAULT 0,
+  `latefeeid` int(10) DEFAULT NULL,
   `invoicenum` text NOT NULL,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
