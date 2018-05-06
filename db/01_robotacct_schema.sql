@@ -1570,6 +1570,8 @@ CREATE TABLE `tblservices` (
   `gid` int(10) NOT NULL,
   `individual` int(11) DEFAULT NULL,
   `contract` int(11) DEFAULT NULL,
+  `supplycode` varchar(50) DEFAULT NULL,
+  `supplyreve` varchar(50) DEFAULT null, 
   `etf` double DEFAULT NULL,
   `term` int(11) DEFAULT 0,
   `name` text NOT NULL,
