@@ -4,7 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -604,7 +603,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblservices` WRITE;
 /*!40000 ALTER TABLE `tblservices` DISABLE KEYS */;
-INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','hdradius',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
+INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,NULL,NULL,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','hdradius',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,NULL,NULL,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,NULL,NULL,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,NULL,NULL,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,NULL,NULL,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
 /*!40000 ALTER TABLE `tblservices` ENABLE KEYS */;
 UNLOCK TABLES;
 

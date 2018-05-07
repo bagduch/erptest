@@ -4,7 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -190,7 +189,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -796,7 +795,7 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_4` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1571,7 +1570,7 @@ CREATE TABLE `tblservices` (
   `individual` int(11) DEFAULT NULL,
   `contract` int(11) DEFAULT NULL,
   `supplycode` varchar(50) DEFAULT NULL,
-  `supplyreve` varchar(50) DEFAULT null, 
+  `supplyreve` varchar(50) DEFAULT NULL,
   `etf` double DEFAULT NULL,
   `term` int(11) DEFAULT 0,
   `name` text NOT NULL,
