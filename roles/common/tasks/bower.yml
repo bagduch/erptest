@@ -7,9 +7,10 @@
   become: no
 
 - name: Install jquery
-  npm:
-    name: "{{item}}"
+  bower:
+    name: "{{item.name}}"
+    version: "{{item.version}}"
     path: "{{repo_basepath}}/html/assets"
   become: no
   with_items:
-    - jquery
+    - { name: "jquery", version: "~1.9" }
