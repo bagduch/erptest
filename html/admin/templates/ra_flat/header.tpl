@@ -7,7 +7,7 @@
     <title>{$pagetitle}</title>
 
     <!-- Bootstrap core CSS     -->
-    <link href="templates/{$template}/assets/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
 
     <!--  Material Dashboard CSS    -->
     <link href="templates/{$template}/assets/css/amaze.css" rel="stylesheet" >
@@ -16,15 +16,15 @@
     <link href="templates/{$template}/assets/css/customer.css" rel="stylesheet" >
 
     <!--     Fonts and icons     -->
-    <link href="templates/{$template}/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/bower_components/components-font-awesome/css/fontawesome.min.css" rel="stylesheet">
     <link href="templates/{$template}/assets/css/font-muli.css" rel='stylesheet' type='text/css'>
-    <link href="templates/{$template}/assets/css/themify-icons.css" rel="stylesheet">
+    <link href="/bower_components/themify-icons/css/themify-icons.css" rel="stylesheet">
 
-    <link href="templates/{$template}/assets/vendors/sweetalert/css/sweetalert2.min.css" rel="Stylesheet" >
+    <link href="/bower_components/sweetalert2/dist/sweetalert2.min.css" rel="Stylesheet" >
     <link href="templates/{$template}/assets/css/component.css" rel="stylesheet">
-    <script src="templates/{$template}/assets/vendors/jquery-3.1.1.min.js" type="text/javascript"></script>
-    <script src="templates/{$template}/assets/js/jquery.easy-autcomplete.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
+    <script src="/bower_components/jquery3/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="/bower_components/EasyAutocomplete/dist/jquery.easy-autocomplete.js" type="text/javascript"></script>
+    <script src="/bower_components/jquery-form/dist/jquery.form.min.js"></script>
 
     {if isset($smartyvalues.headeroutput)}{$smartyvalues.headeroutput}{/if}
     {$headoutput}
@@ -87,4 +87,3 @@
             <div class="content">
 
                 <div class="container-fluid">
-
