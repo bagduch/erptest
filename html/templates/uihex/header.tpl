@@ -7,7 +7,7 @@
     <title>{$companyname} - {$pagetitle}{if isset($kbarticle.title)} - {$kbarticle.title}{/if}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' id='bootstrap-css' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' type='text/css' media='all' />
-    <link rel='stylesheet' id='fontawesome-css' href="/bower_components/components-font-awesome/css/fontawesome.min.css" />
+    <link rel='stylesheet' id='fontawesome-css' href="/bower_components/components-font-awesome/css/fontawesome-all.min.css" />
     <link rel="stylesheet" id="simplelineicons-css" href="/bower_components/simple-line-icons/css/simple-line-icons.css" />
     <link rel="stylesheet" id="roboto-css" href="/bower_components/roboto-fontfacekit/roboto.css" />
     <link rel="stylesheet" id="owlcarousel-css" href="/bower_components/owl.carousel1/owl-carousel/owl.carousel.css" />
@@ -16,11 +16,10 @@
 
     <link rel='stylesheet' id='hexa-css' href='templates/{$template}/css/ui-portal.css' type='text/css' media='all' />
 
+    <script src="/bower_components/jquery/jquery.min.js" /></script>
     <script src="templates/{$template}/js/client.js" /></script>
-    <script src="/bower_components/jquery/dist/jquery.min.js" /></script>
     <script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" /></script>
     <script src="/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-NZ.min.js" charset="UTF-8" /></script>
-    <script src="templates/{$template}/js/enable_datepick.js" /></script>
 
 
 
