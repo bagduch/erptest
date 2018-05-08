@@ -71,7 +71,7 @@
                                             <label for="description">Description (Address)</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <input name="description" id="description" type="text"  class="form-control" value={$services.description} />
+                                            <input name="description" id="description" type="text"  class="form-control" value="{$services.description}" />
                                         </div>
                                     </div>
                                 </div>
