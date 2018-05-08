@@ -198,6 +198,7 @@
   mysql_db:
     name: ra
     state: absent
+  when: "{{vagrant | bool | default(false)}}"
 
 - name: Template MySQL changes for deployment (recaptcha)
   template:
@@ -212,6 +213,7 @@
     - 951_tblclients.sql
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
+  when: "{{vagrant | bool | default(false)}}"
 
 - name: Create RA DB user
   mysql_user:
@@ -224,6 +226,7 @@
   template:
     src: templates/configuration.php.j2
     dest: /var/www/html/configuration.php
+  when: "{{vagrant | bool | default(false)}}"
 
 - name: WHMCS cronjob
   cron:
