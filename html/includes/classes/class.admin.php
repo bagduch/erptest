@@ -289,7 +289,6 @@ class RA_Admin {
     public function display() {
         global $templates_compiledir;
         global $CONFIG;
-        global $disable_admin_ticket_page_counts;
         global $_ADMINLANG;
         $uid = (int) $GLOBALS['userid'];
 
@@ -439,11 +438,7 @@ class RA_Admin {
             }
 
 
-            if ($disable_admin_ticket_page_counts) {
-                $query = "SELECT tblticketstatuses.title,'x',showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
-            } else {
-                $query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
-            }
+            $query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
 
             $result = full_query_i($query);
 
@@ -461,13 +456,11 @@ class RA_Admin {
             }
 
 
-            if (!$disable_admin_ticket_page_counts) {
-                $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
-                $data = mysqli_fetch_array($result);
-                // echo "<pre class=test>" . print_r($data, 1) . "</pre>";
-                $flaggedtickets = $data[0];
-                $flaggedticketschecked = true;
-            }
+            $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
+            $data = mysqli_fetch_array($result);
+            // echo "<pre class=test>" . print_r($data, 1) . "</pre>";
+            $flaggedtickets = $data[0];
+            $flaggedticketschecked = true;
 
             $this->assign("ticketsallactive", $allactive);
             $this->assign("ticketsawaitingreply", $awaitingreply);
