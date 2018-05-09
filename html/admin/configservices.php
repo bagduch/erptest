@@ -74,6 +74,8 @@ if ($action == "save") {
         "gid" => $_POST['gid'],
         "name" => $_POST['name'],
         "revenuecode" => $_POST['rcode'],
+        "supplycode" => $_POST['scode'],
+        "supplyreve" => $_POST['srev'],
         'contract' => $_POST['contract'] == "on" ? 1 : 0,
         'individual' => $_POST['isale'] == "on" ? 1 : 0,
         'etf' => floatval($_POST['etf']),
@@ -144,9 +146,9 @@ if ($action == "save") {
     }
 
     //RebuildModuleHookCache();
-    //  run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
-    // run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
-    //redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
+//    run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
+//    run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
+    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
 if ($sub == "deletecustomfield") {

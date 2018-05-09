@@ -968,7 +968,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
     return array("description" => $description, "tax" => $tax, "recurringcycles" => $recurringcycles);
 }
 
-function InvoicesAddLateFee() {
+function InvoicesAddLateFeeold() {
     global $CONFIG;
     global $_LANG;
     global $cron;
@@ -1011,6 +1011,89 @@ function InvoicesAddLateFee() {
                 getUsersLang($userid);
                 insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => $taxlatefee));
 
+                if (!function_exists("updateInvoiceTotal")) {
+                    require dirname(__FILE__) . "/invoicefunctions.php";
+                }
+
+                updateInvoiceTotal($invoiceid);
+                run_hook("AddInvoiceLateFee", array("invoiceid" => $invoiceid));
+                $invoiceids[] = $invoiceid;
+            }
+        }
+    }
+
+
+    if (is_object($cron)) {
+        $cron->logActivity("Late Invoice Fees added to " . count($invoiceids) . " Invoices" . (count($invoiceids) ? " (Invoice Numbers: " . implode(",", $invoiceids) . ")" : ""), true);
+        $cron->emailLog(count($invoiceids) . " Late Fees Added" . (count($invoiceids) ? " to Invoice Numbers " . implode(",", $invoiceids) : ""));
+    }
+}
+
+function InvoicesAddLateFee() {
+    global $CONFIG;
+    global $_LANG;
+    global $cron;
+
+    if ($CONFIG['TaxLateFee']) {
+        $taxlatefee = "1";
+    }
+
+    $invoiceids = array();
+
+    $taxrate = $taxrate2 = 0;
+
+    if ($CONFIG['TaxEnabled']) {
+        $data = get_query_vals("tblclients", "taxexempt,state,country,separateinvoices", array("id" => $userid));
+        $taxexempt = $data['taxexempt'];
+        $taxstate = $data['state'];
+        $taxcountry = $data['country'];
+
+        if (!$taxexempt) {
+            $taxrate = getTaxRate(1, $taxstate, $taxcountry);
+            $taxrate2 = getTaxRate(2, $taxstate, $taxcountry);
+            $taxrate = $taxrate['rate'];
+            $taxrate2 = $taxrate2['rate'];
+        }
+    }
+
+
+
+    if ($CONFIG['InvoiceLateFeeAmount'] != "0.00") {
+        if ($CONFIG['AddLateFeeDays'] == "") {
+            $CONFIG['AddLateFeeDays'] = "0";
+        }
+
+        $adddate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AddLateFeeDays'], date("Y")));
+        $query = "SELECT tblinvoices.* FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE duedate<'" . $adddate . "' AND tblinvoices.status='Unpaid' AND latefeeid is NULL AND duedate!=date AND (latefeeoveride='' or latefeeoveride is null)";
+        $result = full_query_i($query);
+
+        while ($data = mysqli_fetch_array($result)) {
+            $userid = $data['userid'];
+            $id = $data['id'];
+            $duedate = $data['duedate'];
+            $paymentmethod = $data['paymentmethod'];
+            $total = $data['total'];
+
+            if (!get_query_val("tblinvoiceitems", "COUNT(id)", array("type" => "LateFee", "invoiceid" => $invoiceid))) {
+                if ($CONFIG['LateFeeType'] == "Percentage") {
+                    $amountpaid = get_query_val("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+                    $balance = round($total - $amountpaid, 2);
+                    $latefeeamount = format_as_currency($balance * ($CONFIG['InvoiceLateFeeAmount'] / 100));
+                } else {
+                    $latefeeamount = $CONFIG['InvoiceLateFeeAmount'];
+                }
+
+                if (0 < $CONFIG['LateFeeMinimum'] && $latefeeamount < $CONFIG['LateFeeMinimum']) {
+                    $latefeeamount = $CONFIG['LateFeeMinimum'];
+                }
+
+                getUsersLang($userid);
+                $invoicearray = array("date" => "now()", "latefeeid" => "0", "invoicenum" => "", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => "");
+
+
+                $invoiceid = insert_query("tblinvoices", $invoicearray);
+                update_query("tblinvoices", array("latefeeid" => $invoiceid), array("id" => $id));
+                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => "Late fee for invoice #" . $id . " " . $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => isset($taxlatefee) ? 1 : 0));
                 if (!function_exists("updateInvoiceTotal")) {
                     require dirname(__FILE__) . "/invoicefunctions.php";
                 }

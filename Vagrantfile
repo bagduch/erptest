@@ -49,7 +49,8 @@ Vagrant.configure(2) do |config|
         vagrant: true,
         # recaptcha keys for localhost from guy.hd123@gmail.com account
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
-        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
+        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
+	      repo_basepath: "/vagrant/" # path this file is in
       }
     end
 	else
@@ -60,7 +61,8 @@ Vagrant.configure(2) do |config|
         vagrant: true,
         # recaptcha keys for localhost from guy.hd123@gmail.com account
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
-        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz"
+        recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
+	      repo_basepath: "/vagrant/" # path this file is in
       }
     end
 	end

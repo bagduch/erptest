@@ -144,15 +144,8 @@
   file:
     state: link
     path: /var/www/html
-    src: /vagrant/html
-  when: vagrant
-
-- name: symlink html/ to /var/ra/html/
-  file:
-    state: link
-    path: /var/www/html
-    src: /var/ra/html
-  when: inventory_hostname == "localhost"
+    src: /{{repo_basepath}}/html
+  when: vagrant or inventory_hostname == "localhost"
 
 - name: Create templates_c tmpdir
   file:
@@ -205,6 +198,7 @@
   mysql_db:
     name: ra
     state: absent
+  when: "{{ vagrant | bool | default(false) }}"
 
 - name: Template MySQL changes for deployment (recaptcha)
   template:
@@ -219,6 +213,7 @@
     - 951_tblclients.sql
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
+  when: "{{ vagrant | bool | default(false) }}"
 
 - name: Create RA DB user
   mysql_user:

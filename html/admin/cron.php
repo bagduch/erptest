@@ -236,13 +236,13 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
     update_query("tblcustomerservices", array("overideautosuspend" => ""), "(overideautosuspend='on' OR overideautosuspend='1') AND overidesuspenduntil<'" . date("Y-m-d") . "' AND overidesuspenduntil!='0000-00-00'");
     $i = 0;
     $suspenddate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AutoSuspensionDays'], date("Y")));
-    $query3 = "SELECT * FROM tblcustomerservices WHERE servicestatus='Active' AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND overideautosuspend!='on' AND overideautosuspend!='1' AND nextduedate<='" . $suspenddate . "' ORDER BY domain ASC";
+    $query3 = "SELECT * FROM tblcustomerservices WHERE servicestatus='Active' AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND overideautosuspend!='on' AND overideautosuspend!='1' AND nextduedate<='" . $suspenddate . "' ORDER BY description ASC";
     $result3 = full_query_i($query3);
 
     while ($data = mysqli_fetch_array($result3)) {
         $id = $data['id'];
         $userid = $data['userid'];
-        $domain = $data['domain'];
+        $domain = $data['description'];
         $packageid = $data['packageid'];
         $result2 = select_query_i("tblclients", "", array("id" => $userid));
         $data2 = mysqli_fetch_array($result2);

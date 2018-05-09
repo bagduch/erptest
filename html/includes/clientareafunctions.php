@@ -55,20 +55,6 @@ function initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav) {
     $smarty->assign("date_year", date("Y"));
     $smarty->assign("token", generate_token("plain"));
 
-    if ($CONFIG['SystemSSLURL']) {
-        $smarty->assign("systemsslurl", $CONFIG['SystemSSLURL'] . "/");
-    }
-
-
-    if ($in_ssl && $CONFIG['SystemSSLURL']) {
-        $smarty->assign("systemurl", $CONFIG['SystemSSLURL'] . "/");
-    } else {
-        if ($CONFIG['SystemURL'] != "http://www.yourdomain.com/ra") {
-            $smarty->assign("systemurl", $CONFIG['SystemURL'] . "/");
-        }
-    }
-
-
     if (isset($_SESSION['uid'])) {
         $smarty->assign("loggedin", true);
 
@@ -416,9 +402,8 @@ function clientAreaInitCaptcha() {
 
     if ($ra->get_config("CaptchaSetting") == "on" || ($ra->get_config("CaptchaSetting") == "offloggedin" && !isset($_SESSION['uid']))) {
         if ($ra->get_config("CaptchaType") == "recaptcha") {
-            require_once ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
             $privatekey = $CONFIG['ReCAPTCHAPrivateKey'];
-            $recaptcha = new ReCaptcha($privatekey);
+            $recaptcha = new \ReCaptcha\ReCaptcha($privatekey);
             $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
             $capatacha = "recaptcha";
         } else {
@@ -432,8 +417,6 @@ function clientAreaInitCaptcha() {
 
 function clientAreaReCaptchaHTML() {
     global $CONFIG;
-
-    //  require_once  ROOTDIR . "/includes/recaptcha/ReCaptcha.php";
 
     if ($GLOBALS['capatacha'] != "recaptcha") {
 

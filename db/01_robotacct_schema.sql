@@ -189,7 +189,7 @@ CREATE TABLE `tbladminlog` (
   KEY `logouttime` (`logouttime`),
   KEY `adminid` (`adminid`),
   CONSTRAINT `tbladminlog_ibfk_1` FOREIGN KEY (`adminid`) REFERENCES `tbladmins` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -795,7 +795,7 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_4` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -931,7 +931,7 @@ CREATE TABLE `tblemails` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `tblemails_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1018,7 +1018,28 @@ CREATE TABLE `tblinvoiceitems` (
   KEY `relid` (`relid`),
   CONSTRAINT `tblinvoiceitems_ibfk_4` FOREIGN KEY (`invoiceid`) REFERENCES `tblinvoices` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tblinvoiceitems_ibfk_5` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tblinvoicepaymentmonitor`
+--
+
+DROP TABLE IF EXISTS `tblinvoicepaymentmonitor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblinvoicepaymentmonitor` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `duedate` date DEFAULT NULL,
+  `nextduedate` date DEFAULT NULL,
+  `suspension` text DEFAULT NULL,
+  `period` int(10) DEFAULT NULL,
+  `status` enum('paid','unpaid','suspend','overpaid') NOT NULL,
+  `invoice_id` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `invoice_id` (`invoice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1031,6 +1052,7 @@ DROP TABLE IF EXISTS `tblinvoices`;
 CREATE TABLE `tblinvoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` int(10) NOT NULL,
+  `latefeeid` int(10) DEFAULT NULL,
   `invoicenum` text NOT NULL,
   `date` date DEFAULT NULL,
   `duedate` date DEFAULT NULL,
@@ -1049,28 +1071,12 @@ CREATE TABLE `tblinvoices` (
   KEY `userid` (`userid`),
   KEY `status` (`status`),
   CONSTRAINT `tblinvoices_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `tblknowledgebase`
 --
-
-
-DROP TABLE IF EXISTS `tblinvoicepaymentmonitor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblinvoicepaymentmonitor` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `date` date DEFAULT NULL,
-  `duedate` date DEFAULT NULL,
-  `suspension` text DEFAULT NULL,
-  `period` int(10) DEFAULT NULL,
-  `invoice_id` int(10) NOT NULL UNIQUE,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 
 DROP TABLE IF EXISTS `tblknowledgebase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1563,6 +1569,8 @@ CREATE TABLE `tblservices` (
   `gid` int(10) NOT NULL,
   `individual` int(11) DEFAULT NULL,
   `contract` int(11) DEFAULT NULL,
+  `supplycode` varchar(50) DEFAULT NULL,
+  `supplyreve` varchar(50) DEFAULT NULL,
   `etf` double DEFAULT NULL,
   `term` int(11) DEFAULT 0,
   `name` text NOT NULL,

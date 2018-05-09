@@ -83,7 +83,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbladminperms` WRITE;
 /*!40000 ALTER TABLE `tbladminperms` DISABLE KEYS */;
-INSERT INTO `tbladminperms` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(1,29),(1,30),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(1,50),(1,51),(1,52),(1,53),(1,54),(1,55),(1,56),(1,57),(1,58),(1,59),(1,60),(1,61),(1,62),(1,63),(1,64),(1,65),(1,66),(1,67),(1,68),(1,69),(1,70),(1,71),(1,72),(1,73),(1,74),(1,75),(1,76),(1,77),(1,78),(1,79),(1,80),(1,81),(1,82),(1,83),(1,84),(1,85),(1,86),(1,87),(1,88),(1,89),(1,90),(1,91),(1,92),(1,93),(1,94),(1,95),(1,96),(1,97),(1,98),(1,99),(1,100),(1,101),(1,102),(1,103),(1,104),(1,105),(1,106),(1,107),(1,108),(1,109),(1,110),(1,111),(1,112),(1,113),(1,114),(1,115),(1,116),(1,117),(1,118),(1,119),(1,120),(1,121),(1,122),(1,123),(1,124),(1,125),(1,126),(1,127),(1,128),(1,129),(1,150),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,8),(2,9),(2,10),(2,11),(2,12),(2,13),(2,14),(2,15),(2,16),(2,17),(2,18),(2,19),(2,20),(2,21),(2,22),(2,23),(2,24),(2,25),(2,26),(2,27),(2,28),(2,29),(2,30),(2,31),(2,32),(2,33),(2,34),(2,35),(2,36),(2,37),(2,38),(2,39),(2,40),(2,41),(2,42),(2,43),(2,44),(2,45),(2,46),(2,47),(2,48),(2,49),(2,50),(2,51),(2,52),(2,71),(2,73),(2,85),(2,98),(2,99),(2,101),(2,104),(2,105),(2,110),(2,120),(2,123),(2,124),(2,125),(2,125),(2,126),(2,126),(2,128),(2,129),(3,38),(3,39),(3,40),(3,41),(3,42),(3,43),(3,44),(3,50),(3,105),(3,125),(3,125),(3,126),(3,128);
+INSERT INTO `tbladminperms` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(1,29),(1,30),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(1,50),(1,51),(1,52),(1,53),(1,54),(1,55),(1,56),(1,57),(1,58),(1,59),(1,60),(1,61),(1,62),(1,63),(1,64),(1,65),(1,66),(1,67),(1,68),(1,69),(1,70),(1,71),(1,72),(1,73),(1,74),(1,75),(1,76),(1,77),(1,78),(1,79),(1,80),(1,81),(1,82),(1,83),(1,84),(1,85),(1,86),(1,87),(1,88),(1,89),(1,90),(1,91),(1,92),(1,93),(1,94),(1,95),(1,96),(1,97),(1,98),(1,99),(1,100),(1,101),(1,102),(1,103),(1,104),(1,105),(1,106),(1,107),(1,108),(1,109),(1,110),(1,111),(1,112),(1,113),(1,114),(1,115),(1,116),(1,117),(1,118),(1,119),(1,120),(1,121),(1,122),(1,123),(1,124),(1,125),(1,126),(1,127),(1,128),(1,129),(1,130),(1,131),(1,150),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,8),(2,9),(2,10),(2,11),(2,12),(2,13),(2,14),(2,15),(2,16),(2,17),(2,18),(2,19),(2,20),(2,21),(2,22),(2,23),(2,24),(2,25),(2,26),(2,27),(2,28),(2,29),(2,30),(2,31),(2,32),(2,33),(2,34),(2,35),(2,36),(2,37),(2,38),(2,39),(2,40),(2,41),(2,42),(2,43),(2,44),(2,45),(2,46),(2,47),(2,48),(2,49),(2,50),(2,51),(2,52),(2,71),(2,73),(2,85),(2,98),(2,99),(2,101),(2,104),(2,105),(2,110),(2,120),(2,123),(2,124),(2,125),(2,125),(2,126),(2,126),(2,128),(2,129),(3,38),(3,39),(3,40),(3,41),(3,42),(3,43),(3,44),(3,50),(3,105),(3,125),(3,125),(3,126),(3,128);
 /*!40000 ALTER TABLE `tbladminperms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +93,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbladminroles` WRITE;
 /*!40000 ALTER TABLE `tbladminroles` DISABLE KEYS */;
-INSERT INTO `tbladminroles` VALUES (1,'Full Admin','admin_activity,client_log,income_forecast,income_left_overview,order_left_overview,recent_left_orders','clients_by_country,transactions,affiliates_overview,top_25_clients_by_income,monthly_orders,AUDIT-All-Services,new_customers,client_sources,direct_debit_processing,income_by_product,ticket_tags,region_report,ticket_ratings_reviewer,suspend_customers,heat_map,check,totalorder,cancel_customer,invoices,annual_income_report,support_ticket_replies,aging_invoices,monthly_transactions,credits_reviewer,totalsale,sales_tax_liability,server_revenue_forecasts,promotions_usage,product_suspensions,income_forecast,ticket_feedback_scores,pdf_batch,ticket_feedback_comments,services,client_statement,daily_performance,',1,1,1),(2,'Sales Operator','activity_log,getting_started,income_forecast,income_overview,my_','',0,1,1),(3,'Support Operator','activity_log,getting_started,my_notes,todo_list,ra_news,supportt','',0,0,1);
+INSERT INTO `tbladminroles` VALUES (1,'Full Admin','admin_activity,client_log,income_forecast,income_left_overview,order_left_overview,recent_left_orders','clients_by_country,check,ticket_ratings_reviewer,totalorder,support_ticket_replies,income_by_product,region_report,top_25_clients_by_income,direct_debit_processing,ticket_feedback_scores,ticket_feedback_comments,suspend_customers,monthly_orders,new_customers,product_suspensions,credits_reviewer,sales_tax_liability,affiliates_overview,annual_income_report,monthly_transactions,transactions,server_revenue_forecasts,promotions_usage,cancel_customer,heat_map,AUDIT-All-Services,services,invoices,pdf_batch,daily_performance,totalsale,client_statement,client_sources,income_forecast,ticket_tags,aging_invoices,',1,1,1),(2,'Sales Operator','activity_log,getting_started,income_forecast,income_overview,my_','',0,1,1),(3,'Support Operator','activity_log,getting_started,my_notes,todo_list,ra_news,supportt','',0,0,1);
 /*!40000 ALTER TABLE `tbladminroles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -391,6 +391,15 @@ LOCK TABLES `tblgrouptogroup` WRITE;
 UNLOCK TABLES;
 
 --
+-- Dumping data for table `tblinvoicepaymentmonitor`
+--
+
+LOCK TABLES `tblinvoicepaymentmonitor` WRITE;
+/*!40000 ALTER TABLE `tblinvoicepaymentmonitor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblinvoicepaymentmonitor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `tblknowledgebase`
 --
 
@@ -594,7 +603,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblservices` WRITE;
 /*!40000 ALTER TABLE `tblservices` DISABLE KEYS */;
-INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','hdradius',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
+INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,NULL,NULL,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','hdradius',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,NULL,NULL,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,NULL,NULL,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,NULL,NULL,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,NULL,NULL,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
 /*!40000 ALTER TABLE `tblservices` ENABLE KEYS */;
 UNLOCK TABLES;
 

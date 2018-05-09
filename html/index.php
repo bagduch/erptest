@@ -96,20 +96,6 @@ if ($m = $ra->get_req_var("m")) {
         exit("Invalid Addon Module Name");
     }
 
-
-    if ($results['forcessl'] && $CONFIG['SystemSSLURL']) {
-        $smartyvalues['systemurl'] = $CONFIG['SystemSSLURL'] . "/";
-
-        if ($CONFIG['SystemSSLURL'] && (!$_SERVER['HTTPS'] || $_SERVER['HTTPS'] == "off")) {
-            $filename = $_SERVER['PHP_SELF'];
-            $filename = substr($filename, strrpos($filename, "/"));
-            $filename = str_replace("/", "", $filename);
-            $ssldomain = $CONFIG['SystemSSLURL'];
-            $_SESSION['FORCESSL'] = true;
-            redir($_REQUEST, $ssldomain . "/" . $filename);
-        }
-    }
-
     $templatefile = "/modules/addons/" . $module . "/" . $results['templatefile'] . ".tpl";
     $pagetitle = $results['pagetitle'];
     $smartyvalues['pagetitle'] = $pagetitle;

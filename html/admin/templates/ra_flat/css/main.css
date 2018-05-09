@@ -4817,13 +4817,13 @@ table.tablesorter thead tr th:hover {
     #prerepliescontainer {
         display: none;
     }
-    #prerepliescontainer #predefq {images
-                                   /* background-image: url("../../../images/icons/search.png"); */
-                                   background-position: 5px 3px;
-                                   background-repeat: no-repeat;
-                                   margin: 0;
-                                   padding: 2px 2px 2px 25px;
-                                   border: 1px solid #ccc;
+    #prerepliescontainer #predefq {
+        /* background-image: url("../../../images/icons/search.png"); */
+        background-position: 5px 3px;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 2px 2px 2px 25px;
+        border: 1px solid #ccc;
     }
     #prerepliescontainer .box {
         margin: 10px auto;
@@ -5151,6 +5151,7 @@ table.tablesorter thead tr th:hover {
         color: #fff;
 
     }
+
     /* --------------------------------------------------------------
        SERVICES
     -------------------------------------------------------------- */
@@ -5159,3 +5160,4 @@ table.tablesorter thead tr th:hover {
         color: #cc0000;
     }
 
+}
