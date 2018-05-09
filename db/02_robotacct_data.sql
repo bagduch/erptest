@@ -2,8 +2,7 @@
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
-
+-- Server version	10.2.14-MariaDB-10.2.14+maria~stretch
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -604,7 +603,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblservices` WRITE;
 /*!40000 ALTER TABLE `tblservices` DISABLE KEYS */;
-INSERT INTO `tblservices` VALUES (48,'residential',9,0,0,0,0,'ADSL ',0,0,0,'drttre','','',10,'',0,0,'recurring','','hdradius',0,0,0,'0','',0,0,'','',0.00,0,0),(49,'other',10,1,0,0,0,'ADSL / VDSL / UFB / VOIP / Gigabit Router',100,10,100,'','','',NULL,'',0,0,'onetime','','',0,0,0,'0','',0,1,'','',0.00,0,0),(50,'other',10,0,0,0,0,'Router 1',0,0,0,'',NULL,'',NULL,'',0,0,'free','','',0,0,0,'','',0,0,'','',0.00,0,0),(51,'residential',9,0,0,0,0,'VDSL',0,0,0,'','','',10,'',0,0,'recurring','','',0,0,0,'0','',0,0,'','',0.00,0,0),(52,'residential',9,0,0,0,0,'UFB 30/10',0,0,0,'','','',10,'',0,0,'recurring','','unlimitedinternet',0,0,0,'0','',0,0,'','',0.00,0,0);
 /*!40000 ALTER TABLE `tblservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -614,7 +612,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblservicetoservice` WRITE;
 /*!40000 ALTER TABLE `tblservicetoservice` DISABLE KEYS */;
-INSERT INTO `tblservicetoservice` VALUES (48,49),(48,50);
 /*!40000 ALTER TABLE `tblservicetoservice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -624,7 +621,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblsmstemplate` WRITE;
 /*!40000 ALTER TABLE `tblsmstemplate` DISABLE KEYS */;
-INSERT INTO `tblsmstemplate` VALUES (4,'test','account','test 3 '),(5,'invoice txt','invoice','xdsadas  dsad adsa dasd asdas dsd ');
 /*!40000 ALTER TABLE `tblsmstemplate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -634,7 +630,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbltax` WRITE;
 /*!40000 ALTER TABLE `tbltax` DISABLE KEYS */;
-INSERT INTO `tbltax` VALUES (1,1,'GST','','New Zealand',15.00),(2,1,'World','','',0.00);
 /*!40000 ALTER TABLE `tbltax` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -644,7 +639,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketbreaklines` WRITE;
 /*!40000 ALTER TABLE `tblticketbreaklines` DISABLE KEYS */;
-INSERT INTO `tblticketbreaklines` VALUES (1,'> -----Original Message-----'),(2,'----- Original Message -----'),(3,'-----Original Message-----'),(4,'<!-- Break Line -->'),(5,'====== Please reply above this line ======'),(6,'_____');
 /*!40000 ALTER TABLE `tblticketbreaklines` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -654,7 +648,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketdepartments` WRITE;
 /*!40000 ALTER TABLE `tblticketdepartments` DISABLE KEYS */;
-INSERT INTO `tblticketdepartments` VALUES (1,'Provisioning','','support@ra.net.nz','','','','',1,'','110','','fZjPBXW3a+6AgoUdYX0mFLhL8/g=');
 /*!40000 ALTER TABLE `tblticketdepartments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -673,7 +666,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketlog` WRITE;
 /*!40000 ALTER TABLE `tblticketlog` DISABLE KEYS */;
-INSERT INTO `tblticketlog` VALUES (1,'2018-03-08 03:05:18',31,'Status changed to  (by Sample Admin)');
 /*!40000 ALTER TABLE `tblticketlog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -701,7 +693,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketpredefinedcats` WRITE;
 /*!40000 ALTER TABLE `tblticketpredefinedcats` DISABLE KEYS */;
-INSERT INTO `tblticketpredefinedcats` VALUES (6,0,'test');
 /*!40000 ALTER TABLE `tblticketpredefinedcats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -711,7 +702,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketpredefinedreplies` WRITE;
 /*!40000 ALTER TABLE `tblticketpredefinedreplies` DISABLE KEYS */;
-INSERT INTO `tblticketpredefinedreplies` VALUES (1,6,'reply one ','dsadsadasdas');
 /*!40000 ALTER TABLE `tblticketpredefinedreplies` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -730,7 +720,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbltickets` WRITE;
 /*!40000 ALTER TABLE `tbltickets` DISABLE KEYS */;
-INSERT INTO `tbltickets` VALUES (30,'745673',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','guy@hd.net.nz','WjEs0s0a','2016-06-17 15:34:47','guy@hd.net.nz','\r\n\r\nguy@hd.net.nz','Answered','Medium',NULL,'','2017-02-21 16:34:56',2,1,',1',0,'2017-04-19 12:41:51',''),(31,'614919',1,NULL,NULL,'guy@hd.net.nz','guy@hd.net.nz','Sample admin','','vssbJ3yg','2016-06-17 15:36:45','guy@hd.net.nz','\r\nguy@hd.net.nz','Answered','Medium',NULL,'','2017-01-16 13:37:10',1,1,',1',0,'2017-02-22 12:40:40','');
 /*!40000 ALTER TABLE `tbltickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -749,7 +738,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblticketstatuses` WRITE;
 /*!40000 ALTER TABLE `tblticketstatuses` DISABLE KEYS */;
-INSERT INTO `tblticketstatuses` VALUES (1,'Open','#1ba1ff',1,1,1,0),(2,'Answered','#0C0',2,1,1,1),(3,'Customer-Reply','#ff6600',3,1,1,1),(4,'Closed','#888888',10,1,1,0),(5,'On Hold','#224488',5,1,1,0),(6,'In Progress','#cc0000',6,1,1,0),(7,'TEST STATUS','',0,0,0,0);
 /*!40000 ALTER TABLE `tblticketstatuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -759,7 +747,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tbltickettags` WRITE;
 /*!40000 ALTER TABLE `tbltickettags` DISABLE KEYS */;
-INSERT INTO `tbltickettags` VALUES (6,30,'test');
 /*!40000 ALTER TABLE `tbltickettags` ENABLE KEYS */;
 UNLOCK TABLES;
 

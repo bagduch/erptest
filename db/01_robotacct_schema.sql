@@ -2,8 +2,7 @@
 --
 -- Host: localhost    Database: ra
 -- ------------------------------------------------------
--- Server version	10.2.14-MariaDB-10.2.14+maria~stretch-log
-
+-- Server version	10.2.14-MariaDB-10.2.14+maria~stretch
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -796,7 +795,7 @@ CREATE TABLE `tblcustomfieldsgrouplinks` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_1` FOREIGN KEY (`cfgid`) REFERENCES `tblcustomfieldsgroupnames` (`cfgid`),
   CONSTRAINT `tblcustomfieldsgrouplinks_ibfk_4` FOREIGN KEY (`serviceid`) REFERENCES `tblservices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Links customfieldgroups to individual services';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1571,7 +1570,7 @@ CREATE TABLE `tblservices` (
   `individual` int(11) DEFAULT NULL,
   `contract` int(11) DEFAULT NULL,
   `supplycode` varchar(50) DEFAULT NULL,
-  `supplyreve` varchar(50) DEFAULT null, 
+  `supplyreve` varchar(50) DEFAULT NULL,
   `etf` double DEFAULT NULL,
   `term` int(11) DEFAULT 0,
   `name` text NOT NULL,
@@ -1607,7 +1606,7 @@ CREATE TABLE `tblservices` (
   CONSTRAINT `tblservices_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`),
   CONSTRAINT `tblservices_ibfk_2` FOREIGN KEY (`welcomeemail`) REFERENCES `tblemailtemplates` (`id`),
   CONSTRAINT `tblservices_ibfk_3` FOREIGN KEY (`gid`) REFERENCES `tblservicegroups` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1636,7 +1635,7 @@ CREATE TABLE `tblsmstemplate` (
   `smsgrp` varchar(255) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1655,7 +1654,7 @@ CREATE TABLE `tbltax` (
   `taxrate` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `state_country` (`state`(32),`country`(2))
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1669,7 +1668,7 @@ CREATE TABLE `tblticketbreaklines` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `breakline` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1695,7 +1694,7 @@ CREATE TABLE `tblticketdepartments` (
   `password` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`(64))
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1735,7 +1734,7 @@ CREATE TABLE `tblticketlog` (
   `action` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `tid` (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1795,7 +1794,7 @@ CREATE TABLE `tblticketpredefinedcats` (
   `name` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `parentid_name` (`parentid`,`name`(64))
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1813,7 +1812,7 @@ CREATE TABLE `tblticketpredefinedreplies` (
   PRIMARY KEY (`id`),
   KEY `catid` (`catid`),
   CONSTRAINT `tblticketpredefinedreplies_ibfk_1` FOREIGN KEY (`catid`) REFERENCES `tblticketpredefinedcats` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1893,7 +1892,7 @@ CREATE TABLE `tbltickets` (
   CONSTRAINT `tbltickets_ibfk_4` FOREIGN KEY (`status`) REFERENCES `tblticketstatuses` (`title`),
   CONSTRAINT `tbltickets_ibfk_5` FOREIGN KEY (`did`) REFERENCES `tblticketdepartments` (`id`),
   CONSTRAINT `tbltickets_ibfk_6` FOREIGN KEY (`userid`) REFERENCES `tblclients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1929,7 +1928,7 @@ CREATE TABLE `tblticketstatuses` (
   `autoclose` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `title` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1946,7 +1945,7 @@ CREATE TABLE `tbltickettags` (
   PRIMARY KEY (`id`),
   KEY `ticketid` (`ticketid`),
   CONSTRAINT `tbltickettags_ibfk_1` FOREIGN KEY (`ticketid`) REFERENCES `tbltickets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

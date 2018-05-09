@@ -60,9 +60,7 @@ if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
 //    echo "<pre>", print_r($_POST, 1), "</pre>";
-    if ($tax == "on") {
-        $tax = "1";
-    }
+ 
     if ($_POST['welcomeemail'] == 0) {
         $welcomeemail = "NULL";
     } else {
@@ -82,18 +80,18 @@ if ($action == "save") {
         'term' => $_POST['term'],
         "description" => html_entity_decode($_POST['description']),
         "hidden" => $_POST['hidden'],
+        "retired" => $_POST["retired"] == "on" ? 1 : 0,
         "welcomeemail" => $welcomeemail,
         "paytype" => $_POST['paytype'],
         "servertype" => $_POST['servertype'],
         "recurringcycles" => $_POST['recurringcycles'],
         "autoterminatedays" => $_POST['autoterminatedays'],
         "autoterminateemail" => $_POST['autoterminateemail'],
-        "tax" => $tax == "on" ? 1 : 0,
+        "tax" => $_POST['tax'] == "on" ? 1 : 0,
         'affiliateonetime' => $_POST['affiliateonetime'],
         "affiliatepaytype" => $_POST['affiliatepaytype'],
         "affiliatepayamount" => $_POST['affiliatepayamount'],
     );
-//    echo "<pre>", print_r($array, 1), "</pre>";
 
     update_query("tblservices", $array, array("id" => $id));
 
@@ -148,7 +146,7 @@ if ($action == "save") {
     //RebuildModuleHookCache();
 //    run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
 //    run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
-    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
+//    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
 }
 
 if ($sub == "deletecustomfield") {
