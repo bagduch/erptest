@@ -11,16 +11,13 @@
         <div class="card">
             <div class="content">
                 <div class="row">
-                    <div class="col-xs-5">
-                        <div class="icon-big icon-warning text-center">
-                            <i class="ti-stats-up"></i>
-                        </div>
-                    </div>
                     <div class="col-xs-7">
-                        <div class="numbers">
-                            <p>New Orders</p>
-                        {if $sidebarstats.orders.pending}{$sidebarstats.orders.pending}{else}0{/if}
-                    </div>
+                        <h3>Total Orders<i class="ti-stats-up"></i></h3>
+                        <dl>
+                        {foreach from=$sidebarstats.orders key=status item=count}
+                          <dt>{$status}</dt><dd>{$count}</dd>
+                        {/foreach}
+                        </dl>
                 </div>
             </div>
         </div>

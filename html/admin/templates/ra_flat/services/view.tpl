@@ -33,7 +33,7 @@
                                             <a href="#" onclick="{$servicesg.group.deletelink}">
                                                <i class="fa fa-trash" aria-hidden="true"></i>
                                             </a>
-                                        </td
+                                        </td>
                                     </tr>
                                     {foreach from=$servicesg.service item=servicedata key=sid}
                                         <tr style="text-align:center;">

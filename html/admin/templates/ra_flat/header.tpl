@@ -16,7 +16,7 @@
     <link href="templates/{$template}/assets/css/customer.css" rel="stylesheet" >
 
     <!--     Fonts and icons     -->
-    <link href="/bower_components/components-font-awesome/css/fontawesome.min.css" rel="stylesheet">
+    <link href="/bower_components/components-font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="templates/{$template}/assets/css/font-muli.css" rel='stylesheet' type='text/css'>
     <link href="/bower_components/themify-icons/css/themify-icons.css" rel="stylesheet">
 

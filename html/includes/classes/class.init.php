@@ -344,13 +344,12 @@ class RA_Init {
         global $customadminpath;
         global $disable_iconv;
         global $api_access_key;
-        global $disable_admin_ticket_page_counts;
         global $disable_clients_list_services_summary;
         global $disable_auto_ticket_refresh;
         global $pleskpacketversion;
         global $smtp_debug;
 
-        $db_host = $db_name = $db_username = $db_password = $mysqli_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_admin_ticket_page_counts = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
+        $db_host = $db_name = $db_username = $db_password = $mysqli_charset = $display_errors = $templates_compiledir = $attachments_dir = $downloads_dir = $customadminpath = $disable_iconv = $overidephptimelimit = $api_access_key = $disable_clients_list_services_summary = $disable_auto_ticket_refresh = $pleskpacketversion = $smtp_debug = "";
 
         if (file_exists(ROOTDIR . "/configuration.php")) {
             ob_start();
