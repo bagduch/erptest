@@ -74,7 +74,7 @@
   when: not vagrant
 
 - name: Create RSA key for selfsigned cert
-  openssl_privatekey: 
+  openssl_privatekey:
     path: /etc/nginx/selfsign_key.pem
   register: selfsign_key # exposes size, filename, type, fingerprint
 
@@ -206,7 +206,7 @@
     dest: /tmp/ra_db/999_robotacct_template.sql
 
 - name: Add RA database
-  action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}} 
+  action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}}
   with_items:
     - 01_robotacct_schema.sql
     - 02_robotacct_data.sql
@@ -226,6 +226,7 @@
   template:
     src: templates/configuration.php.j2
     dest: /var/www/html/configuration.php
+  when: "{{vagrant | bool | default(false)}}"
 
 - name: WHMCS cronjob
   cron:
