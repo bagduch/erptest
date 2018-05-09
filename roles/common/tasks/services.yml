@@ -74,7 +74,7 @@
   when: not vagrant
 
 - name: Create RSA key for selfsigned cert
-  openssl_privatekey: 
+  openssl_privatekey:
     path: /etc/nginx/selfsign_key.pem
   register: selfsign_key # exposes size, filename, type, fingerprint
 
@@ -198,7 +198,7 @@
   mysql_db:
     name: ra
     state: absent
-  when: "{{vagrant | bool | default(false)}}"
+  when: "{{ vagrant | bool | default(false) }}"
 
 - name: Template MySQL changes for deployment (recaptcha)
   template:
@@ -206,14 +206,14 @@
     dest: /tmp/ra_db/999_robotacct_template.sql
 
 - name: Add RA database
-  action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}} 
+  action: mysql_db name="ra" state=import target=/tmp/ra_db/{{item}}
   with_items:
     - 01_robotacct_schema.sql
     - 02_robotacct_data.sql
     - 951_tblclients.sql
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
-  when: "{{vagrant | bool | default(false)}}"
+  when: "{{ vagrant | bool | default(false) }}"
 
 - name: Create RA DB user
   mysql_user:

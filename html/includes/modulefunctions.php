@@ -690,10 +690,10 @@ function RebuildModuleHookCache() {
 	global $CONFIG;
 
 	$hooksarray = array();
-	$dh = opendir(ROOTDIR . "/modules/servers/");
+	$dh = opendir(ROOTDIR . "/modules/service/");
 
 	while (false !== $module = readdir($dh)) {
-		if (is_file(ROOTDIR . ("/modules/servers/" . $module . "/hooks.php"))) {
+		if (is_file(ROOTDIR . ("/modules/service/" . $module . "/hooks.php"))) {
 			$hooksarray[] = $module;
 		}
 	}
