@@ -493,88 +493,8 @@ class RA_Admin {
         $this->assign('tickets', $tickets);
 
         if (checkPermission("Sidebar Statistics", true)) {
-            $templatevars = array();
-            $pendingorderstatuses = array();
-            $result = select_query_i("tblorderstatuses", "title", "");
-
-            while ($data = mysqli_fetch_array($result)) {
-                $pendingorderstatuses[] = $data['title'];
-            }
-
-            $query = "SELECT COUNT(*) as total,tblorders.status FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.status IN (" . db_build_in_array($pendingorderstatuses) . ") group by tblorders.status";
-
-            $result = full_query_i($query);
-            while ($data = mysqli_fetch_assoc($result)) {
-                $templatevars['orders'][strtolower($data['status'])] = $data['total'];
-            }
-            //  echo "<pre>", print_r($templatevars['orders'], 1), "</pre>";
-
-
-            $templatevars['clients']['active'] = $templatevars['clients']['inactive'] = $templatevars['clients']['closed'] = 0;
-            $query = "SELECT status,COUNT(*) FROM tblclients GROUP BY status";
-            $result = full_query_i($query);
-
-            while ($data = mysqli_fetch_array($result)) {
-                $templatevars['clients'][strtolower($data[0])] = $data[1];
-            }
-
-            $templatevars['services']['pending'] = $templatevars['services']['active'] = $templatevars['services']['suspended'] = $templatevars['services']['terminated'] = $templatevars['services']['cancelled'] = $templatevars['services']['fraud'] = 0;
-            $query = "SELECT servicestatus,COUNT(*) FROM tblcustomerservices GROUP BY servicestatus";
-            $result = full_query_i($query);
-
-            while ($data = mysqli_fetch_array($result)) {
-                $templatevars['services'][strtolower($data[0])] = $data[1];
-            }
-
-            $templatevars['domains']['pending'] = $templatevars['domains']['active'] = $templatevars['domains']['pendingtransfer'] = $templatevars['domains']['expired'] = $templatevars['domains']['cancelled'] = $templatevars['domains']['fraud'] = 0;
-            $query = "SELECT status,COUNT(*) FROM tbldomains GROUP BY status";
-            $result = full_query_i($query);
-
-            while ($data = mysqli_fetch_array($result)) {
-                $templatevars['domains'][str_replace(" ", "", strtolower($data[0]))] = $data[1];
-            }
-
-            $query = "SELECT COUNT(id) FROM tblinvoices WHERE status='Unpaid'";
-            $result = full_query_i($query);
-            $data = mysqli_fetch_array($result);
-            $templatevars['invoices']['unpaid'] = $data[0];
-            $query = "SELECT COUNT(id) FROM tblinvoices WHERE status='Unpaid' AND duedate<'" . date("Ymd") . "'";
-            $result = full_query_i($query);
-            $data = mysqli_fetch_array($result);
-            $templatevars['invoices']['overdue'] = $data[0];
-
-            if (!$disable_admin_ticket_page_counts) {
-                $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed'";
-                $result = full_query_i($query);
-                $data = mysqli_fetch_array($result);
-                $templatevars['tickets']['active'] = $data[0];
-                $query = "SELECT COUNT(*) FROM tbltickets WHERE status IN (SELECT title FROM `tblticketstatuses` WHERE showawaiting = '1')";
-                $result = full_query_i($query);
-                $data = mysqli_fetch_array($result);
-                $templatevars['tickets']['awaitingreply'] = $data[0];
-
-                if ($flaggedticketschecked) {
-                    $templatevars['tickets']['flagged'] = $flaggedtickets;
-                } else {
-                    $query = "SELECT COUNT(*) FROM tbltickets WHERE status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'";
-                    $result = full_query_i($query);
-                    $data = mysqli_fetch_array($result);
-                    $templatevars['tickets']['flagged'] = $data[0];
-                }
-
-                $ticketstats = array();
-                $query = "SELECT status,COUNT(*) FROM tbltickets GROUP BY status";
-                $result = full_query_i($query);
-
-                while ($data = mysqli_fetch_array($result)) {
-                    $ticketstats[$data[0]] = $data[1];
-                }
-
-                $templatevars['tickets']['onhold'] = (array_key_exists("On Hold", $ticketstats) ? $ticketstats["On Hold"] : "0");
-                $templatevars['tickets']['inprogress'] = (array_key_exists("In Progress", $ticketstats) ? $ticketstats["In Progress"] : "0");
-            }
-
-            $this->assign("sidebarstats", $templatevars);
+          // moved sidebar stats to getSidebarStats()
+          $this->assign("sidebarstats", $this->getSidebarStats());
         }
 
         $this->assignToSmarty();
@@ -1616,6 +1536,105 @@ function dialogChangeTab(id) {
         $this->headOutput = $output;
         return true;
     }
+
+    /**
+     * Returns templatevars for use in sidebar statistics
+     * If an array key isn't defined, from now on we
+     * take it as 0 in any internal handling/display
+     * {$sidebarstats} 	Array (6)
+     * @return [type] [description]
+     */
+    public function getSidebarStats() {
+
+      global $MEMCACHE;
+
+      // attempt to load from memcache first
+      $templatevars = $MEMCACHE->get("sidebarstats");
+      if (is_array($templatevars)) {
+        return $templatevars;
+      }
+      // Otherwise we init the templatevars array to prevent ugly SQL
+      // and also ensure correct ordering for template display
+      $templatevars = [
+        "orders"   => [],
+        "clients"  => [],
+        "services" => [],
+        // invoices statuses are ENUM so we can prepopulate
+        "invoices" => ["Draft"=>0,"Unpaid"=>0,"Overdue"=>0,"Paid"=>0,
+          "Cancelled"=>0,"Refunded"=>0,"Collections"=>0,"Payment Plan"=>0],
+        "tickets"  => []
+      ];
+
+        // Order Statuses
+        $query = "SELECT title,count(tblorders.status) count FROM tblorderstatuses LEFT JOIN tblorders ON tblorderstatuses.title=tblorders.status GROUP BY tblorderstatuses.title";
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+          $templatevars["orders"][$data["title"]] = (int)$data["count"];
+        }
+
+        // Client Statuses
+        $query = "SELECT statuses.status,count(tblclients.status) count
+          FROM (SELECT 'Active' AS status UNION SELECT 'Inactive' UNION SELECT 'Closed') statuses
+          LEFT JOIN tblclients ON statuses.status=tblclients.status GROUP BY tblclients.status";
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+          $templatevars["clients"][$data["status"]] = (int)$data["count"];
+        }
+
+        // Service Statuses
+        $query = "SELECT statuses.status status,COUNT(tblcustomerservices.servicestatus) count FROM
+          (SELECT 'Pending' AS status UNION SELECT 'Active' UNION SELECT 'Suspended' UNION SELECT 'Terminated' UNION SELECT 'Cancelled' UNION SELECT 'Fraud' UNION SELECT 'Draft') statuses
+          LEFT JOIN tblcustomerservices ON tblcustomerservices.servicestatus=statuses.status
+          GROUP BY statuses.status";
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_array($result)) {
+            $templatevars['services'][$data["status"]] = (int)$data["count"];
+        }
+
+        // Invoice Statuses
+        $query = "SELECT status,COUNT(id) count,SUM(duedate < NOW()) overdue FROM tblinvoices GROUP BY status";
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+          if ($data['status'] == "Unpaid") {
+            $templatevars['invoices']["Overdue"] += $data['overdue'];
+            $templatevars['invoices']["Unpaid"] += $data['count'] - $data['overdue'];
+          } else {
+            $templatevars['invoices'][$data['status']] += $data['count'];
+          }
+        }
+
+        // Ticket Statuses
+        $query = sprintf("SELECT
+            tblticketstatuses.title status,
+            tblticketstatuses.showactive,
+            tblticketstatuses.showawaiting,
+            COUNT(tbltickets.status) count,
+            SUM('%s'=tbltickets.flag) flagged
+          FROM tblticketstatuses
+          LEFT JOIN tbltickets ON tbltickets.status=tblticketstatuses.title
+          GROUP BY tblticketstatuses.title",
+        (int)$_SESSION['adminid']);
+        $result = full_query_i($query);
+        while ($data = mysqli_fetch_assoc($result)) {
+          $cleanstatus = str_replace(" ","-",$data['status']);
+          $templatevars["tickets"][$cleanstatus] = $data['count'];
+          $templatevars["tickets"]["total"] += $data['count'];
+
+          if ($data['showactive']) {
+            $templatevars["tickets"]["active"] += $data['count'];
+            $templatevars["tickets"]["flagged"] += $data['flagged'];
+          }
+        }
+        $MEMCACHE->set("sidebarstats",$templatevars,300);
+        return $templatevars;
+      }
+
+      public function refreshSidebarStats() {
+        global $MEMCACHE;
+        return $MEMCACHE->delete("sidebarstats");
+      }
+
+
 
 }
 
