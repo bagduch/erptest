@@ -7,108 +7,116 @@
 
 
 <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
+    <div class="col-lg-2 col-md-4 col-sm-6">
         <div class="card">
-            <div class="content">
-                <div class="row">
-                    <div class="col-xs-7">
-                        <h3>Total Orders<i class="ti-stats-up"></i></h3>
-                        <dl>
-                        {foreach from=$sidebarstats.orders key=status item=count}
-                          <dt>{$status}</dt><dd>{$count}</dd>
-                        {/foreach}
-                        </dl>
+            <div class="card-body">
+                <h3 class="card-title text-center"><i class="ti-stats-up"></i>Orders</h3>
+                <table class="table table-bordered">
+                  <tbody>
+                  {foreach from=$sidebarstats.orders key=status item=count}
+                    <tr><th>{$status}</th><td>{$count}</td></tr>
+                  {/foreach}
+                  </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <a href="orders.php?status=Pending">
+                        <i class="ti-reload"></i> >More info
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="stats">
-                <a href="orders.php?status=Pending">
-                    <i class="ti-reload"></i> >More info
-                </a>
+    </div> {* end cardcol *}
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center"><i class="fa fa-user"></i>Clients</h3>
+              <table class="table table-bordered">
+                <tbody>
+                  {foreach from=$sidebarstats.clients key=status item=count}
+                  <tr><th>{$status}</th><td>{$count}</td></tr>
+                  {/foreach}
+                </tbody>
+              </table>
             </div>
-        </div>
-    </div>
-</div>
-<div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card">
-        <div class="content">
-            <div class="row">
-                <div class="col-xs-5">
-                    <div class="icon-big icon-danger text-center">
-                        <i class="ti-face-sad"></i>
-                    </div>
-                </div>
-                <div class="col-xs-7">
-                    <div class="numbers">
-                        <p>Cancel Orders</p>
-                    {if isset($sidebarstats.orders.cancelled)}{$sidebarstats.orders.cancelled}{else}0{/if}
+            <div class="card-footer">
+                <div class="stats">
+                    <a href="orders.php?status=Cancelled">
+                        <i class="ti-reload"></i> >More info
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card-footer">
-        <div class="stats">
-            <a href="orders.php?status=Cancelled">
-                <i class="ti-reload"></i> >More info
-            </a>
-        </div>
-    </div>
-</div>
-</div>
-<div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card">
-        <div class="content">
-            <div class="row">
-                <div class="col-xs-5">
-                    <div class="icon-big icon-success text-center">
-                        <i class="ti-user"></i>
-                    </div>
-                </div>
-                <div class="col-xs-7">
-                    <div class="numbers">
-                        <p>Active Clients</p>
-                    {if $sidebarstats.clients.active}{$sidebarstats.clients.active}{else}0{/if}
-                </div>
+    </div>{* end cardcol *}
+
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center"><i class="fa fa-dollar"></i>Invoices</h3>
+              <table class="table table-bordered">
+                <tbody>
+                  {foreach from=$sidebarstats.invoices key=status item=count}
+                    <tr><th>{$status}</th><td>{$count}</td></tr>
+                  {/foreach}
+                </tbody>
+              </table>
             </div>
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="stats">
-            <a href="clients.php?status=active">
-                <i class="ti-reload"></i> >More info
-            </a>
-        </div>
-    </div>
-</div>
-</div>
-<div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card">
-        <div class="content">
-            <div class="row">
-                <div class="col-xs-5">
-                    <div class="icon-big icon-info text-center">
-                        <i class="ti-money"></i>
-                    </div>
-                </div>
-                <div class="col-xs-7">
-                    <div class="numbers">
-                        <p>Unpaid Invoice</p>
-                    {if $sidebarstats.invoices.unpaid}{$sidebarstats.invoices.unpaid}{else}0{/if}
+            <div class="card-footer">
+                <div class="stats">
+                    <a href="clients.php?status=active">
+                        <i class="ti-reload"></i> >More info
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-footer">
-        <div class="stats">
-            <a href="invoices.php?status=unpaid" class="small-box-footer">
-                <i class="ti-reload"></i> >More info
-            </a>
+
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center"><i class=""></i>Services</h3>
+                <table class="table table-bordered">
+                  <tbody>
+                    {foreach from=$sidebarstats.services key=status item=count}
+                      <tr><th>{$status}</th><td>{$count}</td></tr>
+                    {/foreach}
+                </tbody>
+              </table>
+            </div>
+              <div class="card-footer">
+                  <div class="stats">
+                      <a href="invoices.php?status=unpaid" class="small-box-footer">
+                          <i class="ti-reload"></i> >More info
+                      </a>
+                  </div>
+              </div>
         </div>
     </div>
-</div>
-</div>
-</div>
+
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center"><i class=""></i>Tickets</h3>
+                <table class="table table-bordered">
+                  <tbody>
+                    {foreach from=$sidebarstats.tickets key=status item=count}
+                      <tr><th>{$status}</th><td>{$count}</td></tr>
+                    {/foreach}
+                </tbody>
+              </table>
+            </div>
+              <div class="card-footer">
+                  <div class="stats">
+                      <a href="invoices.php?status=unpaid" class="small-box-footer">
+                          <i class="ti-reload"></i> >More info
+                      </a>
+                  </div>
+              </div>
+        </div>
+    </div>
+
+</div> {* end sidebarstats row *}
 
 <div class="row">
     {foreach from=$notes item=data}
