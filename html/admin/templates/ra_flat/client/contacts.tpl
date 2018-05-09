@@ -8,6 +8,8 @@ infobox
 contactlist
 content
 jquerycode
+cdata - associative array of row from tblcontacts;
+  only exists when contactid is int (and not addnew)
 *}
 <div class="card">
     <div class="row">
@@ -155,9 +157,14 @@ jquerycode
                         </div>
                     </div>
 
-                    <p align="center"><input type="submit" value="Save Changes" class="btn btn-primary" tabindex="31"> <input type="reset" value="Cancel Changes" class="btn btn-warning" tabindex="32">
-                        <a class="btn btn-danger" href="#" onclick="deleteContact('2');
-                                            return false" style="color:#cc0000"><b>Delete</b></a></p>
+                    <div class="col-md-12" align="center">
+                      <input type="submit" value="Save Changes" class="btn btn-primary" tabindex="31">
+                      <input type="reset" value="Cancel Changes" class="btn btn-warning" tabindex="32">
+                      {if $contactid != "addnew"}
+                        <a class="btn btn-danger" href="#" onclick="deleteContact('{$contactid}');
+                                              return false" style="color:#cc0000"><b>Delete</b></a>
+                      {/if}
+                    </p>
                 </form>
             </div>
         </div>
