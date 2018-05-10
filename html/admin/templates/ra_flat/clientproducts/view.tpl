@@ -109,32 +109,6 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <table class="table">
-                                            {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
-                                                {if $fieldsnd.fieldtype eq "text"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control" id="custome{$fieldid}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "date"}
-                                                    <tr>
-                                                        <td width="50%"><label for="#custome{$fieldidnd}">{$fieldsnd.fieldname}</label></td>
-                                                        <td><input class="form-control datepick" id="custome{$fieldidnd}" name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"></td>
-                                                    </tr>
-                                                {elseif $fieldsnd.fieldtype eq "more"}
-                                                    {foreach from=$fieldsnd.children item=childrenfield}
-                                                        <tr>
-                                                            <td width="50%"><label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label></td>
-                                                            <td><input class="form-control" id="custome{$childrenfield.cfid}" name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"></td>
-                                                        </tr>
-                                                    {/foreach}
-                                                {else}
-                                                {/if}
-                                            {/foreach}
-                                        </table>  
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <table class="table">
-
                                             {foreach from=$servicefield key=fieldid item=fields}
                                                 {if $fields.fieldtype eq "text"}
                                                     <tr>
