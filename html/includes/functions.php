@@ -1817,6 +1817,7 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function sanitize($str) {
+        error_log("THIS REALLY ISN'T SANITISING ANYTHING. FIX ME. ".__FILE__.":".__LINE__);
         return $str;
     }
 
