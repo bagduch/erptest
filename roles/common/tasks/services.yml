@@ -85,7 +85,7 @@
     country_name: NZ
     locality_name: Auckland
     organization_name: "Robotic Accounting"
-    common_name: "roboticaccounting.localhost"
+    common_name: {ra_hostname}
     email_address: "guy@hd.net.nz"
   register: selfsign_csr # exposes keyUsage,extendedKeyUsage,subjectAltName,subject,privatekey,filename
 
@@ -97,7 +97,21 @@
     provider: selfsigned
   register: selfsign_cert # exposes filename
 
+- name: Set SSL paths as selfsigned
+  set_fact:
+    ssl_cert: /etc/nginx/selfsign_cert.pem
+    ssl_key: /etc/nginx/selfsign_key.pem
 
+- name: Check for existence of letsencrypt cert
+  stat:
+    path: /etc/letsencrypt/live/{ra_hostname}
+  register: lepath
+
+- name: Overwrite SSL paths as letsencrypt
+  set_fact:
+    ssl_cert: /etc/letsencrypt/live/{ra_hostname}/fullchain.pem
+    ssl_key: /etc/letsencrypt/live/{ra_hostname}/privkey.pem
+  when: lepath.stat.exists and lepath.stat.isdir
 
 - name: Disable sendfile in nginx (for Virtualbox compatibilty)
   lineinfile:

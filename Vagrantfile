@@ -50,7 +50,8 @@ Vagrant.configure(2) do |config|
         # recaptcha keys for localhost from guy.hd123@gmail.com account
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
         recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
-	      repo_basepath: "/vagrant/" # path this file is in
+	      repo_basepath: "/vagrant/", # path this file is in
+        ra_hostname: "roboticaccounting.localhost"
       }
     end
 	else
@@ -62,7 +63,8 @@ Vagrant.configure(2) do |config|
         # recaptcha keys for localhost from guy.hd123@gmail.com account
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
         recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
-	      repo_basepath: "/vagrant/" # path this file is in
+	      repo_basepath: "/vagrant/", # path this file is in
+        ra_hostname: "roboticaccounting.localhost"
       }
     end
 	end
