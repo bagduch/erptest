@@ -1,9 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- **/
+/** RA - Version 0.1 **/
 
 function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $cardstart, $cardissue, $noremotestore = "", $fullclear = "") {
 	global $CONFIG;

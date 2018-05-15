@@ -1,10 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * */
+/** RA - Version 0.1 **/
 define("ADMINAREA", true);
 require "../init.php";
 include_once '../includes/servicefunctions.php';

@@ -1,15 +1,6 @@
 #!/usr/local/bin/php
 <?php 
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * 
- *
- **/
+/** RA - Version 0.1 **/
 
 require(dirname(__FILE__) . "/../init.php");
 require(dirname(__FILE__) . "/../includes/adminfunctions.php");

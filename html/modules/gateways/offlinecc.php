@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 
 function offlinecc_config() {
 	$configarray = array( "FriendlyName" => array( "Type" => "System", "Value" => "Offline Credit Card" ), "RemoteStorage" => true );

@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * 
- *
- **/
+/** RA - Version 0.1 **/
 
 define("CLIENTAREA", true);
 require "init.php";

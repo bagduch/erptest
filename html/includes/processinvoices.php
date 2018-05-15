@@ -1,10 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * */
+/** RA - Version 0.1 **/
 function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $specificitems = "") {
     global $ra;
     global $cron;

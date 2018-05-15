@@ -1,10 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * */
+/** RA - Version 0.1 **/
 include "../functions.php";
 include "../orderfunctions.php";
 include "../whoisfunctions.php";

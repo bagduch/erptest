@@ -1,15 +1,7 @@
 <?php
 
-/**
- * Affiliate Cookie Tracking + Redirection Handler
- *
- * @package    ra
- * @author     ra Limited <development@ra.com>
- * @copyright  Copyright (c) ra Limited 2005-2013
- * @license    http://www.ra.com/license/ ra Eula
- * @version    $Id$
- * @link       http://www.ra.com/
- */
+/** RA - Version 0.1 **/
+
 define("CLIENTAREA", true);
 
 require("init.php");

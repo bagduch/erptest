@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("Configure Product Addons");
