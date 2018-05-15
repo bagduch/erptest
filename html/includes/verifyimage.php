@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @ WHMCS FULL DECODED & NULLED
+ * @ RA FULL DECODED & NULLED
  *
  * @ Version  : 5.2.15
  * @ Author   : MTIMER

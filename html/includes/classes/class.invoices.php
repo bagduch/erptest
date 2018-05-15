@@ -1,14 +1,6 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+/** RA - Version 0.1 **/
+
 
 class RA_Invoices extends RA_TableModel {
 	public function _execute($criteria = null) {

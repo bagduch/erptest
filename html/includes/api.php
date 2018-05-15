@@ -1,14 +1,6 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+/** RA - Version 0.1 **/
+
 
 function apiXMLOutput($val, $lastk = "") {
 	foreach ($val as $k => $v) {

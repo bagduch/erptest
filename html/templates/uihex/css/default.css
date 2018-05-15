@@ -1,4 +1,4 @@
-.whmcs-wrapper {
+.ra-wrapper {
     padding-bottom: 20px;
 }
 
@@ -217,34 +217,34 @@
     }
 }
 
-.whmcs-supportticketsubmit-steptwo .dashboard {
+.ra-supportticketsubmit-steptwo .dashboard {
     margin-bottom: 40px;
 }
-.whmcs-viewticket .page-intro,
-.whmcs-supportticketsubmit-stepone .page-intro,
-.whmcs-supportticketsubmit-steptwo .page-intro {
+.ra-viewticket .page-intro,
+.ra-supportticketsubmit-stepone .page-intro,
+.ra-supportticketsubmit-steptwo .page-intro {
     margin-bottom: 0; padding-left: 1px;
 }
-.whmcs-viewticket .page-intro .entry-title,
-.whmcs-supportticketsubmit-stepone .page-intro .entry-title,
-.whmcs-supportticketsubmit-steptwo .page-intro .entry-title {
+.ra-viewticket .page-intro .entry-title,
+.ra-supportticketsubmit-stepone .page-intro .entry-title,
+.ra-supportticketsubmit-steptwo .page-intro .entry-title {
     font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;
 }
-.whmcs-viewticket .page-intro .lead,
-.whmcs-supportticketsubmit-stepone .page-intro .lead,
-.whmcs-supportticketsubmit-steptwo .page-intro .lead {
+.ra-viewticket .page-intro .lead,
+.ra-supportticketsubmit-stepone .page-intro .lead,
+.ra-supportticketsubmit-steptwo .page-intro .lead {
     font-size: 14px; margin-bottom: 0; padding: 0;
 }
-.whmcs-supportticketsubmit-stepone .form-submit {
+.ra-supportticketsubmit-stepone .form-submit {
     margin-top: 40px;
 }
-.whmcs-viewticket .btn-toolbar {
+.ra-viewticket .btn-toolbar {
     text-align: right; margin: 0 12px 10px;
 }
-.whmcs-viewticket .popover .arrow {
+.ra-viewticket .popover .arrow {
     left: 10%;
 }
-.whmcs-viewticket .popover-title {
+.ra-viewticket .popover-title {
     font-weight: 600; letter-spacing: normal;
 }
 .client-reply .popover-title {
@@ -253,7 +253,7 @@
 .admin-reply .popover-title {
     background: #777; color: #fff; text-shadow: 0 0 5px #000;
 }
-.whmcs-viewticket .client-reply .popover-content {
+.ra-viewticket .client-reply .popover-content {
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#F5F5F5), color-stop(25px, #FFF), to(#FFF));
     background: -webkit-linear-gradient(#F5F5F5, #FFF 25px, #FFF);
        background: -moz-linear-gradient(#F5F5F5, #FFF 25px, #FFF);
@@ -261,13 +261,13 @@
          background: -o-linear-gradient(#F5F5F5, #FFF 25px, #FFF);
             background: linear-gradient(#F5F5F5, #FFF 25px, #FFF);
 }
-.whmcs-viewticket .ticket-footer {
+.ra-viewticket .ticket-footer {
     border-bottom: 1px #e9e9e9 solid; margin: 15px 15px 20px; padding-bottom: 10px; 
 }
-.whmcs-viewticket .timestamp {
+.ra-viewticket .timestamp {
     float: left;
 }
-.whmcs-viewticket .ticketrating {
+.ra-viewticket .ticketrating {
     float: right;
 }
 i.rating-icon {
@@ -282,14 +282,14 @@ i.rating-neg {
 .submitticket {
     margin-top: 40px;
 }
-.whmcs-viewticket .attachments {
+.ra-viewticket .attachments {
     border-top: 1px solid #e9e9e9; margin: 20px 0 0; padding: 10px 0;
 }
-.whmcs-viewticket .form-actions {
+.ra-viewticket .form-actions {
     border: 0; margin-top: 0; padding-top: 0;
 }
  @media (max-width: 480px) {
-    .layout-responsive .whmcs-viewticket .btn-toolbar {
+    .layout-responsive .ra-viewticket .btn-toolbar {
         text-align: center!important; margin-left: 0; margin-right: 0;
     }
 }
@@ -304,7 +304,7 @@ i.rating-neg {
 
 /* login */
 
-.whmcs-login .loginform {
+.ra-login .loginform {
     background-color: #fff; border: 1px solid #d9d9d9; width: 320px; margin: 30px auto;
     -webkit-border-radius: 6px;
        -moz-border-radius: 6px;
@@ -313,30 +313,30 @@ i.rating-neg {
        -moz-box-shadow: 0 0 10px #ccc;
             box-shadow: 0 0 10px #ccc;
 }
-.whmcs-login form {
+.ra-login form {
     text-align: center; margin: 0; padding: 10px 20px;
 }
-.whmcs-login h2 {
+.ra-login h2 {
     color: #858585; font-size: 22px; margin: 0 0 -10px;
 }
-.whmcs-login .loginform textarea,
-.whmcs-login .loginform input[type="text"],
-.whmcs-login .loginform input[type="password"] {
+.ra-login .loginform textarea,
+.ra-login .loginform input[type="text"],
+.ra-login .loginform input[type="password"] {
     text-align: center; width: 268px; 
 }
-.whmcs-login .rememberme {
+.ra-login .rememberme {
     white-space: nowrap; margin: 0 5px 15px; 
 }
-.whmcs-login .btn-large {
+.ra-login .btn-large {
     padding: 4px 0 8px;
 }
 @media (max-width: 479px) {
-    .layout-responsive .whmcs-login .loginform {
+    .layout-responsive .ra-login .loginform {
         width: 260px; margin: 10px auto;
     }
-    .layout-responsive .whmcs-login .loginform textarea,
-    .layout-responsive .whmcs-login .loginform input[type="text"],
-    .layout-responsive .whmcs-login .loginform input[type="password"] {
+    .layout-responsive .ra-login .loginform textarea,
+    .layout-responsive .ra-login .loginform input[type="text"],
+    .layout-responsive .ra-login .loginform input[type="password"] {
         width: 206px
     }
 }
@@ -828,28 +828,28 @@ i.rating-neg {
 
 /* masspay */
 
-.whmcs-masspay .cart-total {
+.ra-masspay .cart-total {
     margin-bottom: 30px;
 }
-.whmcs-masspay .cart-view table.table-data td {
+.ra-masspay .cart-view table.table-data td {
     border-top: 0; border-bottom: 1px #e5e5e5 solid; padding-top: 0; padding-bottom: 0;
 }
-.whmcs-masspay .cart-view table.table-data td.tbcol3 {
+.ra-masspay .cart-view table.table-data td.tbcol3 {
     white-space: nowrap; padding-top: 6px; padding-bottom: 6px; 
 }
-.whmcs-masspay .cart-view table.table-data .invoiceids td {
+.ra-masspay .cart-view table.table-data .invoiceids td {
     color: #353535; font-weight: 600; border-bottom: 0; padding-top: 10px; padding-bottom: 2px;
 }
-.whmcs-masspay .cart-view table.table-data td ul.item-configoptions {
+.ra-masspay .cart-view table.table-data td ul.item-configoptions {
     color: #999; list-style: outside; margin: 0 18px;
 }
-.whmcs-masspay .cart-view table.table-data td ul.item-configoptions li {
+.ra-masspay .cart-view table.table-data td ul.item-configoptions li {
     padding: 6px 0 6px 0;
 }
-.whmcs-masspay .cart-view table.table-data td ul.item-configoptions li:last-child {
+.ra-masspay .cart-view table.table-data td ul.item-configoptions li:last-child {
     border: 0;
 }
-.whmcs-masspay .cart-view table.table-data td ul.cell-inner-list .cell-price {
+.ra-masspay .cart-view table.table-data td ul.cell-inner-list .cell-price {
     padding-bottom: 8px;
 }
 
@@ -1018,11 +1018,11 @@ i.rating-neg {
 .page-knowledgebase section#search {
     margin: 40px auto 0;
 }
-.whmcs-clientareaproductdetails .download {
+.ra-clientareaproductdetails .download {
     margin-bottom: 20px; padding: 0 10px;
 }
 @media (max-width: 767px) {
-    .layout-responsive .whmcs-clientareaproductdetails .download {
+    .layout-responsive .ra-clientareaproductdetails .download {
         padding: 0;
     }
 }
@@ -1082,27 +1082,27 @@ i.rating-neg {
        margin-left: -2px; margin-right: -2%; 
    }
 }
-[dir="rtl"] .whmcs-viewticket .page-intro,
-[dir="rtl"] .whmcs-supportticketsubmit-stepone .page-intro,
-[dir="rtl"] .whmcs-supportticketsubmit-steptwo .page-intro {
+[dir="rtl"] .ra-viewticket .page-intro,
+[dir="rtl"] .ra-supportticketsubmit-stepone .page-intro,
+[dir="rtl"] .ra-supportticketsubmit-steptwo .page-intro {
     padding-right: 1px;
 }
-[dir="rtl"] .whmcs-viewticket .btn-toolbar {
+[dir="rtl"] .ra-viewticket .btn-toolbar {
     text-align: left;
 }
-[dir="rtl"] .whmcs-viewticket .popover .arrow {
+[dir="rtl"] .ra-viewticket .popover .arrow {
     left: auto; right: 10%;
 }
-[dir="rtl"] .whmcs-viewticket .timestamp {
+[dir="rtl"] .ra-viewticket .timestamp {
     float: right;
 }
-[dir="rtl"] .whmcs-viewticket .ticketrating {
+[dir="rtl"] .ra-viewticket .ticketrating {
     float: left;
 }
 
 /* login */
 
-[dir="rtl"] .whmcs-login p {
+[dir="rtl"] .ra-login p {
 	text-align: center;
 }
 

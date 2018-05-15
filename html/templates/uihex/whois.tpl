@@ -5,7 +5,7 @@
     <title>{$pagetitle} - {$companyname}</title>
 
     <link href="templates/{$template}/css/bootstrap.css" rel="stylesheet">
-    <link href="templates/{$template}/css/whmcs.css" rel="stylesheet">
+    <link href="templates/{$template}/css/ra.css" rel="stylesheet">
 
   </head>
 

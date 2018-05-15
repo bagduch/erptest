@@ -1,14 +1,6 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+/** RA - Version 0.1 **/
+
 
 class RA_Mobile extends RA_Admin {
 	public function getTemplatePath() {

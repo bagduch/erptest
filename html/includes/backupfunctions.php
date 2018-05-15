@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 
 class zipfile {
 	var $datasec = array();

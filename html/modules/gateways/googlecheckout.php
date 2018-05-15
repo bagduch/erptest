@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 
 function googlecheckout_activate() {
 	defineGatewayField( "googlecheckout", "text", "merchantid", "", "Merchant ID", "30", "" );

@@ -19,7 +19,7 @@ function tolls_config() {
             "api_password" => array("FriendlyName" => "API: Password", "Type" => "password", "Size" => "30", "Default" => "", "Description" => ""),
         /*
 
-          "option_realms"				=> array ("FriendlyName" => "Radius Realms", "Type" => "textarea", "Cols" => "60", "Rows"=>5, "Description" => "New realm on each line, only required if you are not entering realm names in with your usernames in WHMCS."),
+          "option_realms"				=> array ("FriendlyName" => "Radius Realms", "Type" => "textarea", "Cols" => "60", "Rows"=>5, "Description" => "New realm on each line, only required if you are not entering realm names in with your usernames in RA."),
           "option_email_cron_to"		=> array ("FriendlyName" => "Email Cron To", "Type" => "textarea", "Cols" => "60", "Rows"=>5, "Description" => "New email on each line, send a report of the cron to these emails."),
           "option_enable_clientarea"	=> array ("FriendlyName" => "Enable Client Area", "Type" => "yesno", "Size" => "25", "Description" => "Enable"),
           "client_graph_area_width"		=> array ("FriendlyName" => "Client Area Graph Width", "Type" => "text", "Size" => "4", "Default"=>"640", "Description" => ""),

@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 class RA_Cron {
 
     private $incli = false;

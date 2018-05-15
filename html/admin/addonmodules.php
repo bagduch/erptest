@@ -19,7 +19,6 @@ $aInt->icon = "addonmodules";
 $action = $ra->get_req_var("action");
 
 if ($action == "getcats") {
-//	$data = curlCall("http://www.ra.com/members/communityaddonsfeed.php", "action=getcats");
     echo $data;
     exit();
 }
@@ -41,8 +40,7 @@ if ($action == "getaddons") {
         }
     }
 
-//	$data = curlCall("http://www.ra.com/members/communityaddonsfeed.php", "action=getaddons&catid=" . $catid . "&search=" . $search . "&modules=" . json_encode($data));
-//	$data = curlCall("http://api.mtimer.net/whmcs/communityaddonsfeed.php", "action=getaddons&catid=" . $catid . "&search=" . $search . "&modules=" . json_encode($data));//如果你不想被RA抓到的话 ;)
+
     echo $data;
     exit();
 }
