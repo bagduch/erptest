@@ -20,7 +20,7 @@
                                 Client
                             </td>
                             <td class="fieldarea">
-                                <input class="form-control" type="text" name="client" value="{$ticketfilterdata.client}" size="10">
+                                <input class="form-control" type="text" name="client" value="{$ticketfilterdata.client|default:""}" size="10">
                             </td>
                         </tr>
 
@@ -41,7 +41,7 @@
                                 Ticket ID
                             </td>
                             <td class="fieldarea">
-                                <input class="form-control" type="text" name="ticketid" value="{$ticketfilterdata.ticketid}" size="15">
+                                <input class="form-control" type="text" name="ticketid" value="{$ticketfilterdata.ticketid|default:""}" size="15">
                             </td>
                         </tr>
                         <tr>
@@ -49,13 +49,13 @@
                                 Subject/Message
                             </td>
                             <td class="fieldarea">
-                                <input class="form-control" type="text" name="subject" size="40" value="{$ticketfilterdata.subject}">
+                                <input class="form-control" type="text" name="subject" size="40" value="{$ticketfilterdata.subject|default:""}">
                             </td>
                             <td class="fieldlabel">
                                 Email Address
                             </td>
                             <td class="fieldarea">
-                                <input class="form-control" type="text" name="email" size="40" value="{$ticketfilterdata.email}">
+                                <input class="form-control" type="text" name="email" size="40" value="{$ticketfilterdata.email|default:""}">
                             </td>
                         </tr>
                     </tbody>

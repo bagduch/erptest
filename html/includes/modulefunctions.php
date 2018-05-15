@@ -1,15 +1,10 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
 
+/**
+ * getModuleType - show server to module association
+ * @param  int $id ID of a server from tblservers
+ * @return string name of the module which uses/handles that server
+ */
 function getModuleType($id) {
 	$result = select_query_i("tblservers", "type", array("id" => $id));
 	$data = mysqli_fetch_array($result);
@@ -17,51 +12,51 @@ function getModuleType($id) {
 	return $type;
 }
 
+/**
+ * ModuleBuildParams
+ * What on earth is this crap?
+ * @param int $id id of a service from tblcustomerservices
+ */
 function ModuleBuildParams($id) {
 
-	$result = select_query_i("tblcustomerservices", "", array("id" => $id));
-	$data = mysqli_fetch_array($result);
-	$func_id = $id = $data['id'];
-	$userid = $data['userid'];
-	$domain = $data['domain'];
-	$username = $data['username'];
-	$password = html_entity_decode(decrypt($data['password']));
-	$pid = $data['packageid'];
-	$server = $data['server'];
-	$params['accountid'] = $id;
-	$params['serviceid'] = $id;
-	$params['domain'] = $domain;
-	$params['username'] = $username;
-	$params['password'] = $password;
-	$params['packageid'] = $pid;
-	$params['pid'] = $pid;
-	$params['serverid'] = $server;
-	$result = select_query_i("tblservices", "", array("id" => $pid));
-	$data = mysqli_fetch_array($result);
-	$params['type'] = $data['type'];
-	$params['producttype'] = $data['type'];
-	$params['moduletype'] = $data['servertype'];
+// heredoc due to multiline
+  $query = <<< EOD
+SELECT
+	tcs.id serviceid,
+	tcs.userid userid,
+	tcs.description description,
+	tcs.servicestatus servicestatus,
+	tcs.serverid serverid,
+	ts.id packageid,
+	ts.type producttype,
+	ts.servertype moduletype
+FROM tblcustomerservices tcs
+LEFT JOIN tblservices ts ON tcs.packageid=ts.id
+WHERE tcs.id=%d
+EOD;
+	$result = full_query_i(sprintf($query,(int)$id));
+	$params = mysqli_fetch_assoc($result);
 
+  // Make sure there's actually a module to provide params to
 	if (!$params['moduletype']) {
 		return false;
 	}
 
-
-	if (!isValidforPath($params['moduletype'])) {
-		exit("Invalid Server Module Name");
-	}
-
-	$counter = 1;
-
-	while ($counter <= 12) {
-		$params["configoption" . $counter] = $data["configoption" . $counter];
-		$counter += 1;
-	}
-
 	$customfields = array();
-        
-      
-	$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.id=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid=" . (int)$id . " AND tblcustomfields.relid=" . (int)$pid);
+
+
+	$query = <<<EOD
+SELECT
+  tcf.fieldname fieldname,
+	tcfv.value value
+FROM tblcustomfieldslinks tcfl
+LEFT JOIN tblcustomfields tcf
+  ON (tcfl.cfid=tcf.cfid)
+LEFT JOIN tblcustomfieldsvalues tcfv
+  ON (tcfv.cfid=tcf.cfid AND tcfv.relid=242)
+WHERE tcfl.serviceid=48
+EOD;
+	$result = full_query_i($query);
 
 	while ($data = mysqli_fetch_array($result)) {
 		$customfieldname = $data[0];
