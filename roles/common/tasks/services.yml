@@ -85,7 +85,7 @@
     country_name: NZ
     locality_name: Auckland
     organization_name: "Robotic Accounting"
-    common_name: {ra_hostname}
+    common_name: {{ra_hostname}}
     email_address: "guy@hd.net.nz"
   register: selfsign_csr # exposes keyUsage,extendedKeyUsage,subjectAltName,subject,privatekey,filename
 
@@ -104,13 +104,13 @@
 
 - name: Check for existence of letsencrypt cert
   stat:
-    path: /etc/letsencrypt/live/{ra_hostname}
+    path: /etc/letsencrypt/live/{}{ra_hostname}}
   register: lepath
 
 - name: Overwrite SSL paths as letsencrypt
   set_fact:
-    ssl_cert: /etc/letsencrypt/live/{ra_hostname}/fullchain.pem
-    ssl_key: /etc/letsencrypt/live/{ra_hostname}/privkey.pem
+    ssl_cert: /etc/letsencrypt/live/{{ra_hostname}}/fullchain.pem
+    ssl_key: /etc/letsencrypt/live/{{ra_hostname}}/privkey.pem
   when: lepath.stat.exists and lepath.stat.isdir
 
 - name: Disable sendfile in nginx (for Virtualbox compatibilty)
@@ -228,7 +228,7 @@
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
     - 953_tblcustomerservicechanges.sql
-  when: "{{ vagrant | bool | default(false) }}"
+  when: vagrant | bool | default(false)
 
 - name: Create RA DB user
   mysql_user:
@@ -241,7 +241,7 @@
   template:
     src: templates/configuration.php.j2
     dest: /var/www/html/configuration.php
-  when: "{{vagrant | bool | default(false)}}"
+  when: vagrant | bool | default(false)
 
 - name: WHMCS cronjob
   cron:
