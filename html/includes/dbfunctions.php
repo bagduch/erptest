@@ -18,6 +18,9 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
         $query .= " INNER JOIN " . db_escape_string($innerjoin) . "";
     }
 
+    if ($leftjoin) {
+        $query .= " LEFT OUTER JOIN " . db_escape_string($innerjoin) . "";
+    }
 
     if ($where) {
         if (is_array($where)) {
@@ -201,6 +204,7 @@ function update_query($table, $array, $where) {
         }
     }
     $result = mysqli_query($ramysqli, $query);
+    error_log($query);
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
 
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
@@ -253,7 +257,7 @@ function insert_query($table, $array) {
     $query .= "(" . $fieldnamelist . ") VALUES (" . $fieldvaluelist . ")";
     $result = mysqli_query($ramysqli, $query);
     // GUYGUYGUY logging
- 
+
     if (!$result && ($CONFIG['SQLErrorReporting'] || $mysqli_errors)) {
         logActivity("SQL Error: " . mysqli_error($ramysqli) . " - Full Query: " . $query);
     }

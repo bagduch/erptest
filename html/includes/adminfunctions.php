@@ -171,9 +171,6 @@ function getAdminHomeStats($type = "") {
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $stats['orders']['thisyear']['total'] = $data[0];
-    global $disable_admin_ticket_page_counts;
-
-    if (!$disable_admin_ticket_page_counts) {
         $allactive = $awaitingreply = 0;
         $ticketcounts = array();
         $query = "SELECT tblticketstatuses.title,(SELECT COUNT(*) FROM tbltickets WHERE tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
@@ -198,7 +195,6 @@ function getAdminHomeStats($type = "") {
         $stats['tickets']['allactive'] = $allactive;
         $stats['tickets']['awaitingreply'] = $awaitingreply;
         $stats['tickets']['flaggedtickets'] = $flaggedtickets;
-    }
 
     $query = "SELECT COUNT(*) FROM tbltodolist WHERE status!='Completed' AND status!='Postponed' AND duedate<='" . date("Y-m-d") . "'";
     $result = full_query_i($query);

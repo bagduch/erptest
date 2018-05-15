@@ -308,19 +308,19 @@
                                     <tbody>
                                         <tr>
                                             <td class="fieldlabel">Direct Shopping Cart Link</td>
-                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}" readonly=""></td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="/cart.php?a=add&amp;pid={$services.id}" readonly=""></td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Direct Shopping Cart Link Specifying Template</td>
-                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;carttpl=cart" readonly=""></td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="/cart.php?a=add&amp;pid={$services.id}&amp;carttpl=cart" readonly=""></td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Direct Shopping Cart Link Including Domain</td>
-                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?a=add&amp;pid={$services.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="/cart.php?a=add&amp;pid={$services.id}&amp;sld=ra&amp;tld=.com" readonly=""></td>
                                         </tr>
                                         <tr>
                                             <td class="fieldlabel">Service Group Cart Link</td>
-                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="https://peter.dev.roboticaccounting.com/cart.php?gid={$services.gid}" readonly=""></td>
+                                            <td class="fieldarea"><input class="form-control" type="text" size="100" value="/cart.php?gid={$services.gid}" readonly=""></td>
                                         </tr>
                                     </tbody>
                                 </table>

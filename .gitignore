@@ -17,4 +17,5 @@ html/modules/service/hdradius
 vendor/
 html/vendor
 composer.lock
-/html/phpmy
+html/phpmy
+html/bower_components
