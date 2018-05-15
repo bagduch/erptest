@@ -18,6 +18,9 @@ function select_query_i($table, $fields, $where, $orderby = "", $orderbyorder = 
         $query .= " INNER JOIN " . db_escape_string($innerjoin) . "";
     }
 
+    if ($leftjoin) {
+        $query .= " LEFT OUTER JOIN " . db_escape_string($innerjoin) . "";
+    }
 
     if ($where) {
         if (is_array($where)) {

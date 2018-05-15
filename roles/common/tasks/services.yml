@@ -213,6 +213,7 @@
     - 951_tblclients.sql
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
+    - 953_tblcustomerservicechanges.sql
   when: "{{ vagrant | bool | default(false) }}"
 
 - name: Create RA DB user
