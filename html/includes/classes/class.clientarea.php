@@ -157,7 +157,6 @@ class RA_ClientArea
 		}
 
 		$this->smarty = &$smarty;
-
 		$this->smarty->caching = 0;
 		$this->smarty->template_dir = ROOTDIR . "/templates/";
 		$this->smarty->compile_dir = $ra->get_template_compiledir_name();
