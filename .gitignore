@@ -1,6 +1,7 @@
 html/assets
 html/templates_c/*
 html/configuration.php
+html/bower_components
 .*swp
 attachments/*
 .vscode
