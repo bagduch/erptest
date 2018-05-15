@@ -35,36 +35,9 @@ if ($action == "save") {
         $subaccount = "0";
     }
 
-
-    if ($domainemails) {
-        $domainemails = 1;
-    }
-
-
-    if ($generalemails) {
-        $generalemails = 1;
-    }else{
-        
-    }
-
-
-    if ($invoiceemails) {
-        $invoiceemails = 1;
-    }
-
-
-    if ($productemails) {
-        $productemails = 1;
-    }
-
-
-    if ($supportemails) {
-        $supportemails = 1;
-    }
-
-
-    if ($affiliateemails) {
-        $affiliateemails = 1;
+    foreach (["domainemails","generalemails","invoiceemails","productemails","supportemails","affiliateemails"] as $emailtype)
+    {
+      ${$emailtype} = array_key_exists($emailtype,$_POST);
     }
 
 
@@ -84,7 +57,28 @@ if ($action == "save") {
         }
 
         $table = "tblcontacts";
-        $array = array("firstname" => $firstname, "lastname" => $lastname, "companyname" => $companyname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber, "mobilenumber" => $mobilenumber, "subaccount" => $subaccount, "permissions" => $permissions, "domainemails" => $domainemails, "generalemails" => $generalemails, "invoiceemails" => $invoiceemails, "productemails" => $productemails, "supportemails" => $supportemails, "affiliateemails" => $affiliateemails);
+        $array = array(
+          "firstname" => $firstname,
+          "lastname" => $lastname,
+          "companyname" => $companyname,
+          "email" => $email,
+          "address1" => $address1,
+          "address2" => $address2,
+          "city" => $city,
+          "state" => $state,
+          "postcode" => $postcode,
+          "country" => $country,
+          "phonenumber" => $phonenumber,
+          "mobilenumber" => $mobilenumber,
+          "subaccount" => $subaccount,
+          "permissions" => $permissions,
+          "domainemails" => (int)$domainemails,
+          "generalemails" => (int)$generalemails,
+          "invoiceemails" => (int)$invoiceemails,
+          "productemails" => (int)$productemails,
+          "supportemails" => (int)$supportemails,
+          "affiliateemails" => (int)$affiliateemails
+        );
 
         if ($password && $password != $aInt->lang("fields", "entertochange")) {
             $array['password'] = generateClientPW($password);
@@ -140,6 +134,7 @@ ob_start();
 
 if (!$contactid) {
     $contactid = "addnew";
+    $aInt->assign("cdata", [ "permissions" => []]); // new users have zero permissiosn by default
 }
 
 $contactlistop.= "<option value=\"addnew\"";

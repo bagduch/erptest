@@ -4,12 +4,9 @@
   npm:
     name: bower
     global: yes
-  become: no
+  become: yes
 
 - name: Install jquery
-  npm:
-    name: "{{item}}"
-    path: "{{repo_basepath}}/html/assets"
+  bower:
+    path: "{{repo_basepath}}"
   become: no
-  with_items:
-    - jquery

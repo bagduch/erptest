@@ -47,9 +47,6 @@ if ($userid && !$id) {
     }
 }
 $servicefield = getServiceCustomFields($clientdata->servicedata['packageid'], $clientdata->servicedata['id']);
-$len = count($servicefield);
-$firsthalf = array_slice($servicefield, 0, $len / 2);
-$secondhalf = array_slice($servicefield, $len / 2);
 if ($_POST['frm1']) {
     check_token("RA.admin.default");
     if ($_POST['addonid']) {
@@ -324,8 +321,7 @@ $aInt->assign('content', $content);
 $aInt->assign("services", $clientdata->servicedata);
 $aInt->assign("status", $aInt->productStatusDropDown($clientdata->servicedata['servicestatus']));
 $aInt->assign("promo", $clientdata->getPromocode());
-$aInt->assign("servicefield", !empty($firsthalf) ? $firsthalf : FALSE);
-$aInt->assign("servicefieldnd", $secondhalf);
+$aInt->assign("servicefield", $servicefield);
 $aInt->assign("servicedrop", $aInt->productDropDown($clientdata->servicedata['packageid']));
 $aInt->assign("billingcycle", $aInt->cyclesDropDown($clientdata->servicedata['billingcycle'], "", "Free"));
 $aInt->assign("paymentmethod", paymentMethodsSelection($clientdata->servicedata['paymentmethod']));

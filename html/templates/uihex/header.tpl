@@ -6,21 +6,20 @@
     <meta charset="UTF-8">
     <title>{$companyname} - {$pagetitle}{if isset($kbarticle.title)} - {$kbarticle.title}{/if}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' id='bootstrap-css'  href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css' type='text/css' media='all' />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="templates/{$template}/css/owl.carousel.css">
-    <link rel='stylesheet' href="templates/{$template}/css/animate.min.css" />
+    <link rel='stylesheet' id='bootstrap-css' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' type='text/css' media='all' />
+    <link rel='stylesheet' id='fontawesome-css' href="/bower_components/components-font-awesome/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" id="simplelineicons-css" href="/bower_components/simple-line-icons/css/simple-line-icons.css" />
+    <link rel="stylesheet" id="roboto-css" href="/bower_components/roboto-fontfacekit/roboto.css" />
+    <link rel="stylesheet" id="owlcarousel-css" href="/bower_components/owl.carousel1/owl-carousel/owl.carousel.css" />
+    <link rel='stylesheet' id="animate-css" href="/bower_components/animate.css/animate.min.css" />
+    <link rel="stylesheet" id="datepicker-css" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+
     <link rel='stylesheet' id='hexa-css' href='templates/{$template}/css/ui-portal.css' type='text/css' media='all' />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="templates/{$template}/js/client.js"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.en-NZ.min.js" charset="UTF-8"></script>
-    <link id="bsdp-css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-
-    <script src="templates/{$template}/js/enable_datepick.js"></script>
+    <script src="/bower_components/jquery/jquery.min.js" /></script>
+    <script src="templates/{$template}/js/client.js" /></script>
+    <script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" /></script>
+    <script src="/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-NZ.min.js" charset="UTF-8" /></script>
 
 
 

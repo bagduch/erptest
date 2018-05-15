@@ -71,7 +71,7 @@
                                             <label for="description">Description (Address)</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <input name="description" id="description" type="text"  class="form-control" value={$services.description} />
+                                            <input name="description" id="description" type="text"  class="form-control" value="{$services.description}" />
                                         </div>
                                     </div>
                                 </div>
@@ -207,55 +207,7 @@
                                 <h3>Custom Fields</h3>
                             </div>
                             <div class="row">
-                                {* loop through servicefieldnd *}
-                                {foreach from=$servicefieldnd key=fieldidnd item=fieldsnd}
-                                    {if $fieldsnd.fieldtype eq "text"}
-                                    <div class="col-md-6">
-                                        <div class="row form-group">
-                                            <div class="col-md-6">
-                                                <label for="#custome{$fieldidnd}">
-                                                    {$fieldsnd.fieldname}
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input class="form-control"
-                                                    id="custome{$fieldidnd}"  name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {elseif $fieldsnd.fieldtype eq "date"}
-                                    <div class="col-md-6">
-                                        <div class="row form-group">
-                                            <div class="col-md-6">
-                                                <label for="#custome{$fieldidnd}">
-                                                    {$fieldsnd.fieldname}
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input class="form-control datepick" id="custome{$fieldidnd}"
-                                                    name="customfield[{$fieldsnd.cfid}]" value="{$fieldsnd.value}"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {elseif $fieldsnd.fieldtype eq "more"}
-                                        {foreach from=$fieldsnd.children item=childrenfield}
-                                        <div class="col-md-6">
-                                            <div class="row form-group">
-                                                <div class="col-md-6">
-                                                    <label for="#custome{$childrenfield.cfid}">{$childrenfield.fieldname}</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input class="form-control" id="custome{$childrenfield.cfid}"
-                                                        name="customfield[{$childrenfield.cfid}]" value="{$childrenfield.value}"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/foreach}
-                                    {/if}
-                                {/foreach} {* end servicefieldnd loop*}
+                                {* loop through servicefield *}
                                 {foreach from=$servicefield key=fieldid item=fields}
                                     {if $fields.fieldtype eq "text"}
                                     <div class="col-md-6">
