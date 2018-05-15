@@ -212,7 +212,7 @@
   mysql_db:
     name: ra
     state: absent
-  when: {{ vagrant | bool | default(false) }}
+  when: "{{ vagrant | bool | default(false) }}"
 
 - name: Template MySQL changes for deployment (recaptcha)
   template:
