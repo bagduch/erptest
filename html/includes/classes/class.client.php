@@ -106,7 +106,7 @@ class RA_Client {
 
 
 			if (0 < count($changelist)) {
-				$adminurl = ($ra->get_config("SystemSSLURL") ? $ra->get_config("SystemSSLURL") : $ra->get_config("SystemURL"));
+				$adminurl = $ra->get_config("SystemURL");
 				$adminurl .= "/" . $ra->get_admin_folder_name() . "/clientssummary.php?userid=" . $this->getID();
 				sendAdminNotification("account", "ra User Details Change", "<p>Client ID: <a href=\"" . $adminurl . "\">" . $this->getID() . " - " . $exinfo['firstname'] . " " . $exinfo['lastname'] . "</a> has requested to change his/her details as indicated below:<br><br>" . implode("<br />
 ", $changelist) . "<br>If you are unhappy with any of the changes, you need to login and revert them - this is the only record of the old details.</p>");

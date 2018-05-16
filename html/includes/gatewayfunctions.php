@@ -23,7 +23,7 @@ function loadGatewayModule($paymentmethod) {
 
     $base_path = fetchGatewayModuleDirectory();
     $expected_file = $base_path . "/" . $paymentmethod . ".php";
-  
+
     $state = false;
 
     if (file_exists($expected_file)) {
@@ -157,11 +157,7 @@ function getGatewayVariables($gateway, $invoiceid = "", $amount = "0.00") {
 
     $GATEWAY['companyname'] = $CONFIG['CompanyName'];
 
-    if ($CONFIG['SystemSSLURL']) {
-        $GATEWAY['systemurl'] = $CONFIG['SystemSSLURL'];
-    } else {
-        $GATEWAY['systemurl'] = $CONFIG['SystemURL'];
-    }
+    $GATEWAY['systemurl'] = $CONFIG['SystemURL'];
 
     $GATEWAY['returnurl'] = $GATEWAY['systemurl'];
     $GATEWAY['langpaynow'] = $_LANG['invoicespaynow'];
@@ -264,7 +260,7 @@ function checkCbTransID($transid) {
 function callback3DSecureRedirect($invoiceid, $success = false) {
     global $CONFIG;
 
-    $systemurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+    $systemurl = $CONFIG['SystemURL'];
 
     if ($success) {
         $redirectPage = $systemurl . ("/viewinvoice.php?id=" . $invoiceid . "&paymentsuccess=true");

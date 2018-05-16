@@ -48,7 +48,7 @@ if ($ccstoredisabled) {
 
         $adminfolder = $ra->get_admin_folder_name();
 
-        if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer && $CONFIG['SystemSSLURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer) {
+        if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer && $CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer) {
             echo "<p>" . $aInt->lang("global", "invalidaccessattempt") . "</p>";
             exit();
         }

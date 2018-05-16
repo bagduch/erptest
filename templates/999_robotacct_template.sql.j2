@@ -1,2 +1,4 @@
 DELETE FROM tblconfiguration WHERE setting IN ("ReCAPTCHAPublicKey","ReCAPTCHAPrivateKey");
 REPLACE INTO `tblconfiguration` (setting,value) VALUES ("ReCAPTCHAPublicKey","{{recaptcha_sitekey}}"),("ReCAPTCHAPrivateKey","{{recaptcha_secretkey}}");
+DELETE FROM tblconfiguration WHERE setting="SystemSSLURL";
+UPDATE tblconfiguration SET value="{{ra_systemurl}}" WHERE setting="SystemURL";
