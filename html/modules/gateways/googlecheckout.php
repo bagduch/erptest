@@ -3,10 +3,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 
@@ -54,5 +54,5 @@ if (!defined( "RA" )) {
 $GATEWAYMODULE['googlecheckoutname'] = "googlecheckout";
 $GATEWAYMODULE['googlecheckoutvisiblename'] = "Google Checkout";
 $GATEWAYMODULE['googlecheckouttype'] = "Invoices";
-$GATEWAYMODULE['googlecheckoutnotes'] = "In order to use Google Checkout in a live environment, you must have an SSL certificate. Inside your Google Checkout account you need to go to <i>Settings > Preferences > Order processing preferences</i> and select the option <i>Automatically authorize and charge the buyer's credit card.</i>  Also, in <i>Settings > Integration</i> you must enter the following callback url: " . $CONFIG['SystemSSLURL'] . "/modules/gateways/callback/googlecheckout.php";
+$GATEWAYMODULE['googlecheckoutnotes'] = "In order to use Google Checkout in a live environment, you must have an SSL certificate. Inside your Google Checkout account you need to go to <i>Settings > Preferences > Order processing preferences</i> and select the option <i>Automatically authorize and charge the buyer's credit card.</i>  Also, in <i>Settings > Integration</i> you must enter the following callback url: " . $CONFIG['SystemURL'] . "/modules/gateways/callback/googlecheckout.php";
 ?>

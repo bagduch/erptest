@@ -61,12 +61,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="fieldlabel">ra SSL System URL</td>
-                                            <td class="fieldarea">
-                                                <input type="text" class="form-control" name="systemsslurl" value="{$CONFIG.SystemSSLURL}" size="50"><br>URL of the ra installation for secure access, eg. https://www.yourdomain.com/members/ (leave blank for no SSL)
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td class="fieldlabel">Template</td>
                                             <td class="fieldarea">
                                                 <select class="form-control"name="template">

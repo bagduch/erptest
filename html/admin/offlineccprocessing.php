@@ -3,10 +3,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  **/
 
@@ -145,7 +145,7 @@ if ($processwindow) {
 
 		$adminfolder = $ra->get_admin_folder_name();
 
-		if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/offlineccprocessing.php") != $referrer && $CONFIG['SystemSSLURL'] . ("/" . $adminfolder . "/offlineccprocessing.php") != $referrer) {
+		if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/offlineccprocessing.php") != $referrer && $CONFIG['SystemURL'] . ("/" . $adminfolder . "/offlineccprocessing.php") != $referrer) {
 			echo "<p>" . $aInt->lang("global", "invalidaccessattempt") . "</p>";
 			exit();
 		}

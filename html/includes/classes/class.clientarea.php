@@ -187,18 +187,8 @@ class RA_ClientArea
 		$this->assign("filename", $this->getCurrentPageName());
 		$this->assign("token", generate_token("plain"));
 
-		if ($ra->in_ssl() && $ra->get_config("SystemSSLURL")) {
-			$this->assign("systemurl", $ra->get_config("SystemSSLURL") . "/");
-		}
-		else {
-			if ($ra->get_config("SystemURL") != "http://www.yourdomain.com/ra") {
-				$this->assign("systemurl", $ra->get_config("SystemURL") . "/");
-			}
-		}
-
-
-		if ($ra->get_config("SystemSSLURL")) {
-			$this->assign("systemsslurl", $ra->get_config("SystemSSLURL") . "/");
+		if ($ra->get_config("SystemURL") != "http://www.yourdomain.com/ra") {
+			$this->assign("systemurl", $ra->get_config("SystemURL") . "/");
 		}
 
 		$this->assign("todaysdate", date("l, jS F Y"));

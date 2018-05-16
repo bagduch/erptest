@@ -51,7 +51,8 @@ Vagrant.configure(2) do |config|
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
         recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
 	      repo_basepath: "/vagrant/", # path this file is in
-        ra_hostname: "roboticaccounting.localhost"
+        ra_hostname: "roboticaccounting.localhost",
+        ra_systemurl: "https://roboticaccounting.localhost:7081/"
       }
     end
 	else
@@ -64,7 +65,8 @@ Vagrant.configure(2) do |config|
         recaptcha_sitekey: "6LcrTEwUAAAAALQmVxWRt81yvjAQ_H_ZLy2E22nE",
         recaptcha_secretkey: "6LcrTEwUAAAAALV5AtmyeLeSHYhWfjnAa16ovDmz",
 	      repo_basepath: "/vagrant/", # path this file is in
-        ra_hostname: "roboticaccounting.localhost"
+        ra_hostname: "roboticaccounting.localhost",
+        ra_systemurl: "https://roboticaccounting.localhost:7081/"
       }
     end
 	end

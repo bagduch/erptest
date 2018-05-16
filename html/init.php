@@ -49,7 +49,7 @@ if ((defined("CLIENTAREA") && isset($_SESSION['uid'])) && !isset($_SESSION['admi
 
     if (($twofa->isForced() && !$twofa->isEnabled()) && $twofa->isActiveClients()) {
         if ($ra->get_filename() == "clientarea" && ($ra->get_req_var("action") == "security" || $ra->get_req_var("2fasetup"))) {
-            
+
         } else {
             redir("action=security&2fasetup=1&enforce=1", "clientarea.php");
         }
@@ -77,31 +77,6 @@ if (defined("CLIENTAREA") && isset($_REQUEST['language'])) {
 }
 
 $ra->loadLanguage();
-
-if (defined("CLIENTAREA") && $CONFIG['SystemSSLURL']) {
-    $files = array("aff.php", "clientarea.php", "supporttickets.php", "contact.php", "passwordreminder.php", "login.php", "logout.php", "affiliates.php", "submitticket.php", "viewemail.php", "viewinvoice.php", "viewticket.php", "creditcard.php", "register.php", "upgrade.php", "cart.php", "configuressl.php", "domainchecker.php", "networkissues.php", "serverstatus.php", "pwreset.php");
-    $nonsslfiles = array(
-        "announcements.php", 
-        "banned.php", 
-        "contact.php", 
-        "downloads.php", 
-        "index.php", 
-        "tutorials.php", 
-        "whois.php", 
-        "knowledgebase.php"
-    );
-
-    if (!defined("RAWWW1")) {
-        $nonsslfiles[] = "dl.php";
-    }
-
-    $filename = $_SERVER['PHP_SELF'];
-    $filename = substr($filename, strrpos($filename, "/"));
-    $filename = str_replace("/", "", $filename);
-    $ssldomain = $CONFIG['SystemSSLURL'];
-    $nonssldomain = $CONFIG['SystemURL'];
-
-}
 
 ob_start();
 require ROOTDIR . "/includes/hookfunctions.php";

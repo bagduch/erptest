@@ -180,7 +180,7 @@ if (!$action) {
             } else {
                 $timestamp = time();
                 $hash = md5($email . $timestamp . $adminid . $cc_encryption_hash);
-                $url = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+                $url = $CONFIG['SystemURL'];
                 $url .= "/" . $adminfolder . "/login.php?action=reset&email=" . $email . "&timestamp=" . $timestamp . "&verify=" . $hash;
                 $msg = ("Dear " . $firstname . ",
 A request was recently made to reset the password for admin username '" . $username . "'.

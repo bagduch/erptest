@@ -4,10 +4,10 @@
  *
  * @ RA
  *
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  *
  * */
 function headerprint() {
@@ -203,7 +203,7 @@ if ($type == "i" || $type == "l") {
             $supportpackageactive = $data[0];
 
             if (!$supportpackageactive) {
-                $formposturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+                $formposturl = $CONFIG['SystemURL'];
                 echo "<div align=\"center\">
 <br />
 <b>Your Support & Updates period for this license has expired</b><br />
@@ -276,7 +276,7 @@ You will need to renew your support & updates before you can download the latest
     echo $pdfdata;
     exit();
 } else {
-    
+
 }
 
 
