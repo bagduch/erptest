@@ -216,8 +216,8 @@
             {/if}
                 {if $ccexpiringsoon}
                 <div class="alert alert-danger">
-                    <p><strong>{$LANG.ccexpiringsoon}:</strong> {$LANG.ccexpiringsoondesc|sprintf2:'
-  <a href="clientarea.php?action=creditcard" class="btn btn-danger btn-xs pull-right">':'</a>'}</p>
+                    <p><strong>{$LANG.ccexpiringsoon}:</strong> {$LANG.ccexpiringsoondesc}'
+  <a href="clientarea.php?action=creditcard" class="btn btn-danger btn-xs pull-right">':'</a></p>
                 </div>
             {/if}
             {foreach from=$addons_html item=addon_html}

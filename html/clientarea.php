@@ -17,7 +17,6 @@ $sub = $ra->get_req_var("sub");
 $id = (int) $ra->get_req_var("id");
 $q = $ra->get_req_var("q");
 $paymentmethod = RA_Gateways::makesafename($ra->get_req_var("paymentmethod"));
-
 if ($action == "changesq" || $ra->get_req_var("2fasetup")) {
     $action = "security";
 }
@@ -2111,4 +2110,5 @@ if ($action == "") {
 }
 
 $ca->output();
+
 ?>
