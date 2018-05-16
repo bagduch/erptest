@@ -18,10 +18,10 @@ if (!function_exists("saveCustomFields")) {
 
 
 if ($clientemail) {
-	$result = select_query_i("tblclients", "id", array("email" => $clientemail));
+	$result = select_query_i("ra_user", "id", array("email" => $clientemail));
 }
 else {
-	$result = select_query_i("tblclients", "id", array("id" => $clientid));
+	$result = select_query_i("ra_user", "id", array("id" => $clientid));
 }
 
 $data = mysqli_fetch_array($result);
@@ -34,9 +34,9 @@ if (!$clientid) {
 
 
 if ($_POST['email']) {
-	$result = select_query_i("tblclients", "id", array("email" => $_POST['email'], "id" => array("sqltype" => "NEQ", "value" => $clientid)));
+	$result = select_query_i("ra_user", "id", array("email" => $_POST['email'], "id" => array("sqltype" => "NEQ", "value" => $clientid)));
 	$data = mysqli_fetch_array($result);
-	$result = select_query_i("tblcontacts", "id", array("email" => $_POST['email'], "subaccount" => "1"));
+	$result = select_query_i("ra_user_contacts", "id", array("email" => $_POST['email'], "subaccount" => "1"));
 	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {
@@ -100,7 +100,7 @@ foreach ($fieldsarray as $fieldname) {
 	}
 }
 
-$query = "UPDATE tblclients SET " . substr($updatequery, 0, 0 - 1) . " WHERE id=" . (int)$clientid;
+$query = "UPDATE ra_user SET " . substr($updatequery, 0, 0 - 1) . " WHERE id=" . (int)$clientid;
 $result = full_query_i($query);
 
 if ($customfields) {

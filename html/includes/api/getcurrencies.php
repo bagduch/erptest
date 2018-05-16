@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query_i("tblcurrencies", "", "", "id", "ASC");
+$result = select_query_i("ra_currency", "", "", "id", "ASC");
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_array($result)) {

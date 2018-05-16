@@ -8,7 +8,7 @@ $reportdata["description"] = "This report shows the 25 clients with the highest 
 
 $reportdata["tableheadings"] = array("Client ID","Client Name","Total Amount In","Total Fees","Total Amount Out","Balance");
 
-$query = "SELECT tblclients.id,tblclients.firstname, tblclients.lastname, SUM(tblaccounts.amountin/tblaccounts.rate), SUM(tblaccounts.fees/tblaccounts.rate), SUM(tblaccounts.amountout/tblaccounts.rate), SUM((tblaccounts.amountin/tblaccounts.rate)-(tblaccounts.fees/tblaccounts.rate)-(tblaccounts.amountout/tblaccounts.rate)) AS balance, tblaccounts.rate FROM tblaccounts INNER JOIN tblclients ON tblclients.id = tblaccounts.userid GROUP BY userid ORDER BY balance DESC LIMIT 0,25";
+$query = "SELECT ra_user.id,ra_user.firstname, ra_user.lastname, SUM(ra_transactions.amountin/ra_transactions.rate), SUM(ra_transactions.fees/ra_transactions.rate), SUM(ra_transactions.amountout/ra_transactions.rate), SUM((ra_transactions.amountin/ra_transactions.rate)-(ra_transactions.fees/ra_transactions.rate)-(ra_transactions.amountout/ra_transactions.rate)) AS balance, ra_transactions.rate FROM ra_transactions INNER JOIN ra_user ON ra_user.id = ra_transactions.userid GROUP BY userid ORDER BY balance DESC LIMIT 0,25";
 $result=full_query_i($query);
 while($data = mysqli_fetch_array($result)) {
     $userid = $data[0];

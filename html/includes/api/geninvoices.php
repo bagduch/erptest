@@ -34,7 +34,7 @@ if (!function_exists("ModuleBuildParams")) {
 
 
 if ($clientid) {
-	$clientid = get_query_val("tblclients", "id", array("id" => $clientid));
+	$clientid = get_query_val("ra_user", "id", array("id" => $clientid));
 
 	if (!$clientid) {
 		$apiresults = array("result" => "error", "message" => "Client ID Not Found");

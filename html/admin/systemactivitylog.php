@@ -9,7 +9,7 @@ $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
 $menuselect = "";
 
-$query = "SELECT DISTINCT user FROM tblactivitylog ORDER BY user ASC";
+$query = "SELECT DISTINCT user FROM ra_systemlog ORDER BY user ASC";
 $result = full_query_i($query);
 $option = "";
 while ($data = mysqli_fetch_array($result)) {
@@ -22,9 +22,9 @@ while ($data = mysqli_fetch_array($result)) {
 
     $option .= ">" . $user . "</option>";
 }
-$result = select_query_i("tblactivitylog", "", "userid=0", "id", "DESC", $CONFIG['ActivityLimit'] . ",9999");
+$result = select_query_i("ra_systemlog", "", "userid=0", "id", "DESC", $CONFIG['ActivityLimit'] . ",9999");
 while ($data = mysqli_fetch_array($result)) {
-    delete_query("tblactivitylog", array("id" => $data['id']));
+    delete_query("ra_systemlog", array("id" => $data['id']));
 }
 $aInt->sortableTableInit("date");
 $where = " AND description not like 'Cron Job%'";
@@ -47,7 +47,7 @@ $aInt->assign("option",$option);
 $aInt->assign("description",$description);
 $aInt->assign("date",$date);
 $aInt->assign("ipaddress",$ipaddress);
-$result = select_query_i("tblactivitylog", "COUNT(*)", $where);
+$result = select_query_i("ra_systemlog", "COUNT(*)", $where);
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
 $patterns = $replacements = array();
@@ -65,7 +65,7 @@ $replacements[] = "<a href=\"invoices.php?action=edit&id=$1\">Invoice ID: $1</a>
 $replacements[] = "<a href=\"quotes.php?action=manage&id=$1\">Quote ID: $1</a> ";
 $replacements[] = "<a href=\"orders.php?action=view&id=$1\">Order ID: $1</a> ";
 $replacements[] = "<a href=\"transactions.php?action=edit&id=$1\">Transaction ID: $1</a> ";
-$result = select_query_i("tblactivitylog", "", $where, "id", "DESC", $page * $limit . ("," . $limit));
+$result = select_query_i("ra_systemlog", "", $where, "id", "DESC", $page * $limit . ("," . $limit));
 
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];

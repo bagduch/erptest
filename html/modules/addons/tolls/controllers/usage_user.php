@@ -8,21 +8,21 @@ if(!defined("RA"))
 require(dirname(dirname(__FILE__)) . '/models/hdtolls.php');
 $hdtolls = new hdtolls();
 $result = $hdtolls->db->query("
-	SELECT	`tblclients`.`id` AS clientid,
-		`tblclients`.`firstname`,
-		`tblclients`.`lastname`,
-		`tblclients`.`companyname`,
-		`tblclients`.`email`,
+	SELECT	`ra_user`.`id` AS clientid,
+		`ra_user`.`firstname`,
+		`ra_user`.`lastname`,
+		`ra_user`.`companyname`,
+		`ra_user`.`email`,
 		`tblhosting`.`id` AS hostingid,
 		`tblhosting`.`domain`,
 		`tblhosting`.`username`
 	
-	FROM `tblclients`
+	FROM `ra_user`
 	
-		INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `tblclients`.`id`
+		INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `ra_user`.`id`
 	
 	WHERE	`tblhosting`.`packageid` IN (520, 560, 712, 738)
-			AND `tblclients`.`id` = '" . $hdtolls->db->real_escape_string($_GET['c']) . "'
+			AND `ra_user`.`id` = '" . $hdtolls->db->real_escape_string($_GET['c']) . "'
 	
 	ORDER BY `tblhosting`.`domain`
 ");

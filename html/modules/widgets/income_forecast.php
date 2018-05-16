@@ -32,7 +32,7 @@ function widget_income_forecast($vars) {
     }
 
     $incomestats = array();
-    $result = select_query_i("tblcustomerservices,tblclients", "currency,billingcycle,COUNT(*),SUM(amount)", "tblclients.id = tblcustomerservices.userid AND (servicestatus = 'Active' OR servicestatus = 'Suspended') GROUP BY currency, billingcycle");
+    $result = select_query_i("tblcustomerservices,ra_user", "currency,billingcycle,COUNT(*),SUM(amount)", "ra_user.id = tblcustomerservices.userid AND (servicestatus = 'Active' OR servicestatus = 'Suspended') GROUP BY currency, billingcycle");
     while ($data = mysqli_fetch_array($result)) {
         $incomestats[$data['currency']][$data['billingcycle']]["count"] = $data[2];
         $incomestats[$data['currency']][$data['billingcycle']]["sum"] = $data[3];

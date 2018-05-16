@@ -14,7 +14,7 @@ $reportdata["headertext"] = "<form method=\"post\" action=\"".$_SERVER['PHP_SELF
 $reportdata["tableheadings"][] = "Tag";
 $reportdata["tableheadings"][] = "Count";
 
-$result = full_query_i("SELECT `tag`, COUNT(*) AS `count` FROM `tbltickettags` INNER JOIN tbltickets ON tbltickets.id=tbltickettags.ticketid WHERE tbltickets.date>='".db_make_safe_human_date($fromdate)." 00:00:00' AND tbltickets.date<='".db_make_safe_human_date($todate)." 23:59:59' GROUP BY tbltickettags.tag ORDER BY `count` DESC");
+$result = full_query_i("SELECT `tag`, COUNT(*) AS `count` FROM `ra_ticket_tags` INNER JOIN ra_ticket ON ra_ticket.id=ra_ticket_tags.ticketid WHERE ra_ticket.date>='".db_make_safe_human_date($fromdate)." 00:00:00' AND ra_ticket.date<='".db_make_safe_human_date($todate)." 23:59:59' GROUP BY ra_ticket_tags.tag ORDER BY `count` DESC");
 while ($data = mysqli_fetch_array($result)) {
     $tag = $data[0];
     $count = $data[1];

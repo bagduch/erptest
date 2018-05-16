@@ -13,15 +13,15 @@ if (!function_exists("pdfInvoice")) {
 
 
 if ($_POST['custommessage']) {
-	delete_query("tblemailtemplates", array("name" => "Mass Mail Template"));
-	insert_query("tblemailtemplates", array("type" => $_POST['customtype'], "name" => "Mass Mail Template", "subject" => html_entity_decode($_POST['customsubject']), "message" => html_entity_decode($_POST['custommessage'])));
+	delete_query("ra_templates_mail", array("name" => "Mass Mail Template"));
+	insert_query("ra_templates_mail", array("type" => $_POST['customtype'], "name" => "Mass Mail Template", "subject" => html_entity_decode($_POST['customsubject']), "message" => html_entity_decode($_POST['custommessage'])));
 	$messagename = "Mass Mail Template";
 }
 else {
 	$messagename = $_POST['messagename'];
 }
 
-$result = select_query_i("tblemailtemplates", "COUNT(*)", array("name" => $messagename));
+$result = select_query_i("ra_templates_mail", "COUNT(*)", array("name" => $messagename));
 $data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
@@ -42,7 +42,7 @@ else {
 sendMessage($messagename, $_POST['id'], $customvars);
 
 if ($_POST['customtext']) {
-	delete_query("tblemailtemplates", array("name" => "Mass Mail Template"));
+	delete_query("ra_templates_mail", array("name" => "Mass Mail Template"));
 }
 
 $apiresults = array("result" => "success");

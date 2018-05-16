@@ -9,11 +9,11 @@ $reportdata["description"] = "This report provides a summary of the answers clie
 if (!$fromdate) $fromdate = fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-7,date("Y"))));
 if (!$todate) $todate = getTodaysDate();
 
-$customfieldid = get_query_val("tblcustomfields","id",array("type"=>"client","fieldname"=>"How did you find us?"));
-if (!$customfieldid) $customfieldid = get_query_val("tblcustomfields","id",array("type"=>"client","fieldname"=>"Where did you hear about us?"));
+$customfieldid = get_query_val("ra_catalog_user_sales_fields","id",array("type"=>"client","fieldname"=>"How did you find us?"));
+if (!$customfieldid) $customfieldid = get_query_val("ra_catalog_user_sales_fields","id",array("type"=>"client","fieldname"=>"Where did you hear about us?"));
 
 if (!$customfieldid && isset($_REQUEST['fieldname']) && isset($_REQUEST['options'])) {
-    $customfieldid = insert_query("tblcustomfields",array("type"=>"client","fieldname"=>$_REQUEST['fieldname'],"fieldtype"=>"dropdown","fieldoptions"=>$_REQUEST['options'],"showorder"=>"on"));
+    $customfieldid = insert_query("ra_catalog_user_sales_fields",array("type"=>"client","fieldname"=>$_REQUEST['fieldname'],"fieldtype"=>"dropdown","fieldoptions"=>$_REQUEST['options'],"showorder"=>"on"));
 }
 
 if (!$customfieldid) $reportdata["headertext"] = '<div style="margin:50px auto;width:50%;padding:15px;border:1px dashed #ccc;text-align:center;font-size:14px;">This report requires you to setup a custom field shown during the signup process with a name of "How Did You Find Us?" or "Where did you hear about us?" in order to collect this data from customers.<br /><br />You don\'t appear to have the custom field setup yet so we can do this now:<br /><br /><form method="post" action="reports.php?report=client_sources">Field Name: <select name="fieldname"><option>How did you find us?</option><option>Where did you hear about us?</option></select><br />Options: <input type="text" name="options" value="Google,Bing,Other Search Engine,Web Hosting Talk,Friend,Advertisement,Other" style="width:70%;" /><br /><br /><input type="submit" value="Create &raquo;" class="btn btn-primary" /></form></div>';
@@ -22,7 +22,7 @@ else $reportdata["headertext"] = "<form method=\"post\" action=\"$PHP_SELF?repor
 $reportdata["tableheadings"][] = "Referral Location";
 $reportdata["tableheadings"][] = "Count";
 
-$result = select_query_i("tblcustomfieldsvalues","value,COUNT(*) AS rows","fieldid=".(int)$customfieldid." AND datecreated>='".db_make_safe_human_date($fromdate)."' AND datecreated<='".db_make_safe_human_date($todate)."' GROUP BY `value`","value","ASC","","tblclients ON tblclients.id=tblcustomfieldsvalues.relid");
+$result = select_query_i("ra_catalog_user_sales_fieldsvalues","value,COUNT(*) AS rows","fieldid=".(int)$customfieldid." AND datecreated>='".db_make_safe_human_date($fromdate)."' AND datecreated<='".db_make_safe_human_date($todate)."' GROUP BY `value`","value","ASC","","ra_user ON ra_user.id=ra_catalog_user_sales_fieldsvalues.relid");
 while ($data = mysqli_fetch_array($result)) {
 
     $reportdata["tablevalues"][] = array($data[0],$data[1]);

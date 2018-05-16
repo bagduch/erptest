@@ -124,7 +124,7 @@ if ($_SESSION['address']) {
                     $success = $twofa->moduleCall("verify");
                 }
                 if ($success) {
-                    validateClientLogin(get_query_val("tblclients", "email", array("id" => $_SESSION['2faclientid'])), "", true);
+                    validateClientLogin(get_query_val("ra_user", "email", array("id" => $_SESSION['2faclientid'])), "", true);
 
                     if ($_SESSION['2farememberme']) {
                         wSetCookie("User", $_SESSION['uid'] . ":" . sha1($_SESSION['upw'] . $ra->get_hash()), time() + 60 * 60 * 24 * 365);
@@ -185,19 +185,19 @@ if ($_SESSION['address']) {
                                 $hashverify = sha1($email . $timestamp . $autoauthkey);
 
                                 if ($hashverify == $hash) {
-                                    $result = select_query_i("tblclients", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+                                    $result = select_query_i("ra_user", "id,password,language", array("email" => $email, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
                                     $data = mysqli_fetch_array($result);
                                     $login_uid = $data['id'];
                                     $login_pwd = $data['password'];
                                     $language = $data['language'];
 
                                     if (!$login_uid) {
-                                        $result = select_query_i("tblcontacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
+                                        $result = select_query_i("ra_user_contacts", "id,userid,password", array("email" => $email, "subaccount" => "1", "password" => array("sqltype" => "NEQ", "value" => "")));
                                         $data = mysqli_fetch_array($result);
                                         $login_cid = $data['id'];
                                         $login_uid = $data['userid'];
                                         $login_pwd = $data['password'];
-                                        $result = select_query_i("tblclients", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+                                        $result = select_query_i("ra_user", "id,language", array("id" => $login_uid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
                                         $data = mysqli_fetch_array($result);
                                         $login_uid = $data['id'];
                                         $language = $data['language'];
@@ -205,7 +205,7 @@ if ($_SESSION['address']) {
 
                                     if ($login_uid) {
                                         $fullhost = gethostbyaddr($remote_ip);
-                                        update_query("tblclients", array("lastlogin" => "now()", "ip" => $remote_ip, "host" => $fullhost), array("id" => $login_uid));
+                                        update_query("ra_user", array("lastlogin" => "now()", "ip" => $remote_ip, "host" => $fullhost), array("id" => $login_uid));
                                         $_SESSION['uid'] = $login_uid;
 
                                         if ($login_cid) {
@@ -310,10 +310,10 @@ if ($_SESSION['address']) {
 } else {
 
     $services = array();
-    $result = select_query_i("tblservices", "", array('retired' => 0));
+    $result = select_query_i("ra_catalog", "", array('retired' => 0));
     while ($data = mysqli_fetch_array($result)) {
         $services [$data['id']] = $data;
-        $result2 = select_query_i("tblpricing", "", array("currency" => 1, "relid" => $data['id']));
+        $result2 = select_query_i("ra_catalog_pricebook", "", array("currency" => 1, "relid" => $data['id']));
         $pricedata = mysqli_fetch_array($result2);
         $recurring = $pricedata['monthly'] . "/month";
         $oneoff = formatCurrency(($pricedata['msetupfee'] == "0.00" ? "" : formatCurrency($pricedata['msetupfee'])) + $pricedata['monthly']) . " one off";

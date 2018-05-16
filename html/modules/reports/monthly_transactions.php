@@ -12,13 +12,13 @@ $reportdata["tableheadings"] = array("Date","Amount In","Fees","Amount Out","Bal
 
 for ( $counter = 1; $counter <= 31; $counter += 1) {
 	$counter = str_pad($counter, 2, "0", STR_PAD_LEFT);  
-	$query = "SELECT SUM(amountin),SUM(fees),SUM(amountout) FROM tblaccounts INNER JOIN tblclients ON tblclients.id=tblaccounts.userid WHERE date LIKE '".db_make_safe_date("$year-$month-$counter")."%' AND tblclients.currency=".(int)$currencyid;
+	$query = "SELECT SUM(amountin),SUM(fees),SUM(amountout) FROM ra_transactions INNER JOIN ra_user ON ra_user.id=ra_transactions.userid WHERE date LIKE '".db_make_safe_date("$year-$month-$counter")."%' AND ra_user.currency=".(int)$currencyid;
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$amountin = $data[0];
 	$fees = $data[1];
 	$amountout = $data[2];
-    $query = "SELECT SUM(amountin),SUM(fees),SUM(amountout) FROM tblaccounts WHERE date LIKE '".db_make_safe_date("$year-$month-$counter")."%' AND userid='0' AND currency=".(int)$currencyid;
+    $query = "SELECT SUM(amountin),SUM(fees),SUM(amountout) FROM ra_transactions WHERE date LIKE '".db_make_safe_date("$year-$month-$counter")."%' AND userid='0' AND currency=".(int)$currencyid;
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$amountin += $data[0];

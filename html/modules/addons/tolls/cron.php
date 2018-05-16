@@ -75,7 +75,7 @@ for($i=6;$i>0;$i--){
 			, c.firstname, c.lastname,  c.companyname
 		FROM mod_hdtolls_daily t
 			LEFT JOIN tblhosting h ON t.hosting_id=h.id
-			LEFT JOIN tblclients c ON t.client_id=c.id
+			LEFT JOIN ra_user c ON t.client_id=c.id
 		WHERE domainstatus='Active'
 			AND `date` LIKE '" . $period . "-%'
 		GROUP BY MONTH(t.`date`), h.id

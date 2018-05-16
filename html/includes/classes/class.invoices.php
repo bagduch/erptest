@@ -11,7 +11,7 @@ class RA_Invoices extends RA_TableModel {
 		global $aInt;
 		global $currency;
 
-		$query = " FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid";
+		$query = " FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid";
 		$filters = $this->buildCriteria($criteria);
 		$query .= (count($filters) ? " WHERE " . implode(" AND ", $filters) : "");
 		$result = full_query_i("SELECT COUNT(*)" . $query);
@@ -26,11 +26,11 @@ class RA_Invoices extends RA_TableModel {
 
 
 		if ($orderby == "id") {
-			$orderby = "tblinvoices.invoicenum " . $this->getPageObj()->getSortDirection() . ",tblinvoices.id";
+			$orderby = "ra_bills.invoicenum " . $this->getPageObj()->getSortDirection() . ",ra_bills.id";
 		}
 
 		$invoices = array();
-		$query = "SELECT tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency" . $query . " ORDER BY " . $orderby . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
+		$query = "SELECT ra_bills.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency" . $query . " ORDER BY " . $orderby . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
 		$result = full_query_i($query);
 
 		while ($data = mysqli_fetch_array($result)) {
@@ -81,51 +81,51 @@ class RA_Invoices extends RA_TableModel {
 
 
 		if ($criteria['invoicenum']) {
-			$filters[] = "(tblinvoices.id='" . db_escape_string($criteria['invoicenum']) . "' OR tblinvoices.invoicenum='" . db_escape_string($criteria['invoicenum']) . "')";
+			$filters[] = "(ra_bills.id='" . db_escape_string($criteria['invoicenum']) . "' OR ra_bills.invoicenum='" . db_escape_string($criteria['invoicenum']) . "')";
 		}
 
 
 		if ($criteria['lineitem']) {
-			$filters[] = "tblinvoices.id IN (SELECT invoiceid FROM tblinvoiceitems WHERE description LIKE '%" . db_escape_string($criteria['lineitem']) . "%')";
+			$filters[] = "ra_bills.id IN (SELECT invoiceid FROM ra_bill_lineitems WHERE description LIKE '%" . db_escape_string($criteria['lineitem']) . "%')";
 		}
 
 
 		if ($criteria['paymentmethod']) {
-			$filters[] = "tblinvoices.paymentmethod='" . db_escape_string($criteria['paymentmethod']) . "'";
+			$filters[] = "ra_bills.paymentmethod='" . db_escape_string($criteria['paymentmethod']) . "'";
 		}
 
 
 		if ($criteria['invoicedate']) {
-			$filters[] = "tblinvoices.date='" . toMySQLDate($criteria['invoicedate']) . "'";
+			$filters[] = "ra_bills.date='" . toMySQLDate($criteria['invoicedate']) . "'";
 		}
 
 
 		if ($criteria['duedate']) {
-			$filters[] = "tblinvoices.duedate='" . toMySQLDate($criteria['duedate']) . "'";
+			$filters[] = "ra_bills.duedate='" . toMySQLDate($criteria['duedate']) . "'";
 		}
 
 
 		if ($criteria['datepaid']) {
-			$filters[] = "tblinvoices.datepaid>='" . toMySQLDate($criteria['datepaid']) . "' AND tblinvoices.datepaid<='" . toMySQLDate($criteria['datepaid']) . "235959'";
+			$filters[] = "ra_bills.datepaid>='" . toMySQLDate($criteria['datepaid']) . "' AND ra_bills.datepaid<='" . toMySQLDate($criteria['datepaid']) . "235959'";
 		}
 
 
 		if ($criteria['totalfrom']) {
-			$filters[] = "tblinvoices.total>='" . db_escape_string($criteria['totalfrom']) . "'";
+			$filters[] = "ra_bills.total>='" . db_escape_string($criteria['totalfrom']) . "'";
 		}
 
 
 		if ($criteria['totalto']) {
-			$filters[] = "tblinvoices.total<='" . db_escape_string($criteria['totalto']) . "'";
+			$filters[] = "ra_bills.total<='" . db_escape_string($criteria['totalto']) . "'";
 		}
 
 
 		if ($criteria['status']) {
 			if ($criteria['status'] == "Overdue") {
-				$filters[] = "tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "'";
+				$filters[] = "ra_bills.status='Unpaid' AND ra_bills.duedate<'" . date("Ymd") . "'";
 			}
 			else {
-				$filters[] = "tblinvoices.status='" . db_escape_string($criteria['status']) . "'";
+				$filters[] = "ra_bills.status='" . db_escape_string($criteria['status']) . "'";
 			}
 		}
 
@@ -140,19 +140,19 @@ class RA_Invoices extends RA_TableModel {
 		global $currency;
 
 		$invoicesummary = array();
-		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Paid' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(ra_bills.id),SUM(total) FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.status='Paid' GROUP BY ra_user.currency");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['paid'] = $data[2];
 		}
 
-		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate>='" . date("Ymd") . "' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(ra_bills.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM ra_transactions WHERE ra_transactions.invoiceid=ra_bills.id)),0) FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.status='Unpaid' AND ra_bills.duedate>='" . date("Ymd") . "' GROUP BY ra_user.currency");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['unpaid'] = $data[2];
 		}
 
-		$result = full_query_i("SELECT currency,COUNT(tblinvoices.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "' GROUP BY tblclients.currency");
+		$result = full_query_i("SELECT currency,COUNT(ra_bills.id),SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM ra_transactions WHERE ra_transactions.invoiceid=ra_bills.id)),0) FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.status='Unpaid' AND ra_bills.duedate<'" . date("Ymd") . "' GROUP BY ra_user.currency");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$invoicesummary[$data[0]]['overdue'] = $data[2];

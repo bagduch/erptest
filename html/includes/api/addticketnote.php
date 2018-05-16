@@ -18,10 +18,10 @@ if (!function_exists("AddNote")) {
 
 
 if ($ticketnum) {
-	$result = select_query_i("tbltickets", "id", array("tid" => $ticketnum));
+	$result = select_query_i("ra_ticket", "id", array("tid" => $ticketnum));
 }
 else {
-	$result = select_query_i("tbltickets", "id", array("id" => $ticketid));
+	$result = select_query_i("ra_ticket", "id", array("id" => $ticketid));
 }
 
 $data = mysqli_fetch_array($result);

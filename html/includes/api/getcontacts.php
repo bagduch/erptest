@@ -82,10 +82,10 @@ if ($subaccount) {
 	$where['subaccount'] = "1";
 }
 
-$result = select_query_i("tblcontacts", "COUNT(*)", $where);
+$result = select_query_i("ra_user_contacts", "COUNT(*)", $where);
 $data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result = select_query_i("tblcontacts", "", $where, "id", "ASC", "" . $limitstart . "," . $limitnum);
+$result = select_query_i("ra_user_contacts", "", $where, "id", "ASC", "" . $limitstart . "," . $limitnum);
 $apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_assoc($result)) {

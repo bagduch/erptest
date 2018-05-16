@@ -11,10 +11,10 @@ if (!$limitstart) {
 	$limitstart = 0;
 }
 
-$result = select_query_i("`tblcancelrequests", "COUNT(*)", $where);
+$result = select_query_i("`ra_cancellations", "COUNT(*)", $where);
 $data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$query = "SELECT * FROM tblcancelrequests LIMIT " . (int)$limitstart . "," . (int)$limitnum;
+$query = "SELECT * FROM ra_cancellations LIMIT " . (int)$limitstart . "," . (int)$limitnum;
 $result2 = full_query_i($query);
 $apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result), "packages" => array());
 

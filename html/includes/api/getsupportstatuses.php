@@ -7,7 +7,7 @@ if (!defined("RA")) {
 }
 
 $statuses = array();
-$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+$result = select_query_i("ra_tickettatuses", "", "", "sortorder", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$statuses[$data['title']] = 0;
@@ -20,7 +20,7 @@ if ($deptid) {
 	$where = "WHERE did='" . mysqli_real_escape_string($deptid) . "'";
 }
 
-$result = full_query_i("SELECT status, COUNT(*) AS count FROM tbltickets " . $where . " GROUP BY status");
+$result = full_query_i("SELECT status, COUNT(*) AS count FROM ra_ticket " . $where . " GROUP BY status");
 
 while ($data = mysqli_fetch_array($result)) {
 	$statuses[$data['status']] = $data['count'];

@@ -19,7 +19,7 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 $aInt->sortableTableInit("id", "DESC");
-$query = "FROM tblserviceaddons INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblserviceaddons.id!='' ";
+$query = "FROM ra_catalog_user_sales_addons INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid INNER JOIN ra_catalog ON tblcustomerservices.packageid=ra_catalog.id WHERE ra_catalog_user_sales_addons.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -27,22 +27,22 @@ if ($clientname) {
 
 
 if ($addon) {
-	$query .= (is_numeric($addon) ? "AND tblserviceaddons.addonid='" . $addon . "'" : "AND tblserviceaddons.name='" . db_escape_string($addon) . "' ");
+	$query .= (is_numeric($addon) ? "AND ra_catalog_user_sales_addons.addonid='" . $addon . "'" : "AND ra_catalog_user_sales_addons.name='" . db_escape_string($addon) . "' ");
 }
 
 
 if ($type != "") {
-	$query .= "AND tblservices.type='" . db_escape_string($type) . "' ";
+	$query .= "AND ra_catalog.type='" . db_escape_string($type) . "' ";
 }
 
 
 if ($package != "") {
-	$query .= "AND tblservices.id='" . db_escape_string($package) . "' ";
+	$query .= "AND ra_catalog.id='" . db_escape_string($package) . "' ";
 }
 
 
 if ($billingcycle != "") {
-	$query .= "AND tblserviceaddons.billingcycle='" . db_escape_string($billingcycle) . "' ";
+	$query .= "AND ra_catalog_user_sales_addons.billingcycle='" . db_escape_string($billingcycle) . "' ";
 }
 
 
@@ -52,12 +52,12 @@ if ($server != "") {
 
 
 if ($paymentmethod != "") {
-	$query .= "AND tblserviceaddons.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
+	$query .= "AND ra_catalog_user_sales_addons.paymentmethod='" . db_escape_string($paymentmethod) . "' ";
 }
 
 
 if ($status != "") {
-	$query .= "AND tblserviceaddons.status='" . db_escape_string($status) . "' ";
+	$query .= "AND ra_catalog_user_sales_addons.status='" . db_escape_string($status) . "' ";
 }
 
 
@@ -65,7 +65,7 @@ if ($domain != "") {
 	$query .= "AND tblcustomerservices.domain LIKE '%" . db_escape_string($domain) . "%' ";
 }
 
-$result = full_query_i("SELECT COUNT(tblserviceaddons.id) " . $query);
+$result = full_query_i("SELECT COUNT(ra_catalog_user_sales_addons.id) " . $query);
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
 echo $aInt->Tabs(array($aInt->lang("global", "searchfilter")), true);
@@ -100,7 +100,7 @@ while ($data = mysqli_fetch_array($result)) {
 	echo ">" . $addon_name . "</option>";
 }
 
-$query2 = "SELECT DISTINCT name FROM tblserviceaddons WHERE name!='' ORDER BY name ASC";
+$query2 = "SELECT DISTINCT name FROM ra_catalog_user_sales_addons WHERE name!='' ORDER BY name ASC";
 $result2 = full_query_i($query2);
 
 while ($data = mysqli_fetch_array($result2)) {
@@ -206,11 +206,11 @@ echo "\" class=\"button\"></DIV>
 $query .= "ORDER BY ";
 
 if ($orderby == "addon") {
-	$query .= "tblserviceaddons.name";
+	$query .= "ra_catalog_user_sales_addons.name";
 }
 else {
 	if ($orderby == "product") {
-		$query .= "tblservices.name";
+		$query .= "ra_catalog.name";
 	}
 	else {
 		if ($orderby == "amount") {
@@ -218,7 +218,7 @@ else {
 		}
 		else {
 			if ($orderby == "clientname") {
-				$query .= "tblclients.firstname " . $order . ",tblclients.lastname";
+				$query .= "ra_user.firstname " . $order . ",ra_user.lastname";
 			}
 			else {
 				$query .= $orderby;
@@ -228,7 +228,7 @@ else {
 }
 
 $query .= " " . $order;
-$query = "SELECT tblserviceaddons.*,tblserviceaddons.name AS addonname,tblcustomerservices.domain,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT ra_catalog_user_sales_addons.*,ra_catalog_user_sales_addons.name AS addonname,tblcustomerservices.domain,tblcustomerservices.userid,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency,ra_catalog.name,ra_catalog.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {

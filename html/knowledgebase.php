@@ -4,7 +4,7 @@
 function kbGetCatIds($catid) {
     global $idnumbers;
 
-    $result = select_query_i("tblknowledgebasecats", "id", array("parentid" => $catid, "hidden" => ""));
+    $result = select_query_i("ra_kbcats", "id", array("parentid" => $catid, "hidden" => ""));
 
     while ($data = mysqli_fetch_array($result)) {
         $cid = $data[0];
@@ -61,7 +61,7 @@ $smartyvalues['seofriendlyurls'] = $CONFIG['SEOFriendlyUrls'];
 
 if ($action == "displaycat") {
     $templatefile = "knowledgebasecat";
-    $result = select_query_i("tblknowledgebasecats", "", array("id" => $catid, "hidden" => "", "catid" => 0));
+    $result = select_query_i("ra_kbcats", "", array("id" => $catid, "hidden" => "", "catid" => 0));
     $data = mysqli_fetch_array($result);
     $catid = $data['id'];
 
@@ -73,7 +73,7 @@ if ($action == "displaycat") {
     $smartyvalues['catid'] = $catid;
     $catparentid = $data['parentid'];
     $catname = $data['name'];
-    $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $catid, "language" => $_SESSION['Language']));
+    $result2 = select_query_i("ra_kbcats", "", array("catid" => $catid, "language" => $_SESSION['Language']));
     $data = mysqli_fetch_array($result2);
 
     if ($data['name']) {
@@ -90,12 +90,12 @@ if ($action == "displaycat") {
     $i = 0;
 
     while ($catparentid != "0") {
-        $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
+        $result = select_query_i("ra_kbcats", "", array("id" => $catparentid));
         $data = mysqli_fetch_array($result);
         $cattempid = $data['id'];
         $catparentid = $data['parentid'];
         $catname = $data['name'];
-        $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
+        $result2 = select_query_i("ra_kbcats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
         $data = mysqli_fetch_array($result2);
 
         if ($data['name']) {
@@ -119,13 +119,13 @@ if ($action == "displaycat") {
     $breadcrumbnav .= $catbreadcrumbnav;
     $smarty->assign("breadcrumbnav", $breadcrumbnav);
     $i = 1;
-    $result = select_query_i("tblknowledgebasecats", "", array("parentid" => $catid, "hidden" => "", "catid" => 0), "name", "ASC");
+    $result = select_query_i("ra_kbcats", "", array("parentid" => $catid, "hidden" => "", "catid" => 0), "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $idkb = $data['id'];
         $name = $data['name'];
         $description = $data['description'];
-        $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $idkb, "language" => $_SESSION['Language']));
+        $result2 = select_query_i("ra_kbcats", "", array("catid" => $idkb, "language" => $_SESSION['Language']));
         $data = mysqli_fetch_array($result2);
 
         if ($data['name']) {
@@ -147,7 +147,7 @@ if ($action == "displaycat") {
         }
 
         $queryreport = substr($queryreport, 4);
-        $result2 = select_query_i("tblknowledgebase", "COUNT(*)", "(" . $queryreport . ")", "", "", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+        $result2 = select_query_i("ra_kb", "COUNT(*)", "(" . $queryreport . ")", "", "", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
         $data2 = mysqli_fetch_array($result2);
         $categorycount = $data2[0];
         $kbcats[$i]['numarticles'] = $categorycount;
@@ -155,7 +155,7 @@ if ($action == "displaycat") {
     }
 
     $smarty->assign("kbcats", $kbcats);
-    $result = select_query_i("tblknowledgebase", "", array("categoryid" => $catid), "order` ASC,`title", "ASC", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid", "order", "ASC");
+    $result = select_query_i("ra_kb", "", array("categoryid" => $catid), "order` ASC,`title", "ASC", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid", "order", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -163,7 +163,7 @@ if ($action == "displaycat") {
         $title = $data['title'];
         $article = $data['article'];
         $views = $data['views'];
-        $result2 = select_query_i("tblknowledgebase", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+        $result2 = select_query_i("ra_kb", "", array("parentid" => $id, "language" => $_SESSION['Language']));
         $data = mysqli_fetch_array($result2);
 
         if ($data['title']) {
@@ -202,12 +202,12 @@ if ($action == "displaycat") {
         $i = 0;
 
         while ($catparentid != "0") {
-            $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
+            $result = select_query_i("ra_kbcats", "", array("id" => $catparentid));
             $data = mysqli_fetch_array($result);
             $cattempid = $data['id'];
             $catparentid = $data['parentid'];
             $catname = $data['name'];
-            $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
+            $result2 = select_query_i("ra_kbcats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
             $data = mysqli_fetch_array($result2);
 
             if ($data['name']) {
@@ -251,13 +251,13 @@ if ($action == "displaycat") {
         $searchqry = "id='x'";
     }
 
-    $query = "SELECT DISTINCT id FROM tblknowledgebase WHERE " . $searchqry . " AND (SELECT categoryid FROM tblknowledgebaselinks WHERE ((articleid=tblknowledgebase.id) OR (articleid=tblknowledgebase.parentid)) LIMIT 1) IN (" . db_build_in_array($idnumbers) . ") ORDER BY `order` ASC,`title` ASC";
+    $query = "SELECT DISTINCT id FROM ra_kb WHERE " . $searchqry . " AND (SELECT categoryid FROM ra_kblinks WHERE ((articleid=ra_kb.id) OR (articleid=ra_kb.parentid)) LIMIT 1) IN (" . db_build_in_array($idnumbers) . ") ORDER BY `order` ASC,`title` ASC";
     $result = full_query_i($query);
     $articleids = array();
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
-        $result2 = select_query_i("tblknowledgebase", "", array("id" => $id));
+        $result2 = select_query_i("ra_kb", "", array("id" => $id));
         $data = mysqli_fetch_array($result2);
         $title = $data['title'];
         $article = $data['article'];
@@ -265,7 +265,7 @@ if ($action == "displaycat") {
         $parentid = $data['parentid'];
 
         if ($parentid) {
-            $result2 = select_query_i("tblknowledgebase", "", array("id" => $parentid));
+            $result2 = select_query_i("ra_kb", "", array("id" => $parentid));
             $data = mysqli_fetch_array($result2);
             $id = $data['id'];
             $title = $data['title'];
@@ -273,11 +273,11 @@ if ($action == "displaycat") {
             $views = $data['views'];
         }
 
-        $result2 = select_query_i("tblknowledgebasecats", "tblknowledgebasecats.hidden", array("articleid" => $id, "hidden" => "on"), "", "", "", "tblknowledgebaselinks ON tblknowledgebaselinks.categoryid=tblknowledgebasecats.id");
+        $result2 = select_query_i("ra_kbcats", "ra_kbcats.hidden", array("articleid" => $id, "hidden" => "on"), "", "", "", "ra_kblinks ON ra_kblinks.categoryid=ra_kbcats.id");
         $data = mysqli_fetch_array($result2);
 
         if (!$data['hidden'] && !in_array($id, $articleids)) {
-            $result2 = select_query_i("tblknowledgebase", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+            $result2 = select_query_i("ra_kb", "", array("parentid" => $id, "language" => $_SESSION['Language']));
             $data = mysqli_fetch_array($result2);
 
             if ($data['title']) {
@@ -300,14 +300,14 @@ if ($action == "displaycat") {
 
     if ($useful == "vote") {
         if ($vote == "yes") {
-            update_query("tblknowledgebase", array("useful" => "+1"), array("id" => $id));
+            update_query("ra_kb", array("useful" => "+1"), array("id" => $id));
         }
 
-        update_query("tblknowledgebase", array("votes" => "+1"), array("id" => $id));
+        update_query("ra_kb", array("votes" => "+1"), array("id" => $id));
     }
 
-    update_query("tblknowledgebase", array("views" => "+1"), array("id" => $id));
-    $result = select_query_i("tblknowledgebase", "", array("id" => $id));
+    update_query("ra_kb", array("views" => "+1"), array("id" => $id));
+    $result = select_query_i("ra_kb", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $title = $data['title'];
@@ -322,7 +322,7 @@ if ($action == "displaycat") {
         exit();
     }
 
-    $result = select_query_i("tblknowledgebasecats", "id,name,parentid,hidden", array("articleid" => $id), "", "", "", "tblknowledgebaselinks ON tblknowledgebasecats.id=tblknowledgebaselinks.categoryid");
+    $result = select_query_i("ra_kbcats", "id,name,parentid,hidden", array("articleid" => $id), "", "", "", "ra_kblinks ON ra_kbcats.id=ra_kblinks.categoryid");
     $data = mysqli_fetch_array($result);
     $catid = $data['id'];
     $catname = $data['name'];
@@ -334,7 +334,7 @@ if ($action == "displaycat") {
         exit();
     }
 
-    $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $catid, "language" => $_SESSION['Language']));
+    $result2 = select_query_i("ra_kbcats", "", array("catid" => $catid, "language" => $_SESSION['Language']));
     $data = mysqli_fetch_array($result2);
 
     if ($data['name']) {
@@ -353,12 +353,12 @@ if ($action == "displaycat") {
         $i = 0;
 
         while ($catparentid != "0") {
-            $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
+            $result = select_query_i("ra_kbcats", "", array("id" => $catparentid));
             $data = mysqli_fetch_array($result);
             $cattempid = $data['id'];
             $catparentid = $data['parentid'];
             $catname = $data['name'];
-            $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
+            $result2 = select_query_i("ra_kbcats", "", array("catid" => $cattempid, "language" => $_SESSION['Language']));
             $data = mysqli_fetch_array($result2);
 
             if ($data['name']) {
@@ -380,7 +380,7 @@ if ($action == "displaycat") {
         }
     }
 
-    $result2 = select_query_i("tblknowledgebase", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+    $result2 = select_query_i("ra_kb", "", array("parentid" => $id, "language" => $_SESSION['Language']));
     $data = mysqli_fetch_array($result2);
 
     if ($data['title']) {
@@ -409,14 +409,14 @@ if ($action == "displaycat") {
 
     $smartyvalues['kbarticle'] = array("id" => $id, "categoryid" => $catid, "categoryname" => $catname, "title" => $title, "text" => $article, "views" => $views, "useful" => $useful, "votes" => $votes, "voted" => $vote);
     $catlist = "";
-    $result = select_query_i("tblknowledgebaselinks", "", array("articleid" => $id));
+    $result = select_query_i("ra_kblinks", "", array("articleid" => $id));
 
     while ($data = mysqli_fetch_assoc($result)) {
         $catlist .= $data['categoryid'] . ",";
     }
 
     $catlist = substr($catlist, 0, 0 - 1);
-    $result = select_query_i("tblknowledgebase", "", "categoryid IN (" . $catlist . ") AND id != " . $id . " ORDER BY RAND()", "", "", "0,5", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+    $result = select_query_i("ra_kb", "", "categoryid IN (" . $catlist . ") AND id != " . $id . " ORDER BY RAND()", "", "", "0,5", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -424,7 +424,7 @@ if ($action == "displaycat") {
         $title = $data['title'];
         $article = $data['article'];
         $views = $data['views'];
-        $result2 = select_query_i("tblknowledgebase", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+        $result2 = select_query_i("ra_kb", "", array("parentid" => $id, "language" => $_SESSION['Language']));
         $data = mysqli_fetch_array($result2);
 
         if ($data['title']) {
@@ -443,13 +443,13 @@ if ($action == "displaycat") {
 } else {
     $templatefile = "knowledgebase";
     $i = 1;
-    $result = select_query_i("tblknowledgebasecats", "", array("parentid" => "0", "hidden" => "", "catid" => 0), "name", "ASC");
+    $result = select_query_i("ra_kbcats", "", array("parentid" => "0", "hidden" => "", "catid" => 0), "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $idkb = $data['id'];
         $name = $data['name'];
         $description = $data['description'];
-        $result2 = select_query_i("tblknowledgebasecats", "", array("catid" => $idkb, "language" => $_SESSION['Language']));
+        $result2 = select_query_i("ra_kbcats", "", array("catid" => $idkb, "language" => $_SESSION['Language']));
         $data = mysqli_fetch_array($result2);
 
         if ($data['name']) {
@@ -469,7 +469,7 @@ if ($action == "displaycat") {
             }
 
             $queryreport = substr($queryreport, 4);
-            $result2 = select_query_i("tblknowledgebase", "COUNT(*)", "(" . $queryreport . ")", "", "", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+            $result2 = select_query_i("ra_kb", "COUNT(*)", "(" . $queryreport . ")", "", "", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
             $data2 = mysqli_fetch_array($result2);
             $categorycount = $data2[0];
             $kbcats[$i]['numarticles'] = $categorycount;
@@ -477,7 +477,7 @@ if ($action == "displaycat") {
         }
 
         $smarty->assign("kbcats", $kbcats);
-        $result = select_query_i("tblknowledgebase", "tblknowledgebase.*", "parentid=0", "views", "DESC", "0,5");
+        $result = select_query_i("ra_kb", "ra_kb.*", "parentid=0", "views", "DESC", "0,5");
 
         while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
@@ -485,11 +485,11 @@ if ($action == "displaycat") {
             $title = $data['title'];
             $article = $data['article'];
             $views = $data['views'];
-            $result2 = select_query_i("tblknowledgebasecats", "tblknowledgebasecats.hidden", array("articleid" => $id, "hidden" => "on"), "", "", "", "tblknowledgebaselinks ON tblknowledgebaselinks.categoryid=tblknowledgebasecats.id");
+            $result2 = select_query_i("ra_kbcats", "ra_kbcats.hidden", array("articleid" => $id, "hidden" => "on"), "", "", "", "ra_kblinks ON ra_kblinks.categoryid=ra_kbcats.id");
             $data = mysqli_fetch_array($result2);
 
             if (!$data['hidden']) {
-                $result2 = select_query_i("tblknowledgebase", "", array("parentid" => $id, "language" => $_SESSION['Language']));
+                $result2 = select_query_i("ra_kb", "", array("parentid" => $id, "language" => $_SESSION['Language']));
                 $data = mysqli_fetch_array($result2);
 
                 if ($data['title']) {

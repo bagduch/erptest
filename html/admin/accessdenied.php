@@ -15,7 +15,7 @@ if (!$adminpermsarray[$permid]) {
 	exit();
 }
 
-$result = select_query_i("tbladmins", "language", array("id" => $_SESSION['adminid']));
+$result = select_query_i("ra_admin", "language", array("id" => $_SESSION['adminid']));
 $data = mysqli_fetch_array($result);
 $language = $data['language'];
 $_ADMINLANG = array();

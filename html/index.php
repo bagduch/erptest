@@ -34,7 +34,7 @@ if ($m = $ra->get_req_var("m")) {
     }
 
     $modulevars = array();
-    $result = select_query_i("tbladdonmodules", "", array("module" => $module));
+    $result = select_query_i("ra_modules", "", array("module" => $module));
 
     while ($data = mysqli_fetch_array($result)) {
         $modulevars[$data['setting']] = $data['value'];

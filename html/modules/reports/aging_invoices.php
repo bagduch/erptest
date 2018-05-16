@@ -21,7 +21,7 @@ for ( $day = 0; $day < 120; $day += 30) {
     $rowdata = array();
     $rowdata[] = "$day - ".($day+30);
     $currencytotals = array();
-    $query = "SELECT tblclients.currency,SUM(tblinvoices.total),(SELECT SUM(amountin-amountout) FROM tblaccounts INNER JOIN tblinvoices ON tblinvoices.id=tblaccounts.invoiceid INNER JOIN tblclients t2 ON t2.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.duedate>='".db_make_safe_date($enddate)."' AND tblinvoices.status='Unpaid' AND t2.currency=tblclients.currency) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.duedate>='".db_make_safe_date($enddate)."' AND tblinvoices.status='Unpaid' GROUP BY tblclients.currency";
+    $query = "SELECT ra_user.currency,SUM(ra_bills.total),(SELECT SUM(amountin-amountout) FROM ra_transactions INNER JOIN ra_bills ON ra_bills.id=ra_transactions.invoiceid INNER JOIN ra_user t2 ON t2.id=ra_bills.userid WHERE ra_bills.duedate<='".db_make_safe_date($startdate)."' AND ra_bills.duedate>='".db_make_safe_date($enddate)."' AND ra_bills.status='Unpaid' AND t2.currency=ra_user.currency) FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.duedate<='".db_make_safe_date($startdate)."' AND ra_bills.duedate>='".db_make_safe_date($enddate)."' AND ra_bills.status='Unpaid' GROUP BY ra_user.currency";
     $result = full_query_i($query);
     while ($data = mysqli_fetch_array($result)) {
         $currencytotals[$data[0]] = $data[1]-$data[2];
@@ -41,7 +41,7 @@ $startdate = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-120,date("Y")));
 $rowdata = array();
 $rowdata[] = "120 +";
 $currencytotals = array();
-$query = "SELECT tblclients.currency,SUM(tblinvoices.total) FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.duedate<='".db_make_safe_date($startdate)."' AND tblinvoices.status='Unpaid' GROUP BY tblclients.currency";
+$query = "SELECT ra_user.currency,SUM(ra_bills.total) FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.duedate<='".db_make_safe_date($startdate)."' AND ra_bills.status='Unpaid' GROUP BY ra_user.currency";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
         $currencytotals[$data[0]] = $data[1];

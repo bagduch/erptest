@@ -43,7 +43,7 @@ class RA_Service
 			$where["tblcustomerservices.userid"] = $this->userid;
 		}
 
-		$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservicegroups.name AS groupname,tblservices.name AS productname,tblservices.type,tblservices.servertype", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+		$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_catalog_groups.name AS groupname,ra_catalog.name AS productname,ra_catalog.type,ra_catalog.servertype", $where, "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
 		$data = mysqli_fetch_array($result);
 
 		if ($data['id']) {
@@ -79,7 +79,7 @@ class RA_Service
 			return array();
 		}
 
-		$result = select_query_i("tblservers", "", array("id" => $this->getData("server")));
+		$result = select_query_i("ra_integration", "", array("id" => $this->getData("server")));
 		$serverarray = mysqli_fetch_assoc($result);
 		return $serverarray;
 	}
@@ -120,7 +120,7 @@ class RA_Service
 
 	public function getPaymentMethod() {
 		$this->getData("paymentmethod");
-		$displayname = $paymentmethod = get_query_val("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
+		$displayname = $paymentmethod = get_query_val("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
 		return $displayname ? $displayname : $paymentmethod;
 	}
 
@@ -219,7 +219,7 @@ class RA_Service
 		global $ra;
 		$predefinedaddons = $this->getPredefinedAddonsOnce();
 		$addons = array();
-		$result = select_query_i("tblserviceaddons", "", array("serviceid" => $this->id), "id", "DESC");
+		$result = select_query_i("ra_catalog_user_sales_addons", "", array("serviceid" => $this->id), "id", "DESC");
 
 		while ($data = mysqli_fetch_array($result)) {
 
@@ -487,13 +487,13 @@ class RA_Service
 			$counter += 1;
 		}
 
-		$moduleconfigops = get_query_vals("tblservices", implode(",", $fields), array("id" => $this->getData("pid")));
+		$moduleconfigops = get_query_vals("ra_catalog", implode(",", $fields), array("id" => $this->getData("pid")));
 		foreach ($fields as $field) {
 			$params[$field] = $moduleconfigops[$field];
 		}
 
 		$customfields = array();
-		$result = full_query_i("SELECT tblcustomfields.fieldname,tblcustomfieldsvalues.value FROM tblcustomfields,tblcustomfieldsvalues WHERE tblcustomfields.cfid=tblcustomfieldsvalues.fieldid AND tblcustomfieldsvalues.relid='" . (int)$this->getData("id") . "' AND tblcustomfields.relid='" . (int)$this->getData("pid") . "'");
+		$result = full_query_i("SELECT ra_catalog_user_sales_fields.fieldname,ra_catalog_user_sales_fieldsvalues.value FROM ra_catalog_user_sales_fields,ra_catalog_user_sales_fieldsvalues WHERE ra_catalog_user_sales_fields.cfid=ra_catalog_user_sales_fieldsvalues.fieldid AND ra_catalog_user_sales_fieldsvalues.relid='" . (int)$this->getData("id") . "' AND ra_catalog_user_sales_fields.relid='" . (int)$this->getData("pid") . "'");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$customfieldname = $data[0];
@@ -515,7 +515,7 @@ class RA_Service
 
 		$params['customfields'] = $customfields;
 		$configoptions = array();
-		$result = full_query_i("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid='" . (int)$this->getData("id") . "' AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid='" . (int)$this->getData("pid") . "'");
+		$result = full_query_i("SELECT ra_catalog_user_sales_addons_options.optionname,ra_catalog_user_sales_addons_options.optiontype,ra_catalog_user_sales_addons_optionssub.optionname,tblhostingconfigoptions.qty FROM ra_catalog_user_sales_addons_options,ra_catalog_user_sales_addons_optionssub,tblhostingconfigoptions,ra_catalog_user_sales_addons_links WHERE tblhostingconfigoptions.configid=ra_catalog_user_sales_addons_options.id AND tblhostingconfigoptions.optionid=ra_catalog_user_sales_addons_optionssub.id AND tblhostingconfigoptions.relid='" . (int)$this->getData("id") . "' AND ra_catalog_user_sales_addons_links.gid=ra_catalog_user_sales_addons_options.gid AND ra_catalog_user_sales_addons_links.pid='" . (int)$this->getData("pid") . "'");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$configoptionname = $data[0];

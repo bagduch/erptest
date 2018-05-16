@@ -107,7 +107,7 @@ function pluralize($count, $text) {
 function widget_admin_activity($vars) {
     global $_ADMINLANG;
     $title = "Admin Activity Overview";
-    $query = "select max(date) date,user,ipaddr,description from tblactivitylog group by user order by date DESC";
+    $query = "select max(date) date,user,ipaddr,description from ra_systemlog group by user order by date DESC";
     $result = full_query_i($query);
     $table = array();
     while ($data = mysqli_fetch_array($result)) {

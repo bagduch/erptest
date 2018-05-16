@@ -14,7 +14,7 @@ if ($ra->get_req_var("ip")) {
 	check_token("RA.admin.default");
 	checkPermission("Add Banned IP");
 	$expires = $year . $month . $day . $hour . $minutes . "00";
-	insert_query("tblbannedips", array("ip" => $ip, "reason" => $reason, "expires" => $expires));
+	insert_query("ra_bannedips", array("ip" => $ip, "reason" => $reason, "expires" => $expires));
 	redir("success=true");
 	exit();
 }
@@ -23,7 +23,7 @@ if ($ra->get_req_var("ip")) {
 if ($ra->get_req_var("delete")) {
 	check_token("RA.admin.default");
 	checkPermission("Unban Banned IP");
-	delete_query("tblbannedips", array("id" => $id));
+	delete_query("ra_bannedips", array("id" => $id));
 	redir("deleted=true");
 	exit();
 }
@@ -136,7 +136,7 @@ if ($filterfor = $ra->get_req_var("filterfor")) {
 	}
 }
 
-$result = select_query_i("tblbannedips", "", $where, "id", "DESC");
+$result = select_query_i("ra_bannedips", "", $where, "id", "DESC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

@@ -15,7 +15,7 @@ if ($action == "addwhitelistip") {
     $whitelistedips = unserialize($whitelistedips);
     $whitelistedips[] = array("ip" => $ipaddress, "note" => $notes);
     $ra->set_config("WhitelistedIPs", serialize($whitelistedips));
-    delete_query("tblbannedips", array("ip" => $ipaddress));
+    delete_query("ra_bannedips", array("ip" => $ipaddress));
     exit();
 }
 
@@ -34,7 +34,7 @@ if ($action == "deletewhitelistip") {
     }
 
     $ra->set_config("WhitelistedIPs", serialize($whitelistedips));
-    update_query("tblconfiguration", array("value" => serialize($whitelistedips)), array("setting" => "WhitelistedIPs"));
+    update_query("ra_config", array("value" => serialize($whitelistedips)), array("setting" => "WhitelistedIPs"));
     exit();
 }
 
@@ -100,7 +100,7 @@ if ($action == "save") {
         $bulkchecktldsstring = ($bulkchecktlds ? implode(",", $bulkchecktlds) : "");
 
         if (!$ra->get_config("CCNeverStore") && $ccneverstore) {
-            update_query("tblclients", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), "");
+            update_query("ra_user", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), "");
         }
         $domain = cleanSystemURL($domain);
         $systemurl = cleanSystemURL($systemurl);
@@ -160,94 +160,94 @@ if ($action == "save") {
             $ra->set_config($k, trim($v));
         }
 
-        update_query("tblconfiguration", array("value" => $activitylimit), array("setting" => "ActivityLimit"));
-        update_query("tblconfiguration", array("value" => $numrecords), array("setting" => "NumRecordstoDisplay"));
-        update_query("tblconfiguration", array("value" => $language), array("setting" => "Language"));
-        update_query("tblconfiguration", array("value" => $dateformat), array("setting" => "DateFormat"));
-        update_query("tblconfiguration", array("value" => $allowuserlanguage), array("setting" => "AllowLanguageChange"));
-        update_query("tblconfiguration", array("value" => $enabletos), array("setting" => "EnableTOSAccept"));
-        update_query("tblconfiguration", array("value" => $tos), array("setting" => "TermsOfService"));
-        update_query("tblconfiguration", array("value" => $orderform), array("setting" => "OrderForm"));
-        update_query("tblconfiguration", array("value" => $allowregister), array("setting" => "AllowRegister"));
-        update_query("tblconfiguration", array("value" => $allowtransfer), array("setting" => "AllowTransfer"));
-        update_query("tblconfiguration", array("value" => $allowowndomain), array("setting" => "AllowOwnDomain"));
-        update_query("tblconfiguration", array("value" => $mailtype), array("setting" => "MailType"));
-        update_query("tblconfiguration", array("value" => $invoicepayto), array("setting" => "InvoicePayTo"));
-        update_query("tblconfiguration", array("value" => $mailpiping), array("setting" => "MailPipingEnabled"));
-        update_query("tblconfiguration", array("value" => $presales), array("setting" => "PreSalesQuestions"));
-        update_query("tblconfiguration", array("value" => $showcancel), array("setting" => "ShowCancellationButton"));
-        update_query("tblconfiguration", array("value" => $affreport), array("setting" => "SendAffiliateReportMonthly"));
-        update_query("tblconfiguration", array("value" => $signature), array("setting" => "Signature"));
-        update_query("tblconfiguration", array("value" => $allowcustomerchangeinvoicegateway), array("setting" => "AllowCustomerChangeInvoiceGateway"));
-        update_query("tblconfiguration", array("value" => $sendemailnotificationonuserdetailschange), array("setting" => "SendEmailNotificationonUserDetailsChange"));
-        update_query("tblconfiguration", array("value" => $invalidloginsbanlength), array("setting" => "InvalidLoginBanLength"));
-        update_query("tblconfiguration", array("value" => $charset), array("setting" => "Charset"));
-        update_query("tblconfiguration", array("value" => $runscriptoncheckout), array("setting" => "RunScriptonCheckOut"));
-        update_query("tblconfiguration", array("value" => $allowedfiletypes), array("setting" => "TicketAllowedFileTypes"));
-        update_query("tblconfiguration", array("value" => $orderformdefault), array("setting" => "OrderOption"));
-        update_query("tblconfiguration", array("value" => $orderformtemplate), array("setting" => "OrderFormTemplate"));
-        update_query("tblconfiguration", array("value" => $allowdomainstwice), array("setting" => "AllowDomainsTwice"));
-        update_query("tblconfiguration", array("value" => $defaultcountry), array("setting" => "DefaultCountry"));
-        update_query("tblconfiguration", array("value" => $captchasetting), array("setting" => "CaptchaSetting"));
-        update_query("tblconfiguration", array("value" => $autoredirecttoinvoice), array("setting" => "AutoRedirectoInvoice"));
-        update_query("tblconfiguration", array("value" => $enablepdfinvoices), array("setting" => "EnablePDFInvoices"));
-        update_query("tblconfiguration", array("value" => $supportticketorder), array("setting" => "SupportTicketOrder"));
-        update_query("tblconfiguration", array("value" => $invoicesubscriptionpayments), array("setting" => "InvoiceSubscriptionPayments"));
-        update_query("tblconfiguration", array("value" => $invoiceincrement), array("setting" => "InvoiceIncrement"));
-        update_query("tblconfiguration", array("value" => $continuousinvoicegeneration), array("setting" => "ContinuousInvoiceGeneration"));
-        update_query("tblconfiguration", array("value" => html_entity_decode($systememailsfromname)), array("setting" => "SystemEmailsFromName"));
-        update_query("tblconfiguration", array("value" => $systememailsfromemail), array("setting" => "SystemEmailsFromEmail"));
-        update_query("tblconfiguration", array("value" => $allowclientregister), array("setting" => "AllowClientRegister"));
-        update_query("tblconfiguration", array("value" => $productmonthlypricingbreakdown), array("setting" => "ProductMonthlyPricingBreakdown"));
-        update_query("tblconfiguration", array("value" => $bulkdomainsearchenabled), array("setting" => "BulkDomainSearchEnabled"));
-        update_query("tblconfiguration", array("value" => $creditondowngrade), array("setting" => "CreditOnDowngrade"));
-        update_query("tblconfiguration", array("value" => $acceptedcardtypes), array("setting" => "AcceptedCardTypes"));
-        update_query("tblconfiguration", array("value" => $invoicelatefeeamount), array("setting" => "InvoiceLateFeeAmount"));
-        update_query("tblconfiguration", array("value" => $latefeetype), array("setting" => "LateFeeType"));
-        update_query("tblconfiguration", array("value" => $sequentialinvoicenumbering), array("setting" => "SequentialInvoiceNumbering"));
-        update_query("tblconfiguration", array("value" => $sequentialinvoicenumberformat), array("setting" => "SequentialInvoiceNumberFormat"));
-        update_query("tblconfiguration", array("value" => $sequentialinvoicenumbervalue), array("setting" => "SequentialInvoiceNumberValue"));
-        update_query("tblconfiguration", array("value" => $supportmodule), array("setting" => "SupportModule"));
-        update_query("tblconfiguration", array("value" => $orderdaysgrace), array("setting" => "OrderDaysGrace"));
-        update_query("tblconfiguration", array("value" => $autorenewdomainsonpayment), array("setting" => "AutoRenewDomainsonPayment"));
-        update_query("tblconfiguration", array("value" => $domainautorenewdefault), array("setting" => "DomainAutoRenewDefault"));
-        update_query("tblconfiguration", array("value" => $supportticketkbsuggestions), array("setting" => "SupportTicketKBSuggestions"));
-        update_query("tblconfiguration", array("value" => $seofriendlyurls), array("setting" => "SEOFriendlyUrls"));
-        update_query("tblconfiguration", array("value" => $showccissuestart), array("setting" => "ShowCCIssueStart"));
-        update_query("tblconfiguration", array("value" => $emailcss), array("setting" => "EmailCSS"));
-        update_query("tblconfiguration", array("value" => $clientdropdownformat), array("setting" => "ClientDropdownFormat"));
-        update_query("tblconfiguration", array("value" => $ticketratingenabled), array("setting" => "TicketRatingEnabled"));
-        update_query("tblconfiguration", array("value" => $requireloginforclienttickets), array("setting" => "RequireLoginforClientTickets"));
-        update_query("tblconfiguration", array("value" => $shownotesfieldoncheckout), array("setting" => "ShowNotesFieldonCheckout"));
-        update_query("tblconfiguration", array("value" => $networkissuesrequirelogin), array("setting" => "NetworkIssuesRequireLogin"));
-        update_query("tblconfiguration", array("value" => $requiredpwstrength), array("setting" => "RequiredPWStrength"));
-        update_query("tblconfiguration", array("value" => $maintenancemode), array("setting" => "MaintenanceMode"));
-        update_query("tblconfiguration", array("value" => $maintenancemodemessage), array("setting" => "MaintenanceModeMessage"));
-        update_query("tblconfiguration", array("value" => $skipfraudforexisting), array("setting" => "SkipFraudForExisting"));
-        update_query("tblconfiguration", array("value" => $contactformdept), array("setting" => "ContactFormDept"));
-        update_query("tblconfiguration", array("value" => $disablesessionipcheck), array("setting" => "DisableSessionIPCheck"));
-        update_query("tblconfiguration", array("value" => $disablesupportticketreplyemailslogging), array("setting" => "DisableSupportTicketReplyEmailsLogging"));
-        update_query("tblconfiguration", array("value" => $ccallowcustomerdelete), array("setting" => "CCAllowCustomerDelete"));
-        update_query("tblconfiguration", array("value" => $noinvoicemeailonorder), array("setting" => "NoInvoiceEmailOnOrder"));
-        update_query("tblconfiguration", array("value" => $autoprovisionexistingonly), array("setting" => "AutoProvisionExistingOnly"));
-        update_query("tblconfiguration", array("value" => $enabledomainrenewalorders), array("setting" => "EnableDomainRenewalOrders"));
-        update_query("tblconfiguration", array("value" => $enablemasspay), array("setting" => "EnableMassPay"));
-        update_query("tblconfiguration", array("value" => $noautoapplycredit), array("setting" => "NoAutoApplyCredit"));
-        update_query("tblconfiguration", array("value" => $clientdisplayformat), array("setting" => "ClientDisplayFormat"));
-        update_query("tblconfiguration", array("value" => $generaterandomusername), array("setting" => "GenerateRandomUsername"));
-        update_query("tblconfiguration", array("value" => $addfundsrequireorder), array("setting" => "AddFundsRequireOrder"));
-        update_query("tblconfiguration", array("value" => $groupsimilarlineitems), array("setting" => "GroupSimilarLineItems"));
-        update_query("tblconfiguration", array("value" => $prorataclientsanniversarydate), array("setting" => "ProrataClientsAnniversaryDate"));
+        update_query("ra_config", array("value" => $activitylimit), array("setting" => "ActivityLimit"));
+        update_query("ra_config", array("value" => $numrecords), array("setting" => "NumRecordstoDisplay"));
+        update_query("ra_config", array("value" => $language), array("setting" => "Language"));
+        update_query("ra_config", array("value" => $dateformat), array("setting" => "DateFormat"));
+        update_query("ra_config", array("value" => $allowuserlanguage), array("setting" => "AllowLanguageChange"));
+        update_query("ra_config", array("value" => $enabletos), array("setting" => "EnableTOSAccept"));
+        update_query("ra_config", array("value" => $tos), array("setting" => "TermsOfService"));
+        update_query("ra_config", array("value" => $orderform), array("setting" => "OrderForm"));
+        update_query("ra_config", array("value" => $allowregister), array("setting" => "AllowRegister"));
+        update_query("ra_config", array("value" => $allowtransfer), array("setting" => "AllowTransfer"));
+        update_query("ra_config", array("value" => $allowowndomain), array("setting" => "AllowOwnDomain"));
+        update_query("ra_config", array("value" => $mailtype), array("setting" => "MailType"));
+        update_query("ra_config", array("value" => $invoicepayto), array("setting" => "InvoicePayTo"));
+        update_query("ra_config", array("value" => $mailpiping), array("setting" => "MailPipingEnabled"));
+        update_query("ra_config", array("value" => $presales), array("setting" => "PreSalesQuestions"));
+        update_query("ra_config", array("value" => $showcancel), array("setting" => "ShowCancellationButton"));
+        update_query("ra_config", array("value" => $affreport), array("setting" => "SendAffiliateReportMonthly"));
+        update_query("ra_config", array("value" => $signature), array("setting" => "Signature"));
+        update_query("ra_config", array("value" => $allowcustomerchangeinvoicegateway), array("setting" => "AllowCustomerChangeInvoiceGateway"));
+        update_query("ra_config", array("value" => $sendemailnotificationonuserdetailschange), array("setting" => "SendEmailNotificationonUserDetailsChange"));
+        update_query("ra_config", array("value" => $invalidloginsbanlength), array("setting" => "InvalidLoginBanLength"));
+        update_query("ra_config", array("value" => $charset), array("setting" => "Charset"));
+        update_query("ra_config", array("value" => $runscriptoncheckout), array("setting" => "RunScriptonCheckOut"));
+        update_query("ra_config", array("value" => $allowedfiletypes), array("setting" => "TicketAllowedFileTypes"));
+        update_query("ra_config", array("value" => $orderformdefault), array("setting" => "OrderOption"));
+        update_query("ra_config", array("value" => $orderformtemplate), array("setting" => "OrderFormTemplate"));
+        update_query("ra_config", array("value" => $allowdomainstwice), array("setting" => "AllowDomainsTwice"));
+        update_query("ra_config", array("value" => $defaultcountry), array("setting" => "DefaultCountry"));
+        update_query("ra_config", array("value" => $captchasetting), array("setting" => "CaptchaSetting"));
+        update_query("ra_config", array("value" => $autoredirecttoinvoice), array("setting" => "AutoRedirectoInvoice"));
+        update_query("ra_config", array("value" => $enablepdfinvoices), array("setting" => "EnablePDFInvoices"));
+        update_query("ra_config", array("value" => $supportticketorder), array("setting" => "SupportTicketOrder"));
+        update_query("ra_config", array("value" => $invoicesubscriptionpayments), array("setting" => "InvoiceSubscriptionPayments"));
+        update_query("ra_config", array("value" => $invoiceincrement), array("setting" => "InvoiceIncrement"));
+        update_query("ra_config", array("value" => $continuousinvoicegeneration), array("setting" => "ContinuousInvoiceGeneration"));
+        update_query("ra_config", array("value" => html_entity_decode($systememailsfromname)), array("setting" => "SystemEmailsFromName"));
+        update_query("ra_config", array("value" => $systememailsfromemail), array("setting" => "SystemEmailsFromEmail"));
+        update_query("ra_config", array("value" => $allowclientregister), array("setting" => "AllowClientRegister"));
+        update_query("ra_config", array("value" => $productmonthlypricingbreakdown), array("setting" => "ProductMonthlyPricingBreakdown"));
+        update_query("ra_config", array("value" => $bulkdomainsearchenabled), array("setting" => "BulkDomainSearchEnabled"));
+        update_query("ra_config", array("value" => $creditondowngrade), array("setting" => "CreditOnDowngrade"));
+        update_query("ra_config", array("value" => $acceptedcardtypes), array("setting" => "AcceptedCardTypes"));
+        update_query("ra_config", array("value" => $invoicelatefeeamount), array("setting" => "InvoiceLateFeeAmount"));
+        update_query("ra_config", array("value" => $latefeetype), array("setting" => "LateFeeType"));
+        update_query("ra_config", array("value" => $sequentialinvoicenumbering), array("setting" => "SequentialInvoiceNumbering"));
+        update_query("ra_config", array("value" => $sequentialinvoicenumberformat), array("setting" => "SequentialInvoiceNumberFormat"));
+        update_query("ra_config", array("value" => $sequentialinvoicenumbervalue), array("setting" => "SequentialInvoiceNumberValue"));
+        update_query("ra_config", array("value" => $supportmodule), array("setting" => "SupportModule"));
+        update_query("ra_config", array("value" => $orderdaysgrace), array("setting" => "OrderDaysGrace"));
+        update_query("ra_config", array("value" => $autorenewdomainsonpayment), array("setting" => "AutoRenewDomainsonPayment"));
+        update_query("ra_config", array("value" => $domainautorenewdefault), array("setting" => "DomainAutoRenewDefault"));
+        update_query("ra_config", array("value" => $supportticketkbsuggestions), array("setting" => "SupportTicketKBSuggestions"));
+        update_query("ra_config", array("value" => $seofriendlyurls), array("setting" => "SEOFriendlyUrls"));
+        update_query("ra_config", array("value" => $showccissuestart), array("setting" => "ShowCCIssueStart"));
+        update_query("ra_config", array("value" => $emailcss), array("setting" => "EmailCSS"));
+        update_query("ra_config", array("value" => $clientdropdownformat), array("setting" => "ClientDropdownFormat"));
+        update_query("ra_config", array("value" => $ticketratingenabled), array("setting" => "TicketRatingEnabled"));
+        update_query("ra_config", array("value" => $requireloginforclienttickets), array("setting" => "RequireLoginforClientTickets"));
+        update_query("ra_config", array("value" => $shownotesfieldoncheckout), array("setting" => "ShowNotesFieldonCheckout"));
+        update_query("ra_config", array("value" => $networkissuesrequirelogin), array("setting" => "NetworkIssuesRequireLogin"));
+        update_query("ra_config", array("value" => $requiredpwstrength), array("setting" => "RequiredPWStrength"));
+        update_query("ra_config", array("value" => $maintenancemode), array("setting" => "MaintenanceMode"));
+        update_query("ra_config", array("value" => $maintenancemodemessage), array("setting" => "MaintenanceModeMessage"));
+        update_query("ra_config", array("value" => $skipfraudforexisting), array("setting" => "SkipFraudForExisting"));
+        update_query("ra_config", array("value" => $contactformdept), array("setting" => "ContactFormDept"));
+        update_query("ra_config", array("value" => $disablesessionipcheck), array("setting" => "DisableSessionIPCheck"));
+        update_query("ra_config", array("value" => $disablesupportticketreplyemailslogging), array("setting" => "DisableSupportTicketReplyEmailsLogging"));
+        update_query("ra_config", array("value" => $ccallowcustomerdelete), array("setting" => "CCAllowCustomerDelete"));
+        update_query("ra_config", array("value" => $noinvoicemeailonorder), array("setting" => "NoInvoiceEmailOnOrder"));
+        update_query("ra_config", array("value" => $autoprovisionexistingonly), array("setting" => "AutoProvisionExistingOnly"));
+        update_query("ra_config", array("value" => $enabledomainrenewalorders), array("setting" => "EnableDomainRenewalOrders"));
+        update_query("ra_config", array("value" => $enablemasspay), array("setting" => "EnableMassPay"));
+        update_query("ra_config", array("value" => $noautoapplycredit), array("setting" => "NoAutoApplyCredit"));
+        update_query("ra_config", array("value" => $clientdisplayformat), array("setting" => "ClientDisplayFormat"));
+        update_query("ra_config", array("value" => $generaterandomusername), array("setting" => "GenerateRandomUsername"));
+        update_query("ra_config", array("value" => $addfundsrequireorder), array("setting" => "AddFundsRequireOrder"));
+        update_query("ra_config", array("value" => $groupsimilarlineitems), array("setting" => "GroupSimilarLineItems"));
+        update_query("ra_config", array("value" => $prorataclientsanniversarydate), array("setting" => "ProrataClientsAnniversaryDate"));
 
         if ($continuousinvoicegeneration == "on" && !$CONFIG['ContinuousInvoiceGeneration']) {
             full_query_i("UPDATE tblcustomerservices SET nextinvoicedate = nextduedate");
             full_query_i("UPDATE tbldomains SET nextinvoicedate = nextduedate");
-            full_query_i("UPDATE tblserviceaddons SET nextinvoicedate = nextduedate");
+            full_query_i("UPDATE ra_catalog_user_sales_addons SET nextinvoicedate = nextduedate");
         }
 
 
         if (is_numeric($invoicestartnumber)) {
-            full_query_i("ALTER TABLE tblinvoices AUTO_INCREMENT = " . (int) $invoicestartnumber);
+            full_query_i("ALTER TABLE ra_bills AUTO_INCREMENT = " . (int) $invoicestartnumber);
         }
     }
 
@@ -291,7 +291,7 @@ if ($success) {
     $infobox;
 }
 
-$result = select_query_i("tblconfiguration", "", "");
+$result = select_query_i("ra_config", "", "");
 
 while ($data = mysqli_fetch_array($result)) {
     $setting = $data['setting'];
@@ -370,7 +370,7 @@ $currency = getCurrency();
 
 $countrys = getCountriesDropDown($CONFIG['RegistrarAdminCountry'], "domcountry");
 
-$dept_query = select_query_i("tblticketdepartments", "id, name", "");
+$dept_query = select_query_i("ra_ticket_teams", "id, name", "");
 $deptarray = "";
 while ($dept_result = mysqli_fetch_assoc($dept_query)) {
     $selected = "";

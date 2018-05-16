@@ -81,11 +81,11 @@ if ($action == "") {
     require "includes/ticketfunctions.php";
     $tickets = array();
     $statusfilter = "";
-    $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
+    $result = select_query_i("ra_ticket_status", "title", array("showactive" => "1"));
     while ($data = mysqli_fetch_array($result)) {
         $statusfilter .= "'" . $data[0] . "',";
     }
-    $result = select_query_i("tblcredit", "sum(amount) as total", array("clientid" => $client->getID));
+    $result = select_query_i("ra_transactions_credit", "sum(amount) as total", array("clientid" => $client->getID));
     $data = mysqli_fetch_assoc($result);
     if (isset($data['total'])) {
         $creditdata = $data['total'];
@@ -95,7 +95,7 @@ if ($action == "") {
     $ca->assign("creditdata", number_format($creditdata, 2));
 
     $statusfilter = substr($statusfilter, 0, 0 - 1);
-    $result = select_query_i("tbltickets", "", "userid=" . (int) ($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
+    $result = select_query_i("ra_ticket", "", "userid=" . (int) ($client->getID()) . (" AND status IN (" . $statusfilter . ")"), "lastreply", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -251,7 +251,7 @@ if ($action == "") {
         $smartyvalues['errormessage'] = $errormessage;
 
         if (!$errormessage) {
-            $oldcontactdata = get_query_vals("tblcontacts", "", array("userid" => $client->getID(), "id" => $id));
+            $oldcontactdata = get_query_vals("ra_user_contacts", "", array("userid" => $client->getID(), "id" => $id));
             $array = db_build_update_array(array("firstname", "lastname", "companyname", "email", "address1", "address2", "city", "state", "postcode", "country", "phonenumber", "subaccount", "permissions", "generalemails", "productemails", "descriptionemails", "invoiceemails", "supportemails"), "implode");
             $array['subaccount'] = ($subaccount ? "1" : "0");
 
@@ -259,7 +259,7 @@ if ($action == "") {
                 $array['password'] = generateClientPW($password);
             }
 
-            update_query("tblcontacts", $array, array("userid" => $client->getID(), "id" => $id));
+            update_query("ra_user_contacts", $array, array("userid" => $client->getID(), "id" => $id));
             run_hook("ContactEdit", array_merge(array("userid" => $client->getID(), "contactid" => $id, "olddata" => $oldcontactdata), $array));
             logActivity("Client Contact Modified - Contact ID: " . $id . " - User ID: " . $client->getID());
             $smartyvalues['successful'] = true;
@@ -366,7 +366,7 @@ if ($action == "") {
     $gotpm = false;
 
     if (!$gotpm) {
-        $result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "type", "value" => "CC"));
+        $result = select_query_i("ra_modules_gateways", "gateway", array("setting" => "type", "value" => "CC"));
     }
 
     while ($data = mysqli_fetch_array($result)) {
@@ -374,7 +374,7 @@ if ($action == "") {
 
         if (function_exists($gateway . "_remoteupdate")) {
             $params = getGatewayVariables($gateway);
-            $result = select_query_i("tblclients", "gatewayid", array("id" => $client->getID()));
+            $result = select_query_i("ra_user", "gatewayid", array("id" => $client->getID()));
             $data = mysqli_fetch_array($result);
             $params['gatewayid'] = $data['gatewayid'];
             $remoteupdatecode = call_user_func($gateway . "_remoteupdate", $params);
@@ -436,9 +436,9 @@ if ($action == "") {
         $confirmpw = html_entity_decode($confirmpw);
 
         if ($_SESSION['cid']) {
-            $result = select_query_i("tblcontacts", "password", array("id" => $_SESSION['cid'], "userid" => $client->getID()));
+            $result = select_query_i("ra_user_contacts", "password", array("id" => $_SESSION['cid'], "userid" => $client->getID()));
         } else {
-            $result = select_query_i("tblclients", "password", array("id" => $client->getID()));
+            $result = select_query_i("ra_user", "password", array("id" => $client->getID()));
         }
 
         $data = mysqli_fetch_array($result);
@@ -460,9 +460,9 @@ if ($action == "") {
 
         if (!$validate->hasErrors()) {
             if ($_SESSION['cid']) {
-                update_query("tblcontacts", array("password" => generateClientPW($newpw)), array("id" => $_SESSION['cid'], "userid" => $client->getID()));
+                update_query("ra_user_contacts", array("password" => generateClientPW($newpw)), array("id" => $_SESSION['cid'], "userid" => $client->getID()));
             } else {
-                update_query("tblclients", array("password" => generateClientPW($newpw)), array("id" => $client->getID()));
+                update_query("ra_user", array("password" => generateClientPW($newpw)), array("id" => $client->getID()));
                 run_hook("ClientChangePassword", array("userid" => $client->getID(), "password" => $newpw));
             }
 
@@ -483,7 +483,7 @@ if ($action == "") {
     $ca->setTemplate("clientareaproducts");
     $table = "tblcustomerservices";
     $fields = "COUNT(*)";
-    $where = "userid='" . db_escape_string($client->getID()) . "' AND tblservices.type='" . $action . "' ";
+    $where = "userid='" . db_escape_string($client->getID()) . "' AND ra_catalog.type='" . $action . "' ";
 
     if ($q) {
         $q = preg_replace("/[^a-z0-9-.]/", "", strtolower($q));
@@ -491,7 +491,7 @@ if ($action == "") {
         $smartyvalues['q'] = $q;
     }
 
-    $innerjoin = "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid";
+    $innerjoin = "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid";
     $result = select_query_i($table, $fields, $where, "", "", "", $innerjoin);
     $data = mysqli_fetch_array($result);
     $numitems = $data[0];
@@ -511,14 +511,14 @@ if ($action == "") {
                 if ($orderby == "status") {
                     $orderby = "servicestatus";
                 } else {
-                    $orderby = "description` " . $sort . ",`tblservices`.`name";
+                    $orderby = "description` " . $sort . ",`ra_catalog`.`name";
                 }
             }
         }
     }
 
     $accounts = array();
-    $fields = "tblcustomerservices.*,tblservicegroups.name AS productgroup,tblservices.name,tblservices.type,tblservices.tax,tblservices.servertype";
+    $fields = "tblcustomerservices.*,ra_catalog_groups.name AS productgroup,ra_catalog.name,ra_catalog.type,ra_catalog.tax,ra_catalog.servertype";
     $result = select_query_i($table, $fields, $where, $orderby, $sort, $limit, $innerjoin);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -553,7 +553,7 @@ if ($action == "") {
         $serverarray = array();
 
         if ($server) {
-            $result2 = select_query_i("tblservers", "", array("id" => $server));
+            $result2 = select_query_i("ra_integration", "", array("id" => $server));
             $serverarray = mysqli_fetch_array($result2);
         }
 
@@ -586,7 +586,7 @@ if ($action == "") {
             }
         }
 
-        $accounts[] = array("id" => $id, "regdate" => $regdate, "group" => $productgroup, "product" => $productname, "module" => $module, "server" => $serverarray, "description" => $description, "firstpaymentamount" => formatCurrency($firstpaymentamount), "recurringamount" => formatCurrency($recurringamount), "amount" => ($billingcycle == "One Time" ? formatCurrency($firstpaymentamount) : formatCurrency($recurringamount)), "nextduedate" => $nextduedate, "billingcycle" => $_LANG["orderpaymentterm" . $langbillingcycle], "username" => $username, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "class" => strtolower($xstatus), "addons" => (get_query_val("tblserviceaddons", "id", array("hostingid" => $id), "id", "DESC") ? "1" : ""), "packagesupgrade" => ($upgradepackages ? "1" : ""), "downloads" => ($downloads ? "1" : ""), "showcancelbutton" => $CONFIG['ShowCancellationButton']);
+        $accounts[] = array("id" => $id, "regdate" => $regdate, "group" => $productgroup, "product" => $productname, "module" => $module, "server" => $serverarray, "description" => $description, "firstpaymentamount" => formatCurrency($firstpaymentamount), "recurringamount" => formatCurrency($recurringamount), "amount" => ($billingcycle == "One Time" ? formatCurrency($firstpaymentamount) : formatCurrency($recurringamount)), "nextduedate" => $nextduedate, "billingcycle" => $_LANG["orderpaymentterm" . $langbillingcycle], "username" => $username, "status" => $status, "rawstatus" => $rawstatus, "statustext" => $_LANG["clientarea" . $rawstatus], "class" => strtolower($xstatus), "addons" => (get_query_val("ra_catalog_user_sales_addons", "id", array("hostingid" => $id), "id", "DESC") ? "1" : ""), "packagesupgrade" => ($upgradepackages ? "1" : ""), "downloads" => ($downloads ? "1" : ""), "showcancelbutton" => $CONFIG['ShowCancellationButton']);
     }
 
     $ca->assign("services", $accounts);
@@ -965,7 +965,7 @@ if ($action == "") {
     }
 
     $ca->assign("addonscount", $addonscount);
-    $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+    $result = select_query_i("ra_catalog_pricebook", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
     $data = mysqli_fetch_array($result);
     $descriptiondnsmanagementprice = $data['msetupfee'];
     $descriptionemailforwardingprice = $data['qsetupfee'];
@@ -1089,10 +1089,10 @@ if ($action == "") {
                 $tmpcontactdetails = array();
 
                 if ($selctype == "c") {
-                    $tmpcontactdetails = get_query_vals("tblcontacts", "", array("userid" => $client->getID(), "id" => $selcid));
+                    $tmpcontactdetails = get_query_vals("ra_user_contacts", "", array("userid" => $client->getID(), "id" => $selcid));
                 } else {
                     if ($selctype == "u") {
-                        $tmpcontactdetails = get_query_vals("tblclients", "", array("id" => $client->getID()));
+                        $tmpcontactdetails = get_query_vals("ra_user", "", array("id" => $client->getID()));
                     }
                 }
 
@@ -1290,7 +1290,7 @@ if ($action == "") {
     checkContactPermission("orders");
     redir("gid=renewals", "cart.php");
 } elseif ($action == "transection") {
-    $result = select_query_i("tblaccounts", "", array("userid" => $client->getID()), "id", "DESC");
+    $result = select_query_i("ra_transactions", "", array("userid" => $client->getID()), "id", "DESC");
     $transection = array();
     while ($data = mysqli_fetch_array($result)) {
         $transection[$data['id']] = $data;
@@ -1300,7 +1300,7 @@ if ($action == "") {
     $ca->setTemplate("clientareatransection");
 } elseif ($action == 'creditus') {
     $creditus = array();
-    $result = select_query_i("tblcredit", "", array("clientid" => $client->getID()), $orderby, $sort, $limit);
+    $result = select_query_i("ra_transactions_credit", "", array("clientid" => $client->getID()), $orderby, $sort, $limit);
     while ($data = mysqli_fetch_array($result)) {
         $creditus[$data['id']] = $data;
     }
@@ -1309,7 +1309,7 @@ if ($action == "") {
 } elseif ($action == "invoices") {
     checkContactPermission("invoices");
     $ca->setTemplate("clientareainvoices");
-    $numitems = get_query_val("tblinvoices", "COUNT(*)", array("userid" => $client->getID()));
+    $numitems = get_query_val("ra_bills", "COUNT(*)", array("userid" => $client->getID()));
     list($orderby, $sort, $limit) = clientAreaTableInit("inv", "status", "DESC", $numitems);
     $smartyvalues['orderby'] = $orderby;
     $smartyvalues['sort'] = strtolower($sort);
@@ -1350,7 +1350,7 @@ if ($action == "") {
 } elseif ($action == "emails") {
     checkContactPermission("emails");
     $ca->setTemplate("clientareaemails");
-    $result = select_query_i("tblemails", "COUNT(*)", array("userid" => $client->getID()), "id", "DESC");
+    $result = select_query_i("ra_user_mail", "COUNT(*)", array("userid" => $client->getID()), "id", "DESC");
     $data = mysqli_fetch_array($result);
     $numitems = $data[0];
     list($orderby, $sort, $limit) = clientAreaTableInit("emails", "date", "DESC", $numitems);
@@ -1364,7 +1364,7 @@ if ($action == "") {
     }
 
     $emails = array();
-    $result = select_query_i("tblemails", "", array("userid" => $client->getID()), $orderby, $sort, $limit);
+    $result = select_query_i("ra_user_mail", "", array("userid" => $client->getID()), $orderby, $sort, $limit);
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -1398,7 +1398,7 @@ if ($action == "") {
     $smartyvalues['groupname'] = $service->getData("groupname");
     $smartyvalues['productname'] = $service->getData("productname");
     $smartyvalues['description'] = $service->getData("description");
-    $cancelrequests = get_query_val("tblcancelrequests", "COUNT(*)", array("relid" => $id));
+    $cancelrequests = get_query_val("ra_cancellations", "COUNT(*)", array("relid" => $id));
 
     if ($cancelrequests) {
         $smartyvalues['invalid'] = "on";
@@ -1445,7 +1445,7 @@ if ($action == "") {
     $addfundsmaxbal = convertCurrency($CONFIG['AddFundsMaximumBalance'], 1, $clientsdetails['currency']);
     $addfundsmax = convertCurrency($CONFIG['AddFundsMaximum'], 1, $clientsdetails['currency']);
     $addfundsmin = convertCurrency($CONFIG['AddFundsMinimum'], 1, $clientsdetails['currency']);
-    $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $client->getID(), "status" => "Active"));
+    $result = select_query_i("ra_orders", "COUNT(*)", array("userid" => $client->getID(), "status" => "Active"));
     $data = mysqli_fetch_array($result);
     $numactiveorders = $data[0];
 
@@ -1495,10 +1495,10 @@ if ($action == "") {
             require "includes/processinvoices.php";
             $invoiceid = createInvoices($client->getID());
 
-            insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $amount, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
+            insert_query("ra_bill_lineitems", array("userid" => $client->getID(), "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $amount, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
             $invoiceid = createInvoices($client->getID(), "", true);
 
-            $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+            $result = select_query_i("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
             $data = mysqli_fetch_array($result);
             $gatewaytype = $data['value'];
 
@@ -1518,7 +1518,7 @@ if ($action == "") {
                 }
             }
 
-            $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
+            $result = select_query_i("ra_bills", "", array("userid" => $client->getID(), "id" => $invoiceid));
             $data = mysqli_fetch_array($result);
             $id = $data['id'];
             $total = $data['total'];
@@ -1557,7 +1557,7 @@ if ($action == "") {
 
     if ($all) {
         $invoiceids = array();
-        $result = select_query_i("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "(select count(id) from tblinvoiceitems where invoiceid=tblinvoices.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)), "id", "DESC");
+        $result = select_query_i("ra_bills", "id", array("userid" => $client->getID(), "status" => "Unpaid", "(select count(id) from ra_bill_lineitems where invoiceid=ra_bills.id and type='Invoice')" => array("sqltype" => "<=", "value" => 0)), "id", "DESC");
 
         while ($data = mysqli_fetch_array($result)) {
             $invoiceids[] = $data['id'];
@@ -1572,7 +1572,7 @@ if ($action == "") {
             } else {
                 $tmp_invoiceids = db_escape_numarray($invoiceids);
                 $invoiceids = array();
-                $result = select_query_i("tblinvoices", "id", array("userid" => $client->getID(), "status" => "Unpaid", "id" => array("sqltype" => "IN", "values" => $tmp_invoiceids)), "id", "DESC");
+                $result = select_query_i("ra_bills", "id", array("userid" => $client->getID(), "status" => "Unpaid", "id" => array("sqltype" => "IN", "values" => $tmp_invoiceids)), "id", "DESC");
 
                 while ($data = mysqli_fetch_array($result)) {
                     $invoiceids[] = $data['id'];
@@ -1582,7 +1582,7 @@ if ($action == "") {
     }
 
     $xmasspays = array();
-    $result = select_query_i("tblinvoiceitems", "invoiceid,relid", array("tblinvoiceitems.userid" => $client->getID(), "tblinvoiceitems.type" => "Invoice", "tblinvoices.status" => "Unpaid"), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+    $result = select_query_i("ra_bill_lineitems", "invoiceid,relid", array("ra_bill_lineitems.userid" => $client->getID(), "ra_bill_lineitems.type" => "Invoice", "ra_bills.status" => "Unpaid"), "", "", "", "ra_bills ON ra_bills.id=ra_bill_lineitems.invoiceid");
 
     while ($data = mysqli_fetch_array($result)) {
         $xmasspays[$data[0]][$data[1]] = 1;
@@ -1626,7 +1626,7 @@ if ($action == "") {
     $subtotal = $credit = $tax = $tax2 = $total = $partialpayments = 0;
     $invoiceitems = array();
     foreach ($invoiceids as $invoiceid) {
-        $result = select_query_i("tblinvoices", "", array("id" => (int) $invoiceid, "userid" => $client->getID()));
+        $result = select_query_i("ra_bills", "", array("id" => (int) $invoiceid, "userid" => $client->getID()));
         $data = mysqli_fetch_array($result);
         $invoiceid = $data['id'];
 
@@ -1637,17 +1637,17 @@ if ($action == "") {
             $tax2 += $data['tax2'];
             $thistotal = $data['total'];
             $total += $thistotal;
-            $result = select_query_i("tblaccounts", "SUM(amountin)", array("invoiceid" => (int) $invoiceid));
+            $result = select_query_i("ra_transactions", "SUM(amountin)", array("invoiceid" => (int) $invoiceid));
             $data = mysqli_fetch_array($result);
             $thispayments = $data[0];
             $partialpayments += $thispayments;
             $thistotal = $thistotal - $thispayments;
 
             if ($geninvoice) {
-                insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "Invoice", "relid" => (int) $invoiceid, "description" => $_LANG['invoicenumber'] . (int) $invoiceid, "amount" => $thistotal, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+                insert_query("ra_bill_lineitems", array("userid" => $client->getID(), "type" => "Invoice", "relid" => (int) $invoiceid, "description" => $_LANG['invoicenumber'] . (int) $invoiceid, "amount" => $thistotal, "duedate" => "now()", "paymentmethod" => $paymentmethod));
             }
 
-            $result = select_query_i("tblinvoiceitems", "", array("invoiceid" => (int) $invoiceid));
+            $result = select_query_i("ra_bill_lineitems", "", array("invoiceid" => (int) $invoiceid));
 
             while ($data = mysqli_fetch_array($result)) {
                 $invoiceitems[(int) $invoiceid][] = array("id" => $data['id'], "description" => nl2br($data['description']), "amount" => formatCurrency($data['amount']), "tax" => $data['tax']);
@@ -1659,13 +1659,13 @@ if ($action == "") {
 
     if ($geninvoice) {
         foreach ($xmasspays as $iid => $vals) {
-            update_query("tblinvoices", array("status" => "Cancelled"), array("id" => (int) $iid, "userid" => $client->getID()));
+            update_query("ra_bills", array("status" => "Cancelled"), array("id" => (int) $iid, "userid" => $client->getID()));
         }
 
         require "includes/processinvoices.php";
         $invoiceid = createInvoices($client->getID(), true, true);
         $invoiceid = (int) $invoiceid;
-        $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+        $result = select_query_i("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
         $data = mysqli_fetch_array($result);
         $gatewaytype = $data['value'];
 
@@ -1685,7 +1685,7 @@ if ($action == "") {
             }
         }
 
-        $result = select_query_i("tblinvoices", "", array("userid" => $client->getID(), "id" => $invoiceid));
+        $result = select_query_i("ra_bills", "", array("userid" => $client->getID(), "id" => $invoiceid));
         $data = mysqli_fetch_array($result);
         $id = $data['id'];
         $total = $data['total'];
@@ -1909,10 +1909,10 @@ if ($action == "") {
                                 $tmpcontactdetails = array();
 
                                 if ($selctype == "c") {
-                                    $tmpcontactdetails = get_query_vals("tblcontacts", "", array("userid" => $client->getID(), "id" => $selcid));
+                                    $tmpcontactdetails = get_query_vals("ra_user_contacts", "", array("userid" => $client->getID(), "id" => $selcid));
                                 } else {
                                     if ($selctype == "u") {
-                                        $tmpcontactdetails = get_query_vals("tblclients", "", array("id" => $client->getID()));
+                                        $tmpcontactdetails = get_query_vals("ra_user", "", array("id" => $client->getID()));
                                     }
                                 }
 
@@ -1983,7 +1983,7 @@ if ($action == "") {
     $smartyvalues['descriptionid'] = $descriptionid;
     $smartyvalues['description'] = $data['description'];
     $descriptionparts = explode(".", $data['description'], 2);
-    $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+    $result = select_query_i("ra_catalog_pricebook", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
     $pricingdata = mysqli_fetch_array($result);
     $descriptiondnsmanagementprice = $pricingdata['msetupfee'];
     $descriptionemailforwardingprice = $pricingdata['qsetupfee'];
@@ -2090,7 +2090,7 @@ if ($action == "") {
 
         if ($invdesc) {
             check_token();
-            insert_query("tblinvoiceitems", array("userid" => $client->getID(), "type" => "DomainAddon" . $addontype, "relid" => $descriptionid, "description" => $invdesc, "amount" => $invamt, "taxed" => $descriptiontax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+            insert_query("ra_bill_lineitems", array("userid" => $client->getID(), "type" => "DomainAddon" . $addontype, "relid" => $descriptionid, "description" => $invdesc, "amount" => $invamt, "taxed" => $descriptiontax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
 
             if (!function_exists("createInvoices")) {
                 require ROOTDIR . "/includes/processinvoices.php";

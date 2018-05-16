@@ -13,10 +13,10 @@ if (!function_exists("AddReply")) {
 
 
 if ($ticketnum) {
-	$result = select_query_i("tbltickets", "", array("tid" => $ticketnum));
+	$result = select_query_i("ra_ticket", "", array("tid" => $ticketnum));
 }
 else {
-	$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+	$result = select_query_i("ra_ticket", "", array("id" => $ticketid));
 }
 
 $data = mysqli_fetch_array($result);
@@ -47,7 +47,7 @@ if (!$id) {
 
 
 if ($userid) {
-	$result2 = select_query_i("tblclients", "", array("id" => $userid));
+	$result2 = select_query_i("ra_user", "", array("id" => $userid));
 	$data = mysqli_fetch_array($result2);
 	$name = $data['firstname'] . " " . $data['lastname'];
 
@@ -66,7 +66,7 @@ if ($sortorder == "ASC") {
 	$apiresults['replies']['reply'][] = $first_reply;
 }
 
-$result = select_query_i("tblticketreplies", "", array("tid" => $id), "id", $sortorder);
+$result = select_query_i("ra_ticket_replies", "", array("tid" => $id), "id", $sortorder);
 
 while ($data = mysqli_fetch_array($result)) {
 	$userid = $data['userid'];
@@ -80,7 +80,7 @@ while ($data = mysqli_fetch_array($result)) {
 	$message = strip_tags($message);
 
 	if ($userid) {
-		$result2 = select_query_i("tblclients", "", array("id" => $userid));
+		$result2 = select_query_i("ra_user", "", array("id" => $userid));
 		$data = mysqli_fetch_array($result2);
 		$name = $data['firstname'] . " " . $data['lastname'];
 
@@ -100,7 +100,7 @@ if ($sortorder != "ASC") {
 }
 
 $apiresults['notes'] = "";
-$result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "id", "ASC");
+$result = select_query_i("ra_ticket_notes", "", array("ticketid" => $id), "id", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$noteid = $data['id'];

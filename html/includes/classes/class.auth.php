@@ -13,7 +13,7 @@ class RA_Auth {
 
     private function getInfo($where) {
         $where['disabled'] = "0";
-        $result = select_query_i("tbladmins", "id,username,template,language,authmodule,loginattempts,passwordhash", $where);
+        $result = select_query_i("ra_admin", "id,username,template,language,authmodule,loginattempts,passwordhash", $where);
         $data = mysqli_fetch_assoc($result);
         $this->admindata = $data;
         return $data['id'] ? true : false;
@@ -92,9 +92,9 @@ class RA_Auth {
 
     public function processLogin() {
         global $ra;
-        update_query("tbladminlog", array("logouttime" => "now()"), array("adminusername " => $this->getAdminUsername(), "logouttime" => "00000000000000"));
-        insert_query("tbladminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
-        update_query("tbladmins", array("loginattempts" => "0"), array("username" => $this->getAdminUsername()));
+        update_query("ra_adminlog", array("logouttime" => "now()"), array("adminusername " => $this->getAdminUsername(), "logouttime" => "00000000000000"));
+        insert_query("ra_adminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
+        update_query("ra_admin", array("loginattempts" => "0"), array("username" => $this->getAdminUsername()));
         run_hook("AdminLogin", array("adminid" => $this->getAdminID(), "username" => $this->getAdminUsername()));
     }
 
@@ -216,7 +216,7 @@ class RA_Auth {
 
         if (3 <= $loginfailures[$remote_ip]['count']) {
             unset($loginfailures[$remote_ip]);
-            insert_query("tblbannedips", array("ip" => $remote_ip, "reason" => "3 Invalid Login Attempts", "expires" => $this->getLoginBanDate()));
+            insert_query("ra_bannedips", array("ip" => $remote_ip, "reason" => "3 Invalid Login Attempts", "expires" => $this->getLoginBanDate()));
         }
 
         $ra->set_config("LoginFailures", serialize($loginfailures));
@@ -238,7 +238,7 @@ class RA_Auth {
 
     public function logout() {
         if ($this->isLoggedIn()) {
-            update_query("tbladminlog", array("logouttime" => "now()"), array("sessionid" => session_id()));
+            update_query("ra_adminlog", array("logouttime" => "now()"), array("sessionid" => session_id()));
             $adminid = $_SESSION['adminid'];
             session_unset();
             session_destroy();
@@ -267,15 +267,15 @@ class RA_Auth {
             return false;
         }
 
-        $result = select_query_i("tbladminlog", "id", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND sessionid='" . db_escape_string(session_id()) . "' AND logouttime='00000000000000'");
+        $result = select_query_i("ra_adminlog", "id", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND sessionid='" . db_escape_string(session_id()) . "' AND logouttime='00000000000000'");
         $data = mysqli_fetch_array($result);
         $adminlogid = $data['id'];
 
         if ($adminlogid) {
-            update_query("tbladminlog", array("lastvisit" => "now()"), array("id" => $adminlogid));
+            update_query("ra_adminlog", array("lastvisit" => "now()"), array("id" => $adminlogid));
         } else {
-            full_query_i("UPDATE tbladminlog SET logouttime=lastvisit WHERE adminusername='" . mysqli_real_escape_string($this->getAdminUsername()) . "' AND logouttime='00000000000000'");
-            insert_query("tbladminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
+            full_query_i("UPDATE ra_adminlog SET logouttime=lastvisit WHERE adminusername='" . mysqli_real_escape_string($this->getAdminUsername()) . "' AND logouttime='00000000000000'");
+            insert_query("ra_adminlog", array("adminusername" => $this->getAdminUsername(), "logintime" => "now()", "lastvisit" => "now()", "ipaddress" => $ra->get_user_ip(), "sessionid" => session_id()));
         }
 
         return true;

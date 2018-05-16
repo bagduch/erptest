@@ -15,10 +15,10 @@ class RA_Orders extends RA_TableModel {
         global $aInt;
         global $currency;
 
-        $query = "FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid LEFT JOIN tblinvoices ON tblinvoices.id=tblorders.invoiceid";
+        $query = "FROM ra_orders INNER JOIN ra_user ON ra_user.id=ra_orders.userid LEFT JOIN ra_bills ON ra_bills.id=ra_orders.invoiceid";
 
         if ($criteria['paymentstatus']) {
-            $query .= " INNER JOIN tblinvoices ON tblinvoices.id=tblorders.invoiceid";
+            $query .= " INNER JOIN ra_bills ON ra_bills.id=ra_orders.invoiceid";
         }
 
         $filters = $this->buildCriteria($criteria);
@@ -27,14 +27,14 @@ class RA_Orders extends RA_TableModel {
             $query .= " WHERE " . implode(" AND ", $filters);
         }
 
-        $result = full_query_i("SELECT COUNT(tblorders.id) " . $query);
+        $result = full_query_i("SELECT COUNT(ra_orders.id) " . $query);
         $data = mysqli_fetch_array($result);
         $this->getPageObj()->setNumResults($data[0]);
-        $query .= " ORDER BY tblorders." . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection();
+        $query .= " ORDER BY ra_orders." . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection();
         $gateways = new RA_Gateways();
         $invoices = new RA_Invoices();
         $orders = array();
-        $query = "SELECT tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblinvoices.status AS invoicestatus " . $query . " LIMIT " . $this->getQueryLimit();
+        $query = "SELECT ra_orders.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency,ra_bills.status AS invoicestatus " . $query . " LIMIT " . $this->getQueryLimit();
         $result = full_query_i($query);
 
         while ($row = mysqli_fetch_assoc($result)) {
@@ -91,48 +91,48 @@ class RA_Orders extends RA_TableModel {
             if (($criteria['status'] == "Pending" || $criteria['status'] == "Active") || $criteria['status'] == "Cancelled") {
                 $statusfilter = "";
                 $where = array("show" . strtolower($criteria['status']) => "1");
-                $result = select_query_i("tblorderstatuses", "title", $where);
+                $result = select_query_i("ra_orderstatuses", "title", $where);
 
                 while ($data = mysqli_fetch_array($result)) {
                     $statusfilter .= "'" . $data[0] . "',";
                 }
 
                 $statusfilter = substr($statusfilter, 0, 0 - 1);
-                $filters[] = "tblorders.status IN (" . $statusfilter . ")";
+                $filters[] = "ra_orders.status IN (" . $statusfilter . ")";
             } else {
-                $filters[] = "tblorders.status='" . db_escape_string($criteria['status']) . "'";
+                $filters[] = "ra_orders.status='" . db_escape_string($criteria['status']) . "'";
             }
         }
 
 
         if ($criteria['clientid']) {
-            $filters[] = "tblorders.userid='" . db_escape_string($criteria['clientid']) . "'";
+            $filters[] = "ra_orders.userid='" . db_escape_string($criteria['clientid']) . "'";
         }
 
 
         if ($criteria['amount']) {
-            $filters[] = "tblorders.amount='" . db_escape_string($criteria['amount']) . "'";
+            $filters[] = "ra_orders.amount='" . db_escape_string($criteria['amount']) . "'";
         }
 
 
         if ($criteria['orderid']) {
-            $filters[] = "tblorders.id='" . db_escape_string($criteria['orderid']) . "'";
+            $filters[] = "ra_orders.id='" . db_escape_string($criteria['orderid']) . "'";
         }
 
 
         if ($criteria['ordernum']) {
-            $filters[] = "tblorders.ordernum='" . db_escape_string($criteria['ordernum']) . "'";
+            $filters[] = "ra_orders.ordernum='" . db_escape_string($criteria['ordernum']) . "'";
         }
 
 
         if ($criteria['orderip']) {
-            $filters[] = "tblorders.ipaddress='" . db_escape_string($criteria['orderip']) . "'";
+            $filters[] = "ra_orders.ipaddress='" . db_escape_string($criteria['orderip']) . "'";
         }
 
 
         if ($criteria['orderdate']) {
             $tempdate = toMySQLDate(urldecode($criteria['orderdate']));
-            $filters[] = "tblorders.date LIKE '" . db_escape_string($tempdate) . "%'";
+            $filters[] = "ra_orders.date LIKE '" . db_escape_string($tempdate) . "%'";
         }
 
 
@@ -142,7 +142,7 @@ class RA_Orders extends RA_TableModel {
 
 
         if ($criteria['paymentstatus']) {
-            $filters[] = "tblinvoices.status='" . db_escape_string($criteria['paymentstatus']) . "'";
+            $filters[] = "ra_bills.status='" . db_escape_string($criteria['paymentstatus']) . "'";
         }
 
         return $filters;
@@ -150,7 +150,7 @@ class RA_Orders extends RA_TableModel {
 
     public function getStatuses() {
         $statuses = array();
-        $result = select_query_i("tblorderstatuses", "title,color", "", "sortorder", "ASC");
+        $result = select_query_i("ra_orderstatuses", "title,color", "", "sortorder", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $statuses[$data['title']] = "<span style=\"color:" . $data['color'] . "\">" . $data['title'] . "</span>";
@@ -175,7 +175,7 @@ class RA_Orders extends RA_TableModel {
     }
 
     public function loadData() {
-        $result = select_query_i("tblorders", "", array("id" => $this->orderid));
+        $result = select_query_i("ra_orders", "", array("id" => $this->orderid));
         $this->orderdata = mysqli_fetch_assoc($result);
         return $this->orderdata;
     }
@@ -212,18 +212,18 @@ class RA_Orders extends RA_TableModel {
 
         $orderid = (int) $orderid;
         run_hook("DeleteOrder", array("orderid" => $orderid));
-        $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+        $result = select_query_i("ra_orders", "userid,invoiceid", array("id" => $orderid));
         $data = mysqli_fetch_array($result);
         $userid = $data['userid'];
         $invoiceid = $data['invoiceid'];
         delete_query("tblhostingconfigoptions", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
-        delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
+        delete_query("ra_partnersaccounts", "relid IN (SELECT id FROM tblhosting WHERE orderid=" . $orderid . ")");
         delete_query("tblcustomerservices", array("orderid" => $orderid));
-        delete_query("tblserviceaddons", array("orderid" => $orderid));
+        delete_query("ra_catalog_user_sales_addons", array("orderid" => $orderid));
         delete_query("tbldomains", array("orderid" => $orderid));
-        delete_query("tblorders", array("id" => $orderid));
-        delete_query("tblinvoices", array("id" => $invoiceid));
-        delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
+        delete_query("ra_orders", array("id" => $orderid));
+        delete_query("ra_bills", array("id" => $invoiceid));
+        delete_query("ra_bill_lineitems", array("invoiceid" => $invoiceid));
         logActivity("Deleted Order - Order ID: " . $orderid, $userid);
         return true;
     }
@@ -271,10 +271,10 @@ class RA_Orders extends RA_TableModel {
             }
         }
 
-        update_query("tblorders", array("status" => $status), array("id" => $orderid));
+        update_query("ra_orders", array("status" => $status), array("id" => $orderid));
 
         if ($status == "Cancelled" || $status == "Fraud") {
-            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,ra_catalog.servertype,tblcustomerservices.packageid,ra_catalog.stockcontrol,ra_catalog.qty", array("orderid" => $orderid), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
 
             while ($data = mysqli_fetch_array($result)) {
                 $productid = $data['id'];
@@ -298,7 +298,7 @@ class RA_Orders extends RA_TableModel {
                         update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
                         if ($stockcontrol == "on") {
-                            update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
+                            update_query("ra_catalog", array("qty" => "+1"), array("id" => $packageid));
                         }
                     }
                 }
@@ -306,14 +306,14 @@ class RA_Orders extends RA_TableModel {
                 update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
                 if ($stockcontrol == "on") {
-                    update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
+                    update_query("ra_catalog", array("qty" => "+1"), array("id" => $packageid));
                 }
             }
         } else {
             update_query("tblcustomerservices", array("servicestatus" => $status), array("orderid" => $orderid));
         }
 
-        update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
+        update_query("ra_catalog_user_sales_addons", array("status" => $status), array("orderid" => $orderid));
 
         if ($status == "Pending") {
             $result = select_query_i("tbldomains", "id,type", array("orderid" => $orderid));
@@ -331,15 +331,15 @@ class RA_Orders extends RA_TableModel {
             update_query("tbldomains", array("status" => $status), array("orderid" => $orderid));
         }
 
-        $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+        $result = select_query_i("ra_orders", "userid,invoiceid", array("id" => $orderid));
         $data = mysqli_fetch_array($result);
         $userid = $data['userid'];
         $invoiceid = $data['invoiceid'];
 
         if ($status == "Pending") {
-            update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
+            update_query("ra_bills", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
         } else {
-            update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
+            update_query("ra_bills", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
             run_hook("InvoiceCancelled", array("invoiceid" => $invoiceid));
         }
 
@@ -366,7 +366,7 @@ class RA_Orders extends RA_TableModel {
             $nextduedate = $data['nextduedate'];
             $serverusername = $data['username'];
             $serverpassword = decrypt($data['password']);
-            $result2 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+            $result2 = select_query_i("ra_catalog", "ra_catalog.name,ra_catalog.type,ra_catalog.welcomeemail,ra_catalog.autosetup,ra_catalog.servertype,ra_catalog_groups.name AS groupname", array("ra_catalog.id" => $packageid), "", "", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
             $data = mysqli_fetch_array($result2);
             $groupname = $data['groupname'];
             $productname = $data['name'];
@@ -404,7 +404,7 @@ class RA_Orders extends RA_TableModel {
             $predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
         }
 
-        $result = select_query_i("tblserviceaddons", "", array("orderid" => $orderid));
+        $result = select_query_i("ra_catalog_user_sales_addons", "", array("orderid" => $orderid));
 
         while ($data = mysqli_fetch_array($result)) {
             $aid = $data['id'];

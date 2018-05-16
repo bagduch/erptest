@@ -41,7 +41,7 @@ if (!isset($_REQUEST['adminid'])) {
 
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$result_adminid = select_query_i("ra_admin", "id", array("id" => $_REQUEST['adminid']));
 	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {

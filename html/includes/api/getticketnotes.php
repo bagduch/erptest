@@ -7,7 +7,7 @@ if (!defined("RA")) {
 }
 
 $notes = array();
-$result = select_query_i("tblticketnotes", "id,admin,date,message", array("ticketid" => $ticketid), "date", "ASC");
+$result = select_query_i("ra_ticket_notes", "id,admin,date,message", array("ticketid" => $ticketid), "date", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
 	$notes[] = $data;

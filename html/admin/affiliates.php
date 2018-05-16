@@ -13,7 +13,7 @@ $aInt->requiredFiles(array("invoicefunctions", "gatewayfunctions"));
 
 if ($action == "save") {
     check_token("RA.admin.default");
-    update_query("tblaffiliates", array("paytype" => $paymenttype, "payamount" => $payamount, "onetime" => $onetime, "visitors" => $visitors, "balance" => $balance, "withdrawn" => $withdrawn), array("id" => $id));
+    update_query("ra_partners", array("paytype" => $paymenttype, "payamount" => $payamount, "onetime" => $onetime, "visitors" => $visitors, "balance" => $balance, "withdrawn" => $withdrawn), array("id" => $id));
     logActivity("Affiliate ID " . $id . " Details Updated");
     redir("action=edit&id=" . $id);
     exit();
@@ -22,7 +22,7 @@ if ($action == "save") {
 
 if ($action == "deletecommission") {
     check_token("RA.admin.default");
-    delete_query("tblaffiliatespending", array("id" => $cid));
+    delete_query("ra_partnerspending", array("id" => $cid));
     redir("action=edit&id=" . $id);
     exit();
 }
@@ -30,7 +30,7 @@ if ($action == "deletecommission") {
 
 if ($action == "deletehistory") {
     check_token("RA.admin.default");
-    delete_query("tblaffiliateshistory", array("id" => $hid));
+    delete_query("ra_partnershistory", array("id" => $hid));
     redir("action=edit&id=" . $id);
     exit();
 }
@@ -38,7 +38,7 @@ if ($action == "deletehistory") {
 
 if ($action == "deletereferral") {
     check_token("RA.admin.default");
-    delete_query("tblaffiliatesaccounts", array("id" => $affaccid));
+    delete_query("ra_partnersaccounts", array("id" => $affaccid));
     redir("action=edit&id=" . $id);
     exit();
 }
@@ -46,7 +46,7 @@ if ($action == "deletereferral") {
 
 if ($action == "deletewithdrawal") {
     check_token("RA.admin.default");
-    delete_query("tblaffiliateswithdrawals", array("id" => $wid));
+    delete_query("ra_partnerswithdrawals", array("id" => $wid));
     redir("action=edit&id=" . $id);
     exit();
 }
@@ -55,8 +55,8 @@ if ($action == "deletewithdrawal") {
 if ($action == "addcomm") {
     check_token("RA.admin.default");
     $amount = format_as_currency($amount);
-    insert_query("tblaffiliateshistory", array("affiliateid" => $id, "date" => toMySQLDate($date), "affaccid" => $refid, "description" => $description, "amount" => $amount));
-    update_query("tblaffiliates", array("balance" => "+=" . $amount), array("id" => (int) $id));
+    insert_query("ra_partnershistory", array("affiliateid" => $id, "date" => toMySQLDate($date), "affaccid" => $refid, "description" => $description, "amount" => $amount));
+    update_query("ra_partners", array("balance" => "+=" . $amount), array("id" => (int) $id));
     redir("action=edit&id=" . $id);
     exit();
 }
@@ -64,23 +64,23 @@ if ($action == "addcomm") {
 
 if ($action == "withdraw") {
     check_token("RA.admin.default");
-    insert_query("tblaffiliateswithdrawals", array("affiliateid" => $id, "date" => "now()", "amount" => $amount));
-    update_query("tblaffiliates", array("balance" => "-=" . $amount, "withdrawn" => "+=" . $amount), array("id" => (int) $id));
+    insert_query("ra_partnerswithdrawals", array("affiliateid" => $id, "date" => "now()", "amount" => $amount));
+    update_query("ra_partners", array("balance" => "-=" . $amount, "withdrawn" => "+=" . $amount), array("id" => (int) $id));
 
     if ($payouttype == "1") {
-        $result = select_query_i("tblaffiliates", "", array("id" => (int) $id));
+        $result = select_query_i("ra_partners", "", array("id" => (int) $id));
         $data = mysqli_fetch_array($result);
         $id = (int) $data['id'];
         $clientid = (int) $data['clientid'];
         addTransaction($clientid, "", "Affiliate Commissions Withdrawal Payout", "0", "0", $amount, $paymentmethod, $transid);
     } else {
         if ($payouttype == "2") {
-            $result = select_query_i("tblaffiliates", "", array("id" => (int) $id));
+            $result = select_query_i("ra_partners", "", array("id" => (int) $id));
             $data = mysqli_fetch_array($result);
             $id = (int) $data['id'];
             $clientid = (int) $data['clientid'];
-            insert_query("tblcredit", array("clientid" => $clientid, "date" => "now()", "description" => "Affiliate Commissions Withdrawal", "amount" => $amount));
-            update_query("tblclients", array("credit" => "+=" . $amount), array("id" => $clientid));
+            insert_query("ra_transactions_credit", array("clientid" => $clientid, "date" => "now()", "description" => "Affiliate Commissions Withdrawal", "amount" => $amount));
+            update_query("ra_user", array("credit" => "+=" . $amount), array("id" => $clientid));
             logActivity("Processed Affiliate Commissions Withdrawal to Credit Balance - User ID: " . $clientid . " - Amount: " . $amount);
         }
     }
@@ -92,7 +92,7 @@ if ($action == "withdraw") {
 
 if ($sub == "delete") {
     check_token("RA.admin.default");
-    delete_query("tblaffiliates", array("id" => $ide));
+    delete_query("ra_partners", array("id" => $ide));
     logActivity("Affiliate " . $ide . " Deleted");
     redir();
 }
@@ -101,7 +101,7 @@ if ($sub == "delete") {
 
 if ($action == "") {
     $aInt->sortableTableInit("clientname", "ASC");
-    $query = "FROM `tblaffiliates` INNER JOIN tblclients ON tblclients.id=tblaffiliates.clientid WHERE tblaffiliates.id!=''";
+    $query = "FROM `ra_partners` INNER JOIN ra_user ON ra_user.id=ra_partners.clientid WHERE ra_partners.id!=''";
 
     if ($client) {
         $query .= " AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($client) . "%'";
@@ -125,7 +125,7 @@ if ($action == "") {
         $query .= " AND withdrawn " . $withdrawntype . " '" . db_escape_string($withdrawn) . "'";
     }
 
-    $result = full_query_i("SELECT COUNT(tblaffiliates.id) " . $query);
+    $result = full_query_i("SELECT COUNT(ra_partners.id) " . $query);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
     $aInt->deleteJSConfirm("doDelete", "affiliates", "deletesure", "affiliates.php?sub=delete&ide=");
@@ -138,9 +138,9 @@ if ($action == "") {
     }
 
     $query .= " ORDER BY ";
-    $query .= ($orderby == "clientname" ? "tblclients.firstname " . $order . ",tblclients.lastname" : $orderby);
+    $query .= ($orderby == "clientname" ? "ra_user.firstname " . $order . ",ra_user.lastname" : $orderby);
     $query .= " " . $order;
-    $query = "SELECT tblaffiliates.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,(SELECT COUNT(*) FROM tblaffiliatesaccounts WHERE tblaffiliatesaccounts.affiliateid=tblaffiliates.id) AS signups " . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT ra_partners.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency,(SELECT COUNT(*) FROM ra_partnersaccounts WHERE ra_partnersaccounts.affiliateid=ra_partners.id) AS signups " . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -179,7 +179,7 @@ if ($action == "") {
         }
 
         echo $infobox;
-        $result = select_query_i("tblaffiliates", "", array("id" => $id));
+        $result = select_query_i("ra_partners", "", array("id" => $id));
         $data = mysqli_fetch_array($result);
         $id = $data['id'];
 
@@ -195,14 +195,14 @@ if ($action == "") {
         $paymenttype = $data['paytype'];
         $payamount = $data['payamount'];
         $onetime = $data['onetime'];
-        $result = select_query_i("tblclients", "", array("id" => $clientid));
+        $result = select_query_i("ra_user", "", array("id" => $clientid));
         $data = mysqli_fetch_array($result);
         $firstname = $data['firstname'];
         $lastname = $data['lastname'];
-        $result = select_query_i("tblaffiliatesaccounts", "COUNT(id)", array("affiliateid" => $id));
+        $result = select_query_i("ra_partnersaccounts", "COUNT(id)", array("affiliateid" => $id));
         $data = mysqli_fetch_array($result);
         $signups = $data[0];
-        $result = select_query_i("tblaffiliatespending", "COUNT(*),SUM(tblaffiliatespending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result = select_query_i("ra_partnerspending", "COUNT(*),SUM(ra_partnerspending.amount)", array("affiliateid" => $id), "clearingdate", "DESC", "", "ra_partnersaccounts ON ra_partnersaccounts.id=ra_partnerspending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
         $data = mysqli_fetch_array($result);
         $pendingcommissions = $data[0];
         $pendingcommissionsamount = $data[1];
@@ -217,7 +217,7 @@ if ($action == "") {
         $aInt->sortableTableInit("regdate", "DESC");
         $tabledata = "";
         $mysqli_errors = true;
-        $numrows = get_query_val("tblaffiliatesaccounts", "COUNT(*)", array("tblaffiliatesaccounts.affiliateid" => $id), "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+        $numrows = get_query_val("ra_partnersaccounts", "COUNT(*)", array("ra_partnersaccounts.affiliateid" => $id), "", "", "", "tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
 
         if ((((($orderby == "id" || $orderby == "regdate") || $orderby == "clientname") || $orderby == "name") || $orderby == "lastpaid") || $orderby == "servicestatus") {
             
@@ -225,7 +225,7 @@ if ($action == "") {
             $orderby = "regdate";
         }
 
-        $result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.id,tblaffiliatesaccounts.lastpaid,tblaffiliatesaccounts.relid, concat(tblclients.firstname,' ',tblclients.lastname,'|||',tblclients.currency) as clientname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.domain,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("tblaffiliatesaccounts.affiliateid" => $id), "" . $orderby, "" . $order, $page * $limit . ("," . $limit), "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result = select_query_i("ra_partnersaccounts", "ra_partnersaccounts.id,ra_partnersaccounts.lastpaid,ra_partnersaccounts.relid, concat(ra_user.firstname,' ',ra_user.lastname,'|||',ra_user.currency) as clientname,ra_catalog.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.domain,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("ra_partnersaccounts.affiliateid" => $id), "" . $orderby, "" . $order, $page * $limit . ("," . $limit), "tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
 
         while ($data = mysqli_fetch_array($result)) {
             $affaccid = $data['id'];
@@ -279,7 +279,7 @@ if ($action == "") {
         $currency = getCurrency($clientid);
         $aInt->sortableTableInit("nopagination");
         $tabledata = "";
-        $result = select_query_i("tblaffiliatespending", "tblaffiliatespending.id,tblaffiliatespending.affaccid,tblaffiliatespending.amount,tblaffiliatespending.clearingdate,tblaffiliatesaccounts.relid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.billingcycle", array("affiliateid" => $id), "clearingdate", "ASC", "", "tblaffiliatesaccounts ON tblaffiliatesaccounts.id=tblaffiliatespending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result = select_query_i("ra_partnerspending", "ra_partnerspending.id,ra_partnerspending.affaccid,ra_partnerspending.amount,ra_partnerspending.clearingdate,ra_partnersaccounts.relid,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_catalog.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.billingcycle", array("affiliateid" => $id), "clearingdate", "ASC", "", "ra_partnersaccounts ON ra_partnersaccounts.id=ra_partnerspending.affaccid INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
 
         while ($data = mysqli_fetch_array($result)) {
             $pendingid = $data['id'];
@@ -303,7 +303,7 @@ if ($action == "") {
 
         $aInt->sortableTableInit("nopagination");
         $tabledata = "";
-        $result = select_query_i("tblaffiliateshistory", "tblaffiliateshistory.*,(SELECT CONCAT(tblclients.id,'|||',tblclients.firstname,'|||',tblclients.lastname,'|||',tblclients.companyname,'|||',tblservices.name,'|||',tblcustomerservices.id,'|||',tblcustomerservices.billingcycle,'|||',tblcustomerservices.servicestatus) FROM tblaffiliatesaccounts INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblaffiliatesaccounts.id=tblaffiliateshistory.affaccid) AS referraldata", array("affiliateid" => $id), "date", "DESC");
+        $result = select_query_i("ra_partnershistory", "ra_partnershistory.*,(SELECT CONCAT(ra_user.id,'|||',ra_user.firstname,'|||',ra_user.lastname,'|||',ra_user.companyname,'|||',ra_catalog.name,'|||',tblcustomerservices.id,'|||',tblcustomerservices.billingcycle,'|||',tblcustomerservices.servicestatus) FROM ra_partnersaccounts INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE ra_partnersaccounts.id=ra_partnershistory.affaccid) AS referraldata", array("affiliateid" => $id), "date", "DESC");
 
         while ($data = mysqli_fetch_array($result)) {
             $historyid = $data['id'];
@@ -338,7 +338,7 @@ if ($action == "") {
 
         $table = $aInt->sortableTable(array($aInt->lang("fields", "date"), $aInt->lang("affiliates", "refid"), $aInt->lang("fields", "clientname"), $aInt->lang("fields", "product"), $aInt->lang("affiliates", "productstatus"), "Description", $aInt->lang("fields", "amount"), ""), $tabledata);
 
-        $result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,(SELECT CONCAT(tblclients.firstname,'|||',tblclients.lastname,'|||',tblcustomerservices.userid,'|||',tblservices.name,'|||',tblcustomerservices.servicestatus,'|||',tblcustomerservices.domain,'|||',tblcustomerservices.amount,'|||',tblcustomerservices.regdate,'|||',tblcustomerservices.billingcycle) FROM tblcustomerservices INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id=tblaffiliatesaccounts.relid) AS referraldata", array("affiliateid" => $id));
+        $result = select_query_i("ra_partnersaccounts", "ra_partnersaccounts.*,(SELECT CONCAT(ra_user.firstname,'|||',ra_user.lastname,'|||',tblcustomerservices.userid,'|||',ra_catalog.name,'|||',tblcustomerservices.servicestatus,'|||',tblcustomerservices.domain,'|||',tblcustomerservices.amount,'|||',tblcustomerservices.regdate,'|||',tblcustomerservices.billingcycle) FROM tblcustomerservices INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE tblcustomerservices.id=ra_partnersaccounts.relid) AS referraldata", array("affiliateid" => $id));
 
         while ($data = mysqli_fetch_array($result)) {
             $affaccid = $data['id'];
@@ -373,7 +373,7 @@ if ($action == "") {
 
         $aInt->sortableTableInit("nopagination");
         $tabledata = "";
-        $result = select_query_i("tblaffiliateswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
+        $result = select_query_i("ra_partnerswithdrawals", "", array("affiliateid" => $id), "id", "DESC");
 
         while ($data = mysqli_fetch_array($result)) {
             $historyid = $data['id'];

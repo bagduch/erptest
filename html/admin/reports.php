@@ -87,7 +87,7 @@ a {
 
 if ($report) {
     $currencies = array();
-    $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
+    $result = select_query_i("ra_currency", "", "", "code", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];

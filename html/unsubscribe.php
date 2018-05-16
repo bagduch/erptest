@@ -11,7 +11,7 @@ function doUnsubscribe($email, $key) {
 		return $_LANG['pwresetemailrequired'];
 	}
 
-	$result = select_query_i("tblclients", "id,email,emailoptout", array("email" => $email));
+	$result = select_query_i("ra_user", "id,email,emailoptout", array("email" => $email));
 	$data = mysqli_fetch_array($result);
 	$userid = $data['id'];
 	$email = $data['email'];
@@ -28,7 +28,7 @@ function doUnsubscribe($email, $key) {
 			return $_LANG['alreadyunsubscribed'];
 		}
 
-		update_query("tblclients", array("emailoptout" => "1"), array("id" => $userid));
+		update_query("ra_user", array("emailoptout" => "1"), array("id" => $userid));
 		sendMessage("Unsubscribe Confirmation", $userid);
 		logActivity("Unsubscribed From Marketing Emails - User ID:" . $userid, $userid);
 		return null;

@@ -6,10 +6,10 @@ function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $card
 	global $_LANG;
 	global $cc_encryption_hash;
 
-	$gatewayid = get_query_val("tblclients", "gatewayid", array("id" => $userid));
+	$gatewayid = get_query_val("ra_user", "gatewayid", array("id" => $userid));
 
 	if ($fullclear) {
-		update_query("tblclients", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), array("id" => $userid));
+		update_query("ra_user", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), array("id" => $userid));
 	}
 
 	$cardnum = ccFormatNumbers($cardnum);
@@ -54,7 +54,7 @@ function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $card
 	}
 
 	$remotestored = false;
-	$result = select_query_i("tblpaymentgateways", "gateway,(SELECT id FROM tblinvoices WHERE paymentmethod=gateway AND userid='" . (int)$userid . "' ORDER BY id DESC LIMIT 0,1) AS invoiceid", "setting='type' AND (value='CC' OR value='OfflineCC')");
+	$result = select_query_i("ra_modules_gateways", "gateway,(SELECT id FROM ra_bills WHERE paymentmethod=gateway AND userid='" . (int)$userid . "' ORDER BY id DESC LIMIT 0,1) AS invoiceid", "setting='type' AND (value='CC' OR value='OfflineCC')");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$gateway = $data['gateway'];
@@ -89,19 +89,19 @@ function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $card
 
 				$rparams['action'] = $action;
 				$captureresult = call_user_func($gateway . "_storeremote", $rparams);
-				$result = select_query_i("tblpaymentgateways", "value", array("gateway" => $rparams['paymentmethod'], "setting" => "name"));
+				$result = select_query_i("ra_modules_gateways", "value", array("gateway" => $rparams['paymentmethod'], "setting" => "name"));
 				$data = mysqli_fetch_array($result);
 				$gatewayname = $data['value'] . " Remote Storage";
 				$debugdata = (is_array($captureresult['rawdata']) ? array_merge(array("UserID" => $rparams['clientdetails']['userid']), $captureresult['rawdata']) : "UserID => " . $rparams['clientdetails']['userid'] . "\r\n" . $captureresult['rawdata']);
 
 				if ($captureresult['status'] == "success") {
 					if (isset($captureresult['gatewayid'])) {
-						update_query("tblclients", array("gatewayid" => $captureresult['gatewayid']), array("id" => $userid));
+						update_query("ra_user", array("gatewayid" => $captureresult['gatewayid']), array("id" => $userid));
 					}
 
 
 					if ($action == "delete") {
-						update_query("tblclients", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), array("id" => $userid));
+						update_query("ra_user", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "startdate" => "", "issuenumber" => "", "gatewayid" => ""), array("id" => $userid));
 					}
 
 					logTransaction($gatewayname, $debugdata, "Success");
@@ -124,7 +124,7 @@ function updateCCDetails($userid, $cardtype, $cardnum, $cardcvv, $cardexp, $card
 		$cardnum = "";
 	}
 
-	update_query("tblclients", array("cardtype" => $cardtype, "cardlastfour" => $cardlastfour, "cardnum" => array("type" => "AES_ENCRYPT", "text" => $cardnum, "hashkey" => $cchash), "expdate" => array("type" => "AES_ENCRYPT", "text" => $cardexp, "hashkey" => $cchash), "startdate" => array("type" => "AES_ENCRYPT", "text" => $cardstart, "hashkey" => $cchash), "issuenumber" => array("type" => "AES_ENCRYPT", "text" => $cardissue, "hashkey" => $cchash)), array("id" => $userid));
+	update_query("ra_user", array("cardtype" => $cardtype, "cardlastfour" => $cardlastfour, "cardnum" => array("type" => "AES_ENCRYPT", "text" => $cardnum, "hashkey" => $cchash), "expdate" => array("type" => "AES_ENCRYPT", "text" => $cardexp, "hashkey" => $cchash), "startdate" => array("type" => "AES_ENCRYPT", "text" => $cardstart, "hashkey" => $cchash), "issuenumber" => array("type" => "AES_ENCRYPT", "text" => $cardissue, "hashkey" => $cchash)), array("id" => $userid));
 	logActivity("Updated Stored Credit Card Details - User ID: " . $userid, $userid);
 	run_hook("CCUpdate", array("userid" => $userid, "cardtype" => $cardtype, "cardnum" => $cardnum, "cardcvv" => $cardcvv, "expdate" => $cardexp, "cardstart" => $cardstart, "issuenumber" => $cardissue));
 }
@@ -156,7 +156,7 @@ function getCCDetails($userid) {
 	global $_LANG;
 
 	$cchash = md5($cc_encryption_hash . $userid);
-	$result = select_query_i("tblclients", "cardtype,cardlastfour,AES_DECRYPT(cardnum,'" . $cchash . "') as cardnum,AES_DECRYPT(expdate,'" . $cchash . "') as expdate,AES_DECRYPT(issuenumber,'" . $cchash . "') as issuenumber,AES_DECRYPT(startdate,'" . $cchash . "') as startdate,gatewayid", array("id" => $userid));
+	$result = select_query_i("ra_user", "cardtype,cardlastfour,AES_DECRYPT(cardnum,'" . $cchash . "') as cardnum,AES_DECRYPT(expdate,'" . $cchash . "') as expdate,AES_DECRYPT(issuenumber,'" . $cchash . "') as issuenumber,AES_DECRYPT(startdate,'" . $cchash . "') as startdate,gatewayid", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 	$carddata = array();
 	$carddata['cardtype'] = $data['cardtype'];
@@ -179,12 +179,12 @@ function getCCVariables($invoiceid) {
 		require_once dirname(__FILE__) . "/gatewayfunctions.php";
 	}
 
-	$result = select_query_i("tblinvoices", "userid,total,paymentmethod", array("id" => $invoiceid));
+	$result = select_query_i("ra_bills", "userid,total,paymentmethod", array("id" => $invoiceid));
 	$data = mysqli_fetch_array($result);
 	$userid = $data['userid'];
 	$total = $data['total'];
 	$paymentmethod = $data['paymentmethod'];
-	$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+	$result = select_query_i("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
 	$data = mysqli_fetch_array($result);
 	$amountpaid = $data[0];
 	$balance = $total - $amountpaid;
@@ -194,7 +194,7 @@ function getCCVariables($invoiceid) {
 	}
 
 	$cchash = md5($cc_encryption_hash . $userid);
-	$result = select_query_i("tblclients", "cardtype,cardlastfour,AES_DECRYPT(cardnum,'" . $cchash . "') as cardnum,AES_DECRYPT(expdate,'" . $cchash . "') as expdate,AES_DECRYPT(issuenumber,'" . $cchash . "') as issuenumber,AES_DECRYPT(startdate,'" . $cchash . "') as startdate,gatewayid", array("id" => $userid));
+	$result = select_query_i("ra_user", "cardtype,cardlastfour,AES_DECRYPT(cardnum,'" . $cchash . "') as cardnum,AES_DECRYPT(expdate,'" . $cchash . "') as expdate,AES_DECRYPT(issuenumber,'" . $cchash . "') as issuenumber,AES_DECRYPT(startdate,'" . $cchash . "') as startdate,gatewayid", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 	$cardtype = $data['cardtype'];
 	$cardnum = $data['cardnum'];
@@ -202,7 +202,7 @@ function getCCVariables($invoiceid) {
 	$startdate = $data['startdate'];
 	$issuenumber = $data['issuenumber'];
 	$gatewayid = $data['gatewayid'];
-	$result = select_query_i("tblclients", "bankname,banktype,AES_DECRYPT(bankcode,'" . $cchash . "') as bankcode,AES_DECRYPT(bankacct,'" . $cchash . "') as bankacct", array("id" => $userid));
+	$result = select_query_i("ra_user", "bankname,banktype,AES_DECRYPT(bankcode,'" . $cchash . "') as bankcode,AES_DECRYPT(bankacct,'" . $cchash . "') as bankacct", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 	$bankname = $data['bankname'];
 	$banktype = $data['banktype'];
@@ -253,7 +253,7 @@ function captureCCPayment($invoiceid, $cccvv = "", $passedparams = false) {
 		$captureresult = call_user_func($params['paymentmethod'] . "_capture", $params);
 
 		if (is_array($captureresult)) {
-			$result = select_query_i("tblpaymentgateways", "value", array("gateway" => $params['paymentmethod'], "setting" => "name"));
+			$result = select_query_i("ra_modules_gateways", "value", array("gateway" => $params['paymentmethod'], "setting" => "name"));
 			$data = mysqli_fetch_array($result);
 			$gatewayname = $data['value'];
 			logTransaction($gatewayname, $captureresult['rawdata'], ucfirst($captureresult['status']));
@@ -287,30 +287,30 @@ function ccProcessing() {
 		$i = 1;
 
 		while ($i <= $ra->get_config("CCRetryEveryWeekFor")) {
-			$chargedates[] = "tblinvoices.duedate='" . date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $i * 7 + $ra->get_config("CCProcessDaysBefore"), date("Y"))) . "'";
+			$chargedates[] = "ra_bills.duedate='" . date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $i * 7 + $ra->get_config("CCProcessDaysBefore"), date("Y"))) . "'";
 			++$i;
 		}
 	}
 
 	$qrygateways = array();
-	$query = "SELECT gateway FROM tblpaymentgateways WHERE setting='type' AND value='CC'";
+	$query = "SELECT gateway FROM ra_modules_gateways WHERE setting='type' AND value='CC'";
 	$result = full_query_i($query);
 
 	while ($data = mysqli_fetch_array($result)) {
-		$qrygateways[] = "tblinvoices.paymentmethod='" . db_escape_string($data['gateway']) . "'";
+		$qrygateways[] = "ra_bills.paymentmethod='" . db_escape_string($data['gateway']) . "'";
 	}
 
 
 	if (count($qrygateways)) {
 		$z = $y = 0;
-		$query = "SELECT tblinvoices.* FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE (tblinvoices.status='Unpaid') AND (" . implode(" OR ", $qrygateways) . ") AND tblclients.disableautocc='' AND (tblinvoices.duedate='" . $chargedate . "'";
+		$query = "SELECT ra_bills.* FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE (ra_bills.status='Unpaid') AND (" . implode(" OR ", $qrygateways) . ") AND ra_user.disableautocc='' AND (ra_bills.duedate='" . $chargedate . "'";
 
 		if (!$ra->get_config("CCAttemptOnlyOnce")) {
 			if (0 < count($chargedates)) {
 				$query .= " OR " . implode(" OR ", $chargedates);
 			}
 			else {
-				$query .= " OR tblinvoices.duedate<'" . $chargedate . "'";
+				$query .= " OR ra_bills.duedate<'" . $chargedate . "'";
 			}
 		}
 

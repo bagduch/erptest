@@ -11,7 +11,7 @@ $aInt->helplink = "Cancellation Requests";
 $menuselect = "$('#menu').multilevelpushmenu('expand','Customers');";
 if ($action == "delete") {
     check_token("RA.admin.default");
-    delete_query("tblcancelrequests", array("id" => $id));
+    delete_query("ra_cancellations", array("id" => $id));
     redir();
     exit();
 }
@@ -19,12 +19,12 @@ if ($action == "delete") {
 $aInt->deleteJSConfirm("doDelete", "clients", "cancelrequestsdelete", "?action=delete&id=");
 
 $aInt->sortableTableInit("date", "ASC");
-$query = "FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid INNER JOIN tblclients ON tblcustomerservices.userid=tblclients.id WHERE ";
+$query = "FROM ra_cancellations INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_cancellations.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid INNER JOIN ra_user ON tblcustomerservices.userid=ra_user.id WHERE ";
 $filter = false;
 $criteria = array();
 
 if ($reason) {
-    $criteria[] = "tblcancelrequests.reason LIKE '%" . db_escape_string($reason) . "%'";
+    $criteria[] = "ra_cancellations.reason LIKE '%" . db_escape_string($reason) . "%'";
     $filter = true;
 }
 
@@ -42,13 +42,13 @@ if ($userid) {
 
 
 if ($serviceid) {
-    $criteria[] = "tblcancelrequests.relid=" . (int) $serviceid;
+    $criteria[] = "ra_cancellations.relid=" . (int) $serviceid;
     $filter = true;
 }
 
 
 if ($type) {
-    $criteria[] = "tblcancelrequests.type='" . db_escape_string($type) . "'";
+    $criteria[] = "ra_cancellations.type='" . db_escape_string($type) . "'";
     $filter = true;
 }
 
@@ -62,11 +62,11 @@ if (!$filter) {
 }
 
 $query .= implode(" AND ", $criteria);
-$result = full_query_i("SELECT COUNT(tblcancelrequests.id) " . $query);
+$result = full_query_i("SELECT COUNT(ra_cancellations.id) " . $query);
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$query .= " ORDER BY tblcancelrequests.date ASC";
-$query = "SELECT tblcancelrequests.*,tblcustomerservices.description,tblcustomerservices.nextduedate,tblservices.name AS productname,tblservicegroups.name AS groupname,tblcustomerservices.id AS productid,tblcustomerservices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid " . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+$query .= " ORDER BY ra_cancellations.date ASC";
+$query = "SELECT ra_cancellations.*,tblcustomerservices.description,tblcustomerservices.nextduedate,ra_catalog.name AS productname,ra_catalog_groups.name AS groupname,tblcustomerservices.id AS productid,tblcustomerservices.userid,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid " . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {

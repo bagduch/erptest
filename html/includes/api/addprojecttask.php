@@ -36,7 +36,7 @@ if (isset($_REQUEST['projectid'])) {
 
 
 if (isset($_REQUEST['userid'])) {
-	$result_userid = select_query_i("tblclients", "id", array("id" => $_REQUEST['userid']));
+	$result_userid = select_query_i("ra_user", "id", array("id" => $_REQUEST['userid']));
 	$data_userid = mysqli_fetch_array($result_userid);
 
 	if (!$data_userid['id']) {
@@ -47,7 +47,7 @@ if (isset($_REQUEST['userid'])) {
 
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$result_adminid = select_query_i("ra_admin", "id", array("id" => $_REQUEST['adminid']));
 	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {

@@ -10,7 +10,7 @@ if (!$fromdate) $fromdate = fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m"),da
 if (!$todate) $todate = getTodaysDate();
 
 $reportdata["headertext"] = "<form method=\"post\" action=\"$PHP_SELF?".((isset($_REQUEST['module']))?'module='.$_REQUEST['module'].'&':'')."report=$report&currencyid=$currencyid&calculate=true\"><center>Staff Name: <select name=\"staffid\"><option value=\"0\">- Any -</option>";
-$result = select_query_i("tbladmins","id,CONCAT(firstname,' ',lastname)","","firstname","ASC");
+$result = select_query_i("ra_admin","id,CONCAT(firstname,' ',lastname)","","firstname","ASC");
 while ($data = mysqli_fetch_array($result)) {
     $reportdata["headertext"] .= "<option value=\"".$data[0]."\"".(($data[0]==$staffid)?" selected":"").">".$data[1]."</option>";
 }
@@ -24,7 +24,7 @@ $reportdata["tableheadings"][] = "Rating";
 $reportdata["tableheadings"][] = "Comments";
 $reportdata["tableheadings"][] = "IP Address";
 
-$result = select_query_i("tblticketfeedback","tblticketfeedback.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblticketfeedback.adminid) AS adminname,(SELECT CONCAT(tid,'|||',title) FROM tbltickets WHERE tbltickets.id=tblticketfeedback.ticketid) AS ticketinfo","datetime>='".db_make_safe_human_date($fromdate)."' AND datetime<='".db_make_safe_human_date($todate)." 23:59:59'".(($staffid)?" AND adminid=".(int)$staffid:""),"datetime","ASC");
+$result = select_query_i("ra_ticket_feedback","ra_ticket_feedback.*,(SELECT CONCAT(firstname,' ',lastname) FROM ra_admin WHERE ra_admin.id=ra_ticket_feedback.adminid) AS adminname,(SELECT CONCAT(tid,'|||',title) FROM ra_ticket WHERE ra_ticket.id=ra_ticket_feedback.ticketid) AS ticketinfo","datetime>='".db_make_safe_human_date($fromdate)."' AND datetime<='".db_make_safe_human_date($todate)." 23:59:59'".(($staffid)?" AND adminid=".(int)$staffid:""),"datetime","ASC");
 while ($data = mysqli_fetch_array($result)) {
 
     $id = $data['id'];

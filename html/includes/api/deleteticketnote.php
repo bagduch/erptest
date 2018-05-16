@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query_i("tblticketnotes", "id", array("id" => $noteid));
+$result = select_query_i("ra_ticket_notes", "id", array("id" => $noteid));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
@@ -14,6 +14,6 @@ if (!$data['id']) {
 	return null;
 }
 
-delete_query("tblticketnotes", array("id" => $noteid));
+delete_query("ra_ticket_notes", array("id" => $noteid));
 $apiresults = array("result" => "success", "noteid" => $noteid);
 ?>

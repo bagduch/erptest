@@ -11,7 +11,7 @@ $aInt->inClientsProfile = true;
 
 if ($displaymessage == "true") {
     $aInt->title = $aInt->lang("emails", "viewemail");
-    $result = select_query_i("tblemails", "", array("id" => $id));
+    $result = select_query_i("ra_user_mail", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $date = $data['date'];
     $to = (is_null($data['to']) ? $aInt->lang("emails", "registeredemail") : $data['to']);
@@ -43,7 +43,7 @@ if ($action == "send" && $messagename == "newmessage") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    delete_query("tblemails", array("id" => $id));
+    delete_query("ra_user_mail", array("id" => $id));
     redir("userid=" . $userid);
 }
 
@@ -58,10 +58,10 @@ if ($action == "send") {
 
 $aInt->deleteJSConfirm("doDelete", "emails", "suredelete", "clientsemails.php?userid=" . $userid . "&action=delete&id=");
 $aInt->sortableTableInit("date", "DESC");
-$result = select_query_i("tblemails", "COUNT(*)", array("userid" => $userid));
+$result = select_query_i("ra_user_mail", "COUNT(*)", array("userid" => $userid));
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblemails", "", array("userid" => $userid), $orderby, $order);
+$result = select_query_i("ra_user_mail", "", array("userid" => $userid), $orderby, $order);
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
     $date = $data['date'];

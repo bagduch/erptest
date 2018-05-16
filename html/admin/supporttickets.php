@@ -7,7 +7,7 @@ $deptid = $ra->get_req_var("deptid");
 $icon = "tickets";
 $departmentshtml = "";
 $departments = array();
-$result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+$result = select_query_i("ra_ticket_teams", "", "", "order", "ASC");
 while ($data = mysqli_fetch_array($result)) {
     $departments[] = array("id" => $data['id'], "name" => $data['name']);
     $departmentshtml .= "<option value=\"" . $data['id'] . "\"" . ($data['id'] == $deptid ? " selected" : "") . ">" . $data['name'] . "</option>";
@@ -82,7 +82,7 @@ if ($action == "gettags") {
         exit();
     }
 
-    $result = select_query_i("tbltickets", "replyingadmin,replyingtime", array("id" => $id, "replyingadmin" => array("sqltype" => ">", "value" => "0")));
+    $result = select_query_i("ra_ticket", "replyingadmin,replyingtime", array("id" => $id, "replyingadmin" => array("sqltype" => ">", "value" => "0")));
 
     if (mysqli_num_rows($result)) {
         $data = mysqli_fetch_assoc($result);
@@ -91,13 +91,13 @@ if ($action == "gettags") {
         $replyingtime = fromMySQLDate($replyingtime, "time");
 
         if ($replyingadmin != $_SESSION['adminid']) {
-            $result = select_query_i("tbladmins", "", array("id" => $replyingadmin));
+            $result = select_query_i("ra_admin", "", array("id" => $replyingadmin));
             $data = mysqli_fetch_array($result);
             $replyingadmin = ucfirst($data['username']);
             echo "<div class=\"errorbox\">" . $replyingadmin . " " . $aInt->lang("support", "viewedandstarted") . (" @ " . $replyingtime . "</div>");
         }
     } else {
-        update_query("tbltickets", array("replyingadmin" => $_SESSION['adminid'], "replyingtime" => "now()"), array("id" => $id));
+        update_query("ra_ticket", array("replyingadmin" => $_SESSION['adminid'], "replyingtime" => "now()"), array("id" => $id));
     }
 
     exit();
@@ -109,7 +109,7 @@ if ($action == "gettags") {
         exit();
     }
 
-    update_query("tbltickets", array("replyingadmin" => ""), array("id" => $id));
+    update_query("ra_ticket", array("replyingadmin" => ""), array("id" => $id));
     exit();
 } elseif ($action == "changestatus") {
     check_token("RA.admin.default");
@@ -124,7 +124,7 @@ if ($action == "gettags") {
         closeTicket($id);
     } else {
         addTicketLog($id, "Status changed to " . $status);
-        update_query("tbltickets", array("status" => $status), array("id" => $id));
+        update_query("ra_ticket", array("status" => $status), array("id" => $id));
         run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => $status, "ticketid" => $id));
     }
 
@@ -139,7 +139,7 @@ if ($action == "gettags") {
     }
 
     addTicketLog($id, "Flagged to " . getAdminName($flag));
-    update_query("tbltickets", array("flag" => $flag), array("id" => $id));
+    update_query("ra_ticket", array("flag" => $flag), array("id" => $id));
 
     if ($flag != 0 && $flag != $_SESSION['adminid']) {
         echo "1";
@@ -152,7 +152,7 @@ if ($action == "gettags") {
     exit();
 } elseif ($action == "getpredefinedreply") {
     check_token("RA.admin.default");
-    $result = select_query_i("tblticketpredefinedreplies", "", array("id" => $id));
+    $result = select_query_i("ra_macro_categories_templates", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $reply = html_entity_decode($data['reply'], ENT_QUOTES);
     echo $reply;
@@ -168,12 +168,12 @@ if ($action == "gettags") {
             exit();
         }
 
-        $result = select_query_i("tbltickets", "message", array("id" => $id));
+        $result = select_query_i("ra_ticket", "message", array("id" => $id));
         $data = mysqli_fetch_array($result);
         $replytext = $data['message'];
     } else {
         if ($ids) {
-            $result = select_query_i("tblticketreplies", "tid,message", array("id" => $ids));
+            $result = select_query_i("ra_ticket_replies", "tid,message", array("id" => $ids));
             $data = mysqli_fetch_array($result);
             $id = $data['tid'];
             $access = validateAdminTicketAccess($id);
@@ -228,23 +228,23 @@ if ($action == "gettags") {
         if ($blockdelete) {
             checkPermission("Delete Ticket");
             foreach ($selectedtickets as $id) {
-                $result = select_query_i("tbltickets", "userid,email", array("id" => $id));
+                $result = select_query_i("ra_ticket", "userid,email", array("id" => $id));
                 $data = mysqli_fetch_array($result);
                 $userid = $data['userid'];
                 $email = $data['email'];
 
                 if ($userid) {
-                    $result = select_query_i("tblclients", "email", array("id" => $userid));
+                    $result = select_query_i("ra_user", "email", array("id" => $userid));
                     $data = mysqli_fetch_array($result);
                     $email = $data['email'];
                 }
 
-                $result = select_query_i("tblticketspamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
+                $result = select_query_i("ra_ticketpamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
                 $data = mysqli_fetch_array($result);
                 $blockedalready = $data[0];
 
                 if (!$blockedalready) {
-                    insert_query("tblticketspamfilters", array("type" => "Sender", "content" => $email));
+                    insert_query("ra_ticketpamfilters", array("type" => "Sender", "content" => $email));
                 }
 
                 deleteTicket($id);
@@ -258,7 +258,7 @@ if ($action == "gettags") {
             $adminname = getAdminName();
             addTicketLog($mastertid, "Merged Tickets " . implode(",", $selectedtickets));
             $adminname = "";
-            $result = select_query_i("tbltickets", "title,userid", array("id" => $mastertid));
+            $result = select_query_i("ra_ticket", "title,userid", array("id" => $mastertid));
             $data = mysqli_fetch_array($result);
             $userid = $data['userid'];
             getUsersLang($userid);
@@ -269,13 +269,13 @@ if ($action == "gettags") {
             }
 
             $subject = (strpos($data[0], (" [" . $merge . "]")) === FALSE ? $data[0] . (" [" . $merge . "]") : $data[0]);
-            update_query("tbltickets", array("title" => $subject), array("id" => $mastertid));
+            update_query("ra_ticket", array("title" => $subject), array("id" => $mastertid));
             foreach ($selectedtickets as $id) {
-                update_query("tblticketnotes", array("ticketid" => $mastertid), array("ticketid" => $id));
-                update_query("tblticketreplies", array("tid" => $mastertid), array("tid" => $id));
+                update_query("ra_ticket_notes", array("ticketid" => $mastertid), array("ticketid" => $id));
+                update_query("ra_ticket_replies", array("tid" => $mastertid), array("tid" => $id));
 
                 if ($id != $mastertid) {
-                    $result = select_query_i("tbltickets", "", array("id" => $id));
+                    $result = select_query_i("ra_ticket", "", array("id" => $id));
                     $data = mysqli_fetch_array($result);
                     $userid = $data['userid'];
                     $name = $data['name'];
@@ -285,7 +285,7 @@ if ($action == "gettags") {
                     $admin = $data['admin'];
                     $attachment = $data['attachment'];
                     insert_query(
-                            "tblticketreplies", array("tid" => $mastertid,
+                            "ra_ticket_replies", array("tid" => $mastertid,
                         "userid" => $userid,
                         "name" => $name,
                         "email" => $email,
@@ -295,7 +295,7 @@ if ($action == "gettags") {
                         "attachment" => $attachment
                             )
                     );
-                    delete_query("tbltickets", array("id" => $id));
+                    delete_query("ra_ticket", array("id" => $id));
                     continue;
                 }
             }
@@ -305,7 +305,7 @@ if ($action == "gettags") {
     }
 } elseif ($action == "deletereply") {
     $replyid = $ra->get_req_var('replyid');
-    $result = delete_query("tblticketreplies", array("id" => $replyid));
+    $result = delete_query("ra_ticket_replies", array("id" => $replyid));
     if ($result) {
         addTicketLog($id, "Deleted Ticket Reply (ID: " . $replyid . ")");
         logActivity("Deleted Ticket Reply - ID: " . $replyid);
@@ -314,7 +314,7 @@ if ($action == "gettags") {
     }
 } elseif ($action == "mergeticket") {
     check_token("RA.admin.default");
-    $result = select_query_i("tbltickets", "id", array("tid" => $mergetid));
+    $result = select_query_i("ra_ticket", "id", array("tid" => $mergetid));
     $data = mysqli_fetch_array($result);
     $mergeid = $data['id'];
 
@@ -337,7 +337,7 @@ if ($action == "gettags") {
     $adminname = getAdminName();
     addTicketLog($mastertid, "Merged Ticket " . $mergeid);
     $adminname = "";
-    $result = select_query_i("tbltickets", "title,userid", array("id" => $mastertid));
+    $result = select_query_i("ra_ticket", "title,userid", array("id" => $mastertid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     getUsersLang($userid);
@@ -348,10 +348,10 @@ if ($action == "gettags") {
     }
 
     $subject = (strpos($data[0], (" [" . $merge . "]")) === FALSE ? $data[0] . (" [" . $merge . "]") : $data[0]);
-    update_query("tbltickets", array("title" => $subject), array("id" => $mastertid));
-    update_query("tblticketnotes", array("ticketid" => $mastertid), array("ticketid" => $mergeid));
-    update_query("tblticketreplies", array("tid" => $mastertid), array("tid" => $mergeid));
-    $result = select_query_i("tbltickets", "", array("id" => $mergeid));
+    update_query("ra_ticket", array("title" => $subject), array("id" => $mastertid));
+    update_query("ra_ticket_notes", array("ticketid" => $mastertid), array("ticketid" => $mergeid));
+    update_query("ra_ticket_replies", array("tid" => $mastertid), array("tid" => $mergeid));
+    $result = select_query_i("ra_ticket", "", array("id" => $mergeid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $name = $data['name'];
@@ -361,7 +361,7 @@ if ($action == "gettags") {
     $admin = $data['admin'];
     $attachment = $data['attachment'];
     insert_query(
-            "tblticketreplies", array(
+            "ra_ticket_replies", array(
         "tid" => $mastertid,
         "userid" => $userid,
         "name" => $name,
@@ -370,7 +370,7 @@ if ($action == "gettags") {
         "message" => $message,
         "adminname" => $admin,
         "attachment" => $attachment));
-    delete_query("tbltickets", array("id" => $mergeid));
+    delete_query("ra_ticket", array("id" => $mergeid));
     redir("action=viewticket&id=" . $mastertid);
     exit();
 } elseif ($action == "openticket") {
@@ -444,7 +444,7 @@ if ($action == "gettags") {
             if ($postaction == "close") {
                 $newstatus = "Closed";
             } elseif (substr($postaction, 0, 9) == "setstatus") {
-                $result = select_query_i("tblticketstatuses", "title", array("id" => substr($postaction, 9)));
+                $result = select_query_i("ra_tickettatuses", "title", array("id" => substr($postaction, 9)));
                 $data = mysqli_fetch_array($result);
                 $newstatus = $data[0];
             } elseif ($postaction == "onhold") {
@@ -463,7 +463,7 @@ if ($action == "gettags") {
 
             if ($billingdescription && $billingdescription != $aInt->lang("support", "toinvoicedes")) {
                 checkPermission("Create Invoice");
-                $result = select_query_i("tbltickets", "", array("id" => $id));
+                $result = select_query_i("ra_ticket", "", array("id" => $id));
                 $data = mysqli_fetch_array($result);
                 $userid = $data['userid'];
                 $contactid = $data['contactid'];
@@ -486,7 +486,7 @@ if ($action == "gettags") {
             }
         }
 
-        update_query("tbltickets", array("replyingadmin" => "", "replyingtime" => ""), array("id" => $id));
+        update_query("ra_ticket", array("replyingadmin" => "", "replyingtime" => ""), array("id" => $id));
 
         if ($postaction == "close") {
             closeTicket($id);
@@ -496,11 +496,11 @@ if ($action == "gettags") {
                 $filt->redir();
             } else {
                 if ($postaction == "onhold") {
-                    update_query("tbltickets", array("status" => "On Hold"), array("id" => $id));
+                    update_query("ra_ticket", array("status" => "On Hold"), array("id" => $id));
                     run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "On Hold", "ticketid" => $id));
                 } else {
                     if ($postaction == "inprogress") {
-                        update_query("tbltickets", array("status" => "In Progress"), array("id" => $id));
+                        update_query("ra_ticket", array("status" => "In Progress"), array("id" => $id));
                         run_hook("TicketStatusChange", array("adminid" => $_SESSION['adminid'], "status" => "In Progress", "ticketid" => $id));
                     }
                 }
@@ -514,7 +514,7 @@ if ($action == "gettags") {
     if ($deptid) {
         check_token("RA.admin.default");
         $adminname = getAdminName();
-        $result = select_query_i("tbltickets", "", array("id" => $id));
+        $result = select_query_i("ra_ticket", "", array("id" => $id));
         $data = mysqli_fetch_array($result);
         $orig_userid = $data['userid'];
         $orig_contactid = $data['contactid'];
@@ -556,7 +556,7 @@ if ($action == "gettags") {
             $ticket->setFlagTo($flagto);
         }
 
-        $table = "tbltickets";
+        $table = "ra_ticket";
         $array = array("status" => $_POST['status'], "urgency" => $_POST['priority'], "title" => $_POST['subject'], "cc" => $_POST['cc']);
         $where = array("id" => $id);
         update_query($table, $array, $where);
@@ -578,7 +578,7 @@ if ($action == "gettags") {
         check_token("RA.admin.default");
 
         if ($type == "r") {
-            $result = select_query_i("tblticketreplies", "", array("id" => $idsd));
+            $result = select_query_i("ra_ticket_replies", "", array("id" => $idsd));
             $data = mysqli_fetch_array($result);
             $attachment = $data['attachment'];
 
@@ -598,13 +598,13 @@ if ($action == "gettags") {
 
                 $keepfile = substr($keepfile, 0, 0 - 1);
                 deleteFile($attachments_dir, $filetoremove);
-                update_query("tblticketreplies", array("attachment" => $keepfile), array("id" => $idsd));
+                update_query("ra_ticket_replies", array("attachment" => $keepfile), array("id" => $idsd));
             } else {
                 deleteFile($attachments_dir, $attachment);
-                update_query("tblticketreplies", array("attachment" => ""), array("id" => $idsd));
+                update_query("ra_ticket_replies", array("attachment" => ""), array("id" => $idsd));
             }
         } else {
-            $result = select_query_i("tbltickets", "", array("id" => $idsd));
+            $result = select_query_i("ra_ticket", "", array("id" => $idsd));
             $data = mysqli_fetch_array($result);
             $attachment = $data['attachment'];
 
@@ -624,10 +624,10 @@ if ($action == "gettags") {
 
                 $keepfile = substr($keepfile, 0, 0 - 1);
                 deleteFile($attachments_dir, $filetoremove);
-                update_query("tbltickets", array("attachment" => $keepfile), array("id" => $idsd));
+                update_query("ra_ticket", array("attachment" => $keepfile), array("id" => $idsd));
             } else {
                 deleteFile($attachments_dir, $attachment);
-                update_query("tbltickets", array("attachment" => ""), array("id" => $idsd));
+                update_query("ra_ticket", array("attachment" => ""), array("id" => $idsd));
             }
         }
 
@@ -648,7 +648,7 @@ if ($action == "gettags") {
 
     if ($sub == "delnote") {
         check_token("RA.admin.default");
-        delete_query("tblticketnotes", array("id" => $idsd));
+        delete_query("ra_ticket_notes", array("id" => $idsd));
         addTicketLog($id, "Deleted Ticket Note ID " . $idsd);
         redir("action=viewticket&id=" . $id);
         exit();
@@ -657,21 +657,21 @@ if ($action == "gettags") {
 
     if ($blocksender) {
         check_token("RA.admin.default");
-        $result = select_query_i("tbltickets", "userid,email", array("id" => $id));
-        $data = get_query_vals("tbltickets", "userid,email", array("id" => $id));
+        $result = select_query_i("ra_ticket", "userid,email", array("id" => $id));
+        $data = get_query_vals("ra_ticket", "userid,email", array("id" => $id));
         $userid = $data['userid'];
         $email = $data['email'];
 
         if ($userid) {
-            $email = get_query_val("tblclients", "email", array("id" => $userid));
+            $email = get_query_val("ra_user", "email", array("id" => $userid));
         }
 
-        $blockedalready = get_query_val("tblticketspamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
+        $blockedalready = get_query_val("ra_ticketpamfilters", "COUNT(*)", array("type" => "Sender", "content" => $email));
 
         if ($blockedalready) {
             infoBox($aInt->lang("support", "spamupdatefailed"), $aInt->lang("support", "spamupdatefailedinfo"));
         } else {
-            insert_query("tblticketspamfilters", array("type" => "Sender", "content" => $email));
+            insert_query("ra_ticketpamfilters", array("type" => "Sender", "content" => $email));
             infoBox($aInt->lang("support", "spamupdatesuccess"), $aInt->lang("support", "spamupdatesuccessinfo"));
         }
     }
@@ -680,14 +680,14 @@ if ($action == "gettags") {
 }
 if ($action == "updnote") {
     check_token("RA.admin.default");
-    update_query("tblticketnotes", array("message" => $_POST['msg'], "date" => date("Y-m-d H:i:s")), array("id" => $_POST['noteid']));
+    update_query("ra_ticket_notes", array("message" => $_POST['msg'], "date" => date("Y-m-d H:i:s")), array("id" => $_POST['noteid']));
     addTicketLog($id, "Update Ticket Note ID " . $_POST['noteid']);
     echo $_POST['msg'] = nl2br($_POST['msg']);
     exit();
 }
 if ($action == "delnote") {
     check_token("RA.admin.default");
-    delete_query("tblticketnotes", array("id" => $_POST['noteid']));
+    delete_query("ra_ticket_notes", array("id" => $_POST['noteid']));
     addTicketLog($id, "Delete Ticket Note ID " . $_POST['noteid']);
     exit();
 }
@@ -735,41 +735,41 @@ if ($action == "list" || $action == "") {
             )
     );
 
-    $tagjoin = ($tag ? " INNER JOIN tbltickettags ON tbltickettags.ticketid=tbltickets.id" : "");
-    $query = " FROM tbltickets LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";
+    $tagjoin = ($tag ? " INNER JOIN ra_ticket_tags ON ra_ticket_tags.ticketid=ra_ticket.id" : "");
+    $query = " FROM ra_ticket LEFT JOIN ra_user ON ra_user.id=ra_ticket.userid" . $tagjoin . " WHERE ";
     $filters = $statusfilter = array();
 
     if ($view == "") {
-        $result = select_query_i("tblticketstatuses", "title", array("showawaiting" => "1"));
+        $result = select_query_i("ra_tickettatuses", "title", array("showawaiting" => "1"));
 
         while ($data = mysqli_fetch_array($result)) {
             $statusfilter[] = $data[0];
         }
 
-        $filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ")";
+        $filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ")";
     } else {
         if ($view == "any") {
             
         } else {
             if ($view == "active") {
-                $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
+                $result = select_query_i("ra_tickettatuses", "title", array("showactive" => "1"));
 
                 while ($data = mysqli_fetch_array($result)) {
                     $statusfilter[] = $data[0];
                 }
 
-                $filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ")";
+                $filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ")";
             } else {
                 if ($view == "flagged") {
-                    $result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
+                    $result = select_query_i("ra_tickettatuses", "title", array("showactive" => "1"));
 
                     while ($data = mysqli_fetch_array($result)) {
                         $statusfilter[] = $data[0];
                     }
 
-                    $filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ") AND flag=" . (int) $_SESSION['adminid'];
+                    $filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ") AND flag=" . (int) $_SESSION['adminid'];
                 } else {
-                    $filters[] = "tbltickets.status='" . db_escape_string($view) . "'";
+                    $filters[] = "ra_ticket.status='" . db_escape_string($view) . "'";
                 }
             }
         }
@@ -790,41 +790,41 @@ if ($action == "list" || $action == "") {
 
     if ($client) {
         if (is_int($client)) {
-            $filters[] = "tbltickets.userid='" . db_escape_string($client) . "'";
+            $filters[] = "ra_ticket.userid='" . db_escape_string($client) . "'";
         } else {
-            $filters[] = "(tbltickets.name LIKE '%" . db_escape_string($client) . "%' "
-                    . "OR concat(tblclients.firstname,' ',tblclients.lastname) LIKE '%" . db_escape_string($client) . "%')";
+            $filters[] = "(ra_ticket.name LIKE '%" . db_escape_string($client) . "%' "
+                    . "OR concat(ra_user.firstname,' ',ra_user.lastname) LIKE '%" . db_escape_string($client) . "%')";
         }
     }
     if ($deptid) {
-        $filters[] = "tbltickets.did='" . db_escape_string($deptid) . "'";
+        $filters[] = "ra_ticket.did='" . db_escape_string($deptid) . "'";
     }
     if ($subject) {
-        $filters[] = "(tbltickets.title LIKE '%" . db_escape_string($subject) . "%' "
-                . " OR tbltickets.message LIKE '%" . db_escape_string($subject) . "%')";
+        $filters[] = "(ra_ticket.title LIKE '%" . db_escape_string($subject) . "%' "
+                . " OR ra_ticket.message LIKE '%" . db_escape_string($subject) . "%')";
     }
     if ($email) {
-        $filters[] = "(tbltickets.email LIKE '%" . db_escape_string($email) . "%' "
-                . "OR tblclients.email LIKE '%" . db_escape_string($email) . "%' "
-                . "OR tbltickets.name LIKE '%" . db_escape_string($email) . "%')";
+        $filters[] = "(ra_ticket.email LIKE '%" . db_escape_string($email) . "%' "
+                . "OR ra_user.email LIKE '%" . db_escape_string($email) . "%' "
+                . "OR ra_ticket.name LIKE '%" . db_escape_string($email) . "%')";
     }
     if ($clientname) {
-        $filters[] = "(tbltickets.name LIKE '%" . db_escape_string($clientname) . "%' "
-                . "OR concat(tblclients.firstname,' ',tblclients.lastname) LIKE '%" . db_escape_string($clientname) . "%')";
+        $filters[] = "(ra_ticket.name LIKE '%" . db_escape_string($clientname) . "%' "
+                . "OR concat(ra_user.firstname,' ',ra_user.lastname) LIKE '%" . db_escape_string($clientname) . "%')";
     }
     if ($tag) {
-        $filters[] = "tbltickettags.tag='" . db_escape_string($tag) . "'";
+        $filters[] = "ra_ticket_tags.tag='" . db_escape_string($tag) . "'";
     }
 
     releaseSession();
 
-    $query .= implode(" AND ", array_merge($filters, array("tbltickets.flag=" . (int) $_SESSION['adminid']))) . " ORDER BY tbltickets.lastreply DESC";
-    $numresultsquery = "SELECT COUNT(tbltickets.id)" . $query;
+    $query .= implode(" AND ", array_merge($filters, array("ra_ticket.flag=" . (int) $_SESSION['adminid']))) . " ORDER BY ra_ticket.lastreply DESC";
+    $numresultsquery = "SELECT COUNT(ra_ticket.id)" . $query;
     $result = full_query_i($numresultsquery);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
     $aInt->sortableTableInit("nopagination");
-    $query = "SELECT tbltickets.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT ra_ticket.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
     $result = full_query_i($query);
     buildAdminTicketListArray($result);
     $tableformurl = "?view=" . $view . "&sub=multipleaction";
@@ -839,38 +839,38 @@ if ($action == "list" || $action == "") {
     $aInt->sortableTableInit("lastreply", "ASC");
     $tabledata = array();
 
-    $query = " FROM tbltickets LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date) FROM `tblticketreplies` group by tblticketreplies.tid) as replies ON replies.tid=tbltickets.id  LEFT JOIN tblclients ON tblclients.id=tbltickets.userid" . $tagjoin . " WHERE ";
-    $filters[] = "tbltickets.flag!=" . (int) $_SESSION['adminid'];
-    $filters[] = "tbltickets.flag !=0";
+    $query = " FROM ra_ticket LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date) FROM `ra_ticket_replies` group by ra_ticket_replies.tid) as replies ON replies.tid=ra_ticket.id  LEFT JOIN ra_user ON ra_user.id=ra_ticket.userid" . $tagjoin . " WHERE ";
+    $filters[] = "ra_ticket.flag!=" . (int) $_SESSION['adminid'];
+    $filters[] = "ra_ticket.flag !=0";
     if ($deptfilter) {
         $filters[] = "did IN (" . db_build_in_array(getAdminDepartmentAssignments()) . ")";
     }
 
-    $query .= implode(" AND ", $filters) . (" ORDER BY tbltickets." . $orderby . " " . $order);
+    $query .= implode(" AND ", $filters) . (" ORDER BY ra_ticket." . $orderby . " " . $order);
 
-    $numresultsquery = "SELECT COUNT(tbltickets.id)" . $query;
+    $numresultsquery = "SELECT COUNT(ra_ticket.id)" . $query;
 
     $result = full_query_i($numresultsquery);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
-    $query = "SELECT tbltickets.*,tblclients.firstname,rname,radminname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT ra_ticket.*,ra_user.firstname,rname,radminname,ra_user.lastname,ra_user.companyname,ra_user.groupid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
     $result = full_query_i($query);
 
     buildAdminTicketListArray($result);
 
     $table = $supporttickets->tablehtml($tabledata, $view);
 
-    $query = "SELECT tbltickets.*,tblclients.firstname,rname,radminname,tblclients.lastname,"
-            . "tblclients.companyname,tblclients.groupid FROM "
-            . "tbltickets LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date)"
-            . " FROM `tblticketreplies` group by tblticketreplies.tid) as replies ON replies.tid=tbltickets.id "
-            . "LEFT JOIN tblclients ON tblclients.id=tbltickets.userid "
-            . "WHERE tbltickets.status IN ('Open','Answered','Customer-Reply','Closed','On Hold','In Progress')"
-            . " AND tbltickets.flag=0 AND did IN (1) ORDER BY tbltickets.lastreply ASC LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT ra_ticket.*,ra_user.firstname,rname,radminname,ra_user.lastname,"
+            . "ra_user.companyname,ra_user.groupid FROM "
+            . "ra_ticket LEFT JOIN (SELECT tid,name as rname,adminname as radminname,max(date)"
+            . " FROM `ra_ticket_replies` group by ra_ticket_replies.tid) as replies ON replies.tid=ra_ticket.id "
+            . "LEFT JOIN ra_user ON ra_user.id=ra_ticket.userid "
+            . "WHERE ra_ticket.status IN ('Open','Answered','Customer-Reply','Closed','On Hold','In Progress')"
+            . " AND ra_ticket.flag=0 AND did IN (1) ORDER BY ra_ticket.lastreply ASC LIMIT " . (int) $page * $limit . "," . (int) $limit;
 
 
     $unsignresult = full_query_i($query);
-    $numresultsquery = "SELECT COUNT(tbltickets.id) from tbltickets where tbltickets.flag=0";
+    $numresultsquery = "SELECT COUNT(ra_ticket.id) from ra_ticket where ra_ticket.flag=0";
 
     $result = full_query_i($numresultsquery);
     $data = mysqli_fetch_array($result);
@@ -902,7 +902,7 @@ if ($action == "list" || $action == "") {
 }
 if ($action == "search") {
     $where = "tid='" . db_escape_string($ticketid) . "' AND did IN (" . db_build_in_array(db_escape_numarray(getAdminDepartmentAssignments())) . ")";
-    $result = select_query_i("tbltickets", "", $where);
+    $result = select_query_i("ra_ticket", "", $where);
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
 
@@ -943,7 +943,7 @@ if ($action == "viewticket") {
     $access = validateAdminTicketAccess($id);
 
     if (isset($_POST['tag'])) {
-        insert_query("tbltickettags", array("ticketid" => $id, "tag" => $_POST['tag']));
+        insert_query("ra_ticket_tags", array("ticketid" => $id, "tag" => $_POST['tag']));
     }
     if ($access == "invalidid") {
         $aInt->gracefulExit($aInt->lang("support", "ticketnotfound"));
@@ -977,7 +977,7 @@ if ($action == "viewticket") {
                 exit();
             }
 
-            update_query("tbltickets", array("urgency" => $value), array("id" => (int) $id));
+            update_query("ra_ticket", array("urgency" => $value), array("id" => (int) $id));
             addTicketLog($id, "Priority changed to " . $value);
             exit();
         }
@@ -996,7 +996,7 @@ if ($action == "viewticket") {
     }
     AdminRead($id);
     if ($replyingadmin && $replyingadmin != $_SESSION['adminid']) {
-        $result = select_query_i("tbladmins", "", array("id" => $replyingadmin));
+        $result = select_query_i("ra_admin", "", array("id" => $replyingadmin));
         $data = mysqli_fetch_array($result);
         $replyingadmin = ucfirst($data['username']);
         $smartyvalues['replyingadmin'] = array("name" => $replyingadmin, "time" => $replyingtime);
@@ -1009,7 +1009,7 @@ if ($action == "viewticket") {
         $contactname = strip_tags($aInt->outputClientLink(array($pauserid, $pacontactid)));
     }
     $staffinvolved = array();
-    $result = select_query_i("tblticketreplies", "DISTINCT adminname", array("tid" => $id));
+    $result = select_query_i("ra_ticket_replies", "DISTINCT adminname", array("tid" => $id));
     while ($data = mysqli_fetch_array($result)) {
         if (trim($data[0])) {
             $staffinvolved[] = $data[0];
@@ -1026,7 +1026,7 @@ if ($action == "viewticket") {
     $date = fromMySQLDate($date, true);
     $outstatus = getStatusColour($tstatus);
     $tags = array();
-    $result = select_query_i("tbltickettags", "id,tag", array("ticketid" => $id), "tag", "ASC");
+    $result = select_query_i("ra_ticket_tags", "id,tag", array("ticketid" => $id), "tag", "ASC");
     while ($data = mysqli_fetch_array($result)) {
         $tags[$data['id']] = $data['tag'];
     }
@@ -1069,13 +1069,13 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $smartyvalues['cc'] = $cc;
     $smartyvalues['staffinvolved'] = $staffinvolved;
     $smartyvalues['deleteperm'] = checkPermission("Delete Ticket", true);
-    $result = select_query_i("tbladmins", "firstname,lastname,signature", array("id" => $_SESSION['adminid']));
+    $result = select_query_i("ra_admin", "firstname,lastname,signature", array("id" => $_SESSION['adminid']));
     $data = mysqli_fetch_array($result);
     $signature = $data['signature'];
     $smartyvalues['signature'] = $signature;
     $smartyvalues['predefinedreplies'] = genPredefinedRepliesList(0);
     $smartyvalues['clientnotes'] = array();
-    $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $pauserid, "sticky" => "1"), "modified", "DESC");
+    $result = select_query_i("ra_notes", "ra_notes.*,(SELECT CONCAT(firstname,' ',lastname) FROM ra_admin WHERE ra_admin.id=ra_notes.adminid) AS adminuser", array("userid" => $pauserid, "sticky" => "1"), "modified", "DESC");
     while ($data = mysqli_fetch_assoc($result)) {
         $data['created'] = fromMySQLDate($data['created'], 1);
         $data['modified'] = fromMySQLDate($data['modified'], 1);
@@ -1083,7 +1083,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $smartyvalues['clientnotes'][] = $data;
     }
     $notes = array();
-    $result = select_query_i("tblticketnotes", "", array("ticketid" => $id), "date", "ASC");
+    $result = select_query_i("ra_ticket_notes", "", array("ticketid" => $id), "date", "ASC");
     while ($data = mysqli_fetch_array($result)) {
         $notes[] = array("id" => $data['id'], "adminid" => $data['adminid'], "admin" => getAdminName($data['adminid']), "date" => fromMySQLDate($data['date'], true), "message" => ticketAutoHyperlinks($data['message']));
     }
@@ -1094,7 +1094,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $smartyvalues['numcustomfields'] = count($customfields);
     $smartyvalues['departments'] = $departments;
     $staff = array();
-    $result = select_query_i("tbladmins", "id,firstname,lastname,supportdepts", "disabled=0 OR id='" . (int) $flag . "'", "firstname` ASC,`lastname", "ASC");
+    $result = select_query_i("ra_admin", "id,firstname,lastname,supportdepts", "disabled=0 OR id='" . (int) $flag . "'", "firstname` ASC,`lastname", "ASC");
     while ($data = mysqli_fetch_array($result)) {
         $staff[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname']);
     }
@@ -1103,7 +1103,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     if ($service) {
         switch (substr($service, 0, 1)) {
             case "S":
-                $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.regdate,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,tblservices.name,tblcustomerservices.username,tblcustomerservices.password,tblservices.servertype", array("tblcustomerservices.id" => substr($service, 1)), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+                $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.regdate,tblcustomerservices.domain,tblcustomerservices.servicestatus,tblcustomerservices.nextduedate,tblcustomerservices.billingcycle,ra_catalog.name,tblcustomerservices.username,tblcustomerservices.password,ra_catalog.servertype", array("tblcustomerservices.id" => substr($service, 1)), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
                 $data = mysqli_fetch_array($result);
                 $service_id = $data['id'];
                 $service_userid = $data['userid'];
@@ -1151,9 +1151,9 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     if ($pauserid && checkPermission("List Services", true)) {
         $currency = getCurrency($pauserid);
         $smartyvalues['relatedservices'] = array();
-        $totalitems = get_query_val("tblcustomerservices", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("tblserviceaddons", "COUNT(tblserviceaddons.id)", array("tblcustomerservices.userid" => $pauserid), "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
+        $totalitems = get_query_val("tblcustomerservices", "COUNT(id)", array("userid" => $pauserid)) + get_query_val("ra_catalog_user_sales_addons", "COUNT(ra_catalog_user_sales_addons.id)", array("tblcustomerservices.userid" => $pauserid), "", "", "", "tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid") + get_query_val("tbldomains", "COUNT(id)", array("userid" => $pauserid));
         $lefttoselect = 10;
-        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "0," . $lefttoselect, "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_catalog.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "0," . $lefttoselect, "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
 
         while ($data = mysqli_fetch_array($result)) {
             $service_id = $data['id'];
@@ -1198,7 +1198,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 
         if (0 < $lefttoselect) {
             $result = select_query_i(
-                    "tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.id AS addonid,tblserviceaddons.addonid AS addonid2,tblserviceaddons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,tblservices.name", array("tblcustomerservices.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "0," . $lefttoselect, "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid");
+                    "ra_catalog_user_sales_addons", "ra_catalog_user_sales_addons.*,ra_catalog_user_sales_addons.id AS addonid,ra_catalog_user_sales_addons.addonid AS addonid2,ra_catalog_user_sales_addons.name AS addonname,tblcustomerservices.id AS hostingid,tblcustomerservices.domain,ra_catalog.name", array("tblcustomerservices.userid" => $pauserid), "status` ASC,`tblhosting`.`id", "DESC", "0," . $lefttoselect, "tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
 
             while ($data = mysqli_fetch_array($result)) {
                 $service_id = $data['id'];
@@ -1307,7 +1307,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     })();";
     $aInt->jquerycode = $jquerycode;
     $replies = array();
-    $result = select_query_i("tbltickets", "userid,contactid,name,email,date,title,message,adminname,attachment", array("id" => $id));
+    $result = select_query_i("ra_ticket", "userid,contactid,name,email,date,title,message,adminname,attachment", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $contactid = $data['contactid'];
@@ -1329,7 +1329,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 
     $attachments = getTicketAttachmentsInfo($id, "", $attachment);
     $replies[] = array("id" => 0, "admin" => $admin, "userid" => $userid, "contactid" => $contactid, "clientname" => $name, "clientemail" => $email, "date" => $date, "friendlydate" => $friendlydate, "friendlytime" => $friendlytime, "message" => $message, "attachments" => $attachments, "numattachments" => count($attachments));
-    $result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "DESC");
+    $result = select_query_i("ra_ticket_replies", "", array("tid" => $id), "date", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
 
@@ -1392,7 +1392,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
     $template = "support/viewticket";
 } else {
     if ($action == "open") {
-        $result = select_query_i("tbladmins", "signature", array("id" => $_SESSION['adminid']));
+        $result = select_query_i("ra_admin", "signature", array("id" => $_SESSION['adminid']));
         $data = mysqli_fetch_array($result);
         $signature = $data['signature'];
 
@@ -1402,7 +1402,7 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         }
 
         if ($userid) {
-            $result = select_query_i("tblclients", "id,firstname,lastname,companyname,email", array("id" => $userid));
+            $result = select_query_i("ra_user", "id,firstname,lastname,companyname,email", array("id" => $userid));
             $data = mysqli_fetch_array($result);
             $client = $data['id'];
 
@@ -1425,11 +1425,11 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
 
 
         $depidoption = "";
-        $result = select_query_i("tbladmins", "", array("id" => $_SESSION['adminid']));
+        $result = select_query_i("ra_admin", "", array("id" => $_SESSION['adminid']));
         $data = mysqli_fetch_array($result);
         $supportdepts = $data['supportdepts'];
         $supportdepts = explode(",", $supportdepts);
-        $result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+        $result = select_query_i("ra_ticket_teams", "", "", "order", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
@@ -1450,13 +1450,13 @@ var langstillsubmit = \"" . $_ADMINLANG['support']['stillsubmit'] . "\";
         $template = "support/supportopen";
     }
 }
-$result = select_query_i("tblticketstatuses", "", "");
+$result = select_query_i("ra_tickettatuses", "", "");
 while ($data = mysqli_fetch_array($result)) {
     $statuseshtml .= "<option value=\"" . $data['id'] . "\">" . $data['title'] . "</option>";
 }
 $aInt->assign("replacemenu", "View Tickets");
 $aInt->assign("menuitem", $supporttickets->getMenuItem($PHP_SELF));
-$result = select_query_i("tbltickettags", "", "", "id", "DESC");
+$result = select_query_i("ra_ticket_tags", "", "", "id", "DESC");
 $tags = "";
 while ($data = mysqli_fetch_array($result)) {
     $tags .= "<a href=" . $PHP_SELF . "?tag=" . $data['tag'] . " style=\"margin-right:3px\" class=\"label label-info\">" . $data['tag'] . "</a>";

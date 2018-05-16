@@ -37,7 +37,7 @@ if ($clientdata->errorbox != "" && $clientdata->errorbox != "No Addons") {
 }
 // if neither userid nor id are defined after that, I guess we just take the very first service?
 if (!$userid && !$id) {
-    $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
+    $userid = get_query_val("ra_user", "id", "", "id", "ASC", "0,1");
 }
 // if only userid is supplied, then validate
 if ($userid && !$id) {
@@ -57,8 +57,8 @@ if ($_POST['frm1']) {
     $logDetail = "";
     foreach ($servicefield as $key => $row) {
         if ($_POST['customfield'][$key] != $row['value']) {
-            delete_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $id));
-            insert_query("tblcustomfieldsvalues", array("value" => $_POST['customfield'][$key], "cfid" => $key, "relid" => $id));
+            delete_query("ra_catalog_user_sales_fieldsvalues", array("cfid" => $key, "relid" => $id));
+            insert_query("ra_catalog_user_sales_fieldsvalues", array("value" => $_POST['customfield'][$key], "cfid" => $key, "relid" => $id));
             $logDetail .= "Custom Field '" . $servicefield[$key]['fieldname'] . "' change from '" . $row['value'] . "' to '" . $_POST['customfield'][$key] . "' ";
         }
     }
@@ -77,7 +77,7 @@ if ($_POST['frm1']) {
         "lastupdate" => "now()"
     );
     if (isset($_POST['account'])) {
-        insert_query("tblnotes", array(
+        insert_query("ra_notes", array(
             "rel_id" => $_POST['account'],
             "adminid" => $_SESSION['adminid'],
             "type" => $_POST['rel_type'],
@@ -108,9 +108,9 @@ if ($action == "delete") {
     checkPermission("Delete Clients Products/Services");
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
     delete_query("tblcustomerservices", array("id" => $id));
-    delete_query("tblserviceaddons", array("hostingid" => $id));
+    delete_query("ra_catalog_user_sales_addons", array("hostingid" => $id));
     //  delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
-    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "'");
+    full_query_i("DELETE FROM ra_catalog_user_sales_fieldsvalues WHERE relid='" . db_escape_string($id) . "'");
     logActivity("Deleted Service - User ID: " . $userid . " - Service ID: " . $id, $userid, $id);
     redir("userid=" . $userid);
 }
@@ -209,7 +209,7 @@ if ($bwlimit == "0") {
     $bwlimit = $aInt->lang("global", "unlimited");
 }
 $currency = getCurrency($userid);
-$data = get_query_vals("tblcancelrequests", "id,type,reason", array("relid" => $id), "id", "DESC");
+$data = get_query_vals("ra_cancellations", "id,type,reason", array("relid" => $id), "id", "DESC");
 $cancelid = $data['id'];
 $canceltype = $data['type'];
 $autoterminatereason = $data['reason'];
@@ -218,7 +218,7 @@ if ($canceltype == "End of Billing Period") {
     $autoterminateendcycle = ($cancelid ? true : false);
 }
 $clientnotes = array();
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+$result = select_query_i("ra_notes", "ra_notes.*,(SELECT CONCAT(firstname,' ',lastname) FROM ra_admin WHERE ra_admin.id=ra_notes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
     $data['modified'] = fromMySQLDate($data['modified'], 1);
@@ -238,7 +238,7 @@ if ($cancelid) {
 }
 $emailarr = array();
 $emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
-$result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
+$result = select_query_i("ra_templates_mail", "", array("type" => "product", "language" => ""), "name", "ASC");
 while ($data = mysqli_fetch_array($result)) {
     $messagename = $data['name'];
     $custom = $data['custom'];
@@ -260,7 +260,7 @@ if ($ra->get_req_var("ajaxupdate")) {
 
 $servicesarray = getServiceAndProductdata("service", $userid);
 $accountlog = array();
-$resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
+$resutlt = select_query_i("ra_systemlog", "*", array("account_id" => $id), "date", "DESC");
 while ($data = mysqli_fetch_array($resutlt)) {
 
     $accountlog[] = $data;
@@ -270,14 +270,14 @@ $accountinvoice = array();
 
 
 
-$result = select_query_i("tbladmins", "");
+$result = select_query_i("ra_admin", "");
 while ($data = mysqli_fetch_assoc($result)) {
     $templatevars['adminlist'][] = $data;
 }
 
-$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from ra_notes as tbn 
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid)
+LEFT JOIN ra_orders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
 where tbn.rel_id = " . $id . " ORDER BY tbn.flag DESC";
 $result = full_query_i($query);

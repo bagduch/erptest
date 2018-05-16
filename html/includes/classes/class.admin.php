@@ -111,10 +111,10 @@ class RA_Admin {
 
       if ($this->requiredPermission) {
           $permid = array_search($this->requiredPermission, getAdminPermsArray());
-          $result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+          $result = select_query_i("ra_admin", "roleid", array("id" => $_SESSION['adminid']));
           $data = mysqli_fetch_array($result);
           $roleid = $data['roleid'];
-          $result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
+          $result = select_query_i("ra_adminpriv", "COUNT(*)", array("roleid" => $roleid, "permid" => $permid));
           $data = mysqli_fetch_array($result);
           $match = $data[0];
 
@@ -190,7 +190,7 @@ class RA_Admin {
             $orderby = "companyname";
         }
 
-        $result = select_query_i("tblclients", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int) $selectedval, $orderby, "ASC");
+        $result = select_query_i("ra_user", "id,firstname,lastname,companyname,groupid", "status='Active' OR id=" . (int) $selectedval, $orderby, "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $selectid = $data['id'];
@@ -387,7 +387,7 @@ class RA_Admin {
         $this->assign("datepickerformat", $CONFIG['DateFormat']);
 
         if (isset($_SESSION['adminid'])) {
-            $result = select_query_i("tbladmins", "firstname,lastname,notes,supportdepts,roleid", array("id" => $_SESSION['adminid']));
+            $result = select_query_i("ra_admin", "firstname,lastname,notes,supportdepts,roleid", array("id" => $_SESSION['adminid']));
             $data = mysqli_fetch_array($result);
             $admin_username = $data['firstname'] . " " . $data['lastname'];
             $admin_notes = $data['notes'];
@@ -397,7 +397,7 @@ class RA_Admin {
             $this->assign("admin_notes", $admin_notes);
             $admin_perms = array();
             $adminpermsarray = getAdminPermsArray();
-            $result = select_query_i("tbladminperms", "permid", array("roleid" => $admin_roleid));
+            $result = select_query_i("ra_adminpriv", "permid", array("roleid" => $admin_roleid));
 
             while ($data = mysqli_fetch_array($result)) {
                 $admin_perms[] = $adminpermsarray[$data[0]];
@@ -408,7 +408,7 @@ class RA_Admin {
         }
 
         $admins = "";
-        $query = "SELECT DISTINCT adminusername FROM tbladminlog WHERE lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND logouttime='0000-00-00' ORDER BY lastvisit ASC";
+        $query = "SELECT DISTINCT adminusername FROM ra_adminlog WHERE lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND logouttime='0000-00-00' ORDER BY lastvisit ASC";
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -438,7 +438,7 @@ class RA_Admin {
             }
 
 
-            $query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
+            $query = "SELECT ra_tickettatuses.title,(SELECT COUNT(ra_ticket.id) FROM ra_ticket WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND ra_ticket.status=ra_tickettatuses.title),showactive,showawaiting FROM ra_tickettatuses ORDER BY sortorder ASC";
 
             $result = full_query_i($query);
 
@@ -456,7 +456,7 @@ class RA_Admin {
             }
 
 
-            $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
+            $result = select_query_i("ra_ticket", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
             $data = mysqli_fetch_array($result);
             // echo "<pre class=test>" . print_r($data, 1) . "</pre>";
             $flaggedtickets = $data[0];
@@ -468,7 +468,7 @@ class RA_Admin {
             $this->assign("ticketcounts", $ticketcounts);
             $this->assign("ticketstatuses", $ticketcounts);
             $departments = array();
-            $result = select_query_i("tblticketdepartments", "id,name", "id IN (" . db_build_in_array($admin_supportdepts_qry) . ")", "order", "ASC");
+            $result = select_query_i("ra_ticket_teams", "id,name", "id IN (" . db_build_in_array($admin_supportdepts_qry) . ")", "order", "ASC");
 
             while ($data = mysqli_fetch_array($result)) {
                 $departments[] = array("id" => $data['id'], "name" => $data['name']);
@@ -477,7 +477,7 @@ class RA_Admin {
             $this->assign("ticketdepts", $departments);
         }
 
-        $query = "select * from tbltickets where status !='Closed' Order By date DESC";
+        $query = "select * from ra_ticket where status !='Closed' Order By date DESC";
         $result = full_query_i($query);
         $tickets = array();
         while ($data = mysqli_fetch_array($result)) {
@@ -1102,9 +1102,9 @@ $(\"#tab" . $tabnumber . "box\").css(\"display\",\"\");";
         $tabarray['clientscredits'] = $this->lang("clientsummary", "credits");
         $tabarray['clientstransactions'] = $this->lang("clientsummary", "transactions");
         $tabarray['clientsemails'] = $this->lang("clientsummary", "emails");
-        $query = "select count(tbn.id) as total from tblnotes as tbn
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+        $query = "select count(tbn.id) as total from ra_notes as tbn
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid)
+LEFT JOIN ra_orders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
 where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . " OR tbcs.userid=" . $uid . " ORDER BY tbn.flag DESC";
         $result = full_query_i($query);
@@ -1117,7 +1117,7 @@ where (tbn.rel_id=" . $uid . " and tbn.type='client') OR tbo.userid=" . $uid . "
 
 
 
-        $result = select_query_i("tblclients", "", array("id" => $uid));
+        $result = select_query_i("ra_user", "", array("id" => $uid));
         $data = mysqli_fetch_array($result);
         $selectfirstname = $data['firstname'];
         $selectlastname = $data['lastname'];
@@ -1301,7 +1301,7 @@ $(\"#\"+name).dialog('open');
             if (isset($ClientOutputData[$userid])) {
                 $data = $ClientOutputData[$userid];
             } else {
-                $result = select_query_i("tblclients", "firstname,lastname,companyname,groupid", array("id" => $userid));
+                $result = select_query_i("ra_user", "firstname,lastname,companyname,groupid", array("id" => $userid));
                 $data = mysqli_fetch_array($result);
                 $ClientOutputData[$userid] = $data;
             }
@@ -1315,7 +1315,7 @@ $(\"#\"+name).dialog('open');
                 if (isset($ContactOutputData[$contactid])) {
                     $contactdata = $ContactOutputData[$contactid];
                 } else {
-                    $contactdata = get_query_vals("tblcontacts", "firstname,lastname", array("id" => $contactid, "userid" => $userid));
+                    $contactdata = get_query_vals("ra_user_contacts", "firstname,lastname", array("id" => $contactid, "userid" => $userid));
                     $ContactOutputData[$contactid] = $contactdata;
                 }
 
@@ -1448,7 +1448,7 @@ function insertMergeField(mfield) {
         }
 
         $groupname = "";
-        $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservices.retired,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+        $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.name,ra_catalog.retired,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
         while ($data = mysqli_fetch_array($result)) {
             $packid = $data['id'];
@@ -1566,16 +1566,16 @@ function dialogChangeTab(id) {
       ];
 
         // Order Statuses
-        $query = "SELECT title,count(tblorders.status) count FROM tblorderstatuses LEFT JOIN tblorders ON tblorderstatuses.title=tblorders.status GROUP BY tblorderstatuses.title";
+        $query = "SELECT title,count(ra_orders.status) count FROM ra_orderstatuses LEFT JOIN ra_orders ON ra_orderstatuses.title=ra_orders.status GROUP BY ra_orderstatuses.title";
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
           $templatevars["orders"][$data["title"]] = (int)$data["count"];
         }
 
         // Client Statuses
-        $query = "SELECT statuses.status,count(tblclients.status) count
+        $query = "SELECT statuses.status,count(ra_user.status) count
           FROM (SELECT 'Active' AS status UNION SELECT 'Inactive' UNION SELECT 'Closed') statuses
-          LEFT JOIN tblclients ON statuses.status=tblclients.status GROUP BY tblclients.status";
+          LEFT JOIN ra_user ON statuses.status=ra_user.status GROUP BY ra_user.status";
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
           $templatevars["clients"][$data["status"]] = (int)$data["count"];
@@ -1592,7 +1592,7 @@ function dialogChangeTab(id) {
         }
 
         // Invoice Statuses
-        $query = "SELECT status,COUNT(id) count,SUM(duedate < NOW()) overdue FROM tblinvoices GROUP BY status";
+        $query = "SELECT status,COUNT(id) count,SUM(duedate < NOW()) overdue FROM ra_bills GROUP BY status";
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
           if ($data['status'] == "Unpaid") {
@@ -1605,14 +1605,14 @@ function dialogChangeTab(id) {
 
         // Ticket Statuses
         $query = sprintf("SELECT
-            tblticketstatuses.title status,
-            tblticketstatuses.showactive,
-            tblticketstatuses.showawaiting,
-            COUNT(tbltickets.status) count,
-            SUM('%s'=tbltickets.flag) flagged
-          FROM tblticketstatuses
-          LEFT JOIN tbltickets ON tbltickets.status=tblticketstatuses.title
-          GROUP BY tblticketstatuses.title",
+            ra_tickettatuses.title status,
+            ra_tickettatuses.showactive,
+            ra_tickettatuses.showawaiting,
+            COUNT(ra_ticket.status) count,
+            SUM('%s'=ra_ticket.flag) flagged
+          FROM ra_tickettatuses
+          LEFT JOIN ra_ticket ON ra_ticket.status=ra_tickettatuses.title
+          GROUP BY ra_tickettatuses.title",
         (int)$_SESSION['adminid']);
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {

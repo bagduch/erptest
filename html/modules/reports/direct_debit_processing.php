@@ -8,7 +8,7 @@ $reportdata["description"] = "This report displays all Unpaid invoices assigned 
 
 $reportdata["tableheadings"] = array("Invoice ID","Client Name","Invoice Date","Due Date","Subtotal","Tax","Credit","Total","Bank Name","Bank Account Type","Bank Code","Bank Account Number");
 
-$query = "SELECT tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.bankname,tblclients.banktype,tblclients.bankcode,tblclients.bankacct FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.paymentmethod='directdebit' AND tblinvoices.status='Unpaid' ORDER BY duedate ASC";
+$query = "SELECT ra_bills.*,ra_user.firstname,ra_user.lastname,ra_user.bankname,ra_user.banktype,ra_user.bankcode,ra_user.bankacct FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.paymentmethod='directdebit' AND ra_bills.status='Unpaid' ORDER BY duedate ASC";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_array($result)) {
 

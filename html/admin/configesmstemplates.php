@@ -16,11 +16,11 @@ $aInt->helplink = "Email Templates";
 $menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 
 if ($action == 'new') {
-    $smsid = insert_query("tblsmstemplate", array('smsgrp' => $_POST['smsgrp'], 'name' => $_POST['name']));
+    $smsid = insert_query("ra_templates_sms", array('smsgrp' => $_POST['smsgrp'], 'name' => $_POST['name']));
     redir("action=edit&id=" . $smsid);
     exit();
 } elseif ($action == "edit") {
-    $result = select_query_i("tblsmstemplate", "*", array('id' => $id));
+    $result = select_query_i("ra_templates_sms", "*", array('id' => $id));
     $sms = mysqli_fetch_assoc($result);
     $aInt->assign("sms", $sms);
     $template = "smstemplate/edit";
@@ -31,13 +31,13 @@ if ($action == 'new') {
         'name' => $_POST['name'],
         'message' => $_POST['message']
     );
-    $result = update_query("tblsmstemplate", $data, array('id' => $id));
+    $result = update_query("ra_templates_sms", $data, array('id' => $id));
 
 redir();
 } else {
 
     $data = array();
-    $result = select_query_i("tblsmstemplate", "*");
+    $result = select_query_i("ra_templates_sms", "*");
     while ($row = mysqli_fetch_assoc($result)) {
         $data[$row['smsgrp']][] = $row;
     }

@@ -7,5 +7,5 @@ if (!defined("RA")) {
 }
 
 $apiresults = array("result" => "success");
-update_query("tbladmins", array("notes" => $notes), array("id" => $_SESSION['adminid']));
+update_query("ra_admin", array("notes" => $notes), array("id" => $_SESSION['adminid']));
 ?>

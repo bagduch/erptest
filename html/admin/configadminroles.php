@@ -12,7 +12,7 @@ $aInt->requiredFiles(array("reportfunctions"));
 $chart = new RAChart();
 if ($action == "addrole") {
     check_token("RA.admin.default");
-    $adminrole = insert_query("tbladminroles", array("name" => $name));
+    $adminrole = insert_query("ra_adminroles", array("name" => $name));
     redir("action=edit&id=" . $adminrole);
     exit();
 }
@@ -20,17 +20,17 @@ if ($action == "addrole") {
 
 if ($action == "duplicaterole") {
     check_token("RA.admin.default");
-    $result = select_query_i("tbladminroles", "", array("id" => $existinggroup));
+    $result = select_query_i("ra_adminroles", "", array("id" => $existinggroup));
     $data = mysqli_fetch_array($result);
     $widgets = $data['widgets'];
     $systememails = $data['systememails'];
     $accountemails = $data['accountemails'];
     $supportemails = $data['supportemails'];
-    $roleid = insert_query("tbladminroles", array("name" => $newname, "widgets" => $widgets, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails));
-    $result = select_query_i("tbladminperms", "", array("roleid" => $existinggroup));
+    $roleid = insert_query("ra_adminroles", array("name" => $newname, "widgets" => $widgets, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails));
+    $result = select_query_i("ra_adminpriv", "", array("roleid" => $existinggroup));
 
     while ($data = mysqli_fetch_array($result)) {
-        insert_query("tbladminperms", array("roleid" => $roleid, "permid" => $data['permid']));
+        insert_query("ra_adminpriv", array("roleid" => $roleid, "permid" => $data['permid']));
     }
 
     redir("action=edit&id=" . $roleid);
@@ -50,12 +50,12 @@ if ($action == "save") {
         $reportdata = "";
     }
 
-    update_query("tbladminroles", array("name" => $name, "widgets" => implode(",", $widget), "report" => $reportdata, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
-    delete_query("tbladminperms", array("roleid" => $id));
+    update_query("ra_adminroles", array("name" => $name, "widgets" => implode(",", $widget), "report" => $reportdata, "systememails" => $systememails, "accountemails" => $accountemails, "supportemails" => $supportemails), array("id" => $id));
+    delete_query("ra_adminpriv", array("roleid" => $id));
 
     if ($adminperms) {
         foreach ($adminperms as $k => $v) {
-            insert_query("tbladminperms", array("roleid" => $id, "permid" => $k));
+            insert_query("ra_adminpriv", array("roleid" => $id, "permid" => $k));
         }
     }
 
@@ -65,14 +65,14 @@ if ($action == "save") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    $admincount = get_query_val("tbladmins", "COUNT(id)", array("roleid" => $id));
+    $admincount = get_query_val("ra_admin", "COUNT(id)", array("roleid" => $id));
 
     if ($admincount) {
         redir();
     }
 
-    delete_query("tbladminroles", array("id" => $id));
-    delete_query("tbladminperms", array("roleid" => $id));
+    delete_query("ra_adminroles", array("id" => $id));
+    delete_query("ra_adminpriv", array("roleid" => $id));
     redir("deleted=true");
 }
 
@@ -89,12 +89,12 @@ if (!$action) {
     $aInt->deleteJSConfirm("doDelete", "adminroles", "suredelete", $_SERVER['PHP_SELF'] . "?action=delete&id=");
 
     $aInt->sortableTableInit("nopagination");
-    $result = select_query_i("tbladminroles", "", "", "name", "ASC");
+    $result = select_query_i("ra_adminroles", "", "", "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $deletejs = (3 < $data['id'] ? "doDelete('" . $data['id'] . "')" : "alert('" . $aInt->lang("adminroles", "nodeldefault", 1) . "')");
         $assigned = array();
-        $result2 = select_query_i("tbladmins", "id,username,disabled", array("roleid" => $data['id']), "username", "ASC");
+        $result2 = select_query_i("ra_admin", "id,username,disabled", array("roleid" => $data['id']), "username", "ASC");
 
         while ($data2 = mysqli_fetch_array($result2)) {
             $assigned[] = "<a href=\"configadmins.php?action=manage&id=" . $data2['id'] . "\"" . ($data2['disabled'] ? " style=\"color:#ccc;\"" : "") . ">" . $data2['username'] . "</a>";
@@ -120,7 +120,7 @@ if (!$action) {
     $aInt->template = "configadminroles/" . $template;
 } elseif ($action == "duplicate") {
     $existinggrouphtml = "<select class='form-control' name=\"existinggroup\">";
-    $result = select_query_i("tbladminroles", "", "", "name", "ASC");
+    $result = select_query_i("ra_adminroles", "", "", "name", "ASC");
     while ($data = mysqli_fetch_array($result)) {
         $existinggrouphtml.= "<option value=\"" . $data['id'] . "\">" . $data['name'] . "</otpion>";
     }
@@ -129,7 +129,7 @@ if (!$action) {
     $template = "dupicate";
     $aInt->template = "configadminroles/" . $template;
 } else {
-    $result = select_query_i("tbladminroles", "", array("id" => $id));
+    $result = select_query_i("ra_adminroles", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $name = $data['name'];
     $widgets = $data['widgets'];
@@ -147,7 +147,7 @@ if (!$action) {
     $permissionsfieldhtml = "<table class=\"borderless\" width=\"100%\"><tr><td valign=\"top\" width=\"34%\">";
     foreach ($adminpermsarray as $k => $v) {
         $permissionsfieldhtml.= ("<input type=\"checkbox\" name=\"adminperms[" . $k . "]") . "\" id=\"adminperms" . $k . "\"";
-        $result = select_query_i("tbladminperms", "COUNT(*)", array("roleid" => $id, "permid" => $k));
+        $result = select_query_i("ra_adminpriv", "COUNT(*)", array("roleid" => $id, "permid" => $k));
         $data = mysqli_fetch_array($result);
         if ($data[0]) {
             $permissionsfieldhtml.= " checked";

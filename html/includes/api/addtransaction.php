@@ -13,7 +13,7 @@ if (!function_exists("addTransaction")) {
 
 
 if ($userid) {
-	$result = select_query_i("tblclients", "id", array("id" => $userid));
+	$result = select_query_i("ra_user", "id", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
@@ -24,7 +24,7 @@ if ($userid) {
 
 
 if ($invoiceid = (int)$_POST['invoiceid']) {
-	$query = "SELECT * FROM tblinvoices WHERE id='" . $invoiceid . "'";
+	$query = "SELECT * FROM ra_bills WHERE id='" . $invoiceid . "'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 
@@ -47,8 +47,8 @@ if ($userid && $credit) {
 		$description .= " (Trans ID: " . $transid . ")";
 	}
 
-	insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
-	update_query("tblclients", array("credit" => "+=" . $amountin), array("id" => (int)$userid));
+	insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
+	update_query("ra_user", array("credit" => "+=" . $amountin), array("id" => (int)$userid));
 }
 
 $apiresults = array("result" => "success");

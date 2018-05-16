@@ -21,7 +21,7 @@ if (!function_exists("processPaidInvoice")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$result = select_query_i("tblinvoices", "id", array("id" => $invoiceid, "status" => "Unpaid"));
+$result = select_query_i("ra_bills", "id", array("id" => $invoiceid, "status" => "Unpaid"));
 $data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 

@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$userid = get_query_val("tblclients", "id", array("id" => $userid));
+$userid = get_query_val("ra_user", "id", array("id" => $userid));
 
 if (!$userid) {
 	$apiresults = array("result" => "error", "message" => "Client ID not found");
@@ -20,6 +20,6 @@ if (!$notes) {
 }
 
 $sticky = $sticky ? 1 : 0;
-$noteid = insert_query("tblnotes", array("userid" => $userid, "adminid" => $_SESSION['adminid'], "created" => "now()", "modified" => "now()", "note" => nl2br($notes), "sticky" => $sticky));
+$noteid = insert_query("ra_notes", array("userid" => $userid, "adminid" => $_SESSION['adminid'], "created" => "now()", "modified" => "now()", "note" => nl2br($notes), "sticky" => $sticky));
 $apiresults = array("result" => "success", "noteid" => $noteid);
 ?>

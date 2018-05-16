@@ -65,12 +65,12 @@ if ($action == "add") {
             "period" => $day,
             "suspension" => $_POST['suspension'],
         );
-        update_query("tblinvoices", array("status" => "Payment Plan"), array("id" => $id));
+        update_query("ra_bills", array("status" => "Payment Plan"), array("id" => $id));
         if ($_POST['newpaymentplan']) {
-            insert_query("tblinvoicepaymentmonitor", $array);
+            insert_query("ra_bill_payment_monitor", $array);
             logActivity("Invoice change to payment plan - Invoice ID: " . $_POST['id'], $_SESSION['adminid']);
         } else {
-            update_query("tblinvoicepaymentmonitor", $array, array('invoice_id' => $_POST['id']));
+            update_query("ra_bill_payment_monitor", $array, array('invoice_id' => $_POST['id']));
             logActivity("Update payment plan - Invoice ID: " . $_POST['id'], $_SESSION['adminid']);
         }
     }

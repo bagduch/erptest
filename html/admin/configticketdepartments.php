@@ -26,12 +26,12 @@ if ($sub == "add") {
 
 
 	if (!$infobox) {
-		$result = select_query_i("tblticketdepartments", "", "", "order", "DESC");
+		$result = select_query_i("ra_ticket_teams", "", "", "order", "DESC");
 		$data = mysqli_fetch_array($result);
 		$order = $data['order'];
 		++$order;
-		$id = insert_query("tblticketdepartments", array("name" => $name, "description" => html_entity_decode($description), "email" => trim($email), "clientsonly" => $clientsonly, "piperepliesonly" => $piperepliesonly, "noautoresponder" => $noautoresponder, "hidden" => $hidden, "order" => $order, "host" => trim($host), "port" => trim($port), "login" => trim($login), "password" => encrypt(trim(html_entity_decode($password)))));
-		$result = select_query_i("tbladmins", "id,supportdepts", array("disabled" => "0"));
+		$id = insert_query("ra_ticket_teams", array("name" => $name, "description" => html_entity_decode($description), "email" => trim($email), "clientsonly" => $clientsonly, "piperepliesonly" => $piperepliesonly, "noautoresponder" => $noautoresponder, "hidden" => $hidden, "order" => $order, "host" => trim($host), "port" => trim($port), "login" => trim($login), "password" => encrypt(trim(html_entity_decode($password)))));
+		$result = select_query_i("ra_admin", "id,supportdepts", array("disabled" => "0"));
 
 		while ($data = mysqli_fetch_array($result)) {
 			$deptadminid = $data[0];
@@ -49,7 +49,7 @@ if ($sub == "add") {
 				}
 			}
 
-			update_query("tbladmins", array("supportdepts" => implode(",", $supportdepts)), array("id" => $deptadminid));
+			update_query("ra_admin", array("supportdepts" => implode(",", $supportdepts)), array("id" => $deptadminid));
 		}
 
 		redir("createsuccess=1");
@@ -74,8 +74,8 @@ if ($sub == "save") {
 	$disabled[] = ($disabled ? 1 : 0);
 
 	if (!$infobox) {
-		update_query("tblticketdepartments", array("name" => $name, "description" => html_entity_decode($description), "email" => trim($email), "clientsonly" => $clientsonly, "piperepliesonly" => $piperepliesonly, "noautoresponder" => $noautoresponder, "hidden" => $hidden, "host" => trim($host), "port" => trim($port), "login" => trim($login), "password" => encrypt(trim(html_entity_decode($password)))), array("id" => $id));
-		$result = select_query_i("tbladmins", "id,supportdepts", "");
+		update_query("ra_ticket_teams", array("name" => $name, "description" => html_entity_decode($description), "email" => trim($email), "clientsonly" => $clientsonly, "piperepliesonly" => $piperepliesonly, "noautoresponder" => $noautoresponder, "hidden" => $hidden, "host" => trim($host), "port" => trim($port), "login" => trim($login), "password" => encrypt(trim(html_entity_decode($password)))), array("id" => $id));
+		$result = select_query_i("ra_admin", "id,supportdepts", "");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$deptadminid = $data[0];
@@ -93,19 +93,19 @@ if ($sub == "save") {
 				}
 			}
 
-			update_query("tbladmins", array("supportdepts" => implode(",", $supportdepts), "disabled" => $disabled), array("id" => $deptadminid));
+			update_query("ra_admin", array("supportdepts" => implode(",", $supportdepts), "disabled" => $disabled), array("id" => $deptadminid));
 		}
 
 
 		if ($customfieldname) {
 			foreach ($customfieldname as $fid => $value) {
-				update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $customfieldtype[$fid], "description" => $customfielddesc[$fid], "fieldoptions" => $customfieldoptions[$fid], "regexpr" => html_entity_decode($customfieldregexpr[$fid]), "adminonly" => $customadminonly[$fid], "required" => $customrequired[$fid], "showorder" => $customshoworder[$fid], "sortorder" => $customsortorder[$fid]), array("id" => $fid));
+				update_query("ra_catalog_user_sales_fields", array("fieldname" => $value, "fieldtype" => $customfieldtype[$fid], "description" => $customfielddesc[$fid], "fieldoptions" => $customfieldoptions[$fid], "regexpr" => html_entity_decode($customfieldregexpr[$fid]), "adminonly" => $customadminonly[$fid], "required" => $customrequired[$fid], "showorder" => $customshoworder[$fid], "sortorder" => $customsortorder[$fid]), array("id" => $fid));
 			}
 		}
 
 
 		if ($addfieldname) {
-			insert_query("tblcustomfields", array("type" => "support", "relid" => $id, "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $addcfdesc, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "sortorder" => $addsortorder));
+			insert_query("ra_catalog_user_sales_fields", array("type" => "support", "relid" => $id, "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $addcfdesc, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "sortorder" => $addsortorder));
 		}
 
 		redir("savesuccess=1");
@@ -115,49 +115,49 @@ if ($sub == "save") {
 
 if ($sub == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query_i("tblticketdepartments", "", array("id" => $id));
+	$result = select_query_i("ra_ticket_teams", "", array("id" => $id));
 	$data = mysqli_fetch_array($result);
 	$order = $data['order'];
-	update_query("tblticketdepartments", array("order" => "-1"), array("`order`" => $order));
-	delete_query("tblticketdepartments", array("id" => $id));
-	$result = select_query_i("tblticketdepartments", "min(id) as id", array());
+	update_query("ra_ticket_teams", array("order" => "-1"), array("`order`" => $order));
+	delete_query("ra_ticket_teams", array("id" => $id));
+	$result = select_query_i("ra_ticket_teams", "min(id) as id", array());
 	$data = mysqli_fetch_array($result);
 	$newdeptid = $data['id'];
-	update_query("tbltickets", array("did" => $newdeptid), array("did" => $id));
-	delete_query("tblcustomfields", array("type" => "support", "relid" => $id));
-	full_query_i("DELETE FROM tblcustomfieldsvalues WHERE fieldid NOT IN (SELECT id FROM tblcustomfields)");
+	update_query("ra_ticket", array("did" => $newdeptid), array("did" => $id));
+	delete_query("ra_catalog_user_sales_fields", array("type" => "support", "relid" => $id));
+	full_query_i("DELETE FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid NOT IN (SELECT id FROM ra_catalog_user_sales_fields)");
 	redir("delsuccess=1");
 }
 
 
 if ($sub == "deletecustomfield") {
 	check_token("RA.admin.default");
-	delete_query("tblcustomfields", array("id" => $id));
-	delete_query("tblcustomfieldsvalues", array("fieldid" => $id));
+	delete_query("ra_catalog_user_sales_fields", array("id" => $id));
+	delete_query("ra_catalog_user_sales_fieldsvalues", array("fieldid" => $id));
 	redir("savesuccess=1");
 }
 
 
 if ($sub == "moveup") {
 	check_token("RA.admin.default");
-	$result = select_query_i("tblticketdepartments", "", array("`order`" => $order));
+	$result = select_query_i("ra_ticket_teams", "", array("`order`" => $order));
 	$data = mysqli_fetch_array($result);
 	$premid = $data['id'];
 	$order1 = $order - 1;
-	update_query("tblticketdepartments", array("order" => $order), array("`order`" => $order1));
-	update_query("tblticketdepartments", array("order" => $order1), array("id" => $premid));
+	update_query("ra_ticket_teams", array("order" => $order), array("`order`" => $order1));
+	update_query("ra_ticket_teams", array("order" => $order1), array("id" => $premid));
 	redir();
 }
 
 
 if ($sub == "movedown") {
 	check_token("RA.admin.default");
-	$result = select_query_i("tblticketdepartments", "", array("`order`" => $order));
+	$result = select_query_i("ra_ticket_teams", "", array("`order`" => $order));
 	$data = mysqli_fetch_array($result);
 	$premid = $data['id'];
 	$order1 = $order + 1;
-	update_query("tblticketdepartments", array("order" => $order), array("`order`" => $order1));
-	update_query("tblticketdepartments", array("order" => $order1), array("id" => $premid));
+	update_query("ra_ticket_teams", array("order" => $order), array("`order`" => $order1));
+	update_query("ra_ticket_teams", array("order" => $order1), array("id" => $premid));
 	redir();
 }
 
@@ -216,11 +216,11 @@ if ($action == "") {
 	echo "</a></p>
 
 ";
-	$result = select_query_i("tblticketdepartments", "", "", "order", "DESC");
+	$result = select_query_i("ra_ticket_teams", "", "", "order", "DESC");
 	$data = mysqli_fetch_array($result);
 	$lastorder = $data['order'];
 	$aInt->sortableTableInit("nopagination");
-	$result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+	$result = select_query_i("ra_ticket_teams", "", "", "order", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -261,7 +261,7 @@ if ($action == "") {
 else {
 	if ($action == "edit") {
 		if (!$infobox) {
-			$result = select_query_i("tblticketdepartments", "", array("id" => $id));
+			$result = select_query_i("ra_ticket_teams", "", array("id" => $id));
 			$data = mysqli_fetch_array($result);
 			$name = $data['name'];
 			$description = $data['description'];
@@ -318,7 +318,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?sub=deletecustomfield&id='+id+'" .
 		echo $aInt->lang("supportticketdepts", "assignedadmins");
 		echo "</td><td class=\"fieldarea\">
 ";
-		$result = select_query_i("tbladmins", "", "", "username", "ASC");
+		$result = select_query_i("ra_admin", "", "", "username", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$supportdepts = $data['supportdepts'];
@@ -424,7 +424,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?sub=deletecustomfield&id='+id+'" .
   <div id=\"tab_content\">
 
 ";
-		$result = select_query_i("tblcustomfields", "", array("type" => "support", "relid" => $id), "id", "ASC");
+		$result = select_query_i("ra_catalog_user_sales_fields", "", array("type" => "support", "relid" => $id), "id", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$fid = $data['id'];
@@ -673,7 +673,7 @@ if ($action == "add") {
 	echo $aInt->lang("supportticketdepts", "assignedadmins");
 	echo "</td><td class=\"fieldarea\">
 ";
-	$result = select_query_i("tbladmins", "", "", "username", "ASC");
+	$result = select_query_i("ra_admin", "", "", "username", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		echo "<label><input type=\"checkbox\" name=\"admins[]\" value=\"" . $data['id'] . "\"";

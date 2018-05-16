@@ -76,7 +76,7 @@ class RA_Client {
 			}
 		}
 
-		update_query("tblclients", $updateqry, array("id" => $this->getID()));
+		update_query("ra_user", $updateqry, array("id" => $this->getID()));
 		$old_customfieldsarray = getCustomFields("client", "", $this->getID(), "", "");
 		$customfields = getCustomFields("client", "", $this->getID(), "", "");
 		foreach ($customfields as $v) {
@@ -132,7 +132,7 @@ class RA_Client {
 
 	private function getContactsData($where) {
 		$contactsarray = array();
-		$result = select_query_i("tblcontacts", "id,firstname,lastname,email", $where, "firstname` ASC,`lastname", "ASC");
+		$result = select_query_i("ra_user_contacts", "id,firstname,lastname,email", $where, "firstname` ASC,`lastname", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$contactsarray[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname'], "email" => $data['email']);
@@ -142,15 +142,15 @@ class RA_Client {
 	}
 
 	public function getContact($contactid) {
-		$result = select_query_i("tblcontacts", "", array("userid" => $this->userid, "id" => $contactid));
+		$result = select_query_i("ra_user_contacts", "", array("userid" => $this->userid, "id" => $contactid));
 		$data = mysqli_fetch_assoc($result);
 		$data['permissions'] = explode(",", $data['permissions']);
 		return isset($data['id']) ? $data : false;
 	}
 
 	public function deleteContact($contactid) {
-		delete_query("tblcontacts", array("userid" => $this->userid, "id" => $contactid));
-		update_query("tblclients", array("billingcid" => ""), array("billingcid" => $contactid, "id" => $this->userid));
+		delete_query("ra_user_contacts", array("userid" => $this->userid, "id" => $contactid));
+		update_query("ra_user", array("billingcid" => ""), array("billingcid" => $contactid, "id" => $this->userid));
 		run_hook("ContactDelete", array("userid" => $this->userid, "contactid" => $contactid));
 		return true;
 	}
@@ -163,7 +163,7 @@ class RA_Client {
 		}
 
 		$files = array();
-		$result = select_query_i("tblclientsfiles", "", $where, "title", "ASC");
+		$result = select_query_i("ra_userfiles", "", $where, "title", "ASC");
 
 		while ($data = mysqli_fetch_assoc($result)) {
 			$id = $data['id'];
@@ -188,7 +188,7 @@ class RA_Client {
 	}
 
 	public function getEmailTemplates() {
-		$query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
+		$query = "SELECT * FROM ra_templates_mail WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
 		$result = full_query_i($query);
 		$emailtpls = array();
 
@@ -202,10 +202,10 @@ class RA_Client {
 	}
 
 	public function sendCustomEmail($subject, $msg) {
-		delete_query("tblemailtemplates", array("name" => "Client Custom Email Msg"));
-		insert_query("tblemailtemplates", array("type" => "general", "name" => "Client Custom Email Msg", "subject" => html_entity_decode($subject), "message" => html_entity_decode($message)));
+		delete_query("ra_templates_mail", array("name" => "Client Custom Email Msg"));
+		insert_query("ra_templates_mail", array("type" => "general", "name" => "Client Custom Email Msg", "subject" => html_entity_decode($subject), "message" => html_entity_decode($message)));
 		sendMessage("Client Custom Email Msg", $this->userid);
-		delete_query("tblemailtemplates", array("name" => "Client Custom Email Msg"));
+		delete_query("ra_templates_mail", array("name" => "Client Custom Email Msg"));
 		return true;
 	}
 }

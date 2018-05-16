@@ -75,11 +75,11 @@ if ($clientsdetails["companyname"]) {
 	$addressline = array($clientsdetails["firstname"]." ".$clientsdetails["lastname"],$clientsdetails["address1"],$clientsdetails["city"],$clientsdetails["state"]." ".$clientsdetails["postcode"]." ".$clientsdetails["country"]);
 }
 
-$result2a = select_query_i("tblinvoices","total",array("id"=>$id));
+$result2a = select_query_i("ra_bills","total",array("id"=>$id));
 $dataa = mysqli_fetch_array($result2a);
 $invtotal = $dataa["total"];
 
-$resultb = select_query_i("tblaccounts","SUM(amountin)-SUM(amountout)",array("invoiceid"=>$id));
+$resultb = select_query_i("ra_transactions","SUM(amountin)-SUM(amountout)",array("invoiceid"=>$id));
 $datab = mysqli_fetch_array($resultb);
 $amountpaid = $datab[0];
 
@@ -90,7 +90,7 @@ $balance = formatCurrency($balance);
 
 
 $transactions = array();
-$resultc = select_query_i("tblaccounts","",array("invoiceid"=>$id),"date` ASC,`id","ASC");
+$resultc = select_query_i("ra_transactions","",array("invoiceid"=>$id),"date` ASC,`id","ASC");
 while ($datac = mysqli_fetch_array($resultc)) {
 	$date = $datac["date"];
 	$date = fromMySQLDate($date);
@@ -184,7 +184,7 @@ $pdf->SetLineStyle(array('width' => 0, 'cap' => 'butt', 'join' => 'miter', 'dash
 # SHOW IMAGE
 
 $setting = array();
-$sresult = select_query_i("tblconfiguration","*");
+$sresult = select_query_i("ra_config","*");
 while($data =  mysqli_fetch_array($sresult)) {
 $setting[$data['setting']] = $data['value'];
 

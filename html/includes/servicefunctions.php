@@ -23,13 +23,13 @@ function getServiceData($id = NULL) {
         tblcustomerservices.overidesuspenduntil,
         tblcustomerservices.lastupdate,
         tblcustomerservices.notes,
-        tblservices.servertype,
-        tblservices.type
+        ra_catalog.servertype,
+        ra_catalog.type
     FROM tblcustomerservices
-    LEFT JOIN tblservices
-        ON tblservices.id=tblcustomerservices.packageid
-    LEFT JOIN tblservicegroups
-        ON (tblservices.gid=tblservicegroups.id )
+    LEFT JOIN ra_catalog
+        ON ra_catalog.id=tblcustomerservices.packageid
+    LEFT JOIN ra_catalog_groups
+        ON (ra_catalog.gid=ra_catalog_groups.id )
     WHERE tblcustomerservices.id=" . (int) $id;
 
     $result = full_query_i($query);
@@ -42,7 +42,7 @@ function getServiceData($id = NULL) {
 // return all custom fields and values for product,
 // even if value not populated (return null)
 // if id is supplied but not gid, determine gid
-// sid is the id from tblservices
+// sid is the id from ra_catalog
 // csid is the id from tblcustomerservices (if applicable) for population of values
 function getServiceCustomFields($sid, $csid = null) {
 
@@ -54,30 +54,30 @@ function getServiceCustomFields($sid, $csid = null) {
         return false;
     }
     $query_selectvals = "SELECT
-            tblcustomfields.*";
+            ra_catalog_user_sales_fields.*";
     $query_tables = " FROM
-            tblservices
-        LEFT JOIN tblservicegroups
-            ON (tblservices.gid=tblservicegroups.id)
-        LEFT JOIN tblcustomfieldsgrouplinks
-            ON (tblcustomfieldsgrouplinks.serviceid=tblservices.id)
-        LEFT JOIN tblcustomfieldsgroupnames
-            ON (tblcustomfieldsgrouplinks.cfgid=tblcustomfieldsgroupnames.cfgid)
-        LEFT JOIN tblcustomfieldsgroupmembers
-            ON (tblcustomfieldsgroupmembers.cfgid=tblcustomfieldsgroupnames.cfgid)
-        LEFT JOIN tblcustomfieldslinks
-            ON (tblservices.id=tblcustomfieldslinks.serviceid)
-        LEFT JOIN tblcustomfields
-            ON (tblcustomfields.cfid=tblcustomfieldsgroupmembers.cfid)
-            OR (tblcustomfields.cfid=tblcustomfieldslinks.cfid)";
+            ra_catalog
+        LEFT JOIN ra_catalog_groups
+            ON (ra_catalog.gid=ra_catalog_groups.id)
+        LEFT JOIN ra_catalog_user_sales_fieldsgrouplinks
+            ON (ra_catalog_user_sales_fieldsgrouplinks.serviceid=ra_catalog.id)
+        LEFT JOIN ra_catalog_user_sales_fieldsgroupnames
+            ON (ra_catalog_user_sales_fieldsgrouplinks.cfgid=ra_catalog_user_sales_fieldsgroupnames.cfgid)
+        LEFT JOIN ra_catalog_user_sales_fieldsgroupmembers
+            ON (ra_catalog_user_sales_fieldsgroupmembers.cfgid=ra_catalog_user_sales_fieldsgroupnames.cfgid)
+        LEFT JOIN ra_catalog_user_sales_fieldslinks
+            ON (ra_catalog.id=ra_catalog_user_sales_fieldslinks.serviceid)
+        LEFT JOIN ra_catalog_user_sales_fields
+            ON (ra_catalog_user_sales_fields.cfid=ra_catalog_user_sales_fieldsgroupmembers.cfid)
+            OR (ra_catalog_user_sales_fields.cfid=ra_catalog_user_sales_fieldslinks.cfid)";
     if (isset($csid)) {
-        $query_selectvals .= ", tblcustomfieldsvalues.value ";
-        $query_tables .= " LEFT JOIN tblcustomfieldsvalues
-            ON (tblcustomfieldsvalues.cfid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . (int) $csid . ") ";
+        $query_selectvals .= ", ra_catalog_user_sales_fieldsvalues.value ";
+        $query_tables .= " LEFT JOIN ra_catalog_user_sales_fieldsvalues
+            ON (ra_catalog_user_sales_fieldsvalues.cfid=ra_catalog_user_sales_fields.cfid AND ra_catalog_user_sales_fieldsvalues.relid=" . (int) $csid . ") ";
     }
-    $query_where = " WHERE tblservices.id=" . (int) $sid;
+    $query_where = " WHERE ra_catalog.id=" . (int) $sid;
     $query = $query_selectvals . $query_tables . $query_where;
-    $query .= " order by tblcustomfields.sortorder";
+    $query .= " order by ra_catalog_user_sales_fields.sortorder";
 
     $result = full_query_i($query);
     $returnvals = array();
@@ -103,7 +103,7 @@ function getServiceCustomFields($sid, $csid = null) {
 
 function getClientFields() {
     $returnvals = array();
-    $query = "select * from tblclientfields";
+    $query = "select * from ra_user_fields";
     $result = full_query_i($query);
     while ($row = mysqli_fetch_assoc($result)) {
         $returnvals[$row['cfid']] = $row;
@@ -121,8 +121,8 @@ function getCustomeFieldGroup($sid) {
 
     $data = array();
     if (isset($sid)) {
-        $query = "select tcfgn.*,tcfgl.serviceid from tblcustomfieldsgroupnames as tcfgn
-                 LEFT JOIN tblcustomfieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid
+        $query = "select tcfgn.*,tcfgl.serviceid from ra_catalog_user_sales_fieldsgroupnames as tcfgn
+                 LEFT JOIN ra_catalog_user_sales_fieldsgrouplinks as tcfgl on tcfgn.cfgid=tcfgl.cfgid
                 ";
         $result = full_query_i($query);
         while ($row = mysqli_fetch_assoc($result)) {
@@ -143,7 +143,7 @@ function addServiceCustomFieldVlues($csid, $valarray) {
         foreach ($valarray as $cfid => $value) {
             // get list of cfids
             if ($validate->validateCustomFields("", $cfid, $order)) {
-                insert_query('tblcustomfieldsvalues', array('cfid' => $cfid, 'relid' => $csid, 'value' => $value));
+                insert_query('ra_catalog_user_sales_fieldsvalues', array('cfid' => $cfid, 'relid' => $csid, 'value' => $value));
                 return true;
             } else {
                 return $validate->errors_msgs;
@@ -163,9 +163,9 @@ function updateServiceCustomFieldValues($relid, $valarray = array()) {
             // get list of cfids
 
             if ($validate->validateCustomFields("", $cfid)) {
-                //update_query('tblcustomfieldsvalues', array('value' => $value), array('cfid' => $cfid, 'relid' => $relid));
+                //update_query('ra_catalog_user_sales_fieldsvalues', array('value' => $value), array('cfid' => $cfid, 'relid' => $relid));
 
-                $query = "INSERT INTO tblcustomfieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE
+                $query = "INSERT INTO ra_catalog_user_sales_fieldsvalues (cfid,relid,value)values('" . $cfid . "','" . $relid . "','" . $value . "') ON DUPLICATE KEY UPDATE
                      value=VALUES(value), cfid=VALUES(cfid),relid=VALUES(relid)";
                 mysqli_query($ramysqli, $query);
                 $query_count++;
@@ -179,7 +179,7 @@ function updateServiceCustomFieldValues($relid, $valarray = array()) {
 
 function getServiceAndProductdata($type, $userid) {
     $servicesarr = $userarray = array();
-    $result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblcustomerservices.id,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus,tblservices.type,tblservicegroups.name as gname", array("userid" => $userid, "tblservicegroups.type" => $type), "description", "ASC", "", "tblservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+    $result = select_query_i("tblcustomerservices", "tblcustomerservices.amount,tblcustomerservices.id,tblcustomerservices.description,ra_catalog.name,tblcustomerservices.servicestatus,ra_catalog.type,ra_catalog_groups.name as gname", array("userid" => $userid, "ra_catalog_groups.type" => $type), "description", "ASC", "", "ra_catalog ON tblcustomerservices.packageid=ra_catalog.id INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
 
     $i = 0;
     while ($data = mysqli_fetch_array($result)) {

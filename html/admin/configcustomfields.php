@@ -19,20 +19,20 @@ if ($action == "save") {
 
     if ($fieldname) {
         foreach ($fieldname as $fid => $value) {
-            update_query("tblcustomfields", array("fieldname" => $value, "fieldtype" => $fieldtype[$fid], "description" => $description[$fid], "fieldoptions" => $fieldoptions[$fid], "regexpr" => html_entity_decode($regexpr[$fid]), "adminonly" => $adminonly[$fid], "required" => $required[$fid], "showorder" => $showorder[$fid], "showinvoice" => $showinvoice[$fid], "sortorder" => $sortorder[$fid]), array("id" => $fid));
+            update_query("ra_catalog_user_sales_fields", array("fieldname" => $value, "fieldtype" => $fieldtype[$fid], "description" => $description[$fid], "fieldoptions" => $fieldoptions[$fid], "regexpr" => html_entity_decode($regexpr[$fid]), "adminonly" => $adminonly[$fid], "required" => $required[$fid], "showorder" => $showorder[$fid], "showinvoice" => $showinvoice[$fid], "sortorder" => $sortorder[$fid]), array("id" => $fid));
         }
     }
 
     if ($addfieldname) {
-        insert_query("tblcustomfields", array("type" => "client", "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $adddescription, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "showinvoice" => $addshowinvoice, "sortorder" => $addsortorder));
+        insert_query("ra_catalog_user_sales_fields", array("type" => "client", "fieldname" => $addfieldname, "fieldtype" => $addfieldtype, "description" => $adddescription, "fieldoptions" => $addfieldoptions, "regexpr" => html_entity_decode($addregexpr), "adminonly" => $addadminonly, "required" => $addrequired, "showorder" => $addshoworder, "showinvoice" => $addshowinvoice, "sortorder" => $addsortorder));
     }
 
     redir("success=true");
 } else {
     if ($action == "delete") {
         check_token("RA.admin.default");
-        delete_query("tblcustomfields", array("id" => $id));
-        delete_query("tblcustomfieldsvalues", array("fieldid" => $id));
+        delete_query("ra_catalog_user_sales_fields", array("id" => $id));
+        delete_query("ra_catalog_user_sales_fieldsvalues", array("fieldid" => $id));
         redir("deleted=true");
     }
 }
@@ -46,7 +46,7 @@ if ($ra->get_req_var("success")) {
 
 //echo $infobox;
 
-$result = select_query_i("tblcustomfields", "", array("type" => "client"), "sortorder");
+$result = select_query_i("ra_catalog_user_sales_fields", "", array("type" => "client"), "sortorder");
 
 while ($data = mysqli_fetch_array($result)) {
     $fid = $data['id'];

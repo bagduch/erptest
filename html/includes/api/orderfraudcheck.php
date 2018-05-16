@@ -16,7 +16,7 @@ if (!function_exists("runFraudCheck")) {
 	require ROOTDIR . "/includes/fraudfunctions.php";
 }
 
-$result = select_query_i("tblorders", "id,userid,ipaddress,invoiceid", array("id" => $orderid));
+$result = select_query_i("ra_orders", "id,userid,ipaddress,invoiceid", array("id" => $orderid));
 $data = mysqli_fetch_array($result);
 $orderid = $data[0];
 
@@ -45,17 +45,17 @@ if ($results['userinput']) {
 else {
 	if ($results['error']) {
 		$status = "Fail";
-		update_query("tblorders", array("status" => "Fraud"), array("id" => $orderid));
+		update_query("ra_orders", array("status" => "Fraud"), array("id" => $orderid));
 		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
 
 		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblcustomerservices", array("servicestatus" => "Fraud"), array("id" => $data['id'], "servicestatus" => "Pending"));
 		}
 
-		$result = select_query_i("tblserviceaddons", "id", array("orderid" => $orderid));
+		$result = select_query_i("ra_catalog_user_sales_addons", "id", array("orderid" => $orderid));
 
 		while ($data = mysqli_fetch_array($result)) {
-			update_query("tblserviceaddons", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
+			update_query("ra_catalog_user_sales_addons", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
 		}
 
 		$result = select_query_i("tbldomains", "id", array("orderid" => $orderid));
@@ -64,21 +64,21 @@ else {
 			update_query("tbldomains", array("status" => "Fraud"), array("id" => $data['id'], "status" => "Pending"));
 		}
 
-		update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
+		update_query("ra_bills", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
 	}
 	else {
 		$status = "Pass";
-		update_query("tblorders", array("status" => "Pending"), array("id" => $orderid));
+		update_query("ra_orders", array("status" => "Pending"), array("id" => $orderid));
 		$result = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
 
 		while ($data = mysqli_fetch_array($result)) {
 			update_query("tblcustomerservices", array("servicestatus" => "Pending"), array("id" => $data['id'], "servicestatus" => "Fraud"));
 		}
 
-		$result = select_query_i("tblserviceaddons", "id", array("orderid" => $orderid));
+		$result = select_query_i("ra_catalog_user_sales_addons", "id", array("orderid" => $orderid));
 
 		while ($data = mysqli_fetch_array($result)) {
-			update_query("tblserviceaddons", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
+			update_query("ra_catalog_user_sales_addons", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
 		}
 
 		$result = select_query_i("tbldomains", "id", array("orderid" => $orderid));
@@ -87,7 +87,7 @@ else {
 			update_query("tbldomains", array("status" => "Pending"), array("id" => $data['id'], "status" => "Fraud"));
 		}
 
-		update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
+		update_query("ra_bills", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
 	}
 }
 

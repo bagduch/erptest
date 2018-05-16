@@ -7,7 +7,7 @@ function getOrderStatusColour($status) {
 
 function getProductInfo($pid) {
 
-    $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.type,tblservices.name AS prodname,tblservicegroups.name AS groupname,tblservices.description", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+    $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.type,ra_catalog.name AS prodname,ra_catalog_groups.name AS groupname,ra_catalog.description", array("ra_catalog.id" => $pid), "", "", "", "ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
     $data = mysqli_fetch_array($result);
     $productinfo = array();
     $productinfo['pid'] = $data['id'];
@@ -36,12 +36,12 @@ function getPricingInfo($pid, $inclconfigops = false, $upgrade = false, $currenc
         $currency = $currencs;
     }
 
-    $result = select_query_i("tblservices", "", array("id" => $pid));
+    $result = select_query_i("ra_catalog", "", array("id" => $pid));
     $data = mysqli_fetch_array($result);
     $paytype = $data['paytype'];
     $freedescription = $data['freedescription'];
     $freedescriptionpaymentterms = $data['freedescriptionpaymentterms'];
-    $result = select_query_i("tblpricing", "*", array("currency" => $currency['id'], "relid" => $pid));
+    $result = select_query_i("ra_catalog_pricebook", "*", array("currency" => $currency['id'], "relid" => $pid));
     $data = mysqli_fetch_array($result);
     //mail("peter@hd.net.nz", "hello", print_r($data, 1));
     $msetupfee = $data['msetupfee'];
@@ -432,7 +432,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             return false;
         }
 
-        $orderid = insert_query("tblorders", array(
+        $orderid = insert_query("ra_orders", array(
             "ordernum" => $order_number,
             "userid" => $userid,
 //          "contactid" => $_SESSION['cart']['contact'], 
@@ -450,7 +450,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $promotioncode = (array_key_exists("promo", $_SESSION['cart']) ? $_SESSION['cart']['promo'] : "");
 
     if ($promotioncode) {
-        $result = select_query_i("tblpromotions", "", array("code" => $promotioncode));
+        $result = select_query_i("ra_promos", "", array("code" => $promotioncode));
         $promo_data = mysqli_fetch_array($result);
     }
 
@@ -486,7 +486,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
 
     if ($CONFIG['TaxInclusiveDeduct'] && ((!$taxrate && !$taxrate2) || $clientsdetails['taxexempt'])) {
-        $result = select_query_i("tbltax", "", "");
+        $result = select_query_i("ra_tax_rates", "", "");
         $data = mysqli_fetch_array($result);
         $excltaxrate = 1 + $data['taxrate'] / 100;
     } else {
@@ -499,7 +499,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     if (array_key_exists("products", $_SESSION['cart']) && is_array($_SESSION['cart']['products'])) {
 
         foreach ($_SESSION['cart']['products'] as $key => $productdata) {
-            $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservicegroups.name AS groupname,tblservices.name,tblservices.paytype,tblservices.proratabilling,tblservices.proratadate,tblservices.proratachargenextmonth,tblservices.tax,tblservices.servertype,tblservices.servergroup", array("tblservices.id" => $productdata['pid']), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+            $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog_groups.name AS groupname,ra_catalog.name,ra_catalog.paytype,ra_catalog.proratabilling,ra_catalog.proratadate,ra_catalog.proratachargenextmonth,ra_catalog.tax,ra_catalog.servertype,ra_catalog.servergroup", array("ra_catalog.id" => $productdata['pid']), "", "", "", "ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
             $data = mysqli_fetch_array($result);
             $pid = $data['id'];
             $gid = $data['gid'];
@@ -781,7 +781,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
                     if (!empty($productdata['customfields'])) {
                         foreach ($productdata['customfields'] as $key => $value) {
-                            insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $serviceid, "value" => $value));
+                            insert_query("ra_catalog_user_sales_fieldsvalues", array("cfid" => $key, "relid" => $serviceid, "value" => $value));
                         }
                     }
 
@@ -802,14 +802,14 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         if ($product_setup > 0) {
                             $prodinvoicearray['description'] = $productname . " " . $_LANG['ordersetupfee'];
                             $prodinvoicearray['amount'] = $product_setup;
-                            insert_query("tblinvoiceitems", $prodinvoicearray);
+                            insert_query("ra_bill_lineitems", $prodinvoicearray);
                         }
 
                         if ($product_onetime > 0) {
                             $prodinvoicearray['description'] = $invoice_description;
                             $prodinvoicearray['type'] = "Item";
                             $prodinvoicearray['amount'] = $product_onetime;
-                            insert_query("tblinvoiceitems", $prodinvoicearray);
+                            insert_query("ra_bill_lineitems", $prodinvoicearray);
                         }
 
                         $promovals = getInvoiceProductPromo($product_total_today_db, $promoid, $userid, $serviceid, $product_setup + $product_onetime);
@@ -818,18 +818,18 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                             $prodinvoicearray['type'] = "Promo";
                             $prodinvoicearray['description'] = $promovals['description'];
                             $prodinvoicearray['amount'] = $promovals['amount'];
-                            insert_query("tblinvoiceitems", $prodinvoicearray);
+                            insert_query("ra_bill_lineitems", $prodinvoicearray);
                         }
                         //mark here
                         $invoiceid = createInvoices($userid, true, "", array("products" => $orderproductids, "addons" => $orderaddonids, "descriptions" => $orderdescriptionids));
                         if ($CONFIG['OrderDaysGrace']) {
                             $new_time = mktime(0, 0, 0, date("m"), date("d") + $CONFIG['OrderDaysGrace'], date("Y"));
                             $duedate = date("Y-m-d", $new_time);
-                            update_query("tblinvoices", array("duedate" => $duedate), array("id" => $invoiceid));
+                            update_query("ra_bills", array("duedate" => $duedate), array("id" => $invoiceid));
                         }
                         if ($invoiceid) {
-                            update_query("tblorders", array("invoiceid" => $invoiceid), array("id" => $orderid));
-                            $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+                            update_query("ra_orders", array("invoiceid" => $invoiceid), array("id" => $orderid));
+                            $result = select_query_i("ra_bills", "status", array("id" => $invoiceid));
                             $data = mysqli_fetch_array($result);
                             $status = $data['status'];
 
@@ -895,7 +895,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         $addon_tax = "";
                     }
 
-                    $result = select_query_i("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $result = select_query_i("ra_catalog_pricebook", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
                     $data = mysqli_fetch_array($result);
                     $addon_setupfee = $data['msetupfee'];
                     $addon_recurring = $data['monthly'];
@@ -946,7 +946,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                         while ($qtycount <= $qty) {
                             $serviceid = $multiqtyids[$qtycount];
                             $addonsetupfee = $addon_total_today_db - $addon_recurring_db;
-                            $aid = insert_query("tblserviceaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
+                            $aid = insert_query("ra_catalog_user_sales_addons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
                             $orderaddonids[] = $aid;
                             $adminemailitems .= $_LANG['clientareaaddon'] . (": " . $addon_name . "<br>\r\n") . $_LANG['ordersetupfee'] . ": " . formatCurrency($addonsetupfee) . "<br>\r\n";
 
@@ -1087,7 +1087,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $addon_tax = "";
             }
 
-            $result = select_query_i("tblpricing", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+            $result = select_query_i("ra_catalog_pricebook", "msetupfee,monthly", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
             $data = mysqli_fetch_array($result);
             $addon_setupfee = $data['msetupfee'];
             $addon_recurring = $data['monthly'];
@@ -1133,7 +1133,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
             if ($checkout) {
                 $addonsetupfee = $addon_total_today_db - $addon_recurring_db;
-                $aid = insert_query("tblserviceaddons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
+                $aid = insert_query("ra_catalog_user_sales_addons", array("hostingid" => $serviceid, "addonid" => $addonid, "orderid" => $orderid, "regdate" => "now()", "name" => "", "setupfee" => $addonsetupfee, "recurring" => $addon_recurring_db, "billingcycle" => $addon_billingcycle, "status" => "Pending", "nextduedate" => "now()", "nextinvoicedate" => "now()", "paymentmethod" => $paymentmethod, "tax" => $addon_tax));
                 $orderaddonids[] = $aid;
                 $adminemailitems .= $_LANG['clientareaaddon'] . (": " . $addon_name . "<br>\r\n") . $_LANG['ordersetupfee'] . ": " . formatCurrency($addonsetupfee) . "<br>\r\n";
 
@@ -1172,7 +1172,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 }
             }
 
-            $result = select_query_i("tblcustomerservices", "tblservices.name,tblcustomerservices.description", array("tblcustomerservices.id" => $serviceid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+            $result = select_query_i("tblcustomerservices", "ra_catalog.name,tblcustomerservices.description", array("tblcustomerservices.id" => $serviceid), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
             $data = mysqli_fetch_array($result);
             $productname = $data['name'];
             $descriptionname = $data['description'];
@@ -1186,7 +1186,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $totaldescriptionprice = 0;
 
     if (array_key_exists("descriptions", $_SESSION['cart']) && is_array($_SESSION['cart']['descriptions'])) {
-        $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+        $result = select_query_i("ra_catalog_pricebook", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
         $data = mysqli_fetch_array($result);
         $descriptiondnsmanagementprice = $data['msetupfee'];
         $descriptionemailforwardingprice = $data['qsetupfee'];
@@ -1385,7 +1385,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
     $orderrenewals = "";
 
     if (array_key_exists("renewals", $_SESSION['cart']) && is_array($_SESSION['cart']['renewals'])) {
-        $result = select_query_i("tblpricing", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
+        $result = select_query_i("ra_catalog_pricebook", "", array("type" => "descriptionaddons", "currency" => $currency['id'], "relid" => 0));
         $data = mysqli_fetch_array($result);
         $descriptiondnsmanagementprice = $data['msetupfee'];
         $descriptionemailforwardingprice = $data['qsetupfee'];
@@ -1480,21 +1480,21 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
                 $tax = ($CONFIG['TaxDomains'] ? "1" : "0");
                 update_query("tbldescriptions", array("registrationperiod" => $regperiod, "recurringamount" => $description_renew_price_db), array("id" => $descriptionid));
 
-                $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.invoiceid", array("type" => "Domain", "relid" => $descriptionid, "status" => "Unpaid", "tblinvoices.userid" => $_SESSION['uid']), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+                $result = select_query_i("ra_bill_lineitems", "ra_bill_lineitems.id,ra_bill_lineitems.invoiceid", array("type" => "Domain", "relid" => $descriptionid, "status" => "Unpaid", "ra_bills.userid" => $_SESSION['uid']), "", "", "", "ra_bills ON ra_bills.id=ra_bill_lineitems.invoiceid");
 
                 while ($data = mysqli_fetch_array($result)) {
                     $itemid = $data['id'];
                     $invoiceid = $data['invoiceid'];
-                    $result2 = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $invoiceid));
+                    $result2 = select_query_i("ra_bill_lineitems", "COUNT(*)", array("invoiceid" => $invoiceid));
                     $data = mysqli_fetch_array($result2);
                     $itemcount = $data[0];
 
                     if ($itemcount == 1) {
-                        update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invoiceid));
+                        update_query("ra_bills", array("status" => "Cancelled"), array("id" => $invoiceid));
                         logActivity("Cancelled Previous Domain Renewal Invoice - Invoice ID: " . $invoiceid . " - Domain: " . $descriptionname);
                     }
 
-                    delete_query("tblinvoiceitems", array("id" => $itemid));
+                    delete_query("ra_bill_lineitems", array("id" => $itemid));
                     updateInvoiceTotal($invoiceid);
                     logActivity("Removed Previous Domain Renewal Line Item - Invoice ID: " . $invoiceid . " - Domain: " . $descriptionname);
                 }
@@ -1511,7 +1511,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         if ($checkout) {
             $invoicesitem = array("userid" => $userid, "type" => "", "relid" => "", "description" => $adjvals['description'], "amount" => $adjvals['amount'], "taxed" => $adjvals['taxed'], "duedate" => "now()", "paymentmethod" => $paymentmethod);
 //            email("peter@hd.net.nz", "here",print_r($invoicesitem, 1));
-            insert_query("tblinvoiceitems", $invoicesitem);
+            insert_query("ra_bill_lineitems", $invoicesitem);
         }
 
         $adjustments[$k]['amount'] = formatCurrency($adjvals['amount']);
@@ -1563,9 +1563,9 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         $adminemailitems .= $_LANG['ordertotalduetoday'] . ": " . formatCurrency($cart_total);
 
         if ($promotioncode && $promo_data['promoapplied']) {
-            update_query("tblpromotions", array("uses" => "+1"), array("code" => $promotioncode));
+            update_query("ra_promos", array("uses" => "+1"), array("code" => $promotioncode));
             $promo_recurring = ($promo_data['recurring'] ? "Recurring" : "One Time");
-            update_query("tblorders", array("promocode" => $promo_data['code'], "promotype" => $promo_recurring . " " . $promo_data['type'], "promovalue" => $promo_data['value']), array("id" => $orderid));
+            update_query("ra_orders", array("promocode" => $promo_data['code'], "promotype" => $promo_recurring . " " . $promo_data['type'], "promovalue" => $promo_data['value']), array("id" => $orderid));
         }
 
 
@@ -1579,15 +1579,15 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
         }
 
         update_query(
-                "tblorders", array(
+                "ra_orders", array(
             "amount" => $cart_total
                 ), array("id" => $orderid));
         $invoiceid = 0;
 
 
         if ($invoiceid) {
-            update_query("tblorders", array("invoiceid" => $invoiceid), array("id" => $orderid));
-            $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+            update_query("ra_orders", array("invoiceid" => $invoiceid), array("id" => $orderid));
+            $result = select_query_i("ra_bills", "status", array("id" => $invoiceid));
             $data = mysqli_fetch_array($result);
             $status = $data['status'];
 
@@ -1599,13 +1599,13 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
 
         if (!$_SESSION['adminid']) {
             if (isset($_COOKIE['RAAffiliateID'])) {
-                $result = select_query_i("tblaffiliates", "clientid", array("id" => (int) $_COOKIE['RAAffiliateID']));
+                $result = select_query_i("ra_partners", "clientid", array("id" => (int) $_COOKIE['RAAffiliateID']));
                 $data = mysqli_fetch_array($result);
                 $clientid = $data['clientid'];
 
                 if ($clientid && $_SESSION['uid'] != $clientid) {
                     foreach ($orderproductids as $orderproductid) {
-                        insert_query("tblaffiliatesaccounts", array("affiliateid" => (int) $_COOKIE['RAAffiliateID'], "relid" => $orderproductid));
+                        insert_query("ra_partnersaccounts", array("affiliateid" => (int) $_COOKIE['RAAffiliateID'], "relid" => $orderproductid));
                     }
                 }
             }
@@ -1616,7 +1616,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             }
         }
 
-        $result = select_query_i("tblclients", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $userid));
+        $result = select_query_i("ra_user", "firstname, lastname, companyname, email, address1, address2, city, state, postcode, country, phonenumber, ip, host", array("id" => $userid));
         $data = mysqli_fetch_array($result);
         list($firstname, $lastname, $companyname, $email, $address1, $address2, $city, $state, $postcode, $country, $phonenumber, $ip, $host) = $data;
         $customfields = getCustomFields("client", "", $userid, "", true);
@@ -1625,7 +1625,7 @@ function calcCartTotals($checkout = "", $ignorenoconfig = "") {
             $clientcustomfields .= "" . $customfield['name'] . ": " . $customfield['value'] . "<br />\r\n";
         }
 
-        $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
+        $result = select_query_i("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
         $data = mysqli_fetch_array($result);
         $nicegatewayname = $data['value'];
         sendAdminMessage("New Order Notification", array("order_id" => $orderid, "order_number" => $order_number, "order_date" => fromMySQLDate(date("Y-m-d H:i:s"), true), "invoice_id" => $invoiceid, "order_payment_method" => $nicegatewayname, "order_total" => formatCurrency($cart_total), "client_id" => $userid, "client_first_name" => $firstname, "client_last_name" => $lastname, "client_email" => $email, "client_company_name" => $companyname, "client_address1" => $address1, "client_address2" => $address2, "client_city" => $city, "client_state" => $state, "client_postcode" => $postcode, "client_country" => $country, "client_phonenumber" => $phonenumber, "client_customfields" => $clientcustomfields, "order_items" => $adminemailitems, "order_notes" => nl2br($ordernotes), "client_ip" => $ip, "client_hostname" => $host), "account");
@@ -1675,7 +1675,7 @@ function SetPromoCode($promotioncode) {
     global $_LANG;
 
     $_SESSION['cart']['promo'] = "";
-    $result = select_query_i("tblpromotions", "", array("code" => $promotioncode));
+    $result = select_query_i("ra_promos", "", array("code" => $promotioncode));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $maxuses = $data['maxuses'];
@@ -1721,7 +1721,7 @@ function SetPromoCode($promotioncode) {
 
 
     if ($newsignups && $_SESSION['uid']) {
-        $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
+        $result = select_query_i("ra_orders", "COUNT(*)", array("userid" => $_SESSION['uid']));
         $data = mysqli_fetch_array($result);
         $previousorders = $data[0];
 
@@ -1734,7 +1734,7 @@ function SetPromoCode($promotioncode) {
 
     if ($existingclient) {
         if ($_SESSION['uid']) {
-            $result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $result = select_query_i("ra_orders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
             $orderCount = mysqli_fetch_array($result);
 
             if ($orderCount[0] == 0) {
@@ -1750,7 +1750,7 @@ function SetPromoCode($promotioncode) {
 
     if ($onceperclient) {
         if ($_SESSION['uid']) {
-            $result = select_query_i("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
+            $result = select_query_i("ra_orders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
             $orderCount = mysqli_fetch_array($result);
 
             if (0 < $orderCount[0]) {
@@ -1781,7 +1781,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
         $newsignups = $promo_data['newsignups'];
 
         if ($newsignups && $_SESSION['uid']) {
-            $result = select_query_i("tblorders", "COUNT(*)", array("userid" => $_SESSION['uid']));
+            $result = select_query_i("ra_orders", "COUNT(*)", array("userid" => $_SESSION['uid']));
             $data = mysqli_fetch_array($result);
             $previousorders = $data[0];
 
@@ -1794,7 +1794,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
         $onceperclient = $promo_data['onceperclient'];
 
         if ($existingclient) {
-            $result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $result = select_query_i("ra_orders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
             $orderCount = mysqli_fetch_array($result);
 
             if ($orderCount[0] < 1) {
@@ -1804,7 +1804,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
         if ($onceperclient) {
-            $result = select_query_i("tblorders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
+            $result = select_query_i("ra_orders", "count(*)", "promocode='" . db_escape_string($promotioncode) . "' AND userid=" . (int) $_SESSION['uid'] . " AND status IN ('Pending','Active')");
             $orderCount = mysqli_fetch_array($result);
 
             if (0 < $orderCount[0]) {
@@ -1947,7 +1947,7 @@ function CalcPromoDiscount($pid, $cycle, $fpamount, $recamount, $setupfee = 0) {
 
 
                 if (count($requiredaddons)) {
-                    $result = select_query_i("tblserviceaddons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+                    $result = select_query_i("ra_catalog_user_sales_addons", "COUNT(*)", "tblcustomerservices.userid='" . (int) $_SESSION['uid'] . "' AND addonid IN (" . db_build_in_array($requiredaddons) . ") AND status='Active'", "", "", "", "tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid");
                     $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
@@ -2091,7 +2091,7 @@ function acceptOrder($orderid, $vars = array()) {
             update_query("tblcustomerservices", $updateqry, array("id" => $productid));
         }
 
-        $result2 = select_query_i("tblcustomerservices", "tblservices.servertype,tblservices.autosetup", array("tblcustomerservices.id" => $productid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result2 = select_query_i("tblcustomerservices", "ra_catalog.servertype,ra_catalog.autosetup", array("tblcustomerservices.id" => $productid), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
         $data = mysqli_fetch_array($result2);
         $module = $data['servertype'];
         $autosetup = $data['autosetup'];
@@ -2141,7 +2141,7 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    $result = select_query_i("tblserviceaddons", "", array("orderid" => $orderid, "status" => "Pending"));
+    $result = select_query_i("ra_catalog_user_sales_addons", "", array("orderid" => $orderid, "status" => "Pending"));
 
     while ($data = mysqli_fetch_array($result)) {
         $aid = $data['id'];
@@ -2165,7 +2165,7 @@ function acceptOrder($orderid, $vars = array()) {
 
 
             if ($welcomeemail && $sendwelcome) {
-                $result3 = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+                $result3 = select_query_i("ra_templates_mail", "name", array("id" => $welcomeemail));
                 $data = mysqli_fetch_array($result3);
                 $welcomeemailname = $data['name'];
                 sendMessage($welcomeemailname, $hostingid);
@@ -2173,7 +2173,7 @@ function acceptOrder($orderid, $vars = array()) {
 
 
             if (!$userid) {
-                $result3 = select_query_i("tblorders", "userid", array("id" => $orderid));
+                $result3 = select_query_i("ra_orders", "userid", array("id" => $orderid));
                 $data = mysqli_fetch_array($result3);
                 $userid = $data['userid'];
             }
@@ -2182,7 +2182,7 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    update_query("tblserviceaddons", array("status" => "Active"), array("orderid" => $orderid, "status" => "Pending"));
+    update_query("ra_catalog_user_sales_addons", array("status" => "Active"), array("orderid" => $orderid, "status" => "Pending"));
     $result = select_query_i("tbldescriptions", "", array("orderid" => $orderid, "status" => "Pending"));
 
     while ($data = mysqli_fetch_array($result)) {
@@ -2289,7 +2289,7 @@ function acceptOrder($orderid, $vars = array()) {
         }
     }
 
-    $result = select_query_i("tblorders", "userid,promovalue", array("id" => $orderid));
+    $result = select_query_i("ra_orders", "userid,promovalue", array("id" => $orderid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $promovalue = $data['promovalue'];
@@ -2325,7 +2325,7 @@ function acceptOrder($orderid, $vars = array()) {
     }
 
     if (!count($errors)) {
-        update_query("tblorders", array("status" => "Active"), array("id" => $orderid));
+        update_query("ra_orders", array("status" => "Active"), array("id" => $orderid));
         logActivity("Order Accepted - Order ID: " . $orderid, $userid);
     }
 
@@ -2351,10 +2351,10 @@ function changeOrderStatus($orderid, $status) {
         }
     }
 
-    update_query("tblorders", array("status" => $status), array("id" => $orderid));
+    update_query("ra_orders", array("status" => $status), array("id" => $orderid));
 
     if ($status == "Cancelled" || $status == "Fraud") {
-        $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,tblservices.servertype,tblcustomerservices.packageid,tblservices.stockcontrol,tblservices.qty", array("orderid" => $orderid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.servicestatus,ra_catalog.servertype,tblcustomerservices.packageid,ra_catalog.stockcontrol,ra_catalog.qty", array("orderid" => $orderid), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
 
         while ($data = mysqli_fetch_array($result)) {
             $productid = $data['id'];
@@ -2378,7 +2378,7 @@ function changeOrderStatus($orderid, $status) {
                     update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
                     if ($stockcontrol == "on") {
-                        update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
+                        update_query("ra_catalog", array("qty" => "+1"), array("id" => $packageid));
                     }
                 }
             }
@@ -2386,14 +2386,14 @@ function changeOrderStatus($orderid, $status) {
             update_query("tblcustomerservices", array("servicestatus" => $status), array("id" => $productid));
 
             if ($stockcontrol == "on") {
-                update_query("tblservices", array("qty" => "+1"), array("id" => $packageid));
+                update_query("ra_catalog", array("qty" => "+1"), array("id" => $packageid));
             }
         }
     } else {
         update_query("tblcustomerservices", array("servicestatus" => $status), array("orderid" => $orderid));
     }
 
-    update_query("tblserviceaddons", array("status" => $status), array("orderid" => $orderid));
+    update_query("ra_catalog_user_sales_addons", array("status" => $status), array("orderid" => $orderid));
 
     if ($status == "Pending") {
         $result = select_query_i("tbldescriptions", "id,type", array("orderid" => $orderid));
@@ -2411,15 +2411,15 @@ function changeOrderStatus($orderid, $status) {
         update_query("tbldescriptions", array("status" => $status), array("orderid" => $orderid));
     }
 
-    $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+    $result = select_query_i("ra_orders", "userid,invoiceid", array("id" => $orderid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoiceid = $data['invoiceid'];
 
     if ($status == "Pending") {
-        update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
+        update_query("ra_bills", array("status" => "Unpaid"), array("id" => $invoiceid, "status" => "Cancelled"));
     } else {
-        update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
+        update_query("ra_bills", array("status" => "Cancelled"), array("id" => $invoiceid, "status" => "Unpaid"));
         run_hook("InvoiceCancelled", array("invoiceid" => $invoiceid));
     }
 
@@ -2427,18 +2427,18 @@ function changeOrderStatus($orderid, $status) {
 }
 
 function cancelRefundOrder($orderid) {
-    $result = select_query_i("tblorders", "invoiceid", array("id" => $orderid));
+    $result = select_query_i("ra_orders", "invoiceid", array("id" => $orderid));
     $data = mysqli_fetch_array($result);
     $invoiceid = $data['invoiceid'];
     $orderid = (int) $orderid;
 
     if ($invoiceid) {
-        $result = select_query_i("tblinvoices", "status", array("id" => $invoiceid));
+        $result = select_query_i("ra_bills", "status", array("id" => $invoiceid));
         $data = mysqli_fetch_array($result);
         $invoicestatus = $data['status'];
 
         if ($invoicestatus == "Paid") {
-            $result = select_query_i("tblaccounts", "id", array("invoiceid" => $invoiceid));
+            $result = select_query_i("ra_transactions", "id", array("invoiceid" => $invoiceid));
             $data = mysqli_fetch_array($result);
             $transid = $data['id'];
             $gatewayresult = refundInvoicePayment($transid, "", true);
@@ -2470,7 +2470,7 @@ function deleteOrder($orderid) {
 
     $orderid = (int) $orderid;
     run_hook("DeleteOrder", array("orderid" => $orderid));
-    $result = select_query_i("tblorders", "userid,invoiceid", array("id" => $orderid));
+    $result = select_query_i("ra_orders", "userid,invoiceid", array("id" => $orderid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoiceid = $data['invoiceid'];
@@ -2478,15 +2478,15 @@ function deleteOrder($orderid) {
 //     delete_query("tblcustomerservices", array("orderid" => $orderid));
     $result2 = select_query_i("tblcustomerservices", "id", array("orderid" => $orderid));
     $data2 = mysqli_fetch_array($result2);
-    delete_query("tblinvoices", array("id" => $invoiceid));
-    delete_query("tblinvoiceitems", array("invoiceid" => $invoiceid));
-    delete_query("tblcustomfieldsvalues", array("relid" => $data2['id']));
+    delete_query("ra_bills", array("id" => $invoiceid));
+    delete_query("ra_bill_lineitems", array("invoiceid" => $invoiceid));
+    delete_query("ra_catalog_user_sales_fieldsvalues", array("relid" => $data2['id']));
     delete_query("tblcustomerservices", array("orderid" => $orderid));
-    delete_query("tblaffiliatesaccounts", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
+    delete_query("ra_partnersaccounts", "relid IN (SELECT id FROM tblcustomerservices WHERE orderid=" . $orderid . ")");
     delete_query("tblcustomerservices", array("orderid" => $orderid));
-    delete_query("tblserviceaddons", array("orderid" => $orderid));
+    delete_query("ra_catalog_user_sales_addons", array("orderid" => $orderid));
     // delete_query("tbldescriptions", array("orderid" => $orderid));
-    delete_query("tblorders", array("id" => $orderid));
+    delete_query("ra_orders", array("id" => $orderid));
 
     logActivity("Deleted Order - Order ID: " . $orderid, $userid);
 }
@@ -2499,7 +2499,7 @@ function getAddonDetail($addonid, $currencs = array()) {
     }
 
     $addonsarray = array();
-    $query = "SELECT *,addon.id as addonid FROM tbladdons AS addon INNER JOIN tblpricing as price ON (price.type='addon' AND price.currency = " . $currency['id'] . " AND price.relid=addon.id) where addon.id=" . $addonid;
+    $query = "SELECT *,addon.id as addonid FROM tbladdons AS addon INNER JOIN ra_catalog_pricebook as price ON (price.type='addon' AND price.currency = " . $currency['id'] . " AND price.relid=addon.id) where addon.id=" . $addonid;
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $_SESSION['addon'][$addonid] = $data;
@@ -2546,7 +2546,7 @@ function getAddons($pid, $addons, $currencs = array()) {
         $addon_setupfee = $data['setupfee'];
         $addon_billingcycle = $data['billingcycle'];
         $addon_free = $data['free'];
-        $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addon_id));
+        $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addon_id));
         $data = mysqli_fetch_array($result2);
         $addon_setupfee = $data['msetupfee'];
         $addon_recurring = $data['monthly'];
@@ -2581,7 +2581,7 @@ function draftOrder($pricing = array(), $remote_ip, $order_number) {
     $result = full_query_i($query);
 
     if ($result->num_rows == 0) {
-        $orderid = insert_query("tblorders", array(
+        $orderid = insert_query("ra_orders", array(
             "ordernum" => $order_number,
             "userid" => $_SESSION['uid'],
             "date" => "now()",
@@ -2628,10 +2628,10 @@ function getAvailableOrderPaymentGateways() {
 
     if ($_SESSION['cart']['products']) {
         foreach ($_SESSION['cart']['products'] as $values) {
-            $result = select_query_i("tblservices", "gid", array("id" => $values['pid']));
+            $result = select_query_i("ra_catalog", "gid", array("id" => $values['pid']));
             $data = mysqli_fetch_array($result);
             $gid = $data['gid'];
-            $result = select_query_i("tblservicegroups", "disabledgateways", array("id" => $gid));
+            $result = select_query_i("ra_catalog_groups", "disabledgateways", array("id" => $gid));
             $data = mysqli_fetch_array($result);
             $disabledgateways .= $data['disabledgateways'];
         }

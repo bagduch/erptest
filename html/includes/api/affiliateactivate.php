@@ -16,7 +16,7 @@ if (!function_exists("affiliateActivate")) {
 	require ROOTDIR . "/includes/affiliatefunctions.php";
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $userid));
+$result = select_query_i("ra_user", "id", array("id" => $userid));
 $data = mysqli_fetch_array($result);
 $userid = $data['id'];
 

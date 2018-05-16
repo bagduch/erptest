@@ -25,7 +25,7 @@ $menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $aInt->requiredFiles(array("gatewayfunctions", "modulefunctions"));
 
 $GatewayValues = $GatewayConfig = $ActiveGateways = $DisabledGateways = array();
-$result = select_query_i("tblpaymentgateways", "", "", "setting", "ASC");
+$result = select_query_i("ra_modules_gateways", "", "", "setting", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $gwv_gateway = $data['gateway'];
@@ -82,7 +82,7 @@ while (false !== $file = readdir($dh)) {
 
 
 closedir($dh);
-$result = select_query_i("tblpaymentgateways", "", "", "order", "DESC");
+$result = select_query_i("ra_modules_gateways", "", "", "order", "DESC");
 
 $data = mysqli_fetch_array($result);
 $lastorder = $data['order'];
@@ -90,7 +90,7 @@ $lastorder = $data['order'];
 if ($action == "activate" && in_array($gateway, $includedmodules)) {
    // echo print_r($gateway);
     check_token("RA.admin.default");
-    delete_query("tblpaymentgateways", array("gateway" => $gateway));
+    delete_query("ra_modules_gateways", array("gateway" => $gateway));
     ++$lastorder;
     $type = "Invoices";
 
@@ -98,14 +98,14 @@ if ($action == "activate" && in_array($gateway, $includedmodules)) {
         $type = "CC";
     }
 
-    insert_query("tblpaymentgateways", array("gateway" => $gateway, "setting" => "name", "value" => $GatewayConfig[$gateway]['FriendlyName']['Value'], "order" => $lastorder));
+    insert_query("ra_modules_gateways", array("gateway" => $gateway, "setting" => "name", "value" => $GatewayConfig[$gateway]['FriendlyName']['Value'], "order" => $lastorder));
 
     if ($GatewayConfig[$gateway]['RemoteStorage']) {
-        insert_query("tblpaymentgateways", array("gateway" => $gateway, "setting" => "remotestorage", "value" => "1"));
+        insert_query("ra_modules_gateways", array("gateway" => $gateway, "setting" => "remotestorage", "value" => "1"));
     }
 
-    insert_query("tblpaymentgateways", array("gateway" => $gateway, "setting" => "type", "value" => $type));
-    insert_query("tblpaymentgateways", array("gateway" => $gateway, "setting" => "visible", "value" => "on"));
+    insert_query("ra_modules_gateways", array("gateway" => $gateway, "setting" => "type", "value" => $type));
+    insert_query("ra_modules_gateways", array("gateway" => $gateway, "setting" => "visible", "value" => "on"));
    redir("activated=true");
 }
 
@@ -115,12 +115,12 @@ if ($action == "deactivate" && in_array($gateway, $includedmodules)) {
 
     if ($gateway != $newgateway) {
         update_query("tblcustomerservices", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
-        update_query("tblserviceaddons", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
+        update_query("ra_catalog_user_sales_addons", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
         update_query("tbldomains", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
-        update_query("tblinvoices", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
-        update_query("tblorders", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
-        update_query("tblaccounts", array("gateway" => $newgateway), array("gateway" => $gateway));
-        delete_query("tblpaymentgateways", array("gateway" => $gateway));
+        update_query("ra_bills", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
+        update_query("ra_orders", array("paymentmethod" => $newgateway), array("paymentmethod" => $gateway));
+        update_query("ra_transactions", array("gateway" => $newgateway), array("gateway" => $gateway));
+        delete_query("ra_modules_gateways", array("gateway" => $gateway));
         redir("deactivated=true");
     } else {
         redir();
@@ -138,16 +138,16 @@ if ($action == "save" && in_array($module, $includedmodules)) {
     foreach ($GatewayConfig[$module] as $confname => $values) {
 
         if ($values['Type'] != "System") {
-            $result = select_query_i("tblpaymentgateways", "COUNT(*)", array("gateway" => $module, "setting" => $confname));
+            $result = select_query_i("ra_modules_gateways", "COUNT(*)", array("gateway" => $module, "setting" => $confname));
             $data = mysqli_fetch_array($result);
             $count = $data[0];
 
             if ($count) {
-                update_query("tblpaymentgateways", array("value" => html_entity_decode(trim($field[$confname]))), array("gateway" => $module, "setting" => $confname));
+                update_query("ra_modules_gateways", array("value" => html_entity_decode(trim($field[$confname]))), array("gateway" => $module, "setting" => $confname));
                 continue;
             }
 
-            insert_query("tblpaymentgateways", array("gateway" => $module, "setting" => $confname, "value" => html_entity_decode(trim($field[$confname]))));
+            insert_query("ra_modules_gateways", array("gateway" => $module, "setting" => $confname, "value" => html_entity_decode(trim($field[$confname]))));
             continue;
         }
     }
@@ -158,28 +158,28 @@ if ($action == "save" && in_array($module, $includedmodules)) {
 
 if ($action == "moveup") {
     check_token("RA.admin.default");
-    $result = select_query_i("tblpaymentgateways", "", array("`order`" => $order));
+    $result = select_query_i("ra_modules_gateways", "", array("`order`" => $order));
     $data = mysqli_fetch_array($result);
     $gateway = $data['gateway'];
     $order1 = $order - 1;
-    update_query("tblpaymentgateways", array("order" => $order), array("`order`" => $order1));
-    update_query("tblpaymentgateways", array("order" => $order1), array("gateway" => $gateway));
+    update_query("ra_modules_gateways", array("order" => $order), array("`order`" => $order1));
+    update_query("ra_modules_gateways", array("order" => $order1), array("gateway" => $gateway));
     redir();
 }
 
 
 if ($action == "movedown") {
     check_token("RA.admin.default");
-    $result = select_query_i("tblpaymentgateways", "", array("`order`" => $order));
+    $result = select_query_i("ra_modules_gateways", "", array("`order`" => $order));
     $data = mysqli_fetch_array($result);
     $gateway = $data['gateway'];
     $order1 = $order + 1;
-    update_query("tblpaymentgateways", array("order" => $order), array("`order`" => $order1));
-    update_query("tblpaymentgateways", array("order" => $order1), array("gateway" => $gateway));
+    update_query("ra_modules_gateways", array("order" => $order), array("`order`" => $order1));
+    update_query("ra_modules_gateways", array("order" => $order1), array("gateway" => $gateway));
     redir();
 }
 
-$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
+$result = select_query_i("ra_currency", "id,code", "", "code", "ASC");
 $i = 0;
 
 while ($currenciesarray[$i] = mysqli_fetch_assoc($result)) {
@@ -231,9 +231,9 @@ echo "</form></p>
 ";
 $count = 1;
 $newgateways = "";
-$data = get_query_vals("tblpaymentgateways", "COUNT(gateway)", array("setting" => "name"));
+$data = get_query_vals("ra_modules_gateways", "COUNT(gateway)", array("setting" => "name"));
 $numgateways = $data[0];
-$result3 = select_query_i("tblpaymentgateways", "", array("setting" => "name"), "order", "ASC");
+$result3 = select_query_i("ra_modules_gateways", "", array("setting" => "name"), "order", "ASC");
 
 while ($data = mysqli_fetch_array($result3)) {
     $module = $data['gateway'];
@@ -329,7 +329,7 @@ while ($data = mysqli_fetch_array($result3)) {
 ";
 
     if ($count != $order) {
-        update_query("tblpaymentgateways", array("order" => $count), array("setting" => "name", "gateway" => $module));
+        update_query("ra_modules_gateways", array("order" => $count), array("setting" => "name", "gateway" => $module));
     }
 
     ++$count;

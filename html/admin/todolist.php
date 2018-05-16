@@ -121,7 +121,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	echo "</td><td class=\"fieldarea\">";
 	echo "<s";
 	echo "elect name=\"admin\"><option value=\"\">Any";
-	$result2 = select_query_i("tbladmins", "id,username", "", "username", "ASC");
+	$result2 = select_query_i("ra_admin", "id,username", "", "username", "ASC");
 
 	while ($data2 = mysqli_fetch_array($result2)) {
 		$admin_id = $data2['id'];
@@ -215,7 +215,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 	echo "</td><td class=\"fieldarea\">";
 	echo "<s";
 	echo "elect name=\"admin\"><option value=\"\">None";
-	$result2 = select_query_i("tbladmins", "id,firstname,lastname", array("disabled" => "0"), "username", "ASC");
+	$result2 = select_query_i("ra_admin", "id,firstname,lastname", array("disabled" => "0"), "username", "ASC");
 
 	while ($data2 = mysqli_fetch_array($result2)) {
 		$admin_id = $data2['id'];
@@ -316,7 +316,7 @@ window.location='" . $_SERVER['PHP_SELF'] . "?action=delete&id='+id+'" . generat
 				$admin = $AdminsArray[$adminid];
 			}
 			else {
-				$result2 = select_query_i("tbladmins", "firstname,lastname", array("id" => $adminid));
+				$result2 = select_query_i("ra_admin", "firstname,lastname", array("id" => $adminid));
 				$data = mysqli_fetch_array($result2);
 				$admin = $data['firstname'] . " " . $data['lastname'];
 				$AdminsArray[$adminid] = $admin;
@@ -380,7 +380,7 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"admin\"><option value=\"\">None";
-		$result2 = select_query_i("tbladmins", "id,firstname,lastname,disabled", "", "username", "ASC");
+		$result2 = select_query_i("ra_admin", "id,firstname,lastname,disabled", "", "username", "ASC");
 
 		while ($data2 = mysqli_fetch_array($result2)) {
 			$admin_id = $data2['id'];

@@ -8,7 +8,7 @@ require("init.php");
 
 // if affiliate id is present, update visitor count & set cookie
 if ($aff = $ra->get_req_var('aff')) {
-    update_query("tblaffiliates", array("visitors" => "+1"), array("id" => $aff));
+    update_query("ra_partners", array("visitors" => "+1"), array("id" => $aff));
     RA_Cookie::set('AffiliateID', $aff, '3m');
 }
 

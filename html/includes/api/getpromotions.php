@@ -12,7 +12,7 @@ if ($code) {
 	$where['code'] = $code;
 }
 
-$result = select_query_i("tblpromotions", "", $where, "code", "ASC");
+$result = select_query_i("ra_promos", "", $where, "code", "ASC");
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_assoc($result)) {

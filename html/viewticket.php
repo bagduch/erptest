@@ -33,7 +33,7 @@ if ($CONFIG['SupportModule']) {
 	}
 }
 
-$result = select_query_i("tbltickets", "", array("tid" => $tid, "c" => $c));
+$result = select_query_i("ra_ticket", "", array("tid" => $tid, "c" => $c));
 $data = mysqli_fetch_array($result);
 $id = $data['id'];
 $tid = $data['tid'];
@@ -56,13 +56,13 @@ else {
 		$smartyvalues['tid'] = $tid;
 		$smartyvalues['c'] = $c;
 		$status = $data['status'];
-		$closedcheck = get_query_val("tblticketstatuses", "id", array("title" => $status, "showactive" => "0"));
+		$closedcheck = get_query_val("ra_tickettatuses", "id", array("title" => $status, "showactive" => "0"));
 		$smartyvalues['stillopen'] = (!$closedcheck ? true : false);
-		$feedbackcheck = get_query_val("tblticketfeedback", "id", array("ticketid" => $id));
+		$feedbackcheck = get_query_val("ra_ticket_feedback", "id", array("ticketid" => $id));
 		$smartyvalues['feedbackdone'] = $feedbackcheck;
 		$date = $data['date'];
 		$smartyvalues['opened'] = date("l, jS F Y H:ia", strtotime($date));
-		$lastreply = get_query_val("tblticketreplies", "date", array("tid" => $id), "id", "DESC");
+		$lastreply = get_query_val("ra_ticket_replies", "date", array("tid" => $id), "id", "DESC");
 
 		if (!$lastreply) {
 			$lastreply = $date;
@@ -81,11 +81,11 @@ else {
 
 		$smartyvalues['ratings'] = $ratings;
 		$staffinvolved = array();
-		$result = select_query_i("tblticketreplies", "DISTINCT admin", array("tid" => $id));
+		$result = select_query_i("ra_ticket_replies", "DISTINCT admin", array("tid" => $id));
 
 		while ($data = mysqli_fetch_array($result)) {
 			if (trim($data[0])) {
-				$staffinvolved[get_query_val("tbladmins", "id", "CONCAT(firstname,' ',lastname)='" . db_escape_string($data[0]) . "'")] = $data[0];
+				$staffinvolved[get_query_val("ra_admin", "id", "CONCAT(firstname,' ',lastname)='" . db_escape_string($data[0]) . "'")] = $data[0];
 			}
 		}
 
@@ -108,12 +108,12 @@ else {
 
 			if (!$errormessage) {
 				foreach ($staffinvolved as $staffid => $staffname) {
-					insert_query("tblticketfeedback", array("ticketid" => $id, "adminid" => $staffid, "rating" => $ra->get_req_var("rate", $staffid), "comments" => $ra->get_req_var("comments", $staffid), "datetime" => "now()", "ip" => $ra->get_user_ip()));
+					insert_query("ra_ticket_feedback", array("ticketid" => $id, "adminid" => $staffid, "rating" => $ra->get_req_var("rate", $staffid), "comments" => $ra->get_req_var("comments", $staffid), "datetime" => "now()", "ip" => $ra->get_user_ip()));
 				}
 
 
 				if (trim($ra->get_req_var("comments", "generic"))) {
-					insert_query("tblticketfeedback", array("ticketid" => $id, "adminid" => "0", "rating" => "0", "comments" => $ra->get_req_var("comments", "generic"), "datetime" => "now()", "ip" => $ra->get_user_ip()));
+					insert_query("ra_ticket_feedback", array("ticketid" => $id, "adminid" => "0", "rating" => "0", "comments" => $ra->get_req_var("comments", "generic"), "datetime" => "now()", "ip" => $ra->get_user_ip()));
 				}
 
 				$smartyvalues['success'] = true;
@@ -136,7 +136,7 @@ else {
 		$replyid = $rating[0];
 		$ratingscore = $rating[1];
 		$replyid = substr($replyid, 4);
-		update_query("tblticketreplies", array("rating" => $ratingscore), array("id" => $replyid));
+		update_query("ra_ticket_replies", array("rating" => $ratingscore), array("id" => $replyid));
 		redir("tid=" . $tid . "&c=" . $c);
 	}
 
@@ -228,13 +228,13 @@ else {
 	if ($admin) {
 		$user = "<strong>" . $admin . "</strong><br />" . $_LANG['supportticketsstaff'];
 	} elseif (0 < $userid) {
-		$clientsdata = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
+		$clientsdata = get_query_vals("ra_user", "firstname,lastname,email", array("id" => $userid));
 		$clientname = $clientsdata['firstname'] . " " . $clientsdata['lastname'];
 		$clientemail = $clientsdata['email'];
 		$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketsclient'];
 
         if (0 < $contactid) {
-			$contactdata = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
+			$contactdata = get_query_vals("ra_user_contacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
 			$clientname = $contactdata['firstname'] . " " . $contactdata['lastname'];
 			$clientemail = $contactdata['email'];
 			$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketscontact'];
@@ -275,7 +275,7 @@ else {
 	$smarty->assign("ratingenabled", $CONFIG['TicketRatingEnabled']);
 	$replies = $ascreplies = array();
 	$ascreplies[] = array("id" => "", "userid" => $userid, "contactid" => $contactid, "name" => ($admin ? $admin : $clientname), "email" => ($admin ? "" : $clientemail), "admin" => ($admin ? true : false), "user" => $user, "admin" => $admin, "date" => $date, "message" => $message, "attachments" => $attachments, "rating" => $rating);
-	$result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+	$result = select_query_i("ra_ticket_replies", "", array("tid" => $id), "date", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$ids = $data['id'];
@@ -296,13 +296,13 @@ else {
 		}
 		else {
 			if (0 < $userid) {
-				$clientsdata = get_query_vals("tblclients", "firstname,lastname,email", array("id" => $userid));
+				$clientsdata = get_query_vals("ra_user", "firstname,lastname,email", array("id" => $userid));
 				$clientname = $clientsdata['firstname'] . " " . $clientsdata['lastname'];
 				$clientemail = $clientsdata['email'];
 				$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketsclient'];
 
 				if (0 < $contactid) {
-					$contactdata = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
+					$contactdata = get_query_vals("ra_user_contacts", "firstname,lastname,email", array("id" => $contactid, "userid" => $userid));
 					$clientname = $contactdata['firstname'] . " " . $contactdata['lastname'];
 					$clientemail = $contactdata['email'];
 					$user = "<strong>" . $clientname . "</strong><br />" . $_LANG['supportticketscontact'];
@@ -347,7 +347,7 @@ else {
 		$clientemail = $clientsdetails['email'];
 
 		if ($_SESSION['cid']) {
-			$contactdata = get_query_vals("tblcontacts", "firstname,lastname,email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+			$contactdata = get_query_vals("ra_user_contacts", "firstname,lastname,email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
 			$clientname = $contactdata['firstname'] . " " . $contactdata['lastname'];
 			$clientemail = $contactdata['email'];
 		}

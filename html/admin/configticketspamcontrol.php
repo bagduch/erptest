@@ -12,14 +12,14 @@ $aInt->helplink = "Email Piping Spam Control";
 
 if ($action == "add") {
 	check_token("RA.admin.default");
-	insert_query("tblticketspamfilters", array("type" => $type, "content" => $spamvalue));
+	insert_query("ra_ticketpamfilters", array("type" => $type, "content" => $spamvalue));
 	redir("added=1");
 }
 
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	delete_query("tblticketspamfilters", array("id" => $id));
+	delete_query("ra_ticketpamfilters", array("id" => $id));
 	redir("deleted=1");
 }
 
@@ -85,12 +85,12 @@ foreach ($nums as $num) {
 		}
 	}
 
-	$result = select_query_i("tblticketspamfilters", "COUNT(*)", array("type" => $filtertype));
+	$result = select_query_i("ra_ticketpamfilters", "COUNT(*)", array("type" => $filtertype));
 	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
 	$aInt->sortableTableInit("id", "ASC");
 	$tabledata = "";
-	$result = select_query_i("tblticketspamfilters", "", array("type" => $filtertype), "content", "ASC", $page * $limit . ("," . $limit));
+	$result = select_query_i("ra_ticketpamfilters", "", array("type" => $filtertype), "content", "ASC", $page * $limit . ("," . $limit));
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];

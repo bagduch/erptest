@@ -95,12 +95,12 @@ if ($ra->get_req_var("generatedinvoices")) {
 releaseSession();
 if ($action == "savenotes") {
     check_token("RA.admin.default");
-    update_query("tbladmins", array("notes" => $notes), array("id" => $_SESSION['adminid']));
+    update_query("ra_admin", array("notes" => $notes), array("id" => $_SESSION['adminid']));
     redir();
 }
 if ($ra->get_req_var("saveorder")) {
     check_token("RA.admin.default");
-    update_query("tbladmins", array("homewidgets" => $widgetdata), array("id" => $_SESSION['adminid']));
+    update_query("ra_admin", array("homewidgets" => $widgetdata), array("id" => $_SESSION['adminid']));
     exit();
 }
 if (isset($_POST['noteid'])) {
@@ -111,7 +111,7 @@ if (isset($_POST['noteid'])) {
         "sticky" => $_POST['done'],
     );
 
-    update_query("tblnotes", $array, array("id" => $_POST['noteid']));
+    update_query("ra_notes", $array, array("id" => $_POST['noteid']));
     if ($_POST['done']) {
         logActivity("Notes Update match as done - User ID: " . $userid, $userid);
     } else {
@@ -120,8 +120,8 @@ if (isset($_POST['noteid'])) {
 }
 
 if ($ra->get_req_var("dismissgs")) {
-    $roleid = get_query_val("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
-    $result = select_query_i("tbladminroles", "widgets", array("id" => $roleid));
+    $roleid = get_query_val("ra_admin", "roleid", array("id" => $_SESSION['adminid']));
+    $result = select_query_i("ra_adminroles", "widgets", array("id" => $roleid));
     $data = mysqli_fetch_array($result);
     $widgets = $data['widgets'];
     $widgets = explode(",", $widgets);
@@ -133,7 +133,7 @@ if ($ra->get_req_var("dismissgs")) {
         }
     }
 
-    update_query("tbladminroles", array("widgets" => implode(",", $widgets)), array("id" => $roleid));
+    update_query("ra_adminroles", array("widgets" => implode(",", $widgets)), array("id" => $roleid));
     exit();
 }
 if ($ra->get_req_var("getincome")) {
@@ -149,7 +149,7 @@ if ($ra->get_req_var("getincome")) {
 }
 
 $templatevars['infobox'] = $infobox;
-$query = "SELECT COUNT(*) FROM tblpaymentgateways WHERE setting='type' AND value='CC'";
+$query = "SELECT COUNT(*) FROM ra_modules_gateways WHERE setting='type' AND value='CC'";
 $result = full_query_i($query);
 $data = mysqli_fetch_array($result);
 
@@ -175,7 +175,7 @@ $(\".widget-header .ui-icon\").click(function() {
     saveHomeWidgets();
 });
 ";
-$data = get_query_vals("tbladmins", "tbladmins.homewidgets,tbladminroles.widgets", array("tbladmins.id" => $_SESSION['adminid']), "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
+$data = get_query_vals("ra_admin", "ra_admin.homewidgets,ra_adminroles.widgets", array("ra_admin.id" => $_SESSION['adminid']), "", "", "", "ra_adminroles ON ra_adminroles.id=ra_admin.roleid");
 $homewidgets = $data['homewidgets'];
 $allowedwidgets = $data['widgets'];
 
@@ -289,7 +289,7 @@ $addons_html = run_hook("AdminHomepage", array());
 $templatevars['addons_html'] = $addons_html;
 
 
-$query = "select tbl1.* from tbladminlog tbl1 inner join (select * from tbladminlog order by lastvisit DESC) as tbl2 on tbl1.id = tbl2.id GROUP By tbl1.adminusername order by lastvisit DESC";
+$query = "select tbl1.* from ra_adminlog tbl1 inner join (select * from ra_adminlog order by lastvisit DESC) as tbl2 on tbl1.id = tbl2.id GROUP By tbl1.adminusername order by lastvisit DESC";
 $result = full_query_i($query);
 $adminlogin = array();
 while ($data = mysqli_fetch_array($result)) {
@@ -297,7 +297,7 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 
-$clientlogquery = "select firstname,lastname,ip,lastlogin from tblclients order by lastlogin DESC LIMIT 4";
+$clientlogquery = "select firstname,lastname,ip,lastlogin from ra_user order by lastlogin DESC LIMIT 4";
 $result = full_query_i($clientlogquery);
 $clientlog = array();
 while ($data = mysqli_fetch_array($result)) {
@@ -306,14 +306,14 @@ while ($data = mysqli_fetch_array($result)) {
 
 $end_date = date("Y-m-d");
 $start_date = date("Y-m-d", strtotime("-15 days", strtotime("now")));
-$query = "select * from tblorders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
+$query = "select * from ra_orders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
 $result = full_query_i($query);
 $orders = array();
 
 $templatevars['notes'] = array();
 
-$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) where tbn.sticky=0 and tbn.assignto='" . $_SESSION['adminid'] . "'";
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from ra_notes as tbn 
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid) where tbn.sticky=0 and tbn.assignto='" . $_SESSION['adminid'] . "'";
 $result = full_query_i($query);
 while ($data = mysqli_fetch_assoc($result)) {
     if (strtotime($data['duedate']) == strtotime(date("d.m.Y"))) {

@@ -28,7 +28,7 @@ if ($cat == "") {
 	$cat = 0;
 }
 
-$result = select_query_i("tblknowledgebasecats", "", array("parentid" => $cat), "name", "ASC");
+$result = select_query_i("ra_kbcats", "", array("parentid" => $cat), "name", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
@@ -45,7 +45,7 @@ if (!$catdone) {
 
 echo "<p><b>Articles</b></p>
 ";
-$result = select_query_i("tblknowledgebase", "", array("categoryid" => $cat), "title", "ASC", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+$result = select_query_i("ra_kb", "", array("categoryid" => $cat), "title", "ASC", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

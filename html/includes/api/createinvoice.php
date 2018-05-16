@@ -16,7 +16,7 @@ if (!function_exists("updateInvoiceTotal")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $_POST['userid']));
+$result = select_query_i("ra_user", "id", array("id" => $_POST['userid']));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
@@ -40,7 +40,7 @@ if (($CONFIG['TaxEnabled'] == "on" && !$taxrate) && !$taxrate2) {
 	}
 }
 
-$invoiceid = insert_query("tblinvoices", array("date" => $_POST['date'], "duedate" => $_POST['duedate'], "userid" => $_POST['userid'], "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $_POST['paymentmethod'], "notes" => $_POST['notes']));
+$invoiceid = insert_query("ra_bills", array("date" => $_POST['date'], "duedate" => $_POST['duedate'], "userid" => $_POST['userid'], "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $_POST['paymentmethod'], "notes" => $_POST['notes']));
 foreach ($_POST as $k => $v) {
 
 	if (substr($k, 0, 10) == "itemamount") {
@@ -50,7 +50,7 @@ foreach ($_POST as $k => $v) {
 		$taxed = $_POST["itemtaxed" . $counter];
 
 		if ($description) {
-			insert_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "userid" => $userid, "description" => $description, "amount" => $amount, "taxed" => $taxed));
+			insert_query("ra_bill_lineitems", array("invoiceid" => $invoiceid, "userid" => $userid, "description" => $description, "amount" => $amount, "taxed" => $taxed));
 			continue;
 		}
 
@@ -66,10 +66,10 @@ if ($_POST['sendinvoice']) {
 
 
 if ($autoapplycredit) {
-	$result = select_query_i("tblclients", "credit", array("id" => $userid));
+	$result = select_query_i("ra_user", "credit", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 	$credit = $data['credit'];
-	$result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+	$result = select_query_i("ra_bills", "total", array("id" => $invoiceid));
 	$data = mysqli_fetch_array($result);
 	$total = $data['total'];
 
@@ -86,8 +86,8 @@ if ($autoapplycredit) {
 		}
 
 		logActivity("Credit Automatically Applied at Invoice Creation - Invoice ID: " . $invoiceid . " - Amount: " . $credit, $userid);
-		update_query("tblclients", array("credit" => $creditleft), array("id" => $userid));
-		update_query("tblinvoices", array("credit" => $credit), array("id" => $invoiceid));
+		update_query("ra_user", array("credit" => $creditleft), array("id" => $userid));
+		update_query("ra_bills", array("credit" => $credit), array("id" => $invoiceid));
 		updateInvoiceTotal($invoiceid);
 
 		if ($doprocesspaid) {

@@ -529,7 +529,7 @@ class RA_Init {
 
             $CONFIG = array();
 
-            $result = select_query_i("tblconfiguration", "", "");
+            $result = select_query_i("ra_config", "", "");
 
             while ($data = @mysqli_fetch_array($result)) {
                 $setting = $data['setting'];
@@ -551,9 +551,9 @@ class RA_Init {
 
 
         if (!isset($this->config[$k])) {
-            insert_query("tblconfiguration", array("setting" => $k, "value" => trim($v)));
+            insert_query("ra_config", array("setting" => $k, "value" => trim($v)));
         } else {
-            update_query("tblconfiguration", array("value" => trim($v)), array("setting" => $k));
+            update_query("ra_config", array("value" => trim($v)), array("setting" => $k));
         }
 
         $CONFIG[$k] = $this->config[$k] = trim($v);
@@ -599,8 +599,8 @@ class RA_Init {
 
         if (!is_array($bannedips) && $bannedips != "NONE") {
             $bannedips = [];
-            $result = full_query_i("DELETE FROM tblbannedips WHERE expires<now()");
-            $result = full_query_i("SELECT ip FROM tblbannedips");
+            $result = full_query_i("DELETE FROM ra_bannedips WHERE expires<now()");
+            $result = full_query_i("SELECT ip FROM ra_bannedips");
             while ($data = mysqli_fetch_assoc($result)) {
                 $bannedips[] = $data['ip'];
             }
@@ -627,7 +627,7 @@ class RA_Init {
             $cookiedata = explode(":", $_COOKIE['RAUser']);
 
             if (is_numeric($cookiedata[0])) {
-                $data = get_query_vals("tblclients", "id,password", array("id" => (int) $cookiedata[0]));
+                $data = get_query_vals("ra_user", "id,password", array("id" => (int) $cookiedata[0]));
                 $loginhash = sha1($data['id'] . $data['password'] . $haship . substr(sha1($this->get_hash()), 0, 20));
                 $cookiehashcompare = sha1($loginhash . $this->get_hash());
 
@@ -646,13 +646,13 @@ class RA_Init {
                 session_destroy();
             } else {
                 if (!isset($_SESSION['adminid'])) {
-                    $result = select_query_i("tblclients", "password", array("id" => $_SESSION['uid']));
+                    $result = select_query_i("ra_user", "password", array("id" => $_SESSION['uid']));
                     $data = mysqli_fetch_array($result);
                     $cid = "";
 
                     if (isset($_SESSION['cid']) && is_numeric($_SESSION['cid'])) {
                         $cid = $_SESSION['cid'];
-                        $result = select_query_i("tblcontacts", "password", array("id" => $_SESSION['cid']));
+                        $result = select_query_i("ra_user_contacts", "password", array("id" => $_SESSION['cid']));
                         $data = mysqli_fetch_array($result);
                     }
 
@@ -854,7 +854,7 @@ class RA_Init {
 
 
         if (isset($_SESSION['uid']) && !isset($_SESSION['adminid'])) {
-            update_query("tblclients", array("language" => $lang), array("id" => $_SESSION['uid']));
+            update_query("ra_user", array("language" => $lang), array("id" => $_SESSION['uid']));
         }
 
         $_SESSION['Language'] = $lang;

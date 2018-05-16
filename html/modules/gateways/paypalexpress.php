@@ -51,9 +51,9 @@ function paypalexpress_orderformoutput($params) {
 
 
 function paypalexpress_orderformcheckout($params) {
-	$orderid = get_query_val( "tblorders", "id", array( "invoiceid" => $params['invoiceid'] ) );
+	$orderid = get_query_val( "ra_orders", "id", array( "invoiceid" => $params['invoiceid'] ) );
 	update_query( "tblcustomerservices", array( "paymentmethod" => "paypal" ), array( "orderid" => $orderid, "paymentmethod" => "paypalexpress" ) );
-	update_query( "tblserviceaddons", array( "paymentmethod" => "paypal" ), array( "orderid" => $orderid, "paymentmethod" => "paypalexpress" ) );
+	update_query( "ra_catalog_user_sales_addons", array( "paymentmethod" => "paypal" ), array( "orderid" => $orderid, "paymentmethod" => "paypalexpress" ) );
 	update_query( "tbldomains", array( "paymentmethod" => "paypal" ), array( "orderid" => $orderid, "paymentmethod" => "paypalexpress" ) );
 	$finalPaymentAmount = $_SESSION['Payment_Amount'];
 	$postfields = array();

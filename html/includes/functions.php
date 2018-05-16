@@ -44,14 +44,14 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields = array();
 
         if ($func_messagename == "defaultnewacc") {
-            $result = select_query_i("tblservices", "tblservices.welcomeemail", array("tblcustomerservices.id" => $func_id), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
+            $result = select_query_i("ra_catalog", "ra_catalog.welcomeemail", array("tblcustomerservices.id" => $func_id), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=ra_catalog.id");
             $data = mysqli_fetch_array($result);
 
             if (!$data['welcomeemail']) {
                 return false;
             }
 
-            $result = select_query_i("tblemailtemplates", "name", array("id" => $data['welcomeemail']));
+            $result = select_query_i("ra_templates_mail", "name", array("id" => $data['welcomeemail']));
             $data = mysqli_fetch_array($result);
             $func_messagename = $data['name'];
         }
@@ -61,7 +61,7 @@ if (!function_exists("emailtpl_template")) {
             $userid = $func_id;
         }
 
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
+        $result = select_query_i("ra_templates_mail", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
         $emailtplid = $data['id'];
         $type = $data['type'];
@@ -165,7 +165,7 @@ if (!function_exists("emailtpl_template")) {
                     $firstname = $extra[0];
                     $email = $extra[1];
                 } else {
-                    $result = select_query_i("tbltickets", "", array("id" => $func_id));
+                    $result = select_query_i("ra_ticket", "", array("id" => $func_id));
                     $data = mysqli_fetch_array($result);
                     $id = $data['id'];
                     $deptid = $data['did'];
@@ -199,7 +199,7 @@ if (!function_exists("emailtpl_template")) {
                         $email = $data['email'];
                     }
 
-                    $result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
+                    $result = select_query_i("ra_ticket_teams", "", array("id" => $deptid));
                     $data = mysqli_fetch_array($result);
                     $fromname = $CONFIG['CompanyName'] . " " . $data['name'];
                     $fromemail = $data['email'];
@@ -207,7 +207,7 @@ if (!function_exists("emailtpl_template")) {
                     $replyid = 0;
 
                     if ($extra) {
-                        $result = select_query_i("tblticketreplies", "", array("id" => $extra));
+                        $result = select_query_i("ra_ticket_replies", "", array("id" => $extra));
                         $data = mysqli_fetch_array($result);
                         $replyid = $data['id'];
                         $tmessage = $data['message'];
@@ -334,13 +334,13 @@ if (!function_exists("emailtpl_template")) {
                 } else {
                     if ($type == "product") {
                         $gatewaysarray = array();
-                        $result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+                        $result = select_query_i("ra_modules_gateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
                         while ($data = mysqli_fetch_array($result)) {
                             $gatewaysarray[$data['gateway']] = $data['value'];
                         }
 
-                        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name,tblservices.description", array("tblcustomerservices.id" => $func_id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+                        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_catalog.name,ra_catalog.description", array("tblcustomerservices.id" => $func_id), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
                         $data = mysqli_fetch_array($result);
                         $id = $data['id'];
                         $userid = $data['userid'];
@@ -375,7 +375,7 @@ if (!function_exists("emailtpl_template")) {
                         $dedi_ns2 = $data['ns2'];
                         $subscriptionid = $data['subscriptionid'];
                         $suspendreason = $data['suspendreason'];
-                        $canceltype = get_query_val("tblcancelrequests", "type", array("relid" => $data['id']), "id", "DESC");
+                        $canceltype = get_query_val("ra_cancellations", "type", array("relid" => $data['id']), "id", "DESC");
                         $regdate = fromMySQLDate($regdate, 0, 1);
 
                         if ($nextduedate != "-") {
@@ -393,7 +393,7 @@ if (!function_exists("emailtpl_template")) {
                         $canceltype = $_LANG["clientareacancellation" . strtolower(str_replace(" ", "", $canceltype))];
 
                         if ($server) {
-                            $result3 = select_query_i("tblservers", "", array("id" => $server));
+                            $result3 = select_query_i("ra_integration", "", array("id" => $server));
                             $data3 = mysqli_fetch_array($result3);
                             $servername = $data3['name'];
                             $serverip = $data3['ipaddress'];
@@ -419,7 +419,7 @@ if (!function_exists("emailtpl_template")) {
 
                         $configoptions = array();
                         $configoptionshtml = "";
-                        $query4 = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid='" . (int) $id . "' AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
+                        $query4 = "SELECT ra_catalog_user_sales_addons_options.id, ra_catalog_user_sales_addons_options.optionname AS confoption, ra_catalog_user_sales_addons_options.optiontype AS conftype, ra_catalog_user_sales_addons_optionssub.optionname, tblhostingconfigoptions.qty FROM tblhostingconfigoptions INNER JOIN ra_catalog_user_sales_addons_options ON ra_catalog_user_sales_addons_options.id = tblhostingconfigoptions.configid INNER JOIN ra_catalog_user_sales_addons_optionssub ON ra_catalog_user_sales_addons_optionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN ra_catalog_user_sales_addons_links ON ra_catalog_user_sales_addons_links.gid=ra_catalog_user_sales_addons_options.gid WHERE tblhostingconfigoptions.relid='" . (int) $id . "' AND ra_catalog_user_sales_addons_links.pid=tblcustomerservices.packageid ORDER BY ra_catalog_user_sales_addons_options.`order`,ra_catalog_user_sales_addons_options.id ASC";
                         $result4 = full_query_i($query4);
 
                         while ($data4 = mysqli_fetch_array($result4)) {
@@ -510,7 +510,7 @@ if (!function_exists("emailtpl_template")) {
                         }
                     } else {
                         if ($type == "affiliate") {
-                            $result = select_query_i("tblaffiliates", "", array("id" => $func_id));
+                            $result = select_query_i("ra_partners", "", array("id" => $func_id));
                             $data = mysqli_fetch_array($result);
                             $id = $affiliateid = $data['id'];
                             $userid = $data['clientid'];
@@ -523,7 +523,7 @@ if (!function_exists("emailtpl_template")) {
                             getUsersLang($userid);
                             $referralstable .= "<table cellspacing=\"1\" bgcolor=\"#cccccc\" width=\"100%\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $_LANG['affiliatessignupdate'] . "</td><td>" . $_LANG['orderproduct'] . "</td><td>" . $_LANG['affiliatesamount'] . "</td><td>" . $_LANG['orderbillingcycle'] . "</td><td>" . $_LANG['affiliatescommission'] . "</td><td>" . $_LANG['affiliatesstatus'] . "</td></tr>";
                             $service = "";
-                            $result = select_query_i("tblaffiliatesaccounts", "tblaffiliatesaccounts.*,tblservices.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=tblaffiliatesaccounts.relid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+                            $result = select_query_i("ra_partnersaccounts", "ra_partnersaccounts.*,ra_catalog.name,tblcustomerservices.userid,tblcustomerservices.servicestatus,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.regdate,tblcustomerservices.billingcycle", array("affiliateid" => $affiliateid), "regdate", "DESC", "", "tblcustomerservices ON tblcustomerservices.id=ra_partnersaccounts.relid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
 
                             while ($data = mysqli_fetch_array($result)) {
                                 $affaccid = $data['id'];
@@ -608,9 +608,9 @@ if (!function_exists("emailtpl_template")) {
 
         if ($userid || $contactid) {
             if ($contactid) {
-                $result2 = select_query_i("tblcontacts", "tblcontacts.*,(SELECT groupid FROM tblclients WHERE id=tblcontacts.userid) AS clgroupid,(SELECT groupname FROM tblclientgroups WHERE id=clgroupid) AS clgroupname,(SELECT language FROM tblclients WHERE id=tblcontacts.userid) AS language", array("id" => $contactid));
+                $result2 = select_query_i("ra_user_contacts", "ra_user_contacts.*,(SELECT groupid FROM ra_user WHERE id=ra_user_contacts.userid) AS clgroupid,(SELECT groupname FROM ra_user_group WHERE id=clgroupid) AS clgroupname,(SELECT language FROM ra_user WHERE id=ra_user_contacts.userid) AS language", array("id" => $contactid));
             } else {
-                $result2 = select_query_i("tblclients", "tblclients.*,tblclients.groupid AS clgroupid,(SELECT groupname FROM tblclientgroups WHERE id=tblclients.groupid) AS clgroupname", array("id" => $userid));
+                $result2 = select_query_i("ra_user", "ra_user.*,ra_user.groupid AS clgroupid,(SELECT groupname FROM ra_user_group WHERE id=ra_user.groupid) AS clgroupname", array("id" => $userid));
             }
 
             $data2 = mysqli_fetch_array($result2);
@@ -650,7 +650,7 @@ if (!function_exists("emailtpl_template")) {
             $cardexp = $carddetails['expdate'];
             unset($carddetails);
             $currency = getCurrency($userid);
-            $balance = get_query_val("tblinvoices", "SUM(total)-COALESCE((SELECT SUM(amountin-amountout) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id),0)", array("userid" => $userid, "status" => "Unpaid"));
+            $balance = get_query_val("ra_bills", "SUM(total)-COALESCE((SELECT SUM(amountin-amountout) FROM ra_transactions WHERE ra_transactions.invoiceid=ra_bills.id),0)", array("userid" => $userid, "status" => "Unpaid"));
             $email_merge_fields['client_due_invoices_balance'] = formatCurrency($balance);
 
             if ($func_messagename == "Automated Password Reset") {
@@ -673,9 +673,9 @@ if (!function_exists("emailtpl_template")) {
                 $passwordhash = generateClientPW($password);
 
                 if ($contactid) {
-                    update_query("tblcontacts", array("password" => $passwordhash), array("id" => $contactid));
+                    update_query("ra_user_contacts", array("password" => $passwordhash), array("id" => $contactid));
                 } else {
-                    update_query("tblclients", array("password" => $passwordhash), array("id" => $userid));
+                    update_query("ra_user", array("password" => $passwordhash), array("id" => $userid));
                 }
 
                 run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
@@ -765,7 +765,7 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields['signature'] = nl2br(html_entity_decode($CONFIG['Signature'], ENT_QUOTES));
         $email_merge_fields['date'] = date("l, jS F Y");
         $email_merge_fields['time'] = date("g:ia");
-        $result = select_query_i("tblemailtemplates", "", array("name" => $func_messagename));
+        $result = select_query_i("ra_templates_mail", "", array("name" => $func_messagename));
         $data = mysqli_fetch_array($result);
 
         if (substr($subject, 0, 10) != "[Ticket ID" && $data['subject']) {
@@ -890,7 +890,7 @@ if (!function_exists("emailtpl_template")) {
                     }
                 }
             } else {
-                $result = select_query_i("tblcontacts", "", array("userid" => $userid, $type . "emails" => "1"));
+                $result = select_query_i("ra_user_contacts", "", array("userid" => $userid, $type . "emails" => "1"));
 
                 while ($data = mysqli_fetch_array($result)) {
                     $ccaddress = trim($data['email']);
@@ -1006,7 +1006,7 @@ if (!function_exists("emailtpl_template")) {
 
 
             if ($userid && !$nosavemaillog) {
-                insert_query("tblemails", array("userid" => $userid, "subject" => $subject, "message" => $message, "date" => "now()", "to" => $email, "cc" => $copyto, "bcc" => $CONFIG['BCCMessages']));
+                insert_query("ra_user_mail", array("userid" => $userid, "subject" => $subject, "message" => $message, "date" => "now()", "to" => $email, "cc" => $copyto, "bcc" => $CONFIG['BCCMessages']));
             }
 
             logActivity("Email Sent to " . $firstname . " " . $lastname . " (" . $subject . ")", $userid ? $userid : "");
@@ -1056,7 +1056,7 @@ if (!function_exists("emailtpl_template")) {
         $mail = new PHPMailer();
 
         if ($deptid) {
-            $result = select_query_i("tblticketdepartments", "name,email", array("id" => $deptid));
+            $result = select_query_i("ra_ticket_teams", "name,email", array("id" => $deptid));
             $data = mysqli_fetch_array($result);
             $mail->From = $data['email'];
             $mail->FromName = html_entity_decode($CONFIG['CompanyName'] . " " . $data['name'], ENT_QUOTES);
@@ -1108,13 +1108,13 @@ if (!function_exists("emailtpl_template")) {
         $mail->Body = $message;
         $mail->AltBody = $message_text;
         $emailcount = 0;
-        $where = "tbladmins.disabled=0 AND tbladminroles." . db_escape_string($to) . "emails='1'";
+        $where = "ra_admin.disabled=0 AND ra_adminroles." . db_escape_string($to) . "emails='1'";
 
         if ($deptid) {
-            $where .= " AND tbladmins.ticketnotifications!=''";
+            $where .= " AND ra_admin.ticketnotifications!=''";
         }
 
-        $result = select_query_i("tbladmins", "firstname,lastname,email,ticketnotifications", $where, "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
+        $result = select_query_i("ra_admin", "firstname,lastname,email,ticketnotifications", $where, "", "", "", "ra_adminroles ON ra_adminroles.id=ra_admin.roleid");
 
         while ($data = mysqli_fetch_array($result)) {
             if ($data['email']) {
@@ -1156,7 +1156,7 @@ if (!function_exists("emailtpl_template")) {
         global $templates_compiledir;
         global $smtp_debug;
 
-        $result = select_query_i("tblemailtemplates", "", array("name" => $name, "language" => ""));
+        $result = select_query_i("ra_templates_mail", "", array("name" => $name, "language" => ""));
         $data = mysqli_fetch_array($result);
         $type = $data['type'];
         $subject = $data['subject'];
@@ -1207,7 +1207,7 @@ if (!function_exists("emailtpl_template")) {
         $mail = new PHPMailer();
 
         if ($deptid) {
-            $result = select_query_i("tblticketdepartments", "name,email", array("id" => $deptid));
+            $result = select_query_i("ra_ticket_teams", "name,email", array("id" => $deptid));
             $data = mysqli_fetch_array($result);
             $mail->From = $data['email'];
             $mail->FromName = html_entity_decode($CONFIG['CompanyName'] . " " . $data['name'], ENT_QUOTES);
@@ -1273,21 +1273,21 @@ if (!function_exists("emailtpl_template")) {
 
 
         if ($adminid) {
-            $where = "tbladmins.disabled=0 AND tbladmins.id='" . (int) $adminid . "'";
+            $where = "ra_admin.disabled=0 AND ra_admin.id='" . (int) $adminid . "'";
 
             if ($type == "support") {
-                $where .= " AND tbladminroles.supportemails='1'";
+                $where .= " AND ra_adminroles.supportemails='1'";
             }
         } else {
-            $where = "tbladmins.disabled=0 AND tbladminroles." . db_escape_string($to) . "emails='1'";
+            $where = "ra_admin.disabled=0 AND ra_adminroles." . db_escape_string($to) . "emails='1'";
 
             if ($deptid) {
-                $where .= " AND tbladmins.ticketnotifications!=''";
+                $where .= " AND ra_admin.ticketnotifications!=''";
             }
         }
 
         $emailcount = 0;
-        $result = select_query_i("tbladmins", "firstname,lastname,email,supportdepts,ticketnotifications", $where, "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
+        $result = select_query_i("ra_admin", "firstname,lastname,email,supportdepts,ticketnotifications", $where, "", "", "", "ra_adminroles ON ra_adminroles.id=ra_admin.roleid");
 
         while ($data = mysqli_fetch_array($result)) {
             if ($data['email']) {
@@ -1517,9 +1517,9 @@ if (!function_exists("emailtpl_template")) {
         $payout = false;
 
         if ($affaccid) {
-            $result = select_query_i("tblaffiliatesaccounts", "", array("id" => $affaccid));
+            $result = select_query_i("ra_partnersaccounts", "", array("id" => $affaccid));
         } else {
-            $result = select_query_i("tblaffiliatesaccounts", "", array("relid" => $hostingid));
+            $result = select_query_i("ra_partnersaccounts", "", array("relid" => $hostingid));
         }
 
         $data = mysqli_fetch_array($result);
@@ -1528,7 +1528,7 @@ if (!function_exists("emailtpl_template")) {
         $lastpaid = $data['lastpaid'];
         $relid = $data['relid'];
         $commission = calculateAffiliateCommission($affid, $relid, $lastpaid);
-        $result = select_query_i("tblservices", "tblservices.affiliateonetime", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id");
+        $result = select_query_i("ra_catalog", "ra_catalog.affiliateonetime", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=ra_catalog.id");
         $data = mysqli_fetch_array($result);
         $affiliateonetime = $data['affiliateonetime'];
 
@@ -1542,7 +1542,7 @@ if (!function_exists("emailtpl_template")) {
             $payout = true;
         }
 
-        $result = select_query_i("tblaffiliates", "onetime", array("id" => $affid));
+        $result = select_query_i("ra_partners", "onetime", array("id" => $affid));
         $data = mysqli_fetch_array($result);
         $onetime = $data['onetime'];
 
@@ -1555,13 +1555,13 @@ if (!function_exists("emailtpl_template")) {
         if ($affaccid && $payout) {
             if ($CONFIG['AffiliatesDelayCommission']) {
                 $clearingdate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['AffiliatesDelayCommission'], date("Y")));
-                insert_query("tblaffiliatespending", array("affaccid" => $affaccid, "amount" => $commission, "clearingdate" => $clearingdate));
+                insert_query("ra_partnerspending", array("affaccid" => $affaccid, "amount" => $commission, "clearingdate" => $clearingdate));
             } else {
-                update_query("tblaffiliates", array("balance" => "+=" . $commission), array("id" => (int) $affid));
-                insert_query("tblaffiliateshistory", array("affiliateid" => $affid, "date" => "now()", "affaccid" => $affaccid, "amount" => $commission));
+                update_query("ra_partners", array("balance" => "+=" . $commission), array("id" => (int) $affid));
+                insert_query("ra_partnershistory", array("affiliateid" => $affid, "date" => "now()", "affaccid" => $affaccid, "amount" => $commission));
             }
 
-            update_query("tblaffiliatesaccounts", array("lastpaid" => "now()"), array("id" => $affaccid));
+            update_query("ra_partnersaccounts", array("lastpaid" => "now()"), array("id" => $affaccid));
         }
 
         return $error;
@@ -1572,7 +1572,7 @@ if (!function_exists("emailtpl_template")) {
         static $AffCommAffiliatesData = array();
 
         $percentage = $fixedamount = "";
-        $result = select_query_i("tblservices", "tblservices.affiliateonetime,tblservices.affiliatepaytype,tblservices.affiliatepayamount,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.billingcycle,tblcustomerservices.userid,tblclients.currency", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=tblservices.id INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result = select_query_i("ra_catalog", "ra_catalog.affiliateonetime,ra_catalog.affiliatepaytype,ra_catalog.affiliatepayamount,tblcustomerservices.amount,tblcustomerservices.firstpaymentamount,tblcustomerservices.billingcycle,tblcustomerservices.userid,ra_user.currency", array("tblcustomerservices.id" => $relid), "", "", "", "tblcustomerservices ON tblcustomerservices.packageid=ra_catalog.id INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
         $data = mysqli_fetch_array($result);
         $userid = $data['userid'];
         $billingcycle = $data['billingcycle'];
@@ -1599,7 +1599,7 @@ if (!function_exists("emailtpl_template")) {
         if (isset($AffCommAffiliatesData[$affid])) {
             $data = $AffCommAffiliatesData[$affid];
         } else {
-            $result = select_query_i("tblaffiliates", "clientid,paytype,payamount,(SELECT currency FROM tblclients WHERE id=clientid) AS currency", array("id" => $affid));
+            $result = select_query_i("ra_partners", "clientid,paytype,payamount,(SELECT currency FROM ra_user WHERE id=clientid) AS currency", array("id" => $affid));
             $data = mysqli_fetch_array($result);
             $AffCommAffiliatesData[$affid] = $data;
         }
@@ -1636,11 +1636,11 @@ if (!function_exists("emailtpl_template")) {
 
         if (!isset($username)) {
             if (isset($_SESSION['adminid'])) {
-                $result = select_query_i("tbladmins", "username", array("id" => $_SESSION['adminid']));
+                $result = select_query_i("ra_admin", "username", array("id" => $_SESSION['adminid']));
                 $data = mysqli_fetch_array($result);
                 $username = sprintf("Admin: %s (%d)", $data['username'], $_SESSION['adminid']);
             } elseif (isset($_SESSION['cid'])) {
-                $result = select_query_i("tblcontacts", "email", array("id" => $_SESSION['cid']));
+                $result = select_query_i("ra_user_contacts", "email", array("id" => $_SESSION['cid']));
                 $data = mysqli_fetch_array(result);
                 $username = sprintf("Contact: %s (%d)", $result['email'], $_SESSION['cid']);
             } elseif (isset($_SESSION['uid'])) {
@@ -1659,7 +1659,7 @@ if (!function_exists("emailtpl_template")) {
             }
         }
         $description = html_entity_decode($description, ENT_QUOTES);
-        insert_query("tblactivitylog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip, "account_id" => $account_id));
+        insert_query("ra_systemlog", array("date" => "now()", "description" => $description, "user" => $username, "userid" => $userid, "ipaddr" => $remote_ip, "account_id" => $account_id));
         run_hook("LogActivity", array("description" => $description, "user" => $username, "userid" => $userid, "ipaddress" => $remote_ip, "account_id" => $account_id));
     }
 
@@ -1705,7 +1705,7 @@ if (!function_exists("emailtpl_template")) {
 
 
             if ($type == "") {
-                $result = select_query_i("tblorders", "id", array("ordernum" => $str));
+                $result = select_query_i("ra_orders", "id", array("ordernum" => $str));
                 $data = mysqli_fetch_array($result);
                 $id = $data['id'];
 
@@ -1719,7 +1719,7 @@ if (!function_exists("emailtpl_template")) {
 
 
             if ($type == "tickets") {
-                $result = select_query_i("tbltickets", "id", array("tid" => $str));
+                $result = select_query_i("ra_ticket", "id", array("tid" => $str));
                 $data = mysqli_fetch_array($result);
                 $id = $data['id'];
 
@@ -2017,7 +2017,7 @@ if (!function_exists("emailtpl_template")) {
             $DefaultLang = $_LANG;
         }
 
-        $result = select_query_i("tblclients", "language", array("id" => $userid));
+        $result = select_query_i("ra_user", "language", array("id" => $userid));
         $data = mysqli_fetch_array($result);
         $language = $data['language'];
 
@@ -2042,7 +2042,7 @@ if (!function_exists("emailtpl_template")) {
             if (isset($usercurrencies[$userid])) {
                 $currencyid = $usercurrencies[$userid];
             } else {
-                $currencyid = $usercurrencies[$userid] = get_query_val("tblclients", "currency", array("id" => $userid));
+                $currencyid = $usercurrencies[$userid] = get_query_val("ra_user", "currency", array("id" => $userid));
             }
         }
 
@@ -2051,10 +2051,10 @@ if (!function_exists("emailtpl_template")) {
             if (isset($currenciesdata[$currencyid])) {
                 $data = $currenciesdata[$currencyid];
             } else {
-                $currenciesdata[$currencyid] = $data = get_query_vals("tblcurrencies", "", array("id" => $currencyid));
+                $currenciesdata[$currencyid] = $data = get_query_vals("ra_currency", "", array("id" => $currencyid));
             }
         } else {
-            $data = get_query_vals("tblcurrencies", "", array("`default`" => "1"));
+            $data = get_query_vals("ra_currency", "", array("`default`" => "1"));
         }
 
         $currency_array = array("id" => $data['id'], "code" => $data['code'], "prefix" => $data['prefix'], "suffix" => $data['suffix'], "format" => $data['format'], "rate" => $data['rate']);
@@ -2140,12 +2140,12 @@ if (!function_exists("emailtpl_template")) {
 
     function convertCurrency($amount, $from, $to, $base_currency_exchange_rate = "") {
         if (!$base_currency_exchange_rate) {
-            $result = select_query_i("tblcurrencies", "rate", array("id" => $from));
+            $result = select_query_i("ra_currency", "rate", array("id" => $from));
             $data = mysqli_fetch_array($result);
             $base_currency_exchange_rate = $data['rate'];
         }
 
-        $result = select_query_i("tblcurrencies", "rate", array("id" => $to));
+        $result = select_query_i("ra_currency", "rate", array("id" => $to));
         $data = mysqli_fetch_array($result);
         $convertto_currency_exchange_rate = $data['rate'];
 
@@ -2164,7 +2164,7 @@ if (!function_exists("emailtpl_template")) {
 
     function getClientGroups() {
         $retarray = array();
-        $result = select_query_i("tblclientgroups", "", "");
+        $result = select_query_i("ra_user_group", "", "");
 
         while ($data = mysqli_fetch_array($result)) {
             $retarray[$data['id']] = array("name" => $data['groupname'], "colour" => $data['groupcolour'], "discountpercent" => $data['discountpercent'], "susptermexempt" => $data['susptermexempt'], "separateinvoices" => $data['separateinvoices']);
@@ -2292,7 +2292,7 @@ if (!function_exists("emailtpl_template")) {
                 $where = array("username" => $adminuser);
             }
 
-            $result = select_query_i("tbladmins", "id", $where);
+            $result = select_query_i("ra_admin", "id", $where);
             $data = mysqli_fetch_array($result);
             $adminid = $data['id'];
 
@@ -2381,7 +2381,7 @@ if (!function_exists("emailtpl_template")) {
             $arraydata = str_replace($v, $replacevar, $arraydata);
         }
 
-        insert_query("tblmodulelog", array("date" => "now()", "module" => strtolower($module), "action" => strtolower($action), "request" => $request, "response" => $response, "arrdata" => $arraydata));
+        insert_query("ra_module_logs", array("date" => "now()", "module" => strtolower($module), "action" => strtolower($action), "request" => $request, "response" => $response, "arrdata" => $arraydata));
     }
 
     function releaseSession() {

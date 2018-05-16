@@ -11,7 +11,7 @@ if (!$enddate) $enddate = fromMySQLDate(date("Y-m-d",mktime(0,0,0,date("m"),date
 
 $rsel[$rating] = ' selected';
 
-$query = "SELECT tblticketreplies.*,tbltickets.tid AS ticketid FROM tblticketreplies INNER JOIN tbltickets ON tbltickets.id=tblticketreplies.tid WHERE tblticketreplies.admin!='' AND tblticketreplies.rating='".(int)$rating."' AND tblticketreplies.date BETWEEN '".db_make_safe_human_date($startdate)."' AND '".db_make_safe_human_date($enddate)."' ORDER BY date DESC";
+$query = "SELECT ra_ticket_replies.*,ra_ticket.tid AS ticketid FROM ra_ticket_replies INNER JOIN ra_ticket ON ra_ticket.id=ra_ticket_replies.tid WHERE ra_ticket_replies.admin!='' AND ra_ticket_replies.rating='".(int)$rating."' AND ra_ticket_replies.date BETWEEN '".db_make_safe_human_date($startdate)."' AND '".db_make_safe_human_date($enddate)."' ORDER BY date DESC";
 $result = full_query_i($query);
 $num_rows = mysqli_num_rows($result);
 

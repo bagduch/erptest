@@ -17,7 +17,7 @@ if (!$limitnum) {
 }
 
 $search = mysqli_real_escape_string($search);
-$result = full_query_i("SELECT SQL_CALC_FOUND_ROWS id, firstname, lastname, companyname, email, groupid, datecreated, status FROM tblclients WHERE email LIKE '" . $search . "%' OR firstname LIKE '" . $search . "%' OR lastname LIKE '" . $search . "%' OR companyname LIKE '" . $search . "%' ORDER BY firstname, lastname, companyname LIMIT " . (int)$limitstart . ", " . (int)$limitnum);
+$result = full_query_i("SELECT SQL_CALC_FOUND_ROWS id, firstname, lastname, companyname, email, groupid, datecreated, status FROM ra_user WHERE email LIKE '" . $search . "%' OR firstname LIKE '" . $search . "%' OR lastname LIKE '" . $search . "%' OR companyname LIKE '" . $search . "%' ORDER BY firstname, lastname, companyname LIMIT " . (int)$limitstart . ", " . (int)$limitnum);
 $result_count = full_query_i("SELECT FOUND_ROWS()");
 $data = mysqli_fetch_array($result_count);
 $totalresults = $data[0];

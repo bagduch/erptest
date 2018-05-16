@@ -36,7 +36,7 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
 
 
     if (!$rate) {
-        $result = select_query_i("tblcurrencies", "rate", array("id" => $currencyid));
+        $result = select_query_i("ra_currency", "rate", array("id" => $currencyid));
         $data = mysqli_fetch_array($result);
         $rate = $data['rate'];
     }
@@ -47,19 +47,19 @@ function addTransaction($userid, $currencyid, $description, $amountin, $fees, $a
     }
 
     $array = array("userid" => $userid, "currency" => $currencyid, "gateway" => $gateway, "date" => $date, "description" => $description, "amountin" => $amountin, "fees" => $fees, "amountout" => $amountout, "rate" => $rate, "transid" => $transid, "invoiceid" => $invoiceid, "refundid" => $refundid);
-    $saveid = insert_query("tblaccounts", $array);
+    $saveid = insert_query("ra_transactions", $array);
     logActivity("Added Transaction - Transaction ID: " . $saveid);
     $array['id'] = $saveid;
     run_hook("AddTransaction", $array);
 }
 
-// recalculate invoice details based on tblinvoiceitems and tbltransactions
+// recalculate invoice details based on ra_bill_lineitems and tbltransactions
 function updateInvoiceTotal($id) {
     global $CONFIG;
 
     // fetch all line items for it
     $result = select_query_i(
-            "tblinvoiceitems", "*", array("invoiceid" => $id)
+            "ra_bill_lineitems", "*", array("invoiceid" => $id)
     );
 
     while ($data = mysqli_fetch_array($result)) {
@@ -72,7 +72,7 @@ function updateInvoiceTotal($id) {
 
     $subtotal = $total = $nontaxsubtotal + $taxsubtotal;
     $result = select_query_i(
-            "tblinvoices", "userid,credit,taxrate,taxrate2", array("id" => $id)
+            "ra_bills", "userid,credit,taxrate,taxrate2", array("id" => $id)
     );
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
@@ -140,17 +140,17 @@ function updateInvoiceTotal($id) {
     $subtotal = format_as_currency($subtotal);
     $tax = format_as_currency($tax);
     $total = format_as_currency($total);
-    update_query("tblinvoices", array("invoicenum" => $id, "subtotal" => $subtotal, "tax" => $tax, "tax2" => $tax2, "total" => $total), array("id" => $id));
+    update_query("ra_bills", array("invoicenum" => $id, "subtotal" => $subtotal, "tax" => $tax, "tax2" => $tax2, "total" => $total), array("id" => $id));
     run_hook("UpdateInvoiceTotal", array("invoiceid" => $id));
 }
 
 function addInvoicePayment($invoiceid, $transid, $amount, $fees, $gateway, $noemail = "", $date = "") {
-    $result = select_query_i("tblinvoices", "userid,total,status", array("id" => $invoiceid));
+    $result = select_query_i("ra_bills", "userid,total,status", array("id" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $total = $data['total'];
     $status = $data['status'];
-    $result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+    $result = select_query_i("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $amountpaid = $data[0];
     $balance = $total - $amountpaid;
@@ -180,21 +180,21 @@ function addInvoicePayment($invoiceid, $transid, $amount, $fees, $gateway, $noem
 
 
     if ($balance <= 0) {
-        $result2 = select_query_i("tblcredit", "sum(amount)", array("relid" => $invoiceid));
+        $result2 = select_query_i("ra_transactions_credit", "sum(amount)", array("relid" => $invoiceid));
         $data2 = mysqli_fetch_array($result2);
         $amountcredited = $data2[0];
         $balance = $balance + $amountcredited;
 
         if ($balance < 0) {
             $balance = $balance * (0 - 1);
-            insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Invoice #" . $invoiceid . " Overpayment", "amount" => $balance, "relid" => $invoiceid));
-            update_query("tblclients", array("credit" => "+=" . $balance), array("id" => $userid));
+            insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Invoice #" . $invoiceid . " Overpayment", "amount" => $balance, "relid" => $invoiceid));
+            update_query("ra_user", array("credit" => "+=" . $balance), array("id" => $userid));
         }
     }
 }
 
 function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = "", $sendemail = true, $refundtransid = "") {
-    $result = select_query_i("tblaccounts", "", array("id" => $transid));
+    $result = select_query_i("ra_transactions", "", array("id" => $transid));
     $data = mysqli_fetch_array($result);
     $transid = $data['id'];
 
@@ -210,7 +210,7 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
     $gatewaytransid = $data['transid'];
     $rate = $data['rate'];
     $gateway = RA_Gateways::makesafename($gateway);
-    $result = select_query_i("tblaccounts", "SUM(amountout),SUM(fees)", array("refundid" => $transid));
+    $result = select_query_i("ra_transactions", "SUM(amountout),SUM(fees)", array("refundid" => $transid));
     $data = mysqli_fetch_array($result);
     $alreadyrefunded = $data[0];
     $alreadyrefundedfees = $data[1];
@@ -221,7 +221,7 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
         $fees = 0;
     }
 
-    $result = select_query_i("tblaccounts", "SUM(amountin),SUM(amountout)", array("invoiceid" => $invoiceid));
+    $result = select_query_i("ra_transactions", "SUM(amountin),SUM(amountout)", array("invoiceid" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $invoicetotalpaid = $data[0];
     $invoicetotalrefunded = $data[1];
@@ -241,11 +241,11 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
         addTransaction($userid, 0, "Refund of Transaction ID " . $gatewaytransid . " to Credit Balance", 0, $fees * (0 - 1), $amount, "", "", $invoiceid, "", $transid, $rate);
         addTransaction($userid, 0, "Credit from Refund of Invoice ID " . $invoiceid, $amount, $fees, 0, "", "", "", "", "", "");
         logActivity("Refunded Invoice Payment to Credit Balance - Invoice ID: " . $invoiceid, $userid);
-        insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Credit from Refund of Invoice ID " . $invoiceid, "amount" => $amount));
-        update_query("tblclients", array("credit" => "+=" . $amount), array("id" => (int) $userid));
+        insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Credit from Refund of Invoice ID " . $invoiceid, "amount" => $amount));
+        update_query("ra_user", array("credit" => "+=" . $amount), array("id" => (int) $userid));
 
         if ($invoicetotalpaid - $invoicetotalrefunded - $amount <= 0) {
-            update_query("tblinvoices", array("status" => "Refunded"), array("id" => $invoiceid));
+            update_query("ra_bills", array("status" => "Refunded"), array("id" => $invoiceid));
             run_hook("InvoiceRefunded", array("invoiceid" => $invoiceid));
         }
 
@@ -257,12 +257,12 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
         return "creditsuccess";
     }
 
-    $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "convertto"));
+    $result = select_query_i("ra_modules_gateways", "value", array("gateway" => $gateway, "setting" => "convertto"));
     $data = mysqli_fetch_array($result);
     $convertto = $data['value'];
 
     if ($convertto) {
-        $result = select_query_i("tblclients", "currency", array("id" => $userid));
+        $result = select_query_i("ra_user", "currency", array("id" => $userid));
         $data = mysqli_fetch_array($result);
         $fromcurrencyid = $data['currency'];
         $convertedamount = convertCurrency($amount, $fromcurrencyid, $convertto, $rate);
@@ -287,7 +287,7 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
         }
 
         $gatewayresult = $gatewayresult['status'];
-        $result = select_query_i("tblpaymentgateways", "value", array("gateway" => $gateway, "setting" => "name"));
+        $result = select_query_i("ra_modules_gateways", "value", array("gateway" => $gateway, "setting" => "name"));
         $data = mysqli_fetch_array($result);
         $gatewayname = $data['value'];
         logTransaction($gatewayname . " Refund", $rawdata, ucfirst($gatewayresult));
@@ -300,12 +300,12 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
     if ($gatewayresult == "success" || $gatewayresult == "manual") {
         addTransaction($userid, 0, "Refund of Transaction ID " . $gatewaytransid, 0, $fees * (0 - 1), $amount, $gateway, $refundtransid, $invoiceid, "", $transid, $rate);
         logActivity("Refunded Invoice Payment - Invoice ID: " . $invoiceid . " - Transaction ID: " . $transid, $userid);
-        $result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+        $result = select_query_i("ra_bills", "total", array("id" => $invoiceid));
         $data = mysqli_fetch_array($result);
         $invoicetotal = $data[0];
 
         if ($invoicetotalpaid - $invoicetotalrefunded - $amount <= 0) {
-            update_query("tblinvoices", array("status" => "Refunded"), array("id" => $invoiceid));
+            update_query("ra_bills", array("status" => "Refunded"), array("id" => $invoiceid));
             run_hook("InvoiceRefunded", array("invoiceid" => $invoiceid));
         }
 
@@ -321,7 +321,7 @@ function refundInvoicePayment($transid, $amount, $sendtogateway, $addascredit = 
 function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
     global $CONFIG;
 
-    $result = select_query_i("tblinvoices", "invoicenum,userid,status", array("id" => $invoiceid));
+    $result = select_query_i("ra_bills", "invoicenum,userid,status", array("id" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $userid = $data['userid'];
     $invoicestatus = $data['status'];
@@ -331,14 +331,14 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
         return false;
     }
     $date = ($date ? toMySQLDate($date) . date(" H:i:s") : "now()");
-    update_query("tblinvoices", array("status" => "Paid", "datepaid" => $date), array("id" => $invoiceid));
+    update_query("ra_bills", array("status" => "Paid", "datepaid" => $date), array("id" => $invoiceid));
     logActivity("Invoice Marked Paid - Invoice ID: " . $invoiceid, $userid);
     if ($CONFIG['SequentialInvoiceNumbering'] && !$invoicenum) {
         $invoicenumber = $CONFIG['SequentialInvoiceNumberFormat'];
-        $invnumval = get_query_val("tblconfiguration", "value", array("setting" => "SequentialInvoiceNumberValue"));
-        update_query("tblconfiguration", array("value" => "+1"), array("setting" => "SequentialInvoiceNumberValue"));
+        $invnumval = get_query_val("ra_config", "value", array("setting" => "SequentialInvoiceNumberValue"));
+        update_query("ra_config", array("value" => "+1"), array("setting" => "SequentialInvoiceNumberValue"));
         $invoicenumber = str_replace("{NUMBER}", $invnumval, $invoicenumber);
-        update_query("tblinvoices", array("invoicenum" => $invoicenumber), array("id" => $invoiceid));
+        update_query("ra_bills", array("invoicenum" => $invoicenumber), array("id" => $invoiceid));
         ++$CONFIG['SequentialInvoiceNumberValue'];
     }
     run_hook("InvoicePaidPreEmail", array("invoiceid" => $invoiceid));
@@ -346,7 +346,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
         sendMessage("Invoice Payment Confirmation", $invoiceid);
     }
 
-    $result = select_query_i("tblinvoiceitems", "", "invoiceid='" . mysqli_real_escape_string($invoiceid) . "' AND type!=''", "id", "ASC");
+    $result = select_query_i("ra_bill_lineitems", "", "invoiceid='" . mysqli_real_escape_string($invoiceid) . "' AND type!=''", "id", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['userid'];
@@ -369,7 +369,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
             if (!$enabledcheck) {
                 $currency = getCurrency($userid);
-                $dnscost = get_query_val("tblpricing", "msetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                $dnscost = get_query_val("ra_catalog_pricebook", "msetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
                 update_query("tbldomains", array("dnsmanagement" => "on", "recurringamount" => "+=" . $dnscost), array("id" => $relid));
             }
         }
@@ -380,7 +380,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
             if (!$enabledcheck) {
                 $currency = getCurrency($userid);
-                $emfcost = get_query_val("tblpricing", "qsetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
+                $emfcost = get_query_val("ra_catalog_pricebook", "qsetupfee", array("type" => "domainaddons", "currency" => $currency['id'], "relid" => 0));
                 update_query("tbldomains", array("emailforwarding" => "on", "recurringamount" => "+=" . $emfcost), array("id" => $relid));
             }
         }
@@ -402,14 +402,14 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
 
         if ($type == "AddFunds") {
-            insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Add Funds Invoice #" . $invoiceid, "amount" => $amount, "relid" => $invoiceid));
-            update_query("tblclients", array("credit" => "+=" . $amount), array("id" => (int) $userid));
+            insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Add Funds Invoice #" . $invoiceid, "amount" => $amount, "relid" => $invoiceid));
+            update_query("ra_user", array("credit" => "+=" . $amount), array("id" => (int) $userid));
         }
 
 
         if ($type == "Invoice") {
-            insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Mass Invoice Payment Credit for Invoice #" . $relid, "amount" => $amount));
-            update_query("tblclients", array("credit" => "+=" . $amount), array("id" => (int) $userid));
+            insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Mass Invoice Payment Credit for Invoice #" . $relid, "amount" => $amount));
+            update_query("ra_user", array("credit" => "+=" . $amount), array("id" => (int) $userid));
             applyCredit($relid, $userid, $amount);
         }
 
@@ -422,7 +422,7 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 
         if (substr($type, 0, 12) == "ProrataAddon") {
             $newduedate = substr($type, 12);
-            update_query("tblserviceaddons", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
+            update_query("ra_catalog_user_sales_addons", array("nextduedate" => $newduedate, "nextinvoicedate" => $newduedate), array("id" => $relid));
         }
     }
 
@@ -432,13 +432,13 @@ function processPaidInvoice($invoiceid, $noemail = "", $date = "") {
 function getTaxRate($level, $state, $country) {
     global $_LANG;
 
-    $result = select_query_i("tbltax", "", array("level" => $level, "state" => $state, "country" => $country));
+    $result = select_query_i("ra_tax_rates", "", array("level" => $level, "state" => $state, "country" => $country));
     $data = mysqli_fetch_array($result);
     $taxname = $data['name'];
     $taxrate = $data['taxrate'];
 
     if (!$taxrate) {
-        $result = select_query_i("tbltax", "", array("level" => $level, "state" => "", "country" => $country));
+        $result = select_query_i("ra_tax_rates", "", array("level" => $level, "state" => "", "country" => $country));
         $data = mysqli_fetch_array($result);
         $taxname = $data['name'];
         $taxrate = $data['taxrate'];
@@ -446,7 +446,7 @@ function getTaxRate($level, $state, $country) {
 
 
     if (!$taxrate) {
-        $result = select_query_i("tbltax", "", array("level" => $level, "state" => "", "country" => ""));
+        $result = select_query_i("ra_tax_rates", "", array("level" => $level, "state" => "", "country" => ""));
         $data = mysqli_fetch_array($result);
         $taxname = $data['name'];
         $taxrate = $data['taxrate'];
@@ -508,7 +508,7 @@ function makeHostingPayment($func_domainid) {
     $server = $data['server'];
     $paymentmethod = $data['paymentmethod'];
     $suspendreason = $data['suspendreason'];
-    $result = select_query_i("tblservices", "", array("id" => $packageid));
+    $result = select_query_i("ra_catalog", "", array("id" => $packageid));
     $data = mysqli_fetch_array($result);
     $producttype = $data['type'];
     $productname = $data['name'];
@@ -574,7 +574,7 @@ function makeHostingPayment($func_domainid) {
     }
 
     AffiliatePayment("", $func_domainid);
-    $result = select_query_i("tblserviceaddons", "id,addonid", "hostingid=" . (int) $func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
+    $result = select_query_i("ra_catalog_user_sales_addons", "id,addonid", "hostingid=" . (int) $func_domainid . " AND addonid>0 AND billingcycle IN ('Free','Free Account') AND status='Pending'");
 
     while ($data = mysqli_fetch_array($result)) {
         $aid = $data['id'];
@@ -585,10 +585,10 @@ function makeHostingPayment($func_domainid) {
         $welcomeemail = $data['welcomeemail'];
 
         if ($autoactivate) {
-            update_query("tblserviceaddons", array("status" => "Active"), array("id" => $aid));
+            update_query("ra_catalog_user_sales_addons", array("status" => "Active"), array("id" => $aid));
 
             if ($welcomeemail) {
-                $result = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+                $result = select_query_i("ra_templates_mail", "name", array("id" => $welcomeemail));
                 $data = mysqli_fetch_array($result);
                 $welcomeemailname = $data['name'];
                 sendMessage($welcomeemailname, $func_domainid);
@@ -738,7 +738,7 @@ function makeDomainPayment($func_domainid, $type = "") {
 function makeAddonPayment($func_addonid) {
     global $CONFIG;
 
-    $result = select_query_i("tblserviceaddons", "", array("id" => $func_addonid));
+    $result = select_query_i("ra_catalog_user_sales_addons", "", array("id" => $func_addonid));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $hostingid = $data['hostingid'];
@@ -768,7 +768,7 @@ function makeAddonPayment($func_addonid) {
     }
 
     $nextduedate = getInvoicePayUntilDate($nextduedate, $billingcycle, true);
-    update_query("tblserviceaddons", array("nextduedate" => $nextduedate), array("id" => $func_addonid));
+    update_query("ra_catalog_user_sales_addons", array("nextduedate" => $nextduedate), array("id" => $func_addonid));
 
     if ($status == "Pending") {
         $result = select_query_i("tbladdons", "autoactivate,welcomeemail", array("id" => $addonid));
@@ -777,10 +777,10 @@ function makeAddonPayment($func_addonid) {
         $welcomeemail = $data['welcomeemail'];
 
         if ($autoactivate) {
-            update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
+            update_query("ra_catalog_user_sales_addons", array("status" => "Active"), array("id" => $func_addonid));
 
             if ($welcomeemail) {
-                $result = select_query_i("tblemailtemplates", "name", array("id" => $welcomeemail));
+                $result = select_query_i("ra_templates_mail", "name", array("id" => $welcomeemail));
                 $data = mysqli_fetch_array($result);
                 $welcomeemailname = $data['name'];
                 sendMessage($welcomeemailname, $hostingid);
@@ -792,7 +792,7 @@ function makeAddonPayment($func_addonid) {
 
 
     if ($status == "Suspended") {
-        update_query("tblserviceaddons", array("status" => "Active"), array("id" => $func_addonid));
+        update_query("ra_catalog_user_sales_addons", array("status" => "Active"), array("id" => $func_addonid));
 
         if ($addonid) {
             $result2 = select_query_i("tbladdons", "suspendproduct", array("id" => $addonid));
@@ -800,7 +800,7 @@ function makeAddonPayment($func_addonid) {
             $suspendproduct = $data2[0];
 
             if ($suspendproduct) {
-                $result2 = select_query_i("tblcustomerservices", "servertype", array("tblcustomerservices.id" => $hostingid), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+                $result2 = select_query_i("tblcustomerservices", "servertype", array("tblcustomerservices.id" => $hostingid), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
                 $data2 = mysqli_fetch_array($result2);
                 $module = $data2[0];
                 logActivity("Unsuspending Parent Service for Addon Payment - Service ID: " . $hostingid, $userid);
@@ -819,7 +819,7 @@ function getProrataValues($billingcycle, $amount, $proratadate, $proratachargene
     global $CONFIG;
 
     if ($CONFIG['ProrataClientsAnniversaryDate']) {
-        $result = select_query_i("tblclients", "datecreated", array("id" => $userid));
+        $result = select_query_i("ra_user", "datecreated", array("id" => $userid));
         $data = mysqli_fetch_array($result);
         $clientregdate = $data[0];
         $clientregdate = explode("-", $clientregdate);
@@ -921,15 +921,15 @@ function getNewClientAutoProvisionStatus($userid) {
 
 function applyCredit($invoiceid, $userid, $amount, $noemail = "") {
     $amount = round($amount, 2);
-    update_query("tblclients", array("credit" => "-=" . $amount), array("id" => (int) $userid));
-    update_query("tblinvoices", array("credit" => "+=" . $amount), array("id" => (int) $invoiceid));
-    insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Applied to Invoice #" . $invoiceid, "amount" => $amount * (0 - 1)));
+    update_query("ra_user", array("credit" => "-=" . $amount), array("id" => (int) $userid));
+    update_query("ra_bills", array("credit" => "+=" . $amount), array("id" => (int) $invoiceid));
+    insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Applied to Invoice #" . $invoiceid, "amount" => $amount * (0 - 1)));
     logActivity("Credit Applied - Amount: " . $amount . " - Invoice ID: " . $invoiceid, $userid);
     updateInvoiceTotal($invoiceid);
-    $result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+    $result = select_query_i("ra_bills", "total", array("id" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $total = $data['total'];
-    $result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+    $result = select_query_i("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
     $data = mysqli_fetch_array($result);
     $amountpaid = $data[0];
     $balance = $total - $amountpaid;
@@ -997,9 +997,9 @@ function getBillingCycleMonths($billingcycle) {
 
 function getAllInvoicePaymentplans() {
     $paymentplan = array();
-    $query = "select ti.total,tc.firstname,tc.lastname,tc.companyname,tc.email,tc.mobilenumber,tipm.invoice_id,ti.notes,tipm.suspension,tipm.date,tipm.duedate,tipm.period from tblinvoicepaymentmonitor as tipm"
-            . " INNER JOIN tblinvoices as ti on tipm.invoice_id = ti.id "
-            . " INNER JOIN tblclients as tc on tc.id = ti.userid"
+    $query = "select ti.total,tc.firstname,tc.lastname,tc.companyname,tc.email,tc.mobilenumber,tipm.invoice_id,ti.notes,tipm.suspension,tipm.date,tipm.duedate,tipm.period from ra_bill_payment_monitor as tipm"
+            . " INNER JOIN ra_bills as ti on tipm.invoice_id = ti.id "
+            . " INNER JOIN ra_user as tc on tc.id = ti.userid"
             . " Order by tipm.date DESC";
     $result = full_query_i($query);
 
@@ -1009,7 +1009,7 @@ function getAllInvoicePaymentplans() {
         $paymenttimes = intdiv($paymentplan[$data['invoice_id']]['days'], $data['period']);
         $paymentplan[$data['invoice_id']]['amount'] = floor(100 * $data['total'] / $paymenttimes + 0.99) / 100;
         $balanace = $data['total'];
-        $query2 = select_query_i("tblaccounts", "amountin,date", array("invoiceid" => $data['invoice_id']));
+        $query2 = select_query_i("ra_transactions", "amountin,date", array("invoiceid" => $data['invoice_id']));
         if ($query2->num_rows != 0) {
             while ($trans = mysqli_fetch_assoc($query2)) {
                 $paymentplan[$data['invoice_id']]['transections'][] = array(
@@ -1028,20 +1028,20 @@ function getAllInvoicePaymentplans() {
 
 function CheckPayment($invoice_id, $paymentdue) {
 
-    $query2 = select_query_i("tblaccounts", "sum(amountin) as paid", array("invoiceid" => $invoice_id));
+    $query2 = select_query_i("ra_transactions", "sum(amountin) as paid", array("invoiceid" => $invoice_id));
     $trans = mysqli_fetch_assoc($query2);
     $amountin = $trans['paid'];
 
     if ($paymentdue < $amountin) {
 
-        update_query("tblinvoicepaymentmonitor", array("status" => "unpaid"), array("invoice_id" => $invoice_id));
+        update_query("ra_bill_payment_monitor", array("status" => "unpaid"), array("invoice_id" => $invoice_id));
     }
 }
 
 function cronJobForPaymentPlan() {
 
     $invoiceNumber = array();
-    $result = select_query_i("tblinvoicepaymentmonitor", "", "");
+    $result = select_query_i("ra_bill_payment_monitor", "", "");
     if ($result->num_rows != 0) {
         while ($data = mysqli_fetch_assoc($result)) {
             $invoiceNumber[] = $data['invoice_id'];
@@ -1050,7 +1050,7 @@ function cronJobForPaymentPlan() {
 }
 
 function cronJobUpdateDuedate() {
-    $query = "select tipm.period,tipm.period,tipm.duedate,tipm.date,tipm.invoice_id,ti.total from tblinvoicepaymentmonitor as tipm inner join tblinvoices as ti on tipm.invoice_id = ti.id";
+    $query = "select tipm.period,tipm.period,tipm.duedate,tipm.date,tipm.invoice_id,ti.total from ra_bill_payment_monitor as tipm inner join ra_bills as ti on tipm.invoice_id = ti.id";
     $result = full_query_i($query);
     if ($result->num_rows != 0) {
         while ($data = mysqli_fetch_assoc($result)) {
@@ -1061,7 +1061,7 @@ function cronJobUpdateDuedate() {
                 if ($nextduedate > strtotime($data['duedate'])) {
                     $nextduedate = $data['duedate'];
                 }
-                update_query("tblinvoicepaymentmonitor", array("nextduedate" => toMySQLDate($duedate)), array("invoice_id" => $data['invoice_id']));
+                update_query("ra_bill_payment_monitor", array("nextduedate" => toMySQLDate($duedate)), array("invoice_id" => $data['invoice_id']));
             }
             $startdate = strtotime($data['date']);
             $currentpayment = intdiv(($now - $startdate) / (60 * 60 * 24), $data['period']);

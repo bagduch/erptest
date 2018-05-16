@@ -92,10 +92,10 @@ function search() {
     }
 
     $modulelink = "addonmodules.php?module=" . $module;
-    $result = select_query_i("tbladdonmodules", "value", array("module" => $module, "setting" => "access"));
+    $result = select_query_i("ra_modules", "value", array("module" => $module, "setting" => "access"));
     $data = mysqli_fetch_array($result);
     $allowedroles = explode(",", $data[0]);
-    $result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+    $result = select_query_i("ra_admin", "roleid", array("id" => $_SESSION['adminid']));
     $data = mysqli_fetch_array($result);
     $adminroleid = $data[0];
 
@@ -115,7 +115,7 @@ function search() {
 
             if (in_array($adminroleid, $allowedroles)) {
                 $modulevars = array("modulelink" => $modulelink);
-                $result = select_query_i("tbladdonmodules", "", array("module" => $module));
+                $result = select_query_i("ra_modules", "", array("module" => $module));
 
                 while ($data = mysqli_fetch_array($result)) {
                     $modulevars[$data['setting']] = $data['value'];
@@ -156,7 +156,7 @@ function search() {
                         call_user_func($module . "_upgrade", $modulevars);
                     }
 
-                    update_query("tbladdonmodules", array("value" => $configarray['version']), array("module" => $module, "setting" => "version"));
+                    update_query("ra_modules", array("value" => $configarray['version']), array("module" => $module, "setting" => "version"));
                 }
 
                 $sidebar = "";

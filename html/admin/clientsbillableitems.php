@@ -17,7 +17,7 @@ $aInt->inClientsProfile = true;
 $aInt->requiredFiles(array("invoicefunctions", "processinvoices", "gatewayfunctions", "clientfunctions"));
 
 if ($action == "getproddesc") {
-	$result = select_query_i("tblservices", "name,description", array("id" => $id));
+	$result = select_query_i("ra_catalog", "name,description", array("id" => $id));
 	$data = mysqli_fetch_array($result);
 	echo $data[0];
 
@@ -35,7 +35,7 @@ if ($action == "getprodprice") {
 		$currency = $currency['id'];
 	}
 
-	$result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency, "relid" => $id));
+	$result = select_query_i("ra_catalog_pricebook", "", array("type" => "product", "currency" => $currency, "relid" => $id));
 	$data = mysqli_fetch_array($result);
 
 	if (0 < $data['monthly']) {
@@ -262,7 +262,7 @@ if (!$action) {
 
 		$managelink = "<a href=\"clientsbillableitems.php?userid=" . $userid . "&action=manage&id=" . $id . "\">";
 		$invoicesnumbers = "";
-		$result2 = select_query_i("tblinvoiceitems", "*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC");
+		$result2 = select_query_i("ra_bill_lineitems", "*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC");
 
 		while ($data = mysqli_fetch_array($result2)) {
 			$invoicesnumbers .= "<a href=\"invoices.php?action=edit&id=" . $data['invoiceid'] . "\">" . $data['invoiceid'] . "</a>, ";
@@ -473,7 +473,7 @@ else {
 			$currency = getCurrency($userid);
 			$gatewaysarray = getGatewaysArray();
 			$aInt->sortableTableInit("nopagination");
-			$result = select_query_i("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+			$result = select_query_i("ra_bill_lineitems", "ra_bills.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "ra_bills ON ra_bills.id=ra_bill_lineitems.invoiceid");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$invoiceid = $data['id'];
@@ -517,7 +517,7 @@ else {
     });
 });";
 			$options = "";
-			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$pid = $data['id'];

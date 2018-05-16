@@ -8,7 +8,7 @@ if (!defined("RA")) {
 
 
 if (isset($_REQUEST['userid'])) {
-	$result_userid = select_query_i("tblclients", "id", array("id" => $_REQUEST['userid']));
+	$result_userid = select_query_i("ra_user", "id", array("id" => $_REQUEST['userid']));
 	$data_userid = mysqli_fetch_array($result_userid);
 
 	if (!$data_userid['id']) {
@@ -25,7 +25,7 @@ if (!isset($_REQUEST['adminid'])) {
 
 
 if (isset($_REQUEST['adminid'])) {
-	$result_adminid = select_query_i("tbladmins", "id", array("id" => $_REQUEST['adminid']));
+	$result_adminid = select_query_i("ra_admin", "id", array("id" => $_REQUEST['adminid']));
 	$data_adminid = mysqli_fetch_array($result_adminid);
 
 	if (!$data_adminid['id']) {
@@ -42,7 +42,7 @@ if (!trim($_REQUEST['title'])) {
 
 
 if (isset($_REQUEST['status'])) {
-	$status = get_query_val("tbladdonmodules", "value", array("module" => "project_management", "setting" => "statusvalues"));
+	$status = get_query_val("ra_modules", "value", array("module" => "project_management", "setting" => "statusvalues"));
 	$status_get = explode(",", $status);
 	$status_main = (in_array($_REQUEST['status'], $status_get) ? $status_get : $status_get[0]);
 }

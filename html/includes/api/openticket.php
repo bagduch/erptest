@@ -19,7 +19,7 @@ if (!function_exists("openNewTicket")) {
 $from = "";
 
 if ($clientid) {
-	$result = select_query_i("tblclients", "id", array("id" => $clientid));
+	$result = select_query_i("ra_user", "id", array("id" => $clientid));
 	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
@@ -29,7 +29,7 @@ if ($clientid) {
 
 
 	if ($contactid) {
-		$result = select_query_i("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
+		$result = select_query_i("ra_user_contacts", "id", array("id" => $contactid, "userid" => $clientid));
 		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {
@@ -47,7 +47,7 @@ else {
 	$from = array("name" => $name, "email" => $email);
 }
 
-$result = select_query_i("tblticketdepartments", "", array("id" => $deptid));
+$result = select_query_i("ra_ticket_teams", "", array("id" => $deptid));
 $data = mysqli_fetch_array($result);
 $deptid = $data['id'];
 

@@ -16,7 +16,7 @@ if (!function_exists("updateInvoiceTotal")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$result = select_query_i("tblinvoices", "id", array("id" => $invoiceid));
+$result = select_query_i("ra_bills", "id", array("id" => $invoiceid));
 $data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 
@@ -30,7 +30,7 @@ if ($itemdescription) {
 	foreach ($itemdescription as $lineid => $description) {
 		$amount = $itemamount[$lineid];
 		$taxed = $itemtaxed[$lineid];
-		update_query("tblinvoiceitems", array("description" => $description, "amount" => $amount, "taxed" => $taxed), array("id" => $lineid));
+		update_query("ra_bill_lineitems", array("description" => $description, "amount" => $amount, "taxed" => $taxed), array("id" => $lineid));
 	}
 }
 
@@ -40,14 +40,14 @@ if ($newitemdescription) {
 		$description = $v;
 		$amount = $newitemamount[$k];
 		$taxed = $newitemtaxed[$k];
-		insert_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "description" => $description, "amount" => $amount, "taxed" => $taxed));
+		insert_query("ra_bill_lineitems", array("invoiceid" => $invoiceid, "description" => $description, "amount" => $amount, "taxed" => $taxed));
 	}
 }
 
 
 if ($deletelineids) {
 	foreach ($deletelineids as $lineid) {
-		delete_query("tblinvoiceitems", array("id" => $lineid, "invoiceid" => $invoiceid));
+		delete_query("ra_bill_lineitems", array("id" => $lineid, "invoiceid" => $invoiceid));
 	}
 }
 
@@ -123,6 +123,6 @@ if ($notes) {
 	$updateqry['notes'] = $notes;
 }
 
-update_query("tblinvoices", $updateqry, array("id" => $invoiceid));
+update_query("ra_bills", $updateqry, array("id" => $invoiceid));
 $apiresults = array("result" => "success", "invoiceid" => $invoiceid);
 ?>

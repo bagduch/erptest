@@ -23,7 +23,7 @@ if ($sub == "add") {
     check_token("RA.admin.default");
 
     if ($invoiceid) {
-        $transuserid = get_query_val("tblinvoices", "userid", array("id" => $invoiceid));
+        $transuserid = get_query_val("ra_bills", "userid", array("id" => $invoiceid));
 
         if (!$transuserid) {
             redir("error=invalidinvid");
@@ -44,8 +44,8 @@ if ($sub == "add") {
             $description .= " (Trans ID: " . $transid . ")";
         }
 
-        insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
-        update_query("tblclients", array("credit" => "+=" . $amountin), array("id" => (int) $userid));
+        insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
+        update_query("ra_user", array("credit" => "+=" . $amountin), array("id" => (int) $userid));
     }
 
     redir("userid=" . $userid);
@@ -55,7 +55,7 @@ if ($sub == "add") {
 
 if ($sub == "save") {
     check_token("RA.admin.default");
-    update_query("tblaccounts", array("gateway" => $paymentmethod, "date" => toMySQLDate($date), "description" => $description, "amountin" => $amountin, "fees" => $fees, "amountout" => $amountout, "transid" => $transid, "invoiceid" => $invoiceid), array("id" => $id));
+    update_query("ra_transactions", array("gateway" => $paymentmethod, "date" => toMySQLDate($date), "description" => $description, "amountin" => $amountin, "fees" => $fees, "amountout" => $amountout, "transid" => $transid, "invoiceid" => $invoiceid), array("id" => $id));
     logActivity("Modified Transaction (User ID: " . $userid . " - Transaction ID: " . $id . ")");
     redir("userid=" . $userid);
     exit();
@@ -65,7 +65,7 @@ if ($sub == "save") {
 if ($sub == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Transaction");
-    delete_query("tblaccounts", array("id" => $ide));
+    delete_query("ra_transactions", array("id" => $ide));
     logActivity("Deleted Transaction (ID: " . $ide . " - User ID: " . $userid . ")");
     redir("userid=" . $userid);
     exit();
@@ -86,7 +86,7 @@ if ($action == "") {
     }
 
     echo $infobox;
-    $result = select_query_i("tblaccounts", "SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout)", array("userid" => $userid));
+    $result = select_query_i("ra_transactions", "SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout)", array("userid" => $userid));
     $data = mysqli_fetch_array($result);
     echo "<div class=\"card\"><div class=\"content\">
 <table width=90% cellspacing=1 cellpadding=5 bgcolor=\"#CCCCCC\" align=\"center\"><tr style=\"text-align:center\"><td><a href=\"";
@@ -117,10 +117,10 @@ if ($action == "") {
 
 ";
     $aInt->sortableTableInit("date", "DESC");
-    $result = select_query_i("tblaccounts", "COUNT(*)", array("userid" => $userid));
+    $result = select_query_i("ra_transactions", "COUNT(*)", array("userid" => $userid));
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
-    $result = select_query_i("tblaccounts", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
+    $result = select_query_i("ra_transactions", "", array("userid" => $userid), $orderby, $order, $page * $limit . ("," . $limit));
 
     while ($data = mysqli_fetch_array($result)) {
         $ide = $data['id'];
@@ -149,7 +149,7 @@ if ($action == "") {
             $description .= " - Trans ID: " . $transid;
         }
 
-        $result2 = select_query_i("tblpaymentgateways", "", array("gateway" => $gateway, "setting" => "name"));
+        $result2 = select_query_i("ra_modules_gateways", "", array("gateway" => $gateway, "setting" => "name"));
         $data = mysqli_fetch_array($result2);
         $gateway = $data['value'];
         $tabledata[] = array($date, $gateway, $description, $amountin, $fees, $amountout, "<a href=\"" . $PHP_SELF . "?userid=" . $userid . "&action=edit&id=" . $ide . "\"><img src=\"images/edit.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Edit\"></a>", "<a href=\"#\" onClick=\"doDelete('" . $ide . "');return false\"><img src=\"images/delete.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Delete\"></a>");
@@ -211,7 +211,7 @@ if ($action == "") {
 
 ";
 } else if ($action == "edit") {
-    $result = select_query_i("tblaccounts", "", array("id" => $id));
+    $result = select_query_i("ra_transactions", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $date = $data['date'];

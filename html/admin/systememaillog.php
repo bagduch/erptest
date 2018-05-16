@@ -10,10 +10,10 @@ $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
 $menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
 $aInt->sortableTableInit("date");
-$result = select_query_i("tblemails,tblclients", "COUNT(tblemails.id)", "tblemails.userid=tblclients.id");
+$result = select_query_i("ra_user_mail,ra_user", "COUNT(ra_user_mail.id)", "ra_user_mail.userid=ra_user.id");
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblemails,tblclients", "tblemails.id,tblemails.date,tblemails.subject,tblemails.userid,tblclients.firstname,tblclients.lastname", "tblemails.userid=tblclients.id", "tblemails`.`id", "DESC", $page * $limit . ("," . $limit));
+$result = select_query_i("ra_user_mail,ra_user", "ra_user_mail.id,ra_user_mail.date,ra_user_mail.subject,ra_user_mail.userid,ra_user.firstname,ra_user.lastname", "ra_user_mail.userid=ra_user.id", "ra_user_mail`.`id", "DESC", $page * $limit . ("," . $limit));
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

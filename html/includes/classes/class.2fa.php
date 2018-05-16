@@ -88,7 +88,7 @@ class RA_2FA
 	}
 
 	public function loadClientSettings() {
-		$data = get_query_vals("tblclients", "id,firstname,lastname,email,authmodule,authdata", array("id" => $this->clientid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
+		$data = get_query_vals("ra_user", "id,firstname,lastname,email,authmodule,authdata", array("id" => $this->clientid, "status" => array("sqltype" => "NEQ", "value" => "Closed")));
 
 		if (!$data['id']) {
 			return false;
@@ -109,7 +109,7 @@ class RA_2FA
 	}
 
 	public function loadAdminSettings() {
-		$data = get_query_vals("tbladmins", "id,username,firstname,lastname,email,authmodule,authdata", array("id" => $this->adminid, "disabled" => "0"));
+		$data = get_query_vals("ra_admin", "id,username,firstname,lastname,email,authmodule,authdata", array("id" => $this->adminid, "disabled" => "0"));
 
 		if (!$data['id']) {
 			return false;
@@ -213,7 +213,7 @@ class RA_2FA
 			$backupcode = sha1($ra->get_hash() . $this->adminid . time());
 			$backupcode = substr($backupcode, 0, 16);
 			$settings['backupcode'] = sha1($backupcode);
-			update_query("tblclients", array("authmodule" => $module, "authdata" => serialize($settings)), array("id" => $this->clientid));
+			update_query("ra_user", array("authmodule" => $module, "authdata" => serialize($settings)), array("id" => $this->clientid));
 			$backupcodedisplay = substr($backupcode, 0, 4) . " " . substr($backupcode, 4, 4) . " " . substr($backupcode, 8, 4) . " " . substr($backupcode, 12, 4);
 			return $backupcodedisplay;
 		}
@@ -223,7 +223,7 @@ class RA_2FA
 			$backupcode = sha1($ra->get_hash() . $this->adminid . time());
 			$backupcode = substr($backupcode, 0, 16);
 			$settings['backupcode'] = sha1($backupcode);
-			update_query("tbladmins", array("authmodule" => $module, "authdata" => serialize($settings)), array("id" => $this->adminid));
+			update_query("ra_admin", array("authmodule" => $module, "authdata" => serialize($settings)), array("id" => $this->adminid));
 			$backupcodedisplay = substr($backupcode, 0, 4) . " " . substr($backupcode, 4, 4) . " " . substr($backupcode, 8, 4) . " " . substr($backupcode, 12, 4);
 			return $backupcodedisplay;
 		}
@@ -235,13 +235,13 @@ class RA_2FA
 		global $ra;
 
 		if ($this->clientid) {
-			update_query("tblclients", array("authmodule" => "", "authdata" => ""), array("id" => $this->clientid));
+			update_query("ra_user", array("authmodule" => "", "authdata" => ""), array("id" => $this->clientid));
 			return true;
 		}
 
 
 		if ($this->adminid) {
-			update_query("tbladmins", array("authmodule" => "", "authdata" => ""), array("id" => $this->adminid));
+			update_query("ra_admin", array("authmodule" => "", "authdata" => ""), array("id" => $this->adminid));
 			return true;
 		}
 
@@ -256,14 +256,14 @@ class RA_2FA
 
 		if ($this->clientid) {
 			$this->clientsettings = array_merge($this->clientsettings, $arr);
-			update_query("tblclients", array("authdata" => serialize($this->clientsettings)), array("id" => $this->clientid));
+			update_query("ra_user", array("authdata" => serialize($this->clientsettings)), array("id" => $this->clientid));
 			return true;
 		}
 
 
 		if ($this->adminid) {
 			$this->adminsettings = array_merge($this->adminsettings, $arr);
-			update_query("tbladmins", array("authdata" => serialize($this->adminsettings)), array("id" => $this->adminid));
+			update_query("ra_admin", array("authdata" => serialize($this->adminsettings)), array("id" => $this->adminid));
 			return true;
 		}
 

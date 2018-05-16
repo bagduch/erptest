@@ -41,7 +41,7 @@ $sql = "SELECT h.domain, h.username, t.hosting_id, t.client_id,
 	FROM mod_hdtolls_daily t
 		LEFT JOIN mod_hdtolls_billing b ON t.hosting_id=b.hosting_id AND b.date_billing_period='" . $data['period'] . "'
 		LEFT JOIN tblhosting h ON t.hosting_id=h.id
-		LEFT JOIN tblclients c ON t.client_id=c.id
+		LEFT JOIN ra_user c ON t.client_id=c.id
 	WHERE domainstatus='Active'
 	GROUP BY h.id
 	ORDER BY c.firstname ASC, h.domain ASC";

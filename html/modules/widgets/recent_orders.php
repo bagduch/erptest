@@ -7,9 +7,9 @@ function widget_recent_left_orders($vars) {
     global $_ADMINLANG;
     $title = "Recent Order";
 
-    $clientlogquery = "select tlo.id,tlc.firstname,tlc.lastname,tlo.ordernum,tlo.date,tlo.amount,tlo.status,ti.status as paymentstatus from tblorders as tlo 
-        INNER JOIN tblclients as tlc ON tlo.userid=tlc.id 
-        INNER JOIN tblinvoices as ti on tlo.invoiceid = ti.id
+    $clientlogquery = "select tlo.id,tlc.firstname,tlc.lastname,tlo.ordernum,tlo.date,tlo.amount,tlo.status,ti.status as paymentstatus from ra_orders as tlo 
+        INNER JOIN ra_user as tlc ON tlo.userid=tlc.id 
+        INNER JOIN ra_bills as ti on tlo.invoiceid = ti.id
         where tlo.status='Pending' ORDER BY tlo.date DESC limit 5
 ";
     $result = full_query_i($clientlogquery);

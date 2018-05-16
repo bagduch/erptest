@@ -9,7 +9,7 @@ $aInt->inClientsProfile = true;
 $aInt->valUserID($userid);
 $currency = getCurrency($userid);
 $clientsdetails = getClientsDetails($userid);
-$result = select_query_i("tblclients", "", array("id" => $userid));
+$result = select_query_i("ra_user", "", array("id" => $userid));
 $data = mysqli_fetch_array($result);
 $name = stripslashes($data['firstname'] . " " . $data['lastname']);
 $creditbalance = $data['credit'];
@@ -18,8 +18,8 @@ if ($action == "") {
     if ($sub == "add") {
         checkPermission("Manage Credits");
         check_token("RA.admin.default");
-        insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amount));
-        update_query("tblclients", array("credit" => "+=" . $amount), array("id" => (int) $userid));
+        insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $amount));
+        update_query("ra_user", array("credit" => "+=" . $amount), array("id" => (int) $userid));
         logActivity("Added Credit - User ID: " . $userid . " - Amount: " . formatCurrency($amount), $userid);
         redir("userid=" . $userid);
         exit();
@@ -30,8 +30,8 @@ if ($action == "") {
         $credit = 0 - $amount;
         checkPermission("Manage Credits");
         check_token("RA.admin.default");
-        insert_query("tblcredit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $credit));
-        update_query("tblclients", array("credit" => "-=" . $amount), array("id" => (int) $userid));
+        insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => toMySQLDate($date), "description" => $description, "amount" => $credit));
+        update_query("ra_user", array("credit" => "-=" . $amount), array("id" => (int) $userid));
         logActivity("Removed Credit - User ID: " . $userid . " - Amount: " . formatCurrency($amount), $userid);
         redir("userid=" . $userid);
         exit();
@@ -41,7 +41,7 @@ if ($action == "") {
     if ($sub == "save") {
         checkPermission("Manage Credits");
         check_token("RA.admin.default");
-        update_query("tblcredit", array("date" => toMySQLDate($date), "description" => $description, "amount" => $amount), array("id" => $id));
+        update_query("ra_transactions_credit", array("date" => toMySQLDate($date), "description" => $description, "amount" => $amount), array("id" => $id));
         logActivity("Edited Credit - Credit ID: " . $id . " - User ID: " . $userid, $userid);
         redir("userid=" . $userid);
         exit();
@@ -51,7 +51,7 @@ if ($action == "") {
     if ($sub == "delete") {
         checkPermission("Manage Credits");
         check_token("RA.admin.default");
-        $result = select_query_i("tblcredit", "", array("id" => $ide));
+        $result = select_query_i("ra_transactions_credit", "", array("id" => $ide));
         $data = mysqli_fetch_array($result);
         $amount = $data['amount'];
         $creditbalance = $creditbalance - $amount;
@@ -60,14 +60,14 @@ if ($action == "") {
             $creditbalance = 0;
         }
 
-        update_query("tblclients", array("credit" => $creditbalance), array("id" => (int) $userid));
-        delete_query("tblcredit", array("id" => $ide));
+        update_query("ra_user", array("credit" => $creditbalance), array("id" => (int) $userid));
+        delete_query("ra_transactions_credit", array("id" => $ide));
         logActivity("Deleted Credit - Credit ID: " . $ide . " - User ID: " . $userid, $userid);
         redir("userid=" . $userid);
         exit();
     }
 
-    $result = select_query_i("tblclients", "", array("id" => $userid));
+    $result = select_query_i("ra_user", "", array("id" => $userid));
     $data = mysqli_fetch_array($result);
     $creditbalance = formatCurrency($data['credit']);
     echo "
@@ -120,7 +120,7 @@ window.location='";
     $patterns = $replacements = array();
     $patterns[] = "/ Invoice #(.*?) /";
     $replacements[] = " <a href=\"invoices.php?action=edit&id=$1\" target=\"_blank\">Invoice #$1</a>";
-    $result = select_query_i("tblcredit", "", array("clientid" => $userid), "date", "DESC");
+    $result = select_query_i("ra_transactions_credit", "", array("clientid" => $userid), "date", "DESC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -147,13 +147,13 @@ window.location='";
         $title = $aInt->lang("credit", "removecredit");
     }
 
-    $result = select_query_i("tblclients", "", array("id" => $userid));
+    $result = select_query_i("ra_user", "", array("id" => $userid));
     $data = mysqli_fetch_array($result);
     $creditbalance = formatCurrency($data['credit']);
     $template = 'client/addcredit';
 } elseif ($action == "edit") {
     checkPermission("Manage Credits");
-    $result = select_query_i("tblcredit", "", array("id" => $id));
+    $result = select_query_i("ra_transactions_credit", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $date = $data['date'];

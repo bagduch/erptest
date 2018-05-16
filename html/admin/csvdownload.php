@@ -45,7 +45,7 @@ if ($report) {
 	require "../includes/reportfunctions.php";
 	$chart = new RAChart();
 	$currencies = array();
-	$result = select_query_i("tblcurrencies", "", "", "code", "ASC");
+	$result = select_query_i("ra_currency", "", "", "code", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -129,7 +129,7 @@ if ($type == "pdfbatch") {
 	require ROOTDIR . "/includes/countries.php";
 	require ROOTDIR . "/includes/clientfunctions.php";
 	require ROOTDIR . "/includes/invoicefunctions.php";
-	$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+	$result = select_query_i("ra_modules_gateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$gatewaysarray[$data['gateway']] = $data['value'];
@@ -156,14 +156,14 @@ if ($type == "pdfbatch") {
 				}
 				else {
 					if ($sortorder == "Client Name") {
-						$orderby = "tblclients`.`firstname` ASC,`tblclients`.`lastname";
+						$orderby = "ra_user`.`firstname` ASC,`ra_user`.`lastname";
 					}
 				}
 			}
 		}
 	}
 
-	$clientWhere = ((is_numeric($userid) && 0 < $userid) ? "AND tblinvoices.userid=" . (int)$userid : "");
+	$clientWhere = ((is_numeric($userid) && 0 < $userid) ? "AND ra_bills.userid=" . (int)$userid : "");
 
 	if ($filterby == "Date Created") {
 		$filterby = "date";
@@ -180,8 +180,8 @@ if ($type == "pdfbatch") {
 
 	$statuses_in_clause = db_build_in_array($statuses);
 	$paymentmethods_in_clause = db_build_in_array($paymentmethods);
-	$batchpdf_where_clause = "tblinvoices." . $filterby . " >= '" . toMySQLDate($datefrom) . ("' AND tblinvoices." . $filterby . "<='") . toMySQLDate($dateto) . "' AND tblinvoices.status IN (" . $statuses_in_clause . ")" . " AND tblinvoices.paymentmethod IN (" . $paymentmethods_in_clause . ")" . $clientWhere;
-	$batchpdfresult = select_query_i("tblinvoices", "tblinvoices.id", $batchpdf_where_clause, $orderby, "ASC", "", "tblclients ON tblclients.id=tblinvoices.userid");
+	$batchpdf_where_clause = "ra_bills." . $filterby . " >= '" . toMySQLDate($datefrom) . ("' AND ra_bills." . $filterby . "<='") . toMySQLDate($dateto) . "' AND ra_bills.status IN (" . $statuses_in_clause . ")" . " AND ra_bills.paymentmethod IN (" . $paymentmethods_in_clause . ")" . $clientWhere;
+	$batchpdfresult = select_query_i("ra_bills", "ra_bills.id", $batchpdf_where_clause, $orderby, "ASC", "", "ra_user ON ra_user.id=ra_bills.userid");
 	$numrows = mysqli_num_rows($batchpdfresult);
 
 	if (!$numrows) {

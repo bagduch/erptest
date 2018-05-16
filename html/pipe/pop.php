@@ -12,7 +12,7 @@ if( !function_exists("imap_open") )
 $type = array( "text", "multipart", "message", "application", "audio", "image", "video", "other" );
 $encoding = array( "7bit", "8bit", "binary", "base64", "quoted-printable", "other" );
 echo "<b>POP Import Log</b><br>Date: " . date("d/m/Y H:i:s") . "<hr>";
-$query = "SELECT * FROM tblticketdepartments WHERE host!='' AND port!='' AND login!='' ORDER BY `order` ASC";
+$query = "SELECT * FROM ra_ticket_teams WHERE host!='' AND port!='' AND login!='' ORDER BY `order` ASC";
 $result = full_query_i($query);
 while( $data = mysqli_fetch_array($result) ) 
 {

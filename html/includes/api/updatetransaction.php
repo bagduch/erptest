@@ -77,6 +77,6 @@ if (isset($_REQUEST['refundid'])) {
 	$updateqry['refundid'] = $_REQUEST['refundid'];
 }
 
-update_query("tblaccounts", $updateqry, array("id" => $transactionid));
+update_query("ra_transactions", $updateqry, array("id" => $transactionid));
 $apiresults = array("result" => "success", "transactionid" => $transactionid);
 ?>

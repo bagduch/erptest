@@ -88,7 +88,7 @@ if ($CONFIG['SupportModule']) {
 
 if ($step == "") {
     $templatefile = "supportticketsubmit-stepone";
-    $result = select_query_i("tblticketdepartments", "COUNT(*)", array("hidden" => ""));
+    $result = select_query_i("ra_ticket_teams", "COUNT(*)", array("hidden" => ""));
     $data = mysqli_fetch_array($result);
     $totaldepartments = $data[0];
     $where = "";
@@ -101,7 +101,7 @@ if ($step == "") {
 
 
     $departments = array();
-    $result = select_query_i("tblticketdepartments", "", $where, "order", "ASC");
+    $result = select_query_i("ra_ticket_teams", "", $where, "order", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $dept_id = $data['id'];
@@ -121,7 +121,7 @@ if ($step == "") {
     if ($step == "2") {
 
         $templatefile = "supportticketsubmit-steptwo";
-        $result = select_query_i("tblticketdepartments", "id,name,clientsonly", array("id" => $deptid));
+        $result = select_query_i("ra_ticket_teams", "id,name,clientsonly", array("id" => $deptid));
         $data = mysqli_fetch_array($result);
         $deptid = $data['id'];
 
@@ -149,7 +149,7 @@ if ($step == "") {
 
         $where .= ") OR id=" . (int) $deptid;
         $departments = array();
-        $result = select_query_i("tblticketdepartments", "", $where, "order", "ASC");
+        $result = select_query_i("ra_ticket_teams", "", $where, "order", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $dept_id = $data['id'];
@@ -167,7 +167,7 @@ if ($step == "") {
             $smarty->assign("clientname", $clientname);
             $smarty->assign("email", $email);
             $relatedservices = array();
-            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblcustomerservices.servicestatus,tblservices.name", array("userid" => $_SESSION['uid']), "tblservices`.`name` ASC,`tblcustomerservices`.`description", "ASC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+            $result = select_query_i("tblcustomerservices", "tblcustomerservices.id,tblcustomerservices.description,tblcustomerservices.servicestatus,ra_catalog.name", array("userid" => $_SESSION['uid']), "ra_catalog`.`name` ASC,`tblcustomerservices`.`description", "ASC", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
 
             while ($data = mysqli_fetch_array($result)) {
                 $productname = $data['name'];
@@ -207,7 +207,7 @@ if ($step == "") {
         }
     } else {
         if ($step == "3") {
-            $result = select_query_i("tblticketdepartments", "id,clientsonly", array("id" => $deptid));
+            $result = select_query_i("ra_ticket_teams", "id,clientsonly", array("id" => $deptid));
             $data = mysqli_fetch_array($result);
             $deptid = $data['id'];
             $check_clientsonly = $data['clientsonly'];
@@ -225,7 +225,7 @@ IP Address: " . $remote_ip;
             $cc = "";
 
             if ($_SESSION['cid']) {
-                $result = select_query_i("tblcontacts", "email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+                $result = select_query_i("ra_user_contacts", "email", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
                 $data = mysqli_fetch_array($result);
                 $cc = $data['email'];
             }

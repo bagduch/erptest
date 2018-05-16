@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query_i("tblcontacts", "id", array("id" => $contactid));
+$result = select_query_i("ra_user_contacts", "id", array("id" => $contactid));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
@@ -14,6 +14,6 @@ if (!$data['id']) {
 	return null;
 }
 
-delete_query("tblcontacts", array("id" => $contactid));
+delete_query("ra_user_contacts", array("id" => $contactid));
 $apiresults = array("result" => "success", "contactid" => $contactid);
 ?>

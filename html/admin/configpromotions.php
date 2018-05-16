@@ -56,13 +56,13 @@ if ($action == "save") {
     $upgradeconfig = serialize(array("value" => format_as_currency($upgradevalue), "type" => $upgradetype, "discounttype" => $upgradediscounttype, "configoptions" => $configoptionupgrades));
 
     if ($id) {
-        update_query("tblpromotions", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "cycles" => $cycles, "appliesto" => $appliesto, "requires" => $requires, "requiresexisting" => $requiresexisting, "startdate" => $startdate, "expirationdate" => $expirationdate, "maxuses" => $maxuses, "lifetimepromo" => $lifetimepromo, "applyonce" => $applyonce, "newsignups" => $newsignups, "existingclient" => $existingclient, "onceperclient" => $onceperclient, "recurfor" => $recurfor, "upgrades" => $upgrades, "upgradeconfig" => $upgradeconfig, "notes" => $notes), array("id" => $id));
+        update_query("ra_promos", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "cycles" => $cycles, "appliesto" => $appliesto, "requires" => $requires, "requiresexisting" => $requiresexisting, "startdate" => $startdate, "expirationdate" => $expirationdate, "maxuses" => $maxuses, "lifetimepromo" => $lifetimepromo, "applyonce" => $applyonce, "newsignups" => $newsignups, "existingclient" => $existingclient, "onceperclient" => $onceperclient, "recurfor" => $recurfor, "upgrades" => $upgrades, "upgradeconfig" => $upgradeconfig, "notes" => $notes), array("id" => $id));
         redir("updated=true");
     } else {
-        $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+        $result = select_query_i("ra_promos", "COUNT(*)", array("code" => $code));
         $data = mysqli_fetch_array($result);
         $duplicates = $data[0];
-        $newid = insert_query("tblpromotions", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "cycles" => $cycles, "appliesto" => $appliesto, "requires" => $requires, "requiresexisting" => $requiresexisting, "startdate" => $startdate, "expirationdate" => $expirationdate, "maxuses" => $maxuses, "lifetimepromo" => $lifetimepromo, "applyonce" => $applyonce, "newsignups" => $newsignups, "existingclient" => $existingclient, "onceperclient" => $onceperclient, "recurfor" => $recurfor, "upgrades" => $upgrades, "upgradeconfig" => $upgradeconfig, "notes" => $notes));
+        $newid = insert_query("ra_promos", array("code" => $code, "type" => $type, "recurring" => $recurring, "value" => $pvalue, "cycles" => $cycles, "appliesto" => $appliesto, "requires" => $requires, "requiresexisting" => $requiresexisting, "startdate" => $startdate, "expirationdate" => $expirationdate, "maxuses" => $maxuses, "lifetimepromo" => $lifetimepromo, "applyonce" => $applyonce, "newsignups" => $newsignups, "existingclient" => $existingclient, "onceperclient" => $onceperclient, "recurfor" => $recurfor, "upgrades" => $upgrades, "upgradeconfig" => $upgradeconfig, "notes" => $notes));
 
         if ($duplicates) {
             redir("action=manage&id=" . $newid);
@@ -78,7 +78,7 @@ if ($action == "save") {
 if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Promotions");
-    delete_query("tblpromotions", array("id" => $id));
+    delete_query("ra_promos", array("id" => $id));
     redir("deleted=true");
     exit();
 }
@@ -87,7 +87,7 @@ if ($action == "delete") {
 if ($expire) {
     check_token("RA.admin.default");
     checkPermission("Create/Edit Promotions");
-    update_query("tblpromotions", array("expirationdate" => date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")))), array("id" => $expire));
+    update_query("ra_promos", array("expirationdate" => date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")))), array("id" => $expire));
     redir("expired=true");
     exit();
 }
@@ -167,10 +167,10 @@ if (!$action) {
         }
     }
 
-    $result = select_query_i("tblpromotions", "COUNT(*)", $where);
+    $result = select_query_i("ra_promos", "COUNT(*)", $where);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
-    $result = select_query_i("tblpromotions", "", $where, "code", "ASC", $page * $limit . ("," . $limit));
+    $result = select_query_i("ra_promos", "", $where, "code", "ASC", $page * $limit . ("," . $limit));
 
     while ($data = mysqli_fetch_array($result)) {
         $pid = $data['id'];
@@ -236,7 +236,7 @@ if (!$action) {
         echo "</td><td class=\"fieldarea\">";
         echo "<s";
         echo "elect name=\"duplicate\">";
-        $query = "SELECT * FROM tblpromotions ORDER BY code ASC";
+        $query = "SELECT * FROM ra_promos ORDER BY code ASC";
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -256,7 +256,7 @@ if (!$action) {
     } else {
         if ($action == "manage") {
             if ($id) {
-                $result = select_query_i("tblpromotions", "", array("id" => $id));
+                $result = select_query_i("ra_promos", "", array("id" => $id));
                 $data = mysqli_fetch_array($result);
                 $code = $data['code'];
                 $type = $data['type'];
@@ -286,13 +286,13 @@ if (!$action) {
                 $requires = explode(",", $requires);
                 $upgradeconfig = unserialize($upgradeconfig);
                 $managetitle = $aInt->lang("promos", "editpromo");
-                $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+                $result = select_query_i("ra_promos", "COUNT(*)", array("code" => $code));
                 $data = mysqli_fetch_array($result);
                 $duplicates = $data[0];
             } else {
                 if ($duplicate) {
                     checkPermission("Create/Edit Promotions");
-                    $result = select_query_i("tblpromotions", "", array("id" => $duplicate));
+                    $result = select_query_i("ra_promos", "", array("id" => $duplicate));
                     $data = mysqli_fetch_array($result);
                     $code = "";
                     $type = $data['type'];
@@ -424,7 +424,7 @@ if (!$action) {
             echo "<s";
             echo "elect name=\"appliesto[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-            $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+            $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
             $jscode = "function autoGenPromo() {
     $.post(\"configpromotions.php\", \"action=genpromo\", function(data) {
         $(\"#promocode\").val(data);
@@ -479,7 +479,7 @@ if (!$action) {
             echo "<s";
             echo "elect name=\"requires[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-            $result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+            $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
             while ($data = mysqli_fetch_array($result)) {
                 $id = $data['id'];
@@ -773,7 +773,7 @@ if (!$action) {
             echo "<s";
             echo "elect name=\"configoptionupgrades[]\" size=\"8\" style=\"width:90%\" multiple>
 ";
-            $result = select_query_i("tblserviceconfigoptions", "tblserviceconfigoptions.id,name,optionname", "", "optionname", "ASC", "", "tblserviceconfiggroups ON tblserviceconfiggroups.id=tblserviceconfigoptions.gid");
+            $result = select_query_i("ra_catalog_user_sales_addons_options", "ra_catalog_user_sales_addons_options.id,name,optionname", "", "optionname", "ASC", "", "ra_catalog_user_sales_addons_groups ON ra_catalog_user_sales_addons_groups.id=ra_catalog_user_sales_addons_options.gid");
 
             while ($data = mysqli_fetch_array($result)) {
                 $configid = $data['id'];

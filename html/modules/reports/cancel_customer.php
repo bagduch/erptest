@@ -8,7 +8,7 @@ $reportdata["description"] = "This report provides a summary of the answers clie
 $reportdata["title"] = "Cancelled Customers";
 $reportdata["description"] = "Cancelled Customers List";
 
-$query = "SELECT tc.firstname,tc.lastname,tc.companyname,tc.email,tcs.*,ts.name FROM tblcustomerservices as tcs inner join tblservices as ts on ts.id=tcs.packageid inner join tblclients as tc on tc.id=tcs.userid where tcs.servicestatus='cancelled'";
+$query = "SELECT tc.firstname,tc.lastname,tc.companyname,tc.email,tcs.*,ts.name FROM tblcustomerservices as tcs inner join ra_catalog as ts on ts.id=tcs.packageid inner join ra_user as tc on tc.id=tcs.userid where tcs.servicestatus='cancelled'";
 $result = full_query_i($query);
 $reportdata["tableheadings"] = array("Service ID", "Client ID", "Client Name", "Company", "Email", "Service", "Cancelled Date", "");
 while ($data = mysqli_fetch_assoc($result)) {

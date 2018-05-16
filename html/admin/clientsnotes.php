@@ -16,7 +16,7 @@ if ($_POST['update']) {
         "duedate" => toMySQLDate($_POST['duedate']),
         "sticky" => $_POST['done'] ? 1 : 0
     );
-    update_query("tblnotes", $array, array("id" => $_POST['id']));
+    update_query("ra_notes", $array, array("id" => $_POST['id']));
     exit();
 }
 $aInt = new RA_Admin($reqperm);
@@ -48,7 +48,7 @@ if ($sub == "add") {
     } else {
         $assingto = $_SESSION['adminid'];
     }
-    insert_query("tblnotes", array(
+    insert_query("ra_notes", array(
         "rel_id" => $account,
         "adminid" => $_SESSION['adminid'],
         "type" => $_POST['rel_type'],
@@ -67,7 +67,7 @@ if ($sub == "add") {
         check_token("RA.admin.default");
         checkPermission("Add/Edit Client Notes");
         update_query(
-                "tblnotes", array(
+                "ra_notes", array(
             "note" => $note,
             "sticky" => $sticky,
             "modified" => "now()"
@@ -82,7 +82,7 @@ if ($sub == "add") {
         if ($sub == "delete") {
             check_token("RA.admin.default");
             checkPermission("Delete Client Notes");
-            delete_query("tblnotes", array("id" => $id));
+            delete_query("ra_notes", array("id" => $id));
             logActivity("Deleted Note - User ID: " . $userid . " - ID: " . $id);
             redir("userid=" . $userid);
             exit();
@@ -92,14 +92,14 @@ if ($sub == "add") {
 
 $aInt->deleteJSConfirm("doDelete", "clients", "deletenote", "clientsnotes.php?userid=" . $userid . "&sub=delete&id=");
 $aInt->sortableTableInit("created", "ASC");
-$result = select_query_i("tblnotes", "COUNT(*)", array("userid" => $userid), "created", "ASC", "", "tbladmins ON tbladmins.id=tblnotes.adminid");
+$result = select_query_i("ra_notes", "COUNT(*)", array("userid" => $userid), "created", "ASC", "", "ra_admin ON ra_admin.id=ra_notes.adminid");
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
 
-$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
-LEFT JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from ra_notes as tbn 
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid) 
+LEFT JOIN ra_admin AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN ra_orders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id and tbn.type='account')
 where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC";
 
@@ -127,10 +127,10 @@ while ($data = mysqli_fetch_array($result)) {
 
 
 if ($action == "edit") {
-    $notesdata = get_query_vals("tblnotes", "note,sticky,assignto,duedate", array("id" => $id));
+    $notesdata = get_query_vals("ra_notes", "note,sticky,assignto,duedate", array("id" => $id));
     $note = $notesdata['note'];
     $importantnote = ($notesdata['sticky'] ? " checked" : "");
-    $result = select_query_i("tbladmins", "id,firstname,lastname");
+    $result = select_query_i("ra_admin", "id,firstname,lastname");
     $select = "<select class=\"form-control\" name=\"assignto\">";
     while ($data = mysqli_fetch_array($result)) {
         if ($data['id'] == $notesdata['assignto']) {
@@ -163,7 +163,7 @@ if ($action == "edit") {
 }
 
 
-$result = select_query_i("tbladmins", "id,firstname,lastname");
+$result = select_query_i("ra_admin", "id,firstname,lastname");
 while ($data = mysqli_fetch_array($result)) {
     $adminlist[$data['id']] = $data['firstname'] . " " . $data['lastname'];
 }

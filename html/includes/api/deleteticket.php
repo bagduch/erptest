@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+$result = select_query_i("ra_ticket", "", array("id" => $ticketid));
 $data = mysqli_fetch_array($result);
 $ticketid = $data['id'];
 

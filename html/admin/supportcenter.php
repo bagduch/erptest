@@ -37,15 +37,15 @@ if ($period == "Yesterday") {
     }
 }
 
-$newtickets = get_query_val("tbltickets", "COUNT(id)", "" . $date);
-$clientreplies = get_query_val("tblticketreplies", "COUNT(id)", "" . $date . " AND admin=''");
-$staffreplies = get_query_val("tblticketreplies", "COUNT(id)", "" . $date . " AND admin!=''");
+$newtickets = get_query_val("ra_ticket", "COUNT(id)", "" . $date);
+$clientreplies = get_query_val("ra_ticket_replies", "COUNT(id)", "" . $date . " AND admin=''");
+$staffreplies = get_query_val("ra_ticket_replies", "COUNT(id)", "" . $date . " AND admin!=''");
 $hours = array();
 $replytimes = array("1" => "0", "2" => 0, "4" => "0", "8" => "0", "16" => "0", "24" => "0");
 $avefirstresponse = "0";
 $avefirstresponsecount = "0";
 $opennoreply = "0";
-$result = full_query_i("SELECT id,date,(SELECT date FROM tblticketreplies WHERE tblticketreplies.tid=tbltickets.id AND admin!='' LIMIT 1) FROM tbltickets WHERE " . $date . " ORDER BY id ASC");
+$result = full_query_i("SELECT id,date,(SELECT date FROM ra_ticket_replies WHERE ra_ticket_replies.tid=ra_ticket.id AND admin!='' LIMIT 1) FROM ra_ticket WHERE " . $date . " ORDER BY id ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $ticketid = $data[0];

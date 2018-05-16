@@ -22,7 +22,7 @@ if ($transid) {
 	$where['transid'] = $transid;
 }
 
-$result = select_query_i("tblaccounts", "", $where);
+$result = select_query_i("ra_transactions", "", $where);
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result), "startnumber" => 0, "numreturned" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_assoc($result)) {

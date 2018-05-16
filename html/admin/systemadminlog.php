@@ -9,13 +9,13 @@ $aInt->sidebar = "utilities";
 $aInt->icon = "logs";
 $aInt->sortableTableInit("date");
 $menuselect = "$('#menu').multilevelpushmenu('expand','Utilities');";
-$query = "DELETE FROM tbladminlog WHERE lastvisit='00000000000000'";
+$query = "DELETE FROM ra_adminlog WHERE lastvisit='00000000000000'";
 $result = full_query_i($query);
 $date = date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y")));
-$query = "UPDATE tbladminlog SET logouttime=lastvisit WHERE lastvisit<'" . $date . "' and logouttime='00000000000000'";
+$query = "UPDATE ra_adminlog SET logouttime=lastvisit WHERE lastvisit<'" . $date . "' and logouttime='00000000000000'";
 $result = full_query_i($query);
-$numrows = get_query_val("tbladminlog", "COUNT(*)", "");
-$result = select_query_i("tbladminlog", "", "", "id", "DESC", $page * $limit . "," . $limit);
+$numrows = get_query_val("ra_adminlog", "COUNT(*)", "");
+$result = select_query_i("ra_adminlog", "", "", "id", "DESC", $page * $limit . "," . $limit);
 
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];

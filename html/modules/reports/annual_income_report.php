@@ -18,13 +18,13 @@ $reportdata["tableheadings"] = array("Month", "Amount In", "Fees", "Amount Out",
 for ($counter = 1; $counter <= 12; $counter += 1) {
     $month = $months[$counter - 1];
     $counter = str_pad($counter, 2, "0", STR_PAD_LEFT);
-    $data = get_query_vals("tblaccounts", "SUM(amountin/rate),SUM(fees/rate),SUM(amountout/rate)", "date LIKE '" . (int) $year . "-$counter-%'");
+    $data = get_query_vals("ra_transactions", "SUM(amountin/rate),SUM(fees/rate),SUM(amountout/rate)", "date LIKE '" . (int) $year . "-$counter-%'");
     $amountin = $data[0];
     $fees = $data[1];
     $amountout = $data[2];
     $monthlybalance = $amountin - $fees - $amountout;
     $overallbalance += $monthlybalance;
-    $prevyearbal = get_query_val("tblaccounts", "SUM((amountin-fees-amountout)/rate)", "date LIKE '" . (int) ($year - 1) . "-$counter%'");
+    $prevyearbal = get_query_val("ra_transactions", "SUM((amountin-fees-amountout)/rate)", "date LIKE '" . (int) ($year - 1) . "-$counter%'");
     $prevyearbal = round($prevyearbal, 2);
     $chartdata['rows'][] = array('c' => array(array('v' => $month), array('v' => $prevyearbal, 'f' => formatCurrency($prevyearbal)), array('v' => $monthlybalance, 'f' => formatCurrency($monthlybalance))));
     $amountin = formatCurrency($amountin);

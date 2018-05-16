@@ -25,7 +25,7 @@ class RA_ClientProduct {
 
     public function getAllproducts() {
         $this->product_data = array();
-        $query = "SELECT tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product')";
+        $query = "SELECT tblcustomerservices.*,ra_catalog.servertype,ra_catalog.type from tblcustomerservices LEFT JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON (ra_catalog.gid=ra_catalog_groups.id AND ra_catalog_groups.type='product')";
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
             $this->product_data[$data['id']] = $data;
@@ -42,7 +42,7 @@ class RA_ClientProduct {
 
     public function getPromocode() {
         $promoarr = array();
-        $result = select_query_i("tblpromotions", "", "", "code", "ASC");
+        $result = select_query_i("ra_promos", "", "", "code", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $promo_id = $data['id'];

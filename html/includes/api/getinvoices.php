@@ -19,24 +19,24 @@ if (!$limitnum) {
 $where = array();
 
 if ($userid) {
-	$where[] = "tblinvoices.userid='" . (int)$userid . "'";
+	$where[] = "ra_bills.userid='" . (int)$userid . "'";
 }
 
 
 if ($status) {
 	if ($status == "Overdue") {
-		$where[] = "tblinvoices.status='Unpaid' AND tblinvoices.duedate<'" . date("Ymd") . "'";
+		$where[] = "ra_bills.status='Unpaid' AND ra_bills.duedate<'" . date("Ymd") . "'";
 	}
 	else {
-		$where[] = "tblinvoices.status='" . db_escape_string($status) . "'";
+		$where[] = "ra_bills.status='" . db_escape_string($status) . "'";
 	}
 }
 
 $where = implode(" AND ", $where);
-$result = select_query_i("tblinvoices", "COUNT(*)", $where);
+$result = select_query_i("ra_bills", "COUNT(*)", $where);
 $data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result = select_query_i("tblinvoices", "tblinvoices.id,tblinvoices.userid,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.*", $where, "tblinvoices`.`duedate", "DESC", "" . $limitstart . "," . $limitnum, "tblclients ON tblclients.id=tblinvoices.userid");
+$result = select_query_i("ra_bills", "ra_bills.id,ra_bills.userid,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_bills.*", $where, "ra_bills`.`duedate", "DESC", "" . $limitstart . "," . $limitnum, "ra_user ON ra_user.id=ra_bills.userid");
 $apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result), "invoices" => array());
 
 while ($data = mysqli_fetch_assoc($result)) {

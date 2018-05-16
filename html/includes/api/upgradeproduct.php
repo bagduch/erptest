@@ -39,7 +39,7 @@ $checkout = ($calconly ? false : true);
 
 if ($checkout) {
 	$gatewaysarray = array();
-	$result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "name"));
+	$result = select_query_i("ra_modules_gateways", "gateway", array("setting" => "name"));
 
 	while ($data = mysqli_fetch_array($result)) {
 		$gatewaysarray[] = $data['gateway'];

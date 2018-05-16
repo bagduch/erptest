@@ -45,7 +45,7 @@ foreach ($clientsModel->getGroups() as $id => $values) {
     $clientgroup [$id] = $values['name'];
 }
 
-$result = select_query_i("tblcurrencies", "id,code", "", "code", "ASC");
+$result = select_query_i("ra_currency", "id,code", "", "code", "ASC");
 $currencys = array();
 while ($data = mysqli_fetch_assoc($result)) {
     $currencys[$data['id']] = $data['code'];
@@ -68,7 +68,7 @@ $filterdata = array(
 );
 
 
-$result = select_query_i("tblcustomfields", "cfid,fieldname", array("type" => "client"));
+$result = select_query_i("ra_catalog_user_sales_fields", "cfid,fieldname", array("type" => "client"));
 
 while ($data = mysqli_fetch_array($result)) {
     $fieldid = $data['cfid'];

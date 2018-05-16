@@ -65,14 +65,14 @@ if ($action == "save") {
         $updatearray = array("startdate" => $startdate, "enddate" => $enddate, "title" => $title, "description" => html_entity_decode($description), "type" => $type, "affecting" => $affecting, "priority" => $priority, "status" => $status, "lastupdate" => "now()");
 
         if ($id) {
-            update_query("tblnetworkissues", $updatearray, array("id" => $id));
+            update_query("ra_system_status", $updatearray, array("id" => $id));
             run_hook("NetworkIssueEdit", array_merge(array("id" => $id), $updatearray));
 
             if ($status == "Resolved") {
                 run_hook("NetworkIssueClose", array("id" => $id));
             }
         } else {
-            $nwid = insert_query("tblnetworkissues", $updatearray);
+            $nwid = insert_query("ra_system_status", $updatearray);
             run_hook("NetworkIssueAdd", array_merge(array("id" => $nwid), $updatearray));
         }
 
@@ -84,7 +84,7 @@ if ($action == "save") {
 
 if ($action == "close") {
     check_token("RA.admin.default");
-    update_query("tblnetworkissues", array("status" => "Resolved", "enddate" => "now()"), array("id" => $id));
+    update_query("ra_system_status", array("status" => "Resolved", "enddate" => "now()"), array("id" => $id));
     run_hook("NetworkIssueClose", array("id" => $id));
     redir("view=resolved");
     exit();
@@ -93,7 +93,7 @@ if ($action == "close") {
 
 if ($action == "reopen") {
     check_token("RA.admin.default");
-    update_query("tblnetworkissues", array("status" => "In Progress", "enddate" => "NULL"), array("id" => $id));
+    update_query("ra_system_status", array("status" => "In Progress", "enddate" => "NULL"), array("id" => $id));
     run_hook("NetworkIssueReopen", array("id" => $id));
     redir();
     exit();
@@ -103,12 +103,12 @@ if ($action == "reopen") {
 if ($action == "delete") {
     check_token("RA.admin.default");
     run_hook("NetworkIssueDelete", array("id" => $id));
-    delete_query("tblnetworkissues", array("id" => $id));
+    delete_query("ra_system_status", array("id" => $id));
     redir();
     exit();
 }
 
-$t_query = "select name from tblservicegroups";
+$t_query = "select name from ra_catalog_groups";
 $t_result = full_query_i($t_query);
 
 if (0 < mysqli_num_rows($t_result)) {
@@ -116,7 +116,7 @@ if (0 < mysqli_num_rows($t_result)) {
         $type_options[] = $t_row[0];
     }
 }
-$p_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'priority'";
+$p_query = "SHOW COLUMNS FROM ra_system_status LIKE 'priority'";
 $p_result = full_query_i($p_query);
 
 if (0 < mysqli_num_rows($p_result)) {
@@ -125,7 +125,7 @@ if (0 < mysqli_num_rows($p_result)) {
     $priority_options = explode("','", $matches[1]);
 }
 
-$s_query = "SHOW COLUMNS FROM tblnetworkissues LIKE 'status'";
+$s_query = "SHOW COLUMNS FROM ra_system_status LIKE 'status'";
 $s_result = full_query_i($s_query);
 
 if (0 < mysqli_num_rows($s_result)) {
@@ -134,7 +134,7 @@ if (0 < mysqli_num_rows($s_result)) {
     $status_options = explode("','", $matches[1]);
 }
 
-$server_query = "SELECT id, name FROM tblservers";
+$server_query = "SELECT id, name FROM ra_integration";
 $server_result = full_query_i($server_query);
 ob_start();
 
@@ -151,7 +151,7 @@ if ($action == "") {
     }
 
 
-    $result = select_query_i("tblnetworkissues", "*", $where, "lastupdate", "DESC");
+    $result = select_query_i("ra_system_status", "*", $where, "lastupdate", "DESC");
     $aInt->deleteJSConfirm("doDelete", "global", "deleteconfirm", "?action=delete&id=");
     echo "
 <p>";
@@ -210,7 +210,7 @@ if ($action == "") {
 
         if ($id) {
             $pagetitle = "Modify Existing Issue";
-            $result = select_query_i("tblnetworkissues", "", array("id" => $id));
+            $result = select_query_i("ra_system_status", "", array("id" => $id));
             $data = mysqli_fetch_array($result);
             $title = $data['title'];
             $startdate = $data['startdate'];
