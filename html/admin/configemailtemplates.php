@@ -9,10 +9,8 @@ $aInt->title = $aInt->lang("emailtpls", "title");
 $aInt->sidebar = "config";
 $aInt->icon = "massmail";
 $aInt->helplink = "Email Templates";
-$menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 $activelanguages = array();
 $result = select_query_i("tblemailtemplates", "DISTINCT language", "", "type", "ASC");
-
 while ($data = mysqli_fetch_array($result)) {
 	$activelanguage = $data['language'];
 
@@ -25,7 +23,7 @@ while ($data = mysqli_fetch_array($result)) {
 if ($action == "new") {
 	check_token("RA.admin.default");
 	checkPermission("Create/Edit Email Templates");
-	$emailid = insert_query("tblemailtemplates", array("type" => $type, "name" => $name, "language" => "", "custom" => "1"));
+	$emailid = insert_query("tblemailtemplates", array("type" => $type,"message"=>$message, "subject"=>$subject,"name" => $name, "language" => "", "custom" => "1"));
 	redir("action=edit&id=" . $emailid);
 	exit();
 }
@@ -530,7 +528,5 @@ else {
 $content = ob_get_contents();
 ob_end_clean();
 $aInt->content = $content;
-$aInt->jscode = $jscode;
-$aInt->jquerycode = $jquerycode.$menuselect;
 $aInt->display();
 ?>
