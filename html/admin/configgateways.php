@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 function defineGatewayField($gateway, $type, $name, $defaultvalue, $friendlyname, $size, $description) {
     global $GatewayFieldDefines;
 

@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 
 function mailin_config() {
 	$configarray = array( "FriendlyName" => array( "Type" => "System", "Value" => "Mail In Payment" ), "instructions" => array( "FriendlyName" => "Bank Transfer Instructions", "Type" => "textarea", "Rows" => "5", "Value" => "Bank Name:

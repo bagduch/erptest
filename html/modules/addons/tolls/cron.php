@@ -146,7 +146,7 @@ if(isset($_GET['invoice']) && $_GET['invoice']=='all'){
 		if(count($emails)>0 && $emails[0]!=''){
 			mail(
 				implode(',', $emails),	# mails
-				'WHMCS Cron TOLLS Billing',
+				'RA Cron TOLLS Billing',
 				implode("\r\n", $m)
 			);
 		}

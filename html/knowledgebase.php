@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 function kbGetCatIds($catid) {
     global $idnumbers;
 

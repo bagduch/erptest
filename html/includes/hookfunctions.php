@@ -1,14 +1,6 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+/** RA - Version 0.1 **/
+
 
 function sort_array_by_priority($a, $b) {
 	return $a['priority'] < $b['priority'] ? 0 - 1 : 1;

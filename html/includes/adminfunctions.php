@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 function getAdminPermsArray() {
     $adminpermsarray = array(
         1 => "Main Homepage",

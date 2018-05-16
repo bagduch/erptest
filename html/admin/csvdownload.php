@@ -1,14 +1,6 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- **/
+/** RA - Version 0.1 **/
+
 
 function csv_clean($var) {
 	$var = html_entity_decode($var, ENT_QUOTES);

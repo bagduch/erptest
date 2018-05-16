@@ -39,7 +39,7 @@ if (!function_exists("emailtpl_template")) {
         global $fromname;
         global $fromemail;
 
-        $sysurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+        $sysurl = $CONFIG['SystemURL'];
         $nosavemaillog = false;
         $email_merge_fields = array();
 
@@ -1044,7 +1044,7 @@ if (!function_exists("emailtpl_template")) {
             $message = "<p><a href=\"" . $CONFIG['Domain'] . "\" target=\"_blank\"><img src=\"" . $CONFIG['LogoURL'] . "\" alt=\"" . $CONFIG['CompanyName'] . "\" border=\"0\"></a></p>";
         }
 
-        $adminurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+        $adminurl = $CONFIG['SystemURL'];
         $adminurl .= "/" . $ra->get_admin_folder_name() . "/";
         $message .= "<font style=\"font-family:Verdana;font-size:11px\"><p>" . $adminmessage . "</p>";
 
@@ -1185,7 +1185,7 @@ if (!function_exists("emailtpl_template")) {
         $email_merge_fields['signature'] = nl2br(html_entity_decode($CONFIG['Signature'], ENT_QUOTES));
         $email_merge_fields['RA_url'] = $CONFIG['SystemURL'];
         $email_merge_fields['RA_link'] = "<a href=\"" . $CONFIG['SystemURL'] . "\">" . $CONFIG['SystemURL'] . "</a>";
-        $adminurl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+        $adminurl = $CONFIG['SystemURL'];
         $adminurl .= "/" . $ra->get_admin_folder_name() . "/";
         $email_merge_fields['RA_admin_url'] = $adminurl;
         $email_merge_fields['RA_admin_link'] = "<a href=\"" . $adminurl . "\">" . $adminurl . "</a>";
@@ -1817,6 +1817,7 @@ if (!function_exists("emailtpl_template")) {
     }
 
     function sanitize($str) {
+        // This function SHOULD NOT BE USED. Any callers NEED to be fixed.
         error_log("THIS REALLY ISN'T SANITISING ANYTHING. FIX ME. ".__FILE__.":".__LINE__);
         return $str;
     }

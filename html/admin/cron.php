@@ -1,10 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * */
+/** RA - Version 0.1 **/
 
 require dirname(__FILE__) . "/../init.php";
 include ROOTDIR . "/includes/clientfunctions.php";

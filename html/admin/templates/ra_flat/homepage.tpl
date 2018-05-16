@@ -1,4 +1,4 @@
-<!-- BEGIN WHMCS -->
+<!-- BEGIN RA -->
 {if isset($maintenancemode) && $maintenancemode}
     <div class="errorbox" style="font-size:14px;"> {$_ADMINLANG.home.maintenancemode} </div>
     <br />
@@ -164,7 +164,7 @@
         {/if}
     {/foreach}
 </div>
-<!-- END WHMCS -->
+<!-- END RA -->
 <div class="row">
     <div class="col-md-6">
         <!-- Custom tabs (Charts with tabs)-->

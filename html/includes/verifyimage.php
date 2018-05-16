@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ WHMCS FULL DECODED & NULLED
- *
- * @ Version  : 5.2.15
- * @ Author   : MTIMER
- * @ Release on : 2013-12-24
- * @ Website  : http://www.mtimer.cn
- *
- **/
+/** RA - Version 0.1 **/
 require "../init.php";
 if (!function_exists("imagecreatefrompng")) {
 	exit("You need to recompile with the GD library included in PHP for this feature to be able to function");

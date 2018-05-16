@@ -6,7 +6,7 @@
     global: yes
   become: yes
 
-- name: Install jquery
+- name: Install bower components
   bower:
     path: "{{repo_basepath}}"
   become: no

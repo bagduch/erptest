@@ -1,10 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * */
+/** RA - Version 0.1 * */
 define("ADMINAREA", true);
 require "../init.php";
 include_once '../includes/servicefunctions.php';
@@ -60,7 +56,7 @@ if ($action == "save") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
 //    echo "<pre>", print_r($_POST, 1), "</pre>";
- 
+
     if ($_POST['welcomeemail'] == 0) {
         $welcomeemail = "NULL";
     } else {
@@ -146,7 +142,7 @@ if ($action == "save") {
     //RebuildModuleHookCache();
 //    run_hook("ProductEdit", array_merge(array("pid" => $id), $array));
 //    run_hook("AdminProductConfigFieldsSave", array("pid" => $id));
-//    redir("action=edit&id=" . $id . ($tab ? "&tab=" . $tab : "") . "&success=true");
+    redir("action=edit&id=" . $id . ($_POST['mytab'] ? "&tab=" . $_POST['mytab'] : "") . "&success=true");
 }
 
 if ($sub == "deletecustomfield") {
@@ -753,6 +749,7 @@ if ($action == "") {
         
     }
 //    echo "<pre>", print_r($groups, 1), "</pre>";
+
     $aInt->assign('autoemail', $autoemail);
     $aInt->assign('groupsid', $groupsid);
     $aInt->assign('groups', $groups);
@@ -761,6 +758,7 @@ if ($action == "") {
     $aInt->assign('tabledata', $tabledata);
 }
 $aInt->assign('langs', $lang);
+$aInt->assign("mytab", isset($_GET['tab']) ? $_GET['tab'] : "");
 if (isset($templatefile) && $templatefile != "") {
     $aInt->template = $templatefile;
 }

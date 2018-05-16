@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 
 function payoffline_activate() {
 	defineGatewayField( "payoffline", "text", "username", "", "Merchant Key", "20", "" );

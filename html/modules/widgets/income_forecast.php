@@ -4,7 +4,7 @@ if (!defined("RA"))
     die("This file cannot be accessed directly");
 
 function widget_income_forecast($vars) {
-    global $whmcs, $_ADMINLANG, $currency, $currencytotal, $data;
+    global $ra, $_ADMINLANG, $currency, $currencytotal, $data;
     $title = $_ADMINLANG['home']['incomeforecast'];
 
     function ah_formatstat($billingcycle, $stat) {

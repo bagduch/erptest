@@ -1,5 +1,5 @@
 <?php
 
-define("WHMCSDBCONNECT", true);
+define("RADBCONNECT", true);
 require "init.php";
 ?>

@@ -18,7 +18,7 @@
 			<p>{$LANG.twofa2ndfactorreq}</p>
 		</div>
 		{/if}
-		<form method="post" action="{$systemsslurl}dologin.php" id="frmlogin">
+		<form method="post" action="{$systemurl}dologin.php" id="frmlogin">
 			{if $newbackupcode}
 			<input type="hidden" name="newbackupcode" value="1" />
 			<h2>{$LANG.twofanewbackupcodeis}</h2>
@@ -29,7 +29,7 @@
 			<input type="submit" value="{$LANG.continue} &raquo;" class="btn btn-default" />
 			{elseif $backupcode}
 			<input type="hidden" name="backupcode" value="1" />
-			<div class="form-group"> 	
+			<div class="form-group">
 				<div class="input-group">
 					<input type="text" name="code" class="form-control" />
 					<span class="input-group-btn">

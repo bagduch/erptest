@@ -1,4 +1,5 @@
 <?php
+/** RA - Version 0.1 **/
 
 define("CLIENTAREA", true);
 require "init.php";

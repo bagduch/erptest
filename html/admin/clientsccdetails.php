@@ -1,15 +1,6 @@
 <?php
 
-/**
- *
- * @ RA
- *
- * 
- * 
- * 
- * 
- *
- * */
+/** RA - Version 0.1 **/
 define("ADMINAREA", true);
 require "../init.php";
 $aInt = new RA_Admin("View Credit Card Details");
@@ -57,7 +48,7 @@ if ($ccstoredisabled) {
 
         $adminfolder = $ra->get_admin_folder_name();
 
-        if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer && $CONFIG['SystemSSLURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer) {
+        if ($CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer && $CONFIG['SystemURL'] . ("/" . $adminfolder . "/clientsccdetails.php") != $referrer) {
             echo "<p>" . $aInt->lang("global", "invalidaccessattempt") . "</p>";
             exit();
         }

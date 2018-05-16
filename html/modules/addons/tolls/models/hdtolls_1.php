@@ -86,7 +86,7 @@ class hdtolls {
         // we don't need the remote asterisk database any longer
         $this->db_tolls->close();
 
-        // grab some WHMCS settings like API username and password
+        // grab some RA settings like API username and password
         $result = $this->db->query("SELECT * FROM `tbladdonmodules` WHERE module = '" . $this->module . "'");
         while ($row = $result->fetch_assoc()) {
             $this->settings[$row['setting']] = $row['value'];
@@ -430,7 +430,7 @@ class hdtolls {
     }
 
     /**
-     * This method creates a WHMCS invoice for a given hosting ID and billing period
+     * This method creates a RA invoice for a given hosting ID and billing period
      * 
      * @param integer $hostingid the hosting ID to invoice
      * @param string $period the period to invoice in %Y-%m format
@@ -501,7 +501,7 @@ class hdtolls {
             $bills[$row['dependent_category']] = $row;
         }
 
-        // this is what shows up on the end-user's WHMCS invoice
+        // this is what shows up on the end-user's RA invoice
         $x = array();
         $x[] = "Service plan summary: " . $client['product_name'];
         $x[] = "SIP phone number: " . $client['domain'];
@@ -541,7 +541,7 @@ class hdtolls {
             $this->log_invoice($client['clientid'], $client['hostingid'], $period, $total_invoice_bill, null);
 
             // stop here, do not proceed with the rest of the method which deals with
-            // official WHMCS client invoicing
+            // official RA client invoicing
             return;
         }
 
@@ -552,8 +552,8 @@ class hdtolls {
         $postfields["userid"] = $client['clientid'];
         $postfields["paymentmethod"] = $client['paymentmethod'];
 
-        /*         * ** WHMCS JSON API Sample Code *** */
-#		$url = "https://my.hd.net.nz/includes/api.php"; # URL to WHMCS API file goes here
+        /*         * ** RA JSON API Sample Code *** */
+#		$url = "https://my.hd.net.nz/includes/api.php"; # URL to RA API file goes here
 #		$username = 'apihostingdirect'; # Admin username goes here
 #		$password = 'fj237tG83F'; # Admin password goes here
 

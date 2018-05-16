@@ -312,9 +312,9 @@ function getClientNotes($userid, $limit = "", $table = true) {
     } else {
         $limitquery = "";
     }
-    $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
-        INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
-        INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
+    $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn
+        INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
+        INNER JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto)
         LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
         LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
         where (tbn.rel_id=" . $userid . " and tbn.type='client') OR tbo.userid=" . $userid . " OR tbcs.userid=" . $userid . " ORDER BY tbn.flag DESC " . $limitquery;
@@ -656,7 +656,7 @@ function validateClientLogin($username, $password, $twofadone = false) {
     global $ra;
 
     if ($username && (($password || $_SESSION['adminid']) || $twofadone)) {
-        
+
     } else {
         return false;
     }
@@ -1156,7 +1156,7 @@ function doResetPWEmail($email, $answer = "") {
       );
       }
      */
-    $reseturl = ($CONFIG['SystemSSLURL'] ? $CONFIG['SystemSSLURL'] : $CONFIG['SystemURL']);
+    $reseturl = $CONFIG['SystemURL'];
     $reseturl .= "/pwreset.php?key=" . $resetkey;
     sendMessage("Password Reset Validation", $userid, array("pw_reset_url" => $reseturl, "contactid" => $contactid));
     logActivity("Password Reset Requested", $userid);

@@ -1,6 +1,7 @@
 html/assets
 html/templates_c/*
 html/configuration.php
+html/bower_components
 .*swp
 attachments/*
 .vscode
@@ -17,4 +18,5 @@ html/modules/service/hdradius
 vendor/
 html/vendor
 composer.lock
+html/phpmy
 html/bower_components
