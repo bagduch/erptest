@@ -19,7 +19,7 @@ $aInt->requiredFiles(array("gatewayfunctions", "orderfunctions", "modulefunction
 
 if ($ra->get_req_var("rerunfraudcheck")) {
     check_token("RA.admin.default");
-    $result = select_query_i("tblorders", "id,userid,ipaddress", array("id" => $orderid));
+    $result = select_query_i("ra_orders", "id,userid,ipaddress", array("id" => $orderid));
     $data = mysqli_fetch_array($result);
     $orderid = $data['id'];
     $userid = $data['userid'];
@@ -73,7 +73,7 @@ if ($action == "addnotes") {
     } else {
         $assingto = $_SESSION['adminid'];
     }
-    insert_query("tblnotes", array(
+    insert_query("ra_notes", array(
         "rel_id" => $account,
         "adminid" => $_SESSION['adminid'],
         "type" => $_POST['rel_type'],
@@ -96,14 +96,14 @@ if ($action == "affassign") {
 
         while ($data = mysqli_fetch_array($result)) {
             $serviceid = $data['id'];
-            insert_query("tblaffiliatesaccounts", array("affiliateid" => $affid, "relid" => $serviceid));
+            insert_query("ra_partnersaccounts", array("affiliateid" => $affid, "relid" => $serviceid));
         }
 
         exit();
     }
 
     echo $aInt->lang("orders", "chooseaffiliate") . "<br /><select name=\"affid\" id=\"affid\" style=\"width:270px;\">";
-    $result = select_query_i("tblaffiliates", "tblaffiliates.id,tblclients.firstname,tblclients.lastname", "", "firstname", "ASC", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+    $result = select_query_i("ra_partners", "ra_partners.id,ra_user.firstname,ra_user.lastname", "", "firstname", "ASC", "", "ra_user ON ra_user.id=ra_partners.clientid");
 
     while ($data = mysqli_fetch_array($result)) {
         $aff_id = $data['id'];
@@ -119,8 +119,8 @@ if ($action == "affassign") {
 
 if ($action == "ajaxchangeorderstatus") {
     check_token("RA.admin.default");
-    $id = get_query_val("tblorders", "id", array("id" => $id));
-    $result = select_query_i("tblorderstatuses", "title", "", "sortorder", "ASC");
+    $id = get_query_val("ra_orders", "id", array("id" => $id));
+    $result = select_query_i("ra_orderstatuses", "title", "", "sortorder", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $statusesarr[] = $data['title'];
@@ -128,7 +128,7 @@ if ($action == "ajaxchangeorderstatus") {
 
 
     if (in_array($status, $statusesarr) && $id) {
-        update_query("tblorders", array("status" => $status), array("id" => $id));
+        update_query("ra_orders", array("status" => $status), array("id" => $id));
         echo $id;
     } else {
         echo 0;
@@ -192,7 +192,7 @@ if ($ra->get_req_var("massdelete")) {
 if ($ra->get_req_var("sendmessage")) {
     check_token("RA.admin.default");
     $clientslist = "";
-    $result = select_query_i("tblorders", "DISTINCT userid", "id IN (" . db_build_in_array($selectedorders) . ")");
+    $result = select_query_i("ra_orders", "DISTINCT userid", "id IN (" . db_build_in_array($selectedorders) . ")");
 
     while ($data = mysqli_fetch_array($result)) {
         $clientslist .= "selectedclients[]=" . $data['userid'] . "&";
@@ -342,14 +342,14 @@ if (!$action) {
         }
         if ($ra->get_req_var("updatenotes")) {
             check_token("RA.admin.default");
-            update_query("tblorders", array("notes" => $notes), array("id" => $id));
+            update_query("ra_orders", array("notes" => $notes), array("id" => $id));
             exit();
         }
 
 
         $gatewaysarray = getGatewaysArray();
         require ROOTDIR . "/includes/countries.php";
-        $result = select_query_i("tblorders", "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", array("tblorders.id" => $id), "", "", "", "tblclients ON tblclients.id=tblorders.userid");
+        $result = select_query_i("ra_orders", "ra_orders.*,ra_user.firstname,ra_user.lastname,ra_user.email,ra_user.companyname,ra_user.address1,ra_user.address2,ra_user.city,ra_user.state,ra_user.postcode,ra_user.country,ra_user.groupid,(SELECT status FROM ra_bills WHERE id=ra_orders.invoiceid) AS invoicestatus", array("ra_orders.id" => $id), "", "", "", "ra_user ON ra_user.id=ra_orders.userid");
         $orderdata = mysqli_fetch_array($result);
         $orderdata['amount'] = formatCurrency($orderdata['amount']);
         $orderdata['country'] = $countries[$orderdata['country']];
@@ -362,7 +362,7 @@ if (!$action) {
 
 
         $statusoptions = "<select id=\"ajaxchangeorderstatus\" style=\"font-size:14px;\">";
-        $result = select_query_i("tblorderstatuses", "", "", "sortorder", "ASC");
+        $result = select_query_i("ra_orderstatuses", "", "", "sortorder", "ASC");
         while ($data = mysqli_fetch_array($result)) {
             $statusoptions .= "<option style=\"color:" . $data['color'] . "\"";
 
@@ -388,7 +388,7 @@ if (!$action) {
         }
         run_hook("ViewOrderDetailsPage", array("orderid" => $id, "ordernum" => $ordernum, "userid" => $userid, "amount" => $amount, "paymentmethod" => $paymentmethod, "invoiceid" => $invoiceid, "status" => $orderstatus));
         $clientnotes = array();
-        $result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+        $result = select_query_i("ra_notes", "ra_notes.*,(SELECT CONCAT(firstname,' ',lastname) FROM ra_admin WHERE ra_admin.id=ra_notes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 
         while ($data = mysqli_fetch_assoc($result)) {
             $data['created'] = fromMySQLDate($data['created'], 1);
@@ -455,12 +455,12 @@ if (!$action) {
         $data = mysqli_fetch_array($result);
 
         $firstproductinorder = $data['id'];
-        $result = select_query_i("tblaffiliatesaccounts", "", array("relid" => $firstproductinorder));
+        $result = select_query_i("ra_partnersaccounts", "", array("relid" => $firstproductinorder));
         $data = mysqli_fetch_array($result);
         $affid = $data['affiliateid'];
 
         if ($affid) {
-            $result = select_query_i("tblaffiliates", "tblaffiliates.id,firstname,lastname", array("tblaffiliates.id" => $affid), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+            $result = select_query_i("ra_partners", "ra_partners.id,firstname,lastname", array("ra_partners.id" => $affid), "", "", "", "ra_user ON ra_user.id=ra_partners.clientid");
             $data = mysqli_fetch_array($result);
         }
 
@@ -494,16 +494,16 @@ if (!$action) {
                 $serverpassword = createServerPassword();
             }
 
-            $result2 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
-            $tblservicesdata = mysqli_fetch_assoc($result2);
+            $result2 = select_query_i("ra_catalog", "ra_catalog.name,ra_catalog.type,ra_catalog.welcomeemail,ra_catalog.autosetup,ra_catalog.servertype,ra_catalog_groups.name AS groupname", array("ra_catalog.id" => $packageid), "", "", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
+            $ra_catalogdata = mysqli_fetch_assoc($result2);
 
-            $tblcustomerservices[$data['id']]['services'] = $tblservicesdata;
-            $groupname = $tblservicesdata['groupname'];
-            $productname = $tblservicesdata['name'];
-            $producttype = $tblservicesdata['type'];
-            $welcomeemail = $tblservicesdata['welcomeemail'];
-            $autosetup = $tblservicesdata['autosetup'];
-            $servertype = $tblservicesdata['servertype'];
+            $tblcustomerservices[$data['id']]['services'] = $ra_catalogdata;
+            $groupname = $ra_catalogdata['groupname'];
+            $productname = $ra_catalogdata['name'];
+            $producttype = $ra_catalogdata['type'];
+            $welcomeemail = $ra_catalogdata['welcomeemail'];
+            $autosetup = $ra_catalogdata['autosetup'];
+            $servertype = $ra_catalogdata['servertype'];
 
 
 
@@ -512,7 +512,7 @@ if (!$action) {
 
                 if ($servertype) {
                     echo "" . $aInt->lang("fields", "username") . ((": <input type=\"text\" name=\"vars[products][" . $hostingid . "]") . "[username]\" size=\"12\" value=\"" . $serverusername . "\"> ") . $aInt->lang("fields", "password") . ((": <input type=\"text\" name=\"vars[products][" . $hostingid . "]") . "[password]\" size=\"12\" value=\"" . $serverpassword . "\"> ") . $aInt->lang("fields", "server") . ((": <select name=\"vars[products][" . $hostingid . "]") . "[server]\" style=\"width:150px;\"><option value=\"\">None</option>");
-                    $result2 = select_query_i("tblservers", "", array("type" => $servertype), "name", "ASC");
+                    $result2 = select_query_i("ra_integration", "", array("type" => $servertype), "name", "ASC");
 
                     while ($data2 = mysqli_fetch_array($result2)) {
                         $serverid = $data2['id'];
@@ -733,10 +733,10 @@ if (!$action) {
     return false;
 });";
 
-    $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid) 
-LEFT JOIN tbladmins AS tbaa on (tbaa.id=tbn.assignto) 
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+    $query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name,CONCAT(tbaa.firstname,' ',tbaa.lastname) as assignname from ra_notes as tbn 
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid) 
+LEFT JOIN ra_admin AS tbaa on (tbaa.id=tbn.assignto) 
+LEFT JOIN ra_orders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 where tbo.id=" . $id;
     $result = full_query_i($query);
     while ($data = mysqli_fetch_array($result)) {

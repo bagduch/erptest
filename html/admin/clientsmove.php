@@ -68,7 +68,7 @@ function searchselectclient(userid,name,email) {
 else {
 	check_token("RA.admin.default");
 	$newuserid = trim($newuserid);
-	$result = select_query_i("tblclients", "id", array("id" => $newuserid));
+	$result = select_query_i("ra_user", "id", array("id" => $newuserid));
 	$data = mysqli_fetch_array($result);
 	$newuserid = $data['id'];
 

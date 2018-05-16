@@ -17,7 +17,7 @@ if ($language) {
 	$where['language'] = $language;
 }
 
-$result = select_query_i("tblemailtemplates", "", $where, "name", "ASC");
+$result = select_query_i("ra_templates_mail", "", $where, "name", "ASC");
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_array($result)) {

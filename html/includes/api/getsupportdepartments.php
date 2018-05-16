@@ -7,7 +7,7 @@ if (!defined("RA")) {
 }
 
 $activestatuses = $awaitingreplystatuses = array();
-$query = "SELECT title,showactive,showawaiting FROM tblticketstatuses";
+$query = "SELECT title,showactive,showawaiting FROM ra_tickettatuses";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
@@ -24,7 +24,7 @@ while ($data = mysqli_fetch_array($result)) {
 $deptfilter = "";
 
 if (!$ignore_dept_assignments) {
-	$result = select_query_i("tbladmins", "supportdepts", array("id" => $_SESSION['adminid']));
+	$result = select_query_i("ra_admin", "supportdepts", array("id" => $_SESSION['adminid']));
 	$data = mysqli_fetch_array($result);
 	$supportdepts = $data[0];
 	$supportdepts = explode(",", $supportdepts);
@@ -39,11 +39,11 @@ if (!$ignore_dept_assignments) {
 
 
 	if (count($deptids)) {
-		$deptfilter = "WHERE tblticketdepartments.id IN (" . db_build_in_array($deptids) . ") ";
+		$deptfilter = "WHERE ra_ticket_teams.id IN (" . db_build_in_array($deptids) . ") ";
 	}
 }
 
-$result = full_query_i("SELECT id,name,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($awaitingreplystatuses) . ")) AS awaitingreply,(SELECT COUNT(id) FROM tbltickets WHERE did=tblticketdepartments.id AND status IN (" . db_build_in_array($activestatuses) . ")) AS opentickets FROM tblticketdepartments " . $deptfilter . "ORDER BY name ASC");
+$result = full_query_i("SELECT id,name,(SELECT COUNT(id) FROM ra_ticket WHERE did=ra_ticket_teams.id AND status IN (" . db_build_in_array($awaitingreplystatuses) . ")) AS awaitingreply,(SELECT COUNT(id) FROM ra_ticket WHERE did=ra_ticket_teams.id AND status IN (" . db_build_in_array($activestatuses) . ")) AS opentickets FROM ra_ticket_teams " . $deptfilter . "ORDER BY name ASC");
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_array($result)) {

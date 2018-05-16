@@ -13,13 +13,13 @@ for ( $rawmonth = 1; $rawmonth <= 12; $rawmonth++ ) {
     $year2 = $year-1;
 	$month = str_pad($rawmonth, 2, 0, STR_PAD_LEFT);
 
-    $newsignups = get_query_val("tblclients","COUNT(*)","datecreated LIKE '$year-$month-%'");
-    $totalorders = get_query_val("tblorders","COUNT(*)","date LIKE '$year-$month-%'");
-    $completedorders = get_query_val("tblorders","COUNT(*)","date LIKE '$year-$month-%' AND status='Active'");
+    $newsignups = get_query_val("ra_user","COUNT(*)","datecreated LIKE '$year-$month-%'");
+    $totalorders = get_query_val("ra_orders","COUNT(*)","date LIKE '$year-$month-%'");
+    $completedorders = get_query_val("ra_orders","COUNT(*)","date LIKE '$year-$month-%' AND status='Active'");
 
-    $newsignups2 = get_query_val("tblclients","COUNT(*)","datecreated LIKE '$year2-$month-%'");
-    $totalorders2 = get_query_val("tblorders","COUNT(*)","date LIKE '$year2-$month-%'");
-    $completedorders2 = get_query_val("tblorders","COUNT(*)","date LIKE '$year2-$month-%' AND status='Active'");
+    $newsignups2 = get_query_val("ra_user","COUNT(*)","datecreated LIKE '$year2-$month-%'");
+    $totalorders2 = get_query_val("ra_orders","COUNT(*)","date LIKE '$year2-$month-%'");
+    $completedorders2 = get_query_val("ra_orders","COUNT(*)","date LIKE '$year2-$month-%' AND status='Active'");
 
     $reportdata["tablevalues"][] = array($months[$rawmonth].' '.$year,$newsignups,$totalorders,$completedorders);
 

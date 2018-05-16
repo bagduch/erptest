@@ -30,7 +30,7 @@ function getClientfieldshtml($relid2 = FALSE) {
         $customfieldval = (is_array($ordervalues) ? $ordervalues[$id] : "");
 
         if ($relid2) {
-            $customfieldval = get_query_val("tblclientfieldsvalues", "value", array("cfid" => $id, "relid" => $relid2));
+            $customfieldval = get_query_val("ra_user_fieldsvalues", "value", array("cfid" => $id, "relid" => $relid2));
         }
 
         $rawvalue = $customfieldval;
@@ -151,7 +151,7 @@ function getCustomFields($type, $relid, $relid2, $admin = "", $order = "", $orde
         $adminonly = $data['adminonly'];
         $customfieldval = (is_array($ordervalues) ? $ordervalues[$id] : "");
         if ($relid2) {
-            $customfieldval = get_query_val("tblcustomfieldsvalues", "value", array("fieldid" => $id, "relid" => $relid2));
+            $customfieldval = get_query_val("ra_catalog_user_sales_fieldsvalues", "value", array("fieldid" => $id, "relid" => $relid2));
         }
         $rawvalue = $customfieldval;
 
@@ -234,15 +234,15 @@ function saveClientFields($relid, $customfields) {
     if (is_array($customfields)) {
         foreach ($customfields as $id => $value) {
 
-            $result = select_query_i("tblclientfieldsvalues", "", array("cfid" => $id, "relid" => $relid));
+            $result = select_query_i("ra_user_fieldsvalues", "", array("cfid" => $id, "relid" => $relid));
             $num_rows = mysqli_num_rows($result);
 
             if ($num_rows == "0") {
-                insert_query("tblclientfieldsvalues", array("cfid" => $id, "relid" => $relid, "value" => $value));
+                insert_query("ra_user_fieldsvalues", array("cfid" => $id, "relid" => $relid, "value" => $value));
                 continue;
             }
 
-            update_query("tblclientfieldsvalues", array("value" => $value), array("cfid" => $id, "relid" => $relid));
+            update_query("ra_user_fieldsvalues", array("value" => $value), array("cfid" => $id, "relid" => $relid));
         }
     }
 }
@@ -253,7 +253,7 @@ function saveCustomFields($relid, $customfields, $type = "") {
 
             if ($type) {
                 $where = array("id" => $id, "type" => $type);
-                $result = select_query_i("tblclientfields", "", $where);
+                $result = select_query_i("ra_user_fields", "", $where);
                 $data = mysqli_fetch_array($result);
 
                 if (!$data['id']) {
@@ -261,15 +261,15 @@ function saveCustomFields($relid, $customfields, $type = "") {
                 }
             }
 
-            $result = select_query_i("tblcustomfieldsvalues", "", array("fieldid" => $id, "relid" => $relid));
+            $result = select_query_i("ra_catalog_user_sales_fieldsvalues", "", array("fieldid" => $id, "relid" => $relid));
             $num_rows = mysqli_num_rows($result);
 
             if ($num_rows == "0") {
-                insert_query("tblcustomfieldsvalues", array("fieldid" => $id, "relid" => $relid, "value" => $value));
+                insert_query("ra_catalog_user_sales_fieldsvalues", array("fieldid" => $id, "relid" => $relid, "value" => $value));
                 continue;
             }
 
-            update_query("tblcustomfieldsvalues", array("value" => $value), array("fieldid" => $id, "relid" => $relid));
+            update_query("ra_catalog_user_sales_fieldsvalues", array("value" => $value), array("fieldid" => $id, "relid" => $relid));
         }
     }
 }
@@ -298,7 +298,7 @@ function migrateCustomFieldsBetweenProducts($serviceid, $newpid, $save = false) 
             $cfname = $v['name'];
             $cfval = $v['rawvalue'];
             $customfieldsarray[$cfname] = $cfval;
-            delete_query("tblcustomfieldsvalues", array("fieldid" => $cfid, "relid" => $serviceid));
+            delete_query("ra_catalog_user_sales_fieldsvalues", array("fieldid" => $cfid, "relid" => $serviceid));
         }
 
         $customfields = getCustomFields("product", $newpid, "", true);
@@ -307,7 +307,7 @@ function migrateCustomFieldsBetweenProducts($serviceid, $newpid, $save = false) 
             $cfname = $v['name'];
 
             if ($customfieldsarray[$cfname]) {
-                insert_query("tblcustomfieldsvalues", array("fieldid" => $cfid, "relid" => $serviceid, "value" => $customfieldsarray[$cfname]));
+                insert_query("ra_catalog_user_sales_fieldsvalues", array("fieldid" => $cfid, "relid" => $serviceid, "value" => $customfieldsarray[$cfname]));
                 continue;
             }
         }

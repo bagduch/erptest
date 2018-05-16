@@ -14,7 +14,7 @@ $datefilter = $year.'-'.$month.'%';
 
 $reportdata["tableheadings"] = array("Product Name","Units Sold","Value");
 
-$result = select_query_i("tblservices","tblservices.id,tblservices.name,tblservicegroups.name AS groupname","","tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name","ASC","","tblservicegroups ON tblservices.gid=tblservicegroups.id");
+$result = select_query_i("ra_catalog","ra_catalog.id,ra_catalog.name,ra_catalog_groups.name AS groupname","","ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name","ASC","","ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 while($data = mysqli_fetch_array($result)) {
 	$pid = $data["id"];
 	$group = $data["groupname"];
@@ -22,7 +22,7 @@ while($data = mysqli_fetch_array($result)) {
 
     if ($group!=$prevgroup) $reportdata["tablevalues"][] = array("**<b>$group</b>");
 
-    $result2 = select_query_i("tblcustomerservices","COUNT(*),SUM(tblcustomerservices.firstpaymentamount)","tblcustomerservices.packageid='$pid' AND tblcustomerservices.servicestatus='Active' AND tblcustomerservices.regdate LIKE '".$datefilter."' AND tblclients.currency='$currencyid'","","","","tblclients ON tblclients.id=tblcustomerservices.userid");
+    $result2 = select_query_i("tblcustomerservices","COUNT(*),SUM(tblcustomerservices.firstpaymentamount)","tblcustomerservices.packageid='$pid' AND tblcustomerservices.servicestatus='Active' AND tblcustomerservices.regdate LIKE '".$datefilter."' AND ra_user.currency='$currencyid'","","","","ra_user ON ra_user.id=tblcustomerservices.userid");
     $data = mysqli_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];
@@ -45,7 +45,7 @@ while($data = mysqli_fetch_array($result)) {
     $pid = $data["id"];
     $prodname = $data["name"];
 
-    $result2 = select_query_i("tblserviceaddons","COUNT(*),SUM(tblserviceaddons.setupfee+tblserviceaddons.recurring)","tblserviceaddons.addonid='$pid' AND tblserviceaddons.status='Active' AND tblserviceaddons.regdate LIKE '$datefilter' AND tblclients.currency='$currencyid'","","","","tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid");
+    $result2 = select_query_i("ra_catalog_user_sales_addons","COUNT(*),SUM(ra_catalog_user_sales_addons.setupfee+ra_catalog_user_sales_addons.recurring)","ra_catalog_user_sales_addons.addonid='$pid' AND ra_catalog_user_sales_addons.status='Active' AND ra_catalog_user_sales_addons.regdate LIKE '$datefilter' AND ra_user.currency='$currencyid'","","","","tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid");
     $data = mysqli_fetch_array($result2);
     $number = $data[0];
     $amount = $data[1];

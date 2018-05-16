@@ -69,10 +69,10 @@ if (substr($_GET['orderBy'], 0, 1) == "+") {
 $query = "
 		SELECT
             tblcustomerservices.id AS id,
-			tblclients.firstname as firstname,
-			tblclients.lastname as lastname,
-			tblclients.companyname as companyname,
-			tblclients.id AS clientid,
+			ra_user.firstname as firstname,
+			ra_user.lastname as lastname,
+			ra_user.companyname as companyname,
+			ra_user.id AS clientid,
 			tblcustomerservices.description AS description, 
 			tblcustomerservices.id AS hostingid,
 			tblcustomerservices.username AS username,
@@ -91,14 +91,14 @@ $query = "
 
 		FROM tblcustomerservices
 		            INNER JOIN tblproducts ON tblproducts.id=tblcustomerservices.packageid
-		            INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid
+		            INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid
                             LEFT JOIN tblallconnectreport_TESTREMOVE ON tblallconnectreport_TESTREMOVE.hosting_id=tblcustomerservices.id
 
-			LEFT OUTER JOIN tblcustomfields as cfasid ON cfasid.relid=tblcustomerservices.packageid AND cfasid.fieldname like 'ASID'
-			LEFT OUTER JOIN tblcustomfieldsvalues as cfasidv ON cfasidv.relid = tblcustomerservices.id  AND cfasidv.fieldid=cfasid.id 
+			LEFT OUTER JOIN ra_catalog_user_sales_fields as cfasid ON cfasid.relid=tblcustomerservices.packageid AND cfasid.fieldname like 'ASID'
+			LEFT OUTER JOIN ra_catalog_user_sales_fieldsvalues as cfasidv ON cfasidv.relid = tblcustomerservices.id  AND cfasidv.fieldid=cfasid.id 
 
-			LEFT OUTER JOIN tblcustomfields as cffclcircuitid ON cffclcircuitid.relid=tblcustomerservices.packageid AND cffclcircuitid.fieldname like 'FCL Circuit ID'
-			LEFT OUTER JOIN tblcustomfieldsvalues as cffclcircuitidv ON cffclcircuitidv.relid = tblcustomerservices.id  AND cffclcircuitidv.fieldid=cffclcircuitid.id
+			LEFT OUTER JOIN ra_catalog_user_sales_fields as cffclcircuitid ON cffclcircuitid.relid=tblcustomerservices.packageid AND cffclcircuitid.fieldname like 'FCL Circuit ID'
+			LEFT OUTER JOIN ra_catalog_user_sales_fieldsvalues as cffclcircuitidv ON cffclcircuitidv.relid = tblcustomerservices.id  AND cffclcircuitidv.fieldid=cffclcircuitid.id
 
 			LEFT OUTER JOIN tblproductconfiglinks on tblproductconfiglinks.pid = tblcustomerservices.packageid
 			LEFT OUTER JOIN tblproductconfigoptions ON tblproductconfigoptions.gid = tblproductconfiglinks.gid
@@ -106,7 +106,7 @@ $query = "
 			LEFT OUTER JOIN tblproductconfigoptionssub ON tblproductconfigoptionssub.configid=tblcustomerservicesconfigoptions.configid AND tblcustomerservicesconfigoptions.relid=tblcustomerservices.id AND tblcustomerservicesconfigoptions.optionid=tblproductconfigoptionssub.id
                  
 
-	" . $ProductFilter . " AND tblclients.id!=14362 AND tblcustomerservices.billingcycle like 'Monthly'
+	" . $ProductFilter . " AND ra_user.id!=14362 AND tblcustomerservices.billingcycle like 'Monthly'
 
 	GROUP BY tblcustomerservices.id	ORDER BY " . ((@$_GET['orderBy']) ? mysqli_real_escape_string(substr($_GET['orderBy'], 1)) : "monthly") . " " . mysqli_real_escape_string($order) . "
 
@@ -138,7 +138,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         $optionarray[$rowss['relid']][] = $rowss['optionname'];
     }
 
-    $sql = "SELECT * FROM tblinvoiceitems LEFT JOIN tblinvoices ON tblinvoiceitems.invoiceid=tblinvoices.id WHERE tblinvoiceitems.description LIKE '%" . $row['description'] . "%' AND type='Hosting' AND date > '2017-01-01' AND status != 'Cancelled' AND relid=" . $row['id'] . " order by tblinvoiceitems.duedate DESC";
+    $sql = "SELECT * FROM ra_bill_lineitems LEFT JOIN ra_bills ON ra_bill_lineitems.invoiceid=ra_bills.id WHERE ra_bill_lineitems.description LIKE '%" . $row['description'] . "%' AND type='Hosting' AND date > '2017-01-01' AND status != 'Cancelled' AND relid=" . $row['id'] . " order by ra_bill_lineitems.duedate DESC";
     $invoice = mysqli_query($sql);
     $invoicelist = "";
     $total = "";

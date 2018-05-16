@@ -12,7 +12,7 @@ $aInt->helplink = "Security/Ban Control";
 
 if ($email) {
 	check_token("RA.admin.default");
-	insert_query("tblbannedemails", array("domain" => $email));
+	insert_query("ra_bannedemails", array("domain" => $email));
 	redir("success=true");
 	exit();
 }
@@ -20,7 +20,7 @@ if ($email) {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	delete_query("tblbannedemails", array("id" => $id));
+	delete_query("ra_bannedemails", array("id" => $id));
 	redir("delete=true");
 	exit();
 }
@@ -69,7 +69,7 @@ echo "\" class=\"button\"></div>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query_i("tblbannedemails", "", "", "domain", "ASC");
+$result = select_query_i("ra_bannedemails", "", "", "domain", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

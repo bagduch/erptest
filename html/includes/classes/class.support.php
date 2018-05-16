@@ -24,11 +24,11 @@ class RA_Support {
 
 
         if (isset($id)) {
-            $result = select_query_i("tbltickets", "", array("id" => $id));
+            $result = select_query_i("ra_ticket", "", array("id" => $id));
             $this->ticket = mysqli_fetch_array($result);
             $this->id = $id;
         } else {
-            $result = select_query_i("tbltickets");
+            $result = select_query_i("ra_ticket");
             $this->tickets = mysqli_fetch_array($result);
         }
         if ($action == "viewticket") {
@@ -73,7 +73,7 @@ class RA_Support {
 
     public function gettages() {
         $array = array();
-        $result = select_query_i("tbltickettags", "DISTINCT tag", "tag LIKE '" . db_escape_string($q) . "%'", "tag", "ASC");
+        $result = select_query_i("ra_ticket_tags", "DISTINCT tag", "tag LIKE '" . db_escape_string($q) . "%'", "tag", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $array[] = $data[0];
@@ -84,7 +84,7 @@ class RA_Support {
 
     public function removetag() {
         $tagid = $_POST['tagid'];
-        $result = delete_query("tbltickettags", array("id" => $tagid));
+        $result = delete_query("ra_ticket_tags", array("id" => $tagid));
         return $result;
     }
 
@@ -96,7 +96,7 @@ class RA_Support {
         }
 
         $existingtags = array();
-        $result = select_query_i("tbltickettags", "tag", array("ticketid" => $id));
+        $result = select_query_i("ra_ticket_tags", "tag", array("ticketid" => $id));
 
         while ($data = mysqli_fetch_assoc($result)) {
             $existingtags[] = $data['tag'];
@@ -106,7 +106,7 @@ class RA_Support {
 
             if (trim($tag)) {
                 if (!in_array($tag, $tags)) {
-                    delete_query("tbltickettags", array("ticketid" => $id, "tag" => $tag));
+                    delete_query("ra_ticket_tags", array("ticketid" => $id, "tag" => $tag));
                     addTicketLog($id, "Deleted Tag " . $tag);
                     continue;
                 }
@@ -119,7 +119,7 @@ class RA_Support {
 
             if (trim($tag)) {
                 if (!in_array($tag, $existingtags)) {
-                    insert_query("tbltickettags", array("ticketid" => $id, "tag" => $tag));
+                    insert_query("ra_ticket_tags", array("ticketid" => $id, "tag" => $tag));
                     addTicketLog($id, "Added Tag " . $tag);
                     continue;
                 }
@@ -149,7 +149,7 @@ class RA_Support {
         $pdata['rids'] = db_escape_numarray($pdata['rids']);
         $pdata['rids'] = implode(", ", $pdata['rids']);
         $noemail = (!$pdata['splitnotifyclient'] ? TRUE : FALSE);
-        $result = select_query_i("tblticketreplies", "id,message", "`id` IN (" . $pdata['rids'] . ")", "date", "ASC", "0,1");
+        $result = select_query_i("ra_ticket_replies", "id,message", "`id` IN (" . $pdata['rids'] . ")", "date", "ASC", "0,1");
         $data = mysqli_fetch_array($result);
 
         $subject = (trim($pdata["splitsubject"]) ? $pdata["splitsubject"] : $this->ticket['title']);
@@ -159,8 +159,8 @@ class RA_Support {
         $newOpenedTicketResults = openNewTicket($this->ticket['userid'], $this->ticket['did'], $deptid, $subject, $data['id'], $priority, $data['message'], array("name" => $this->ticket['userid'], "email" => $newTicketEmail), $this->ticket['userid'], $this->ticket['userid'], $noemail, $data['admin']);
 
         $ticketid = $newOpenedTicketResults['ID'];
-        delete_query("tblticketreplies", array("id" => $data['id']));
-        update_query("tblticketreplies", array("tid" => $ticketid), "`id` IN (" . $pdata['rids'] . ")");
+        delete_query("ra_ticket_replies", array("id" => $data['id']));
+        update_query("ra_ticket_replies", array("tid" => $ticketid), "`id` IN (" . $pdata['rids'] . ")");
         return $ticketid;
     }
 
@@ -171,10 +171,10 @@ class RA_Support {
         if (substr($ref, 0, 1) == "t") {
             $this->accessCheck();
 
-            $msg = get_query_val("tbltickets", "message", array("id" => $id));
+            $msg = get_query_val("ra_ticket", "message", array("id" => $id));
         } else {
             if (substr($ref, 0, 1) == "r") {
-                $data = get_query_vals("tblticketreplies", "tid,message", array("id" => $id));
+                $data = get_query_vals("ra_ticket_replies", "tid,message", array("id" => $id));
                 $id = $data['tid'];
                 $msg = $data['message'];
                 $this->accessCheck();
@@ -211,7 +211,7 @@ class RA_Support {
     }
 
     public function getticketlogDetail($offset) {
-        $result = select_query_i("tblticketlog", "", array("tid" => $this->id), "date", "DESC", "" . $offset . "," . $this->qlimit);
+        $result = select_query_i("ra_ticket_log_link", "", array("tid" => $this->id), "date", "DESC", "" . $offset . "," . $this->qlimit);
 
         while ($data = mysqli_fetch_array($result)) {
             $tabledata[] = array(fromMySQLDate($data['date'], 1), "<div style=\"text-align:left;\">" . $data['action'] . "</div>");
@@ -221,7 +221,7 @@ class RA_Support {
 
     public function getticketlogNumber($offset) {
 
-        $totaltickets = get_query_val("tblticketlog", "COUNT(id)", array("tid" => $this->id));
+        $totaltickets = get_query_val("ra_ticket_log_link", "COUNT(id)", array("tid" => $this->id));
 
 
 
@@ -261,7 +261,7 @@ class RA_Support {
     }
 
     public function getClientlogDetails($offset) {
-        $result = select_query_i("tblactivitylog", "", array("userid" => $this->userid), "date", "DESC", "" . $offset . "," . $this->qlimit);
+        $result = select_query_i("ra_systemlog", "", array("userid" => $this->userid), "date", "DESC", "" . $offset . "," . $this->qlimit);
         while ($data = mysqli_fetch_array($result)) {
             $description = $data['description'];
             $description .= " ";
@@ -273,7 +273,7 @@ class RA_Support {
     }
 
     public function getClientlogNumber() {
-        $totaltickets = get_query_val("tblactivitylog", "COUNT(id)", array("userid" => $this->userid));
+        $totaltickets = get_query_val("ra_systemlog", "COUNT(id)", array("userid" => $this->userid));
         return $totaltickets;
     }
 
@@ -307,9 +307,9 @@ class RA_Support {
         if (isset($this->userid)) {
             $where = array("userid" => $this->userid);
         } else {
-            $where = array("email" => get_query_val("tbltickets", "email", array("id" => $this->id)));
+            $where = array("email" => get_query_val("ra_ticket", "email", array("id" => $this->id)));
         }
-        $totaltickets = get_query_val("tbltickets", "COUNT(id)", $where);
+        $totaltickets = get_query_val("ra_ticket", "COUNT(id)", $where);
         $this->qlimit = 4;
 
         $offset = (int) $offset;
@@ -349,7 +349,7 @@ class RA_Support {
     }
 
     public function getticketDetails($where, $offset) {
-        $result = select_query_i("tbltickets", "", $where, "lastreply", "DESC", "" . $offset . "," . $qlimit);
+        $result = select_query_i("ra_ticket", "", $where, "lastreply", "DESC", "" . $offset . "," . $qlimit);
         while ($data = mysqli_fetch_array($result)) {
             if (!in_array($_SESSION['adminid'], explode(",", $data['adminunread']))) {
                 $unread = 1;
@@ -400,7 +400,7 @@ class RA_Support {
         $currency = getCurrency($pauserid);
         $service = $this->ticket['service'];
         $output = array();
-        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "", "tblservices ON tblservices.id=tblcustomerservices.packageid");
+        $result = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_catalog.name", array("userid" => $pauserid), "servicestatus` ASC,`id", "DESC", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid");
         while ($data = mysqli_fetch_array($result)) {
             $service_id = $data['id'];
             $service_name = $data['name'];
@@ -462,13 +462,13 @@ class RA_Support {
     public function updatereply($ref, $text, $id) {
 
         if (substr($ref, 0, 1) == "t") {
-            update_query("tbltickets", array("message" => $text), array("id" => substr($ref, 1)));
+            update_query("ra_ticket", array("message" => $text), array("id" => substr($ref, 1)));
         } else {
             if (substr($ref, 0, 1) == "r") {
-                update_query("tblticketreplies", array("message" => $text), array("id" => substr($ref, 1)));
+                update_query("ra_ticket_replies", array("message" => $text), array("id" => substr($ref, 1)));
             } else {
                 if ($id && is_numeric($id)) {
-                    update_query("tblticketreplies", array("message" => $text), array("id" => $id));
+                    update_query("ra_ticket_replies", array("message" => $text), array("id" => $id));
                 }
             }
         }
@@ -482,7 +482,7 @@ class RA_Support {
     public function getTicketstatus() {
 
         $status = array();
-        $result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+        $result = select_query_i("ra_tickettatuses", "", "", "sortorder", "ASC");
         while ($data = mysqli_fetch_array($result)) {
             $status[] = array("title" => $data['title'], "color" => $data['color'], "id" => $data['id']);
         }

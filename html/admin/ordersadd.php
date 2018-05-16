@@ -19,14 +19,14 @@ if ($action == "createpromo") {
     if ($pvalue <= 0) {
         exit("Promotion Value must be greater than zero");
     }
-    $result = select_query_i("tblpromotions", "COUNT(*)", array("code" => $code));
+    $result = select_query_i("ra_promos", "COUNT(*)", array("code" => $code));
     $data = mysqli_fetch_array($result);
     echo "<pre>", print_r($data, 1), "</pre>";
     $duplicates = $data[0];
     if ($duplicates) {
         exit("Promotion Code already exists. Please try another.");
     }
-    $promoid = insert_query("tblpromotions", array(
+    $promoid = insert_query("ra_promos", array(
         "code" => $code,
         "type" => $type,
         "recurring" => isset($recurring) ? 1 : 0,
@@ -144,7 +144,7 @@ if ($action == "getconfigoptions") {
 }
 if ($ra->get_req_var("submitorder")) {
     check_token("RA.admin.default");
-    $userid = get_query_val("tblclients", "id", array("id" => $userid));
+    $userid = get_query_val("ra_user", "id", array("id" => $userid));
 
     if (!$userid && !$calconly) {
         infoBox("Invalid Client ID", "Please enter or select a valid client to add the order to");
@@ -313,7 +313,7 @@ if ($ra->get_req_var("submitorder")) {
         calcCartTotals(true);
         unset($_SESSION['uid']);
         if ($orderstatus == "Active") {
-            update_query("tblorders", array("status" => "Active"), array("id" => $_SESSION['orderdetails']['OrderID'])
+            update_query("ra_orders", array("status" => "Active"), array("id" => $_SESSION['orderdetails']['OrderID'])
             );
             if (is_array($_SESSION['orderdetails']['Products'])) {
                 foreach ($_SESSION['orderdetails']['Products'] as $productid) {
@@ -423,7 +423,7 @@ if ($ra->get_req_var("noselections")) {
     infoBox($aInt->lang("global", "validationerror"), $aInt->lang("orders", "noselections"));
 }
 echo $infobox;
-$result = select_query_i("tblpromotions", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
+$result = select_query_i("ra_promos", "", "(maxuses<=0 OR uses<maxuses) AND (expirationdate='0000-00-00' OR expirationdate>='" . date("Ymd") . "')", "code", "ASC");
 while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];
@@ -448,7 +448,7 @@ while ($data = mysqli_fetch_array($result)) {
     }
     $activepromotion .= "<option value=\"" . $promo_code . "\">" . $promo_code . " - " . $promo_value . " " . $promo_recurring . "</option>";
 }
-$result = select_query_i("tblpromotions", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
+$result = select_query_i("ra_promos", "", "(maxuses>0 AND uses>=maxuses) OR (expirationdate!='0000-00-00' AND expirationdate<'" . date("Ymd") . "')", "code", "ASC");
 while ($data = mysqli_fetch_array($result)) {
     $promo_id = $data['id'];
     $promo_code = $data['code'];

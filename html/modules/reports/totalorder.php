@@ -18,7 +18,7 @@ if (!$year)
 for ($counter = 1; $counter <= 12; $counter += 1) {
     $month = $months[$counter - 1];
     $counter = str_pad($counter, 2, "0", STR_PAD_LEFT);
-    $signup = get_query_vals("tblorders", "COUNT(*)", "date LIKE '" . (int) $year . "-$counter-%' AND status='Active'");
+    $signup = get_query_vals("ra_orders", "COUNT(*)", "date LIKE '" . (int) $year . "-$counter-%' AND status='Active'");
     $cancel = get_query_vals("tblcustomerservices", "COUNT(*)", "nextduedate LIKE '" . (int) $year . "-$counter-%' AND servicestatus='Cancelled'");
 
     $chartdata['rows'][] = array(
@@ -50,7 +50,7 @@ $args['chartarea'] = '80,30,90%,350';
 $reportdata["headertext"] = $chart->drawChart('Column', $chartdata, $args, '400px');
 //
 //if ($startdate && $enddate) {
-//    $query = "select COUNT(*), CONCAT_WS('-',YEAR(`date`), MONTH(`date`)) as period from tblorders where '" . $startdata . "' AND '" . $enddate . "' group by YEAR(`date`), MONTH(`date`),status";
+//    $query = "select COUNT(*), CONCAT_WS('-',YEAR(`date`), MONTH(`date`)) as period from ra_orders where '" . $startdata . "' AND '" . $enddate . "' group by YEAR(`date`), MONTH(`date`),status";
 //    $array = array();
 //    $result = full_query_i($query);
 //    while ($data = mysqli_fetch_array($result)) {
@@ -58,7 +58,7 @@ $reportdata["headertext"] = $chart->drawChart('Column', $chartdata, $args, '400p
 //        $reportdata["tablevalues"][] = array($data['subtotal'], $data['tax'], $data['total']);
 //    }
 //} else {
-//    $query = "select COUNT(*) as total, CONCAT_WS('-',YEAR(`date`), MONTH(`date`)) as period,status from tblorders where status='Active' group by YEAR(`date`), MONTH(`date`)";
+//    $query = "select COUNT(*) as total, CONCAT_WS('-',YEAR(`date`), MONTH(`date`)) as period,status from ra_orders where status='Active' group by YEAR(`date`), MONTH(`date`)";
 //    $array = array();
 //    $result = full_query_i($query);
 //    while ($data = mysqli_fetch_assoc($result)) {

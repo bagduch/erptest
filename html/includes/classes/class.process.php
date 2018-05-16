@@ -100,7 +100,7 @@ class RA_Process {
     public function getProductDetail() {
 
         if (isset($this->session['fpid'])) {
-            $result = full_query_i("SELECT tblservices.*,tblservicegroups.name as groupname FROM tblservices LEFT JOIN tblservicegroups ON tblservices.gid = tblservicegroups.id where tblservices.id =" . $this->session['fpid']);
+            $result = full_query_i("SELECT ra_catalog.*,ra_catalog_groups.name as groupname FROM ra_catalog LEFT JOIN ra_catalog_groups ON ra_catalog.gid = ra_catalog_groups.id where ra_catalog.id =" . $this->session['fpid']);
             $data = mysqli_fetch_assoc($result);
             if (!empty($data)) {
 
@@ -124,7 +124,7 @@ class RA_Process {
 
         $addons = array();
 
-        $query = "select tblservices.* from tblservicetoservice LEFT JOIN tblservices on tblservicetoservice.children_id=tblservices.id where tblservicetoservice.parent_id=" . $pid;
+        $query = "select ra_catalog.* from ra_service2service LEFT JOIN ra_catalog on ra_service2service.children_id=ra_catalog.id where ra_service2service.parent_id=" . $pid;
         // echo $query;
         $result = full_query_i($query);
         while ($data = mysqli_fetch_assoc($result)) {
@@ -142,7 +142,7 @@ class RA_Process {
         if ($this->checkdraftduplication()) {
             $order_number = generateUniqueID();
             $remote_ip = $ra->get_user_ip();
-            $orderid = insert_query("tblorders", array(
+            $orderid = insert_query("ra_orders", array(
                 "ordernum" => $order_number,
                 "userid" => $this->session['uid'],
                 "date" => "now()",
@@ -181,7 +181,7 @@ class RA_Process {
             "taxrate2" => $taxrate2
         );
 
-        $invoiceid = insert_query("tblinvoices", $invoice);
+        $invoiceid = insert_query("ra_bills", $invoice);
         return $invoiceid;
     }
 
@@ -209,7 +209,7 @@ class RA_Process {
         );
         $_SESSION['serviceid'] = $serviceid;
         $_SESSION['invoiceid'] = $this->createtInvoice();
-        insert_query("tblinvoiceitems", array(
+        insert_query("ra_bill_lineitems", array(
             "invoiceid" => $_SESSION['invoiceid'],
             "userid" => $this->session['uid'],
             "type" => $this->productdata['data']['type'],
@@ -229,11 +229,11 @@ class RA_Process {
             update_query("tblcustomerservices", array('servicestatus' => 'Pending'), array("id" => $this->session['serviceid']));
             updateInvoiceTotal($this->session['invoiceid']);
 
-            $result = select_query_i("tblinvoiceitems", "SUM(amount) as total", array("invoiceid" => $this->session['invoiceid']));
+            $result = select_query_i("ra_bill_lineitems", "SUM(amount) as total", array("invoiceid" => $this->session['invoiceid']));
             $data = mysqli_fetch_assoc($result);
 
-            update_query("tblinvoices", array('status' => 'Unpaid'), array("id" => $this->session['invoiceid']));
-            update_query("tblorders", array('status' => 'Pending', 'amount' => $data['total'], 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));
+            update_query("ra_bills", array('status' => 'Unpaid'), array("id" => $this->session['invoiceid']));
+            update_query("ra_orders", array('status' => 'Pending', 'amount' => $data['total'], 'invoiceid' => $this->session['invoiceid']), array("id" => $this->session['orderid']));
         }
     }
 
@@ -241,7 +241,7 @@ class RA_Process {
         $success_id = false;
         if (!empty($data) && !empty($this->session['avalialeaddons'])) {
             foreach ($data as $key => $value) {
-                $success_id = insert_query("tblcustomfieldsvalues", array("cfid" => $key, "relid" => $this->session['serviceid'], "value" => $value));
+                $success_id = insert_query("ra_catalog_user_sales_fieldsvalues", array("cfid" => $key, "relid" => $this->session['serviceid'], "value" => $value));
             }
         }
         return $success_id;
@@ -275,7 +275,7 @@ class RA_Process {
 
 
                     $success_id = insert_query("tblcustomerservices", $insertdata);
-                    insert_query("tblinvoiceitems", array(
+                    insert_query("ra_bill_lineitems", array(
                         "invoiceid" => $_SESSION['invoiceid'],
                         "userid" => $this->session['uid'],
                         "type" => $data['type'],

@@ -46,7 +46,7 @@ if ($promocode && !$promooverride) {
 	define("CLIENTAREA", true);
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $_POST['clientid']));
+$result = select_query_i("ra_user", "id", array("id" => $_POST['clientid']));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
@@ -55,7 +55,7 @@ if (!$data['id']) {
 }
 
 $gatewaysarray = array();
-$result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "name"));
+$result = select_query_i("ra_modules_gateways", "gateway", array("setting" => "name"));
 
 while ($data = mysqli_fetch_array($result)) {
 	$gatewaysarray[] = $data['gateway'];
@@ -237,7 +237,7 @@ $cartdata = calcCartTotals(true);
 
 if (($affid && is_array($_SESSION['orderdetails']['Products'])) && $_SESSION['uid'] != $affid) {
 	foreach ($_SESSION['orderdetails']['Products'] as $productid) {
-		insert_query("tblaffiliatesaccounts", array("affiliateid" => $affid, "relid" => $productid));
+		insert_query("ra_partnersaccounts", array("affiliateid" => $affid, "relid" => $productid));
 	}
 }
 
@@ -260,7 +260,7 @@ if (is_array($_SESSION['orderdetails']['Addons'])) {
 $apiresults = array("result" => "success", "orderid" => $_SESSION['orderdetails']['OrderID'], "productids" => $productids, "addonids" => $addonids, "domainids" => $domainids);
 
 if (!$noinvoice) {
-	$apiresults['invoiceid'] = ($_SESSION['orderdetails']['InvoiceID'] ? $_SESSION['orderdetails']['InvoiceID'] : get_query_val("tblorders", "invoiceid", array("id" => $_SESSION['orderdetails']['OrderID'])));
+	$apiresults['invoiceid'] = ($_SESSION['orderdetails']['InvoiceID'] ? $_SESSION['orderdetails']['InvoiceID'] : get_query_val("ra_orders", "invoiceid", array("id" => $_SESSION['orderdetails']['OrderID'])));
 }
 
 ?>

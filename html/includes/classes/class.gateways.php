@@ -11,7 +11,7 @@ class RA_Gateways
 	}
 
 	public function getDisplayNames() {
-		$result = select_query_i("tblpaymentgateways", "gateway,value", array("setting" => "name"), "order", "ASC");
+		$result = select_query_i("ra_modules_gateways", "gateway,value", array("setting" => "name"), "order", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$this->displaynames[$data['gateway']] = $data['value'];
@@ -48,7 +48,7 @@ class RA_Gateways
 		}
 
 		self::$gateways = array();
-		$result = select_query_i("tblpaymentgateways", "DISTINCT gateway", "");
+		$result = select_query_i("ra_modules_gateways", "DISTINCT gateway", "");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$gateway = $data[0];
@@ -68,7 +68,7 @@ class RA_Gateways
 
 	public function getAvailableGateways($invoiceid = "") {
 		$validgateways = array();
-		$result = full_query_i("SELECT DISTINCT gateway, (SELECT value FROM tblpaymentgateways g2 WHERE g1.gateway=g2.gateway AND setting='name' LIMIT 1) AS `name`, (SELECT `order` FROM tblpaymentgateways g2 WHERE g1.gateway=g2.gateway AND setting='name' LIMIT 1) AS `order` FROM `tblpaymentgateways` g1 WHERE setting='visible' AND value='on' ORDER BY `order` ASC");
+		$result = full_query_i("SELECT DISTINCT gateway, (SELECT value FROM ra_modules_gateways g2 WHERE g1.gateway=g2.gateway AND setting='name' LIMIT 1) AS `name`, (SELECT `order` FROM ra_modules_gateways g2 WHERE g1.gateway=g2.gateway AND setting='name' LIMIT 1) AS `order` FROM `ra_modules_gateways` g1 WHERE setting='visible' AND value='on' ORDER BY `order` ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$validgateways[$data[0]] = $data[1];
@@ -77,13 +77,13 @@ class RA_Gateways
 
 		if ($invoiceid) {
 			$disabledgateways = array();
-			$result = select_query_i("tblinvoiceitems", "", array("type" => "Hosting", "invoiceid" => $invoiceid));
+			$result = select_query_i("ra_bill_lineitems", "", array("type" => "Hosting", "invoiceid" => $invoiceid));
 
 			while ($data = mysqli_fetch_assoc($result)) {
 				$relid = $data['relid'];
 
 				if ($relid) {
-					$result2 = full_query_i("SELECT pg.disabledgateways AS disabled FROM tblhosting h LEFT JOIN tblservices p on h.packageid = p.id LEFT JOIN tblservicegroups pg on p.gid = pg.id where h.id = " . (int)$relid);
+					$result2 = full_query_i("SELECT pg.disabledgateways AS disabled FROM tblhosting h LEFT JOIN ra_catalog p on h.packageid = p.id LEFT JOIN ra_catalog_groups pg on p.gid = pg.id where h.id = " . (int)$relid);
 					$data2 = mysqli_fetch_assoc($result2);
 					$gateways = explode(",", $data2['disabled']);
 					foreach ($gateways as $gateway) {

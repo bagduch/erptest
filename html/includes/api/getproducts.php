@@ -40,7 +40,7 @@ if ($module) {
 	$where[] = "servertype='" . db_escape_string($module) . "'";
 }
 
-$result = select_query_i("tblservices", "", implode(" AND ", $where));
+$result = select_query_i("ra_catalog", "", implode(" AND ", $where));
 $apiresults = array("result" => "success", "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_array($result)) {
@@ -52,7 +52,7 @@ while ($data = mysqli_fetch_array($result)) {
 		$productarray['stocklevel'] = $data['qty'];
 	}
 
-	$result2 = select_query_i("tblpricing", "tblcurrencies.code,tblcurrencies.prefix,tblcurrencies.suffix,tblpricing.msetupfee,tblpricing.qsetupfee,tblpricing.ssetupfee,tblpricing.asetupfee,tblpricing.bsetupfee,tblpricing.tsetupfee,tblpricing.monthly,tblpricing.quarterly,tblpricing.semiannually,tblpricing.annually,tblpricing.biennially,tblpricing.triennially", array("type" => "product", "relid" => $pid), "code", "ASC", "", "tblcurrencies ON tblcurrencies.id=tblpricing.currency");
+	$result2 = select_query_i("ra_catalog_pricebook", "ra_currency.code,ra_currency.prefix,ra_currency.suffix,ra_catalog_pricebook.msetupfee,ra_catalog_pricebook.qsetupfee,ra_catalog_pricebook.ssetupfee,ra_catalog_pricebook.asetupfee,ra_catalog_pricebook.bsetupfee,ra_catalog_pricebook.tsetupfee,ra_catalog_pricebook.monthly,ra_catalog_pricebook.quarterly,ra_catalog_pricebook.semiannually,ra_catalog_pricebook.annually,ra_catalog_pricebook.biennially,ra_catalog_pricebook.triennially", array("type" => "product", "relid" => $pid), "code", "ASC", "", "ra_currency ON ra_currency.id=ra_catalog_pricebook.currency");
 
 	while ($data = mysqli_fetch_assoc($result2)) {
 		$code = $data['code'];
@@ -73,7 +73,7 @@ while ($data = mysqli_fetch_array($result)) {
 		$options = array();
 		foreach ($option['options'] as $op) {
 			$pricing = array();
-			$result4 = select_query_i("tblpricing", "code,msetupfee,qsetupfee,ssetupfee,asetupfee,bsetupfee,tsetupfee,monthly,quarterly,semiannually,annually,biennially,triennially", array("type" => "configoptions", "relid" => $op['id']), "", "", "", "tblcurrencies ON tblcurrencies.id=tblpricing.currency");
+			$result4 = select_query_i("ra_catalog_pricebook", "code,msetupfee,qsetupfee,ssetupfee,asetupfee,bsetupfee,tsetupfee,monthly,quarterly,semiannually,annually,biennially,triennially", array("type" => "configoptions", "relid" => $op['id']), "", "", "", "ra_currency ON ra_currency.id=ra_catalog_pricebook.currency");
 
 			while ($oppricing = mysqli_fetch_assoc($result4)) {
 				$currcode = $oppricing['code'];

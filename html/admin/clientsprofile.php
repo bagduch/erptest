@@ -13,7 +13,7 @@ if ($ra->get_req_var("save")) {
     check_token("RA.admin.default");
     $email = trim($email);
     $password = trim($password);
-    $result = select_query_i("tblclients", "COUNT(*)", "email='" . db_escape_string($email) . "' AND id!='" . db_escape_string($userid) . "'");
+    $result = select_query_i("ra_user", "COUNT(*)", "email='" . db_escape_string($email) . "' AND id!='" . db_escape_string($userid) . "'");
     $data = mysqli_fetch_array($result);
 
     if ($data[0]) {
@@ -24,7 +24,7 @@ if ($ra->get_req_var("save")) {
         run_hook("ClientDetailsValidation", array());
         $_SESSION['profilevalidationerror'] = $errormessage;
         $oldclientsdetails = getClientsDetails($userid);
-        $table = "tblclients";
+        $table = "ra_user";
         $array = array(
             "firstname" => $firstname,
             "lastname" => $lastname,
@@ -65,11 +65,11 @@ if ($ra->get_req_var("save")) {
         if ($password && $password != $aInt->lang("fields", "entertochange")) {
             if ($CONFIG['NOMD5']) {
                 if ($password != decrypt($oldclientsdetails['password'])) {
-                    update_query("tblclients", array("password" => generateClientPW($password)), array("id" => $userid));
+                    update_query("ra_user", array("password" => generateClientPW($password)), array("id" => $userid));
                     run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
                 }
             } else {
-                update_query("tblclients", array("password" => generateClientPW($password)), array("id" => $userid));
+                update_query("ra_user", array("password" => generateClientPW($password)), array("id" => $userid));
                 run_hook("ClientChangePassword", array("userid" => $userid, "password" => $password));
             }
         }
@@ -147,7 +147,7 @@ if ($CONFIG['NOMD5']) {
     $password = $aInt->lang("fields", "entertochange");
 }
 
-$result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
+$result = select_query_i("ra_user_group", "", "", "groupname", "ASC");
 
 $groupid = array();
 while ($data = mysqli_fetch_assoc($result)) {
@@ -163,11 +163,11 @@ include "../includes/countries.php";
 
 
 $billingcid = array();
-$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("ra_user_contacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 while ($data = mysqli_fetch_array($result)) {
     $billingcid[$data['id']] = $data;
 }
-$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+$result = select_query_i("ra_currency", "id,code,`default`", "", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $currencyoption .= "<option value=\"" . $data['id'] . "\"";

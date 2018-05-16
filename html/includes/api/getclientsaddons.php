@@ -42,7 +42,7 @@ if ($addonid) {
 	$where[] = "addonid=" . (int)$addonid;
 }
 
-$result = select_query_i("tblserviceaddons", "", implode(" AND ", $where));
+$result = select_query_i("ra_catalog_user_sales_addons", "", implode(" AND ", $where));
 $apiresults = array("result" => "success", "serviceid" => $serviceid, "clientid" => $clientid, "totalresults" => mysqli_num_rows($result));
 
 while ($data = mysqli_fetch_array($result)) {

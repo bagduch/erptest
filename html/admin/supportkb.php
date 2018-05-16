@@ -2,7 +2,7 @@
 
 function kbGetCatIds($catid) {
     global $idnumbers;
-    $result = select_query_i("tblknowledgebasecats", "id", array("parentid" => $catid, "hidden" => ""));
+    $result = select_query_i("ra_kbcats", "id", array("parentid" => $catid, "hidden" => ""));
     while ($data = mysqli_fetch_array($result)) {
         $cid = $data[0];
         $idnumbers[] = $cid;
@@ -17,7 +17,7 @@ function buildCategoriesList($level, $parentlevel, $exclude = "") {
     if ($level == 0) {
         $le['sqltype'] = "NULL";
     }
-    $result = select_query_i("tblknowledgebasecats", "", array("parentid" => $le, "catid" => 0), "name", "ASC");
+    $result = select_query_i("ra_kbcats", "", array("parentid" => $le, "catid" => 0), "name", "ASC");
     while ($data = mysqli_fetch_array($result)) {
 
         $id = $data['id'];
@@ -62,8 +62,8 @@ if ($catid == 0) {
 
 if ($addarticle) {
     check_token("RA.admin.default");
-    $newarticleid = insert_query("tblknowledgebase", array("title" => $articlename, "article" => '', "private" => "", "order" => 0, "parentid" => "0", "language" => 'en'));
-    insert_query("tblknowledgebaselinks", array("categoryid" => $catid, "articleid" => $newarticleid));
+    $newarticleid = insert_query("ra_kb", array("title" => $articlename, "article" => '', "private" => "", "order" => 0, "parentid" => "0", "language" => 'en'));
+    insert_query("ra_kblinks", array("categoryid" => $catid, "articleid" => $newarticleid));
     logActivity("Added New Knowledgebase Article - " . $articlename);
     redir("action=edit&id=" . $newarticleid);
     exit();
@@ -75,7 +75,7 @@ if ($addcategory) {
     if ($catid == "") {
         $cid = "NULL";
     }
-    $newcatid = insert_query("tblknowledgebasecats", array("parentid" => $cid, "name" => $catname, "catid" => 0, "description" => $description, "hidden" => $hidden, 'language' => 'en'));
+    $newcatid = insert_query("ra_kbcats", array("parentid" => $cid, "name" => $catname, "catid" => 0, "description" => $description, "hidden" => $hidden, 'language' => 'en'));
     logActivity("Added New Knowledgebase Category - " . $catname);
     redir("catid=" . $newcatid);
     exit();
@@ -84,10 +84,10 @@ if ($addcategory) {
 
 if ($action == "save") {
     check_token("RA.admin.default");
-    update_query("tblknowledgebase", array("title" => $title, "article" => html_entity_decode($article), "views" => $views, "useful" => $useful, "votes" => $votes, "private" => $private, "order" => $order), array("id" => $id));
-    delete_query("tblknowledgebaselinks", array("articleid" => $id));
+    update_query("ra_kb", array("title" => $title, "article" => html_entity_decode($article), "views" => $views, "useful" => $useful, "votes" => $votes, "private" => $private, "order" => $order), array("id" => $id));
+    delete_query("ra_kblinks", array("articleid" => $id));
     foreach ($categories as $category) {
-        insert_query("tblknowledgebaselinks", array("categoryid" => $category, "articleid" => $id));
+        insert_query("ra_kblinks", array("categoryid" => $category, "articleid" => $id));
     }
 
     if ($toggleeditor) {
@@ -106,17 +106,17 @@ if ($action == "save") {
 
 if ($action == "savecat") {
     check_token("RA.admin.default");
-    update_query("tblknowledgebasecats", array(
+    update_query("ra_kbcats", array(
         "name" => $name,
         "description" => $description,
         "hidden" => $hidden,
         "parentid" => $parentcategory), array("id" => $id)
     );
     foreach ($multilang_name as $language => $name) {
-        delete_query("tblknowledgebasecats", array("catid" => $id, "language" => $language));
+        delete_query("ra_kbcats", array("catid" => $id, "language" => $language));
 
         if ($name) {
-            insert_query("tblknowledgebasecats", array("catid" => $id, "name" => $name, "description" => html_entity_decode($multilang_desc[$language]), "language" => $language));
+            insert_query("ra_kbcats", array("catid" => $id, "name" => $name, "description" => html_entity_decode($multilang_desc[$language]), "language" => $language));
             continue;
         }
     }
@@ -129,8 +129,8 @@ if ($action == "savecat") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    delete_query("tblknowledgebase", array("id" => $id));
-    delete_query("tblknowledgebaselinks", array("articleid" => $id));
+    delete_query("ra_kb", array("id" => $id));
+    delete_query("ra_kblinks", array("articleid" => $id));
     logActivity("Deleted Knowledgebase Article (ID: " . $id . ")");
     redir("catid=" . $catid);
     exit();
@@ -139,10 +139,10 @@ if ($action == "delete") {
 
 if ($action == "deletecategory") {
     check_token("RA.admin.default");
-    delete_query("tblknowledgebaselinks", array("categoryid" => $id));
-    delete_query("tblknowledgebasecats", array("id" => $id));
-    delete_query("tblknowledgebasecats", array("parentid" => $id));
-    full_query_i("DELETE FROM tblknowledgebase WHERE parentid=0 AND id NOT IN (SELECT articleid FROM tblknowledgebaselinks)");
+    delete_query("ra_kblinks", array("categoryid" => $id));
+    delete_query("ra_kbcats", array("id" => $id));
+    delete_query("ra_kbcats", array("parentid" => $id));
+    full_query_i("DELETE FROM ra_kb WHERE parentid=0 AND id NOT IN (SELECT articleid FROM ra_kblinks)");
     logActivity("Deleted Knowledgebase Category (ID: " . $id . ")");
     redir("catid=" . $catid);
     exit();
@@ -158,7 +158,7 @@ if ($action == "") {
     $breadcrumbnav = "";
 
     if ($catid != "0") {
-        $result = select_query_i("tblknowledgebasecats", "", array("id" => $catid));
+        $result = select_query_i("ra_kbcats", "", array("id" => $catid));
         $data = mysqli_fetch_array($result);
         $catid = $data['id'];
 
@@ -172,7 +172,7 @@ if ($action == "") {
 
         if ($catparentid != NULL || $catparentid != "") {
             while ($catparentid != "0") {
-                $result = select_query_i("tblknowledgebasecats", "", array("id" => $catparentid));
+                $result = select_query_i("ra_kbcats", "", array("id" => $catparentid));
                 $data = mysqli_fetch_array($result);
                 $cattempid = $data['id'];
                 $catparentid = $data['parentid'];
@@ -247,9 +247,9 @@ if ($action == "") {
 
 ";
     echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "kbhome") . "</a> " . $breadcrumbnav . "</p>";
-    $result = full_query_i("SELECT * FROM tblknowledgebasecats WHERE parentid IS null ORDER BY name ASC");
+    $result = full_query_i("SELECT * FROM ra_kbcats WHERE parentid IS null ORDER BY name ASC");
     /* 	$result = select_query_i(
-      "tblknowledgebasecats",
+      "ra_kbcats",
       "",
       array(
       "parentid" => array(
@@ -278,8 +278,8 @@ if ($action == "") {
             $catid = "0";
         }
 
-//		$result = select_query_i("tblknowledgebasecats", "", array("parentid" => $catid, "catid" => 0), "name", "ASC");
-        $stmt = full_query_i("SELECT * FROM tblknowledgebasecats WHERE parentid IS NULL");
+//		$result = select_query_i("ra_kbcats", "", array("parentid" => $catid, "catid" => 0), "name", "ASC");
+        $stmt = full_query_i("SELECT * FROM ra_kbcats WHERE parentid IS NULL");
 //        $stmt->bind_param($catid,$catname,$description,$hidden);a
 //        $stmt->bind_param();
         //       $result = $stmt->execute();
@@ -300,7 +300,7 @@ if ($action == "") {
             }
 
             $queryreport = substr($queryreport, 4);
-            $result2 = select_query_i("tblknowledgebase", "COUNT(*)", "parentid=NULL AND (" . $queryreport . ")", "", "", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+            $result2 = select_query_i("ra_kb", "COUNT(*)", "parentid=NULL AND (" . $queryreport . ")", "", "", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
             $data2 = mysqli_fetch_array($result2);
             $numarticles = $data2[0];
             echo "<td width=33%><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"" . $PHP_SELF . "?catid=" . $id . "\"><b>" . $name . "</b></a> (" . $numarticles . ") <a href=\"" . $PHP_SELF . "?action=editcat&id=" . $id . "\"><img src=\"images/edit.gif\" align=\"absmiddle\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\" /></a> <a href=\"#\" onClick=\"doDeleteCat(" . $id . ")\"><img src=\"images/delete.gif\" align=\"absmiddle\" border=\"0\" alt=\"") . $aInt->lang("global", "delete") . "\" /></a>";
@@ -323,7 +323,7 @@ if ($action == "") {
 ";
     }
 
-    $result = select_query_i("tblknowledgebase", "", array("categoryid" => $catid), "order` ASC,`title", "ASC", "", "tblknowledgebaselinks ON tblknowledgebase.id=tblknowledgebaselinks.articleid");
+    $result = select_query_i("ra_kb", "", array("categoryid" => $catid), "order` ASC,`title", "ASC", "", "ra_kblinks ON ra_kb.id=ra_kblinks.articleid");
     $numarticles = mysqli_num_rows($result);
 
     if ($numarticles != "0") {
@@ -360,7 +360,7 @@ if ($action == "") {
     }
 } elseif ($action == "edit") {
 
-    $result = select_query_i("tblknowledgebase", "", array("id" => $id));
+    $result = select_query_i("ra_kb", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $title = $data['title'];
     $article = $data['article'];
@@ -371,7 +371,7 @@ if ($action == "") {
     $order = $data['order'];
     $multilang_title = array();
     $multilang_article = array();
-    $result = select_query_i("tblknowledgebase", "", array("parentid" => $id));
+    $result = select_query_i("ra_kb", "", array("parentid" => $id));
 
     while ($data = mysqli_fetch_array($result)) {
         $language = $data['language'];
@@ -380,7 +380,7 @@ if ($action == "") {
     }
 
     $categories = array();
-    $result = select_query_i("tblknowledgebaselinks", "", array("articleid" => $id));
+    $result = select_query_i("ra_kblinks", "", array("articleid" => $id));
 
     while ($data = mysqli_fetch_array($result)) {
         $categories[] = $data['categoryid'];
@@ -495,7 +495,7 @@ if ($action == "") {
         $aInt->richTextEditor();
     }
 } elseif ($action == "editcat") {
-    $result = select_query_i("tblknowledgebasecats", "", array("id" => $id));
+    $result = select_query_i("ra_kbcats", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $parentid = $data['parentid'];
     $name = $data['name'];
@@ -505,7 +505,7 @@ if ($action == "") {
     $categories[] = $parentid;
     $multilang_name = array();
     $multilang_desc = array();
-    $result = select_query_i("tblknowledgebasecats", "", array("catid" => $id));
+    $result = select_query_i("ra_kbcats", "", array("catid" => $id));
 
     while ($data = mysqli_fetch_array($result)) {
         $language = $data['language'];

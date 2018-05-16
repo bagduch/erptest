@@ -14,19 +14,19 @@ $count = $balance = $totalcredits = $totaldebits = 0;
 
 if ($userid) {
 
-$result = select_query_i("tblinvoices","","userid='".db_escape_string($userid)."' AND status IN ('Unpaid','Paid','Collections')","date","ASC");
+$result = select_query_i("ra_bills","","userid='".db_escape_string($userid)."' AND status IN ('Unpaid','Paid','Collections')","date","ASC");
 while($data = mysqli_fetch_array($result)) {
 	$invoiceid = $data["id"];
     $date = $data["date"];
 	$total = $data["credit"]+$data["total"];
-    $result2 = select_query_i("tblinvoiceitems","id","invoiceid='$invoiceid' AND (type='AddFunds' OR type='Invoice')");
+    $result2 = select_query_i("ra_bill_lineitems","id","invoiceid='$invoiceid' AND (type='AddFunds' OR type='Invoice')");
     $data = mysqli_fetch_array($result2);
     $addfunds = $data[0];
     if (!$addfunds) $statement[str_replace('-','',$date)."_".$count] = array("Invoice",$date,"<a href=\"invoices.php?action=edit&id=$invoiceid\" target=\"_blank\">#$invoiceid</a>",0,$total);
     $count++;
 }
 
-$result = select_query_i("tblaccounts","","userid='$userid'","date","ASC");
+$result = select_query_i("ra_transactions","","userid='$userid'","date","ASC");
 while($data = mysqli_fetch_array($result)) {
 	$transid = $data["id"];
     $date = $data["date"];
@@ -35,12 +35,12 @@ while($data = mysqli_fetch_array($result)) {
     $amountout = $data["amountout"];
     $invoiceid = $data["invoiceid"];
     $date = substr($date,0,10);
-    $result2 = select_query_i("tblinvoiceitems","type",array("invoiceid"=>$invoiceid));
+    $result2 = select_query_i("ra_bill_lineitems","type",array("invoiceid"=>$invoiceid));
     $data = mysqli_fetch_array($result2);
     $itemtype = $data[0];
     $adminid = $data["adminid"];
     if ($adminid>0) {
-	$result3= select_query_i("tbladmins","username",array("id"=>$adminid));
+	$result3= select_query_i("ra_admin","username",array("id"=>$adminid));
 	$data = mysqli_fetch_array($result3);
 	$adminname = $data[0];
 	} else {
@@ -52,7 +52,7 @@ while($data = mysqli_fetch_array($result)) {
         $description = "Credit Prefunding";
     } elseif ($itemtype=="Invoice") {
         $description = "Mass Invoice Payment - ";
-        $result2 = select_query_i("tblinvoiceitems","relid",array("invoiceid"=>$invoiceid),"relid","ASC");
+        $result2 = select_query_i("ra_bill_lineitems","relid",array("invoiceid"=>$invoiceid),"relid","ASC");
         while ($data = mysqli_fetch_array($result2)) {
             $invoiceid = $data[0];
             $description .= "<a href=\"invoices.php?action=edit&id=$invoiceid\" target=\"_blank\">#$invoiceid</a>, ";

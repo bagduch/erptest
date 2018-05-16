@@ -8,7 +8,7 @@ require "../includes/customfieldfunctions.php";
 $aInt = new RA_Admin("List Support Tickets");
 $aInt->title = $aInt->lang("support", "printticketversion");
 $aInt->requiredFiles(array("ticketfunctions"));
-$result = select_query_i("tbltickets", "", array("id" => $id));
+$result = select_query_i("ra_ticket", "", array("id" => $id));
 $data = mysqli_fetch_array($result);
 $id = $data['id'];
 $tid = $data['tid'];
@@ -50,7 +50,7 @@ $message = nl2br($message);
 $message = ticketAutoHyperlinks($message);
 
 if ($pauserid != "0000000000") {
-	$result = select_query_i("tblclients", "", array("id" => $pauserid));
+	$result = select_query_i("ra_user", "", array("id" => $pauserid));
 	$data = mysqli_fetch_array($result);
 	$firstname = $data['firstname'];
 	$lastname = $data['lastname'];
@@ -117,7 +117,7 @@ echo "</p><hr size=1>
 ";
 
 if ($pauserid != "0000000000") {
-	$result2 = select_query_i("tblclients", "", array("id" => $pauserid));
+	$result2 = select_query_i("ra_user", "", array("id" => $pauserid));
 	$data2 = mysqli_fetch_array($result2);
 	$firstname = $data2['firstname'];
 	$lastname = $data2['lastname'];
@@ -128,7 +128,7 @@ else {
 }
 
 echo "" . $clientinfo . " @ " . $date . "<br><hr size=1><br>" . stripslashes($message) . "<hr size=1>";
-$result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+$result = select_query_i("ra_ticket_replies", "", array("tid" => $id), "date", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$ids = $data['id'];
@@ -149,7 +149,7 @@ while ($data = mysqli_fetch_array($result)) {
 	}
 	else {
 		if ($puserid != "0000000000") {
-			$result2 = select_query_i("tblclients", "", array("id" => $pauserid));
+			$result2 = select_query_i("ra_user", "", array("id" => $pauserid));
 			$data2 = mysqli_fetch_array($result2);
 			$firstname = $data2['firstname'];
 			$lastname = $data2['lastname'];

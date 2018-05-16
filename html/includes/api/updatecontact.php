@@ -11,7 +11,7 @@ if (!function_exists("generateClientPW")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query_i("tblcontacts", "id,subaccount", array("id" => $contactid));
+$result = select_query_i("ra_user_contacts", "id,subaccount", array("id" => $contactid));
 $data = mysqli_fetch_array($result);
 $subaccount = $data['subaccount'];
 
@@ -22,9 +22,9 @@ if (!$data[0]) {
 
 
 if (($subaccount || $_REQUEST['subaccount']) && $_REQUEST['email']) {
-	$result = select_query_i("tblclients", "id", array("email" => $_REQUEST['email']));
+	$result = select_query_i("ra_user", "id", array("email" => $_REQUEST['email']));
 	$data = mysqli_fetch_array($result);
-	$result = select_query_i("tblcontacts", "id", array("email" => $_REQUEST['email'], "subaccount" => "1", "id" => array("sqltype" => "NEQ", "value" => $contactid)));
+	$result = select_query_i("ra_user_contacts", "id", array("email" => $_REQUEST['email'], "subaccount" => "1", "id" => array("sqltype" => "NEQ", "value" => $contactid)));
 	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {
@@ -154,6 +154,6 @@ if (isset($_REQUEST['supportemails'])) {
 	$updateqry['supportemails'] = $supportemails;
 }
 
-update_query("tblcontacts", $updateqry, array("id" => $contactid));
+update_query("ra_user_contacts", $updateqry, array("id" => $contactid));
 $apiresults = array("result" => "success", "contactid" => $contactid);
 ?>

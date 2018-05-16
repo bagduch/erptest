@@ -12,7 +12,7 @@ if (!function_exists("AddReply")) {
 }
 
 $from = "";
-$result = select_query_i("tbltickets", "", array("id" => $ticketid));
+$result = select_query_i("ra_ticket", "", array("id" => $ticketid));
 $data = mysqli_fetch_array($result);
 $ticketid = $data['id'];
 
@@ -23,7 +23,7 @@ if (!$ticketid) {
 
 
 if ($clientid) {
-	$result = select_query_i("tblclients", "id", array("id" => $clientid));
+	$result = select_query_i("ra_user", "id", array("id" => $clientid));
 	$data = mysqli_fetch_array($result);
 
 	if (!$data['id']) {
@@ -33,7 +33,7 @@ if ($clientid) {
 
 
 	if ($contactid) {
-		$result = select_query_i("tblcontacts", "id", array("id" => $contactid, "userid" => $clientid));
+		$result = select_query_i("ra_user_contacts", "id", array("id" => $contactid, "userid" => $clientid));
 		$data = mysqli_fetch_array($result);
 
 		if (!$data['id']) {

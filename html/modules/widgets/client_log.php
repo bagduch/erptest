@@ -7,7 +7,7 @@ function widget_client_log($vars) {
     global $_ADMINLANG;
     $title = "Client Log Overview";
 
-    $clientlogquery = "select id,firstname,lastname,ip,lastlogin from tblclients where lastlogin between Now() AND Now()-Interval 30 minute order by lastlogin DESC LIMIT 4";
+    $clientlogquery = "select id,firstname,lastname,ip,lastlogin from ra_user where lastlogin between Now() AND Now()-Interval 30 minute order by lastlogin DESC LIMIT 4";
     $result = full_query_i($clientlogquery);
 
     if ($result->num_rows > 0) {

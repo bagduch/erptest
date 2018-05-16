@@ -118,7 +118,7 @@ function bundlesValidateProductConfig($key, $billingcycle, $configoptions, $addo
 	$itemdata = unserialize($itemdata);
 	$proditemdata = $itemdata[$proddata['bitem']];
 	$errors = "";
-	$productname = get_query_val("tblservices", "name", array("id" => $proddata['pid']));
+	$productname = get_query_val("ra_catalog", "name", array("id" => $proddata['pid']));
 
 	if ($proditemdata['billingcycle'] && bundlesConvertBillingCycle($proditemdata['billingcycle']) != $billingcycle) {
 		$errors .= "<li>" . sprintf($_LANG['bundlewarningproductcycle'], $proditemdata['billingcycle'], $productname);
@@ -127,7 +127,7 @@ function bundlesValidateProductConfig($key, $billingcycle, $configoptions, $addo
 	foreach ($proditemdata['configoption'] as $cid => $opid) {
 
 		if ($opid != $configoptions[$cid]) {
-			$data = get_query_vals("tblserviceconfigoptions", "optionname,optiontype,(SELECT optionname FROM tblserviceconfigoptionssub WHERE id='" . (int)$opid . "') AS subopname", array("id" => $cid));
+			$data = get_query_vals("ra_catalog_user_sales_addons_options", "optionname,optiontype,(SELECT optionname FROM ra_catalog_user_sales_addons_optionssub WHERE id='" . (int)$opid . "') AS subopname", array("id" => $cid));
 
 			if ($data['optiontype'] == 1 || $data['optiontype'] == 2) {
 				$errors .= "<li>" . sprintf($_LANG['bundlewarningproductconfopreq'], $data['subopname'], $data['optionname']);
@@ -222,7 +222,7 @@ function bundlesValidateCheckout() {
 			}
 
 			++$numitemsperbundle[$bnum];
-			$productname = get_query_val("tblservices", "name", array("id" => $pid));
+			$productname = get_query_val("ra_catalog", "name", array("id" => $pid));
 
 			if ($itemdata['billingcycle'] && bundlesConvertBillingCycle($itemdata['billingcycle']) != $billingcycle) {
 				$warnings[] = sprintf($_LANG['bundlewarningproductcycle'], $itemdata['billingcycle'], $productname);
@@ -232,7 +232,7 @@ function bundlesValidateCheckout() {
 			foreach ($itemdata['configoption'] as $cid => $opid) {
 
 				if ($opid != $configoptions[$cid]) {
-					$data = get_query_vals("tblserviceconfigoptions", "optionname,optiontype,(SELECT optionname FROM tblserviceconfigoptionssub WHERE id='" . (int)$opid . "') AS subopname", array("id" => $cid));
+					$data = get_query_vals("ra_catalog_user_sales_addons_options", "optionname,optiontype,(SELECT optionname FROM ra_catalog_user_sales_addons_optionssub WHERE id='" . (int)$opid . "') AS subopname", array("id" => $cid));
 
 					if ($data['optiontype'] == 1 || $data['optiontype'] == 2) {
 						$warnings[] = sprintf($_LANG['bundlewarningproductconfopreq'], $data['subopname'], $data['optionname']);

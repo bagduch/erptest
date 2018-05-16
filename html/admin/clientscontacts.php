@@ -13,9 +13,9 @@ if ($action == "save") {
 
     if ($subaccount) {
         $subaccount = "1";
-        $result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
+        $result = select_query_i("ra_user", "COUNT(*)", array("email" => $email));
         $data = mysqli_fetch_array($result);
-        $result = select_query_i("tblcontacts", "COUNT(*)", array("email" => $email, "id" => array("sqltype" => "NEQ", "value" => $contactid)));
+        $result = select_query_i("ra_user_contacts", "COUNT(*)", array("email" => $email, "id" => array("sqltype" => "NEQ", "value" => $contactid)));
         $data2 = mysqli_fetch_array($result);
 
         if ($data[0] + $data2[0]) {
@@ -50,13 +50,13 @@ if ($action == "save") {
         logActivity("Added Contact - User ID: " . $userid . " - Contact ID: " . $contactid);
     } else {
         logActivity("Contact Modified - User ID: " . $userid . " - Contact ID: " . $contactid);
-        $oldcontactdata = get_query_vals("tblcontacts", "", array("userid" => $_SESSION['uid'], "id" => $id));
+        $oldcontactdata = get_query_vals("ra_user_contacts", "", array("userid" => $_SESSION['uid'], "id" => $id));
 
         if ($permissions) {
             $permissions = implode(",", $permissions);
         }
 
-        $table = "tblcontacts";
+        $table = "ra_user_contacts";
         $array = array(
           "firstname" => $firstname,
           "lastname" => $lastname,
@@ -96,8 +96,8 @@ if ($action == "save") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    delete_query("tblcontacts", array("id" => $contactid, "userid" => $userid));
-    update_query("tblclients", array("billingcid" => ""), array("id" => $userid, "billingcid" => $contactid));
+    delete_query("ra_user_contacts", array("id" => $contactid, "userid" => $userid));
+    update_query("ra_user", array("billingcid" => ""), array("id" => $userid, "billingcid" => $contactid));
     run_hook("ContactDelete", array("userid" => $userid, "contactid" => $contactid));
     redir("userid=" . $userid);
     exit();
@@ -109,7 +109,7 @@ if ($error) {
     infoBox($aInt->lang("global", "validationerror"), $error);
 }
 
-$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("ra_user_contacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $contactlistid = $data['id'];
@@ -157,7 +157,7 @@ if ($resetpw) {
 
 
 if ($contactid && $contactid != "addnew") {
-    $result = select_query_i("tblcontacts", "", array("userid" => $userid, "id" => $contactid));
+    $result = select_query_i("ra_user_contacts", "", array("userid" => $userid, "id" => $contactid));
     $data = mysqli_fetch_assoc($result);
     $data['permissions'] = explode(",", $data['permissions']);
     $aInt->assign("cdata", $data);

@@ -6,7 +6,7 @@ if (!defined("RA")) {
 	exit("This file cannot be accessed directly");
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $clientid));
+$result = select_query_i("ra_user", "id", array("id" => $clientid));
 $data = mysqli_fetch_array($result);
 $clientid = $data['id'];
 
@@ -16,7 +16,7 @@ if (!$clientid) {
 }
 
 $credits = array();
-$result = select_query_i("tblcredit", "id,date,description,amount,relid", array("clientid" => $clientid), "date", "ASC");
+$result = select_query_i("ra_transactions_credit", "id,date,description,amount,relid", array("clientid" => $clientid), "date", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
 	$credits[] = $data;

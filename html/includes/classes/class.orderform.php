@@ -37,7 +37,7 @@ class RA_OrderForm {
 
     public function getServiceGroups() {
         $groupsarray = array();
-        $result = select_query_i("tblservicegroups", "","", "order", "ASC");
+        $result = select_query_i("ra_catalog_groups", "","", "order", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $groupid = $data['id'];
@@ -52,13 +52,13 @@ class RA_OrderForm {
         global $currency;
 
         if (!$gid) {
-            $result = select_query_i("tblservicegroups", "id","hidden=''", "order", "ASC");
+            $result = select_query_i("ra_catalog_groups", "id","hidden=''", "order", "ASC");
             $data = mysqli_fetch_array($result);
             $gid = $data[0];
         }
 
         $tmparray = array();
-        $result = select_query_i("tblservices", "", array("gid" => $gid, "hidden" => ""), "order` ASC,`name", "ASC");
+        $result = select_query_i("ra_catalog", "", array("gid" => $gid, "hidden" => ""), "order` ASC,`name", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
@@ -140,7 +140,7 @@ class RA_OrderForm {
     }
 
     public function getProductGroupInfo($gid) {
-        $result = select_query_i("tblservicegroups", "", array("id" => $gid));
+        $result = select_query_i("ra_catalog_groups", "", array("id" => $gid));
         $data = mysqli_fetch_assoc($result);
 
         if (!$data['id']) {
@@ -157,7 +157,7 @@ class RA_OrderForm {
 
     public function setPid($pid) {
         $this->pid = $pid;
-        $result = select_query_i("tblservices", "tblservices.id AS pid,tblservices.gid,tblservices.type,tblservices.name AS name,tblservicegroups.name AS groupname,tblservices.description,tblservices.paytype,tblservicegroups.orderfrmtpl", array("tblservices.id" => $pid), "", "", "", "tblservicegroups ON tblservicegroups.id=tblservices.gid");
+        $result = select_query_i("ra_catalog", "ra_catalog.id AS pid,ra_catalog.gid,ra_catalog.type,ra_catalog.name AS name,ra_catalog_groups.name AS groupname,ra_catalog.description,ra_catalog.paytype,ra_catalog_groups.orderfrmtpl", array("ra_catalog.id" => $pid), "", "", "", "ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
         $data = mysqli_fetch_assoc($result);
       
         if (!$data['pid']) {
@@ -185,7 +185,7 @@ class RA_OrderForm {
         }
 
         $paytype = $this->productinfo['paytype'];
-        $result = select_query_i("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $this->productinfo['pid']));
+        $result = select_query_i("ra_catalog_pricebook", "", array("type" => "product", "currency" => $currency['id'], "relid" => $this->productinfo['pid']));
         $data = mysqli_fetch_array($result);
         $monthly = $data['monthly'];
         $quarterly = $data['quarterly'];

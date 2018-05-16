@@ -228,6 +228,8 @@
     - 952_tblconfiguration.sql
     - 999_robotacct_template.sql
     - 953_tblcustomerservicechanges.sql
+    - 2018-05-16_ben_table_name_changes.sql
+    
   when: vagrant | bool | default(false)
 
 - name: Create RA DB user

@@ -14,7 +14,7 @@ $reportdata["tableheadings"] = array("Credit ID", "Client Name", "Date", "Descri
 
 if ($startdate && $enddate) {
 
-    $query = "SELECT tblcredit.*,tblclients.firstname,tblclients.lastname FROM tblcredit INNER JOIN tblclients ON tblclients.id=tblcredit.clientid WHERE tblcredit.date BETWEEN '" . db_make_safe_human_date($startdate) . "' AND '" . db_make_safe_human_date($enddate) . "'";
+    $query = "SELECT ra_transactions_credit.*,ra_user.firstname,ra_user.lastname FROM ra_transactions_credit INNER JOIN ra_user ON ra_user.id=ra_transactions_credit.clientid WHERE ra_transactions_credit.date BETWEEN '" . db_make_safe_human_date($startdate) . "' AND '" . db_make_safe_human_date($enddate) . "'";
     $result = full_query_i($query);
     while ($data = mysqli_fetch_array($result)) {
         $id = $data["id"];

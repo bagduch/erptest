@@ -2,11 +2,11 @@
 
 /**
  * getModuleType - show server to module association
- * @param  int $id ID of a server from tblservers
+ * @param  int $id ID of a server from ra_integration
  * @return string name of the module which uses/handles that server
  */
 function getModuleType($id) {
-	$result = select_query_i("tblservers", "type", array("id" => $id));
+	$result = select_query_i("ra_integration", "type", array("id" => $id));
 	$data = mysqli_fetch_array($result);
 	$type = $data['type'];
 	return $type;
@@ -31,7 +31,7 @@ SELECT
 	ts.type producttype,
 	ts.servertype moduletype
 FROM tblcustomerservices tcs
-LEFT JOIN tblservices ts ON tcs.packageid=ts.id
+LEFT JOIN ra_catalog ts ON tcs.packageid=ts.id
 WHERE tcs.id=%d
 EOD;
 	$result = full_query_i(sprintf($query,(int)$id));
@@ -49,10 +49,10 @@ EOD;
 SELECT
   tcf.fieldname fieldname,
 	tcfv.value value
-FROM tblcustomfieldslinks tcfl
-LEFT JOIN tblcustomfields tcf
+FROM ra_catalog_user_sales_fieldslinks tcfl
+LEFT JOIN ra_catalog_user_sales_fields tcf
   ON (tcfl.cfid=tcf.cfid)
-LEFT JOIN tblcustomfieldsvalues tcfv
+LEFT JOIN ra_catalog_user_sales_fieldsvalues tcfv
   ON (tcfv.cfid=tcf.cfid AND tcfv.relid=242)
 WHERE tcfl.serviceid=48
 EOD;
@@ -78,7 +78,7 @@ EOD;
 
 	$params['customfields'] = $customfields;
 	$configoptions = array();
-	$result = full_query_i("SELECT tblserviceconfigoptions.optionname,tblserviceconfigoptions.optiontype,tblserviceconfigoptionssub.optionname,tblhostingconfigoptions.qty FROM tblserviceconfigoptions,tblserviceconfigoptionssub,tblhostingconfigoptions,tblserviceconfiglinks WHERE tblhostingconfigoptions.configid=tblserviceconfigoptions.id AND tblhostingconfigoptions.optionid=tblserviceconfigoptionssub.id AND tblhostingconfigoptions.relid=" . (int)$id . " AND tblserviceconfiglinks.gid=tblserviceconfigoptions.gid AND tblserviceconfiglinks.pid=" . (int)$pid);
+	$result = full_query_i("SELECT ra_catalog_user_sales_addons_options.optionname,ra_catalog_user_sales_addons_options.optiontype,ra_catalog_user_sales_addons_optionssub.optionname,tblhostingconfigoptions.qty FROM ra_catalog_user_sales_addons_options,ra_catalog_user_sales_addons_optionssub,tblhostingconfigoptions,ra_catalog_user_sales_addons_links WHERE tblhostingconfigoptions.configid=ra_catalog_user_sales_addons_options.id AND tblhostingconfigoptions.optionid=ra_catalog_user_sales_addons_optionssub.id AND tblhostingconfigoptions.relid=" . (int)$id . " AND ra_catalog_user_sales_addons_links.gid=ra_catalog_user_sales_addons_options.gid AND ra_catalog_user_sales_addons_links.pid=" . (int)$pid);
 
 	while ($data = mysqli_fetch_array($result)) {
 		$configoptionname = $data[0];
@@ -117,7 +117,7 @@ EOD;
 	$params['clientsdetails'] = $clientsdetails;
 
 	if ($server) {
-		$result = select_query_i("tblservers", "", array("id" => $server));
+		$result = select_query_i("ra_integration", "", array("id" => $server));
 		$data = mysqli_fetch_array($result);
 		$params['server'] = true;
 		$params['serverip'] = $data['ipaddress'];
@@ -298,7 +298,7 @@ function ServerTerminateAccount($func_id) {
 		if ($result == "success") {
 			logActivity("Module Terminate Successful - Service ID: " . $func_id, $params['clientsdetails']['userid']);
 			update_query("tblcustomerservices", array("servicestatus" => "Terminated"), array("id" => $func_id));
-			update_query("tblserviceaddons", array("status" => "Terminated"), array("hostingid" => $func_id));
+			update_query("ra_catalog_user_sales_addons", array("status" => "Terminated"), array("hostingid" => $func_id));
 			run_hook("AfterModuleTerminate", array("params" => $params));
 			return $result;
 		}
@@ -465,7 +465,7 @@ function ServerClientArea($func_id) {
 }
 
 function ServerUsageUpdate() {
-	$result2 = select_query_i("tblservers", "", array("disabled" => "0"), "name", "ASC");
+	$result2 = select_query_i("ra_integration", "", array("disabled" => "0"), "name", "ASC");
 
 	while ($data = mysqli_fetch_array($result2)) {
 		$servertype = $data['type'];
@@ -617,7 +617,7 @@ function createServerPassword() {
 
 function getServerID($servertype, $servergroup) {
 	if (!$servergroup) {
-		$result = select_query_i("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
+		$result = select_query_i("ra_integration", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=ra_integration.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", array("type" => $servertype, "active" => "1", "disabled" => "0"));
 		$data = mysqli_fetch_array($result);
 		$serverid = $data['id'];
 		$maxaccounts = $data['maxaccounts'];
@@ -625,23 +625,23 @@ function getServerID($servertype, $servergroup) {
 
 		if ($serverid) {
 			if ($maxaccounts <= $usagecount) {
-				$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
+				$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=ra_integration.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM ra_integration WHERE type='" . db_escape_string($servertype) . "' AND id!=" . (int)$serverid . " AND disabled=0 ORDER BY percentusage ASC");
 				$data = mysqli_fetch_array($result);
 
 				if ($data['id']) {
 					$serverid = $data['id'];
-					update_query("tblservers", array("active" => ""), array("type" => $servertype));
-					update_query("tblservers", array("active" => "1"), array("type" => $servertype, "id" => $serverid));
+					update_query("ra_integration", array("active" => ""), array("type" => $servertype));
+					update_query("ra_integration", array("active" => "1"), array("type" => $servertype, "id" => $serverid));
 				}
 			}
 		}
 	}
 	else {
-		$result = select_query_i("tblservergroups", "filltype", array("id" => $servergroup));
+		$result = select_query_i("ra_integration_groups", "filltype", array("id" => $servergroup));
 		$data = mysqli_fetch_array($result);
 		$filltype = $data['filltype'];
 		$serverslist = "";
-		$result = select_query_i("tblservergroupsrel", "serverid", array("groupid" => $servergroup));
+		$result = select_query_i("ra_integration_groupsrel", "serverid", array("groupid" => $servergroup));
 
 		while ($data = mysqli_fetch_array($result)) {
 			$serverslist .= (int)$data['serverid'] . ",";
@@ -650,13 +650,13 @@ function getServerID($servertype, $servergroup) {
 		$serverslist = substr($serverslist, 0, 0 - 1);
 
 		if ($filltype == 1) {
-			$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
+			$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=ra_integration.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM ra_integration WHERE id IN (" . $serverslist . ") AND disabled=0 ORDER BY percentusage ASC");
 			$data = mysqli_fetch_array($result);
 			$serverid = $data['id'];
 		}
 		else {
 			if ($filltype == 2) {
-				$result = select_query_i("tblservers", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
+				$result = select_query_i("ra_integration", "id,maxaccounts,(SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=ra_integration.id AND (servicestatus='Active' OR servicestatus='Suspended')) AS usagecount", "id IN (" . $serverslist . ") AND active='1' AND disabled=0");
 				$data = mysqli_fetch_array($result);
 				$serverid = $data['id'];
 				$maxaccounts = $data['maxaccounts'];
@@ -664,13 +664,13 @@ function getServerID($servertype, $servergroup) {
 
 				if ($serverid) {
 					if ($maxaccounts <= $usagecount) {
-						$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=tblservers.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM tblservers WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
+						$result = full_query_i("SELECT id,((SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.server=ra_integration.id AND (servicestatus='Active' OR servicestatus='Suspended'))/maxaccounts) AS percentusage FROM ra_integration WHERE id IN (" . $serverslist . ") AND disabled=0 AND id!=" . (int)$serverid . " ORDER BY percentusage ASC");
 						$data = mysqli_fetch_array($result);
 
 						if ($data['id']) {
 							$serverid = $data['id'];
-							update_query("tblservers", array("active" => ""), array("type" => $servertype));
-							update_query("tblservers", array("active" => "1"), array("type" => $servertype, "id" => $serverid));
+							update_query("ra_integration", array("active" => ""), array("type" => $servertype));
+							update_query("ra_integration", array("active" => "1"), array("type" => $servertype, "id" => $serverid));
 						}
 					}
 				}
@@ -696,11 +696,11 @@ function RebuildModuleHookCache() {
 	closedir($dh);
 
 	if (isset($CONFIG['ModuleHooks'])) {
-		update_query("tblconfiguration", array("value" => implode(",", $hooksarray)), array("setting" => "ModuleHooks"));
+		update_query("ra_config", array("value" => implode(",", $hooksarray)), array("setting" => "ModuleHooks"));
 		return null;
 	}
 
-	insert_query("tblconfiguration", array("setting" => "ModuleHooks", "value" => implode(",", $hooksarray)));
+	insert_query("ra_config", array("setting" => "ModuleHooks", "value" => implode(",", $hooksarray)));
 }
 
 function moduleConfigFieldOutput($values) {

@@ -42,7 +42,7 @@ if ($username2) {
 	$where["tblcustomerservices.username"] = $username2;
 }
 
-$result = select_query_i("tblcustomerservices", "COUNT(*)", $where, "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query_i("tblcustomerservices", "COUNT(*)", $where, "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
 $data = mysqli_fetch_array($result);
 $totalresults = $data[0];
 $limitstart = (int)$limitstart;
@@ -52,7 +52,7 @@ if (!$limitnum) {
 	$limitnum = 999999;
 }
 
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblservices.name AS productname,tblservicegroups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM tblservers WHERE tblservers.id=tblcustomerservices.server) AS serverdetails,(SELECT tblpaymentgateways.value FROM tblpaymentgateways WHERE tblpaymentgateways.gateway=tblcustomerservices.paymentmethod AND tblpaymentgateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_catalog.name AS productname,ra_catalog_groups.name AS groupname,(SELECT CONCAT(name,'|',ipaddress,'|',hostname) FROM ra_integration WHERE ra_integration.id=tblcustomerservices.server) AS serverdetails,(SELECT ra_modules_gateways.value FROM ra_modules_gateways WHERE ra_modules_gateways.gateway=tblcustomerservices.paymentmethod AND ra_modules_gateways.setting='name' LIMIT 1) AS paymentmethodname", $where, "tblhosting`.`id", "ASC", "" . $limitstart . "," . $limitnum, "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
 $apiresults = array("result" => "success", "clientid" => $clientid, "serviceid" => $serviceid, "pid" => $pid, "domain" => $domain, "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result));
 
 if (!$totalresults) {

@@ -93,9 +93,9 @@ class tolls {
     function search_all($search) {
 
         if (is_numeric($search)) {
-            $query = "select * from tblcustomfieldsvalues where value like '%" . $search . "%'";
+            $query = "select * from ra_catalog_user_sales_fieldsvalues where value like '%" . $search . "%'";
         } else {
-            $query = "select tc.firstname,tc.lastname,tcs.id from tblclients as tc INNER JOIN tblcustomerservices as tcs on tc.id = tcs.userid INNER JOIN tblservices as ts on (tcs.packageid=ts.id and ts.name like '%Toll%') where tc.firstname like '%" . $search . "%' or tc.lastname like '%" . $search . "%'";
+            $query = "select tc.firstname,tc.lastname,tcs.id from ra_user as tc INNER JOIN tblcustomerservices as tcs on tc.id = tcs.userid INNER JOIN ra_catalog as ts on (tcs.packageid=ts.id and ts.name like '%Toll%') where tc.firstname like '%" . $search . "%' or tc.lastname like '%" . $search . "%'";
         }
         $result = $this->db->query($query);
         $data = "<div class=\"list-group\">";
@@ -498,11 +498,11 @@ class tolls {
 
         // get client information
         $result = $this->db->query("
-			SELECT `tblclients`.`id` AS clientid,
-				`tblclients`.`firstname`,
-				`tblclients`.`lastname`,
-				`tblclients`.`companyname`,
-				`tblclients`.`email`,
+			SELECT `ra_user`.`id` AS clientid,
+				`ra_user`.`firstname`,
+				`ra_user`.`lastname`,
+				`ra_user`.`companyname`,
+				`ra_user`.`email`,
 				`tblhosting`.`id` AS hostingid,
 				`tblhosting`.`packageid`,
 				`tblhosting`.`domain`,
@@ -510,9 +510,9 @@ class tolls {
 				`tblhosting`.`paymentmethod`,
 				`tblproducts`.`name` as product_name				
 			
-			FROM `tblclients`
+			FROM `ra_user`
 			
-				INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `tblclients`.`id`
+				INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `ra_user`.`id`
 				LEFT JOIN `tblproducts` ON `tblhosting`.`packageid` = `tblproducts`.`id`
 			
 			WHERE `tblhosting`.`packageid` IN (520, 560, 712, 738)

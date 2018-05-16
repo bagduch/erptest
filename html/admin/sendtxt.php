@@ -17,8 +17,8 @@ if (!$queryMgr->isValidTokenFormat($userInput_massmailquery)) {
 if ($action == "preview") {
     check_token("RA.admin.default");
     $email_preview = true;
-    delete_query("tblemailtemplates", array("name" => "Mass Mail Template"));
-    insert_query("tblemailtemplates", array("type" => $type, "name" => "Mass Mail Template", "subject" => html_entity_decode($subject), "message" => html_entity_decode($messagetxt), "fromname" => "", "fromemail" => "", "copyto" => ""));
+    delete_query("ra_templates_mail", array("name" => "Mass Mail Template"));
+    insert_query("ra_templates_mail", array("type" => $type, "name" => "Mass Mail Template", "subject" => html_entity_decode($subject), "message" => html_entity_decode($messagetxt), "fromname" => "", "fromemail" => "", "copyto" => ""));
 
     if ($massmail && $safeStoredQuery = $queryMgr->getQuery($queryMgr->getTokenValue())) {
         $massmailquery = $safeStoredQuery;
@@ -68,14 +68,14 @@ if ($action == "send") {
 
 
         if ($save == "on") {
-            insert_query("tblemailtemplates", array("type" => $type, "name" => $savename, "subject" => html_entity_decode($subject), "message" => html_entity_decode($message), "fromname" => html_entity_decode($fromname), "fromemail" => $fromemail, "copyto" => $cc, "custom" => "1"));
+            insert_query("ra_templates_mail", array("type" => $type, "name" => $savename, "subject" => html_entity_decode($subject), "message" => html_entity_decode($message), "fromname" => html_entity_decode($fromname), "fromemail" => $fromemail, "copyto" => $cc, "custom" => "1"));
             echo "<p>" . $aInt->lang("sendmessage", "msgsavedsuccess") . "</p>";
         }
 
 
         if (!$step) {
-            delete_query("tblemailtemplates", array("name" => "Mass Mail Template"));
-            insert_query("tblemailtemplates", array("type" => $type, "name" => "Mass Mail Template", "subject" => html_entity_decode($subject), "message" => html_entity_decode($message), "fromname" => html_entity_decode($fromname), "fromemail" => $fromemail, "copyto" => $cc));
+            delete_query("ra_templates_mail", array("name" => "Mass Mail Template"));
+            insert_query("ra_templates_mail", array("type" => $type, "name" => "Mass Mail Template", "subject" => html_entity_decode($subject), "message" => html_entity_decode($message), "fromname" => html_entity_decode($fromname), "fromemail" => $fromemail, "copyto" => $cc));
             $_SESSION['massmail']['massmailamount'] = $massmailamount;
             $_SESSION['massmail']['massmailinterval'] = $massmailinterval;
             $_SESSION['massmail']['attachments'] = array();
@@ -123,7 +123,7 @@ if ($action == "send") {
 
             if ($emailoptout || RA_Session::get("massmailemailoptout")) {
                 RA_Session::set("massmailemailoptout", true);
-                $massmailquery .= " AND tblclients.emailoptout = '0'";
+                $massmailquery .= " AND ra_user.emailoptout = '0'";
             }
 
             $sentids = $_SESSION['massmail']['sentids'];
@@ -176,13 +176,13 @@ if ($action == "send") {
 
                     if ($emailoptout) {
                         if ($type == "general") {
-                            $skipemail = get_query_val("tblclients", "emailoptout", array("id" => $selectedclient));
+                            $skipemail = get_query_val("ra_user", "emailoptout", array("id" => $selectedclient));
                         } elseif ($type == "product") {
-                            $skipemail = get_query_val("tblcustomerservices", "emailoptout", array("tblcustomerservices.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+                            $skipemail = get_query_val("tblcustomerservices", "emailoptout", array("tblcustomerservices.id" => $selectedclient), "", "", "", "ra_user ON ra_user.id=tblcustomerservices.userid");
                         } elseif ($type == "domain") {
-                            $skipemail = get_query_val("tbldomains", "emailoptout", array("tbldomains.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
+                            $skipemail = get_query_val("tbldomains", "emailoptout", array("tbldomains.id" => $selectedclient), "", "", "", "ra_user ON ra_user.id=tbldomains.userid");
                         } elseif ($type == "affiliate") {
-                            $skipemail = get_query_val("tblaffiliates", "emailoptout", array("tblaffiliates.id" => $selectedclient), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+                            $skipemail = get_query_val("ra_partners", "emailoptout", array("ra_partners.id" => $selectedclient), "", "", "", "ra_user ON ra_user.id=ra_partners.clientid");
                         }
                     }
 
@@ -204,7 +204,7 @@ if ($action == "send") {
 
         if ($done) {
             echo "<p><b>" . $aInt->lang("sendmessage", "sendingcompleted") . "</b></p>";
-            delete_query("tblemailtemplates", array("name" => "Mass Mail Template"));
+            delete_query("ra_templates_mail", array("name" => "Mass Mail Template"));
             foreach ($_SESSION['massmail']['attachments'] as $filename) {
                 deleteFile($attachments_dir, $filename);
             }
@@ -241,18 +241,18 @@ if ($showform) {
 
         if ($emailtype == "General") {
             $type = "general";
-            $query = "SELECT id,id AS userid,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblclients WHERE id!=''";
+            $query = "SELECT id,id AS userid,ra_user.firstname,ra_user.lastname,ra_user.email FROM ra_user WHERE id!=''";
 
             if ($clientstatus) {
-                $query .= " AND tblclients.status IN (" . $clientstatus . ")";
+                $query .= " AND ra_user.status IN (" . $clientstatus . ")";
             }
 
             if ($clientgroup) {
-                $query .= " AND tblclients.groupid IN (" . $clientgroup . ")";
+                $query .= " AND ra_user.groupid IN (" . $clientgroup . ")";
             }
 
             if ($clientlanguage) {
-                $query .= " AND tblclients.language IN (" . $clientlanguage . ")";
+                $query .= " AND ra_user.language IN (" . $clientlanguage . ")";
             }
 
             if (is_array($customfield)) {
@@ -262,20 +262,20 @@ if ($showform) {
                             $v = "on";
                         }
                         if ($v == "cfoff") {
-                            $query .= " AND ((SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='' OR (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1) IS NULL)";
+                            $query .= " AND ((SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1)='' OR (SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1) IS NULL)";
                             continue;
                         }
-                        $query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
+                        $query .= " AND (SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1)='" . db_escape_string($v) . "'";
                         continue;
                     }
                 }
             }
         } elseif ($emailtype == "Product/Service") {
             $type = "product";
-            $query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE tblcustomerservices.id!=''";
+            $query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,ra_user.firstname,ra_user.lastname,ra_user.email FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid WHERE tblcustomerservices.id!=''";
 
             if ($productids) {
-                $query .= " AND tblservices.id IN (" . $productids . ")";
+                $query .= " AND ra_catalog.id IN (" . $productids . ")";
             }
 
             if ($productstatus) {
@@ -287,17 +287,17 @@ if ($showform) {
             }
 
             if ($clientstatus) {
-                $query .= " AND tblclients.status IN (" . $clientstatus . ")";
+                $query .= " AND ra_user.status IN (" . $clientstatus . ")";
             }
 
 
             if ($clientgroup) {
-                $query .= " AND tblclients.groupid IN (" . $clientgroup . ")";
+                $query .= " AND ra_user.groupid IN (" . $clientgroup . ")";
             }
 
 
             if ($clientlanguage) {
-                $query .= " AND tblclients.language IN (" . $clientlanguage . ")";
+                $query .= " AND ra_user.language IN (" . $clientlanguage . ")";
             }
 
 
@@ -305,37 +305,37 @@ if ($showform) {
                 foreach ($customfield as $k => $v) {
 
                     if ($v) {
-                        $query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
+                        $query .= " AND (SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1)='" . db_escape_string($v) . "'";
                         continue;
                     }
                 }
             }
         } elseif ($emailtype == "Addon") {
             $type = "addon";
-            $query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblserviceaddons ON tblserviceaddons.hostingid = tblcustomerservices.id WHERE tblserviceaddons.id!=''";
+            $query = "SELECT tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.domain,ra_user.firstname,ra_user.lastname,ra_user.email FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid INNER JOIN ra_catalog_user_sales_addons ON ra_catalog_user_sales_addons.hostingid = tblcustomerservices.id WHERE ra_catalog_user_sales_addons.id!=''";
 
             if ($addonids) {
-                $query .= " AND tblserviceaddons.addonid IN (" . $addonids . ")";
+                $query .= " AND ra_catalog_user_sales_addons.addonid IN (" . $addonids . ")";
             }
 
 
             if ($addonstatus) {
-                $query .= " AND tblserviceaddons.status IN (" . $addonstatus . ")";
+                $query .= " AND ra_catalog_user_sales_addons.status IN (" . $addonstatus . ")";
             }
 
 
             if ($clientstatus) {
-                $query .= " AND tblclients.status IN (" . $clientstatus . ")";
+                $query .= " AND ra_user.status IN (" . $clientstatus . ")";
             }
 
 
             if ($clientgroup) {
-                $query .= " AND tblclients.groupid IN (" . $clientgroup . ")";
+                $query .= " AND ra_user.groupid IN (" . $clientgroup . ")";
             }
 
 
             if ($clientlanguage) {
-                $query .= " AND tblclients.language IN (" . $clientlanguage . ")";
+                $query .= " AND ra_user.language IN (" . $clientlanguage . ")";
             }
 
 
@@ -343,14 +343,14 @@ if ($showform) {
                 foreach ($customfield as $k => $v) {
 
                     if ($v) {
-                        $query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
+                        $query .= " AND (SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1)='" . db_escape_string($v) . "'";
                         continue;
                     }
                 }
             }
         } elseif ($emailtype == "Domain") {
             $type = "domain";
-            $query = "SELECT tbldomains.id,tbldomains.userid,tbldomains.domain,tblclients.firstname,tblclients.lastname,tblclients.email FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id!=''";
+            $query = "SELECT tbldomains.id,tbldomains.userid,tbldomains.domain,ra_user.firstname,ra_user.lastname,ra_user.email FROM tbldomains INNER JOIN ra_user ON ra_user.id=tbldomains.userid WHERE tbldomains.id!=''";
 
             if ($servicestatus) {
                 $query .= " AND tbldomains.status IN (" . $servicestatus . ")";
@@ -358,17 +358,17 @@ if ($showform) {
 
 
             if ($clientstatus) {
-                $query .= " AND tblclients.status IN (" . $clientstatus . ")";
+                $query .= " AND ra_user.status IN (" . $clientstatus . ")";
             }
 
 
             if ($clientgroup) {
-                $query .= " AND tblclients.groupid IN (" . $clientgroup . ")";
+                $query .= " AND ra_user.groupid IN (" . $clientgroup . ")";
             }
 
 
             if ($clientlanguage) {
-                $query .= " AND tblclients.language IN (" . $clientlanguage . ")";
+                $query .= " AND ra_user.language IN (" . $clientlanguage . ")";
             }
 
 
@@ -376,7 +376,7 @@ if ($showform) {
                 foreach ($customfield as $k => $v) {
 
                     if ($v) {
-                        $query .= " AND (SELECT value FROM tblcustomfieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=tblclients.id LIMIT 1)='" . db_escape_string($v) . "'";
+                        $query .= " AND (SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid='" . db_escape_string($k) . "' AND relid=ra_user.id LIMIT 1)='" . db_escape_string($v) . "'";
                         continue;
                     }
                 }
@@ -418,32 +418,32 @@ if ($showform) {
         if ($multiple) {
             if ($type == "general") {
                 foreach ($selectedclients as $id) {
-                    $result = select_query_i("tblclients", "", array("id" => $id));
+                    $result = select_query_i("ra_user", "", array("id" => $id));
                     $data = mysqli_fetch_array($result);
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
                 }
             } elseif ($type == "product") {
                 foreach ($selectedclients as $id) {
-                    $result = select_query_i("tblcustomerservices", "tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+                    $result = select_query_i("tblcustomerservices", "ra_user.firstname,ra_user.lastname,ra_user.email,tblcustomerservices.domain", array("tblcustomerservices.id" => $id), "", "", "", "ra_user ON ra_user.id=tblcustomerservices.userid");
                     $data = mysqli_fetch_array($result);
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
                 }
             } elseif ($type == "domain") {
                 foreach ($selectedclients as $id) {
-                    $result = select_query_i("tbldomains", "tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "tblclients ON tblclients.id=tbldomains.userid");
+                    $result = select_query_i("tbldomains", "ra_user.firstname,ra_user.lastname,ra_user.email,tbldomains.domain", array("tbldomains.id" => $id), "", "", "", "ra_user ON ra_user.id=tbldomains.userid");
                     $data = mysqli_fetch_array($result);
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
                 }
             } elseif ($type == "affiliate") {
                 foreach ($selectedclients as $id) {
-                    $result = select_query_i("tblaffiliates", "tblclients.firstname,tblclients.lastname,tblclients.email", array("tblaffiliates.id" => $id), "", "", "", "tblclients ON tblclients.id=tblaffiliates.clientid");
+                    $result = select_query_i("ra_partners", "ra_user.firstname,ra_user.lastname,ra_user.email", array("ra_partners.id" => $id), "", "", "", "ra_user ON ra_user.id=ra_partners.clientid");
                     $data = mysqli_fetch_array($result);
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
                 }
             }
         } else {
             if ($resend) {
-                $result = select_query_i("tblemails", "", array("id" => $emailid));
+                $result = select_query_i("ra_user_mail", "", array("id" => $emailid));
                 $data = mysqli_fetch_array($result);
                 $id = $data['userid'];
                 $subject = $data['subject'];
@@ -459,14 +459,14 @@ if ($showform) {
 
 
             if ($type == "general") {
-                $result = select_query_i("tblclients", "", array("id" => $id));
+                $result = select_query_i("ra_user", "", array("id" => $id));
                 $data = mysqli_fetch_array($result);
 
                 if ($data['email']) {
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " &lt;" . $data['email'] . "&gt;";
                 }
             } elseif ($type == "product") {
-                $query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysqli_real_escape_string($id) . "'";
+                $query = "SELECT ra_user.id,ra_user.firstname,ra_user.lastname,ra_user.email,tblcustomerservices.domain FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE tblcustomerservices.id='" . mysqli_real_escape_string($id) . "'";
                 $result = full_query_i($query);
                 $data = mysqli_fetch_array($result);
 
@@ -474,7 +474,7 @@ if ($showform) {
                     $todata[] = "" . $data['firstname'] . " " . $data['lastname'] . " - " . $data['domain'] . " &lt;" . $data['email'] . "&gt;";
                 }
             } elseif ($type == "domain") {
-                $query = "SELECT tblclients.id,tblclients.firstname,tblclients.lastname,tblclients.email,tbldomains.domain FROM tbldomains INNER JOIN tblclients ON tblclients.id=tbldomains.userid WHERE tbldomains.id='" . mysqli_real_escape_string($id) . "'";
+                $query = "SELECT ra_user.id,ra_user.firstname,ra_user.lastname,ra_user.email,tbldomains.domain FROM tbldomains INNER JOIN ra_user ON ra_user.id=tbldomains.userid WHERE tbldomains.id='" . mysqli_real_escape_string($id) . "'";
                 $result = full_query_i($query);
                 $data = mysqli_fetch_array($result);
 
@@ -493,11 +493,11 @@ if ($showform) {
     echo $infobox;
 
     if ($sub == "loadmessage") {
-        $result = select_query_i("tblsmstemplate", "", array("name" => $messagename));
+        $result = select_query_i("ra_templates_sms", "", array("name" => $messagename));
         $data = mysqli_fetch_array($result);
 
         if (!$data['id']) {
-            $result = select_query_i("tblsmstemplate", "", array("name" => $messagename));
+            $result = select_query_i("ra_templates_sms", "", array("name" => $messagename));
             $data = mysqli_fetch_array($result);
         }
 
@@ -657,7 +657,7 @@ frmmessage.subject.select();
             name=\"messagename\"><option value=\"\">";
     echo $aInt->lang("sendmessage", "choose");
     echo "...";
-    $query = "SELECT * FROM tblsmstemplate";
+    $query = "SELECT * FROM ra_templates_sms";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -668,7 +668,7 @@ frmmessage.subject.select();
 
 
     if ($type != "general") {
-        $result = select_query_i("tblemailtemplates", "", array("type" => $type, "language" => ""), "custom` ASC,`name", "ASC");
+        $result = select_query_i("ra_templates_mail", "", array("type" => $type, "language" => ""), "custom` ASC,`name", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $messid = $data['id'];

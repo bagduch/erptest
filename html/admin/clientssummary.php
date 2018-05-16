@@ -30,7 +30,7 @@ if (isset($_POST['noteid'])) {
         "sticky" => $_POST['done'],
     );
 
-    update_query("tblnotes", $array, array("id" => $_POST['noteid']));
+    update_query("ra_notes", $array, array("id" => $_POST['noteid']));
     if ($_POST['done']) {
         logActivity("Notes Update match as done - User ID: " . $userid, $userid);
     } else {
@@ -55,7 +55,7 @@ if ($action == "massaction") {
             checkPermission("Delete Clients Products/Services");
             foreach ($selproducts as $pid) {
                 delete_query("tblcustomerservices", array("id" => $pid));
-                delete_query("tblserviceaddons", array("hostingid" => $pid));
+                delete_query("ra_catalog_user_sales_addons", array("hostingid" => $pid));
                 logActivity("Deleted Product ID: " . $pid . " - User ID: " . $userid, $userid);
             }
         }
@@ -64,7 +64,7 @@ if ($action == "massaction") {
         if ($seladdons) {
             checkPermission("Delete Clients Products/Services");
             foreach ($seladdons as $aid) {
-                delete_query("tblserviceaddons", array("id" => $aid));
+                delete_query("ra_catalog_user_sales_addons", array("id" => $aid));
                 logActivity("Deleted Addon ID: " . $aid . " - User ID: " . $userid, $userid);
             }
         }
@@ -84,7 +84,7 @@ if ($action == "massaction") {
 
     if (((((($massupdate || $masscreate) || $masssuspend) || $massunsuspend) || $massterminate) || $masschangepackage) || $masschangepw) {
         if ($paymentmethod) {
-            $paymentmethod = get_query_val("tblpaymentgateways", "gateway", array("gateway" => $paymentmethod));
+            $paymentmethod = get_query_val("ra_modules_gateways", "gateway", array("gateway" => $paymentmethod));
         }
 
 
@@ -116,11 +116,11 @@ if ($action == "massaction") {
                 $invdata = getInvoiceProductDetails($serviceid, $existingpid, "", "", $billingcycle, $domain);
                 $description = $invdata['description'] . " (" . fromMySQLDate($existingnextduedate) . " - " . $nextduedate . ")";
                 $tax = $invdata['tax'];
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "ProrataProduct" . $targetnextduedate, "relid" => $serviceid, "description" => $description, "amount" => $amountdue, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+                insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "ProrataProduct" . $targetnextduedate, "relid" => $serviceid, "description" => $description, "amount" => $amountdue, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
             }
 
             foreach ($seladdons as $aid) {
-                $data = get_query_vals("tblserviceaddons", "hostingid,addonid,name,nextduedate,billingcycle,recurring,paymentmethod", array("id" => $aid));
+                $data = get_query_vals("ra_catalog_user_sales_addons", "hostingid,addonid,name,nextduedate,billingcycle,recurring,paymentmethod", array("id" => $aid));
                 $serviceid = $data['hostingid'];
                 $addonid = $data['addonid'];
                 $name = $data['name'];
@@ -158,7 +158,7 @@ if ($action == "massaction") {
 
                 $description .= " (" . fromMySQLDate($existingnextduedate) . " - " . $nextduedate . ")";
                 $tax = $invdata['tax'];
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "ProrataProduct" . $targetnextduedate, "relid" => $aid, "description" => $description, "amount" => $amountdue, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
+                insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "ProrataProduct" . $targetnextduedate, "relid" => $aid, "description" => $description, "amount" => $amountdue, "taxed" => $tax, "duedate" => "now()", "paymentmethod" => $paymentmethod));
             }
 
             createInvoices($userid);
@@ -232,7 +232,7 @@ if ($action == "massaction") {
             if (count($updateqry)) {
                 checkPermission("Edit Clients Products/Services");
                 foreach ($seladdons as $aid) {
-                    update_query("tblserviceaddons", $updateqry, array("id" => $aid));
+                    update_query("ra_catalog_user_sales_addons", $updateqry, array("id" => $aid));
                 }
 
                 logActivity("Mass Updated Addons IDs: " . implode(",", $seladdons) . (" - User ID: " . $userid), $userid);
@@ -406,7 +406,7 @@ if ($action == "uploadfile") {
     $filename = "file" . $rand . "_" . $filename;
     run_hook("AdminClientFileUpload", array("userid" => $userid, "title" => $title, "filename" => $filename, "origfilename" => $origfilename, "adminonly" => isset($adminonly) ? $adminonly : 0));
     move_uploaded_file($_FILES['uploadfile']['tmp_name'], $attachments_dir . $filename);
-    insert_query("tblclientsfiles", array("userid" => $userid, "title" => $title, "filename" => $filename, "adminonly" => isset($adminonly) ? $adminonly : 0, "dateadded" => "now()"));
+    insert_query("ra_userfiles", array("userid" => $userid, "title" => $title, "filename" => $filename, "adminonly" => isset($adminonly) ? $adminonly : 0, "dateadded" => "now()"));
     logActivity("Added Client File - Title: " . $title . " - User ID: " . $userid, $userid);
    redir("userid=" . $userid);
 }
@@ -415,7 +415,7 @@ if ($action == "uploadfile") {
 if ($action == "deletefile") {
     check_token("RA.admin.default");
     checkPermission("Manage Clients Files");
-    $result = select_query_i("tblclientsfiles", "", array("id" => $id, "userid" => $userid));
+    $result = select_query_i("ra_userfiles", "", array("id" => $id, "userid" => $userid));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
 
@@ -426,7 +426,7 @@ if ($action == "deletefile") {
     $title = $data['title'];
     $filename = $data['filename'];
     deleteFile($attachments_dir, $filename);
-    delete_query("tblclientsfiles", array("id" => $id));
+    delete_query("ra_userfiles", array("id" => $id));
     logActivity("Deleted Client File - Title: " . $title . " - User ID: " . $userid, $userid);
     redir("userid=" . $userid);
 }
@@ -463,7 +463,7 @@ if ($action == "addfunds") {
         $invoiceid = createInvoices($userid);
         $paymentmethod = getClientsPaymentMethod($userid);
 
-        insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $addfundsamt, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
+        insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "AddFunds", "relid" => "", "description" => $_LANG['addfunds'], "amount" => $addfundsamt, "taxed" => "0", "duedate" => "now()", "paymentmethod" => $paymentmethod));
 
         $invoiceid = createInvoices($userid, "", true);
         redir("userid=" . $userid . "&addfunds=true&invoiceid=" . $invoiceid);
@@ -524,10 +524,10 @@ if ($csajaxtoggle) {
         exit();
     }
 
-    $csajaxtoggleval = get_query_val("tblclients", $csajaxtoggle, array("id" => $userid));
+    $csajaxtoggleval = get_query_val("ra_user", $csajaxtoggle, array("id" => $userid));
 
     if ($csajaxtoggleval == "on") {
-        update_query("tblclients", array($csajaxtoggle => ""), array("id" => $userid));
+        update_query("ra_user", array($csajaxtoggle => ""), array("id" => $userid));
 
         if ($csajaxtoggle == "taxexempt") {
             echo "<strong class=\"textred\">No</strong>";
@@ -535,7 +535,7 @@ if ($csajaxtoggle) {
             echo "<strong class=\"textgreen\">Yes</strong>";
         }
     } else {
-        update_query("tblclients", array($csajaxtoggle => "on"), array("id" => $userid));
+        update_query("ra_user", array($csajaxtoggle => "on"), array("id" => $userid));
 
         if ($csajaxtoggle == "taxexempt") {
             echo "<strong class=\"textgreen\">Yes</strong>";
@@ -615,7 +615,7 @@ $clientsdetails['splitinvoices'] = ($clientsdetails['separateinvoices'] ? $aInt-
 $templatevars['clientsdetails'] = $clientsdetails;
 include "../includes/countries.php";
 $templatevars['clientsdetails']['countrylong'] = $countries[$clientsdetails['country']];
-$result = select_query_i("tblcontacts", "", array("userid" => $userid));
+$result = select_query_i("ra_user_contacts", "", array("userid" => $userid));
 $contacts = array();
 
 while ($data = mysqli_fetch_array($result)) {
@@ -623,7 +623,7 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 $templatevars['contacts'] = $contacts;
-$result = select_query_i("tblclientgroups", "", array("id" => $clientsdetails['groupid']));
+$result = select_query_i("ra_user_group", "", array("id" => $clientsdetails['groupid']));
 $data = mysqli_fetch_array($result);
 $groupname = $data['groupname'];
 $groupcolour = $data['groupcolour'];
@@ -633,7 +633,7 @@ if (!$groupname) {
 }
 
 $templatevars['clientgroup'] = array("name" => $groupname, "colour" => $groupcolour);
-$result = select_query_i("tblclients", "", array("id" => $userid));
+$result = select_query_i("ra_user", "", array("id" => $userid));
 $data = mysqli_fetch_array($result);
 $datecreated = $data['datecreated'];
 $templatevars['signupdate'] = fromMySQLDate($datecreated);
@@ -663,7 +663,7 @@ if ($clientsdetails['lastlogin']) {
 }
 
 $templatevars['stats'] = $clientstats;
-$result = select_query_i("tblemails", "", array("userid" => $userid), "id", "DESC", "0,5");
+$result = select_query_i("ra_user_mail", "", array("userid" => $userid), "id", "DESC", "0,5");
 $lastfivemail = array();
 
 while ($data = mysqli_fetch_array($result)) {
@@ -671,7 +671,7 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 $templatevars['lastfivemail'] = $lastfivemail;
-$result = select_query_i("tblaffiliates", "", array("clientid" => $userid));
+$result = select_query_i("ra_partners", "", array("clientid" => $userid));
 $data = mysqli_fetch_array($result);
 $affid = $data['id'];
 $templatevars['affiliateid'] = $affid;
@@ -683,7 +683,7 @@ if ($affid) {
 }
 
 $templatevars['messages'] = "<select name=\"messagename\"><option value=\"newmessage\">" . $aInt->lang("global", "newmessage") . "</option>";
-$query = "SELECT * FROM tblemailtemplates WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
+$query = "SELECT * FROM ra_templates_mail WHERE type='general' AND language='' AND name!='Password Reset Validation' ORDER BY name ASC";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
@@ -722,7 +722,7 @@ while ($data = mysqli_fetch_assoc($result)) {
 }
 
 $templatevars['quotes'] = $quotes;
-$result = select_query_i("tblclientsfiles", "", array("userid" => $userid), "title", "ASC");
+$result = select_query_i("ra_userfiles", "", array("userid" => $userid), "title", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
@@ -750,7 +750,7 @@ foreach ($tmplinks as $tmplinks2) {
 }
 
 
-$result = select_query_i("tbladmins", '');
+$result = select_query_i("ra_admin", '');
 while ($data = mysqli_fetch_assoc($result)) {
     $templatevars['adminlist'][] = $data;
 }

@@ -30,7 +30,7 @@ if (isset($_SESSION['uid'])) {
 		}
 	}
 
-    $result = select_query_i("tbltickets", 
+    $result = select_query_i("ra_ticket", 
         "COUNT(id)", 
         "userid='" . mysqli_real_escape_string($_SESSION['uid']) . "' AND status!='Closed'"
     );
@@ -41,8 +41,8 @@ if (isset($_SESSION['uid'])) {
 		check_token();
 		$smartyvalues['searchterm'] = $smartyvalues['q'] = $searchterm;
 		$searchterm = mysqli_real_escape_string(trim($searchterm));
-		$where = "tbltickets.userid='" . mysqli_real_escape_string($_SESSION['uid']) . ("' AND (tbltickets.tid='" . $searchterm . "' OR (tbltickets.title LIKE '%" . $searchterm . "%' OR tbltickets.message LIKE '%" . $searchterm . "%' OR tblticketreplies.message LIKE '%" . $searchterm . "%'))");
-		$result = full_query_i("SELECT COUNT(DISTINCT tbltickets.id) FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where);
+		$where = "ra_ticket.userid='" . mysqli_real_escape_string($_SESSION['uid']) . ("' AND (ra_ticket.tid='" . $searchterm . "' OR (ra_ticket.title LIKE '%" . $searchterm . "%' OR ra_ticket.message LIKE '%" . $searchterm . "%' OR ra_ticket_replies.message LIKE '%" . $searchterm . "%'))");
+		$result = full_query_i("SELECT COUNT(DISTINCT ra_ticket.id) FROM ra_ticket LEFT JOIN ra_ticket_replies ON ra_ticket.id = ra_ticket_replies.tid WHERE " . $where);
 		$data = mysqli_fetch_array($result);
 		$numtickets = $data[0];
 		$smartyvalues['numtickets'] = $numtickets;
@@ -51,7 +51,7 @@ if (isset($_SESSION['uid'])) {
 		$smartyvalues['sort'] = strtolower($sort);
 
         switch($orderby) {
-            case "date":        $orderby = "tbltickets.date";   break;
+            case "date":        $orderby = "ra_ticket.date";   break;
             case "dept":        $orderby = "did";               break;
             case "subject":     $orderby = "title";             break;
             case "status":      $orderby = "status";            break;
@@ -75,11 +75,11 @@ if (isset($_SESSION['uid'])) {
 		}
 
 		$tickets = array();
-		$result = full_query_i("SELECT DISTINCT tbltickets.id FROM tbltickets LEFT JOIN tblticketreplies ON tbltickets.id = tblticketreplies.tid WHERE " . $where . (" ORDER BY " . $orderby . " " . $sort . " LIMIT " . $limit));
+		$result = full_query_i("SELECT DISTINCT ra_ticket.id FROM ra_ticket LEFT JOIN ra_ticket_replies ON ra_ticket.id = ra_ticket_replies.tid WHERE " . $where . (" ORDER BY " . $orderby . " " . $sort . " LIMIT " . $limit));
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
-			$result2 = select_query_i("tbltickets", "", array("userid" => $_SESSION['uid'], "id" => $id));
+			$result2 = select_query_i("ra_ticket", "", array("userid" => $_SESSION['uid'], "id" => $id));
 			$data = mysqli_fetch_array($result2);
 			$tid = $data['tid'];
 			$c = $data['c'];
@@ -99,7 +99,7 @@ if (isset($_SESSION['uid'])) {
 		}
 	}
 	else {
-		$result = select_query_i("tbltickets", "COUNT(id)", array("userid" => $_SESSION['uid']));
+		$result = select_query_i("ra_ticket", "COUNT(id)", array("userid" => $_SESSION['uid']));
 		$data = mysqli_fetch_array($result);
 		$numtickets = $data[0];
 		$smartyvalues['numtickets'] = $numtickets;
@@ -118,16 +118,16 @@ if (isset($_SESSION['uid'])) {
         }
 
 		$tickets = array();
-        $result = select_query_i("tbltickets", 
-                "tbltickets.*,
-                tblticketdepartments.name AS deptname", 
+        $result = select_query_i("ra_ticket", 
+                "ra_ticket.*,
+                ra_ticket_teams.name AS deptname", 
                 array(
                      "userid" => $_SESSION['uid']
                  ), 
                  $orderby, 
                  $sort, 
                  $limit, 
-                 " tblticketdepartments ON tblticketdepartments.id=tbltickets.did"
+                 " ra_ticket_teams ON ra_ticket_teams.id=ra_ticket.did"
              );
 
 		while ($data = mysqli_fetch_array($result)) {

@@ -13,32 +13,32 @@ for ( $day = 1; $day <= 31; $day += 1) {
     $date = date("Y-m-d",mktime(0,0,0,$month,$day,$year));
     $daytext = date("l",mktime(0,0,0,$month,$day,$year));
 
-	$query = "SELECT COUNT(*) FROM tblorders WHERE `date` LIKE '".db_make_safe_date($date)."%' AND status='Active'";
+	$query = "SELECT COUNT(*) FROM ra_orders WHERE `date` LIKE '".db_make_safe_date($date)."%' AND status='Active'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$neworders = $data[0];
 
-	$query = "SELECT COUNT(*) FROM tblinvoices WHERE `date`='".db_make_safe_date($date)."'";
+	$query = "SELECT COUNT(*) FROM ra_bills WHERE `date`='".db_make_safe_date($date)."'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$newinvoices = $data[0];
 
-	$query = "SELECT COUNT(*) FROM tblinvoices WHERE `datepaid` LIKE '".db_make_safe_date($date)."%'";
+	$query = "SELECT COUNT(*) FROM ra_bills WHERE `datepaid` LIKE '".db_make_safe_date($date)."%'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$paidinvoices = $data[0];
 
-	$query = "SELECT COUNT(*) FROM tbltickets WHERE `date` LIKE '".db_make_safe_date($date)."%'";
+	$query = "SELECT COUNT(*) FROM ra_ticket WHERE `date` LIKE '".db_make_safe_date($date)."%'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$newtickets = $data[0];
 
-	$query = "SELECT COUNT(*) FROM tblticketreplies WHERE `date` LIKE '".db_make_safe_date($date)."%' AND admin!=''";
+	$query = "SELECT COUNT(*) FROM ra_ticket_replies WHERE `date` LIKE '".db_make_safe_date($date)."%' AND admin!=''";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$ticketreplies = $data[0];
 
-	$query = "SELECT COUNT(*) FROM tblcancelrequests WHERE `date` LIKE '".db_make_safe_date($date)."%'";
+	$query = "SELECT COUNT(*) FROM ra_cancellations WHERE `date` LIKE '".db_make_safe_date($date)."%'";
 	$result = full_query_i($query);
 	$data = mysqli_fetch_array($result);
 	$cancellations = $data[0];

@@ -24,7 +24,7 @@ class RA_ClientService {
       /**
       * Instantiates client service class
       *
-      * @param user ID according to tblclients
+      * @param user ID according to ra_user
       * @param id ID according to tblcustomerservices
       */
 
@@ -56,7 +56,7 @@ class RA_ClientService {
 
     public function getPromocode() {
         $promoarr = array();
-        $result = select_query_i("tblpromotions", "", "", "code", "ASC");
+        $result = select_query_i("ra_promos", "", "", "code", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $promo_id = $data['id'];
@@ -107,7 +107,7 @@ class RA_ClientService {
     public function getAllclientproducts($clientid) {
         $datas = false;
         if (isset($clientid)) {
-            $query = "select tblcustomerservices.*,tblservices.name,tblservices.type from tblcustomerservices LEFT JOIN tblservices on tblservices.id=tblcustomerservices.packageid where tblcustomerservices.userid=" . $clientid;
+            $query = "select tblcustomerservices.*,ra_catalog.name,ra_catalog.type from tblcustomerservices LEFT JOIN ra_catalog on ra_catalog.id=tblcustomerservices.packageid where tblcustomerservices.userid=" . $clientid;
             $result = full_query_i($query);
             if ($result->num_rows > 0) {
                 while ($data = mysqli_fetch_assoc($result)) {
@@ -122,7 +122,7 @@ class RA_ClientService {
 
     public function getAddonProduct() {
         if (!empty($this->servicedata)) {
-            $query = "select tblcustomerservices.*,tblservices.name,tblservices.type from tblcustomerservices LEFT JOIN tblservices on tblservices.id=tblcustomerservices.packageid where tblcustomerservices.parent=" . $this->servicedata['id'];
+            $query = "select tblcustomerservices.*,ra_catalog.name,ra_catalog.type from tblcustomerservices LEFT JOIN ra_catalog on ra_catalog.id=tblcustomerservices.packageid where tblcustomerservices.parent=" . $this->servicedata['id'];
             $result = full_query_i($query);
             if ($result->num_rows > 0) {
                 $data = mysqli_fetch_assoc($result);
@@ -137,7 +137,7 @@ class RA_ClientService {
 
     public function getAlladdons() {
         if (!empty($this->servicedata)) {
-            $query = "select * from tblservicetoservice as tsts LEFT JOIN tblservices as ts on tsts.children_id=ts.id where tsts.parent_id=" . $this->servicedata['packageid'];
+            $query = "select * from ra_service2service as tsts LEFT JOIN ra_catalog as ts on tsts.children_id=ts.id where tsts.parent_id=" . $this->servicedata['packageid'];
             $result = full_query_i($query);
             if ($result->num_rows > 0) {
                 while ($data = mysqli_fetch_assoc($result)) {
@@ -158,7 +158,7 @@ class RA_ClientService {
     public function addaddon($id, $payment) {
 
         $addon = array();
-        $query = "select * from tblservices where id=" . $id;
+        $query = "select * from ra_catalog where id=" . $id;
         $result = full_query_i($query);
 
         if ($result->num_rows > 0) {

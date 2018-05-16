@@ -5,7 +5,7 @@
 function buildCategoriesList($level, $parentlevel, $exclude = "") {
 	global $catid;
 
-	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $level), "name", "ASC");
+	$result = select_query_i("ra_macro_categories", "", array("parentid" => $level), "name", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -37,12 +37,12 @@ function buildCategoriesList($level, $parentlevel, $exclude = "") {
 }
 
 function deletePreDefCat($catid) {
-	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid));
+	$result = select_query_i("ra_macro_categories", "", array("parentid" => $catid));
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
-		delete_query("tblticketpredefinedreplies", array("catid" => $id));
-		delete_query("tblticketpredefinedcats", array("id" => $id));
+		delete_query("ra_macro_categories_templates", array("catid" => $id));
+		delete_query("ra_macro_categories", array("id" => $id));
 		deletePreDefCat($id);
 	}
 
@@ -58,7 +58,7 @@ $aInt->icon = "ticketspredefined";
 if ($addreply == "true") {
 	check_token("RA.admin.default");
 	checkPermission("Create Predefined Replies");
-	$lastid = insert_query("tblticketpredefinedreplies", array("catid" => $catid, "name" => $name));
+	$lastid = insert_query("ra_macro_categories_templates", array("catid" => $catid, "name" => $name));
 	logActivity("Added New Predefined Reply - " . $title);
 	redir("action=edit&id=" . $lastid);
 	exit();
@@ -68,7 +68,7 @@ if ($addreply == "true") {
 if ($sub == "save") {
 	check_token("RA.admin.default");
 	checkPermission("Manage Predefined Replies");
-	$table = "tblticketpredefinedreplies";
+	$table = "ra_macro_categories_templates";
 	$array = array("catid" => $catid, "name" => $name, "reply" => $reply);
 	$where = array("id" => $id);
 	update_query($table, $array, $where);
@@ -81,7 +81,7 @@ if ($sub == "save") {
 if ($sub == "savecat") {
 	check_token("RA.admin.default");
 	checkPermission("Manage Predefined Replies");
-	$table = "tblticketpredefinedcats";
+	$table = "ra_macro_categories";
 	$array = array("parentid" => $parentid, "name" => $name);
 	$where = array("id" => $id);
 	update_query($table, $array, $where);
@@ -94,7 +94,7 @@ if ($sub == "savecat") {
 if ($addcategory == "true") {
 	check_token("RA.admin.default");
 	checkPermission("Create Predefined Replies");
-	insert_query("tblticketpredefinedcats", array("parentid" => $catid, "name" => $catname));
+	insert_query("ra_macro_categories", array("parentid" => $catid, "name" => $catname));
 	logActivity("Added New Predefined Reply Category - " . $catname);
 	redir("catid=" . $catid . "&addedcat=true");
 	exit();
@@ -104,7 +104,7 @@ if ($addcategory == "true") {
 if ($sub == "delete") {
 	check_token("RA.admin.default");
 	checkPermission("Delete Predefined Replies");
-	delete_query("tblticketpredefinedreplies", array("id" => $id));
+	delete_query("ra_macro_categories_templates", array("id" => $id));
 	logActivity("Deleted Predefined Reply (ID: " . $id . ")");
 	redir("catid=" . $catid . "&delete=true");
 	exit();
@@ -114,8 +114,8 @@ if ($sub == "delete") {
 if ($sub == "deletecategory") {
 	check_token("RA.admin.default");
 	checkPermission("Delete Predefined Replies");
-	delete_query("tblticketpredefinedreplies", array("catid" => $id));
-	delete_query("tblticketpredefinedcats", array("id" => $id));
+	delete_query("ra_macro_categories_templates", array("catid" => $id));
+	delete_query("ra_macro_categories", array("id" => $id));
 	deletePreDefCat($id);
 	logActivity("Deleted Predefined Reply Category (ID: " . $id . ")");
 	redir("catid=" . $catid . "&deletecat=true");
@@ -152,7 +152,7 @@ if ($action == "") {
 	echo $infobox;
 
 	if ($catid) {
-		$catid = get_query_val("tblticketpredefinedcats", "id", array("id" => $catid));
+		$catid = get_query_val("ra_macro_categories", "id", array("id" => $catid));
 	}
 
 	$aInt->deleteJSConfirm("doDelete", "support", "predefdelsure", $_SERVER['PHP_SELF'] . "?catid=" . $catid . "&sub=delete&id=");
@@ -245,14 +245,14 @@ if ($action == "") {
 
 
 	if ($catid != "0") {
-		$result = select_query_i("tblticketpredefinedcats", "", array("id" => $catid));
+		$result = select_query_i("ra_macro_categories", "", array("id" => $catid));
 		$data = mysqli_fetch_array($result);
 		$catparentid = $data['parentid'];
 		$catname = $data['name'];
 		$catbreadcrumbnav = " > <a href=\"" . $PHP_SELF . "?catid=" . $catid . "\">" . $catname . "</a>";
 
 		while ($catparentid != "0") {
-			$result = select_query_i("tblticketpredefinedcats", "", array("id" => $catparentid));
+			$result = select_query_i("ra_macro_categories", "", array("id" => $catparentid));
 			$data = mysqli_fetch_array($result);
 			$cattempid = $data['id'];
 			$catparentid = $data['parentid'];
@@ -264,7 +264,7 @@ if ($action == "") {
 		echo "<p>" . $aInt->lang("support", "youarehere") . (": <a href=\"" . $PHP_SELF . "\">") . $aInt->lang("support", "toplevel") . "</a> " . $breadcrumbnav . "</p>";
 	}
 
-	$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
+	$result = select_query_i("ra_macro_categories", "", array("parentid" => $catid), "name", "ASC");
 	$numcats = mysqli_num_rows($result);
 	echo "
 ";
@@ -282,13 +282,13 @@ if ($action == "") {
 			$catid = "0";
 		}
 
-		$result = select_query_i("tblticketpredefinedcats", "", array("parentid" => $catid), "name", "ASC");
+		$result = select_query_i("ra_macro_categories", "", array("parentid" => $catid), "name", "ASC");
 		$i = 0;
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
 			$name = $data['name'];
-			$result3 = select_query_i("tblticketpredefinedreplies", "id", array("catid" => $id));
+			$result3 = select_query_i("ra_macro_categories_templates", "id", array("catid" => $id));
 			$numarticles = mysqli_num_rows($result3);
 			echo "<td width=33%><img src=\"../images/folder.gif\" align=\"absmiddle\"> <a href=\"" . $PHP_SELF . "?catid=" . $id . "\"><b>" . $name . "</b></a> (" . $numarticles . ") <a href=\"" . $PHP_SELF . "?action=editcat&id=" . $id . "\"><img src=\"images/edit.gif\" align=\"absmiddle\" border=\"0\" alt=\"" . $aInt->lang("global", "edit") . ("\" /></a> <a href=\"#\" onClick=\"doDeleteCat(" . $id . ");return false\"><img src=\"images/delete.gif\" align=\"absmiddle\" border=\"0\"alt=\"") . $aInt->lang("global", "delete") . ("\" /></a><br>" . $description . "</td>");
 			++$i;
@@ -330,7 +330,7 @@ if ($action == "") {
 		$where = substr($where, 5);
 	}
 
-	$result = select_query_i("tblticketpredefinedreplies", "", $where, "name", "ASC");
+	$result = select_query_i("ra_macro_categories_templates", "", $where, "name", "ASC");
 	$numarticles = mysqli_num_rows($result);
 
 	if ($search) {
@@ -346,7 +346,7 @@ if ($action == "") {
 
 <table width=100%><tr>
 ";
-		$result = select_query_i("tblticketpredefinedreplies", "", $where, "name", "ASC");
+		$result = select_query_i("ra_macro_categories_templates", "", $where, "name", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
@@ -371,7 +371,7 @@ if ($action == "") {
 }
 else {
 	if ($action == "edit") {
-		$result = select_query_i("tblticketpredefinedreplies", "", array("id" => $id));
+		$result = select_query_i("ra_macro_categories_templates", "", array("id" => $id));
 		$data = mysqli_fetch_array($result);
 		$catid = $data['catid'];
 		$name = $data['name'];
@@ -418,7 +418,7 @@ else {
 	}
 	else {
 		if ($action == "editcat") {
-			$result = select_query_i("tblticketpredefinedcats", "", array("id" => $id));
+			$result = select_query_i("ra_macro_categories", "", array("id" => $id));
 			$data = mysqli_fetch_array($result);
 			$parentid = $catid = $data['parentid'];
 			$name = stripslashes($data['name']);

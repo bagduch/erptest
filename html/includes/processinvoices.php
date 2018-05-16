@@ -63,7 +63,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
     AND (donotrenew='' OR `status`='Pending')
     AND `status` IN (" . $statusfilter . ")
     AND " . $matchfield . "<='" . $descriptioninvoicedate . "'";
-    $hostingaddonsquery = "tblserviceaddons.paymentmethod!='' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.status IN (" . $statusfilter . ") AND tblserviceaddons.nextduedate!='00000000' AND tblserviceaddons.nextinvoicedate!='00000000' AND ((tblserviceaddons.billingcycle='Monthly' AND tblserviceaddons." . $matchfield . "<='" . $invoicedatemonthly . ("') OR (tblserviceaddons.billingcycle='Quarterly' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatequarterly . ("') OR (tblserviceaddons.billingcycle='Semi-Annually' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatesemiannually . ("') OR (tblserviceaddons.billingcycle='Annually' AND tblserviceaddons." . $matchfield . "<='") . $invoicedateannually . ("') OR (tblserviceaddons.billingcycle='Biennially' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatebiennially . ("') OR (tblserviceaddons.billingcycle='Triennially' AND tblserviceaddons." . $matchfield . "<='") . $invoicedatetriennially . "') OR (tblserviceaddons.billingcycle='One Time'))";
+    $hostingaddonsquery = "ra_catalog_user_sales_addons.paymentmethod!='' AND ra_catalog_user_sales_addons.billingcycle!='Free' AND ra_catalog_user_sales_addons.billingcycle!='Free Account' AND ra_catalog_user_sales_addons.status IN (" . $statusfilter . ") AND ra_catalog_user_sales_addons.nextduedate!='00000000' AND ra_catalog_user_sales_addons.nextinvoicedate!='00000000' AND ((ra_catalog_user_sales_addons.billingcycle='Monthly' AND ra_catalog_user_sales_addons." . $matchfield . "<='" . $invoicedatemonthly . ("') OR (ra_catalog_user_sales_addons.billingcycle='Quarterly' AND ra_catalog_user_sales_addons." . $matchfield . "<='") . $invoicedatequarterly . ("') OR (ra_catalog_user_sales_addons.billingcycle='Semi-Annually' AND ra_catalog_user_sales_addons." . $matchfield . "<='") . $invoicedatesemiannually . ("') OR (ra_catalog_user_sales_addons.billingcycle='Annually' AND ra_catalog_user_sales_addons." . $matchfield . "<='") . $invoicedateannually . ("') OR (ra_catalog_user_sales_addons.billingcycle='Biennially' AND ra_catalog_user_sales_addons." . $matchfield . "<='") . $invoicedatebiennially . ("') OR (ra_catalog_user_sales_addons.billingcycle='Triennially' AND ra_catalog_user_sales_addons." . $matchfield . "<='") . $invoicedatetriennially . "') OR (ra_catalog_user_sales_addons.billingcycle='One Time'))";
     $i = 0;
     $billableitemqry = "";
 
@@ -84,7 +84,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
 
         if ($specificitems['addons']) {
-            $hostingaddonsquery .= "tblserviceaddons.id IN (" . db_build_in_array(db_escape_numarray($specificitems['addons'])) . ") AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account'";
+            $hostingaddonsquery .= "ra_catalog_user_sales_addons.id IN (" . db_build_in_array(db_escape_numarray($specificitems['addons'])) . ") AND ra_catalog_user_sales_addons.billingcycle!='Free' AND ra_catalog_user_sales_addons.billingcycle!='Free Account'";
         }
 
 
@@ -98,7 +98,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
     if ($hostingquery) {
         $servicecount = 0;
         $cancellationreqids = array();
-        $result = select_query_i("tblcancelrequests", "DISTINCT relid", "");
+        $result = select_query_i("ra_cancellations", "DISTINCT relid", "");
 
         while ($data = mysqli_fetch_array($result)) {
             $cancellationreqids[] = $data[0];
@@ -129,7 +129,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                 $billingcycle = $data['billingcycle'];
                 $status = $data['servicestatus'];
                 $num_rows = get_query_val(
-                        "tblinvoiceitems", "COUNT(id)", array(
+                        "ra_bill_lineitems", "COUNT(id)", array(
                     "userid" => $userid,
                     "type" => "Service",
                     "relid" => $serviceid,
@@ -139,7 +139,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                 $contblock = false;
 
                 if ((!$num_rows && $continvoicegen) && $status == "Pending") {
-                    $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $serviceid));
+                    $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $serviceid));
                     $contblock = true;
                 }
                 if ($num_rows == 0) {
@@ -156,7 +156,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                     $recurringfinished = false;
 
                     if ($recurringcycles) {
-                        $num_rows3 = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $id));
+                        $num_rows3 = get_query_val("ra_bill_lineitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $id));
 
                         if ($recurringcycles <= $num_rows3) {
                             update_query("tblcustomerservices", array("servicestatus" => "Completed"), array("id" => $id));
@@ -173,10 +173,10 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                             $amount -= $promovals['amount'];
                         }
 
-//                        insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Service", "relid" => $id, "description" => $description, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+//                        insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "Service", "relid" => $id, "description" => $description, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
 
                         if (isset($promovals['description'])) {
-                            insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Promo", "relid" => $id, "description" => $promovals['description'], "amount" => $promovals['amount'], "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+                            insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "Promo", "relid" => $id, "description" => $promovals['description'], "amount" => $promovals['amount'], "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
                         }
                     }
                 } else {
@@ -189,10 +189,10 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
             if ($hostingaddonsquery) {
                 $result3 = select_query_i(
-                        "tblserviceaddons", "tblserviceaddons.*,
-                    tblserviceaddons.regdate AS addonregdate,
+                        "ra_catalog_user_sales_addons", "ra_catalog_user_sales_addons.*,
+                    ra_catalog_user_sales_addons.regdate AS addonregdate,
                     tblcustomerservices.userid,
-                    tblcustomerservices.description", $hostingaddonsquery . (" AND tblserviceaddons.hostingid='" . $id . "'"), "tblserviceaddons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid"
+                    tblcustomerservices.description", $hostingaddonsquery . (" AND ra_catalog_user_sales_addons.hostingid='" . $id . "'"), "ra_catalog_user_sales_addons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid"
                 );
 
                 while ($data = mysqli_fetch_array($result3)) {
@@ -201,7 +201,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                     $nextduedate = $data[$matchfield];
                     $status = $data['status'];
                     $num_rows = get_query_val(
-                            "tblinvoiceitems", "COUNT(id)", array(
+                            "ra_bill_lineitems", "COUNT(id)", array(
                         "userid" => $userid,
                         "type" => "Addon",
                         "relid" => $id,
@@ -212,7 +212,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
 
                     if ((!$num_rows && $continvoicegen) && $status == "Pending") {
                         $num_rows = get_query_val(
-                                "tblinvoiceitems", "COUNT(id)", array(
+                                "ra_bill_lineitems", "COUNT(id)", array(
                             "userid" => $userid,
                             "type" => "Addon",
                             "relid" => $id
@@ -248,7 +248,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                             $paydates = "(" . fromMySQLDate($nextduedate) . " - " . fromMySQLDate($invoicepayuntildate) . ")";
                         }
                         $num_rows = get_query_val(
-                                "tblinvoiceitems", "COUNT(id)", array(
+                                "ra_bill_lineitems", "COUNT(id)", array(
                             "userid" => $userid,
                             "type" => "Addon",
                             "relid" => $id,
@@ -265,7 +265,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                                 }
                                 $description = $_LANG['orderaddon'] . (" " . $description . "- " . $name . " " . $paydates);
                                 insert_query(
-                                        "tblinvoiceitems", array(
+                                        "ra_bill_lineitems", array(
                                     "userid" => $userid,
                                     "type" => "Addon",
                                     "relid" => $id,
@@ -281,7 +281,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                         }
                         if (!$contblock && $continvoicegen) {
                             update_query(
-                                    "tblserviceaddons", array(
+                                    "ra_catalog_user_sales_addons", array(
                                 "nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)
                                     ), array(
                                 "id" => $id
@@ -301,19 +301,19 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
     if ($hostingaddonsquery) {
         $addoncount = 0;
         if (count($AddonSpecificIDs)) {
-            $hostingaddonsquery .= " AND tblserviceaddons.id NOT IN (" . db_build_in_array(db_escape_numarray($AddonSpecificIDs)) . ")";
+            $hostingaddonsquery .= " AND ra_catalog_user_sales_addons.id NOT IN (" . db_build_in_array(db_escape_numarray($AddonSpecificIDs)) . ")";
         }
-        $result = select_query_i("tblserviceaddons", "tblserviceaddons.*,tblserviceaddons.regdate AS addonregdate,tblcustomerservices.userid,tblcustomerservices.description", $hostingaddonsquery, "tblserviceaddons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid");
+        $result = select_query_i("ra_catalog_user_sales_addons", "ra_catalog_user_sales_addons.*,ra_catalog_user_sales_addons.regdate AS addonregdate,tblcustomerservices.userid,tblcustomerservices.description", $hostingaddonsquery, "ra_catalog_user_sales_addons`.`name", "ASC", "", "tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid");
         $totaladdonrows = mysqli_num_rows($result);
         while ($data = mysqli_fetch_array($result)) {
             $id = $data['id'];
             $userid = $data['userid'];
             $nextduedate = $data[$matchfield];
             $status = $data['status'];
-            $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id, "duedate" => $nextduedate));
+            $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id, "duedate" => $nextduedate));
             $contblock = false;
             if ((!$num_rows && $continvoicegen) && $status == "Pending") {
-                $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id));
+                $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", array("userid" => $userid, "type" => "Addon", "relid" => $id));
                 $contblock = true;
             }
 
@@ -349,11 +349,11 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                         $description = "(" . $description . ") ";
                     }
                     $description = $_LANG['orderaddon'] . (" " . $description . "- " . $name . " " . $paydates);
-                    insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Addon", "relid" => $id, "description" => $description, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+                    insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "Addon", "relid" => $id, "description" => $description, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
                 }
             } else {
                 if (!$contblock && $continvoicegen) {
-                    update_query("tblserviceaddons", array("nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)), array("id" => $id));
+                    update_query("ra_catalog_user_sales_addons", array("nextinvoicedate" => getInvoicePayUntilDate($nextduedate, $billingcycle, true)), array("id" => $id));
                 }
             }
             ++$addoncount;
@@ -371,11 +371,11 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
             $userid = $data['userid'];
             $nextduedate = $data[$matchfield];
             $status = $data['status'];
-            $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", "userid='" . $userid . "' AND type IN ('Service','Upgrade','ServiceTransfer') AND relid='" . $id . "' AND duedate='" . $nextduedate . "'");
+            $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", "userid='" . $userid . "' AND type IN ('Service','Upgrade','ServiceTransfer') AND relid='" . $id . "' AND duedate='" . $nextduedate . "'");
             $contblock = false;
 
             if ((!$num_rows && $continvoicegen) && $status == "Pending") {
-                $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", "userid='" . $userid . "' AND type IN ('Service','Upgrade','ServiceTransfer') AND relid='" . $id . "'");
+                $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", "userid='" . $userid . "' AND type IN ('Service','Upgrade','ServiceTransfer') AND relid='" . $id . "'");
                 $contblock = true;
             }
 
@@ -438,7 +438,7 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                 $promo_description = $promo_amount = 0;
 
                 if ($promoid) {
-                    $data = get_query_vals("tblpromotions", "", array("id" => $promoid));
+                    $data = get_query_vals("ra_promos", "", array("id" => $promoid));
                     $promo_id = $data['id'];
 
                     if ($promo_id) {
@@ -467,10 +467,10 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
                     }
                 }
 
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "Service" . $type, "relid" => $id, "description" => $descriptiondesc, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+                insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "Service" . $type, "relid" => $id, "description" => $descriptiondesc, "amount" => $amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
 
                 if ($promo_description) {
-                    insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "PromoService", "relid" => $id, "description" => $promo_description, "amount" => $promo_amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
+                    insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "PromoService", "relid" => $id, "description" => $promo_description, "amount" => $promo_amount, "taxed" => $tax, "duedate" => $nextduedate, "paymentmethod" => $paymentmethod));
                 }
             } else {
                 if (!$contblock && $continvoicegen) {
@@ -501,16 +501,16 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
             $paymentmethod = getClientsPaymentMethod($data['userid']);
 
             if ($data['invoiceaction'] != "4") {
-                insert_query("tblinvoiceitems", array("userid" => $data['userid'], "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax, "duedate" => $data['duedate'], "paymentmethod" => $paymentmethod));
+                insert_query("ra_bill_lineitems", array("userid" => $data['userid'], "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax, "duedate" => $data['duedate'], "paymentmethod" => $paymentmethod));
             }
 
             $updatearray = array("invoicecount" => "+1");
 
             if ($data['invoiceaction'] == "4") {
-                $num_rows = get_query_val("tblinvoiceitems", "COUNT(id)", array("type" => "Item", "relid" => $data['id'], "duedate" => $data['duedate']));
+                $num_rows = get_query_val("ra_bill_lineitems", "COUNT(id)", array("type" => "Item", "relid" => $data['id'], "duedate" => $data['duedate']));
 
                 if ($num_rows == 0) {
-                    insert_query("tblinvoiceitems", array("userid" => $data['userid'], "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax, "duedate" => $data['duedate'], "paymentmethod" => $paymentmethod));
+                    insert_query("ra_bill_lineitems", array("userid" => $data['userid'], "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax, "duedate" => $data['duedate'], "paymentmethod" => $paymentmethod));
                 }
 
                 $adddays = $addmonths = $addyears = 0;
@@ -553,11 +553,11 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
     if (is_array($specificitems)) {
 
 
-        $where[] = "tblclients.separateinvoices=''";
-        $where[] = "(tblclientgroups.separateinvoices='' OR tblclientgroups.separateinvoices is null)";
+        $where[] = "ra_user.separateinvoices=''";
+        $where[] = "(ra_user_group.separateinvoices='' OR ra_user_group.separateinvoices is null)";
     }
 
-    $result = select_query_i("tblinvoiceitems", "DISTINCT tblinvoiceitems.userid,tblinvoiceitems.duedate,tblinvoiceitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "tblclients ON tblclients.id=tblinvoiceitems.userid LEFT JOIN tblclientgroups ON tblclientgroups.id=tblclients.groupid");
+    $result = select_query_i("ra_bill_lineitems", "DISTINCT ra_bill_lineitems.userid,ra_bill_lineitems.duedate,ra_bill_lineitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "ra_user ON ra_user.id=ra_bill_lineitems.userid LEFT JOIN ra_user_group ON ra_user_group.id=ra_user.groupid");
 
     while ($data = mysqli_fetch_array($result)) {
 
@@ -573,8 +573,8 @@ function createInvoices($func_userid = "", $noemails = "", $nocredit = "", $spec
             $where[] = "userid=" . (int) $func_userid;
         }
 
-        $where[] = "(tblclients.separateinvoices='on' OR tblclientgroups.separateinvoices='on')";
-        $result = select_query_i("tblinvoiceitems", "tblinvoiceitems.id,tblinvoiceitems.userid,tblinvoiceitems.type,tblinvoiceitems.relid,tblinvoiceitems.duedate,tblinvoiceitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "tblclients ON tblclients.id=tblinvoiceitems.userid LEFT JOIN tblclientgroups ON tblclientgroups.id=tblclients.groupid");
+        $where[] = "(ra_user.separateinvoices='on' OR ra_user_group.separateinvoices='on')";
+        $result = select_query_i("ra_bill_lineitems", "ra_bill_lineitems.id,ra_bill_lineitems.userid,ra_bill_lineitems.type,ra_bill_lineitems.relid,ra_bill_lineitems.duedate,ra_bill_lineitems.paymentmethod", implode(" AND ", $where), "duedate", "ASC", "", "ra_user ON ra_user.id=ra_bill_lineitems.userid LEFT JOIN ra_user_group ON ra_user_group.id=ra_user.groupid");
         while ($data = mysqli_fetch_array($result)) {
 
 
@@ -600,7 +600,7 @@ function invoicereminders($CONFIG) {
         if ($CONFIG['SendInvoiceReminderDays']) {
             $invoiceids = array();
             $invoicedateyear = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['SendInvoiceReminderDays'], date("Y")));
-            $query = "SELECT * FROM tblinvoices WHERE duedate='" . $invoicedateyear . "' AND `status`='Unpaid'";
+            $query = "SELECT * FROM ra_bills WHERE duedate='" . $invoicedateyear . "' AND `status`='Unpaid'";
             $result = full_query_i($query);
             while ($data = mysqli_fetch_array($result)) {
                 $id = $data['id'];
@@ -638,12 +638,12 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         }
 
         $invpaymentmethod = getClientsPaymentMethod($userid);
-        update_query("tblinvoiceitems", array("paymentmethod" => $invpaymentmethod), array("id" => $itemid));
+        update_query("ra_bill_lineitems", array("paymentmethod" => $invpaymentmethod), array("id" => $itemid));
     }
 
 
     if ($itemid) {
-        if (get_query_val("tblinvoiceitems", "invoiceid", array("id" => $itemid))) {
+        if (get_query_val("ra_bill_lineitems", "invoiceid", array("id" => $itemid))) {
             return false;
         }
     }
@@ -651,7 +651,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
     $taxrate = $taxrate2 = 0;
 
     if ($CONFIG['TaxEnabled']) {
-        $data = get_query_vals("tblclients", "taxexempt,state,country,separateinvoices", array("id" => $userid));
+        $data = get_query_vals("ra_user", "taxexempt,state,country,separateinvoices", array("id" => $userid));
         $taxexempt = $data['taxexempt'];
         $taxstate = $data['state'];
         $taxcountry = $data['country'];
@@ -666,16 +666,16 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
 
     $invoicearray = array("date" => "now()", "invoicenum" => "", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => $invoicenotes);
 
-    $invoiceid = insert_query("tblinvoices", $invoicearray);
+    $invoiceid = insert_query("ra_bills", $invoicearray);
 
     if ($itemid) {
-        update_query("tblinvoiceitems", array("invoiceid" => $invoiceid), array("invoiceid" => "0", "userid" => $userid, "type" => "Promo" . $type, "relid" => $relid));
+        update_query("ra_bill_lineitems", array("invoiceid" => $invoiceid), array("invoiceid" => "0", "userid" => $userid, "type" => "Promo" . $type, "relid" => $relid));
         $where = array("id" => $itemid);
     } else {
         $where = array("invoiceid" => "NULL", "duedate" => $duedate, "userid" => $userid, "paymentmethod" => $paymentmethod);
     }
 
-    update_query("tblinvoiceitems", array("invoiceid" => $invoiceid), $where);
+    update_query("ra_bill_lineitems", array("invoiceid" => $invoiceid), $where);
     logActivity("Created Invoice - Invoice ID: " . $invoiceid, $userid);
 
     if (is_object($cron)) {
@@ -686,30 +686,30 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
     $result2 = select_query_i("tblbillableitems", "", array("userid" => $userid, "invoiceaction" => "2", "invoicecount" => "0"));
 
     while ($data = mysqli_fetch_array($result2)) {
-        insert_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "userid" => $userid, "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax));
+        insert_query("ra_bill_lineitems", array("invoiceid" => $invoiceid, "userid" => $userid, "type" => "Item", "relid" => $data['id'], "description" => $data['description'], "amount" => $data['amount'], "taxed" => $billableitemstax));
         update_query("tblbillableitems", array("invoicecount" => "+1"), array("id" => $data['id']));
     }
 
     updateInvoiceTotal($invoiceid);
-    $data2 = get_query_vals("tblclients", "credit,groupid", array("id" => $userid));
+    $data2 = get_query_vals("ra_user", "credit,groupid", array("id" => $userid));
     $credit = $data2['credit'];
     $groupid = $data2['groupid'];
-    $data2 = get_query_vals("tblinvoices", "subtotal,total", array("id" => $invoiceid));
+    $data2 = get_query_vals("ra_bills", "subtotal,total", array("id" => $invoiceid));
     $subtotal = $data2['subtotal'];
     $total = $data2['total'];
-    $isaddfundsinvoice = get_query_val("tblinvoiceitems", "COUNT(id)", "invoiceid='" . $invoiceid . "' AND (type='AddFunds' OR type='Invoice')");
+    $isaddfundsinvoice = get_query_val("ra_bill_lineitems", "COUNT(id)", "invoiceid='" . $invoiceid . "' AND (type='AddFunds' OR type='Invoice')");
 
     if ($groupid && !$isaddfundsinvoice) {
-        $discountpercent = get_query_val("tblclientgroups", "discountpercent", array("id" => $groupid));
+        $discountpercent = get_query_val("ra_user_group", "discountpercent", array("id" => $groupid));
 
         if (0 < $discountpercent) {
             $discountamount = $subtotal * ($discountpercent / 100) * (0 - 1);
-            insert_query("tblinvoiceitems", array("invoiceid" => $invoiceid, "userid" => $userid, "type" => "GroupDiscount", "description" => $_LANG['clientgroupdiscount'], "amount" => $discountamount, "taxed" => "1"));
+            insert_query("ra_bill_lineitems", array("invoiceid" => $invoiceid, "userid" => $userid, "type" => "GroupDiscount", "description" => $_LANG['clientgroupdiscount'], "amount" => $discountamount, "taxed" => "1"));
             updateInvoiceTotal($invoiceid);
-            $data2 = get_query_vals("tblclients", "credit,groupid", array("id" => $userid));
+            $data2 = get_query_vals("ra_user", "credit,groupid", array("id" => $userid));
             $credit = $data2['credit'];
             $groupid = $data2['groupid'];
-            $data2 = get_query_vals("tblinvoices", "subtotal,total", array("id" => $invoiceid));
+            $data2 = get_query_vals("ra_bills", "subtotal,total", array("id" => $invoiceid));
             $subtotal = $data2['subtotal'];
             $total = $data2['total'];
         }
@@ -717,7 +717,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
 
 
     if ($ra->get_config("ContinuousInvoiceGeneration")) {
-        $result2 = select_query_i("tblinvoiceitems", "", array("invoiceid" => $invoiceid));
+        $result2 = select_query_i("ra_bill_lineitems", "", array("invoiceid" => $invoiceid));
 
         while ($data = mysqli_fetch_array($result2)) {
             $type = $data['type'];
@@ -734,7 +734,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
                 $packageid = $data['packageid'];
                 $regdate = $data['regdate'];
                 $nextduedate = $data['nextduedate'];
-                $data = get_query_vals("tblservices", "proratabilling,proratadate,proratachargenextmonth", array("id" => $packageid));
+                $data = get_query_vals("ra_catalog", "proratabilling,proratadate,proratachargenextmonth", array("id" => $packageid));
                 $proratabilling = $data['proratabilling'];
                 $proratadate = $data['proratadate'];
                 $proratachargenextmonth = $data['proratachargenextmonth'];
@@ -749,7 +749,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
                     $nextinvoicedate = date("Ymd", mktime(0, 0, 0, $nextduedate[1], $nextduedate[2], $nextduedate[0] + $registrationperiod));
                 } else {
                     if ($type == "Addon") {
-                        $billingcycle = get_query_val("tblserviceaddons", "billingcycle", array("id" => $relid));
+                        $billingcycle = get_query_val("ra_catalog_user_sales_addons", "billingcycle", array("id" => $relid));
                         $proratamonths = getBillingCycleMonths($billingcycle);
                         $nextinvoicedate = date("Ymd", mktime(0, 0, 0, $month + $proratamonths, $day, $year));
                     }
@@ -798,7 +798,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
 
 
             if ($type == "Addon") {
-                update_query("tblserviceaddons", array("nextinvoicedate" => $nextinvoicedate), array("id" => $relid));
+                update_query("ra_catalog_user_sales_addons", array("nextinvoicedate" => $nextinvoicedate), array("id" => $relid));
             }
         }
     }
@@ -815,9 +815,9 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         }
 
         logActivity("Credit Automatically Applied at Invoice Creation - Invoice ID: " . $invoiceid . " - Amount: " . $credit, $userid);
-        insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Applied to Invoice #" . $invoiceid, "amount" => $credit * (0 - 1)));
-        update_query("tblclients", array("credit" => $creditleft), array("id" => $userid));
-        update_query("tblinvoices", array("credit" => $credit), array("id" => $invoiceid));
+        insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Applied to Invoice #" . $invoiceid, "amount" => $credit * (0 - 1)));
+        update_query("ra_user", array("credit" => $creditleft), array("id" => $userid));
+        update_query("ra_bills", array("credit" => $credit), array("id" => $invoiceid));
         updateInvoiceTotal($invoiceid);
     }
 
@@ -827,7 +827,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         processPaidInvoice($invoiceid);
     }
 
-    $result2 = select_query_i("tblpaymentgateways", "value", array("gateway" => $invpaymentmethod, "setting" => "type"));
+    $result2 = select_query_i("ra_modules_gateways", "value", array("gateway" => $invpaymentmethod, "setting" => "type"));
     $data2 = mysqli_fetch_array($result2);
     $paymenttype = $data2['value'];
 
@@ -835,7 +835,7 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         sendMessage((($paymenttype == "CC" || $paymenttype == "OfflineCC") ? "Credit Card " : "") . "Invoice Created", $invoiceid);
     }
 
-    $result2 = select_query_i("tblinvoices", "total", array("id" => $invoiceid, "status" => "Unpaid"));
+    $result2 = select_query_i("ra_bills", "total", array("id" => $invoiceid, "status" => "Unpaid"));
     $data2 = mysqli_fetch_array($result2);
     $total = $data2['total'];
 
@@ -852,8 +852,8 @@ function createInvoicesProcess($data, $noemails = "", $nocredit = "") {
         $counter = 1;
 
         while ($counter <= $invoiceincrement) {
-            $tempinvoiceid = insert_query("tblinvoices", array("date" => "now()"));
-            delete_query("tblinvoices", array("id" => $tempinvoiceid));
+            $tempinvoiceid = insert_query("ra_bills", array("date" => "now()"));
+            delete_query("ra_bills", array("id" => $tempinvoiceid));
             $counter += 1;
         }
     }
@@ -864,7 +864,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
     global $_LANG;
     global $currency;
 
-    $data = get_query_vals("tblservices", "type,name,tax,proratabilling,proratadate,proratachargenextmonth,recurringcycles", array("id" => $pid));
+    $data = get_query_vals("ra_catalog", "type,name,tax,proratabilling,proratadate,proratachargenextmonth,recurringcycles", array("id" => $pid));
     $type = $data['type'];
     $package = $data['name'];
     $tax = $data['tax'];
@@ -914,7 +914,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
     }
 
     $configbillingcycle = strtolower(str_replace("-", "", $configbillingcycle));
-    $query = "SELECT tblserviceconfigoptions.id, tblserviceconfigoptions.optionname AS confoption, tblserviceconfigoptions.optiontype AS conftype, tblserviceconfigoptionssub.optionname, tblhostingconfigoptions.qty,tblhostingconfigoptions.optionid FROM tblhostingconfigoptions INNER JOIN tblserviceconfigoptions ON tblserviceconfigoptions.id = tblhostingconfigoptions.configid INNER JOIN tblserviceconfigoptionssub ON tblserviceconfigoptionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid WHERE tblhostingconfigoptions.relid=" . (int) $id . " AND tblserviceconfigoptions.hidden='0' AND tblserviceconfigoptionssub.hidden='0' AND tblserviceconfiglinks.pid=tblcustomerservices.packageid ORDER BY tblserviceconfigoptions.`order`,tblserviceconfigoptions.id ASC";
+    $query = "SELECT ra_catalog_user_sales_addons_options.id, ra_catalog_user_sales_addons_options.optionname AS confoption, ra_catalog_user_sales_addons_options.optiontype AS conftype, ra_catalog_user_sales_addons_optionssub.optionname, tblhostingconfigoptions.qty,tblhostingconfigoptions.optionid FROM tblhostingconfigoptions INNER JOIN ra_catalog_user_sales_addons_options ON ra_catalog_user_sales_addons_options.id = tblhostingconfigoptions.configid INNER JOIN ra_catalog_user_sales_addons_optionssub ON ra_catalog_user_sales_addons_optionssub.id = tblhostingconfigoptions.optionid INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblhostingconfigoptions.relid INNER JOIN ra_catalog_user_sales_addons_links ON ra_catalog_user_sales_addons_links.gid=ra_catalog_user_sales_addons_options.gid WHERE tblhostingconfigoptions.relid=" . (int) $id . " AND ra_catalog_user_sales_addons_options.hidden='0' AND ra_catalog_user_sales_addons_optionssub.hidden='0' AND ra_catalog_user_sales_addons_links.pid=tblcustomerservices.packageid ORDER BY ra_catalog_user_sales_addons_options.`order`,ra_catalog_user_sales_addons_options.id ASC";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -945,7 +945,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
         } else {
             if ($conftype == 4) {
                 $optionname = "" . $optionqty . " x " . $optionname . " ";
-                $qtyprice = get_query_val("tblpricing", $configbillingcycle, array("type" => "configoptions", "currency" => $currency['id'], "relid" => $optionid));
+                $qtyprice = get_query_val("ra_catalog_pricebook", $configbillingcycle, array("type" => "configoptions", "currency" => $currency['id'], "relid" => $optionid));
                 $optionname .= formatCurrency($qtyprice);
             }
         }
@@ -953,7 +953,7 @@ function getInvoiceProductDetails($id, $pid, $regdate, $nextduedate, $billingcyc
         $description .= ("\r\n") . $confoption . ": " . $optionname;
     }
 
-    $result = select_query_i("tblcustomfields", "tblcustomfields.cfid,tblcustomfields.fieldname,(SELECT value FROM tblcustomfieldsvalues WHERE tblcustomfieldsvalues.fieldid=tblcustomfields.cfid AND tblcustomfieldsvalues.relid=" . $id . " LIMIT 1) AS value", array("type" => "product", "relid" => $pid, "showinvoice" => "on"));
+    $result = select_query_i("ra_catalog_user_sales_fields", "ra_catalog_user_sales_fields.cfid,ra_catalog_user_sales_fields.fieldname,(SELECT value FROM ra_catalog_user_sales_fieldsvalues WHERE ra_catalog_user_sales_fieldsvalues.fieldid=ra_catalog_user_sales_fields.cfid AND ra_catalog_user_sales_fieldsvalues.relid=" . $id . " LIMIT 1) AS value", array("type" => "product", "relid" => $pid, "showinvoice" => "on"));
 
     while ($data = mysqli_fetch_assoc($result)) {
         if ($data['value']) {
@@ -981,7 +981,7 @@ function InvoicesAddLateFeeold() {
         }
 
         $adddate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AddLateFeeDays'], date("Y")));
-        $query = "SELECT tblinvoices.* FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE duedate<'" . $adddate . "' AND tblinvoices.status='Unpaid' AND duedate!=date AND latefeeoveride=''";
+        $query = "SELECT ra_bills.* FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE duedate<'" . $adddate . "' AND ra_bills.status='Unpaid' AND duedate!=date AND latefeeoveride=''";
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -991,9 +991,9 @@ function InvoicesAddLateFeeold() {
             $paymentmethod = $data['paymentmethod'];
             $total = $data['total'];
 
-            if (!get_query_val("tblinvoiceitems", "COUNT(id)", array("type" => "LateFee", "invoiceid" => $invoiceid))) {
+            if (!get_query_val("ra_bill_lineitems", "COUNT(id)", array("type" => "LateFee", "invoiceid" => $invoiceid))) {
                 if ($CONFIG['LateFeeType'] == "Percentage") {
-                    $amountpaid = get_query_val("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+                    $amountpaid = get_query_val("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
                     $balance = round($total - $amountpaid, 2);
                     $latefeeamount = format_as_currency($balance * ($CONFIG['InvoiceLateFeeAmount'] / 100));
                 } else {
@@ -1005,7 +1005,7 @@ function InvoicesAddLateFeeold() {
                 }
 
                 getUsersLang($userid);
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => $taxlatefee));
+                insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => $taxlatefee));
 
                 if (!function_exists("updateInvoiceTotal")) {
                     require dirname(__FILE__) . "/invoicefunctions.php";
@@ -1039,7 +1039,7 @@ function InvoicesAddLateFee() {
     $taxrate = $taxrate2 = 0;
 
     if ($CONFIG['TaxEnabled']) {
-        $data = get_query_vals("tblclients", "taxexempt,state,country,separateinvoices", array("id" => $userid));
+        $data = get_query_vals("ra_user", "taxexempt,state,country,separateinvoices", array("id" => $userid));
         $taxexempt = $data['taxexempt'];
         $taxstate = $data['state'];
         $taxcountry = $data['country'];
@@ -1060,7 +1060,7 @@ function InvoicesAddLateFee() {
         }
 
         $adddate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $CONFIG['AddLateFeeDays'], date("Y")));
-        $query = "SELECT tblinvoices.* FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE duedate<'" . $adddate . "' AND tblinvoices.status='Unpaid' AND latefeeid is NULL AND duedate!=date AND (latefeeoveride='' or latefeeoveride is null)";
+        $query = "SELECT ra_bills.* FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE duedate<'" . $adddate . "' AND ra_bills.status='Unpaid' AND latefeeid is NULL AND duedate!=date AND (latefeeoveride='' or latefeeoveride is null)";
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -1070,9 +1070,9 @@ function InvoicesAddLateFee() {
             $paymentmethod = $data['paymentmethod'];
             $total = $data['total'];
 
-            if (!get_query_val("tblinvoiceitems", "COUNT(id)", array("type" => "LateFee", "invoiceid" => $invoiceid))) {
+            if (!get_query_val("ra_bill_lineitems", "COUNT(id)", array("type" => "LateFee", "invoiceid" => $invoiceid))) {
                 if ($CONFIG['LateFeeType'] == "Percentage") {
-                    $amountpaid = get_query_val("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+                    $amountpaid = get_query_val("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
                     $balance = round($total - $amountpaid, 2);
                     $latefeeamount = format_as_currency($balance * ($CONFIG['InvoiceLateFeeAmount'] / 100));
                 } else {
@@ -1087,9 +1087,9 @@ function InvoicesAddLateFee() {
                 $invoicearray = array("date" => "now()", "latefeeid" => "0", "invoicenum" => "", "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "taxrate" => $taxrate, "taxrate2" => $taxrate2, "paymentmethod" => $invpaymentmethod, "notes" => "");
 
 
-                $invoiceid = insert_query("tblinvoices", $invoicearray);
-                update_query("tblinvoices", array("latefeeid" => $invoiceid), array("id" => $id));
-                insert_query("tblinvoiceitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => "Late fee for invoice #" . $id . " " . $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => isset($taxlatefee) ? 1 : 0));
+                $invoiceid = insert_query("ra_bills", $invoicearray);
+                update_query("ra_bills", array("latefeeid" => $invoiceid), array("id" => $id));
+                insert_query("ra_bill_lineitems", array("userid" => $userid, "type" => "LateFee", "invoiceid" => $invoiceid, "description" => "Late fee for invoice #" . $id . " " . $_LANG['latefee'] . " (" . $_LANG['latefeeadded'] . " " . fromMySQLDate(date("Y-m-d")) . ")", "amount" => $latefeeamount, "duedate" => $duedate, "paymentmethod" => $paymentmethod, "taxed" => isset($taxlatefee) ? 1 : 0));
                 if (!function_exists("updateInvoiceTotal")) {
                     require dirname(__FILE__) . "/invoicefunctions.php";
                 }
@@ -1119,14 +1119,14 @@ function SendOverdueInvoiceReminders() {
 
         if ($CONFIG["Send" . $type . "OverdueInvoiceReminder"] != "0") {
             $adddate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $CONFIG["Send" . $type . "OverdueInvoiceReminder"], date("Y")));
-            $result = select_query_i("tblinvoices,tblclients", "tblinvoices.id,tblinvoices.userid,tblclients.firstname,tblclients.lastname", array("tblinvoices.duedate" => $adddate, "tblinvoices.status" => "Unpaid", "tblclients.overideduenotices" => "", "tblclients.id" => array("sqltype" => "TABLEJOIN", "value" => "tblinvoices.userid")));
+            $result = select_query_i("ra_bills,ra_user", "ra_bills.id,ra_bills.userid,ra_user.firstname,ra_user.lastname", array("ra_bills.duedate" => $adddate, "ra_bills.status" => "Unpaid", "ra_user.overideduenotices" => "", "ra_user.id" => array("sqltype" => "TABLEJOIN", "value" => "ra_bills.userid")));
 
             while ($data = mysqli_fetch_array($result)) {
                 $invoiceid = $data['id'];
                 $userid = $data['userid'];
                 $firstname = $data['firstname'];
                 $lastname = $data['lastname'];
-                $result2 = full_query_i("SELECT COUNT(tblinvoiceitems.id) FROM tblinvoiceitems INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblinvoiceitems.relid WHERE tblinvoiceitems.type = 'Service' AND tblcustomerservices.overideautosuspend = '1' AND tblcustomerservices.overidesuspenduntil>'" . date("Y-m-d") . "' AND tblcustomerservices.overidesuspenduntil!='0000-00-00' AND tblinvoiceitems.invoiceid = " . (int) $invoiceid);
+                $result2 = full_query_i("SELECT COUNT(ra_bill_lineitems.id) FROM ra_bill_lineitems INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_bill_lineitems.relid WHERE ra_bill_lineitems.type = 'Service' AND tblcustomerservices.overideautosuspend = '1' AND tblcustomerservices.overidesuspenduntil>'" . date("Y-m-d") . "' AND tblcustomerservices.overidesuspenduntil!='0000-00-00' AND ra_bill_lineitems.invoiceid = " . (int) $invoiceid);
                 $data2 = mysqli_fetch_array($result2);
                 $numoverideautosuspend = $data2[0];
 
@@ -1161,7 +1161,7 @@ function getInvoiceProductPromo($amount, $promoid, $userid = "", $serviceid = ""
         return array();
     }
 
-    $data = get_query_vals("tblpromotions", "", array("id" => $promoid));
+    $data = get_query_vals("ra_promos", "", array("id" => $promoid));
     $promo_id = $data['id'];
 
     if (!$promo_id) {
@@ -1195,7 +1195,7 @@ function getInvoiceProductPromo($amount, $promoid, $userid = "", $serviceid = ""
 
 
     if ($serviceid && $promo_recurfor) {
-        $promo_recurringcount = get_query_val("tblinvoiceitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $serviceid));
+        $promo_recurringcount = get_query_val("ra_bill_lineitems", "COUNT(id)", array("userid" => $userid, "type" => "Service", "relid" => $serviceid));
 
         if ($promo_recurfor - 1 < $promo_recurringcount) {
             $amount = getInvoiceProductDefaultPrice($pid, $billingcycle, $regdate, $nextduedate);
@@ -1276,7 +1276,7 @@ function getInvoiceProductPromo($amount, $promoid, $userid = "", $serviceid = ""
 function getInvoiceProductDefaultPrice($pid, $billingcycle, $regdate, $nextduedate, $serviceid = "", $userid = "") {
     global $currency;
 
-    $data = get_query_vals("tblpricing", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
+    $data = get_query_vals("ra_catalog_pricebook", "", array("type" => "product", "currency" => $currency['id'], "relid" => $pid));
     $amount = $data[$billingcycle];
 
     if ($regdate == $nextduedate) {

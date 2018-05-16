@@ -12,7 +12,7 @@ $aInt->requiredFiles(array("clientfunctions", "invoicefunctions", "gatewayfuncti
 
 if ($processwindow) {
 	check_token("RA.admin.default");
-	$result = select_query_i("tblinvoices", "", array("id" => $id));
+	$result = select_query_i("ra_bills", "", array("id" => $id));
 	$data = mysqli_fetch_array($result);
 	$id = $data['id'];
 	$userid = $data['userid'];
@@ -221,7 +221,7 @@ if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
 }";
 $aInt->sortableTableInit("duedate", "ASC");
 $gatewaysarray = getGatewaysArray();
-$query = "SELECT tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE paymentmethod='offlinecc' AND tblinvoices.status='Unpaid' ORDER BY ";
+$query = "SELECT ra_bills.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE paymentmethod='offlinecc' AND ra_bills.status='Unpaid' ORDER BY ";
 
 if ($orderby == "clientname") {
 	$query .= "firstname " . db_escape_string($order) . ", lastname";

@@ -17,20 +17,20 @@ class RA_Tickets extends RA_TableModel {
 	public function getOrders($criteria = array()) {
 		global $aInt;
 
-		$query = " FROM tbltickets LEFT JOIN tblclients ON tblclients.id=tbltickets.userid";
+		$query = " FROM ra_ticket LEFT JOIN ra_user ON ra_user.id=ra_ticket.userid";
 		$filters = $this->buildCriteria($criteria);
 
 		if (count($filters)) {
 			$query .= " WHERE " . implode(" AND ", $filters);
 		}
 
-		$result = full_query_i("SELECT COUNT(tbltickets.id)" . $query);
+		$result = full_query_i("SELECT COUNT(ra_ticket.id)" . $query);
 		$data = mysqli_fetch_array($result);
 		$this->getPageObj()->setNumResults($data[0]);
 		$query .= " ORDER BY " . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection();
 		$query .= " LIMIT " . $this->getQueryLimit();
 		$tickets = array();
-		$result = full_query_i("SELECT tbltickets.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid" . $query);
+		$result = full_query_i("SELECT ra_ticket.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid" . $query);
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
@@ -104,39 +104,39 @@ class RA_Tickets extends RA_TableModel {
 		$filters = array();
 
 		if ($criteria['status'] == "Awaiting Reply") {
-			$result = select_query_i("tblticketstatuses", "title", array("showawaiting" => "1"));
+			$result = select_query_i("ra_tickettatuses", "title", array("showawaiting" => "1"));
 
 			while ($data = mysqli_fetch_array($result)) {
 				$statusfilter[] = $data[0];
 			}
 
-			$filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ")";
+			$filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ")";
 		}
 		else {
 			if ($criteria['status'] == "") {
 			}
 			else {
 				if ($criteria['status'] == "All Active Tickets") {
-					$result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
+					$result = select_query_i("ra_tickettatuses", "title", array("showactive" => "1"));
 
 					while ($data = mysqli_fetch_array($result)) {
 						$statusfilter[] = $data[0];
 					}
 
-					$filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ")";
+					$filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ")";
 				}
 				else {
 					if ($criteria['status'] == "Flagged Tickets") {
-						$result = select_query_i("tblticketstatuses", "title", array("showactive" => "1"));
+						$result = select_query_i("ra_tickettatuses", "title", array("showactive" => "1"));
 
 						while ($data = mysqli_fetch_array($result)) {
 							$statusfilter[] = $data[0];
 						}
 
-						$filters[] = "tbltickets.status IN (" . db_build_in_array($statusfilter) . ") AND flag=" . (int)$_SESSION['adminid'];
+						$filters[] = "ra_ticket.status IN (" . db_build_in_array($statusfilter) . ") AND flag=" . (int)$_SESSION['adminid'];
 					}
 					else {
-						$filters[] = "tbltickets.status='" . db_escape_string($criteria['status']) . "'";
+						$filters[] = "ra_ticket.status='" . db_escape_string($criteria['status']) . "'";
 					}
 				}
 			}
@@ -153,37 +153,37 @@ class RA_Tickets extends RA_TableModel {
 
 
 		if ($criteria['ticketid']) {
-			$filters[] = "tbltickets.tid='" . db_escape_string($criteria['ticketid']) . "'";
+			$filters[] = "ra_ticket.tid='" . db_escape_string($criteria['ticketid']) . "'";
 		}
 
 
 		if ($criteria['clientid']) {
-			$filters[] = "tbltickets.userid='" . db_escape_string($criteria['clientid']) . "'";
+			$filters[] = "ra_ticket.userid='" . db_escape_string($criteria['clientid']) . "'";
 		}
 
 
 		if ($criteria['deptid']) {
-			$filters[] = "tbltickets.did='" . db_escape_string($criteria['deptid']) . "'";
+			$filters[] = "ra_ticket.did='" . db_escape_string($criteria['deptid']) . "'";
 		}
 
 
 		if ($criteria['subject']) {
-			$filters[] = "(tbltickets.title LIKE '%" . db_escape_string($criteria['subject']) . "%' OR tbltickets.message LIKE '%" . db_escape_string($criteria['subject']) . "%')";
+			$filters[] = "(ra_ticket.title LIKE '%" . db_escape_string($criteria['subject']) . "%' OR ra_ticket.message LIKE '%" . db_escape_string($criteria['subject']) . "%')";
 		}
 
 
 		if ($criteria['email']) {
-			$filters[] = "(tbltickets.email LIKE '%" . db_escape_string($criteria['email']) . "%' OR tblclients.email LIKE '%" . db_escape_string($criteria['email']) . "%' OR tbltickets.name LIKE '%" . db_escape_string($criteria['email']) . "%')";
+			$filters[] = "(ra_ticket.email LIKE '%" . db_escape_string($criteria['email']) . "%' OR ra_user.email LIKE '%" . db_escape_string($criteria['email']) . "%' OR ra_ticket.name LIKE '%" . db_escape_string($criteria['email']) . "%')";
 		}
 
 
 		if ($criteria['clientname']) {
-			$filters[] = "(tbltickets.name LIKE '%" . db_escape_string($criteria['clientname']) . "%' OR concat(tblclients.firstname,' ',tblclients.lastname) LIKE '%" . db_escape_string($criteria['clientname']) . "%')";
+			$filters[] = "(ra_ticket.name LIKE '%" . db_escape_string($criteria['clientname']) . "%' OR concat(ra_user.firstname,' ',ra_user.lastname) LIKE '%" . db_escape_string($criteria['clientname']) . "%')";
 		}
 
 
 		if ($criteria['tag']) {
-			$filters[] = "tbltickettags.tag='" . db_escape_string($criteria['tag']) . "'";
+			$filters[] = "ra_ticket_tags.tag='" . db_escape_string($criteria['tag']) . "'";
 		}
 
 		return $filters;
@@ -191,7 +191,7 @@ class RA_Tickets extends RA_TableModel {
 
 	public function getAdminsDeptIDs() {
 		$deptids = array();
-		$admin_supportdepts = explode(",", get_query_val("tbladmins", "supportdepts", array("id" => $_SESSION['adminid'])));
+		$admin_supportdepts = explode(",", get_query_val("ra_admin", "supportdepts", array("id" => $_SESSION['adminid'])));
 		foreach ($admin_supportdepts as $deptid) {
 
 			if (trim($deptid)) {
@@ -210,7 +210,7 @@ class RA_Tickets extends RA_TableModel {
 			return false;
 		}
 
-		return get_query_val("tbladmins", "signature", array("id" => $adminid));
+		return get_query_val("ra_admin", "signature", array("id" => $adminid));
 	}
 
 	public function getStatuses($counts = false) {
@@ -226,13 +226,13 @@ class RA_Tickets extends RA_TableModel {
 				$admin_supportdepts_qry[] = 0;
 			}
 
-			$query = "SELECT tblticketstatuses.title,(SELECT COUNT(tbltickets.id) FROM tbltickets WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
+			$query = "SELECT ra_tickettatuses.title,(SELECT COUNT(ra_ticket.id) FROM ra_ticket WHERE did IN (" . db_build_in_array($admin_supportdepts_qry) . ") AND ra_ticket.status=ra_tickettatuses.title),showactive,showawaiting FROM ra_tickettatuses ORDER BY sortorder ASC";
 		}
 		else {
 			$ticketcounts[] = "Awaiting Reply";
 			$ticketcounts[] = "All Active Tickets";
 			$ticketcounts[] = "Flagged Tickets";
-			$query = "SELECT title FROM tblticketstatuses ORDER BY sortorder ASC";
+			$query = "SELECT title FROM ra_tickettatuses ORDER BY sortorder ASC";
 		}
 
 		$result = full_query_i($query);
@@ -256,7 +256,7 @@ class RA_Tickets extends RA_TableModel {
 
 
 		if ($counts) {
-			$result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
+			$result = select_query_i("ra_ticket", "COUNT(*)", "status!='Closed' AND flag='" . (int)$_SESSION['adminid'] . "'");
 			$data = mysqli_fetch_array($result);
 			$ticketcounts[2]['count'] = $data[0];
 		}
@@ -287,7 +287,7 @@ class RA_Tickets extends RA_TableModel {
 			return $this->data[$var];
 		}
 
-		$result = select_query_i("tbltickets", "", array("id" => $this->ticketid));
+		$result = select_query_i("ra_ticket", "", array("id" => $this->ticketid));
 		$data = mysqli_fetch_assoc($result);
 		$this->data = $data;
 		return $data;
@@ -298,7 +298,7 @@ class RA_Tickets extends RA_TableModel {
 			return false;
 		}
 
-		$result = select_query_i("tblticketdepartments", "id,name,email", "", "order", "ASC");
+		$result = select_query_i("ra_ticket_teams", "id,name,email", "", "order", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$this->deptids[] = $data['id'];
@@ -342,10 +342,10 @@ class RA_Tickets extends RA_TableModel {
 
 		if ($this->getData("userid")) {
 			if ($this->getData("contactid")) {
-				$clientname = get_query_val("tblcontacts", "CONCAT(firstname,' ',lastname)", array("id" => $this->getData("contactid"), "userid" => $this->getData("userid")));
+				$clientname = get_query_val("ra_user_contacts", "CONCAT(firstname,' ',lastname)", array("id" => $this->getData("contactid"), "userid" => $this->getData("userid")));
 			}
 			else {
-				$clientname = get_query_val("tblclients", "CONCAT(firstname,' ',lastname)", array("id" => $this->getData("userid")));
+				$clientname = get_query_val("ra_user", "CONCAT(firstname,' ',lastname)", array("id" => $this->getData("userid")));
 			}
 		}
 		else {
@@ -380,7 +380,7 @@ class RA_Tickets extends RA_TableModel {
 			$this->getData();
 		}
 
-		update_query("tbltickets", array("did" => $newdeptid), array("id" => $this->getData("id")));
+		update_query("ra_ticket", array("did" => $newdeptid), array("id" => $this->getData("id")));
 		$deptname = $this->getDeptName($newdeptid);
 		$this->log("Department changed to " . $deptname);
 		$this->sendAdminEmail("Support Ticket Department Reassigned", "", true);
@@ -404,7 +404,7 @@ class RA_Tickets extends RA_TableModel {
 			return false;
 		}
 
-		update_query("tbltickets", array("status" => $newstatus), array("id" => $this->getData("id")));
+		update_query("ra_ticket", array("status" => $newstatus), array("id" => $this->getData("id")));
 		$this->log("Status changed to " . $newstatus);
 		run_hook("TicketStatusChange", array("ticketid" => $this->getData("id"), "status" => $newstatus));
 		return true;
@@ -422,7 +422,7 @@ class RA_Tickets extends RA_TableModel {
 			return false;
 		}
 
-		update_query("tbltickets", array("title" => $newsubject), array("id" => $this->getData("id")));
+		update_query("ra_ticket", array("title" => $newsubject), array("id" => $this->getData("id")));
 		$this->log("Subject changed to '" . $newsubject . "'");
 		run_hook("TicketSubjectChange", array("ticketid" => $this->getData("id"), "priority" => $newsubject));
 		return true;
@@ -443,7 +443,7 @@ class RA_Tickets extends RA_TableModel {
 
 
 		if (0 < $adminid) {
-			$data = get_query_vals("tbladmins", "id,firstname,lastname,username", array("id" => $adminid));
+			$data = get_query_vals("ra_admin", "id,firstname,lastname,username", array("id" => $adminid));
 
 			if (!$data['id']) {
 				return false;
@@ -466,7 +466,7 @@ class RA_Tickets extends RA_TableModel {
 			$this->getData();
 		}
 
-		update_query("tbltickets", array("flag" => $adminid), array("id" => $this->getData("id")));
+		update_query("ra_ticket", array("flag" => $adminid), array("id" => $this->getData("id")));
 
 		if (0 < $adminid) {
 			$this->log("Assigned to Staff Member " . $adminname);
@@ -495,7 +495,7 @@ class RA_Tickets extends RA_TableModel {
 			return false;
 		}
 
-		update_query("tbltickets", array("urgency" => $newpriority), array("id" => $this->getData("id")));
+		update_query("ra_ticket", array("urgency" => $newpriority), array("id" => $this->getData("id")));
 		$this->log("Priority changed to " . $newpriority);
 		run_hook("TicketPriorityChange", array("ticketid" => $this->getData("id"), "priority" => $newpriority));
 		return true;
@@ -527,7 +527,7 @@ class RA_Tickets extends RA_TableModel {
 		}
 
 		$tags = array();
-		$result = full_query_i("SELECT `tag`, COUNT(*) AS `count` FROM `tbltickettags` WHERE ticketid IN (" . db_build_in_array($this->tagticketids) . ") GROUP BY `tag` ORDER BY `count` DESC");
+		$result = full_query_i("SELECT `tag`, COUNT(*) AS `count` FROM `ra_ticket_tags` WHERE ticketid IN (" . db_build_in_array($this->tagticketids) . ") GROUP BY `tag` ORDER BY `count` DESC");
 
 		while ($data = mysqli_fetch_assoc($result)) {
 			$tags[] = $data;
@@ -646,7 +646,7 @@ class RA_Tickets extends RA_TableModel {
 		static $ticketcolors = array();
 
 		if (!array_key_exists($tstatus, $ticketcolors)) {
-			$ticketcolors[$tstatus] = $color = get_query_val("tblticketstatuses", "color", array("title" => $tstatus));
+			$ticketcolors[$tstatus] = $color = get_query_val("ra_tickettatuses", "color", array("title" => $tstatus));
 		}
 		else {
 			$color = $ticketcolors[$tstatus];
@@ -679,7 +679,7 @@ class RA_Tickets extends RA_TableModel {
 
 		$id = $this->getData("id");
 		$replies = array();
-		$result = select_query_i("tbltickets", "userid,contactid,name,email,date,title,message,admin,attachment", array("id" => $id));
+		$result = select_query_i("ra_ticket", "userid,contactid,name,email,date,title,message,admin,attachment", array("id" => $id));
 		$data = mysqli_fetch_array($result);
 		$userid = $data['userid'];
 		$contactid = $data['contactid'];
@@ -701,7 +701,7 @@ class RA_Tickets extends RA_TableModel {
 
 		$attachments = $this->getTicketAttachmentsInfo("", $attachment);
 		$replies[] = array("id" => 0, "admin" => $admin, "userid" => $userid, "contactid" => $contactid, "clientname" => $name, "clientemail" => $email, "date" => $date, "friendlydate" => $friendlydate, "friendlytime" => $friendlytime, "message" => $message, "attachments" => $attachments, "numattachments" => count($attachments));
-		$result = select_query_i("tblticketreplies", "", array("tid" => $id), "date", "ASC");
+		$result = select_query_i("ra_ticket_replies", "", array("tid" => $id), "date", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$replyid = $data['id'];
@@ -787,7 +787,7 @@ class RA_Tickets extends RA_TableModel {
 
 	public function getNotes() {
 		$notes = array();
-		$result = select_query_i("tblticketnotes", "", array("ticketid" => $this->getData("id")), "date", "DESC");
+		$result = select_query_i("ra_ticket_notes", "", array("ticketid" => $this->getData("id")), "date", "DESC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$date = $data['date'];
@@ -801,7 +801,7 @@ class RA_Tickets extends RA_TableModel {
 
 	public function getFlaggableStaff() {
 		$staff = array();
-		$result = select_query_i("tbladmins", "id,firstname,lastname", "disabled=0 OR id='" . (int)$this->getData("flag") . "'", "firstname` ASC,`lastname", "ASC");
+		$result = select_query_i("ra_admin", "id,firstname,lastname", "disabled=0 OR id='" . (int)$this->getData("flag") . "'", "firstname` ASC,`lastname", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$staff[$data['id']] = $data['firstname'] . " " . $data['lastname'];

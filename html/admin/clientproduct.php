@@ -15,7 +15,7 @@ $userid = (int) $ra->get_req_var("userid");
 $aid = $ra->get_req_var("aid");
 $action = $ra->get_req_var("action");
 $modop = $ra->get_req_var("modop");
-$query = "SELECT tblcustomerservices.*,tblservices.servertype,tblservices.type from tblcustomerservices LEFT JOIN tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON (tblservices.gid=tblservicegroups.id AND tblservicegroups.type='product')";
+$query = "SELECT tblcustomerservices.*,ra_catalog.servertype,ra_catalog.type from tblcustomerservices LEFT JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON (ra_catalog.gid=ra_catalog_groups.id AND ra_catalog_groups.type='product')";
 $result = full_query_i($query);
 $product_data = array();
 
@@ -37,7 +37,7 @@ if (!$id && $hostingid) {
 }
 
 if (!$userid && !$id) {
-    $userid = get_query_val("tblclients", "id", "", "id", "ASC", "0,1");
+    $userid = get_query_val("ra_user", "id", "", "id", "ASC", "0,1");
 }
 
 
@@ -81,14 +81,14 @@ if ($_POST['frm1']) {
         }
 
         if (is_numeric($aid)) {
-            $oldstatus = get_query_val("tblserviceaddons", "status", array("id" => $aid));
+            $oldstatus = get_query_val("ra_catalog_user_sales_addons", "status", array("id" => $aid));
             $array = array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes);
 
             if ($oldnextduedate != $nextduedate) {
                 $array['nextinvoicedate'] = toMySQLDate($nextduedate);
             }
 
-            update_query("tblserviceaddons", $array, array("id" => $aid));
+            update_query("ra_catalog_user_sales_addons", $array, array("id" => $aid));
 
             if ($oldserviceid != $id) {
                 logActivity("Transferred Addon from Service ID: " . $oldserviceid . " to Service ID: " . $id . " - Addon ID: " . $aid, $id);
@@ -123,13 +123,13 @@ if ($_POST['frm1']) {
                 if ($ra->get_req_var("defaultpricing")) {
                     $billingcycle = $data['billingcycle'];
                     $currency = getCurrency($userid);
-                    $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
                     $data = mysqli_fetch_array($result2);
                     $setupfee = $data['msetupfee'];
                     $recurring = $data['monthly'];
                 }
             }
-            $newaddonid = insert_query("tblserviceaddons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
+            $newaddonid = insert_query("ra_catalog_user_sales_addons", array("hostingid" => $id, "addonid" => $addonid, "name" => $name, "setupfee" => $setupfee, "recurring" => $recurring, "billingcycle" => $billingcycle, "status" => $status, "regdate" => toMySQLDate($regdate), "nextduedate" => toMySQLDate($nextduedate), "nextinvoicedate" => toMySQLDate($nextduedate), "paymentmethod" => $paymentmethod, "tax" => $tax, "notes" => $notes));
             logActivity("Added New Addon - " . $name . $predefname . " - Addon ID: " . $newaddonid . " - Service ID: " . $id);
             if ($geninvoice) {
                 $invoiceid = createInvoices($userid, "", "", array("addons" => array($newaddonid)));
@@ -221,22 +221,22 @@ if ($_POST['frm1']) {
 
     update_query("tblcustomerservices", $updatearr, array("id" => $id));
     logActivity("Modified Product/Service - " . implode(", ", $changelog) . (" - User ID: " . $userid . " - Service ID: " . $id), $userid, $id);
-    $cancelid = get_query_val("tblcancelrequests", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
+    $cancelid = get_query_val("ra_cancellations", "id", array("relid" => $id, "type" => "End of Billing Period"), "id", "DESC");
 
     if ($autoterminateendcycle) {
         if ($cancelid) {
-            update_query("tblcancelrequests", array("reason" => $autoterminatereason), array("id" => $cancelid));
+            update_query("ra_cancellations", array("reason" => $autoterminatereason), array("id" => $cancelid));
         } else {
             createCancellationRequest($userid, $id, $autoterminatereason, "End of Billing Period");
         }
     } else {
         if ($cancelid) {
-            delete_query("tblcancelrequests", array("id" => $cancelid));
+            delete_query("ra_cancellations", array("id" => $cancelid));
             logActivity("Removed Automatic Cancellation for End of Current Cycle - Service ID: " . $id, $userid, $id);
         }
     }
 
-    $module = get_query_val("tblservices", "servertype", array("id" => $packageid));
+    $module = get_query_val("ra_catalog", "servertype", array("id" => $packageid));
 
     if ($module) {
         if (!isValidforPath($module)) {
@@ -267,9 +267,9 @@ if ($action == "delete") {
     checkPermission("Delete Clients Products/Services");
     run_hook("ServiceDelete", array("userid" => $userid, "serviceid" => $id));
     delete_query("tblcustomerservices", array("id" => $id));
-    delete_query("tblserviceaddons", array("hostingid" => $id));
+    delete_query("ra_catalog_user_sales_addons", array("hostingid" => $id));
     delete_query("tblcustomerservicesconfigoptions", array("relid" => $id));
-    full_query_i("DELETE FROM tblcustomfieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM tblcustomfields WHERE type='product')");
+    full_query_i("DELETE FROM ra_catalog_user_sales_fieldsvalues WHERE relid='" . db_escape_string($id) . "' AND fieldid IN (SELECT id FROM ra_catalog_user_sales_fields WHERE type='product')");
     logActivity("Deleted Product/Service - User ID: " . $userid . " - Service ID: " . $id, $userid, $id);
     redir("userid=" . $userid);
 }
@@ -278,7 +278,7 @@ if ($action == "deladdon") {
     check_token("RA.admin.default");
     checkPermission("Delete Clients Products/Services");
     run_hook("AddonDeleted", array("id" => $aid));
-    delete_query("tblserviceaddons", array("id" => $aid));
+    delete_query("ra_catalog_user_sales_addons", array("id" => $aid));
     logActivity("Deleted Addon - User ID: " . $userid . " - Service ID: " . $id . " - Addon ID: " . $aid, $userid, $id);
     redir("userid=" . $userid . "&id=" . $id);
 }
@@ -394,7 +394,7 @@ if ($bwlimit == "0") {
 }
 
 $currency = getCurrency($userid);
-$data = get_query_vals("tblcancelrequests", "id,type,reason", array("relid" => $id), "id", "DESC");
+$data = get_query_vals("ra_cancellations", "id,type,reason", array("relid" => $id), "id", "DESC");
 $cancelid = $data['id'];
 $canceltype = $data['type'];
 $autoterminatereason = $data['reason'];
@@ -406,7 +406,7 @@ if ($canceltype == "End of Billing Period") {
 
 
 //if (!$server) {
-//    $server = get_query_val("tblservers", "id", array("type" => $module, "active" => "1"));
+//    $server = get_query_val("ra_integration", "id", array("type" => $module, "active" => "1"));
 //
 //    if ($server) {
 //        update_query("tblcustomerservices", array("server" => $server), array("id" => $id));
@@ -449,7 +449,7 @@ function runModuleCommand(cmd,custom) {
 ";
 $aInt->jscode = $jscode;
 $clientnotes = array();
-$result = select_query_i("tblnotes", "tblnotes.*,(SELECT CONCAT(firstname,' ',lastname) FROM tbladmins WHERE tbladmins.id=tblnotes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
+$result = select_query_i("ra_notes", "ra_notes.*,(SELECT CONCAT(firstname,' ',lastname) FROM ra_admin WHERE ra_admin.id=ra_notes.adminid) AS adminuser", array("userid" => $userid, "sticky" => "1"), "modified", "DESC");
 
 while ($data = mysqli_fetch_assoc($result)) {
     $data['created'] = fromMySQLDate($data['created'], 1);
@@ -541,7 +541,7 @@ if ($aid) {
         $notes = "";
     } else {
         $managetitle = $aInt->lang("addons", "editaddon");
-        $result = select_query_i("tblserviceaddons", "", array("id" => $aid));
+        $result = select_query_i("ra_catalog_user_sales_addons", "", array("id" => $aid));
         $data = mysqli_fetch_array($result);
         $addonid = $data['addonid'];
         $customname = $data['name'];
@@ -590,7 +590,7 @@ if ($aid) {
     echo "<p align=\"center\">" . $frm->submit($aInt->lang("global", "savechanges"), "btn btn-primary") . " " . $frm->button($aInt->lang("global", "cancel"), "window.location='?userid=" . $userid . "&id=" . $id . "'") . "</p>";
 } else {
     $serversarr = $serversarr2 = array();
-    $result = select_query_i("tblservers", "", array("type" => $module), "name", "ASC");
+    $result = select_query_i("ra_integration", "", array("type" => $module), "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $serverid = $data['id'];
@@ -620,7 +620,7 @@ if ($aid) {
     }
 
     $promoarr = array();
-    $result = select_query_i("tblpromotions", "", "", "code", "ASC");
+    $result = select_query_i("ra_promos", "", "", "code", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $promo_id = $data['id'];
@@ -843,7 +843,7 @@ echo $frmsub->hidden("type", "product");
 echo $frmsub->hidden("id", $id);
 $emailarr = array();
 $emailarr['newmessage'] = $aInt->lang("emails", "newmessage");
-$result = select_query_i("tblemailtemplates", "", array("type" => "product", "language" => ""), "name", "ASC");
+$result = select_query_i("ra_templates_mail", "", array("type" => "product", "language" => ""), "name", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $messagename = $data['name'];
@@ -888,18 +888,18 @@ if ($ra->get_req_var("ajaxupdate")) {
 }
 
 $accountlog = array();
-$resutlt = select_query_i("tblactivitylog", "*", array("account_id" => $id), "date", "DESC");
+$resutlt = select_query_i("ra_systemlog", "*", array("account_id" => $id), "date", "DESC");
 while ($data = mysqli_fetch_array($resutlt)) {
 
     $accountlog[] = $data;
 }
-$result = select_query_i("tbladmins", "");
+$result = select_query_i("ra_admin", "");
 while ($data = mysqli_fetch_assoc($result)) {
     $adminlist[] = $data;
 }
-$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from tblnotes as tbn 
-INNER JOIN tbladmins AS tba on (tba.id=tbn.adminid)
-LEFT JOIN tblorders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
+$query = "select tbn.*,CONCAT(tba.firstname,' ',tba.lastname) as name from ra_notes as tbn 
+INNER JOIN ra_admin AS tba on (tba.id=tbn.adminid)
+LEFT JOIN ra_orders as tbo on (tbo.id=tbn.rel_id and tbn.type='order')
 LEFT JOIN tblcustomerservices as tbcs on (tbcs.id=tbn.rel_id  and tbn.type='account')
 where tbn.rel_id = " . $id . " ORDER BY tbn.flag DESC";
 $result = full_query_i($query);

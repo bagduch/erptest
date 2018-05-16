@@ -14,11 +14,11 @@ if ($action == "save") {
 	check_token("RA.admin.default");
 
 	if ($id) {
-		update_query("tblticketstatuses", array("title" => trim($title), "color" => $color, "sortorder" => $sortorder, "showactive" => $showactive, "showawaiting" => $showawaiting, "autoclose" => $autoclose), array("id" => $id));
+		update_query("ra_tickettatuses", array("title" => trim($title), "color" => $color, "sortorder" => $sortorder, "showactive" => $showactive, "showawaiting" => $showawaiting, "autoclose" => $autoclose), array("id" => $id));
 		header("Location: configticketstatuses.php?update=true");
 	}
 	else {
-		insert_query("tblticketstatuses", array("title" => trim($title), "color" => $color, "sortorder" => $sortorder, "showactive" => $showactive, "showawaiting" => $showawaiting, "autoclose" => $autoclose));
+		insert_query("ra_tickettatuses", array("title" => trim($title), "color" => $color, "sortorder" => $sortorder, "showactive" => $showactive, "showawaiting" => $showawaiting, "autoclose" => $autoclose));
 		header("Location: configticketstatuses.php?added=true");
 	}
 
@@ -28,11 +28,11 @@ if ($action == "save") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	$result = select_query_i("tblticketstatuses", "title", array("id" => $id));
+	$result = select_query_i("ra_tickettatuses", "title", array("id" => $id));
 	$data = mysqli_fetch_assoc($result);
 	$title = $data['title'];
-	update_query("tbltickets", array("status" => "Closed"), array("status" => $title));
-	delete_query("tblticketstatuses", array("id" => $id));
+	update_query("ra_ticket", array("status" => "Closed"), array("status" => $title));
+	delete_query("ra_tickettatuses", array("id" => $id));
 	header("Location: configticketstatuses.php?delete=true");
 	exit();
 }
@@ -72,7 +72,7 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+$result = select_query_i("ra_tickettatuses", "", "", "sortorder", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
 	$statusid = $data['id'];
@@ -107,7 +107,7 @@ echo "
 <h2>";
 
 if ($action == "edit") {
-	$result = select_query_i("tblticketstatuses", "", array("id" => $id));
+	$result = select_query_i("ra_tickettatuses", "", array("id" => $id));
 	$data = mysqli_fetch_array($result);
 	$title = $data['title'];
 	$color = $data['color'];

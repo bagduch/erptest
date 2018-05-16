@@ -87,7 +87,7 @@ echo "<s";
 echo "elect name=\"clientlanguage[]\" size=\"4\" multiple=\"true\"><option value=\"\" selected>";
 echo $aInt->lang("global", "default");
 echo "</option>";
-$result = select_query_i("tblclients", "DISTINCT language", "", "language", "ASC");
+$result = select_query_i("ra_user", "DISTINCT language", "", "language", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$language = $displanguage = $data['language'];
@@ -126,7 +126,7 @@ echo $aInt->lang("fields", "product");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"productids[]\" size=\"10\" multiple=\"true\">";
-$result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`tblservices`.`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+$result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`ra_catalog`.`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
@@ -165,7 +165,7 @@ echo $aInt->lang("massmail", "assignedserver");
 echo "</td><td class=\"fieldarea\">";
 echo "<s";
 echo "elect name=\"server[]\" size=\"5\" multiple=\"true\">";
-$result = select_query_i("tblservers", "", "", "name", "ASC");
+$result = select_query_i("ra_integration", "", "", "name", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

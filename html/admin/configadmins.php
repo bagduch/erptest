@@ -25,7 +25,7 @@ if ($action == "save") {
         }
 
         if ($validate->validate("required", "username", array("administrators", "usererror"))) {
-            $existingid = get_query_val("tbladmins", "id", array("username" => $username));
+            $existingid = get_query_val("ra_admin", "id", array("username" => $username));
 
             if ((!$id && $existingid) || (($id && $existingid) && $id != $existingid)) {
                 $validate->addError("administrators", "userexists");
@@ -47,7 +47,7 @@ if ($action == "save") {
         $disabled = ($disabled ? 1 : 0);
 
         if ($id) {
-            update_query("tbladmins", array(
+            update_query("ra_admin", array(
                 "roleid" => $roleid,
                 "username" => $username,
                 "firstname" => $firstname,
@@ -67,7 +67,7 @@ if ($action == "save") {
 
             if ($password) {
                 update_query(
-                        "tbladmins", array(
+                        "ra_admin", array(
                     "password_hash" => password_hash($password, PASSWORD_DEFAULT)
                         ), array(
                     "id" => $id
@@ -78,7 +78,7 @@ if ($action == "save") {
             redir("saved=true");
         } else {
             insert_query(
-                    "tbladmins", array(
+                    "ra_admin", array(
                 "roleid" => $roleid,
                 "username" => $username,
                 "passwordhash" => password_hash(trim($password), PASSWORD_DEFAULT),
@@ -103,7 +103,7 @@ if ($action == "save") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    delete_query("tbladmins", array("id" => $id));
+    delete_query("ra_admin", array("id" => $id));
     redir("deleted=true");
 }
 
@@ -118,7 +118,7 @@ if ($action == "") {
         
     }
 
-    $data = get_query_vals("tbladmins", "COUNT(id),id", array("roleid" => "1"));
+    $data = get_query_vals("ra_admin", "COUNT(id),id", array("roleid" => "1"));
     $numrows = $data[0];
     $onlyadminid = ($numrows == "1" ? $data['id'] : 0);
     $jscode = "function doDelete(id) {
@@ -130,14 +130,14 @@ if ($action == "") {
     }";
 
     $aInt->sortableTableInit("nopagination");
-    $result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "0"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
+    $result = select_query_i("ra_admin", "ra_admin.*,ra_adminroles.name", array("disabled" => "0"), "firstname` ASC,`lastname", "ASC", "", "ra_adminroles ON ra_admin.roleid=ra_adminroles.id");
 
     while ($data = mysqli_fetch_array($result)) {
         $departments = $deptnames = array();
         $supportdepts = db_build_in_array(explode(",", $data['supportdepts']));
 
         if ($supportdepts) {
-            $resultdeptids = select_query_i("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
+            $resultdeptids = select_query_i("ra_ticket_teams", "name", "id IN (" . $supportdepts . ")");
 
             while ($data_resultdeptids = mysqli_fetch_array($resultdeptids)) {
                 $deptnames[] = $data_resultdeptids[0];
@@ -172,14 +172,14 @@ if ($action == "") {
             ), $tabledata
     );
     $tabledata = array();
-    $result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "tbladminroles ON tbladmins.roleid=tbladminroles.id");
+    $result = select_query_i("ra_admin", "ra_admin.*,ra_adminroles.name", array("disabled" => "1"), "firstname` ASC,`lastname", "ASC", "", "ra_adminroles ON ra_admin.roleid=ra_adminroles.id");
 
     while ($data = mysqli_fetch_array($result)) {
         $departments = $deptnames = array();
         $supportdepts = db_build_in_array(explode(",", $data['supportdepts']));
 
         if ($supportdepts) {
-            $resultdeptids = select_query_i("tblticketdepartments", "name", "id IN (" . $supportdepts . ")");
+            $resultdeptids = select_query_i("ra_ticket_teams", "name", "id IN (" . $supportdepts . ")");
 
             while ($data_resultdeptids = mysqli_fetch_array($resultdeptids)) {
                 $deptnames[] = $data_resultdeptids[0];
@@ -201,7 +201,7 @@ if ($action == "") {
     $template = "configadmins";
 } elseif ($action == "manage") {
     if ($id) {
-        $result = select_query_i("tbladmins", "", array("id" => $id));
+        $result = select_query_i("ra_admin", "", array("id" => $id));
         $data = mysqli_fetch_array($result);
         $supportdepts = $data['supportdepts'];
         $ticketnotifications = $data['ticketnotifications'];
@@ -218,7 +218,7 @@ if ($action == "") {
         $language = $data['language'];
         $disabled = $data['disabled'];
         $aInt->assign('data', $data);
-        $numrows = get_query_vals("tbladmins", "COUNT(id)", array("roleid" => "1"));
+        $numrows = get_query_vals("ra_admin", "COUNT(id)", array("roleid" => "1"));
         $onlyadmin = (($numrows == "1" && $roleid == "1") ? true : false);
         $managetitle = $aInt->lang("administrators", "editadmin");
     } else {
@@ -237,7 +237,7 @@ if ($action == "") {
         echo " disabled";
     }
 
-    $result = select_query_i("tbladminroles", "", "", "name", "ASC");
+    $result = select_query_i("ra_adminroles", "", "", "name", "ASC");
 
     $roleoption = "";
     while ($data = mysqli_fetch_array($result)) {
@@ -255,7 +255,7 @@ if ($action == "") {
 
 
     $nodepartments = true;
-    $result = select_query_i("tblticketdepartments", "", "", "order", "ASC");
+    $result = select_query_i("ra_ticket_teams", "", "", "order", "ASC");
 
     $templates = array();
     $dirpath = ROOTDIR . "/" . $ra->get_admin_folder_name() . "/templates/";

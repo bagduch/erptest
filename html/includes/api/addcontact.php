@@ -11,7 +11,7 @@ if (!function_exists("addContact")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $clientid));
+$result = select_query_i("ra_user", "id", array("id" => $clientid));
 $data = mysqli_fetch_array($result);
 
 if (!$data[0]) {
@@ -22,9 +22,9 @@ if (!$data[0]) {
 $permissions = $permissions ? explode(",", $permissions) : array();
 
 if (count($permissions)) {
-	$result = select_query_i("tblclients", "id", array("email" => $email));
+	$result = select_query_i("ra_user", "id", array("email" => $email));
 	$data = mysqli_fetch_array($result);
-	$result = select_query_i("tblcontacts", "id", array("email" => $email, "subaccount" => "1"));
+	$result = select_query_i("ra_user_contacts", "id", array("email" => $email, "subaccount" => "1"));
 	$data2 = mysqli_fetch_array($result);
 
 	if ($data['id'] || $data2['id']) {

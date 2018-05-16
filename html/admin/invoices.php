@@ -51,7 +51,7 @@ if ($action == "invtooltip") {
     check_token("RA.admin.default");
     echo "<table bgcolor=\"#cccccc\" cellspacing=\"1\" cellpadding=\"3\"><tr bgcolor=\"#efefef\" style=\"text-align:center;font-weight:bold;\"><td>" . $aInt->lang("fields", "description") . "</td><td>" . $aInt->lang("fields", "amount") . "</td></tr>";
     $currency = getCurrency($userid);
-    $result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
+    $result = select_query_i("ra_bill_lineitems", "", array("invoiceid" => $id), "id", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $lineid = $data['id'];
@@ -59,7 +59,7 @@ if ($action == "invtooltip") {
     }
 
     $data = get_query_vals(
-            "tblinvoices", "subtotal,credit,tax,tax2,taxrate,taxrate2,total", array("id" => $id), "id", "ASC"
+            "ra_bills", "subtotal,credit,tax,tax2,taxrate,taxrate2,total", array("id" => $id), "id", "ASC"
     );
     echo "<tr bgcolor=\"#efefef\" style=\"text-align:right;font-weight:bold;\"><td>" . $aInt->lang("fields", "subtotal") . "&nbsp;</td><td>" . formatCurrency($data['subtotal']) . "</td></tr>";
 
@@ -103,7 +103,7 @@ if ($action == "createinvoice") {
 
     $duedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d") + $CONFIG['CreateInvoiceDaysBefore'], date("Y")));
     $invoiceid = insert_query(
-            "tblinvoices", array(
+            "ra_bills", array(
         "date" => "now()",
         "duedate" => $duedate,
         "userid" => $userid,
@@ -122,8 +122,8 @@ if ($action == "createinvoice") {
         $counter = 1;
 
         while ($counter <= $invoiceincrement) {
-            $tempinvoiceid = insert_query("tblinvoices", array("date" => "now()"));
-            delete_query("tblinvoices", array("id" => $tempinvoiceid));
+            $tempinvoiceid = insert_query("ra_bills", array("date" => "now()"));
+            delete_query("ra_bills", array("id" => $tempinvoiceid));
             $counter += 1;
         }
     }
@@ -137,13 +137,13 @@ if ($ra->get_req_var("markpaid")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
     foreach ($selectedinvoices as $invid) {
-        $result2 = select_query_i("tblinvoices", "paymentmethod, ppi", array("id" => $invid));
+        $result2 = select_query_i("ra_bills", "paymentmethod, ppi", array("id" => $invid));
         $data = mysqli_fetch_array($result2);
         $paymentmethod = $data['paymentmethod'];
         addInvoicePayment($invid, "", "", "", $paymentmethod);
 
         if ($data['ppi'] == 0) {
-            update_query("tblinvoices", array("ppi" => "1"), array("id" => $invid));
+            update_query("ra_bills", array("ppi" => "1"), array("id" => $invid));
             continue;
         }
     }
@@ -154,7 +154,7 @@ if ($ra->get_req_var("markunpaid")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
     foreach ($selectedinvoices as $invid) {
-        update_query("tblinvoices", array("status" => "Unpaid", "datepaid" => "0000-00-00 00:00:00"), array("id" => $invid));
+        update_query("ra_bills", array("status" => "Unpaid", "datepaid" => "0000-00-00 00:00:00"), array("id" => $invid));
         logActivity("Reactivated Invoice - Invoice ID: " . $invid);
         run_hook("InvoiceUnpaid", array("invoiceid" => $invid));
     }
@@ -165,7 +165,7 @@ if ($ra->get_req_var("markcancelled")) {
     check_token("RA.admin.default");
     checkPermission("Manage Invoice");
     foreach ($selectedinvoices as $invid) {
-        update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $invid));
+        update_query("ra_bills", array("status" => "Cancelled"), array("id" => $invid));
         logActivity("Cancelled Invoice - Invoice ID: " . $invid);
         run_hook("InvoiceCancelled", array("invoiceid" => $invid));
     }
@@ -175,7 +175,7 @@ if ($ra->get_req_var("markcancelled")) {
 if ($ra->get_req_var("duplicateinvoice")) {
     check_token("RA.admin.default");
     foreach ($selectedinvoices as $invid) {
-        $result_duplicate = select_query_i("tblinvoices", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
+        $result_duplicate = select_query_i("ra_bills", "userid,invoicenum,date,duedate,datepaid,subtotal,credit,tax,tax2,total,taxrate2,status,paymentmethod,notes", array("id" => $invid));
         $data_duplicate = mysqli_fetch_assoc($result_duplicate);
         $datefrom = fromMySQLDate($data_duplicate['date']);
         $date = toMySQLDate($datefrom);
@@ -183,7 +183,7 @@ if ($ra->get_req_var("duplicateinvoice")) {
         $duedate = toMySQLDate($duedatefrom);
         $datepaidfrom = fromMySQLDate($data_duplicate['datepaid']);
         $datepaid = toMySQLDate($datepaidfrom);
-        insert_query("tblinvoices", array(
+        insert_query("ra_bills", array(
             "userid" => $data_duplicate['userid'],
             "invoicenum" => $data_duplicate['invoicenum'],
             "date" => $date, "duedate" => $duedate,
@@ -208,7 +208,7 @@ if ($ra->get_req_var("massdelete")) {
     check_token("RA.admin.default");
     checkPermission("Delete Invoice");
     foreach ($selectedinvoices as $invid) {
-        delete_query("tblinvoices", array("id" => $invid));
+        delete_query("ra_bills", array("id" => $invid));
         logActivity("Deleted Invoice - Invoice ID: " . $invid);
     }
 
@@ -226,7 +226,7 @@ if ($ra->get_req_var("paymentreminder")) {
 if ($ra->get_req_var("delete")) {
     check_token("RA.admin.default");
     checkPermission("Delete Invoice");
-    delete_query("tblinvoices", array("id" => $invoiceid));
+    delete_query("ra_bills", array("id" => $invoiceid));
     logActivity("Deleted Invoice - Invoice ID: " . $invoiceid);
     $filters->redir();
 }
@@ -318,7 +318,7 @@ if ($action == "") {
 } else {
     if ($action == "edit") {
         $result = select_query_i(
-                "tblinvoices", "userid,paymentmethod", array("id" => $id)
+                "ra_bills", "userid,paymentmethod", array("id" => $id)
         );
         $data = mysqli_fetch_array($result);
         $userid = $data[0];
@@ -326,7 +326,7 @@ if ($action == "") {
         if ($saveoptions) {
             check_token("RA.admin.default");
             update_query(
-                    "tblinvoices", array(
+                    "ra_bills", array(
                 "date" => toMySQLDate($invoicedate),
                 "duedate" => toMySQLDate($datedue),
                 "paymentmethod" => $paymentmethod,
@@ -348,14 +348,14 @@ if ($action == "") {
         }
         if ($save == "notes") {
             check_token("RA.admin.default");
-            update_query("tblinvoices", array("notes" => $notes), array("id" => $id));
+            update_query("ra_bills", array("notes" => $notes), array("id" => $id));
             logActivity("Modified Invoice Notes - Invoice ID: " . $id, $userid);
             redir("action=edit&id=" . $id);
             exit();
         }
         if ($sub == "statuscancelled") {
             check_token("RA.admin.default");
-            update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $id));
+            update_query("ra_bills", array("status" => "Cancelled"), array("id" => $id));
             logActivity("Cancelled Invoice - Invoice ID: " . $id, $userid);
             run_hook("InvoiceCancelled", array("invoiceid" => $id));
             redir("action=edit&id=" . $id);
@@ -363,7 +363,7 @@ if ($action == "") {
         }
         if ($sub == "statusunpaid") {
             check_token("RA.admin.default");
-            update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $id));
+            update_query("ra_bills", array("status" => "Unpaid"), array("id" => $id));
             logActivity("Reactivated Invoice - Invoice ID: " . $id, $userid);
             run_hook("InvoiceUnpaid", array("invoiceid" => $id));
             redir("action=edit&id=" . $id);
@@ -389,13 +389,13 @@ if ($action == "") {
 
             if ($description) {
                 foreach ($description as $lineid => $desc) {
-                    update_query("tblinvoiceitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => isset($taxed[$lineid]) ? 1 : 0), array("id" => $lineid));
+                    update_query("ra_bill_lineitems", array("description" => $desc, "amount" => $amount[$lineid], "taxed" => isset($taxed[$lineid]) ? 1 : 0), array("id" => $lineid));
                 }
             }
 
 
             if ($adddescription) {
-                insert_query("tblinvoiceitems", array(
+                insert_query("ra_bill_lineitems", array(
                     "invoiceid" => $id,
                     "userid" => $userid,
                     "description" => $adddescription,
@@ -408,13 +408,13 @@ if ($action == "") {
 
             if ($selaction == "delete" && is_array($itemids)) {
                 foreach ($itemids as $itemid) {
-                    delete_query("tblinvoiceitems", array("id" => $itemid));
+                    delete_query("ra_bill_lineitems", array("id" => $itemid));
                 }
             }
 
 
             if ($selaction == "split" && is_array($itemids)) {
-                $result = select_query_i("tblinvoices", "userid,date,duedate,taxrate,taxrate2,paymentmethod", array("id" => $id));
+                $result = select_query_i("ra_bills", "userid,date,duedate,taxrate,taxrate2,paymentmethod", array("id" => $id));
                 $data = mysqli_fetch_array($result);
                 $userid = $data[0];
                 $date = $data[1];
@@ -422,26 +422,26 @@ if ($action == "") {
                 $taxrate = $data[3];
                 $taxrate2 = $data[4];
                 $paymentmethod = $data[5];
-                $result = select_query_i("tblinvoiceitems", "COUNT(*)", array("invoiceid" => $id));
+                $result = select_query_i("ra_bill_lineitems", "COUNT(*)", array("invoiceid" => $id));
                 $data = mysqli_fetch_array($result);
                 $totalitemscount = $data[0];
 
                 if (count($itemids) < $totalitemscount) {
-                    $invoiceid = insert_query("tblinvoices", array("date" => $date, "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "paymentmethod" => $paymentmethod, "taxrate" => $taxrate, "taxrate2" => $taxrate2));
+                    $invoiceid = insert_query("ra_bills", array("date" => $date, "duedate" => $duedate, "userid" => $userid, "status" => "Unpaid", "paymentmethod" => $paymentmethod, "taxrate" => $taxrate, "taxrate2" => $taxrate2));
 
                     if (1 < $CONFIG['InvoiceIncrement']) {
                         $invoiceincrement = $CONFIG['InvoiceIncrement'] - 1;
                         $counter = 1;
 
                         while ($counter <= $invoiceincrement) {
-                            $tempinvoiceid = insert_query("tblinvoices", array("date" => "now()"));
-                            delete_query("tblinvoices", array("id" => $tempinvoiceid));
+                            $tempinvoiceid = insert_query("ra_bills", array("date" => "now()"));
+                            delete_query("ra_bills", array("id" => $tempinvoiceid));
                             $counter += 1;
                         }
                     }
 
                     foreach ($itemids as $itemid) {
-                        update_query("tblinvoiceitems", array("invoiceid" => $invoiceid), array("id" => $itemid));
+                        update_query("ra_bill_lineitems", array("invoiceid" => $invoiceid), array("id" => $itemid));
                     }
 
                     updateInvoiceTotal($invoiceid);
@@ -453,7 +453,7 @@ if ($action == "") {
             }
 
             updateInvoiceTotal($id);
-            $result = select_query_i("tblinvoices", "userid", array("id" => $id));
+            $result = select_query_i("ra_bills", "userid", array("id" => $id));
             $data = mysqli_fetch_array($result);
             $userid = $data[0];
             logActivity("Modified Invoice - Invoice ID: " . $id, $userid);
@@ -462,13 +462,13 @@ if ($action == "") {
         }
         if ($addcredit != "0.00" && $addcredit) {
             check_token("RA.admin.default");
-            $result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
+            $result2 = select_query_i("ra_bills", "userid,subtotal,credit,total", array("id" => $id));
             $data = mysqli_fetch_array($result2);
             $userid = $data['userid'];
             $subtotal = $data['subtotal'];
             $credit = $data['credit'];
             $total = $data['total'];
-            $result2 = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
+            $result2 = select_query_i("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
             $data = mysqli_fetch_array($result2);
             $amountpaid = $data[0];
             $balance = $total - $amountpaid;
@@ -479,7 +479,7 @@ if ($action == "") {
 
             $addcredit = round($addcredit, 2);
             $balance = round($balance, 2);
-            $result2 = select_query_i("tblclients", "credit", array("id" => $userid));
+            $result2 = select_query_i("ra_user", "credit", array("id" => $userid));
             $data = mysqli_fetch_array($result2);
             $totalcredit = $data['credit'];
 
@@ -497,7 +497,7 @@ if ($action == "") {
         }
         if ($removecredit != "0.00" && $removecredit != "") {
             check_token("RA.admin.default");
-            $result2 = select_query_i("tblinvoices", "userid,subtotal,credit,total", array("id" => $id));
+            $result2 = select_query_i("ra_bills", "userid,subtotal,credit,total", array("id" => $id));
             $data = mysqli_fetch_array($result2);
             $userid = $data['userid'];
             $subtotal = $data['subtotal'];
@@ -507,10 +507,10 @@ if ($action == "") {
             if ($credit < $removecredit) {
                 infoBox("An Error Occurred", "You cannot remove more credit than the invoice has applied");
             } else {
-                update_query("tblinvoices", array("credit" => "-=" . $removecredit), array("id" => (int) $id));
+                update_query("ra_bills", array("credit" => "-=" . $removecredit), array("id" => (int) $id));
                 updateInvoiceTotal($id);
-                update_query("tblclients", array("credit" => "+=" . $removecredit), array("id" => (int) $userid));
-                insert_query("tblcredit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Removed from Invoice #" . $id, "amount" => $removecredit));
+                update_query("ra_user", array("credit" => "+=" . $removecredit), array("id" => (int) $userid));
+                insert_query("ra_transactions_credit", array("clientid" => $userid, "date" => "now()", "description" => "Credit Removed from Invoice #" . $id, "amount" => $removecredit));
                 logActivity("Credit Removed - Amount: " . $removecredit . " - Invoice ID: " . $id, $userid);
                 $currency = getCurrency($userid);
                 infoBox("Success", formatCurrency($removecredit) . " credit was successfully removed from the invoice");
@@ -518,12 +518,12 @@ if ($action == "") {
         }
         if ($sub == "delete") {
             check_token("RA.admin.default");
-            delete_query("tblinvoiceitems", array("id" => $iid));
+            delete_query("ra_bill_lineitems", array("id" => $iid));
             updateInvoiceTotal($id);
             redir("action=edit&id=" . $id);
             exit();
         }
-        $result = select_query_i("tblinvoices", "tblpaymentgateways.value", array("tblpaymentgateways.setting" => "type", "tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid INNER JOIN tblpaymentgateways ON tblpaymentgateways.gateway=tblinvoices.paymentmethod");
+        $result = select_query_i("ra_bills", "ra_modules_gateways.value", array("ra_modules_gateways.setting" => "type", "ra_bills.id" => $id), "", "", "", "ra_user ON ra_user.id=ra_bills.userid INNER JOIN ra_modules_gateways ON ra_modules_gateways.gateway=ra_bills.paymentmethod");
         $data = mysqli_fetch_array($result);
         $type = $data['value'];
         if ($tplname) {
@@ -533,7 +533,7 @@ if ($action == "") {
         if ($type == "CC") {
             if ($sub == "attemptpayment") {
                 check_token("RA.admin.default");
-                $data = get_query_vals("tblclients", "cardtype,gatewayid", array("id" => $userid));
+                $data = get_query_vals("ra_user", "cardtype,gatewayid", array("id" => $userid));
 
                 if ($data[0] || $data[1]) {
                     logActivity("Admin Initiated Payment Capture - Invoice ID: " . $id, $userid);
@@ -551,7 +551,7 @@ if ($action == "") {
 
             if ($sub == "initiatepayment") {
                 check_token("RA.admin.default");
-                $data = get_query_vals("tblclients", "gatewayid", array("id" => $userid));
+                $data = get_query_vals("ra_user", "gatewayid", array("id" => $userid));
                 logActivity("Admin Initiated Payment Attempt - Invoice ID: " . $id, $userid);
 
                 if (captureCCPayment($id)) {
@@ -597,19 +597,19 @@ if ($action == "") {
         if ($sub == "deletetrans") {
             check_token("RA.admin.default");
             checkPermission("Delete Transaction");
-            delete_query("tblaccounts", array("id" => $ide));
+            delete_query("ra_transactions", array("id" => $ide));
             logActivity("Deleted Transaction - Transaction ID: " . $ide);
             redir("action=edit&id=" . $id);
             exit();
         }
         $gatewaysarray = getGatewaysArray();
-        $result = select_query_i("tblinvoices", "tblinvoices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.state,tblclients.country", array("tblinvoices.id" => $id), "", "", "", "tblclients ON tblclients.id=tblinvoices.userid");
+        $result = select_query_i("ra_bills", "ra_bills.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.state,ra_user.country", array("ra_bills.id" => $id), "", "", "", "ra_user ON ra_user.id=ra_bills.userid");
         $invoices = mysqli_fetch_array($result);
         if (!$invoices['id']) {
             $aInt->gracefulExit("Invoice ID Not Found");
         } else {
             $currency = getCurrency($userid);
-            $result = select_query_i("tblaccounts", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
+            $result = select_query_i("ra_transactions", "COUNT(id),SUM(amountin)-SUM(amountout)", array("invoiceid" => $id));
             $accounts = mysqli_fetch_array($result);
             $transcount = $accounts[0];
             $amountpaid = $accounts[1];
@@ -625,14 +625,14 @@ if ($action == "") {
 
 
             $details = array();
-            $result = select_query_i("tblinvoiceitems", "", array("invoiceid" => $id), "id", "ASC");
+            $result = select_query_i("ra_bill_lineitems", "", array("invoiceid" => $id), "id", "ASC");
             while ($data = mysqli_fetch_array($result)) {
                 $details[$data['id']] = $data;
                 $linecount = explode("\r\n", $data['description']);
                 $details[$data['id']]['linecount'] = count($linecount);
             }
             $transactions = array();
-            $result = select_query_i("tblaccounts", "", array("invoiceid" => $id), "date` ASC,`id", "ASC");
+            $result = select_query_i("ra_transactions", "", array("invoiceid" => $id), "date` ASC,`id", "ASC");
             while ($data = mysqli_fetch_array($result)) {
                 $transactions[] = $data;
             }
@@ -640,7 +640,7 @@ if ($action == "") {
                 $transactions = 0;
             }
             $paymentplan = array();
-            $result = select_query_i("tblinvoicepaymentmonitor", "", array("invoice_id" => $id));
+            $result = select_query_i("ra_bill_payment_monitor", "", array("invoice_id" => $id));
             if ($result->num_rows !== 0) {
                 while ($data = mysqli_fetch_array($result)) {
                     $paymentplan['days'] = (strtotime($data['duedate']) - strtotime($data['date'])) / (60 * 60 * 24);

@@ -160,7 +160,7 @@ else {
 		echo "</td><td class=\"fieldarea\">";
 		echo "<s";
 		echo "elect name=\"departments[]\" size=\"4\" multiple=\"true\">";
-		$result = select_query_i("tblticketdepartments", "", "", "name", "ASC");
+		$result = select_query_i("ra_ticket_teams", "", "", "name", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$departmentid = $data['id'];
@@ -181,7 +181,7 @@ else {
 		echo "<s";
 		echo "elect name=\"statuses[]\" size=\"4\" multiple=\"true\">
 ";
-		$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+		$result = select_query_i("ra_tickettatuses", "", "", "sortorder", "ASC");
 
 		while ($data = mysqli_fetch_assoc($result)) {
 			$title = $data['title'];
@@ -247,7 +247,7 @@ else {
 		echo "elect name=\"newdepartment\"><option value=\"\">- ";
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>";
-		$result = select_query_i("tblticketdepartments", "", "", "name", "ASC");
+		$result = select_query_i("ra_ticket_teams", "", "", "name", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$departmentid = $data['id'];
@@ -270,7 +270,7 @@ else {
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>
 ";
-		$result = select_query_i("tblticketstatuses", "", "", "sortorder", "ASC");
+		$result = select_query_i("ra_tickettatuses", "", "", "sortorder", "ASC");
 
 		while ($data = mysqli_fetch_assoc($result)) {
 			$title = $data['title'];
@@ -326,7 +326,7 @@ else {
 		echo "elect name=\"flagto\"><option value=\"\">- ";
 		echo $aInt->lang("supportticketescalations", "nochange");
 		echo " -</option>";
-		$result = select_query_i("tbladmins", "", "", "username", "ASC");
+		$result = select_query_i("ra_admin", "", "", "username", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$flag_adminid = $data['id'];
@@ -357,7 +357,7 @@ else {
 		echo $aInt->lang("supportticketescalations", "alsonotify");
 		echo ":</div>
 ";
-		$result = select_query_i("tbladmins", "", "", "username", "ASC");
+		$result = select_query_i("ra_admin", "", "", "username", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			echo "<label><input type=\"checkbox\" name=\"notify[]\" value=\"" . $data['id'] . "\"";

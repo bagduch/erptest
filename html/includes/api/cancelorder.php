@@ -16,7 +16,7 @@ if (!function_exists("changeOrderStatus")) {
 	require ROOTDIR . "/includes/orderfunctions.php";
 }
 
-$result = select_query_i("tblorders", "", array("id" => $orderid, "status" => "Pending"));
+$result = select_query_i("ra_orders", "", array("id" => $orderid, "status" => "Pending"));
 $data = mysqli_fetch_array($result);
 $orderid = $data['id'];
 

@@ -13,9 +13,9 @@ if ($enable) {
     check_token("RA.admin.default");
 
     if (isset($CONFIG['ModuleDebugMode'])) {
-        update_query("tblconfiguration", array("value" => "on"), array("setting" => "ModuleDebugMode"));
+        update_query("ra_config", array("value" => "on"), array("setting" => "ModuleDebugMode"));
     } else {
-        insert_query("tblconfiguration", array("setting" => "ModuleDebugMode", "value" => "on"));
+        insert_query("ra_config", array("setting" => "ModuleDebugMode", "value" => "on"));
     }
 
     $CONFIG['ModuleDebugMode'] = "on";
@@ -24,22 +24,22 @@ if ($enable) {
 
 if ($disable) {
     check_token("RA.admin.default");
-    update_query("tblconfiguration", array("value" => ""), array("setting" => "ModuleDebugMode"));
+    update_query("ra_config", array("value" => ""), array("setting" => "ModuleDebugMode"));
     $CONFIG['ModuleDebugMode'] = "";
 }
 
 
 if ($reset) {
     check_token("RA.admin.default");
-    delete_query("tblmodulelog", "id!=''");
+    delete_query("ra_module_logs", "id!=''");
     redir();
 }
 
 
 if (!$id) {
     $aInt->sortableTableInit("id");
-    $numrows = get_query_val("tblmodulelog", "COUNT(*)", "", "id", "DESC");
-    $result = select_query_i("tblmodulelog", "", "", "id", "DESC", $page * $limit . "," . $limit);
+    $numrows = get_query_val("ra_module_logs", "COUNT(*)", "", "id", "DESC");
+    $result = select_query_i("ra_module_logs", "", "", "id", "DESC", $page * $limit . "," . $limit);
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];
@@ -72,7 +72,7 @@ if (!$id) {
 </form>
 " . $aInt->sortableTable(array(array("", $aInt->lang("fields", "date"), 120), array("", $aInt->lang("fields", "module"), 120), array("", $aInt->lang("fields", "action"), 150), $aInt->lang("fields", "request"), $aInt->lang("fields", "response")), $tabledata);
 } else {
-    $result = select_query_i("tblmodulelog", "", array("id" => $id));
+    $result = select_query_i("ra_module_logs", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $date = $data['date'];

@@ -27,12 +27,12 @@ function currencyUpdateRates() {
 		}
 	}
 
-	$result = select_query_i("tblcurrencies", "", array("`default`" => "1"));
+	$result = select_query_i("ra_currency", "", array("`default`" => "1"));
 	$data = mysqli_fetch_array($result);
 	$currencycode = $data['code'];
 	$baserate = $exchrate[$currencycode];
 	$return = "";
-	$result = select_query_i("tblcurrencies", "", array("`default`" => array("sqltype" => "NEQ", "value" => "1")), "code", "ASC");
+	$result = select_query_i("ra_currency", "", array("`default`" => array("sqltype" => "NEQ", "value" => "1")), "code", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -41,7 +41,7 @@ function currencyUpdateRates() {
 		$exchangerate = round(1 / ($baserate / $coderate), 5);
 
 		if (0 < $exchangerate) {
-			update_query("tblcurrencies", array("rate" => $exchangerate), array("id" => $id));
+			update_query("ra_currency", array("rate" => $exchangerate), array("id" => $id));
 
 			if (is_object($cron)) {
 				$cron->logActivity("Updated " . $code . " Exchange Rate to " . $exchangerate, true);
@@ -62,7 +62,7 @@ function currencyUpdateRates() {
 }
 
 function currencyUpdatePricing($currencyid = "") {
-	$result = select_query_i("tblcurrencies", "id", array("`default`" => "1"));
+	$result = select_query_i("ra_currency", "id", array("`default`" => "1"));
 	$data = mysqli_fetch_array($result);
 	$defaultcurrencyid = $data['id'];
 	$where = array();
@@ -73,13 +73,13 @@ function currencyUpdatePricing($currencyid = "") {
 	}
 
 	$currencies = array();
-	$result = select_query_i("tblcurrencies", "id,rate", $where);
+	$result = select_query_i("ra_currency", "id,rate", $where);
 
 	while ($data = mysqli_fetch_array($result)) {
 		$currencies[$data['id']] = $data['rate'];
 	}
 
-	$result = select_query_i("tblpricing", "", array("currency" => $defaultcurrencyid, 1 => 1));
+	$result = select_query_i("ra_catalog_pricebook", "", array("currency" => $defaultcurrencyid, 1 => 1));
 
 	while ($data = mysqli_fetch_array($result)) {
 		$type = $data['type'];
@@ -112,17 +112,17 @@ function currencyUpdatePricing($currencyid = "") {
 
 
 			if ($domaintype) {
-				$result2 = select_query_i("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
+				$result2 = select_query_i("ra_catalog_pricebook", "id", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
 			}
 			else {
-				$result2 = select_query_i("tblpricing", "id", array("type" => $type, "currency" => $id, "relid" => $relid));
+				$result2 = select_query_i("ra_catalog_pricebook", "id", array("type" => $type, "currency" => $id, "relid" => $relid));
 			}
 
 			$data = mysqli_fetch_array($result2);
 			$pricing_id = $data['id'];
 
 			if (!$pricing_id) {
-				$pricing_id = insert_query("tblpricing", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
+				$pricing_id = insert_query("ra_catalog_pricebook", array("type" => $type, "currency" => $id, "relid" => $relid, "tsetupfee" => $tsetupfee));
 			}
 
 			$update_msetupfee = (0 < $msetupfee ? round($msetupfee * $rate, 2) : $msetupfee);
@@ -152,7 +152,7 @@ function currencyUpdatePricing($currencyid = "") {
 				$updatecriteria = array("type" => $type, "currency" => $id, "relid" => $relid);
 			}
 
-			update_query("tblpricing", array("msetupfee" => $update_msetupfee, "qsetupfee" => $update_qsetupfee, "ssetupfee" => $update_ssetupfee, "asetupfee" => $update_asetupfee, "bsetupfee" => $update_bsetupfee, "tsetupfee" => $update_tsetupfee, "monthly" => $update_monthly, "quarterly" => $update_quarterly, "semiannually" => $update_semiannually, "annually" => $update_annually, "biennially" => $update_biennially, "triennially" => $update_triennially), $updatecriteria);
+			update_query("ra_catalog_pricebook", array("msetupfee" => $update_msetupfee, "qsetupfee" => $update_qsetupfee, "ssetupfee" => $update_ssetupfee, "asetupfee" => $update_asetupfee, "bsetupfee" => $update_bsetupfee, "tsetupfee" => $update_tsetupfee, "monthly" => $update_monthly, "quarterly" => $update_quarterly, "semiannually" => $update_semiannually, "annually" => $update_annually, "biennially" => $update_biennially, "triennially" => $update_triennially), $updatecriteria);
 		}
 	}
 

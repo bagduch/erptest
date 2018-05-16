@@ -16,7 +16,7 @@ $menuselect = "$('#menu').multilevelpushmenu('expand','Services');";
 $action = $ra->get_req_var("action");
 $id = $ra->get_req_var("id");
 if ($manageoptions) {
-    $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
+    $result = select_query_i("ra_currency", "", "", "code", "ASC");
     while ($data = mysqli_fetch_array($result)) {
         $curr_id = $data['id'];
         $curr_code = $data['code'];
@@ -28,13 +28,13 @@ if ($manageoptions) {
         check_token("RA.admin.default");
         checkPermission("Delete Products/Services");
         delete_query("tblservicetogroup", array("gid" => $confid));
-        delete_query("tblcustomfieldsgroup", array("id" => $confid));
-        delete_query("tblcustomfields", array("gid" => $confid));
+        delete_query("ra_catalog_user_sales_fieldsgroup", array("id" => $confid));
+        delete_query("ra_catalog_user_sales_fields", array("gid" => $confid));
         redir("manageoptions=true&cid=" . $cid);
         exit();
     }
     $aInt->title = "Configurable Options";
-    $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $cid));
+    $result = select_query_i("ra_catalog_user_sales_fieldsgroup", "", array("id" => $cid));
     $data = mysqli_fetch_array($result);
     $cid = $data['id'];
     $name = $data['name'];
@@ -113,7 +113,7 @@ function closewindow() {
     echo "</td><td width=70>Quarterly</td><td width=70>Semi-Annual</td><td width=70>Annual</td><td width=70>Biennial</td><td width=70>Triennial</td><td width=50>Order</td><td width=30>Hide</td></tr>
 ";
     $x = 0;
-    $query = "SELECT * FROM tblserviceconfigoptionssub WHERE configid=" . (int) $cid . " ORDER BY sortorder ASC,id ASC";
+    $query = "SELECT * FROM ra_catalog_user_sales_addons_optionssub WHERE configid=" . (int) $cid . " ORDER BY sortorder ASC,id ASC";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -131,13 +131,13 @@ function closewindow() {
         echo "</td>";
         $firstcurrencydone = false;
         foreach ($currenciesarray as $curr_id => $curr_code) {
-            $result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+            $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
             $data = mysqli_fetch_array($result2);
             $pricing_id = $data['id'];
 
             if (!$pricing_id) {
-                insert_query("tblpricing", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
-                $result2 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+                insert_query("ra_catalog_pricebook", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
+                $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "configoptions", "currency" => $curr_id, "relid" => $optionid));
                 $data = mysqli_fetch_array($result2);
             }
 
@@ -203,23 +203,23 @@ if ($action == "savegroup") {
     checkPermission("Edit Products/Services");
 
     if ($id) {
-        update_query("tblcustomfieldsgroup", array("name" => $name), array("id" => $id));
+        update_query("ra_catalog_user_sales_fieldsgroup", array("name" => $name), array("id" => $id));
         $response = "saved";
     } else {
-        $id = insert_query("tblcustomfieldsgroupnames", array("name" => $name));
+        $id = insert_query("ra_catalog_user_sales_fieldsgroupnames", array("name" => $name));
         $response = "added";
     }
 
-    delete_query("tblcustomfieldsgrouplinks","");
+    delete_query("ra_catalog_user_sales_fieldsgrouplinks","");
       foreach ($productlinks as $pid) {
-          update_query("tblservices", array("cpid" => $id), array("id" => $pid));
+          update_query("ra_catalog", array("cpid" => $id), array("id" => $pid));
       }
 
 
     if ($fieldname) {
         foreach ($fieldname as $fid => $value) {
 
-            update_query("tblcustomfields",
+            update_query("ra_catalog_user_sales_fields",
               array(
                 "fieldname" => $value,
                 "fieldtype" => $fieldtype[$fid],
@@ -240,7 +240,7 @@ if ($action == "savegroup") {
 
     if ($addfieldname) {
         insert_query(
-          "tblcustomfields",
+          "ra_catalog_user_sales_fields",
           array(
             "gid" => $id,
             "type" => "product",
@@ -267,7 +267,7 @@ if ($action == "savegroup") {
 if ($action == "duplicate") {
     check_token("RA.admin.default");
     checkPermission("Create New Products/Services");
-    $result = select_query_i("tblcustomfieldsgroup", "", array("id" => $existinggroupid));
+    $result = select_query_i("ra_catalog_user_sales_fieldsgroup", "", array("id" => $existinggroupid));
     $data = mysqli_fetch_array($result);
     $addstr = "";
     foreach ($data as $key => $value) {
@@ -288,9 +288,9 @@ if ($action == "duplicate") {
     }
 
     $addstr = substr($addstr, 0, 0 - 1);
-    full_query_i("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
+    full_query_i("INSERT INTO ra_catalog_user_sales_fieldsgroup VALUES (" . $addstr . ")");
     $newgroupid = mysqli_insert_id();
-    $result = select_query_i("tblcustomfields", "", array("gid" => $existinggroupid));
+    $result = select_query_i("ra_catalog_user_sales_fields", "", array("gid" => $existinggroupid));
 
     while ($data = mysqli_fetch_array($result)) {
         $configid = $data['id'];
@@ -313,9 +313,9 @@ if ($action == "duplicate") {
         }
 
         $addstr = substr($addstr, 0, 0 - 1);
-        full_query_i("INSERT INTO tblcustomfieldsgroup VALUES (" . $addstr . ")");
+        full_query_i("INSERT INTO ra_catalog_user_sales_fieldsgroup VALUES (" . $addstr . ")");
         $newconfigid = mysqli_insert_id();
-        $result2 = select_query_i("tblcustomfields", "", array("gid" => $configid));
+        $result2 = select_query_i("ra_catalog_user_sales_fields", "", array("gid" => $configid));
 
         while ($data = mysqli_fetch_array($result2)) {
             $optionid = $data['id'];
@@ -338,7 +338,7 @@ if ($action == "duplicate") {
             }
 
             $addstr = substr($addstr, 0, 0 - 1);
-            full_query_i("INSERT INTO tblcustomfields VALUES (" . $addstr . ")");
+            full_query_i("INSERT INTO ra_catalog_user_sales_fields VALUES (" . $addstr . ")");
         }
     }
 
@@ -355,19 +355,19 @@ if ($action == 'save') {
     }
 
     if (isset($_POST['deletefield'])) { // if deleting a field, nothing else is changed
-        delete_query("tblcustomfieldsgroupmembers", array("cfid" => $_POST['deletefield'], "cfgid" => $id));
-        delete_query("tblcustomfields", array("cfid" => $_POST['deletefield']));
+        delete_query("ra_catalog_user_sales_fieldsgroupmembers", array("cfid" => $_POST['deletefield'], "cfgid" => $id));
+        delete_query("ra_catalog_user_sales_fields", array("cfid" => $_POST['deletefield']));
     } else { // otherwise we go ahead and reapply all of the form data
         // update $groupname
         if (isset($_POST['name']))
         {
-          update_query("tblcustomfieldsgroupnames", array("name" => db_escape_string($_POST['name']), "cfgid" => $id));
+          update_query("ra_catalog_user_sales_fieldsgroupnames", array("name" => db_escape_string($_POST['name']), "cfgid" => $id));
         }
 
-        delete_query("tblcustomfieldsgrouplinks", array("cfgid"=>$id));
+        delete_query("ra_catalog_user_sales_fieldsgrouplinks", array("cfgid"=>$id));
         if (isset($_POST["productlinks"])) {
           foreach ($_POST["productlinks"] as $productlink) {
-            insert_query("tblcustomfieldsgrouplinks",array("cfgid"=>$id,"serviceid"=>$productlink));
+            insert_query("ra_catalog_user_sales_fieldsgrouplinks",array("cfgid"=>$id,"serviceid"=>$productlink));
           }
         }
 
@@ -385,7 +385,7 @@ if ($action == 'save') {
                     "showinvoice" => $_POST['showinvoice'][$fid] == "on" ? 1 : 0,
                     "sortorder" => $_POST['sortorder'][$fid]
                 );
-                update_query("tblcustomfields", $customfieldname, array("cfid" => $fid));
+                update_query("ra_catalog_user_sales_fields", $customfieldname, array("cfid" => $fid));
             }
             if (isset($_POST['updatelinkfieldname'])) {
                 foreach ($_POST['updatelinkfieldname'] as $upfid => $uvalue) {
@@ -401,7 +401,7 @@ if ($action == 'save') {
                         "showinvoice" => 0,
                         "sortorder" => 0
                     );
-                    update_query("tblcustomfields", $updatelinkfield, array("cfid" => $upfid));
+                    update_query("ra_catalog_user_sales_fields", $updatelinkfield, array("cfid" => $upfid));
                 }
             }
         }
@@ -418,7 +418,7 @@ if ($action == 'save') {
                 "showinvoice" => $_POST['addshowinvoice'] == "on" ? 1 : 0,
                 "sortorder" => $_POST['addsortorder']
             );
-            $nfid = insert_query("tblcustomfields", $addcustomfieldname);
+            $nfid = insert_query("ra_catalog_user_sales_fields", $addcustomfieldname);
 
             if (isset($_POST['addlinkfieldname'])) {
                 if (is_array($_POST['addlinkfieldname'])) {
@@ -436,8 +436,8 @@ if ($action == 'save') {
                             "sortorder" => 0,
                             "parent_id" => $nfid
                         );
-                        $newid = insert_query("tblcustomfields", $linkfields);
-                        insert_query("tblcustomfieldsgroupmembers", array("cfgid" => $id, "cfid" => $newid));
+                        $newid = insert_query("ra_catalog_user_sales_fields", $linkfields);
+                        insert_query("ra_catalog_user_sales_fieldsgroupmembers", array("cfgid" => $id, "cfid" => $newid));
                     }
                 }
             }
@@ -446,7 +446,7 @@ if ($action == 'save') {
 
         if (isset($nfid)) {
 
-            insert_query("tblcustomfieldsgroupmembers", array("cfgid" => $id, "cfid" => $nfid));
+            insert_query("ra_catalog_user_sales_fieldsgroupmembers", array("cfgid" => $id, "cfid" => $nfid));
         }
     }
     redir("action=managegroup&id=" . $id . "&success=true");
@@ -456,8 +456,8 @@ if ($action == 'save') {
 if ($action == "deleteoption") {
     check_token("RA.admin.default");
     checkPermission("Edit Products/Services");
-    delete_query("tblserviceconfigoptions", array("id" => $opid));
-    delete_query("tblserviceconfigoptionssub", array("configid" => $opid));
+    delete_query("ra_catalog_user_sales_addons_options", array("id" => $opid));
+    delete_query("ra_catalog_user_sales_addons_optionssub", array("configid" => $opid));
     delete_query("tblhostingconfigoptions", array("configid" => $opid));
     redir("action=managegroup&id=" . $id);
     exit();
@@ -468,8 +468,8 @@ if ($action == "deletegroup") {
 
     check_token("RA.admin.default");
     checkPermission("Delete Products/Services");
-    delete_query("tblcustomfieldsgroupnames", array("cfgid" => $id));
-    delete_query("tblcustomfieldsgroupmembers", array("cfgid" => $id));
+    delete_query("ra_catalog_user_sales_fieldsgroupnames", array("cfgid" => $id));
+    delete_query("ra_catalog_user_sales_fieldsgroupmembers", array("cfgid" => $id));
 
 
     redir("deleted=true");
@@ -491,7 +491,7 @@ if ($action == "") {
     }
 
     $aInt->sortableTableInit("nopagination");
-    $result = select_query_i("tblcustomfieldsgroupnames", "", "", "name", "ASC");
+    $result = select_query_i("ra_catalog_user_sales_fieldsgroupnames", "", "", "name", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
 
@@ -506,13 +506,13 @@ if ($action == "") {
 
 // action=managegroup
 // Usually POST - actions:
-// * Modify name in tblcustomfieldsgroupnames
-// * Change assigned products in tblcustomfieldsgrouplinks
-// * Define new custom field as a member of the group (tblcustomfields)
-// * Change existing customfield attributes (tblcustomfields)
+// * Modify name in ra_catalog_user_sales_fieldsgroupnames
+// * Change assigned products in ra_catalog_user_sales_fieldsgrouplinks
+// * Define new custom field as a member of the group (ra_catalog_user_sales_fields)
+// * Change existing customfield attributes (ra_catalog_user_sales_fields)
 } elseif ($action == "managegroup") {
     $allservice = array();
-    $services = select_query_i('tblservices', "id,type,name");
+    $services = select_query_i('ra_catalog', "id,type,name");
     // populate $allservice with [id,type,name]
     while ($data = mysqli_fetch_array($services)) {
         $allservice [$data['id']] = array(
@@ -521,8 +521,8 @@ if ($action == "") {
            'check' => ""
         );
     }
-    // populate $allservice['id'] with " selected" for html decoration if in  tblcustomfieldsgroupmembers
-    $linkedproducts = select_query_i("tblcustomfieldsgrouplinks","serviceid",array(cfgid=>$id));
+    // populate $allservice['id'] with " selected" for html decoration if in  ra_catalog_user_sales_fieldsgroupmembers
+    $linkedproducts = select_query_i("ra_catalog_user_sales_fieldsgrouplinks","serviceid",array(cfgid=>$id));
     while ($data = mysqli_fetch_array($linkedproducts)) {
       $allservice[$data['serviceid']]['check'] = " selected";
     }
@@ -535,7 +535,7 @@ if ($action == "") {
         }
         $action = "save";
         $steptitle = "Manage Group";
-        $query = "select tblcustomfields.* from tblcustomfields INNER JOIN tblcustomfieldsgroupmembers on (tblcustomfields.cfid = tblcustomfieldsgroupmembers.cfid AND tblcustomfieldsgroupmembers.cfgid=" . $id . ") ORDER BY tblcustomfields.sortorder";
+        $query = "select ra_catalog_user_sales_fields.* from ra_catalog_user_sales_fields INNER JOIN ra_catalog_user_sales_fieldsgroupmembers on (ra_catalog_user_sales_fields.cfid = ra_catalog_user_sales_fieldsgroupmembers.cfid AND ra_catalog_user_sales_fieldsgroupmembers.cfgid=" . $id . ") ORDER BY ra_catalog_user_sales_fields.sortorder";
         $result = full_query_i($query);
         $datas = array();
         while ($data = mysqli_fetch_assoc($result)) {
@@ -547,7 +547,7 @@ if ($action == "") {
                 unset($datas[$cfid]);
             }
         }
-        $query = "select * from tblcustomfieldsgroupnames where cfgid=" . $id;
+        $query = "select * from ra_catalog_user_sales_fieldsgroupnames where cfgid=" . $id;
         $result = full_query_i($query);
         $data2 = mysqli_fetch_assoc($result);
         $name = $data2['name'];
@@ -569,7 +569,7 @@ if ($action == "") {
         $aInt->template = "customfieldgroup/creategroup";
     }
 
-    $result = select_query_i("tblservices", "tblservices.id,tblservices.name,tblservicegroups.name AS groupname", "", "groupname` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+    $result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "groupname` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
     echo "</select></td></tr></table>";
 } elseif ($action == "duplicategroup") {
@@ -584,7 +584,7 @@ if ($action == "") {
 <tr><td width=150 class=\"fieldlabel\">Existing Group</td><td class=\"fieldarea\">";
     echo "<s";
     echo "elect name=\"existinggroupid\">";
-    $result = select_query_i("tblcustomfieldsgroup", "", "", "id", "ASC");
+    $result = select_query_i("ra_catalog_user_sales_fieldsgroup", "", "", "id", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $id = $data['id'];

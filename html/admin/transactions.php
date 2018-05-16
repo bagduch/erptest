@@ -33,8 +33,8 @@ if ($action == "add") {
                 $description .= " (" . $aInt->lang("transactions", "transid") . (": " . $transid . ")");
             }
 
-            insert_query("tblcredit", array("clientid" => $client, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
-            update_query("tblclients", array("credit" => "+=" . $amountin), array("id" => (int) $client));
+            insert_query("ra_transactions_credit", array("clientid" => $client, "date" => toMySQLDate($date), "description" => $description, "amount" => $amountin));
+            update_query("ra_user", array("credit" => "+=" . $amountin), array("id" => (int) $client));
         }
     } else {
         $invoiceids = trim($invoiceids);
@@ -43,7 +43,7 @@ if ($action == "add") {
             $invoiceids = substr($invoiceids, 0, 0 - 1);
         }
 
-        $query = select_query_i("tblinvoices", "SUM(total)", "id IN (" . $invoiceids . ")");
+        $query = select_query_i("ra_bills", "SUM(total)", "id IN (" . $invoiceids . ")");
         $data = mysqli_fetch_assoc($query);
         $invoicestotal = $data[0];
         $invoices = explode(",", $invoiceids);
@@ -52,10 +52,10 @@ if ($action == "add") {
         foreach ($invoices as $invoiceid) {
 
             if (0 < $totalleft) {
-                $result = select_query_i("tblinvoices", "total", array("id" => $invoiceid));
+                $result = select_query_i("ra_bills", "total", array("id" => $invoiceid));
                 $data = mysqli_fetch_array($result);
                 $invoicetotal = $data[0];
-                $result2 = select_query_i("tblaccounts", "SUM(amountin)", array("invoiceid" => $invoiceid));
+                $result2 = select_query_i("ra_transactions", "SUM(amountin)", array("invoiceid" => $invoiceid));
                 $data = mysqli_fetch_array($result2);
                 $totalin = $data[0];
                 $paymentdue = $invoicetotal - $totalin;
@@ -92,7 +92,7 @@ if ($action == "save") {
     }
 
     $date = toMySQLDate($date);
-    update_query("tblaccounts", array("userid" => $client, "currency" => $currency, "date" => $date, "description" => $description, "amountin" => $amountin, "fees" => $fees, "amountout" => $amountout, "gateway" => $paymentmethod, "transid" => $transid, "invoiceid" => $invoiceid), array("id" => $id));
+    update_query("ra_transactions", array("userid" => $client, "currency" => $currency, "date" => $date, "description" => $description, "amountin" => $amountin, "fees" => $fees, "amountout" => $amountout, "gateway" => $paymentmethod, "transid" => $transid, "invoiceid" => $invoiceid), array("id" => $id));
     logActivity("Modified Transaction - Transaction ID: " . $id);
     redir("saved=true");
     exit();
@@ -102,7 +102,7 @@ if ($action == "save") {
 if ($action == "delete") {
     check_token("RA.admin.default");
     checkPermission("Delete Transaction");
-    delete_query("tblaccounts", array("id" => $id));
+    delete_query("ra_transactions", array("id" => $id));
     logActivity("Deleted Transaction - Transaction ID: " . $id);
     redir("deleted=true");
     exit();
@@ -188,7 +188,7 @@ if (!$action) {
     $withinoption .= ">Custom Date Range</option>";
     $date2 = getTodaysDate();
 
-    $result = select_query_i("tblcurrencies", "", "", "code", "ASC");
+    $result = select_query_i("ra_currency", "", "", "code", "ASC");
 
 
     while ($data = mysqli_fetch_array($result)) {
@@ -207,41 +207,41 @@ if (!$action) {
     $where = array();
 
     if ($show == "received") {
-        $where[] = "tblaccounts.amountin>0";
+        $where[] = "ra_transactions.amountin>0";
     } else {
         if ($show == "sent") {
-            $where[] = "tblaccounts.amountout>0";
+            $where[] = "ra_transactions.amountout>0";
         }
     }
 
 
     if ($amount) {
-        $where[] = "(tblaccounts.amountin='" . db_escape_string($amount) . "' OR tblaccounts.amountout='" . db_escape_string($amount) . "')";
+        $where[] = "(ra_transactions.amountin='" . db_escape_string($amount) . "' OR ra_transactions.amountout='" . db_escape_string($amount) . "')";
     }
 
 
     if ($startdate) {
-        $where[] = "tblaccounts.date>='" . toMySQLDate($startdate) . " 00:00:00'";
+        $where[] = "ra_transactions.date>='" . toMySQLDate($startdate) . " 00:00:00'";
     }
 
 
     if ($enddate) {
-        $where[] = "tblaccounts.date<='" . toMySQLDate($enddate) . " 23:59:59'";
+        $where[] = "ra_transactions.date<='" . toMySQLDate($enddate) . " 23:59:59'";
     }
 
 
     if (!$startdate && !$enddate) {
         if ($within == "week") {
             $lastweek = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - 7, date("Y")));
-            $where[] = "tblaccounts.date>=" . $lastweek;
+            $where[] = "ra_transactions.date>=" . $lastweek;
         } else {
             if ($within == "month") {
                 $lastmonth = date("Ymd", mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
-                $where[] = "tblaccounts.date>=" . $lastmonth;
+                $where[] = "ra_transactions.date>=" . $lastmonth;
             } else {
                 if ($within == "year") {
                     $lastyear = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y") - 1));
-                    $where[] = "tblaccounts.date>=" . $lastyear;
+                    $where[] = "ra_transactions.date>=" . $lastyear;
                 }
             }
         }
@@ -249,17 +249,17 @@ if (!$action) {
 
 
     if ($filtertransid) {
-        $where[] = "tblaccounts.transid='" . db_escape_string($filtertransid) . "'";
+        $where[] = "ra_transactions.transid='" . db_escape_string($filtertransid) . "'";
     }
 
 
     if ($paymentmethod) {
-        $where[] = "tblaccounts.gateway='" . db_escape_string($paymentmethod) . "'";
+        $where[] = "ra_transactions.gateway='" . db_escape_string($paymentmethod) . "'";
     }
 
 
     if ($filterdescription) {
-        $where[] = "tblaccounts.description LIKE '%" . db_escape_string($filterdescription) . "%'";
+        $where[] = "ra_transactions.description LIKE '%" . db_escape_string($filterdescription) . "%'";
     }
 
 
@@ -268,7 +268,7 @@ if (!$action) {
     }
 
     $totals = array();
-    $fullquery = "SELECT tblclients.currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM tblaccounts,tblclients " . ($query ? $query . " AND" : "WHERE") . " tblclients.id=tblaccounts.userid GROUP BY tblclients.currency";
+    $fullquery = "SELECT ra_user.currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM ra_transactions,ra_user " . ($query ? $query . " AND" : "WHERE") . " ra_user.id=ra_transactions.userid GROUP BY ra_user.currency";
     $result = full_query_i($fullquery);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -280,7 +280,7 @@ if (!$action) {
         $totals[$currency] = array("in" => $totalin, "fees" => $totalfees, "out" => $totalout, "total" => $total);
     }
 
-    $fullquery = "SELECT currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM tblaccounts " . ($query ? $query . " AND" : "WHERE") . " userid=0 GROUP BY currency";
+    $fullquery = "SELECT currency,SUM(amountin),SUM(fees),SUM(amountout),SUM(amountin-fees-amountout) FROM ra_transactions " . ($query ? $query . " AND" : "WHERE") . " userid=0 GROUP BY currency";
     $result = full_query_i($fullquery);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -296,11 +296,11 @@ if (!$action) {
     }
 
     $gatewaysarray = getGatewaysArray();
-    $query .= " ORDER BY tblaccounts.date DESC,tblaccounts.id DESC";
-    $result = full_query_i("SELECT COUNT(*) FROM tblaccounts" . $query);
+    $query .= " ORDER BY ra_transactions.date DESC,ra_transactions.id DESC";
+    $result = full_query_i("SELECT COUNT(*) FROM ra_transactions" . $query);
     $data = mysqli_fetch_array($result);
     $numrows = $data[0];
-    $query = "SELECT tblaccounts.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency AS currencyid FROM tblaccounts LEFT JOIN tblclients ON tblclients.id=tblaccounts.userid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
+    $query = "SELECT ra_transactions.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency AS currencyid FROM ra_transactions LEFT JOIN ra_user ON ra_user.id=ra_transactions.userid" . $query . " LIMIT " . (int) $page * $limit . "," . (int) $limit;
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -390,7 +390,7 @@ if (!$action) {
     $aInt->assign("PHP_SELF", $PHP_SELF);
     $template = "billing/view";
 } else {
-    $result = select_query_i("tblaccounts", "", array("id" => $id));
+    $result = select_query_i("ra_transactions", "", array("id" => $id));
     $data = mysqli_fetch_array($result);
     $id = $data['id'];
     $userid = $data['userid'];

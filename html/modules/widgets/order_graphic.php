@@ -29,7 +29,7 @@ function widget_order_left_overview($vars) {
 
     $end_date = date("Y-m-d");
     $start_date = date("Y-m-d", strtotime("-15 days", strtotime("now")));
-    $query = "select * from tblorders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
+    $query = "select * from ra_orders where date between '" . $start_date . "' AND '" . $end_date . "' order by date desc";
     $result = full_query_i($query);
     $orders = array();
     $starttime = date("t", strtotime(date("Y-m-01")));

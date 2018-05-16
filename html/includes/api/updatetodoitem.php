@@ -13,7 +13,7 @@ if (!$itemid) {
 	return null;
 }
 
-$adminid = get_query_val("tbladmins", "id", array("id" => $adminid));
+$adminid = get_query_val("ra_admin", "id", array("id" => $adminid));
 
 if (!$adminid) {
 	$apiresults = array("result" => "error", "message" => "Admin ID Not Found");

@@ -198,7 +198,7 @@ class RA_ClientArea
 
 	public function getCurrencyOptions() {
 		$currenciesarray = array();
-		$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+		$result = select_query_i("ra_currency", "id,code,`default`", "", "code", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$currenciesarray[] = array("id" => $data['id'], "code" => $data['code'], "default" => $data['default']);
@@ -261,7 +261,7 @@ class RA_ClientArea
 			$this->assign("clientsstats", getClientsStats($_SESSION['uid']));
 
 			if (isset($_SESSION['cid'])) {
-				$result = select_query_i("tblcontacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+				$result = select_query_i("ra_user_contacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
 				$data = mysqli_fetch_array($result);
 				$loggedinuser = array("contactid" => $data['id'], "firstname" => $data['firstname'], "lastname" => $data['lastname'], "email" => $data['email']);
 				$contactpermissions = explode(",", $data[4]);
@@ -332,7 +332,7 @@ class RA_ClientArea
 			}
 		}
 
-		return array("updatecc" => $calinkupdatecc, "updatesq" => null, "security" => $security, "addfunds" => $ra->get_config("AddFundsEnabled"), "masspay" => $ra->get_config("EnableMassPay"), "affiliates" => $ra->get_config("AffiliateEnabled"), "domainreg" => $ra->get_config("AllowRegister"), "domaintrans" => $ra->get_config("AllowTransfer"), "domainown" => $ra->get_config("AllowOwnDomain"), "pmaddon" => get_query_val("tbladdonmodules", "value", array("module" => "project_management", "setting" => "clientenable")));
+		return array("updatecc" => $calinkupdatecc, "updatesq" => null, "security" => $security, "addfunds" => $ra->get_config("AddFundsEnabled"), "masspay" => $ra->get_config("EnableMassPay"), "affiliates" => $ra->get_config("AffiliateEnabled"), "domainreg" => $ra->get_config("AllowRegister"), "domaintrans" => $ra->get_config("AllowTransfer"), "domainown" => $ra->get_config("AllowOwnDomain"), "pmaddon" => get_query_val("ra_modules", "value", array("module" => "project_management", "setting" => "clientenable")));
 	}
 
 	public function buildBreadCrumb() {

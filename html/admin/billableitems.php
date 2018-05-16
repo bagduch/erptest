@@ -198,7 +198,7 @@ if (!$action) {
 	$result = select_query_i("tblbillableitems", "COUNT(*)", $where);
 	$data = mysqli_fetch_array($result);
 	$numrows = $data[0];
-	$result = select_query_i("tblbillableitems", "tblbillableitems.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency", $where, $orderby, $order, $page * $limit . ("," . $limit), "tblclients ON tblclients.id=tblbillableitems.userid");
+	$result = select_query_i("tblbillableitems", "tblbillableitems.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency", $where, $orderby, $order, $page * $limit . ("," . $limit), "ra_user ON ra_user.id=tblbillableitems.userid");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -282,7 +282,7 @@ else {
 		}
 		else {
 			$pagetitle = $aInt->lang("billableitems", "additem");
-			$clientcheck = get_query_val("tblclients", "id", "");
+			$clientcheck = get_query_val("ra_user", "id", "");
 
 			if (!$clientcheck) {
 				$aInt->gracefulExit($aInt->lang("billableitems", "noclientsmsg"));
@@ -295,7 +295,7 @@ else {
 			$amount = "0.00";
 			$invoicecount = 0;
 			$options = "";
-			$result = select_query_i("tblservices", "tblservices.id,tblservices.gid,tblservices.name,tblservicegroups.name AS groupname", "", "tblservicegroups`.`order` ASC,`tblservices`.`order` ASC,`name", "ASC", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+			$result = select_query_i("ra_catalog", "ra_catalog.id,ra_catalog.gid,ra_catalog.name,ra_catalog_groups.name AS groupname", "", "ra_catalog_groups`.`order` ASC,`ra_catalog`.`order` ASC,`name", "ASC", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$pid = $data['id'];
@@ -483,7 +483,7 @@ else {
 			$currency = getCurrency($userid);
 			$gatewaysarray = getGatewaysArray();
 			$aInt->sortableTableInit("nopagination");
-			$result = select_query_i("tblinvoiceitems", "tblinvoices.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+			$result = select_query_i("ra_bill_lineitems", "ra_bills.*", array("type" => "Item", "relid" => $id), "invoiceid", "ASC", "", "ra_bills ON ra_bills.id=ra_bill_lineitems.invoiceid");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$invoiceid = $data['id'];

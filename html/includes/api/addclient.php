@@ -66,7 +66,7 @@ if ($notes) {
 
 
 if (count($updateqry)) {
-	update_query("tblclients", $updateqry, array("id" => $_SESSION['uid']));
+	update_query("ra_user", $updateqry, array("id" => $_SESSION['uid']));
 }
 
 

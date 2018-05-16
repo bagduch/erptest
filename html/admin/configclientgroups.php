@@ -11,7 +11,7 @@ $aInt->helplink = "Client Groups";
 $menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 if ($action == "savegroup") {
     check_token("RA.admin.default");
-    insert_query("tblclientgroups", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices));
+    insert_query("ra_user_group", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices));
     header("Location: configclientgroups.php?added=true");
     exit();
 }
@@ -19,7 +19,7 @@ if ($action == "savegroup") {
 
 if ($action == "updategroup") {
     check_token("RA.admin.default");
-    update_query("tblclientgroups", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices), array("id" => $groupid));
+    update_query("ra_user_group", array("groupname" => $groupname, "groupcolour" => $groupcolour, "discountpercent" => $discountpercent, "susptermexempt" => $susptermexempt, "separateinvoices" => $separateinvoices), array("id" => $groupid));
     header("Location: configclientgroups.php?update=true");
     exit();
 }
@@ -27,21 +27,21 @@ if ($action == "updategroup") {
 
 if ($action == "delete") {
     check_token("RA.admin.default");
-    $result = select_query_i("tblclients", "", array("groupid" => $id));
+    $result = select_query_i("ra_user", "", array("groupid" => $id));
     $numaccounts = mysqli_num_rows($result);
 
     if (0 < $numaccounts) {
         header("Location: configclientgroups.php?deleteerror=true");
         exit();
     } else {
-        delete_query("tblclientgroups", array("id" => $id));
+        delete_query("ra_user_group", array("id" => $id));
         header("Location: configclientgroups.php?deletesuccess=true");
         exit();
     }
 }
 if ($ation == "") {
     $aInt->sortableTableInit("nopagination");
-    $result = select_query_i("tblclientgroups", "", "");
+    $result = select_query_i("ra_user_group", "", "");
 
     while ($data = mysqli_fetch_assoc($result)) {
         $suspterm = ($data['susptermexempt'] == "on" ? $aInt->lang("global", "yes") : $aInt->lang("global", "no"));
@@ -62,7 +62,7 @@ if ($ation == "") {
 }
 
 if ($action == "edit") {
-    $result = select_query_i("tblclientgroups", "", array("id" => $id));
+    $result = select_query_i("ra_user_group", "", array("id" => $id));
     $data = mysqli_fetch_assoc($result);
     $aInt->assign("groupid", $id);
     $aInt->assign("editdata", $data);

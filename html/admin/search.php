@@ -7,7 +7,7 @@ $aInt = new RA_Admin("loginonly");
 
 if ($a == "savenotes") {
     check_token("RA.admin.default");
-    update_query("tbladmins", array("notes" => $notes), array("id" => $_SESSION['adminid']));
+    update_query("ra_admin", array("notes" => $notes), array("id" => $_SESSION['adminid']));
     exit();
 }
 
@@ -35,7 +35,7 @@ if ($intellisearch) {
     $value = db_escape_string($value);
 
     if (checkPermission("List Clients", true) || checkPermission("View Clients Summary", true)) {
-        $query = "SELECT id,firstname,lastname,companyname,email,status FROM tblclients WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
+        $query = "SELECT id,firstname,lastname,companyname,email,status FROM ra_user WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
 
 
         if (is_numeric($value)) {
@@ -74,7 +74,7 @@ if ($intellisearch) {
         }
 
         $tempmatches = "";
-        $query = "SELECT id,userid,firstname,lastname,companyname,email FROM tblcontacts WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
+        $query = "SELECT id,userid,firstname,lastname,companyname,email FROM ra_user_contacts WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR address1 LIKE '%" . $value . "%' OR address2 LIKE '%" . $value . "%' OR postcode LIKE '%" . $value . "%' OR phonenumber LIKE '%" . $value . "%'";
 
         if (is_numeric($value)) {
             $query .= " OR id='" . $value . "'";
@@ -109,7 +109,7 @@ if ($intellisearch) {
 
     if (checkPermission("List Services", true) || checkPermission("View Clients Products/Services", true)) {
         $tempmatches = "";
-        $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.description,tblservices.name,tblcustomerservices.servicestatus FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblservices.id=tblcustomerservices.packageid WHERE ";
+        $query = "SELECT ra_user.firstname,ra_user.lastname,ra_user.companyname,tblcustomerservices.id,tblcustomerservices.userid,tblcustomerservices.description,ra_catalog.name,tblcustomerservices.servicestatus FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid INNER JOIN ra_catalog ON ra_catalog.id=tblcustomerservices.packageid WHERE ";
 
         if (is_numeric($value)) {
             $query .= "tblcustomerservices.id='" . $value . "' OR";
@@ -155,7 +155,7 @@ if ($intellisearch) {
 
     if (is_numeric($value)) {
         if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
-            $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.id like '" . $value . "%' LIMIT 5";
+            $query = "SELECT ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_bills.id,ra_bills.userid,ra_bills.status FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.id like '" . $value . "%' LIMIT 5";
             $result = full_query_i($query);
             $colstart = "<div class=\"dummy-column\"><h2>Invoice/Products</h2>";
             while ($data = mysqli_fetch_array($result)) {
@@ -175,7 +175,7 @@ if ($intellisearch) {
             }
         }
         if (checkPermission("View Orders", true) || checkPermission("Create Upgrade/Downgrade Orders", true)) {
-            $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblorders.id,tblorders.userid,tblorders.status FROM tblorders INNER JOIN tblclients ON tblclients.id=tblorders.userid WHERE tblorders.id LIKE '" . $value . "%' LIMIT 5";
+            $query = "SELECT ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_orders.id,ra_orders.userid,ra_orders.status FROM ra_orders INNER JOIN ra_user ON ra_user.id=ra_orders.userid WHERE ra_orders.id LIKE '" . $value . "%' LIMIT 5";
             $result = full_query_i($query);
             $ocolstart = "<div class=\"dummy-column\"><h2>Orders</h2>";
             while ($data = mysqli_fetch_array($result)) {
@@ -198,7 +198,7 @@ if ($intellisearch) {
 
 
     if (checkPermission("List Support Tickets", true) || checkPermission("View Support Ticket", true)) {
-        $query = "SELECT id,tid,title FROM tbltickets WHERE tbltickets.tid='" . $value . "' OR tbltickets.title LIKE '%" . $value . "%' ORDER BY lastreply DESC LIMIT 0,10";
+        $query = "SELECT id,tid,title FROM ra_ticket WHERE ra_ticket.tid='" . $value . "' OR ra_ticket.title LIKE '%" . $value . "%' ORDER BY lastreply DESC LIMIT 0,10";
         $result = full_query_i($query);
         $tcolstart = "<div class=\"dummy-column\"><h2>Support Tickets</h2>";
         while ($data = mysqli_fetch_array($result)) {
@@ -211,7 +211,7 @@ if ($intellisearch) {
 
 
     if (checkPermission("List Invoices", true) || checkPermission("Manage Invoice", true)) {
-        $query = "SELECT tblclients.firstname,tblclients.lastname,tblclients.companyname,tblinvoices.id,tblinvoices.userid,tblinvoices.status FROM tblinvoices INNER JOIN tblclients ON tblclients.id=tblinvoices.userid WHERE tblinvoices.invoicenum='" . $value . "'";
+        $query = "SELECT ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_bills.id,ra_bills.userid,ra_bills.status FROM ra_bills INNER JOIN ra_user ON ra_user.id=ra_bills.userid WHERE ra_bills.invoicenum='" . $value . "'";
         $result = full_query_i($query);
         $icolstart = "<div class=\"dummy-column\"><h2>Invoices</h2>";
         while ($data = mysqli_fetch_array($result)) {
@@ -275,7 +275,7 @@ if ($clientsearch || $ticketclientsearch) {
 
     $value = db_escape_string($value);
     $tempmatches = "";
-    $query = "SELECT id,firstname,lastname,companyname,email FROM tblclients WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR email LIKE '%" . $value . "%' LIMIT 0,5";
+    $query = "SELECT id,firstname,lastname,companyname,email FROM ra_user WHERE concat(firstname,' ',lastname) LIKE '%" . $value . "%' OR companyname LIKE '%" . $value . "%' OR email LIKE '%" . $value . "%' LIMIT 0,5";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {

@@ -42,7 +42,7 @@ function checkPermission($action, $noredirect = "") {
     if (isset($_SESSION['adminid'])) {
 
         if ($AdminRoleID == 0) {
-            $result = select_query_i("tbladmins", "roleid", array("id" => $_SESSION['adminid']));
+            $result = select_query_i("ra_admin", "roleid", array("id" => $_SESSION['adminid']));
             $data = mysqli_fetch_array($result);
             $roleid = $data['roleid'];
             $AdminRoleID = $roleid;
@@ -50,7 +50,7 @@ function checkPermission($action, $noredirect = "") {
 
 
         if (!count($AdminRolePerms)) {
-            $result = select_query_i("tbladminperms", "permid", array("roleid" => $AdminRoleID));
+            $result = select_query_i("ra_adminpriv", "permid", array("roleid" => $AdminRoleID));
 
             while ($data = mysqli_fetch_array($result)) {
                 $AdminRolePerms[] = $data[0];
@@ -98,7 +98,7 @@ function getAdminName($adminid = "") {
         $adminid = $_SESSION['adminid'];
     }
 
-    $result = select_query_i("tbladmins", "firstname,lastname", array("id" => $adminid));
+    $result = select_query_i("ra_admin", "firstname,lastname", array("id" => $adminid));
     $data = mysqli_fetch_array($result);
     $adminname = trim($data['firstname'] . " " . $data['lastname']);
     return $adminname;
@@ -111,15 +111,15 @@ function getAdminHomeStats($type = "") {
     $currency = getCurrency(0, 1);
 
     if (!$type || $type == "income") {
-        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-d") . "%'");
+        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM ra_transactions WHERE date LIKE '" . date("Y-m-d") . "%'");
         $data = mysqli_fetch_array($result);
         $todaysincome = formatCurrency($data[0]);
         $stats['income']['today'] = $todaysincome;
-        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-m-") . "%'");
+        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM ra_transactions WHERE date LIKE '" . date("Y-m-") . "%'");
         $data = mysqli_fetch_array($result);
         $todaysincome = formatCurrency($data[0]);
         $stats['income']['thismonth'] = $todaysincome;
-        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM tblaccounts WHERE date LIKE '" . date("Y-") . "%'");
+        $result = full_query_i("SELECT SUM((amountin-fees-amountout)/rate) FROM ra_transactions WHERE date LIKE '" . date("Y-") . "%'");
         $data = mysqli_fetch_array($result);
         $todaysincome = formatCurrency($data[0]);
         $stats['income']['thisyear'] = $todaysincome;
@@ -129,15 +129,15 @@ function getAdminHomeStats($type = "") {
         }
     }
 
-    $result = full_query_i("SELECT SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM tblaccounts WHERE tblaccounts.invoiceid=tblinvoices.id)),0) FROM tblinvoices WHERE tblinvoices.status='Unpaid' AND duedate<'" . date("Ymd") . "'");
+    $result = full_query_i("SELECT SUM(total)-COALESCE(SUM((SELECT SUM(amountin) FROM ra_transactions WHERE ra_transactions.invoiceid=ra_bills.id)),0) FROM ra_bills WHERE ra_bills.status='Unpaid' AND duedate<'" . date("Ymd") . "'");
     $data = mysqli_fetch_array($result);
     $overdueinvoices = $data[0];
     $stats['invoices']['overduebalance'] = $data[1];
-    $result = full_query_i("SELECT COUNT(*) FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblcancelrequests.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
+    $result = full_query_i("SELECT COUNT(*) FROM ra_cancellations INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_cancellations.relid WHERE (tblcustomerservices.servicestatus!='Cancelled' AND tblcustomerservices.servicestatus!='Terminated')");
     $data = mysqli_fetch_array($result);
     $stats['cancellations']['pending'] = $data[0];
     $stats['orders']['today']['active'] = $stats['orders']['today']['fraud'] = $stats['orders']['today']['pending'] = $stats['orders']['today']['cancelled'] = 0;
-    $query = "SELECT status,COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-d") . "%' GROUP BY status";
+    $query = "SELECT status,COUNT(*) FROM ra_orders WHERE date LIKE '" . date("Y-m-d") . "%' GROUP BY status";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -146,7 +146,7 @@ function getAdminHomeStats($type = "") {
 
     $stats['orders']['today']['total'] = $stats['orders']['today']['active'] + $stats['orders']['today']['fraud'] + $stats['orders']['today']['pending'] + $stats['orders']['today']['cancelled'];
     $stats['orders']['yesterday']['active'] = $stats['orders']['yesterday']['fraud'] = $stats['orders']['yesterday']['pending'] = $stats['orders']['yesterday']['cancelled'] = 0;
-    $query = "SELECT status,COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))) . "%' GROUP BY status";
+    $query = "SELECT status,COUNT(*) FROM ra_orders WHERE date LIKE '" . date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))) . "%' GROUP BY status";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -154,17 +154,17 @@ function getAdminHomeStats($type = "") {
     }
 
     $stats['orders']['yesterday']['total'] = $stats['orders']['yesterday']['active'] + $stats['orders']['yesterday']['fraud'] + $stats['orders']['yesterday']['pending'] + $stats['orders']['yesterday']['cancelled'];
-    $query = "SELECT COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-m-") . "%'";
+    $query = "SELECT COUNT(*) FROM ra_orders WHERE date LIKE '" . date("Y-m-") . "%'";
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $stats['orders']['thismonth']['total'] = $data[0];
-    $query = "SELECT COUNT(*) FROM tblorders WHERE date LIKE '" . date("Y-") . "%'";
+    $query = "SELECT COUNT(*) FROM ra_orders WHERE date LIKE '" . date("Y-") . "%'";
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $stats['orders']['thisyear']['total'] = $data[0];
         $allactive = $awaitingreply = 0;
         $ticketcounts = array();
-        $query = "SELECT tblticketstatuses.title,(SELECT COUNT(*) FROM tbltickets WHERE tbltickets.status=tblticketstatuses.title),showactive,showawaiting FROM tblticketstatuses ORDER BY sortorder ASC";
+        $query = "SELECT ra_tickettatuses.title,(SELECT COUNT(*) FROM ra_ticket WHERE ra_ticket.status=ra_tickettatuses.title),showactive,showawaiting FROM ra_tickettatuses ORDER BY sortorder ASC";
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -180,7 +180,7 @@ function getAdminHomeStats($type = "") {
             }
         }
 
-        $result = select_query_i("tbltickets", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
+        $result = select_query_i("ra_ticket", "COUNT(*)", "status!='Closed' AND flag='" . (int) $_SESSION['adminid'] . "'");
         $data = mysqli_fetch_array($result);
         $flaggedtickets = $data[0];
         $stats['tickets']['allactive'] = $allactive;
@@ -191,7 +191,7 @@ function getAdminHomeStats($type = "") {
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $stats['todoitems']['due'] = $data[0];
-    $query = "SELECT COUNT(*) FROM tblnetworkissues WHERE status!='Scheduled' AND status!='Resolved'";
+    $query = "SELECT COUNT(*) FROM ra_system_status WHERE status!='Scheduled' AND status!='Resolved'";
     $result = full_query_i($query);
     $data = mysqli_fetch_array($result);
     $stats['networkissues']['open'] = $data[0];

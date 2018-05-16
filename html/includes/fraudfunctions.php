@@ -24,7 +24,7 @@ function getActiveFraudModule() {
 	$orderid = $_SESSION['orderdetails']['OrderID'];
 
 	if ($CONFIG['SkipFraudForExisting']) {
-		$result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+		$result = select_query_i("ra_orders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
 		$data = mysqli_fetch_array($result);
 
 		if ($data[0]) {
@@ -89,7 +89,7 @@ function runFraudCheck($orderid, $fraudmodule, $userid = "", $ip = "") {
 		}
 	}
 
-	update_query("tblorders", array("fraudmodule" => $fraudmodule, "fraudoutput" => $fraudoutput), array("id" => $orderid));
+	update_query("ra_orders", array("fraudmodule" => $fraudmodule, "fraudoutput" => $fraudoutput), array("id" => $orderid));
 	$results['fraudoutput'] = $fraudoutput;
 	return $results;
 }

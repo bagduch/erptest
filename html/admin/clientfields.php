@@ -17,7 +17,7 @@ $aInt->icon = "configoptions";
 $aInt->helplink = "Configurable Options";
 $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfunctions", "gatewayfunctions"));
 if ($action == "") {
-    $result = select_query_i("tblclientfields", "");
+    $result = select_query_i("ra_user_fields", "");
     while ($data = mysqli_fetch_assoc($result)) {
         $clientfields[$data['cfid']] = $data;
     }
@@ -26,7 +26,7 @@ if ($action == "") {
 
 if ($action = "deletefield") {
     if (isset($_POST['deletefieldid'])) {
-        delete_query("tblclientfields", array('cfid' => $_POST['deletefieldid']));
+        delete_query("ra_user_fields", array('cfid' => $_POST['deletefieldid']));
         logActivity($_SESSION['admin_id'] . " removed customer fields" . $_POST['deletefieldid']);
     }
 }
@@ -45,7 +45,7 @@ if ($action == "save") {
                 "showinvoice" => $_POST['showinvoice'][$fid] == "on" ? 1 : 0,
                 "sortorder" => $_POST['sortorder'][$fid]
             );
-            update_query("tblclientfields", $customfieldname, array("cfid" => $fid));
+            update_query("ra_user_fields", $customfieldname, array("cfid" => $fid));
         }
         if (isset($_POST['updatelinkfieldname'])) {
             foreach ($_POST['updatelinkfieldname'] as $upfid => $uvalue) {
@@ -61,7 +61,7 @@ if ($action == "save") {
                     "showinvoice" => 0,
                     "sortorder" => 0
                 );
-                update_query("tblclientfields", $updatelinkfield, array("cfid" => $upfid));
+                update_query("ra_user_fields", $updatelinkfield, array("cfid" => $upfid));
             }
         }
     }
@@ -78,7 +78,7 @@ if ($action == "save") {
             "showinvoice" => $_POST['addshowinvoice'] == "on" ? 1 : 0,
             "sortorder" => $_POST['addsortorder']
         );
-        $nfid = insert_query("tblclientfields", $addcustomfieldname);
+        $nfid = insert_query("ra_user_fields", $addcustomfieldname);
     }
     redir();
 }

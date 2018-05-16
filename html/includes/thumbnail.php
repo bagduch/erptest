@@ -12,7 +12,7 @@ if (!function_exists("getimagesize")) {
 $filename = "";
 
 if ($tid) {
-	$data = get_query_vals("tbltickets", "userid,attachment", array("id" => $tid));
+	$data = get_query_vals("ra_ticket", "userid,attachment", array("id" => $tid));
 	$userid = $data[0];
 	$attachments = $data[1];
 	$attachments = explode("|", $attachments);
@@ -21,12 +21,12 @@ if ($tid) {
 
 
 if ($rid) {
-	$data = get_query_vals("tblticketreplies", "tid,attachment", array("id" => $rid));
+	$data = get_query_vals("ra_ticket_replies", "tid,attachment", array("id" => $rid));
 	$ticketid = $data[0];
 	$attachments = $data[1];
 	$attachments = explode("|", $attachments);
 	$filename = $attachments_dir . $attachments[$i];
-	$userid = get_query_val("tbltickets", "userid", array("id" => $ticketid));
+	$userid = get_query_val("ra_ticket", "userid", array("id" => $ticketid));
 }
 
 

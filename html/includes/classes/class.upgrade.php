@@ -35,7 +35,7 @@ class RA_Upgrade {
 	}
 
 	public function hasUnpaidInvoice() {
-		$result = select_query_i("tblinvoiceitems", "invoiceid", array("type" => "Hosting", "relid" => $this->getProductInfo("id"), "status" => "Unpaid", "tblinvoices.userid" => $this->getProductInfo("userid")), "", "", "", "tblinvoices ON tblinvoices.id=tblinvoiceitems.invoiceid");
+		$result = select_query_i("ra_bill_lineitems", "invoiceid", array("type" => "Hosting", "relid" => $this->getProductInfo("id"), "status" => "Unpaid", "ra_bills.userid" => $this->getProductInfo("userid")), "", "", "", "ra_bills ON ra_bills.id=ra_bill_lineitems.invoiceid");
 		$data = mysqli_fetch_array($result);
 
 		if ($data[0]) {
@@ -57,7 +57,7 @@ class RA_Upgrade {
 		}
 
 		$array = array();
-		$result = select_query_i("tblservices", "id", "id IN (" . db_build_in_array($upgradepackages) . ")", "order` ASC,`name", "ASC");
+		$result = select_query_i("ra_catalog", "id", "id IN (" . db_build_in_array($upgradepackages) . ")", "order` ASC,`name", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$pid = $data['id'];
@@ -172,7 +172,7 @@ class RA_Upgrade {
 		if (is_array($this->promodata)) {
 		}
 		else {
-			$promodata = get_query_vals("tblpromotions", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblcustomerservices", "promoid", array("id" => $serviceid))));
+			$promodata = get_query_vals("ra_promos", "code,type,value", array("lifetimepromo" => 1, "recurring" => 1, "id" => get_query_val("tblcustomerservices", "promoid", array("id" => $serviceid))));
 
 			if (is_array($promodata)) {
 				$smartyvalues['promocode'] = $promocode = $promodata['code'];
@@ -258,7 +258,7 @@ class RA_Upgrade {
 		$newpid = $this->newpid;
 		$newbillingcycleraw = $this->newbillingcycleraw;
 		$newbillingcycle = $this->newbillingcyclenice;
-		$result = select_query_i("tblservices", "id,name,tax,paytype,upgradechargefullcycle", array("id" => $newpid));
+		$result = select_query_i("ra_catalog", "id,name,tax,paytype,upgradechargefullcycle", array("id" => $newpid));
 		$data = mysqli_fetch_array($result);
 		$newpid = $data['id'];
 
@@ -275,7 +275,7 @@ class RA_Upgrade {
 			$newbillingcycleraw = "monthly";
 		}
 
-		$result = select_query_i("tblpricing", $newbillingcycleraw, array("type" => "product", "currency" => $currency['id'], "relid" => $newpid));
+		$result = select_query_i("ra_catalog_pricebook", $newbillingcycleraw, array("type" => "product", "currency" => $currency['id'], "relid" => $newpid));
 		$data = mysqli_fetch_array($result);
 		$newamount = $data[$newbillingcycleraw];
 		$configoptionspricingarray = getCartConfigOptions($newpid, "", $newbillingcycle, $serviceid);
@@ -451,7 +451,7 @@ class RA_Upgrade {
 	public function setPromoCode($promocode) {
 		global $_LANG;
 
-		$result = select_query_i("tblpromotions", "", array("code" => $promocode));
+		$result = select_query_i("ra_promos", "", array("code" => $promocode));
 		$data = mysqli_fetch_array($result);
 		$id = $data['id'];
 		$recurringtype = $data['type'];
@@ -507,7 +507,7 @@ class RA_Upgrade {
 
 
 		if ($onceperclient) {
-			$result = select_query_i("tblorders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
+			$result = select_query_i("ra_orders", "count(*)", array("status" => "Active", "userid" => $_SESSION['uid'], "promocode" => $promocode));
 			$orderCount = mysqli_fetch_array($result);
 
 			if (0 < $orderCount[0]) {

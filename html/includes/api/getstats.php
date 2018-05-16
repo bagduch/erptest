@@ -12,7 +12,7 @@ foreach ($stats['income'] as $k => $v) {
 	$apiresults["income_" . $k] = $v;
 }
 
-$result = select_query_i("tblorders", "COUNT(*)", array("status" => "Pending"));
+$result = select_query_i("ra_orders", "COUNT(*)", array("status" => "Pending"));
 $data = mysqli_fetch_array($result);
 $apiresults['orders_pending'] = $data[0];
 foreach ($stats['orders']['today'] as $k => $v) {
@@ -34,7 +34,7 @@ $apiresults['todoitems_due'] = $stats['todoitems']['due'];
 $apiresults['networkissues_open'] = $stats['networkissues']['open'];
 $apiresults['billableitems_uninvoiced'] = $stats['billableitems']['uninvoiced'];
 $apiresults['quotes_valid'] = $stats['quotes']['valid'];
-$result = select_query_i("tbladminlog", "COUNT(DISTINCT adminusername)", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND logouttime='0000-00-00'");
+$result = select_query_i("ra_adminlog", "COUNT(DISTINCT adminusername)", "lastvisit>='" . date("Y-m-d H:i:s", mktime(date("H"), date("i") - 15, date("s"), date("m"), date("d"), date("Y"))) . "' AND logouttime='0000-00-00'");
 $data = mysqli_fetch_array($result);
 $apiresults['staff_online'] = $data[0];
 

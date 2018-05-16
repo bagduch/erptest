@@ -24,11 +24,11 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 	$cyclemonths = getBillingCycleMonths($cycle);
 	if ($accountid) {
 		$values = array();
-		$result = select_query_i("tblserviceconfigoptions", "", array("relid" => $accountid));
+		$result = select_query_i("ra_catalog_user_sales_addons_options", "", array("relid" => $accountid));
 
 		while ($data = mysqli_fetch_array($result)) {
 			$configid = $data['configid'];
-			$result2 = select_query_i("tblserviceconfigoptions", "", array("id" => $configid));
+			$result2 = select_query_i("ra_catalog_user_sales_addons_options", "", array("id" => $configid));
 			$data2 = mysqli_fetch_array($result2);
 			$optiontype = $data2['optiontype'];
 
@@ -49,7 +49,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		$where['hidden'] = 0;
 	}
 
-	$result2 = select_query_i("tblserviceconfigoptions", "", $where, "order` ASC,`id", "ASC", "", "tblserviceconfiglinks ON tblserviceconfiglinks.gid=tblserviceconfigoptions.gid");
+	$result2 = select_query_i("ra_catalog_user_sales_addons_options", "", $where, "order` ASC,`id", "ASC", "", "ra_catalog_user_sales_addons_links ON ra_catalog_user_sales_addons_links.gid=ra_catalog_user_sales_addons_options.gid");
 
 	while ($data2 = mysqli_fetch_array($result2)) {
 		$optionid = $data2['id'];
@@ -69,7 +69,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		$selvalue = $values[$optionid];
 
 		if ($optiontype == "3") {
-			$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid));
+			$result3 = select_query_i("ra_catalog_user_sales_addons_optionssub", "", array("configid" => $optionid));
 			$data3 = mysqli_fetch_array($result3);
 			$opid = $data3['id'];
 			$ophidden = $data3['hidden'];
@@ -81,7 +81,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 			}
 
 			$opnameonly = $opname;
-			$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+			$result4 = select_query_i("ra_catalog_pricebook", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
 			$data = mysqli_fetch_array($result4);
 			$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 			$price = $fullprice = $data[$cycle];
@@ -116,7 +116,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 		}
 		else {
 			if ($optiontype == "4") {
-				$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid));
+				$result3 = select_query_i("ra_catalog_user_sales_addons_optionssub", "", array("configid" => $optionid));
 				$data3 = mysqli_fetch_array($result3);
 				$opid = $data3['id'];
 				$ophidden = $data3['hidden'];
@@ -128,7 +128,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 				}
 
 				$opnameonly = $opname;
-				$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+				$result4 = select_query_i("ra_catalog_pricebook", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
 				$data = mysqli_fetch_array($result4);
 				$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 				$price = $fullprice = $data[$cycle];
@@ -157,7 +157,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 				$selrecurring = $fullprice * $selectedqty;
 			}
 			else {
-				$result3 = select_query_i("tblserviceconfigoptionssub", "", array("configid" => $optionid), "sortorder` ASC,`id", "ASC");
+				$result3 = select_query_i("ra_catalog_user_sales_addons_optionssub", "", array("configid" => $optionid), "sortorder` ASC,`id", "ASC");
 
 				while ($data3 = mysqli_fetch_array($result3)) {
 					$opid = $data3['id'];
@@ -170,7 +170,7 @@ function getCartConfigOptions($pid, $values, $cycle, $accountid = "", $orderform
 					}
 
 					$opnameonly = $opname;
-					$result4 = select_query_i("tblpricing", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
+					$result4 = select_query_i("ra_catalog_pricebook", "", array("type" => "configoptions", "currency" => $currency['id'], "relid" => $opid));
 					$data = mysqli_fetch_array($result4);
 					$setup = $data[substr($cycle, 0, 1) . "setupfee"];
 					$price = $fullprice = $data[$cycle];

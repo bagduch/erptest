@@ -19,7 +19,7 @@ if (!$_SESSION['uid'] || !$invoiceid) {
 	redir("", "clientarea.php");
 }
 
-$result = select_query_i("tblinvoices", "", array("id" => $invoiceid, "userid" => $_SESSION['uid']));
+$result = select_query_i("ra_bills", "", array("id" => $invoiceid, "userid" => $_SESSION['uid']));
 $data = mysqli_fetch_array($result);
 $invoiceid = $data['id'];
 $status = $data['status'];
@@ -80,7 +80,7 @@ if ($action == "submit") {
 
 
 		if (!$errormessage) {
-			$result = select_query_i("tblclients", "", array("id" => $_SESSION['uid']));
+			$result = select_query_i("ra_user", "", array("id" => $_SESSION['uid']));
 			$data = mysqli_fetch_array($result);
 			$old_firstname = $data['firstname'];
 			$old_lastname = $data['lastname'];
@@ -95,17 +95,17 @@ if ($action == "submit") {
 			$billingcid = $data['billingcid'];
 
 			if ($billingcid) {
-				$table = "tblcontacts";
+				$table = "ra_user_contacts";
 				$array = array("firstname" => $firstname, "lastname" => $lastname, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber);
 				$where = array("id" => $billingcid, "userid" => $_SESSION['uid']);
 				update_query($table, $array, $where);
 			}
 			else {
 				if (((((((($firstname != $old_firstname || $lastname != $old_lastname) || $address1 != $old_address1) || $address2 != $old_address2) || $city != $old_city) || $state != $old_state) || $postcode != $old_postcode) || $country != $old_country) || $phonenumber != $old_phonenumber) {
-					$table = "tblcontacts";
+					$table = "ra_user_contacts";
 					$array = array("userid" => $_SESSION['uid'], "firstname" => $firstname, "lastname" => $lastname, "email" => $email, "address1" => $address1, "address2" => $address2, "city" => $city, "state" => $state, "postcode" => $postcode, "country" => $country, "phonenumber" => $phonenumber);
 					$billingcid = insert_query($table, $array);
-					update_query("tblclients", array("billingcid" => $billingcid), array("id" => $_SESSION['uid']));
+					update_query("ra_user", array("billingcid" => $billingcid), array("id" => $_SESSION['uid']));
 				}
 			}
 
@@ -124,7 +124,7 @@ if ($action == "submit") {
 			$params['cardexp'] = ccFormatDate(ccFormatNumbers($ccexpirymonth . $ccexpiryyear));
 			$params['cardstart'] = ccFormatDate(ccFormatNumbers($ccstartmonth . $ccstartyear));
 			$params['cardissuenum'] = ccFormatNumbers($ccissuenum);
-			$params['gatewayid'] = get_query_val("tblclients", "gatewayid", array("id" => $_SESSION['uid']));
+			$params['gatewayid'] = get_query_val("ra_user", "gatewayid", array("id" => $_SESSION['uid']));
 		}
 
 
@@ -189,7 +189,7 @@ if (!$errormessage || $fromorderform) {
 }
 
 include "includes/countries.php";
-$result = select_query_i("tblaccounts", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
+$result = select_query_i("ra_transactions", "SUM(amountin)-SUM(amountout)", array("invoiceid" => $invoiceid));
 $data = mysqli_fetch_array($result);
 $amountpaid = $data[0];
 $balance = $total - $amountpaid;

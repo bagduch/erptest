@@ -11,7 +11,7 @@ if (!function_exists("deleteClient")) {
 	require ROOTDIR . "/includes/clientfunctions.php";
 }
 
-$result = select_query_i("tblclients", "id", array("id" => $clientid));
+$result = select_query_i("ra_user", "id", array("id" => $clientid));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {

@@ -12,7 +12,7 @@ if (!defined("RA"))
     die("This file cannot be accessed directly");
 $reportdata["title"] = "Service by Region";
 $reportdata["description"] = "Counting Region numbers";
-$sql = "select * from tblcustomerservices as tbcs INNER JOIN tblclients as tbc on tbcs.userid=tbc.id";
+$sql = "select * from tblcustomerservices as tbcs INNER JOIN ra_user as tbc on tbcs.userid=tbc.id";
 $regionlist = array();
 $result = full_query_i($sql);
 while ($data = mysqli_fetch_array($result)) {

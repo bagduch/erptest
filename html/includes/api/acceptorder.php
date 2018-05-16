@@ -15,7 +15,7 @@ if (!function_exists("ModuleBuildParams")) {
 	require ROOTDIR . "/includes/modulefunctions.php";
 }
 
-$result = select_query("tblorders", "", array("id" => $orderid, "status" => "Pending"));
+$result = select_query("ra_orders", "", array("id" => $orderid, "status" => "Pending"));
 $data = mysql_fetch_array($result);
 $orderid = $data['id'];
 

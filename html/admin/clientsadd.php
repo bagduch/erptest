@@ -17,7 +17,7 @@ $aInt->requiredFiles(array("clientfunctions", "servicefunctions", "customfieldfu
 
 if ($action == "add") {
     check_token("RA.admin.default");
-    $result = select_query_i("tblclients", "COUNT(*)", array("email" => $email));
+    $result = select_query_i("ra_user", "COUNT(*)", array("email" => $email));
     $data = mysqli_fetch_array($result);
 
     if ($data[0]) {
@@ -33,7 +33,7 @@ if ($action == "add") {
             infoBox($aInt->lang("global", "validationerror"), $aInt->lang("clients", "invalidemail"), "error");
         } else {
             $query = "subaccount=1 AND email='" . mysqli_real_escape_string($email) . "'";
-            $result = select_query_i("tblcontacts", "COUNT(*)", $query);
+            $result = select_query_i("ra_user_contacts", "COUNT(*)", $query);
             $data = mysqli_fetch_array($result);
 
             if ($data[0]) {
@@ -97,7 +97,7 @@ if ($overideduenotices == "on") {
     //  echo " checked";
 }
 
-$result = select_query_i("tblcontacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
+$result = select_query_i("ra_user_contacts", "", array("userid" => $userid), "firstname` ASC,`lastname", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $contactoption .= "<option value=\"" . $data['id'] . "\"";
@@ -110,7 +110,7 @@ while ($data = mysqli_fetch_array($result)) {
 }
 
 
-$result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+$result = select_query_i("ra_currency", "id,code,`default`", "", "code", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
     $currencyoption .= "<option value=\"" . $data['id'] . "\"";
@@ -122,7 +122,7 @@ while ($data = mysqli_fetch_array($result)) {
     $currencyoption .= ">" . $data['code'] . "</option>";
 }
 
-$result = select_query_i("tblclientgroups", "", "", "groupname", "ASC");
+$result = select_query_i("ra_user_group", "", "", "groupname", "ASC");
 while ($data = mysqli_fetch_assoc($result)) {
     $groupoption .= "<option style='background-color:" . $data['groupcolour'] . "' value='" . $data['id'] . "'";
     if ($data['id'] == $groupid) {

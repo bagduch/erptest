@@ -14,13 +14,13 @@ class RA_Order {
 
 	public function loadData() {
         $result = select_query_i(
-            "tblorders", 
-            "tblorders.*,tblclients.firstname,tblclients.lastname,tblclients.email,tblclients.companyname,tblclients.address1,tblclients.address2,tblclients.city,tblclients.state,tblclients.postcode,tblclients.country,tblclients.groupid,(SELECT status FROM tblinvoices WHERE id=tblorders.invoiceid) AS invoicestatus", 
-            array("tblorders.id" => $this->orderid), 
+            "ra_orders", 
+            "ra_orders.*,ra_user.firstname,ra_user.lastname,ra_user.email,ra_user.companyname,ra_user.address1,ra_user.address2,ra_user.city,ra_user.state,ra_user.postcode,ra_user.country,ra_user.groupid,(SELECT status FROM ra_bills WHERE id=ra_orders.invoiceid) AS invoicestatus", 
+            array("ra_orders.id" => $this->orderid), 
             "", 
             "", 
             "", 
-            "tblclients ON tblclients.id=tblorders.userid"
+            "ra_user ON ra_user.id=ra_orders.userid"
         );
 		$data = mysqli_fetch_array($result);
 
@@ -41,7 +41,7 @@ class RA_Order {
 
 		$order_number = generateUniqueID();
         $this->orderid = insert_query(
-            "tblorders", 
+            "ra_orders", 
             array(
                 "ordernum" => $order_number, 
                 "userid" => $userid, 

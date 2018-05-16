@@ -16,10 +16,10 @@ if (!$limitnum) {
 	$limitnum = 25;
 }
 
-$query = " FROM tblorders o
-    LEFT JOIN tblclients c ON o.userid=c.id
-    LEFT JOIN tblpaymentgateways p ON o.paymentmethod=p.gateway AND p.setting='name'
-    LEFT JOIN tblinvoices i ON o.invoiceid=i.id";
+$query = " FROM ra_orders o
+    LEFT JOIN ra_user c ON o.userid=c.id
+    LEFT JOIN ra_modules_gateways p ON o.paymentmethod=p.gateway AND p.setting='name'
+    LEFT JOIN ra_bills i ON o.invoiceid=i.id";
 $where = array();
 
 if ($id) {
@@ -88,7 +88,7 @@ while ($orderdata = mysqli_fetch_assoc($result)) {
 		$hostingstatus = $data['servicestatus'];
 		$firstpaymentamount = formatCurrency($data['firstpaymentamount']);
 		$packageid = $data['packageid'];
-		$result3 = select_query_i("tblservices", "tblservices.name,tblservices.type,tblservices.welcomeemail,tblservices.autosetup,tblservices.servertype,tblservicegroups.name AS groupname", array("tblservices.id" => $packageid), "", "", "", "tblservicegroups ON tblservices.gid=tblservicegroups.id");
+		$result3 = select_query_i("ra_catalog", "ra_catalog.name,ra_catalog.type,ra_catalog.welcomeemail,ra_catalog.autosetup,ra_catalog.servertype,ra_catalog_groups.name AS groupname", array("ra_catalog.id" => $packageid), "", "", "", "ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id");
 		$data = mysqli_fetch_array($result3);
 		$groupname = $data['groupname'];
 		$productname = $data['name'];
@@ -126,7 +126,7 @@ while ($orderdata = mysqli_fetch_assoc($result)) {
 		$predefinedaddons[$addon_id] = array("name" => $addon_name, "welcomeemail" => $addon_welcomeemail);
 	}
 
-	$result2 = select_query_i("tblserviceaddons", "", array("orderid" => $orderid));
+	$result2 = select_query_i("ra_catalog_user_sales_addons", "", array("orderid" => $orderid));
 
 	while ($data = mysqli_fetch_array($result2)) {
 		$aid = $data['id'];

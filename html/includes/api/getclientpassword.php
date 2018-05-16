@@ -8,10 +8,10 @@ if (!defined("RA")) {
 
 
 if ($_POST['userid']) {
-	$result = select_query_i("tblclients", "", array("id" => $_POST['userid']));
+	$result = select_query_i("ra_user", "", array("id" => $_POST['userid']));
 }
 else {
-	$result = select_query_i("tblclients", "", array("email" => $_POST['email']));
+	$result = select_query_i("ra_user", "", array("email" => $_POST['email']));
 }
 
 $data = mysqli_fetch_array($result);

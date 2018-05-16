@@ -54,7 +54,7 @@ function searchselectclient(userid,name,email) {
 <tr><td class=\"fieldlabel\">";
 	echo $aInt->lang("clients", "firstclient");
 	echo "</td><td class=\"fieldarea\">";
-	$result = select_query_i("tblclients", "", array("id" => $userid));
+	$result = select_query_i("ra_user", "", array("id" => $userid));
 	$data = mysqli_fetch_array($result);
 	$useridselect = $data['id'];
 	$firstname = $data['firstname'];
@@ -90,7 +90,7 @@ function searchselectclient(userid,name,email) {
 else {
 	check_token("RA.admin.default");
 	$newuserid = trim($newuserid);
-	$result = select_query_i("tblclients", "id", array("id" => $newuserid));
+	$result = select_query_i("ra_user", "id", array("id" => $newuserid));
 	$data = mysqli_fetch_array($result);
 	$newuserid = $data['id'];
 
@@ -108,23 +108,23 @@ else {
 		$deleteuser = trim($userid);
 	}
 
-	$tables_array = array("tblaccounts", "tblcontacts", "tbldomains", "tblemails", "tblcustomerservices", "tblinvoiceitems", "tblinvoices", "tblnotes", "tblorders", "tblquotes", "tblticketreplies", "tbltickets", "tblactivitylog", "tblsslorders");
+	$tables_array = array("ra_transactions", "ra_user_contacts", "tbldomains", "ra_user_mail", "tblcustomerservices", "ra_bill_lineitems", "ra_bills", "ra_notes", "ra_orders", "tblquotes", "ra_ticket_replies", "ra_ticket", "ra_systemlog", "tblsslorders");
 	foreach ($tables_array as $table) {
 		update_query($table, array("userid" => $resultinguserid), array("userid" => $userid));
 	}
 
-	update_query("tblcredit", array("clientid" => $resultinguserid), array("clientid" => $userid));
+	update_query("ra_transactions_credit", array("clientid" => $resultinguserid), array("clientid" => $userid));
 	$userid = $newuserid;
 	foreach ($tables_array as $table) {
 		update_query($table, array("userid" => $resultinguserid), array("userid" => $userid));
 	}
 
-	update_query("tblcredit", array("clientid" => $resultinguserid), array("clientid" => $userid));
-	$result = select_query_i("tblclients", "credit", array("id" => $deleteuser));
+	update_query("ra_transactions_credit", array("clientid" => $resultinguserid), array("clientid" => $userid));
+	$result = select_query_i("ra_user", "credit", array("id" => $deleteuser));
 	$data = mysqli_fetch_array($result);
 	$credit = $data[0];
-	update_query("tblclients", array("credit" => "+=" . $credit), array("id" => (int)$resultinguserid));
-	$result = select_query_i("tblaffiliates", "", array("clientid" => $deleteuser));
+	update_query("ra_user", array("credit" => "+=" . $credit), array("id" => (int)$resultinguserid));
+	$result = select_query_i("ra_partners", "", array("clientid" => $deleteuser));
 	$data = mysqli_fetch_array($result);
 	$affid = $data['id'];
 
@@ -132,23 +132,23 @@ else {
 		$visitors = $data['visitors'];
 		$balance = $data['balance'];
 		$withdrawn = $data['withdrawn'];
-		$result = select_query_i("tblaffiliates", "", array("clientid" => $resultinguserid));
+		$result = select_query_i("ra_partners", "", array("clientid" => $resultinguserid));
 		$data = mysqli_fetch_array($result);
 		$newaffid = $data['id'];
 		if (!$newaffid) {
-			$newaffid = insert_query("tblaffiliates", array("date" => "now()", "clientid" => $resultinguserid));
+			$newaffid = insert_query("ra_partners", array("date" => "now()", "clientid" => $resultinguserid));
 		}
 
-		update_query("tblaffiliates", array("visitors" => "+=" . (int)$visitors, "balance" => "+=" . $balance, "withdrawn" => "+=" . $withdrawn), array("id" => (int)$newaffid));
-		update_query("tblaffiliatesaccounts", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
-		update_query("tblaffiliateshistory", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
-		update_query("tblaffiliateswithdrawals", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
-		delete_query("tblaffiliates", array("clientid" => $deleteuser));
+		update_query("ra_partners", array("visitors" => "+=" . (int)$visitors, "balance" => "+=" . $balance, "withdrawn" => "+=" . $withdrawn), array("id" => (int)$newaffid));
+		update_query("ra_partnersaccounts", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
+		update_query("ra_partnershistory", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
+		update_query("ra_partnerswithdrawals", array("affiliateid" => $newaffid), array("affiliateid" => $affid));
+		delete_query("ra_partners", array("clientid" => $deleteuser));
 	}
 
 
 	if ($resultinguserid != $deleteuser) {
-		delete_query("tblclients", array("id" => $deleteuser));
+		delete_query("ra_user", array("id" => $deleteuser));
 	}
 
 	logActivity("Merged User ID: " . $deleteuser . " with User ID: " . $resultinguserid, $resultinguserid);

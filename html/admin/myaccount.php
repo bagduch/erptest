@@ -138,12 +138,12 @@ if ($action == "save") {
         $errormessage = $aInt->lang("administrators", "pwmatcherror");
         $action = "edit";
     } else {
-        update_query("tbladmins", array("firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "ticketnotifications" => implode(",", $ticketnotify)), array("id" => $_SESSION['adminid']));
+        update_query("ra_admin", array("firstname" => $firstname, "lastname" => $lastname, "email" => $email, "signature" => $signature, "notes" => $notes, "template" => $template, "language" => $language, "ticketnotifications" => implode(",", $ticketnotify)), array("id" => $_SESSION['adminid']));
         unset($_SESSION['adminlang']);
         logActivity("Administrator Account Modified (" . $firstname . " " . $lastname . ")");
 
         if ($password) {
-            update_query("tbladmins", array(
+            update_query("ra_admin", array(
                 "passwordhash" => password_hash($password, PASSWORD_DEFAULT)
                     ), array("id" => $_SESSION['adminid'])
             );
@@ -155,7 +155,7 @@ if ($action == "save") {
 }
 
 releaseSession();
-$result = select_query_i("tbladmins", "tbladmins.*,tbladminroles.name", array("tbladmins.id" => $_SESSION['adminid']), "", "", "", "tbladminroles ON tbladminroles.id=tbladmins.roleid");
+$result = select_query_i("ra_admin", "ra_admin.*,ra_adminroles.name", array("ra_admin.id" => $_SESSION['adminid']), "", "", "", "ra_adminroles ON ra_adminroles.id=ra_admin.roleid");
 $data = mysqli_fetch_array($result);
 
 if (!$errormessage) {
@@ -225,7 +225,7 @@ echo "</td><td class=\"fieldarea\">";
 $nodepartments = true;
 $supportdepts = getAdminDepartmentAssignments();
 foreach ($supportdepts as $deptid) {
-    $deptname = get_query_val("tblticketdepartments", "name", array("id" => $deptid));
+    $deptname = get_query_val("ra_ticket_teams", "name", array("id" => $deptid));
 
     if ($deptname) {
         echo "<label><input type=\"checkbox\" name=\"ticketnotify[]\" value=\"" . $deptid . "\"" . (in_array($deptid, $ticketnotify) ? " checked" : "") . " /> " . $deptname . "</label><br />";

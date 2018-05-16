@@ -16,17 +16,17 @@ $aInt->requiredFiles(array("modulefunctions"));
 $menuselect = "$('#menu').multilevelpushmenu('expand','System');";
 
 if (!isset($CONFIG['ActiveAddonModules'])) {
-    insert_query("tblconfiguration", array("setting" => "ActiveAddonModules", "value" => ""));
+    insert_query("ra_config", array("setting" => "ActiveAddonModules", "value" => ""));
 }
 
 
 if (!isset($CONFIG['AddonModulesPerms'])) {
-    insert_query("tblconfiguration", array("setting" => "AddonModulesPerms", "value" => ""));
+    insert_query("ra_config", array("setting" => "AddonModulesPerms", "value" => ""));
 }
 
 
 if (!isset($CONFIG['AddonModulesHooks'])) {
-    insert_query("tblconfiguration", array("setting" => "AddonModulesHooks", "value" => ""));
+    insert_query("ra_config", array("setting" => "AddonModulesHooks", "value" => ""));
 }
 
 $activemodules = explode(",", $CONFIG['ActiveAddonModules']);
@@ -66,20 +66,20 @@ $action = $ra->get_req_var("action");
 if ($action == "save") {
     check_token("RA.admin.default");
     $exvars = array();
-    $result = select_query_i("tbladdonmodules", "", "");
+    $result = select_query_i("ra_modules", "", "");
 
     while ($data = mysqli_fetch_array($result)) {
         $exvars[$data['module']][$data['setting']] = $data['value'];
     }
 
-    delete_query("tbladdonmodules", array("setting" => "access"));
+    delete_query("ra_modules", array("setting" => "access"));
     foreach ($access as $module => $roleids) {
         $allowedroleids = "";
         foreach ($roleids as $roleid => $v) {
             $allowedroleids[] = $roleid;
         }
 
-        insert_query("tbladdonmodules", array("module" => $module, "setting" => "access", "value" => implode(",", $allowedroleids)));
+        insert_query("ra_modules", array("module" => $module, "setting" => "access", "value" => implode(",", $allowedroleids)));
     }
 
     foreach ($addon_modules as $module => $vals) {
@@ -88,11 +88,11 @@ if ($action == "save") {
             foreach ($vals['fields'] as $key => $values) {
 
                 if (isset($exvars[$module][$key])) {
-                    update_query("tbladdonmodules", array("value" => trim($_POST['fields'][$module][$key])), array("module" => $module, "setting" => $key));
+                    update_query("ra_modules", array("value" => trim($_POST['fields'][$module][$key])), array("module" => $module, "setting" => $key));
                     continue;
                 }
 
-                insert_query("tbladdonmodules", array("module" => $module, "setting" => $key, "value" => trim($_POST['fields'][$module][$key])));
+                insert_query("ra_modules", array("module" => $module, "setting" => $key, "value" => trim($_POST['fields'][$module][$key])));
             }
 
             continue;
@@ -127,10 +127,10 @@ if ($action == "activate") {
     if (!$response || (is_array($response) && ($response['status'] == "success" || $response['status'] == "info"))) {
         $activemodules[] = $module;
         sort($activemodules);
-        update_query("tblconfiguration", array("value" => implode(",", $activemodules)), array("setting" => "ActiveAddonModules"));
+        update_query("ra_config", array("value" => implode(",", $activemodules)), array("setting" => "ActiveAddonModules"));
 
         if ($addon_modules[$module]['version'] != $aInt->lang("addonmodules", "nooutput")) {
-            insert_query("tbladdonmodules", array("module" => $module, "setting" => "version", "value" => $addon_modules[$module]['version']));
+            insert_query("ra_modules", array("module" => $module, "setting" => "version", "value" => $addon_modules[$module]['version']));
         }
     }
 
@@ -152,7 +152,7 @@ if ($action == "deactivate") {
     wSetCookie("AddonModActivate", $response);
 
     if (!$response || (is_array($response) && ($response['status'] == "success" || $response['status'] == "info"))) {
-        delete_query("tbladdonmodules", array("module" => $module));
+        delete_query("ra_modules", array("module" => $module));
         foreach ($activemodules as $k => $mod) {
 
             if ($mod == $module) {
@@ -162,7 +162,7 @@ if ($action == "deactivate") {
         }
 
         sort($activemodules);
-        update_query("tblconfiguration", array("value" => implode(",", $activemodules)), array("setting" => "ActiveAddonModules"));
+        update_query("ra_config", array("value" => implode(",", $activemodules)), array("setting" => "ActiveAddonModules"));
     }
 
     redir("deactivated=true");
@@ -234,7 +234,7 @@ if ($action == "") {
 //<tr><th>" . $aInt->lang("addonmodules", "module") . "</th><th width=\"100\">" . $aInt->lang("global", "version") . "</th><th width=\"100\">" . $aInt->lang("addonmodules", "author") . "</th><th width=\"350\"></th></tr>
 //";
     $modulevars = $addonmodulesperms = array();
-    $result = select_query_i("tbladdonmodules", "", "");
+    $result = select_query_i("ra_modules", "", "");
 
     while ($data = mysqli_fetch_array($result)) {
         $modulevars[$data['module']][$data['setting']] = $data['value'];
@@ -282,7 +282,7 @@ if ($action == "") {
             if (function_exists($module . "_upgrade")) {
                 call_user_func($module . "_upgrade", $modulevars);
             }
-            update_query("tbladdonmodules", array("value" => $vals['version']), array("module" => $module, "setting" => "version"));
+            update_query("ra_modules", array("value" => $vals['version']), array("module" => $module, "setting" => "version"));
         }
 
         foreach ($vals['fields'] as $key => $values) {
@@ -296,7 +296,7 @@ if ($action == "") {
             );
         }
         $allowedroles = explode(",", $modulevars[$module]['access']);
-        $result = select_query_i("tbladminroles", "", "", "name", "ASC");
+        $result = select_query_i("ra_adminroles", "", "", "name", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $checked = "";
@@ -330,8 +330,8 @@ if ($action == "") {
     $aInt->assign("token", generate_token("link"));
     $aInt->assign("moduletable", $moduletable);
 
-    update_query("tblconfiguration", array("value" => implode(",", $addonmodulehooks)), array("setting" => "AddonModulesHooks"));
-    update_query("tblconfiguration", array("value" => serialize($addonmodulesperms)), array("setting" => "AddonModulesPerms"));
+    update_query("ra_config", array("value" => implode(",", $addonmodulehooks)), array("setting" => "AddonModulesHooks"));
+    update_query("ra_config", array("value" => serialize($addonmodulesperms)), array("setting" => "AddonModulesPerms"));
 }
 
 

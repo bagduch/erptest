@@ -20,7 +20,7 @@ if ($action == "delete") {
 	}
 	else {
 		run_hook("ServerDelete", array("serverid" => $id));
-		delete_query("tblservers", array("id" => $id));
+		delete_query("ra_integration", array("id" => $id));
 		redir("deletesuccess=true");
 		exit();
 	}
@@ -29,8 +29,8 @@ if ($action == "delete") {
 
 if ($action == "deletegroup") {
 	check_token("RA.admin.default");
-	delete_query("tblservergroups", array("id" => $id));
-	delete_query("tblservergroupsrel", array("serverid" => $id));
+	delete_query("ra_integration_groups", array("id" => $id));
+	delete_query("ra_integration_groupsrel", array("serverid" => $id));
 	redir("deletegroupsuccess=true");
 	exit();
 }
@@ -40,7 +40,7 @@ if ($action == "save") {
 	check_token("RA.admin.default");
 
 	if ($id) {
-		$result = select_query_i("tblservers", "active,type", array("id" => $id));
+		$result = select_query_i("ra_integration", "active,type", array("id" => $id));
 		$data = mysqli_fetch_array($result);
 
 		if ($type == $data['type']) {
@@ -50,15 +50,15 @@ if ($action == "save") {
 			$active = "";
 		}
 
-		update_query("tblservers", array("name" => $name, "type" => $type, "ipaddress" => trim($ipaddress), "assignedips" => trim($assignedips), "hostname" => trim($hostname), "monthlycost" => trim($monthlycost), "noc" => $noc, "statusaddress" => trim($statusaddress), "nameserver1" => trim($nameserver1), "nameserver1ip" => trim($nameserver1ip), "nameserver2" => trim($nameserver2), "nameserver2ip" => trim($nameserver2ip), "nameserver3" => trim($nameserver3), "nameserver3ip" => trim($nameserver3ip), "nameserver4" => trim($nameserver4), "nameserver4ip" => trim($nameserver4ip), "nameserver5" => trim($nameserver5), "nameserver5ip" => trim($nameserver5ip), "maxaccounts" => trim($maxaccounts), "username" => trim($username), "password" => encrypt(trim($password)), "accesshash" => trim($accesshash), "secure" => $secure, "disabled" => $disabled, "active" => $active), array("id" => $id));
+		update_query("ra_integration", array("name" => $name, "type" => $type, "ipaddress" => trim($ipaddress), "assignedips" => trim($assignedips), "hostname" => trim($hostname), "monthlycost" => trim($monthlycost), "noc" => $noc, "statusaddress" => trim($statusaddress), "nameserver1" => trim($nameserver1), "nameserver1ip" => trim($nameserver1ip), "nameserver2" => trim($nameserver2), "nameserver2ip" => trim($nameserver2ip), "nameserver3" => trim($nameserver3), "nameserver3ip" => trim($nameserver3ip), "nameserver4" => trim($nameserver4), "nameserver4ip" => trim($nameserver4ip), "nameserver5" => trim($nameserver5), "nameserver5ip" => trim($nameserver5ip), "maxaccounts" => trim($maxaccounts), "username" => trim($username), "password" => encrypt(trim($password)), "accesshash" => trim($accesshash), "secure" => $secure, "disabled" => $disabled, "active" => $active), array("id" => $id));
 		run_hook("ServerEdit", array("serverid" => $id));
 		redir("savesuccess=true");
 	}
 	else {
-		$result = select_query_i("tblservers", "id", array("type" => $type, "active" => "1"));
+		$result = select_query_i("ra_integration", "id", array("type" => $type, "active" => "1"));
 		$data = mysqli_fetch_array($result);
 		$active = ($data['id'] ? "" : "1");
-		$newid = insert_query("tblservers", array("name" => $name, "type" => $type, "ipaddress" => trim($ipaddress), "assignedips" => trim($assignedips), "hostname" => trim($hostname), "monthlycost" => trim($monthlycost), "noc" => $noc, "statusaddress" => trim($statusaddress), "nameserver1" => trim($nameserver1), "nameserver1ip" => trim($nameserver1ip), "nameserver2" => trim($nameserver2), "nameserver2ip" => trim($nameserver2ip), "nameserver3" => trim($nameserver3), "nameserver3ip" => trim($nameserver3ip), "nameserver4" => trim($nameserver4), "nameserver4ip" => trim($nameserver4ip), "nameserver5" => trim($nameserver5), "nameserver5ip" => trim($nameserver5ip), "maxaccounts" => trim($maxaccounts), "username" => trim($username), "password" => encrypt(trim($password)), "accesshash" => trim($accesshash), "secure" => $secure, "active" => $active, "disabled" => $disabled));
+		$newid = insert_query("ra_integration", array("name" => $name, "type" => $type, "ipaddress" => trim($ipaddress), "assignedips" => trim($assignedips), "hostname" => trim($hostname), "monthlycost" => trim($monthlycost), "noc" => $noc, "statusaddress" => trim($statusaddress), "nameserver1" => trim($nameserver1), "nameserver1ip" => trim($nameserver1ip), "nameserver2" => trim($nameserver2), "nameserver2ip" => trim($nameserver2ip), "nameserver3" => trim($nameserver3), "nameserver3ip" => trim($nameserver3ip), "nameserver4" => trim($nameserver4), "nameserver4ip" => trim($nameserver4ip), "nameserver5" => trim($nameserver5), "nameserver5ip" => trim($nameserver5ip), "maxaccounts" => trim($maxaccounts), "username" => trim($username), "password" => encrypt(trim($password)), "accesshash" => trim($accesshash), "secure" => $secure, "active" => $active, "disabled" => $disabled));
 		run_hook("ServerAdd", array("serverid" => $newid));
 		redir("createsuccess=true");
 	}
@@ -71,17 +71,17 @@ if ($action == "savegroup") {
 	check_token("RA.admin.default");
 
 	if ($id) {
-		update_query("tblservergroups", array("name" => $name, "filltype" => $filltype), array("id" => $id));
-		delete_query("tblservergroupsrel", array("groupid" => $id));
+		update_query("ra_integration_groups", array("name" => $name, "filltype" => $filltype), array("id" => $id));
+		delete_query("ra_integration_groupsrel", array("groupid" => $id));
 	}
 	else {
-		$id = insert_query("tblservergroups", array("name" => $name, "filltype" => $filltype));
+		$id = insert_query("ra_integration_groups", array("name" => $name, "filltype" => $filltype));
 	}
 
 
 	if ($selectedservers) {
 		foreach ($selectedservers as $serverid) {
-			insert_query("tblservergroupsrel", array("groupid" => $id, "serverid" => $serverid));
+			insert_query("ra_integration_groupsrel", array("groupid" => $id, "serverid" => $serverid));
 		}
 	}
 
@@ -94,25 +94,25 @@ ob_start();
 if ($action == "") {
 	if ($sub == "enable") {
 		check_token("RA.admin.default");
-		update_query("tblservers", array("disabled" => "0"), array("id" => $id));
+		update_query("ra_integration", array("disabled" => "0"), array("id" => $id));
 		redir("enablesuccess=1");
 	}
 
 
 	if ($sub == "disable") {
 		check_token("RA.admin.default");
-		update_query("tblservers", array("disabled" => "1"), array("id" => $id));
+		update_query("ra_integration", array("disabled" => "1"), array("id" => $id));
 		redir("disablesuccess=1");
 	}
 
 
 	if ($sub == "makedefault") {
 		check_token("RA.admin.default");
-		$result = select_query_i("tblservers", "", array("id" => $id));
+		$result = select_query_i("ra_integration", "", array("id" => $id));
 		$data = mysqli_fetch_array($result);
 		$type = $data['type'];
-		update_query("tblservers", array("active" => ""), array("type" => $type));
-		update_query("tblservers", array("active" => "1"), array("id" => $id));
+		update_query("ra_integration", array("active" => ""), array("type" => $type));
+		update_query("ra_integration", array("active" => "1"), array("id" => $id));
 		redir("makedefault=1");
 	}
 
@@ -188,13 +188,13 @@ if ($action == "") {
 
 	closedir($dh);
 	$aInt->sortableTableInit("nopagination");
-	$result3 = select_query_i("tblservers", "DISTINCT type", "", "type", "ASC");
+	$result3 = select_query_i("ra_integration", "DISTINCT type", "", "type", "ASC");
 
 	while ($data = mysqli_fetch_array($result3)) {
 		$servertype = $data['type'];
 		$tabledata[] = array("dividingline", ucfirst($servertype));
 		$disableddata = array();
-		$result = select_query_i("tblservers", "", array("type" => $data['type']), "name", "ASC");
+		$result = select_query_i("ra_integration", "", array("type" => $data['type']), "name", "ASC");
 
 		while ($data = mysqli_fetch_array($result)) {
 			$id = $data['id'];
@@ -259,7 +259,7 @@ if ($action == "") {
 
 ";
 	$tabledata = "";
-	$result = select_query_i("tblservergroups", "", "", "name", "ASC");
+	$result = select_query_i("ra_integration_groups", "", "", "name", "ASC");
 
 	while ($data = mysqli_fetch_array($result)) {
 		$id = $data['id'];
@@ -276,7 +276,7 @@ if ($action == "") {
 		}
 
 		$servers = "";
-		$result2 = select_query_i("tblservergroupsrel", "tblservers.name", array("groupid" => $id), "name", "ASC", "", "tblservers ON tblservers.id=tblservergroupsrel.serverid");
+		$result2 = select_query_i("ra_integration_groupsrel", "ra_integration.name", array("groupid" => $id), "name", "ASC", "", "ra_integration ON ra_integration.id=ra_integration_groupsrel.serverid");
 
 		while ($data = mysqli_fetch_array($result2)) {
 			$servers .= $data['name'] . ", ";
@@ -291,7 +291,7 @@ if ($action == "") {
 else {
 	if ($action == "manage") {
 		if ($id) {
-			$result = select_query_i("tblservers", "", array("id" => $id));
+			$result = select_query_i("ra_integration", "", array("id" => $id));
 			$data = mysqli_fetch_array($result);
 			$id = $data['id'];
 			$type = $data['type'];
@@ -518,7 +518,7 @@ else {
 		if ($action == "managegroup") {
 			if ($id) {
 				$managetitle = $aInt->lang("configservers", "editgroup");
-				$result = select_query_i("tblservergroups", "", array("id" => $id));
+				$result = select_query_i("ra_integration_groups", "", array("id" => $id));
 				$data = mysqli_fetch_array($result);
 				$id = $data['id'];
 				$name = $data['name'];
@@ -575,7 +575,7 @@ $(\"#serverrem\").click(function () {
 			echo "<s";
 			echo "elect size=\"10\" multiple=\"multiple\" id=\"serverslist\" style=\"width:200px;\">";
 			$selectedservers = array();
-			$result = select_query_i("tblservergroupsrel", "tblservers.id,tblservers.name,tblservers.disabled", array("groupid" => $id), "name", "ASC", "", "tblservers ON tblservers.id=tblservergroupsrel.serverid");
+			$result = select_query_i("ra_integration_groupsrel", "ra_integration.id,ra_integration.name,ra_integration.disabled", array("groupid" => $id), "name", "ASC", "", "ra_integration ON ra_integration.id=ra_integration_groupsrel.serverid");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];
@@ -589,7 +589,7 @@ $(\"#serverrem\").click(function () {
 				$selectedservers[$id] = $name;
 			}
 
-			$result = select_query_i("tblservers", "", "", "name", "ASC");
+			$result = select_query_i("ra_integration", "", "", "name", "ASC");
 
 			while ($data = mysqli_fetch_array($result)) {
 				$id = $data['id'];

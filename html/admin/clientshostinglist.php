@@ -47,7 +47,7 @@ if (listtype) {
 }
 
 $aInt->sortableTableInit("domain", "ASC");
-$query = "FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid INNER JOIN tblservices ON tblcustomerservices.packageid=tblservices.id WHERE tblcustomerservices.id!='' ";
+$query = "FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid INNER JOIN ra_catalog ON tblcustomerservices.packageid=ra_catalog.id WHERE tblcustomerservices.id!='' ";
 
 if ($clientname) {
 	$query .= "AND concat(firstname,' ',lastname) LIKE '%" . db_escape_string($clientname) . "%' ";
@@ -55,12 +55,12 @@ if ($clientname) {
 
 
 if ($listtype) {
-	$query .= "AND tblservices.type='" . db_escape_string($listtype) . "' ";
+	$query .= "AND ra_catalog.type='" . db_escape_string($listtype) . "' ";
 }
 
 
 if ($package) {
-	$query .= "AND tblservices.id='" . db_escape_string($package) . "' ";
+	$query .= "AND ra_catalog.id='" . db_escape_string($package) . "' ";
 }
 
 
@@ -105,7 +105,7 @@ if ($assignedips) {
 
 
 if ($packagesearch) {
-	$query .= "AND tblservices.name='" . db_escape_string($packagesearch) . "' ";
+	$query .= "AND ra_catalog.name='" . db_escape_string($packagesearch) . "' ";
 }
 
 
@@ -126,10 +126,10 @@ if ($notes) {
 
 if ($customfieldvalue) {
 	if ($customfield) {
-		$query .= "AND tblcustomerservices.id IN (SELECT relid FROM tblcustomfieldsvalues WHERE fieldid=" . (int)$customfield . " AND value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
+		$query .= "AND tblcustomerservices.id IN (SELECT relid FROM ra_catalog_user_sales_fieldsvalues WHERE fieldid=" . (int)$customfield . " AND value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 	else {
-		$query .= "AND tblcustomerservices.id IN (SELECT tblcustomfieldsvalues.relid FROM tblcustomfieldsvalues INNER JOIN tblcustomfields ON tblcustomfieldsvalues.fieldid=tblcustomfields.cfid WHERE tblcustomfields.type='product' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
+		$query .= "AND tblcustomerservices.id IN (SELECT ra_catalog_user_sales_fieldsvalues.relid FROM ra_catalog_user_sales_fieldsvalues INNER JOIN ra_catalog_user_sales_fields ON ra_catalog_user_sales_fieldsvalues.fieldid=ra_catalog_user_sales_fields.cfid WHERE ra_catalog_user_sales_fields.type='product' AND ra_catalog_user_sales_fieldsvalues.value LIKE '%" . db_escape_string($customfieldvalue) . "%') ";
 	}
 }
 
@@ -200,7 +200,7 @@ echo $aInt->lang("global", "any");
 echo "</option>
 ";
 $servers = $disabledservers = "";
-$result2 = select_query_i("tblservers", "id,name,disabled", "", "name", "ASC");
+$result2 = select_query_i("ra_integration", "id,name,disabled", "", "name", "ASC");
 
 while ($data = mysqli_fetch_array($result2)) {
 	$id = $data['id'];
@@ -259,7 +259,7 @@ echo "<s";
 echo "elect name=\"customfield\" style=\"width:200px;\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
-$result2 = select_query_i("tblcustomfields", "tblcustomfields.cfid,tblcustomfields.fieldname,tblservices.name", array("tblcustomfields.type" => "product"), "", "", "", "tblservices ON tblservices.id=tblcustomfields.relid");
+$result2 = select_query_i("ra_catalog_user_sales_fields", "ra_catalog_user_sales_fields.cfid,ra_catalog_user_sales_fields.fieldname,ra_catalog.name", array("ra_catalog_user_sales_fields.type" => "product"), "", "", "", "ra_catalog ON ra_catalog.id=ra_catalog_user_sales_fields.relid");
 
 while ($data = mysqli_fetch_array($result2)) {
 	$fieldid = $data['id'];
@@ -302,11 +302,11 @@ echo "\" class=\"button\"></DIV>
 $query .= "ORDER BY ";
 
 if ($orderby == "product") {
-	$query .= "tblservices.name";
+	$query .= "ra_catalog.name";
 }
 else {
 	if ($orderby == "clientname") {
-		$query .= "tblclients.firstname " . $order . ",tblclients.lastname";
+		$query .= "ra_user.firstname " . $order . ",ra_user.lastname";
 	}
 	else {
 		$query .= $orderby;
@@ -314,7 +314,7 @@ else {
 }
 
 $query .= " " . $order;
-$query = "SELECT tblcustomerservices.*,tblclients.firstname,tblclients.lastname,tblclients.companyname,tblclients.groupid,tblclients.currency,tblservices.name,tblservices.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
+$query = "SELECT tblcustomerservices.*,ra_user.firstname,ra_user.lastname,ra_user.companyname,ra_user.groupid,ra_user.currency,ra_catalog.name,ra_catalog.type " . $query . " LIMIT " . (int)$page * $limit . "," . (int)$limit;
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {

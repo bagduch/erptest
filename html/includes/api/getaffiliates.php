@@ -54,7 +54,7 @@ if ($withdrawn) {
 
 
 if ($userid) {
-	$result_user = select_query_i("tblaffiliates", "clientid", array("clientid" => $userid));
+	$result_user = select_query_i("ra_partners", "clientid", array("clientid" => $userid));
 	$data_user = mysqli_fetch_array($result_user);
 	$userid = $data_user['clientid'];
 
@@ -64,10 +64,10 @@ if ($userid) {
 	}
 }
 
-$result = select_query_i("tblaffiliates", "COUNT(*)", $where);
+$result = select_query_i("ra_partners", "COUNT(*)", $where);
 $data = mysqli_fetch_array($result);
 $totalresults = $data[0];
-$result2 = select_query_i("tblaffiliates", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
+$result2 = select_query_i("ra_partners", "", $where, "id", "ASC", (int)$limitstart . "," . (int)$limitnum);
 $apiresults = array("result" => "success", "totalresults" => $totalresults, "startnumber" => $limitstart, "numreturned" => mysqli_num_rows($result2), "affiliates" => array());
 
 while ($data3 = mysqli_fetch_assoc($result2)) {

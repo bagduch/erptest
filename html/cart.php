@@ -221,7 +221,7 @@ if (!$a) {
                 if ($billingcycle == "Free Account") {
                     $free = true;
                 } else {
-                    $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
+                    $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $addonid));
                     $data = mysqli_fetch_array($result2);
                     $setupfee = $data['msetupfee'];
                     $recurring = $data['monthly'];
@@ -352,7 +352,7 @@ if (!$a) {
         $smartyvalues['productservices'] = $productservice;
 
         if ($pid) {
-            $result = select_query_i("tblservices", "id,gid", array("id" => $pid));
+            $result = select_query_i("ra_catalog", "id,gid", array("id" => $pid));
             $data = mysqli_fetch_array($result);
             $pid = $data['id'];
             $gid = $data['gid'];
@@ -362,7 +362,7 @@ if (!$a) {
                 $gid = $productservice[0]['gid'];
             }
         }
-        $type = select_query_i('tblservicegroups', "type", array("id" => $gid));
+        $type = select_query_i('ra_catalog_groups', "type", array("id" => $gid));
         $typedata = mysqli_fetch_array($result);
         $smartyvalues['type'] = $typedata['type'];
         $groupinfo = $orderfrm->getProductGroupInfo($gid);
@@ -547,7 +547,7 @@ if ($a == "confservice") {
 
         if ($configoption) {
             foreach ($configoption as $opid => $opid2) {
-                $result = select_query_i("tblserviceconfigoptions", "", array("id" => $opid));
+                $result = select_query_i("ra_catalog_user_sales_addons_options", "", array("id" => $opid));
                 $data = mysqli_fetch_array($result);
                 $optionname = $data['optionname'];
                 $optiontype = $data['optiontype'];
@@ -749,7 +749,7 @@ if ($a == "fraudcheck") {
         $fraudmodule = getActiveFraudModule();
 
         if ($CONFIG['SkipFraudForExisting']) {
-            $result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+            $result = select_query_i("ra_orders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
             $data = mysqli_fetch_array($result);
 
             if ($data[0]) {
@@ -757,7 +757,7 @@ if ($a == "fraudcheck") {
             }
         }
 
-        $result = full_query_i("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
+        $result = full_query_i("SELECT COUNT(*) FROM ra_bills INNER JOIN ra_orders ON ra_orders.invoiceid=ra_bills.id WHERE ra_orders.id='" . db_escape_string($orderid) . "' AND ra_bills.status='Paid' AND subtotal>0");
         $data = mysqli_fetch_array($result);
 
         if ($data[0]) {
@@ -795,7 +795,7 @@ if ($a == "fraudcheck") {
         outputClientArea($templatefile);
         exit();
     } else {
-        update_query("tblorders", array("status" => "Pending"), array("id" => $orderid));
+        update_query("ra_orders", array("status" => "Pending"), array("id" => $orderid));
 
         if ($_SESSION['orderdetails']['Products']) {
             foreach ($_SESSION['orderdetails']['Products'] as $productid) {
@@ -806,7 +806,7 @@ if ($a == "fraudcheck") {
 
         if ($_SESSION['orderdetails']['Addons']) {
             foreach ($_SESSION['orderdetails']['Addons'] as $addonid) {
-                update_query("tblserviceaddons", array("status" => "Pending"), array("id" => $addonid, "status" => "Fraud"));
+                update_query("ra_catalog_user_sales_addons", array("status" => "Pending"), array("id" => $addonid, "status" => "Fraud"));
             }
         }
 
@@ -817,7 +817,7 @@ if ($a == "fraudcheck") {
 //            }
 //        }
 
-        update_query("tblinvoices", array("status" => "Unpaid"), array("id" => $_SESSION['orderdetails']['InvoiceID'], "status" => "Cancelled"));
+        update_query("ra_bills", array("status" => "Unpaid"), array("id" => $_SESSION['orderdetails']['InvoiceID'], "status" => "Cancelled"));
         logActivity("Order ID " . $orderid . " Passed Fraud Check");
         redir("a=complete");
         exit();
@@ -836,7 +836,7 @@ if ($a == "complete") {
     $total = 0;
 
     if ($invoiceid) {
-        $result = select_query_i("tblinvoices", "id,total,paymentmethod,status", array("userid" => $_SESSION['uid'], "id" => $invoiceid));
+        $result = select_query_i("ra_bills", "id,total,paymentmethod,status", array("userid" => $_SESSION['uid'], "id" => $invoiceid));
         $data = mysqli_fetch_array($result);
         $invoiceid = $data['id'];
         $total = $data['total'];
@@ -885,7 +885,7 @@ if ($a == "complete") {
     if (($invoiceid && $status == "Unpaid") && function_exists($paymentmethod . "_orderformcheckout")) {
         $params = getGatewayVariables($paymentmethod, $invoiceid, $total);
         $captureresult = call_user_func($paymentmethod . "_orderformcheckout", $params);
-        $gatewayname = get_query_val("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
+        $gatewayname = get_query_val("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "name"));
         logTransaction($gatewayname, $captureresult['rawdata'], ucfirst($captureresult['status']));
 
         if ($captureresult['status'] == "success") {
@@ -897,7 +897,7 @@ if ($a == "complete") {
 
 
     if ($invoiceid && $status == "Unpaid") {
-        $gatewaytype = get_query_val("tblpaymentgateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
+        $gatewaytype = get_query_val("ra_modules_gateways", "value", array("gateway" => $paymentmethod, "setting" => "type"));
 
         if (!isValidforPath($paymentmethod)) {
             exit("Invalid Payment Gateway Name");
@@ -941,7 +941,7 @@ if ($a == "complete") {
         }
     }
 
-    $amount = get_query_val("tblorders", "amount", array("userid" => $_SESSION['uid'], "id" => $orderid));
+    $amount = get_query_val("ra_orders", "amount", array("userid" => $_SESSION['uid'], "id" => $orderid));
     $templatefile = "complete";
     $smartyvalues = array_merge($smartyvalues, array("orderid" => $orderid, "ordernumber" => $_SESSION['orderdetails']['OrderNumber'], "invoiceid" => $invoiceid, "ispaid" => $_SESSION['orderdetails']['paymentcomplete'], "amount" => $amount, "paymentmethod" => $paymentmethod, "clientdetails" => getClientsDetails($_SESSION['uid'])));
     $addons_html = run_hook("ShoppingCartCheckoutCompletePage", $smartyvalues);

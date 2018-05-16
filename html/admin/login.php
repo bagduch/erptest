@@ -29,7 +29,7 @@ if ($action && $disableadminforgottenpw) {
 
 $msgtitle = $msg = $reset = "";
 if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp) && $verify) {
-    $result = select_query_i("tbladmins", "", array("email" => $email, "disabled" => "0"));
+    $result = select_query_i("ra_admin", "", array("email" => $email, "disabled" => "0"));
     $data = mysqli_fetch_array($result);
     $adminid = $data['id'];
     $firstname = $data['firstname'];
@@ -51,7 +51,7 @@ if (((($action == "reset" && !$disableadminforgottenpw) && $email) && $timestamp
         }
 
         $newpassword = $str;
-        update_query("tbladmins", array(
+        update_query("ra_admin", array(
             "passwordhash" => password_hash($newpassword, PASSWORD_DEFAULT),
             "loginattempts" => "0"), array("email" => $email));
         $message .= "Dear " . $firstname . ",
@@ -160,7 +160,7 @@ if (!$action) {
 } elseif ($action == "reset" && !$disableadminforgottenpw) {
 
     if ($sub == "send") {
-        $result = select_query_i("tbladmins", "", array("email" => $email));
+        $result = select_query_i("ra_admin", "", array("email" => $email));
         $data = mysqli_fetch_array($result);
         $adminid = $data['id'];
         $firstname = $data['firstname'];

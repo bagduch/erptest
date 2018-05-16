@@ -36,7 +36,7 @@ if ($escalations) {
         $flagto = $data['flagto'];
         $notify = $data['notify'];
         $addreply = $data['addreply'];
-        $ticketsqry = "SELECT * FROM tbltickets WHERE ";
+        $ticketsqry = "SELECT * FROM ra_ticket WHERE ";
 
         if ($departments) {
             $departments = explode(",", $departments);
@@ -94,12 +94,12 @@ if ($escalations) {
 
             if ($flagto) {
                 $updateqry['flag'] = $flagto;
-                sendAdminMessage("Support Ticket Flagged", array("ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("tblclients", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg)), "support", ($newdepartment ? $newdepartment : $ticketdeptid), $flagto);
+                sendAdminMessage("Support Ticket Flagged", array("ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("ra_user", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg)), "support", ($newdepartment ? $newdepartment : $ticketdeptid), $flagto);
             }
 
 
             if (count($updateqry)) {
-                update_query("tbltickets", $updateqry, array("id" => $ticketid));
+                update_query("ra_ticket", $updateqry, array("id" => $ticketid));
             }
 
 
@@ -107,13 +107,13 @@ if ($escalations) {
                 $notify = explode(",", $notify);
 
                 if (in_array("all", $notify)) {
-                    sendAdminMessage("Escalation Rule Notification", array("rule_name" => $name, "ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("tblclients", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg)), "support", ($newdepartment ? $newdepartment : $ticketdeptid));
+                    sendAdminMessage("Escalation Rule Notification", array("rule_name" => $name, "ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("ra_user", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg)), "support", ($newdepartment ? $newdepartment : $ticketdeptid));
                 }
 
                 foreach ($notify as $notifyid) {
 
                     if (is_numeric($notifyid)) {
-                        sendAdminMessage("Escalation Rule Notification", array("rule_name" => $name, "ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("tblclients", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg), "ticket_status" => $ticketstatus), "support", "", $notifyid);
+                        sendAdminMessage("Escalation Rule Notification", array("rule_name" => $name, "ticket_id" => $ticketid, "ticket_tid" => $tickettid, "client_id" => $ticketuserid, "client_name" => get_query_val("ra_user", "CONCAT(firstname,' ',lastname)", array("id" => $ticketuserid)), "ticket_department" => getDepartmentName(($newdepartment ? $newdepartment : $ticketdeptid)), "ticket_subject" => $ticketsubject, "ticket_priority" => ($newpriority ? $newpriority : $ticketpriority), "ticket_message" => ticketMessageFormat($ticketmsg), "ticket_status" => $ticketstatus), "support", "", $notifyid);
                         continue;
                     }
                 }
@@ -130,15 +130,15 @@ if ($escalations) {
         }
     }
 
-    update_query("tblconfiguration", array("value" => date("Y-m-d H:i:s")), array("setting" => "TicketEscalationLastRun"));
+    update_query("ra_config", array("value" => date("Y-m-d H:i:s")), array("setting" => "TicketEscalationLastRun"));
     exit();
 }
 
 //$cron->logactivity("Starting");
-full_query_i("DELETE FROM tblinvoices WHERE userid NOT IN (SELECT id FROM tblclients)");
-full_query_i("UPDATE tbltickets SET did=(SELECT id FROM tblticketdepartments ORDER BY `order` ASC LIMIT 1) WHERE did NOT IN (SELECT id FROM tblticketdepartments)");
-update_query("tblclients", array("currency" => "1"), array("currency" => "0"));
-update_query("tblaccounts", array("currency" => "1"), array("currency" => "0", "userid" => "0"));
+full_query_i("DELETE FROM ra_bills WHERE userid NOT IN (SELECT id FROM ra_user)");
+full_query_i("UPDATE ra_ticket SET did=(SELECT id FROM ra_ticket_teams ORDER BY `order` ASC LIMIT 1) WHERE did NOT IN (SELECT id FROM ra_ticket_teams)");
+update_query("ra_user", array("currency" => "1"), array("currency" => "0"));
+update_query("ra_transactions", array("currency" => "1"), array("currency" => "0", "userid" => "0"));
 
 if ($ra->get_config("CurrencyAutoUpdateExchangeRates") && $cron->isScheduled("updaterates")) {
     currencyUpdateRates();
@@ -180,7 +180,7 @@ if ($cron->isScheduled("invoicereminders")) {
 if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests")) {
     $i = 0;
     $terminatedate = date("Ymd", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
-    $query = "SELECT * FROM tblcancelrequests INNER JOIN tblcustomerservices ON tblcustomerservices.id = tblcancelrequests.relid WHERE (servicestatus!='Terminated' AND servicestatus!='Cancelled') AND (type='Immediate' OR (type='End of Billing Period' AND nextduedate<='" . $terminatedate . "\')) AND (tblcustomerservices.billingcycle='Free' OR tblcustomerservices.billingcycle='Free Account' OR tblcustomerservices.nextduedate != '0000-00-00') ORDER BY domain ASC";
+    $query = "SELECT * FROM ra_cancellations INNER JOIN tblcustomerservices ON tblcustomerservices.id = ra_cancellations.relid WHERE (servicestatus!='Terminated' AND servicestatus!='Cancelled') AND (type='Immediate' OR (type='End of Billing Period' AND nextduedate<='" . $terminatedate . "\')) AND (tblcustomerservices.billingcycle='Free' OR tblcustomerservices.billingcycle='Free Account' OR tblcustomerservices.nextduedate != '0000-00-00') ORDER BY domain ASC";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -191,11 +191,11 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
         $packageid = $data['packageid'];
         $regdate = fromMySQLDate($regdate);
         $nextduedate = fromMySQLDate($nextduedate);
-        $result2 = select_query_i("tblclients", "firstname,lastname", array("id" => $userid));
+        $result2 = select_query_i("ra_user", "firstname,lastname", array("id" => $userid));
         $data2 = mysqli_fetch_array($result2);
         $firstname = $data2['firstname'];
         $lastname = $data2['lastname'];
-        $result2 = select_query_i("tblservices", "name,servertype", array("id" => $packageid));
+        $result2 = select_query_i("ra_catalog", "name,servertype", array("id" => $packageid));
         $data2 = mysqli_fetch_array($result2);
         $prodname = $data2['name'];
         $module = $data2['servertype'];
@@ -215,7 +215,7 @@ if ($CONFIG['AutoCancellationRequests'] && $cron->isScheduled("cancelrequests"))
 
         if ($serverresult == "success") {
             update_query("tblcustomerservices", array("servicestatus" => "Cancelled"), array("id" => $id));
-            update_query("tblserviceaddons", array("status" => "Cancelled"), array("hostingid" => $id));
+            update_query("ra_catalog_user_sales_addons", array("status" => "Cancelled"), array("hostingid" => $id));
             run_hook("AddonCancelled", array("id" => "all", "userid" => $userid, "serviceid" => $id, "addonid" => ""));
             $cron->emailLogSub("SUCCESS: " . $loginfo, true);
             ++$i;
@@ -240,16 +240,16 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
         $userid = $data['userid'];
         $domain = $data['description'];
         $packageid = $data['packageid'];
-        $result2 = select_query_i("tblclients", "", array("id" => $userid));
+        $result2 = select_query_i("ra_user", "", array("id" => $userid));
         $data2 = mysqli_fetch_array($result2);
         $firstname = $data2['firstname'];
         $lastname = $data2['lastname'];
         $groupid = $data2['groupid'];
-        $result2 = select_query_i("tblservices", "name,servertype", array("id" => $packageid));
+        $result2 = select_query_i("ra_catalog", "name,servertype", array("id" => $packageid));
         $data2 = mysqli_fetch_array($result2);
         $prodname = $data2['name'];
         $module = $data2['servertype'];
-        $result2 = select_query_i("tblclientgroups", "susptermexempt", array("id" => $groupid));
+        $result2 = select_query_i("ra_user_group", "susptermexempt", array("id" => $groupid));
         $data2 = mysqli_fetch_array($result2);
         $susptermexempt = $data2['susptermexempt'];
 
@@ -277,7 +277,7 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
         }
     }
 
-    $query3 = "SELECT tblserviceaddons.*,tblcustomerservices.userid,tblcustomerservices.packageid,tblcustomerservices.domain,tblclients.firstname,tblclients.lastname,tblclients.groupid FROM tblserviceaddons INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblserviceaddons.status='Active' AND tblserviceaddons.billingcycle!='Free' AND tblserviceaddons.billingcycle!='Free Account' AND tblserviceaddons.billingcycle!='One Time' AND tblserviceaddons.nextduedate<='" . $suspenddate . "' AND tblcustomerservices.overideautosuspend!='on' AND tblcustomerservices.overideautosuspend!='1' ORDER BY tblserviceaddons.name ASC";
+    $query3 = "SELECT ra_catalog_user_sales_addons.*,tblcustomerservices.userid,tblcustomerservices.packageid,tblcustomerservices.domain,ra_user.firstname,ra_user.lastname,ra_user.groupid FROM ra_catalog_user_sales_addons INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE ra_catalog_user_sales_addons.status='Active' AND ra_catalog_user_sales_addons.billingcycle!='Free' AND ra_catalog_user_sales_addons.billingcycle!='Free Account' AND ra_catalog_user_sales_addons.billingcycle!='One Time' AND ra_catalog_user_sales_addons.nextduedate<='" . $suspenddate . "' AND tblcustomerservices.overideautosuspend!='on' AND tblcustomerservices.overideautosuspend!='1' ORDER BY ra_catalog_user_sales_addons.name ASC";
     $result3 = full_query_i($query3);
 
     while ($data = mysqli_fetch_array($result3)) {
@@ -292,12 +292,12 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
         $firstname = $data['firstname'];
         $lastname = $data['lastname'];
         $groupid = $data['groupid'];
-        $result2 = select_query_i("tblclientgroups", "susptermexempt", array("id" => $groupid));
+        $result2 = select_query_i("ra_user_group", "susptermexempt", array("id" => $groupid));
         $data2 = mysqli_fetch_array($result2);
         $susptermexempt = $data2['susptermexempt'];
 
         if (!$susptermexempt) {
-            update_query("tblserviceaddons", array("status" => "Suspended"), array("id" => $id));
+            update_query("ra_catalog_user_sales_addons", array("status" => "Suspended"), array("id" => $id));
             $loginfo = $firstname . " " . $lastname . " - " . $name . " (Service ID: " . $serviceid . " - Addon ID: " . $id . ")";
             $cron->logActivity("SUCCESS: " . $loginfo, true);
             run_hook("AddonSuspended", array("id" => $id, "userid" => $userid, "serviceid" => $serviceid, "addonid" => $addonid));
@@ -308,7 +308,7 @@ if ($CONFIG['AutoSuspension'] && $cron->isScheduled("suspensions")) {
                 $suspendproduct = $data2[0];
 
                 if ($suspendproduct) {
-                    $result2 = select_query_i("tblservices", "name,servertype", array("id" => $packageid));
+                    $result2 = select_query_i("ra_catalog", "name,servertype", array("id" => $packageid));
                     $data2 = mysqli_fetch_array($result2);
                     $prodname = $data2['name'];
                     $module = $data2['servertype'];
@@ -353,16 +353,16 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
         $userid = $data['userid'];
         $domain = $data['domain'];
         $packageid = $data['packageid'];
-        $result2 = select_query_i("tblclients", "", array("id" => $userid));
+        $result2 = select_query_i("ra_user", "", array("id" => $userid));
         $data2 = mysqli_fetch_array($result2);
         $firstname = $data2['firstname'];
         $lastname = $data2['lastname'];
         $groupid = $data2['groupid'];
-        $result2 = select_query_i("tblservices", "name,servertype", array("id" => $packageid));
+        $result2 = select_query_i("ra_catalog", "name,servertype", array("id" => $packageid));
         $data2 = mysqli_fetch_array($result2);
         $prodname = $data2['name'];
         $module = $data2['servertype'];
-        $result2 = select_query_i("tblclientgroups", "susptermexempt", array("id" => $groupid));
+        $result2 = select_query_i("ra_user_group", "susptermexempt", array("id" => $groupid));
         $data2 = mysqli_fetch_array($result2);
         $susptermexempt = $data2['susptermexempt'];
         if (!$susptermexempt) {
@@ -387,7 +387,7 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
         }
     }
 
-    $query = "UPDATE tblserviceaddons SET status='Terminated' WHERE (status='Active' OR status='Suspended') AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND nextduedate!='0000-00-00' AND nextduedate<='" . $terminatedate . "'";
+    $query = "UPDATE ra_catalog_user_sales_addons SET status='Terminated' WHERE (status='Active' OR status='Suspended') AND billingcycle!='Free Account' AND billingcycle!='Free' AND billingcycle!='One Time' AND nextduedate!='0000-00-00' AND nextduedate<='" . $terminatedate . "'";
     $result = full_query_i($query);
     $cron->logActivity("Processed " . $i . " Terminations", true);
     $cron->emailLog($i . " Services Terminated");
@@ -396,7 +396,7 @@ if ($CONFIG['AutoTermination'] && $cron->isScheduled("terminations")) {
 
 if ($cron->isScheduled("fixedtermterminations")) {
     $count = 0;
-    $result = select_query_i("tblservices", "id,autoterminatedays,autoterminateemail,servertype,name", "autoterminatedays>0", "id", "ASC");
+    $result = select_query_i("ra_catalog", "id,autoterminatedays,autoterminateemail,servertype,name", "autoterminatedays>0", "id", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $pid = $data[0];
@@ -406,13 +406,13 @@ if ($cron->isScheduled("fixedtermterminations")) {
         $prodname = $data[4];
 
         if ($autoterminateemail) {
-            $result2 = select_query_i("tblemailtemplates", "name", array("id" => $autoterminateemail));
+            $result2 = select_query_i("ra_templates_mail", "name", array("id" => $autoterminateemail));
             $data = mysqli_fetch_array($result2);
             $emailtplname = $data[0];
         }
 
         $terminatebefore = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $autoterminatedays, date("Y")));
-        $result2 = select_query_i("tblcustomerservices", "tblcustomerservices.id,userid,domain,firstname,lastname", "packageid=" . $pid . " AND regdate<='" . $terminatebefore . "' AND (servicestatus='Active' OR servicestatus='Suspended')", "id", "ASC", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result2 = select_query_i("tblcustomerservices", "tblcustomerservices.id,userid,domain,firstname,lastname", "packageid=" . $pid . " AND regdate<='" . $terminatebefore . "' AND (servicestatus='Active' OR servicestatus='Suspended')", "id", "ASC", "", "ra_user ON ra_user.id=tblcustomerservices.userid");
 
         while ($data = mysqli_fetch_array($result2)) {
             $serviceid = $data[0];
@@ -459,13 +459,13 @@ if ($cron->isScheduled("closetickets")) {
 
 if ($CONFIG['AffiliatesDelayCommission'] && $cron->isScheduled("affcommissions")) {
     $affiliatepaymentscleared = 0;
-    $query = "SELECT * FROM tblaffiliatespending WHERE clearingdate<='" . date("Y-m-d") . "'";
+    $query = "SELECT * FROM ra_partnerspending WHERE clearingdate<='" . date("Y-m-d") . "'";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
         $affaccid = $data['affaccid'];
         $amount = $data['amount'];
-        $query2 = "SELECT * FROM tblaffiliatesaccounts WHERE id=" . (int) $affaccid;
+        $query2 = "SELECT * FROM ra_partnersaccounts WHERE id=" . (int) $affaccid;
         $result2 = full_query_i($query2);
         $data = mysqli_fetch_array($result2);
         $affaccid = $data['id'];
@@ -477,22 +477,22 @@ if ($CONFIG['AffiliatesDelayCommission'] && $cron->isScheduled("affcommissions")
         $servicestatus = $data['servicestatus'];
 
         if ($affaccid && $servicestatus == "Active") {
-            update_query("tblaffiliates", array("balance" => "+=" . $amount), array("id" => (int) $affid));
-            update_query("tblaffiliatesaccounts", array("lastpaid" => "now()"), array("id" => (int) $affaccid));
-            insert_query("tblaffiliateshistory", array("affiliateid" => $affid, "date" => "now()", "affaccid" => $affaccid, "amount" => $amount));
+            update_query("ra_partners", array("balance" => "+=" . $amount), array("id" => (int) $affid));
+            update_query("ra_partnersaccounts", array("lastpaid" => "now()"), array("id" => (int) $affaccid));
+            insert_query("ra_partnershistory", array("affiliateid" => $affid, "date" => "now()", "affaccid" => $affaccid, "amount" => $amount));
             ++$affiliatepaymentscleared;
         }
     }
 
     $cron->logActivity("Processed " . $affiliatepaymentscleared . " Pending Affiliate Payments", true);
     $cron->emailLog($affiliatepaymentscleared . " Pending Affiliate Payments Cleared");
-    $query = "DELETE FROM tblaffiliatespending WHERE clearingdate<='" . date("Y-m-d") . "'";
+    $query = "DELETE FROM ra_partnerspending WHERE clearingdate<='" . date("Y-m-d") . "'";
     $result = full_query_i($query);
 }
 
 
 if (($CONFIG['SendAffiliateReportMonthly'] && date("d") == "1") && $cron->isScheduled("affreports")) {
-    $query = "SELECT aff.* FROM tblaffiliates aff join tblclients client on aff.clientid = client.id where client.status = 'Active'";
+    $query = "SELECT aff.* FROM ra_partners aff join ra_user client on aff.clientid = client.id where client.status = 'Active'";
     $result = full_query_i($query);
 
     while ($data = mysqli_fetch_array($result)) {
@@ -532,7 +532,7 @@ if ($cron->isScheduled("emailmarketing")) {
 
         if ($type == "client") {
             $emailtplid = $clientemailtpl;
-            $query = "SELECT id FROM tblclients WHERE ";
+            $query = "SELECT id FROM ra_user WHERE ";
 
             if (0 < $clientnumdays) {
                 $criteria[] = "datecreated='" . date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $clientnumdays, date("Y"))) . "'";
@@ -540,12 +540,12 @@ if ($cron->isScheduled("emailmarketing")) {
 
 
             if (strlen($clientsminactive)) {
-                $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.userid=tblclients.id AND tblcustomerservices.servicestatus='Active')>=" . (int) $clientsminactive;
+                $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.userid=ra_user.id AND tblcustomerservices.servicestatus='Active')>=" . (int) $clientsminactive;
             }
 
 
             if (strlen($clientsmaxactive)) {
-                $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.userid=tblclients.id AND tblcustomerservices.servicestatus='Active')<=" . (int) $clientsmaxactive;
+                $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices WHERE tblcustomerservices.userid=ra_user.id AND tblcustomerservices.servicestatus='Active')<=" . (int) $clientsmaxactive;
             }
 
 
@@ -602,13 +602,13 @@ if ($cron->isScheduled("emailmarketing")) {
 
                     if (count($prodexcludeaid)) {
                         if (implode($prodexcludeaid)) {
-                            $criteria[] = "(SELECT COUNT(*) FROM tblserviceaddons WHERE tblserviceaddons.hostingid=tblcustomerservices.id AND tblserviceaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblserviceaddons.status='Active')=0";
+                            $criteria[] = "(SELECT COUNT(*) FROM ra_catalog_user_sales_addons WHERE ra_catalog_user_sales_addons.hostingid=tblcustomerservices.id AND ra_catalog_user_sales_addons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND ra_catalog_user_sales_addons.status='Active')=0";
                         }
                     }
 
 
                     if ($marketing) {
-                        $criteria[] = "(SELECT COUNT(*) FROM tblclients h3 WHERE h3.id=tblcustomerservices.userid AND h3.emailoptout = '0')=1";
+                        $criteria[] = "(SELECT COUNT(*) FROM ra_user h3 WHERE h3.id=tblcustomerservices.userid AND h3.emailoptout = '0')=1";
                     }
 
                     $query .= implode(" AND ", $criteria);
@@ -617,7 +617,7 @@ if ($cron->isScheduled("emailmarketing")) {
 
                 if (count($filteraids)) {
                     $criteria = array();
-                    $query1 = "SELECT hostingid FROM tblserviceaddons WHERE ";
+                    $query1 = "SELECT hostingid FROM ra_catalog_user_sales_addons WHERE ";
                     $criteria[] = "addonid IN (" . db_build_in_array($filteraids) . ")";
 
                     if (0 < $prodnumdays) {
@@ -638,20 +638,20 @@ if ($cron->isScheduled("emailmarketing")) {
 
                     if (count($prodexcludepid)) {
                         if (implode($prodexcludepid)) {
-                            $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices h2 WHERE h2.userid=(SELECT userid FROM tblcustomerservices WHERE tblcustomerservices.id=tblserviceaddons.hostingid) AND h2.packageid IN (" . db_build_in_array($prodexcludepid) . ") AND h2.servicestatus='Active')=0";
+                            $criteria[] = "(SELECT COUNT(*) FROM tblcustomerservices h2 WHERE h2.userid=(SELECT userid FROM tblcustomerservices WHERE tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid) AND h2.packageid IN (" . db_build_in_array($prodexcludepid) . ") AND h2.servicestatus='Active')=0";
                         }
                     }
 
 
                     if (count($prodexcludeaid)) {
                         if (implode($prodexcludeaid)) {
-                            $criteria[] = "(SELECT COUNT(*) FROM tblserviceaddons h2 WHERE h2.hostingid=tblserviceaddons.hostingid AND tblserviceaddons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND tblserviceaddons.status='Active')=0";
+                            $criteria[] = "(SELECT COUNT(*) FROM ra_catalog_user_sales_addons h2 WHERE h2.hostingid=ra_catalog_user_sales_addons.hostingid AND ra_catalog_user_sales_addons.addonid IN (" . db_build_in_array($prodexcludeaid) . ") AND ra_catalog_user_sales_addons.status='Active')=0";
                         }
                     }
 
 
                     if ($marketing) {
-                        $criteria[] = "(SELECT COUNT(*) FROM tblclients h3 WHERE h3.id=(SELECT userid FROM tblcustomerservices WHERE tblcustomerservices.id=tblserviceaddons.hostingid) AND h3.emailoptout = '0')=1";
+                        $criteria[] = "(SELECT COUNT(*) FROM ra_user h3 WHERE h3.id=(SELECT userid FROM tblcustomerservices WHERE tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid) AND h3.emailoptout = '0')=1";
                     }
 
                     $query1 .= implode(" AND ", $criteria);
@@ -659,7 +659,7 @@ if ($cron->isScheduled("emailmarketing")) {
             }
         }
 
-        $result2 = select_query_i("tblemailtemplates", "name", array("id" => $emailtplid));
+        $result2 = select_query_i("ra_templates_mail", "name", array("id" => $emailtplid));
         $data = mysqli_fetch_array($result2);
         $emailtplname = $data[0];
         $count = 0;
@@ -697,12 +697,12 @@ if ($cron->isScheduled("emailmarketing")) {
 if (date("d") == $CONFIG['CCDaySendExpiryNotices'] && $cron->isScheduled("ccexpirynotices")) {
     $expiryemailcount = 0;
     $expirymonth = date("my", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
-    $result = select_query_i("tblclients", "id", "cardtype!='' AND status='Active'");
+    $result = select_query_i("ra_user", "id", "cardtype!='' AND status='Active'");
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['id'];
         $cchash = md5($cc_encryption_hash . $userid);
-        $result2 = select_query_i("tblclients", "id", "id='" . $userid . "' AND AES_DECRYPT(expdate,'" . $cchash . "')='" . $expirymonth . "'");
+        $result2 = select_query_i("ra_user", "id", "id='" . $userid . "' AND AES_DECRYPT(expdate,'" . $cchash . "')='" . $expirymonth . "'");
         $data = mysqli_fetch_array($result2);
         $userid = $data['id'];
 
@@ -710,7 +710,7 @@ if (date("d") == $CONFIG['CCDaySendExpiryNotices'] && $cron->isScheduled("ccexpi
             sendMessage("Credit Card Expiring Soon", $userid);
 
             if (!$CONFIG['CCDoNotRemoveOnExpiry']) {
-                update_query("tblclients", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "issuenumber" => "", "startdate" => ""), array("id" => $userid));
+                update_query("ra_user", array("cardtype" => "", "cardlastfour" => "", "cardnum" => "", "expdate" => "", "issuenumber" => "", "startdate" => ""), array("id" => $userid));
             }
 
             ++$expiryemailcount;
@@ -741,7 +741,7 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
         $invoiceaction = "1";
     }
 
-    $result = select_query_i("tblservices", "id,name,overagesenabled,overagesdisklimit,overagesbwlimit,overagesdiskprice,overagesbwprice", array("overagesenabled" => array("sqltype" => "NEQ", "value" => "")));
+    $result = select_query_i("ra_catalog", "id,name,overagesenabled,overagesdisklimit,overagesbwlimit,overagesdiskprice,overagesbwprice", array("overagesenabled" => array("sqltype" => "NEQ", "value" => "")));
 
     while ($data = mysqli_fetch_array($result)) {
         $pid = $data['id'];
@@ -752,7 +752,7 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
         $overagesbasediskprice = $data['overagesdiskprice'];
         $overagesbasebwprice = $data['overagesbwprice'];
         $overagesenabled = explode(",", $overagesenabled);
-        $result2 = select_query_i("tblcustomerservices", "tblcustomerservices.*,tblclients.currency", "packageid=" . $pid . " AND (servicestatus='Active' OR servicestatus='Suspended')", "", "", "", "tblclients ON tblclients.id=tblcustomerservices.userid");
+        $result2 = select_query_i("tblcustomerservices", "tblcustomerservices.*,ra_user.currency", "packageid=" . $pid . " AND (servicestatus='Active' OR servicestatus='Suspended')", "", "", "", "ra_user ON ra_user.id=tblcustomerservices.userid");
 
         while ($data = mysqli_fetch_array($result2)) {
             $serviceid = $data['id'];
@@ -763,7 +763,7 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
             $disklimit = $data['disklimit'];
             $bwusage = $data['bwusage'];
             $bwlimit = $data['bwlimit'];
-            $result3 = select_query_i_i("tblcurrencies", "rate", array("id" => $currency));
+            $result3 = select_query_i_i("ra_currency", "rate", array("id" => $currency));
             $data = mysqli_fetch_array($result3);
             $convertrate = $data['rate'];
 
@@ -864,38 +864,38 @@ if ($overagesbillingdate == date("Ymd") && $cron->isScheduled("overagesbilling")
 
 
 if ($CONFIG['AutoClientStatusChange'] != "1" && $cron->isScheduled("clientstatussync")) {
-    $result = full_query_i("SELECT id,lastlogin FROM tblclients WHERE status='Active' AND overrideautoclose='0' AND (SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.userid=tblclients.id AND servicestatus IN ('Active','Suspended'))=0" . ($CONFIG['AutoClientStatusChange'] == "3" ? " AND lastlogin<='" . date("Ymd", mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"))) . "'" : ""));
+    $result = full_query_i("SELECT id,lastlogin FROM ra_user WHERE status='Active' AND overrideautoclose='0' AND (SELECT COUNT(id) FROM tblcustomerservices WHERE tblcustomerservices.userid=ra_user.id AND servicestatus IN ('Active','Suspended'))=0" . ($CONFIG['AutoClientStatusChange'] == "3" ? " AND lastlogin<='" . date("Ymd", mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"))) . "'" : ""));
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['id'];
-        $result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblserviceaddons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=tblclients.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblcustomerservices WHERE userid=tblclients.id AND status IN ('Active')) AS activeservices FROM tblclients WHERE tblclients.id=" . (int) $userid . " LIMIT 1");
+        $result2 = full_query_i("SELECT (SELECT COUNT(*) FROM tblcustomerservices WHERE userid=ra_user.id AND servicestatus IN ('Active','Suspended'))+(SELECT COUNT(*) FROM ra_catalog_user_sales_addons WHERE hostingid IN (SELECT id FROM tblcustomerservices WHERE userid=ra_user.id) AND status IN ('Active','Suspended'))+(SELECT COUNT(*) FROM tblcustomerservices WHERE userid=ra_user.id AND status IN ('Active')) AS activeservices FROM ra_user WHERE ra_user.id=" . (int) $userid . " LIMIT 1");
         $data = mysqli_fetch_array($result2);
         $totalactivecount = $data[0];
 
         if ($totalactivecount == 0) {
-            update_query("tblclients", array("status" => "Inactive"), array("id" => $userid));
+            update_query("ra_user", array("status" => "Inactive"), array("id" => $userid));
         }
     }
 
-    $result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblcustomerservices.servicestatus IN ('Active','Suspended')");
+    $result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE ra_user.status='Inactive' AND ra_user.overrideautoclose='0' AND tblcustomerservices.servicestatus IN ('Active','Suspended')");
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['userid'];
-        update_query("tblclients", array("status" => "Active"), array("id" => $userid));
+        update_query("ra_user", array("status" => "Active"), array("id" => $userid));
     }
 
-    $result = full_query_i("SELECT tblcustomerservices.userid FROM tblserviceaddons INNER JOIN tblcustomerservices ON tblcustomerservices.id=tblserviceaddons.hostingid INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblserviceaddons.status IN ('Active','Suspended')");
+    $result = full_query_i("SELECT tblcustomerservices.userid FROM ra_catalog_user_sales_addons INNER JOIN tblcustomerservices ON tblcustomerservices.id=ra_catalog_user_sales_addons.hostingid INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE ra_user.status='Inactive' AND ra_user.overrideautoclose='0' AND ra_catalog_user_sales_addons.status IN ('Active','Suspended')");
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['userid'];
-        update_query("tblclients", array("status" => "Active"), array("id" => $userid));
+        update_query("ra_user", array("status" => "Active"), array("id" => $userid));
     }
 
-    $result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN tblclients ON tblclients.id=tblcustomerservices.userid WHERE tblclients.status='Inactive' AND tblclients.overrideautoclose='0' AND tblcustomerservices.status IN ('Active','Pending-Transfer')");
+    $result = full_query_i("SELECT tblcustomerservices.userid FROM tblcustomerservices INNER JOIN ra_user ON ra_user.id=tblcustomerservices.userid WHERE ra_user.status='Inactive' AND ra_user.overrideautoclose='0' AND tblcustomerservices.status IN ('Active','Pending-Transfer')");
 
     while ($data = mysqli_fetch_array($result)) {
         $userid = $data['userid'];
-        update_query("tblclients", array("status" => "Active"), array("id" => $userid));
+        update_query("ra_user", array("status" => "Active"), array("id" => $userid));
     }
 
     $cron->logActivity("Done", true);

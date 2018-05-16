@@ -67,7 +67,7 @@ function initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav) {
         $smarty->assign("clientsstats", getClientsStats($_SESSION['uid']));
 
         if (isset($_SESSION['cid'])) {
-            $result = select_query_i("tblcontacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
+            $result = select_query_i("ra_user_contacts", "id,firstname,lastname,email,permissions", array("id" => $_SESSION['cid'], "userid" => $_SESSION['uid']));
             $data = mysqli_fetch_array($result);
             $loggedinuser = array("contactid" => $data['id'], "firstname" => $data['firstname'], "lastname" => $data['lastname'], "email" => $data['email']);
             $contactpermissions = explode(",", $data[4]);
@@ -107,7 +107,7 @@ function initialiseClientArea($pagetitle, $pageicon, $breadcrumbnav) {
     $setlanguage .= "</select></form>";
     $smarty->assign("setlanguage", $setlanguage);
     $currenciesarray = array();
-    $result = select_query_i("tblcurrencies", "id,code,`default`", "", "code", "ASC");
+    $result = select_query_i("ra_currency", "id,code,`default`", "", "code", "ASC");
 
     while ($data = mysqli_fetch_array($result)) {
         $currenciesarray[] = array("id" => $data['id'], "code" => $data['code'], "default" => $data['default']);
@@ -271,7 +271,7 @@ function processSingleTemplate($templatepath, $templatevars) {
 function CALinkUpdateCC() {
     global $CONFIG;
 
-    $result = select_query_i("tblpaymentgateways", "gateway", array("setting" => "type", "value" => "CC"));
+    $result = select_query_i("ra_modules_gateways", "gateway", array("setting" => "type", "value" => "CC"));
 
     while ($data = mysqli_fetch_array($result)) {
         $gateway = $data['gateway'];
@@ -294,7 +294,7 @@ function CALinkUpdateCC() {
 
 
     if (!$CONFIG['CCNeverStore']) {
-        $result = select_query_i("tblpaymentgateways", "COUNT(*)", "setting='type' AND (value='CC' OR value='OfflineCC')");
+        $result = select_query_i("ra_modules_gateways", "COUNT(*)", "setting='type' AND (value='CC' OR value='OfflineCC')");
         $data = mysqli_fetch_array($result);
 
         if ($data[0]) {

@@ -14,11 +14,11 @@ if ($action == "save") {
 	check_token("RA.admin.default");
 
 	if ($id) {
-		update_query("tblorderstatuses", array("title" => $title, "color" => $color, "showpending" => $showpending, "showactive" => $showactive, "showcancelled" => $showcancelled, "sortorder" => $sortorder), array("id" => $id));
+		update_query("ra_orderstatuses", array("title" => $title, "color" => $color, "showpending" => $showpending, "showactive" => $showactive, "showcancelled" => $showcancelled, "sortorder" => $sortorder), array("id" => $id));
 		header("Location: configorderstatuses.php?update=true");
 	}
 	else {
-		insert_query("tblorderstatuses", array("title" => $title, "color" => $color, "showpending" => $showpending, "showactive" => $showactive, "showcancelled" => $showcancelled, "sortorder" => $sortorder));
+		insert_query("ra_orderstatuses", array("title" => $title, "color" => $color, "showpending" => $showpending, "showactive" => $showactive, "showcancelled" => $showcancelled, "sortorder" => $sortorder));
 		header("Location: configorderstatuses.php?added=true");
 	}
 
@@ -30,9 +30,9 @@ if ($action == "delete") {
 	check_token("RA.admin.default");
 
 	if (4 < $id) {
-		$title = get_query_val("tblorderstatuses", "title", array("id" => $id));
-		update_query("tblorders", array("status" => "Cancelled"), array("status" => $title));
-		delete_query("tblorderstatuses", array("id" => $id));
+		$title = get_query_val("ra_orderstatuses", "title", array("id" => $id));
+		update_query("ra_orders", array("status" => "Cancelled"), array("status" => $title));
+		delete_query("ra_orderstatuses", array("id" => $id));
 		header("Location: configorderstatuses.php?delete=true");
 	}
 	else {
@@ -77,7 +77,7 @@ echo "</a></p>
 
 ";
 $aInt->sortableTableInit("nopagination");
-$result = select_query_i("tblorderstatuses", "", "", "sortorder", "ASC");
+$result = select_query_i("ra_orderstatuses", "", "", "sortorder", "ASC");
 
 while ($data = mysqli_fetch_assoc($result)) {
 	$statusid = $data['id'];
@@ -113,7 +113,7 @@ echo "
 <h2>";
 
 if ($action == "edit") {
-	$data = get_query_vals("tblorderstatuses", "", array("id" => $id));
+	$data = get_query_vals("ra_orderstatuses", "", array("id" => $id));
 	extract($data);
 	echo $aInt->lang("orderstatusconfig", "edit");
 }

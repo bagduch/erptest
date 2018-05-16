@@ -95,7 +95,7 @@ $aInt = new RA_Admin("Create Upgrade/Downgrade Orders", false);
 $aInt->title = $aInt->lang("services", "upgradedowngrade");
 $aInt->requiredFiles(array("orderfunctions", "upgradefunctions", "invoicefunctions", "configoptionsfunctions"));
 ob_start();
-$result = select_query_i("tblcustomerservices", "tblcustomerservices.userid,tblcustomerservices.domain,tblcustomerservices.billingcycle,tblcustomerservices.nextduedate,tblcustomerservices.paymentmethod,tblservices.id AS pid,tblservices.name,tblservicegroups.name as groupname", array("tblcustomerservices.id" => $id), "", "", "", "tblservices ON tblservices.id=tblcustomerservices.packageid INNER JOIN tblservicegroups ON tblservicegroups.id=tblservices.gid");
+$result = select_query_i("tblcustomerservices", "tblcustomerservices.userid,tblcustomerservices.domain,tblcustomerservices.billingcycle,tblcustomerservices.nextduedate,tblcustomerservices.paymentmethod,ra_catalog.id AS pid,ra_catalog.name,ra_catalog_groups.name as groupname", array("tblcustomerservices.id" => $id), "", "", "", "ra_catalog ON ra_catalog.id=tblcustomerservices.packageid INNER JOIN ra_catalog_groups ON ra_catalog_groups.id=ra_catalog.gid");
 $data = mysqli_fetch_array($result);
 $userid = $data['userid'];
 $service_groupname = $data['groupname'];
@@ -388,7 +388,7 @@ function calctotals() {
 				echo "elect name=\"promocode\" id=\"promocode\" onchange=\"calctotals()\"><option value=\"\">";
 				echo $aInt->lang("global", "none");
 				echo "</option>";
-				$result = select_query_i("tblpromotions", "", array("upgrades" => "1"), "code", "ASC");
+				$result = select_query_i("ra_promos", "", array("upgrades" => "1"), "code", "ASC");
 
 				while ($data = mysqli_fetch_array($result)) {
 					$promo_id = $data['id'];

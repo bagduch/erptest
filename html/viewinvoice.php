@@ -43,14 +43,14 @@ if ($gateway) {
 	$validgateways = $gateways->getAvailableGateways($invoiceid);
 
 	if (array_key_exists($gateway, $validgateways)) {
-		update_query("tblinvoices", array("paymentmethod" => $gateway), array("id" => $invoiceid));
+		update_query("ra_bills", array("paymentmethod" => $gateway), array("id" => $invoiceid));
 		run_hook("InvoiceChangeGateway", array("invoiceid" => $invoiceid, "paymentmethod" => $gateway));
 	}
 
 	redir("id=" . $invoiceid);
 }
 
-$creditbal = get_query_val("tblclients", "credit", array("id" => $invoice->getData("userid")));
+$creditbal = get_query_val("ra_user", "credit", array("id" => $invoice->getData("userid")));
 
 if ($invoice->getData("status") == "Unpaid" && 0 < $creditbal) {
 	$balance = $invoice->getData("balance");

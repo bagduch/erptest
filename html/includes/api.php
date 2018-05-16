@@ -82,7 +82,7 @@ else {
 
 
 if ($allowed) {
-	$result = select_query_i("tbladmins", "id,disabled", array("username" => $_POST['username'], "password" => $_POST['password']));
+	$result = select_query_i("ra_admin", "id,disabled", array("username" => $_POST['username'], "password" => $_POST['password']));
 	$data = mysqli_fetch_array($result);
 	$adminid = $data['id'];
 	$admindisabled = $data['disabled'];
@@ -93,18 +93,18 @@ if ($allowed) {
 	}
 	else {
 		if (!$adminid) {
-			$result = select_query_i("tbladmins", "loginattempts", array("username" => $login_unm));
+			$result = select_query_i("ra_admin", "loginattempts", array("username" => $login_unm));
 			$data = mysqli_fetch_array($result);
 			$loginattempts = $data['loginattempts'] + 1;
 
 			if ("3" <= $loginattempts) {
 				$expire_date = mktime(date("H"), date("i") + $CONFIG['InvalidLoginBanLength'], date("s"), date("m"), date("d"), date("Y"));
 				$expire_date = date("Y-m-d H:i:s", $expire_date);
-				insert_query("tblbannedips", array("ip" => $remote_ip, "reason" => "3 Invalid API Login Attempts", "expires" => $expire_date));
-				update_query("tbladmins", array("loginattempts" => "0"), array("username" => $_POST['username']));
+				insert_query("ra_bannedips", array("ip" => $remote_ip, "reason" => "3 Invalid API Login Attempts", "expires" => $expire_date));
+				update_query("ra_admin", array("loginattempts" => "0"), array("username" => $_POST['username']));
 			}
 
-			update_query("tbladmins", array("loginattempts" => "+1"), array("username" => $_POST['username']));
+			update_query("ra_admin", array("loginattempts" => "+1"), array("username" => $_POST['username']));
 			$apiresults = array("result" => "error", "message" => "Authentication Failed");
 			$allowed = false;
 		}

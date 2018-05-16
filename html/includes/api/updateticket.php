@@ -11,7 +11,7 @@ if (!function_exists("closeTicket")) {
 	require ROOTDIR . "/includes/ticketfunctions.php";
 }
 
-$result = select_query_i("tbltickets", "id", array("id" => $ticketid));
+$result = select_query_i("ra_ticket", "id", array("id" => $ticketid));
 $data = mysqli_fetch_array($result);
 
 if (!$data['id']) {
@@ -70,6 +70,6 @@ if ($flag) {
 	$updateqry['flag'] = $flag;
 }
 
-update_query("tbltickets", $updateqry, array("id" => $ticketid));
+update_query("ra_ticket", $updateqry, array("id" => $ticketid));
 $apiresults = array("result" => "success", "ticketid" => $ticketid);
 ?>

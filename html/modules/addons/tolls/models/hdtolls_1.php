@@ -87,7 +87,7 @@ class hdtolls {
         $this->db_tolls->close();
 
         // grab some RA settings like API username and password
-        $result = $this->db->query("SELECT * FROM `tbladdonmodules` WHERE module = '" . $this->module . "'");
+        $result = $this->db->query("SELECT * FROM `ra_modules` WHERE module = '" . $this->module . "'");
         while ($row = $result->fetch_assoc()) {
             $this->settings[$row['setting']] = $row['value'];
         }
@@ -439,11 +439,11 @@ class hdtolls {
 
         // get client information
         $result = $this->db->query("
-			SELECT `tblclients`.`id` AS clientid,
-				`tblclients`.`firstname`,
-				`tblclients`.`lastname`,
-				`tblclients`.`companyname`,
-				`tblclients`.`email`,
+			SELECT `ra_user`.`id` AS clientid,
+				`ra_user`.`firstname`,
+				`ra_user`.`lastname`,
+				`ra_user`.`companyname`,
+				`ra_user`.`email`,
 				`tblhosting`.`id` AS hostingid,
 				`tblhosting`.`packageid`,
 				`tblhosting`.`domain`,
@@ -451,9 +451,9 @@ class hdtolls {
 				`tblhosting`.`paymentmethod`,
 				`tblproducts`.`name` as product_name				
 			
-			FROM `tblclients`
+			FROM `ra_user`
 			
-				INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `tblclients`.`id`
+				INNER JOIN `tblhosting` ON `tblhosting`.`userid` = `ra_user`.`id`
 				LEFT JOIN `tblproducts` ON `tblhosting`.`packageid` = `tblproducts`.`id`
 			
 			WHERE `tblhosting`.`packageid` IN (520, 560, 712, 738)

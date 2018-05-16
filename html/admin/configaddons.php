@@ -44,11 +44,11 @@ if ($action == "save") {
     foreach ($_POST['currency'] as $currency_id => $pricing) {
 
         if ($creatednew) {
-            insert_query("tblpricing", array("type" => "addon", "currency" => $currency_id, "relid" => $id, "msetupfee" => $pricing['msetupfee'], "monthly" => $pricing['monthly']));
+            insert_query("ra_catalog_pricebook", array("type" => "addon", "currency" => $currency_id, "relid" => $id, "msetupfee" => $pricing['msetupfee'], "monthly" => $pricing['monthly']));
             continue;
         }
 
-        update_query("tblpricing", array("msetupfee" => $pricing['msetupfee'], "monthly" => $pricing['monthly']), array("type" => "addon", "currency" => $currency_id, "relid" => $id));
+        update_query("ra_catalog_pricebook", array("msetupfee" => $pricing['msetupfee'], "monthly" => $pricing['monthly']), array("type" => "addon", "currency" => $currency_id, "relid" => $id));
     }
 
     run_hook("AddonConfigSave", array("id" => $id));
@@ -66,7 +66,7 @@ if ($action == "save") {
 if ($action == "delete") {
     check_token("RA.admin.default");
     delete_query("tbladdons", array("id" => $id));
-    delete_query("tblpricing", array("type" => "addon", "relid" => $id));
+    delete_query("ra_catalog_pricebook", array("type" => "addon", "relid" => $id));
     infoBox($aInt->lang("addons", "addondeletesuccess"), $aInt->lang("addon", "addondelsuccessinfo"));
     redir("deleted=true");
     exit();
@@ -134,7 +134,7 @@ if (!$action) {
             $addondetail = mysqli_fetch_assoc($result);
 
 
-            $query = "select tblservices.id,tblservices.name,tbladdontoservice.serviceid,tblservicegroups.name as groupname from tblservices LEFT JOIN tblservicegroups ON tblservices.gid=tblservicegroups.id LEFT JOIN tbladdontoservice ON (tblservices.id=tbladdontoservice.serviceid and tbladdontoservice.addonid=" . $id . ")";
+            $query = "select ra_catalog.id,ra_catalog.name,tbladdontoservice.serviceid,ra_catalog_groups.name as groupname from ra_catalog LEFT JOIN ra_catalog_groups ON ra_catalog.gid=ra_catalog_groups.id LEFT JOIN tbladdontoservice ON (ra_catalog.id=tbladdontoservice.serviceid and tbladdontoservice.addonid=" . $id . ")";
 
             $result = full_query_i($query);
             $service = array();
@@ -147,7 +147,7 @@ if (!$action) {
                 }
             }
 
-            $result2 = select_query_i("tblpricing", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $id));
+            $result2 = select_query_i("ra_catalog_pricebook", "", array("type" => "addon", "currency" => $currency['id'], "relid" => $id));
             $price = array();
             while ($data = mysqli_fetch_assoc($result2)) {
                 $price[$data['currency']] = $data;

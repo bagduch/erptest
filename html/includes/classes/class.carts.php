@@ -205,7 +205,7 @@ class RA_Carts {
                 $fraudmodule = getActiveFraudModule();
 
                 if ($CONFIG['SkipFraudForExisting']) {
-                    $result = select_query_i("tblorders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
+                    $result = select_query_i("ra_orders", "COUNT(*)", array("status" => "Active", "userid" => $_SESSION['uid']));
                     $data = mysqli_fetch_array($result);
 
                     if ($data[0]) {
@@ -213,7 +213,7 @@ class RA_Carts {
                     }
                 }
 
-                $result = full_query_i("SELECT COUNT(*) FROM tblinvoices INNER JOIN tblorders ON tblorders.invoiceid=tblinvoices.id WHERE tblorders.id='" . db_escape_string($orderid) . "' AND tblinvoices.status='Paid' AND subtotal>0");
+                $result = full_query_i("SELECT COUNT(*) FROM ra_bills INNER JOIN ra_orders ON ra_orders.invoiceid=ra_bills.id WHERE ra_orders.id='" . db_escape_string($orderid) . "' AND ra_bills.status='Paid' AND subtotal>0");
                 $data = mysqli_fetch_array($result);
 
                 if ($data[0]) {
@@ -231,7 +231,7 @@ class RA_Carts {
                 }
 
                 logActivity("Order ID " . $orderid . " Fraud Check Initiated");
-                update_query("tblorders", array("status" => "Fraud"), array("id" => $orderid));
+                update_query("ra_orders", array("status" => "Fraud"), array("id" => $orderid));
 
                 if ($_SESSION['orderdetails']['Products']) {
                     foreach ($_SESSION['orderdetails']['Products'] as $productid) {
@@ -242,14 +242,14 @@ class RA_Carts {
 
                 if ($_SESSION['orderdetails']['Addons']) {
                     foreach ($_SESSION['orderdetails']['Addons'] as $addonid) {
-                        update_query("tblserviceaddons", array("status" => "Fraud"), array("id" => $addonid, "status" => "Pending"));
+                        update_query("ra_catalog_user_sales_addons", array("status" => "Fraud"), array("id" => $addonid, "status" => "Pending"));
                     }
                 }
 
 
 
 
-                update_query("tblinvoices", array("status" => "Cancelled"), array("id" => $_SESSION['orderdetails']['InvoiceID'], "status" => "Unpaid"));
+                update_query("ra_bills", array("status" => "Cancelled"), array("id" => $_SESSION['orderdetails']['InvoiceID'], "status" => "Unpaid"));
                 $results = runFraudCheck($orderid, $fraudmodule);
                 $_SESSION['orderdetails']['fraudcheckresults'] = $results;
 
@@ -404,7 +404,7 @@ class RA_Carts {
         }
 
         $domaincontacts = array();
-        $result = select_query_i("tblcontacts", "", array("userid" => $_SESSION['uid'], "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
+        $result = select_query_i("ra_user_contacts", "", array("userid" => $_SESSION['uid'], "address1" => array("sqltype" => "NEQ", "value" => "")), "firstname` ASC,`lastname", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $domaincontacts[] = array("id" => $data['id'], "name" => $data['firstname'] . " " . $data['lastname']);

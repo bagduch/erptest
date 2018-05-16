@@ -14,7 +14,7 @@ if (isset($_SESSION['uid'])) {
 	$smarty->assign("logo", $CONFIG['LogoURL']);
 	$smarty->assign("companyname", $CONFIG['CompanyName']);
 	$id = $ra->get_req_var("id");
-	$result = select_query_i("tblemails", "", array("id" => $id, "userid" => $_SESSION['uid']));
+	$result = select_query_i("ra_user_mail", "", array("id" => $id, "userid" => $_SESSION['uid']));
 	$data = mysqli_fetch_array($result);
 	$date = $data['date'];
 	$subject = $data['subject'];

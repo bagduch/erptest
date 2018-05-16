@@ -87,7 +87,7 @@ class RA_Validate {
             $where['showorder'] = "on";
         }
 
-        $result = select_query_i("tblcustomfields", "id,fieldname,fieldtype,fieldoptions,required,regexpr", $where, "sortorder` ASC,`id", "ASC");
+        $result = select_query_i("ra_catalog_user_sales_fields", "id,fieldname,fieldtype,fieldoptions,required,regexpr", $where, "sortorder` ASC,`id", "ASC");
 
         while ($data = mysqli_fetch_array($result)) {
             $fieldid = $data['id'];
@@ -198,7 +198,7 @@ class RA_Validate {
                 if (!strpos($val, "@")) {
                     return false;
                 }
-                return get_query_val("tblbannedemails", "COUNT(id)", array("domain" => $val)) ? false : true;
+                return get_query_val("ra_bannedemails", "COUNT(id)", array("domain" => $val)) ? false : true;
             case "uniqueemail" :
                 $where = array("email" => $val);
                 if (is_array($field2) && 0 < $field2[0]) {

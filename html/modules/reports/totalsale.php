@@ -16,7 +16,7 @@ $reportdata["headertext"] = '<form method="post" action="' . $PHP_SELF . '?repor
 $reportdata["tableheadings"] = array("GST", "Sub", "Total");
 
 if ($startdate && $enddate) {
-    $query = "select * from tblinvoices where date between '" . $startdata . "' AND '" . $enddate . "' AND status='Paid'";
+    $query = "select * from ra_bills where date between '" . $startdata . "' AND '" . $enddate . "' AND status='Paid'";
     $array = array();
     $result = full_query_i($query);
     while ($data = mysqli_fetch_array($result)) {

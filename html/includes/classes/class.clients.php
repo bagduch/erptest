@@ -16,12 +16,12 @@ class RA_Clients extends RA_TableModel {
         $clientgroups = $this->getGroups();
         $filters = $this->buildCriteria($criteria);
         $where = (count($filters) ? " WHERE " . implode(" AND ", $filters) : "");
-        $customfieldjoin = ($this->customfieldsfilter ? " INNER JOIN tblcustomfieldsvalues ON tblcustomfieldsvalues.relid=tblclients.id" : "");
-        $result = full_query_i("SELECT COUNT(*) FROM tblclients" . $customfieldjoin . $where);
+        $customfieldjoin = ($this->customfieldsfilter ? " INNER JOIN ra_catalog_user_sales_fieldsvalues ON ra_catalog_user_sales_fieldsvalues.relid=ra_user.id" : "");
+        $result = full_query_i("SELECT COUNT(*) FROM ra_user" . $customfieldjoin . $where);
         $data = mysqli_fetch_array($result);
         $this->getPageObj()->setNumResults($data[0]);
         $clients = array();
-        $query = "SELECT id,firstname,lastname,companyname,email,datecreated,groupid,status FROM tblclients" . $customfieldjoin . $where . " ORDER BY " . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
+        $query = "SELECT id,firstname,lastname,companyname,email,datecreated,groupid,status FROM ra_user" . $customfieldjoin . $where . " ORDER BY " . $this->getPageObj()->getOrderBy() . " " . $this->getPageObj()->getSortDirection() . " LIMIT " . $this->getQueryLimit();
         $result = full_query_i($query);
 
         while ($data = mysqli_fetch_array($result)) {
@@ -44,8 +44,8 @@ class RA_Clients extends RA_TableModel {
                       COUNT(IF(tsg.type='product' AND tcs.servicestatus IN ('Pending','Active','Suspended'),1,NULL)) 'products',
                       COUNT(IF(tsg.type='service' AND tcs.servicestatus IN ('Pending','Active','Suspended'),1,NULL)) 'services' 
                       FROM tblcustomerservices as tcs 
-                      INNER JOIN tblservices AS ts ON tcs.packageid=ts.id 
-                      INNER JOIN tblservicegroups as tsg on ts.gid=tsg.id WHERE tcs.userid=" . (int) $id;
+                      INNER JOIN ra_catalog AS ts ON tcs.packageid=ts.id 
+                      INNER JOIN ra_catalog_groups as tsg on ts.gid=tsg.id WHERE tcs.userid=" . (int) $id;
                 $result2 = full_query_i($query);
                 $data = mysqli_fetch_array($result2);
                 $services = $data['services'];
@@ -132,7 +132,7 @@ class RA_Clients extends RA_TableModel {
                 $fieldvalue = trim($fieldvalue);
 
                 if ($fieldvalue) {
-                    $cfquery[] = "(tblcustomfieldsvalues.fieldid='" . db_escape_string($fieldid) . "' AND tblcustomfieldsvalues.value LIKE '%" . db_escape_string($fieldvalue) . "%')";
+                    $cfquery[] = "(ra_catalog_user_sales_fieldsvalues.fieldid='" . db_escape_string($fieldid) . "' AND ra_catalog_user_sales_fieldsvalues.value LIKE '%" . db_escape_string($fieldvalue) . "%')";
                     $this->customfieldsfilter = true;
                     continue;
                 }
@@ -153,7 +153,7 @@ class RA_Clients extends RA_TableModel {
         }
 
         $this->groups = array();
-        $result = select_query_i("tblclientgroups", "", "");
+        $result = select_query_i("ra_user_group", "", "");
 
         while ($data = mysqli_fetch_array($result)) {
             $this->groups[$data['id']] = array("name" => $data['groupname'], "colour" => $data['groupcolour'], "discountpercent" => $data['discountpercent'], "susptermexempt" => $data['susptermexempt'], "separateinvoices" => $data['separateinvoices']);

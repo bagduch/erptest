@@ -18,11 +18,11 @@ if ($action == "save") {
 	foreach ($save_arr as $k => $v) {
 
 		if (!isset($CONFIG[$k])) {
-			insert_query("tblconfiguration", array("setting" => $k, "value" => $v));
+			insert_query("ra_config", array("setting" => $k, "value" => $v));
 			continue;
 		}
 
-		update_query("tblconfiguration", array("value" => $v), array("setting" => $k));
+		update_query("ra_config", array("value" => $v), array("setting" => $k));
 	}
 
 	redir("saved=true");
@@ -47,7 +47,7 @@ if ($action == "add") {
 			$state = "";
 		}
 
-        insert_query("tbltax", 
+        insert_query("ra_tax_rates", 
             array(
                 "level" => $level, 
                 "name" => $name, 
@@ -64,12 +64,12 @@ if ($action == "add") {
 
 if ($action == "delete") {
 	check_token("RA.admin.default");
-	delete_query("tbltax", array("id" => $id));
+	delete_query("ra_tax_rates", array("id" => $id));
 	redir();
 	exit();
 }
 
-$result = select_query_i("tblconfiguration", "", "");
+$result = select_query_i("ra_config", "", "");
 
 while ($data = mysqli_fetch_array($result)) {
 	$setting = $data['setting'];
@@ -209,7 +209,7 @@ echo "
 ";
 $aInt->sortableTableInit("nopagination");
 $tabledata = "";
-$result = select_query_i("tbltax", "", array("level" => "1"), "state", "ASC");
+$result = select_query_i("ra_tax_rates", "", array("level" => "1"), "state", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];
@@ -240,7 +240,7 @@ echo "
 ";
 $aInt->sortableTableInit("nopagination");
 $tabledata = "";
-$result = select_query_i("tbltax", "", array("level" => "2"), "state", "ASC");
+$result = select_query_i("ra_tax_rates", "", array("level" => "2"), "state", "ASC");
 
 while ($data = mysqli_fetch_array($result)) {
 	$id = $data['id'];

@@ -11,7 +11,7 @@ if (!function_exists("addInvoicePayment")) {
 	require ROOTDIR . "/includes/invoicefunctions.php";
 }
 
-$query = "SELECT * FROM tblinvoices WHERE id='" . (int)$_POST['invoiceid'] . "'";
+$query = "SELECT * FROM ra_bills WHERE id='" . (int)$_POST['invoiceid'] . "'";
 $result = full_query_i($query);
 $data = mysqli_fetch_array($result);
 

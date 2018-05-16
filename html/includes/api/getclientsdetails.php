@@ -22,7 +22,7 @@ else {
 	}
 }
 
-$result = select_query_i("tblclients", "id", $where);
+$result = select_query_i("ra_user", "id", $where);
 $data = mysqli_fetch_array($result);
 $clientid = $data['id'];
 
@@ -32,7 +32,7 @@ if (!$clientid) {
 }
 
 $clientsdetails = getClientsDetails($clientid);
-$currency_result = full_query_i("SELECT code FROM tblcurrencies WHERE id=" . (int)$clientsdetails['currency']);
+$currency_result = full_query_i("SELECT code FROM ra_currency WHERE id=" . (int)$clientsdetails['currency']);
 $currency = mysqli_fetch_assoc($currency_result);
 $clientsdetails['currency_code'] = $currency['code'];
 

@@ -38,7 +38,7 @@ echo "<s";
 echo "elect name=\"filtergateway\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
-$query = "SELECT DISTINCT gateway FROM tblgatewaylog ORDER BY gateway ASC";
+$query = "SELECT DISTINCT gateway FROM ra_gateway_logs ORDER BY gateway ASC";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
@@ -64,7 +64,7 @@ echo "<s";
 echo "elect name=\"filterresult\"><option value=\"\">";
 echo $aInt->lang("global", "any");
 echo "</option>";
-$query = "SELECT DISTINCT result FROM tblgatewaylog ORDER BY result ASC";
+$query = "SELECT DISTINCT result FROM ra_gateway_logs ORDER BY result ASC";
 $result = full_query_i($query);
 
 while ($data = mysqli_fetch_array($result)) {
@@ -121,10 +121,10 @@ if ($filterresult) {
     $where[] = "result='" . db_escape_string($filterresult) . "'";
 }
 
-$result = select_query_i("tblgatewaylog", "COUNT(*)", implode(" AND ", $where), "id", "DESC");
+$result = select_query_i("ra_gateway_logs", "COUNT(*)", implode(" AND ", $where), "id", "DESC");
 $data = mysqli_fetch_array($result);
 $numrows = $data[0];
-$result = select_query_i("tblgatewaylog", "", implode(" AND ", $where), "id", "DESC", $page * $limit . ("," . $limit));
+$result = select_query_i("ra_gateway_logs", "", implode(" AND ", $where), "id", "DESC", $page * $limit . ("," . $limit));
 
 while ($data = mysqli_fetch_array($result)) {
     $id = $data['id'];
