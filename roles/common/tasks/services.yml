@@ -148,11 +148,11 @@
     delete: 1
   when: false # Not in use
 
-  - name: get rid of /var/www/html/ so we can symlink
-    file:
-      path: /var/www/html
-      state: absent
-    when: false
+- name: get rid of /var/www/html/ so we can symlink
+  file:
+    path: /var/www/html
+    state: absent
+  when: true
 
 - name: Force-symlink html/ to /var/www/html/
   file:
