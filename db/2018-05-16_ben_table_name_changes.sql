@@ -1,3 +1,7 @@
+ALTER TABLE `tbladdons` DROP FOREIGN KEY `tbladdons_ibfk_1`;
+ALTER TABLE `tblserviceaddons` DROP FOREIGN KEY `tblserviceaddons_ibfk_3`;
+ALTER TABLE `tbldownloads` DROP FOREIGN KEY `tbldownloads_ibfk_1`;
+
 RENAME TABLE `tblaccounts` TO `ra_transactions`;
 RENAME TABLE `tblactivitylog` TO `ra_systemlog`;
 RENAME TABLE `tbladdonmodules` TO `ra_modules`;
